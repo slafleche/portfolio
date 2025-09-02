@@ -1,0 +1,18 @@
+# Node
+node_modules/
+
+# Yarn Berry
+.yarn/
+
+# VSCode local settings (keep shared settings)
+.vscode/*
+!.vscode/settings.json
+
+# Build artifacts
+/public/
+
+# macOS
+.DS_Store
+
+# Lockfiles from other package managers
+package-lock.json
