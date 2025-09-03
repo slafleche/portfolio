@@ -16,3 +16,6 @@ node_modules/
 
 # Lockfiles from other package managers
 package-lock.json
+
+# Bash scripts
+scripts/bash
