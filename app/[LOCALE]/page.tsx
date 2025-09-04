@@ -1,7 +1,7 @@
 import { use } from "react";
 import Link from "next/link";
 import { AVAILABLE_LOCALES, TRANSLATIONS, type Locale } from "@/data/locales";
-import { resolveLocale } from "@/lib/locale";
+import { resolveLocale } from "@/lib/locales/locale";
 
 type Params = { LOCALE?: string };
 type Props = { params: Promise<Params> | Params };
