@@ -1,30 +1,23 @@
+// src/app/page.tsx
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { AVAILABLE_LOCALES, type Locale } from "@/data/locales";
-
-function pickLocaleFromAcceptLanguage(accept: string | null): Locale | null {
-  if (!accept) return null;
-  // e.g. "fr-CA,fr;q=0.9,en;q=0.8"
-  const langs = accept
-    .split(",")
-    .map((part) => part.split(";")[0].trim()) // strip quality
-    .filter(Boolean);
-
-  for (const tag of langs) {
-    const base = tag.slice(0, 2); // "fr-CA" -> "fr"
-    if ((AVAILABLE_LOCALES as readonly string[]).includes(base)) {
-      return base as Locale;
-    }
-  }
-  return null;
-}
+import {
+  DEFAULT_LOCALE,
+  pickLocaleFromAcceptLanguage,
+  getTranslator,
+} from "@/lib/locale";
+import LocaleAutoRedirect from "@/components/LocaleAutoRedirect";
+import type { Locale } from "@/data/locales";
 
 export default async function RootPage() {
   const accept = (await headers()).get("accept-language");
-  const headerLocale = pickLocaleFromAcceptLanguage(accept);
-  const locale: Locale = headerLocale ?? "en"; // fallback stays en
+  const fallback: Locale = pickLocaleFromAcceptLanguage(accept) ?? DEFAULT_LOCALE;
 
-  console.log("accept-language:", (await headers()).get("accept-language"));
+  const t = getTranslator(fallback); // 👈 use t from fallback locale
 
-  redirect(`/${locale}`);
+  return (
+    <>
+      <LocaleAutoRedirect fallback={fallback} />
+      <p>{t("redirecting")}</p>
+    </>
+  );
 }

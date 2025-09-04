@@ -1,4 +1,3 @@
-// src/lib/LocaleProvider.tsx
 "use client";
 import React from "react";
 import { LocaleProvider as BaseLocaleProvider } from "./localeContext";
