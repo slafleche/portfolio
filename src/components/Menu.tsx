@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import * as s from '@/styles/typgraphy.css';
+import * as s from '@/styles/menu.css';
+
 import {
   AVAILABLE_LOCALES,
   LOCALE_LABELS,
   type Locale,
-} from '../data/locales.gen';
+} from '@/data/locales.gen';
 
 export default function Menu({ locale }: { locale: Locale }) {
   const otherLocales = (AVAILABLE_LOCALES as readonly string[]).filter(

@@ -1,5 +1,5 @@
 import { ReactNode, use } from "react";
-import { resolveLocale } from "../src/lib/locales/locale";
+import { resolveLocale } from "@/lib/locales/locale";
 import LocaleProvider from "@/lib/locales/LocaleProvider"; 
 import Menu from "@/components/Menu";
 
