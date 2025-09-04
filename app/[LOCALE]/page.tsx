@@ -1,20 +1,27 @@
+// src/app/[LOCALE]/page.tsx
+import { use } from "react";
 import Link from "next/link";
-import { TRANSLATIONS, AVAILABLE_LOCALES, Locale } from "../src/data/locales";
+import { AVAILABLE_LOCALES, TRANSLATIONS, type Locale } from "@/data/locales";
+import { resolveLocale } from "@/lib/locale";
 
-interface HomePageProps {
-  params: { LOCALE: string };
-}
+type Params = { LOCALE?: string };
+type Props = { params: Promise<Params> | Params };
 
-export default function HomePage({ params }: HomePageProps) {
-  const defaultLocale: Locale = "en";
+export default function HomePage({ params }: Props) {
+  // Unwrap if Next passes a Promise for params
+  const resolved =
+    typeof (params as any)?.then === "function"
+      ? use(params as Promise<Params>)
+      : (params as Params);
 
-  const locale: Locale = AVAILABLE_LOCALES.includes(params.LOCALE as Locale)
-    ? (params.LOCALE as Locale)
-    : defaultLocale;
+  // Respect URL param; only fall back if invalid/missing
+  const locale: Locale = resolveLocale(resolved?.LOCALE);
 
-  const t = (key: string) => TRANSLATIONS[locale]?.[key] ?? key;
+  const t = (key: keyof (typeof TRANSLATIONS)[Locale]) =>
+    TRANSLATIONS[locale]?.[key] ?? key;
 
-  const otherLocales = AVAILABLE_LOCALES.filter((l) => l !== locale);
+  const otherLocales = (AVAILABLE_LOCALES as readonly string[])
+    .filter((l) => l !== locale) as Locale[];
 
   return (
     <>

@@ -1,33 +1,12 @@
-// src/app/layout.tsx
-import "./globals.css";
-import type { ReactNode } from "react";
-import { use } from "react";
-import { AVAILABLE_LOCALES, type Locale } from "@/data/locales";
-import { resolveLocale } from "@/lib/locale";
-import LocaleProvider from "@/lib/LocaleProvider";
+// src/lib/LocaleProvider.tsx
+"use client";
+import React from "react";
+import { LocaleProvider as BaseLocaleProvider } from "./localeContext";
+import type { Locale } from "@/data/locales";
 
-type Params = { LOCALE?: string };
-
-export default function RootLayout({
+export default function LocaleProvider({
+  locale,
   children,
-  params,
-}: {
-  children: ReactNode;
-  params: Promise<Params> | Params;
-}) {
-  const resolved =
-    typeof (params as any)?.then === "function"
-      ? use(params as Promise<Params>)
-      : (params as Params);
-
-  // Prefer the helper; it already validates + falls back
-  const locale: Locale = resolveLocale(resolved?.LOCALE);
-
-  return (
-    <html lang={locale}>
-      <body>
-        <LocaleProvider locale={locale}>{children}</LocaleProvider>
-      </body>
-    </html>
-  );
+}: React.PropsWithChildren<{ locale: Locale }>) {
+  return <BaseLocaleProvider locale={locale}>{children}</BaseLocaleProvider>;
 }
