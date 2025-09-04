@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getBrowserLocale, DEFAULT_LOCALE } from "@/lib/locale";
+import { getBrowserLocale, DEFAULT_LOCALE } from "@/lib/locales/locale";
 import type { Locale } from "@/data/locales";
 
 /** Runs only on `/`. Uses browser UI first, then server fallback. */

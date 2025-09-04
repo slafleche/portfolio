@@ -4,7 +4,7 @@ import {
   DEFAULT_LOCALE,
   pickLocaleFromAcceptLanguage,
   getTranslator,
-} from "@/lib/locale";
+} from "@/lib/locales/locale";
 import LocaleAutoRedirect from "@/components/LocaleAutoRedirect";
 import type { Locale } from "@/data/locales";
 
