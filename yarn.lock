@@ -1223,6 +1223,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vanilla-extract/next-plugin@npm:^2.4.14":
+  version: 2.4.14
+  resolution: "@vanilla-extract/next-plugin@npm:2.4.14"
+  dependencies:
+    "@vanilla-extract/webpack-plugin": "npm:^2.3.22"
+  peerDependencies:
+    next: ">=12.1.7"
+  checksum: 10c0/fe802e7ac0374845d2795631aea99778e800449db5282dbd7f7fdf9f48b7c4fea4a8f0451688eb4e6bb37e0301871d462a4a89236f875324495df03080f4a94e
+  languageName: node
+  linkType: hard
+
 "@vanilla-extract/private@npm:^1.0.9":
   version: 1.0.9
   resolution: "@vanilla-extract/private@npm:1.0.9"
@@ -1236,6 +1247,20 @@ __metadata:
   peerDependencies:
     "@vanilla-extract/css": ^1.0.0
   checksum: 10c0/d266fe1ab40dbf4136df4dab508b1d3e7d64cf2cd88c0f370b9de12f20027431fdd58c4a12b603c5ace72e50d416ee743944af98321c538218eadf9fceaf8023
+  languageName: node
+  linkType: hard
+
+"@vanilla-extract/webpack-plugin@npm:^2.3.22":
+  version: 2.3.22
+  resolution: "@vanilla-extract/webpack-plugin@npm:2.3.22"
+  dependencies:
+    "@vanilla-extract/integration": "npm:^8.0.4"
+    debug: "npm:^4.3.1"
+    loader-utils: "npm:^2.0.0"
+    picocolors: "npm:^1.0.0"
+  peerDependencies:
+    webpack: ^4.30.0 || ^5.20.2
+  checksum: 10c0/a684e0ccf53e086e47f8ebdc394364795ac716ec5a4e73624ab087c3f551d7393277b4ed60154e972846fc5523f3171afda63f1c719cc729923794ce5f39bb7d
   languageName: node
   linkType: hard
 
@@ -1509,6 +1534,13 @@ __metadata:
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: 10c0/f23823513b63173a001030fae4f2dabe283b99a9d324ade3ad3d148e218134676f1ee8568c877cd79ec1c53158dcf2d2ba527a97c606618928ba99dd930102bf
+  languageName: node
+  linkType: hard
+
+"big.js@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "big.js@npm:5.2.2"
+  checksum: 10c0/230520f1ff920b2d2ce3e372d77a33faa4fa60d802fe01ca4ffbc321ee06023fe9a741ac02793ee778040a16b7e497f7d60c504d1c402b8fdab6f03bb785a25f
   languageName: node
   linkType: hard
 
@@ -2022,6 +2054,13 @@ __metadata:
   version: 9.2.2
   resolution: "emoji-regex@npm:9.2.2"
   checksum: 10c0/af014e759a72064cf66e6e694a7fc6b0ed3d8db680427b021a89727689671cefe9d04151b2cad51dbaf85d5ba790d061cd167f1cf32eb7b281f6368b3c181639
+  languageName: node
+  linkType: hard
+
+"emojis-list@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "emojis-list@npm:3.0.0"
+  checksum: 10c0/7dc4394b7b910444910ad64b812392159a21e1a7ecc637c775a440227dcb4f80eff7fe61f4453a7d7603fa23d23d30cc93fe9e4b5ed985b88d6441cd4a35117b
   languageName: node
   linkType: hard
 
@@ -3518,7 +3557,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.2.3":
+"json5@npm:^2.1.2, json5@npm:^2.2.3":
   version: 2.2.3
   resolution: "json5@npm:2.2.3"
   bin:
@@ -3575,6 +3614,17 @@ __metadata:
   version: 3.1.3
   resolution: "lilconfig@npm:3.1.3"
   checksum: 10c0/f5604e7240c5c275743561442fbc5abf2a84ad94da0f5adc71d25e31fa8483048de3dcedcb7a44112a942fed305fd75841cdf6c9681c7f640c63f1049e9a5dcc
+  languageName: node
+  linkType: hard
+
+"loader-utils@npm:^2.0.0":
+  version: 2.0.4
+  resolution: "loader-utils@npm:2.0.4"
+  dependencies:
+    big.js: "npm:^5.2.2"
+    emojis-list: "npm:^3.0.0"
+    json5: "npm:^2.1.2"
+  checksum: 10c0/d5654a77f9d339ec2a03d88221a5a695f337bf71eb8dea031b3223420bb818964ba8ed0069145c19b095f6c8b8fd386e602a3fc7ca987042bd8bb1dcc90d7100
   languageName: node
   linkType: hard
 
@@ -4251,6 +4301,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.42.0"
     "@vanilla-extract/css": "npm:^1.17.4"
     "@vanilla-extract/esbuild-plugin": "npm:^2.3.18"
+    "@vanilla-extract/next-plugin": "npm:^2.4.14"
     "@vanilla-extract/sprinkles": "npm:^1.6.5"
     autoprefixer: "npm:^10.4.21"
     chokidar: "npm:^3.5.1"
