@@ -1,4 +1,3 @@
-// src/lib/localeContext.tsx
 "use client";
 import React, { createContext, useContext, useMemo } from "react";
 import type { Locale } from "@/data/locales";

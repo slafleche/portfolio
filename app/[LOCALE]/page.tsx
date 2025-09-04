@@ -1,4 +1,3 @@
-// src/app/[LOCALE]/page.tsx
 import { use } from "react";
 import Link from "next/link";
 import { AVAILABLE_LOCALES, TRANSLATIONS, type Locale } from "@/data/locales";
