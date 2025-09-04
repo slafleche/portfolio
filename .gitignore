@@ -19,3 +19,11 @@ package-lock.json
 
 # Bash scripts
 scripts/bash
+
+# Generated data
+src/data/*
+
+# Next.js
+.next/
+.swc/
+.*.env

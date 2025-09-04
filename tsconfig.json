@@ -1,16 +1,37 @@
 {
   "compilerOptions": {
+    "types": ["node", "next"],
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
-    "baseUrl": "."
+    "baseUrl": "src",
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["*"]
+    },
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["src/**/*", "serve.js"],
+  "include": [
+    "app/[LOCALE]/page.tsx",
+    "middleware.ts",
+    "src/**/*",
+    ".next/types/**/*.ts",
+    "types/**/*.d.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }
