@@ -1,4 +1,4 @@
-import { AVAILABLE_LOCALES, TRANSLATIONS, type Locale } from "@/data/locales";
+import { AVAILABLE_LOCALES, TRANSLATIONS, type Locale } from "..data/locales.gen";
 
 export const DEFAULT_LOCALE: Locale = "en";
 
