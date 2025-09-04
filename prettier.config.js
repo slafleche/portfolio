@@ -1,6 +1,5 @@
-module.exports = {
-  semi: true,
+// Prettier 3 + ESM project → use ESM export
+export default {
   singleQuote: true,
   trailingComma: "all",
-  printWidth: 80,
 };
