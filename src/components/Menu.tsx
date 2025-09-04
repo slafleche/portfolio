@@ -1,26 +1,38 @@
-import Link from 'next/link';
-import * as styles from '@/styles/menu.css.ts';
+'use client';
 
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   AVAILABLE_LOCALES,
   LOCALE_LABELS,
   type Locale,
 } from '@/data/locales.gen';
+import * as s from '@/styles/menu.css.ts';
 
-export default function Menu({ locale }: { locale: Locale }) {
-  const otherLocales = (AVAILABLE_LOCALES as readonly string[]).filter(
-    (l) => l !== locale,
-  ) as Locale[];
+export default function Menu() {
+  const pathname = usePathname() || '/';
+  const first = pathname.split('/').filter(Boolean)[0];
+
+  const current: Locale = (AVAILABLE_LOCALES as readonly string[]).includes(
+    first as string,
+  )
+    ? (first as Locale)
+    : (AVAILABLE_LOCALES[0] as Locale); // fallback to first available (likely "en")
+
+  // show ONLY the other locales
+  const others = (AVAILABLE_LOCALES as readonly Locale[]).filter(
+    (l) => l !== current,
+  );
 
   return (
-    <div className={styles.headerBar}>
-      <nav className={styles.nav}>
-        {otherLocales.map((l) => (
-          <Link key={l} href={`/${l}`} className={styles.link}>
+    <nav className={s.headerBar}>
+      <div className={s.nav}>
+        {others.map((l) => (
+          <Link key={l} href={`/${l}`} className={s.link} hrefLang={l}>
             {LOCALE_LABELS[l]}
           </Link>
         ))}
-      </nav>
-    </div>
+      </div>
+    </nav>
   );
 }
