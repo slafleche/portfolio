@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import * as s from '@/styles/menu.css';
+import * as styles from '@/styles/menu.css.ts';
 
 import {
   AVAILABLE_LOCALES,
@@ -13,10 +13,10 @@ export default function Menu({ locale }: { locale: Locale }) {
   ) as Locale[];
 
   return (
-    <div className={s.headerBar}>
-      <nav className={s.nav}>
+    <div className={styles.headerBar}>
+      <nav className={styles.nav}>
         {otherLocales.map((l) => (
-          <Link key={l} href={`/${l}`} className={s.link}>
+          <Link key={l} href={`/${l}`} className={styles.link}>
             {LOCALE_LABELS[l]}
           </Link>
         ))}

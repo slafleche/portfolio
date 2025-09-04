@@ -37,14 +37,14 @@
     "wait-on": "^7.0.1"
   },
   "scripts": {
-    "locales": "MINIFY=0 node scripts/generateLocales.mjs",
-    "predev": "locales",
-    "prebuild": "locales",
-    "dev": "wait-on predev && next dev",
-    "build": "yarn prebuild & next build",
+    "locales": "node scripts/generateLocales.mjs",
+    "predev": "yarn locales",
+    "prebuild": "MINIFY=1 yarn locales",
+    "dev": "next dev",
+    "build": "next build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "dev:open": "wait-on predev & next dev & wait-on http://localhost:3000 && open-cli http://localhost:3000"
+    "dev:open": "yarn dev & wait-on http://localhost:3000 && open-cli http://localhost:3000"
   },
   "packageManager": "yarn@4.9.4"
 }
