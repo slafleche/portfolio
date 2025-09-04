@@ -1,6 +1,7 @@
 import { ReactNode, use } from "react";
 import { resolveLocale } from "../src/lib/locales/locale";
 import LocaleProvider from "@/lib/locales/LocaleProvider"; 
+import Menu from "@/components/Menu";
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -16,6 +17,7 @@ export default function RootLayout({ children, params }: RootLayoutProps) {
       <head />
       <body>
         <LocaleProvider locale={locale}>
+          <Menu locale={locale} />
           {children}
         </LocaleProvider>
       </body>
