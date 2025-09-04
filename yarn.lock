@@ -1241,6 +1241,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vanilla-extract/recipes@npm:^0.5.7":
+  version: 0.5.7
+  resolution: "@vanilla-extract/recipes@npm:0.5.7"
+  peerDependencies:
+    "@vanilla-extract/css": ^1.0.0
+  checksum: 10c0/18e7a7a12dedd16e43a1974c8ee273bee9080bd70042e91ce244e4be5679c4f626a257d37186bbd3562157d48fec26650a50f7a396439862da527e2223687ac8
+  languageName: node
+  linkType: hard
+
 "@vanilla-extract/sprinkles@npm:^1.6.5":
   version: 1.6.5
   resolution: "@vanilla-extract/sprinkles@npm:1.6.5"
@@ -4302,6 +4311,7 @@ __metadata:
     "@vanilla-extract/css": "npm:^1.17.4"
     "@vanilla-extract/esbuild-plugin": "npm:^2.3.18"
     "@vanilla-extract/next-plugin": "npm:^2.4.14"
+    "@vanilla-extract/recipes": "npm:^0.5.7"
     "@vanilla-extract/sprinkles": "npm:^1.6.5"
     autoprefixer: "npm:^10.4.21"
     chokidar: "npm:^3.5.1"
