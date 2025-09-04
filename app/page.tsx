@@ -23,5 +23,8 @@ export default async function RootPage() {
   const accept = (await headers()).get("accept-language");
   const headerLocale = pickLocaleFromAcceptLanguage(accept);
   const locale: Locale = headerLocale ?? "en"; // fallback stays en
+
+  console.log("accept-language:", (await headers()).get("accept-language"));
+
   redirect(`/${locale}`);
 }

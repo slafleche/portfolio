@@ -1,58 +1,86 @@
-# Yarn Berry
-.yarn/
-
-# VSCode local settings (keep shared settings)
-.vscode/*
-!.vscode/settings.json
-
-# Build artifacts
-/public/
-
-# Lockfiles from other package managers
-package-lock.json
-
-# Bash scripts
-scripts/bash
-
-# Generated data
-src/data/*
-
-# Dependencies
-/node_modules
-/.pnp
+# -----------------------
+# Node / Dependencies
+# -----------------------
+node_modules/
+.pnp.*
 .pnp.js
 
-# Testing
-/coverage
+# -----------------------
+# Yarn Berry (v2+)
+# Commit .yarn except caches/build-state.
+# If you use Zero-Installs, you may commit .yarn/cache as well.
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
 
-# Next.js build output
-/.next/
-/out/
-/build
+# -----------------------
+# Build artifacts
+# -----------------------
+.next/
+out/
+build/
+dist/
 
-# Production
-/dist
+# -----------------------
+# Testing / Coverage
+# -----------------------
+coverage/
 
-# Misc
-.DS_Store
-*.pem
+# -----------------------
+# Lockfiles
+# -----------------------
+package-lock.json
 
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-.pnpm-debug.log*
+# -----------------------
+# Bash scripts
+# -----------------------
+scripts/bash/
 
+# -----------------------
+# Generated data
+# -----------------------
+src/data/*
+!src/data/.gitkeep
+
+# -----------------------
 # Local env files
+# -----------------------
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
+# -----------------------
 # Vercel
-.vercel
+# -----------------------
+.vercel/
 
-# Typescript
+# -----------------------
+# TypeScript
+# -----------------------
 *.tsbuildinfo
-next-env.d.ts
+
+# -----------------------
+# VSCode local settings (keep shared settings)
+# -----------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+# -----------------------
+# Misc
+# -----------------------
+.DS_Store
+*.pem
+
+# -----------------------
+# Debug logs
+# -----------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
