@@ -1,5 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
+export const header = style({
+  display: 'flex',
+});
+
 export const headerBar = style({
   display: 'flex',
   alignItems: 'center',
@@ -17,5 +21,11 @@ export const nav = style({
 export const link = style({
   textDecoration: 'none',
   fontWeight: 600,
-  selectors: { '&:hover': { textDecoration: 'underline' } },
+  borderRadius: 8,
+  padding: '0.25rem 0.5rem',
+  selectors: {
+    '&:hover': { textDecoration: 'underline' },
+    '&[data-active="true"]': { background: 'rgba(0,0,0,0.06)' }, // state via data-attr
+    '&:focus-visible': { outline: '2px solid currentColor', outlineOffset: 2 },
+  },
 });

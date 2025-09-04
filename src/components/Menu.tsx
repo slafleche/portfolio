@@ -12,26 +12,31 @@ import * as s from '@/styles/menu.css.ts';
 export default function Menu() {
   const pathname = usePathname() || '/';
   const first = pathname.split('/').filter(Boolean)[0];
-
-  const current: Locale = (AVAILABLE_LOCALES as readonly string[]).includes(
-    first as string,
-  )
+  const locales = AVAILABLE_LOCALES as readonly Locale[];
+  const current = (locales as readonly string[]).includes(first)
     ? (first as Locale)
-    : (AVAILABLE_LOCALES[0] as Locale); // fallback to first available (likely "en")
-
-  // show ONLY the other locales
-  const others = (AVAILABLE_LOCALES as readonly Locale[]).filter(
-    (l) => l !== current,
-  );
+    : locales[0];
 
   return (
     <nav className={s.headerBar}>
       <div className={s.nav}>
-        {others.map((l) => (
-          <Link key={l} href={`/${l}`} className={s.link} hrefLang={l}>
-            {LOCALE_LABELS[l]}
-          </Link>
-        ))}
+        {locales
+          .filter((l) => l !== current) // only other locales (your rule)
+          .map((l) => (
+            <Link
+              key={l}
+              href={`/${l}`}
+              className={s.link}
+              hrefLang={l}
+              data-active={false}
+            >
+              {LOCALE_LABELS[l]}
+            </Link>
+          ))}
+        {/* show current (non-link) if you want to indicate it */}
+        <span className={s.link} data-active aria-current="page">
+          {LOCALE_LABELS[current]}
+        </span>
       </div>
     </nav>
   );
