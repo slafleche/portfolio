@@ -12,9 +12,7 @@
     "sourceMap": true,
     "baseUrl": "src",
     "resolveJsonModule": true,
-    "paths": {
-      "@/*": ["*"]
-    },
+    "paths": { "@/*": ["*"] },
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "noEmit": true,

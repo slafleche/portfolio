@@ -1,6 +1,6 @@
 import { use } from "react";
 import Link from "next/link";
-import { AVAILABLE_LOCALES, TRANSLATIONS, type Locale } from "@/data/locales";
+import { AVAILABLE_LOCALES, TRANSLATIONS, type Locale } from "@/data/locales.gen";
 import { resolveLocale } from "@/lib/locales/locale";
 
 type Params = { LOCALE?: string };
@@ -26,12 +26,11 @@ export default function HomePage({ params }: Props) {
     <>
       <h1>{t("title")}</h1>
       <p>{t("description")}</p>
-
-      {otherLocales.map((loc) => (
+      {/* {otherLocales.map((loc) => (
         <Link key={loc} href={`/${loc}`}>
           {TRANSLATIONS[loc]?.title ?? loc}
         </Link>
-      ))}
+      ))} */}
     </>
   );
 }
