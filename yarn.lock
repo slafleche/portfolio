@@ -4052,6 +4052,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-xml-parser@npm:^3.14.0":
+  version: 3.21.1
+  resolution: "fast-xml-parser@npm:3.21.1"
+  dependencies:
+    strnum: "npm:^1.0.4"
+  bin:
+    xml2js: cli.js
+  checksum: 10c0/26ed57fd3cb86434959cffa6852ab63231850ff5be6836aef7744b1abc8013fa5696c05179e422965677e116606611242d91ceebf246d91a5247e262d8b59996
+  languageName: node
+  linkType: hard
+
 "fastq@npm:^1.6.0":
   version: 1.19.1
   resolution: "fastq@npm:1.19.1"
@@ -5813,6 +5824,7 @@ __metadata:
     postcss: "npm:^8.5.6"
     postcss-cli: "npm:^11.0.1"
     prettier: "npm:^3.6.2"
+    prettier-plugin-xml: "npm:^0.1.0"
     react: "npm:^19.1.1"
     react-dom: "npm:^19.1.1"
     react-router-dom: "npm:^7.8.2"
@@ -5920,7 +5932,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.6.2":
+"prettier-plugin-xml@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "prettier-plugin-xml@npm:0.1.0"
+  dependencies:
+    fast-xml-parser: "npm:^3.14.0"
+    prettier: "npm:>=1.10"
+  checksum: 10c0/aeac61d1d85a5fd614b61681f5859d1b3673465d337e56d4e1aa63c3bcb6b28ed3cf9355d6d899e96fa279abf31bc06a8580abc55fb906ff1020c41d96b4ae88
+  languageName: node
+  linkType: hard
+
+"prettier@npm:>=1.10, prettier@npm:^3.6.2":
   version: 3.6.2
   resolution: "prettier@npm:3.6.2"
   bin:
@@ -6757,6 +6779,13 @@ __metadata:
   version: 3.1.1
   resolution: "strip-json-comments@npm:3.1.1"
   checksum: 10c0/9681a6257b925a7fa0f285851c0e613cc934a50661fa7bb41ca9cbbff89686bb4a0ee366e6ecedc4daafd01e83eee0720111ab294366fe7c185e935475ebcecd
+  languageName: node
+  linkType: hard
+
+"strnum@npm:^1.0.4":
+  version: 1.1.2
+  resolution: "strnum@npm:1.1.2"
+  checksum: 10c0/a0fce2498fa3c64ce64a40dada41beb91cabe3caefa910e467dc0518ef2ebd7e4d10f8c2202a6104f1410254cae245066c0e94e2521fb4061a5cb41831952392
   languageName: node
   linkType: hard
 

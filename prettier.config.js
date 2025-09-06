@@ -1,4 +1,11 @@
 export default {
   singleQuote: true,
-  trailingComma: "all",
+  trailingComma: 'all',
+  plugins: ['prettier-plugin-xml'],
+  overrides: [
+    {
+      files: '*.svg',
+      options: { parser: 'xml' },
+    },
+  ],
 };
