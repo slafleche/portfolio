@@ -71,7 +71,8 @@ try {
         { overrides: { removeViewBox: false, cleanupIds: false } },
       ],
       'convertTransform',
-      ['convertPathData', { forceAbsolutePath: true }],
+      ['convertPathData',
+{ forceAbsolutePath: true }],
     ],
   };
 }
@@ -91,7 +92,8 @@ if (opts.precision != null) {
 if (opts.shortenIds) {
   // Enable ID shortening on top of user's config
   baseConfig.plugins ??= [];
-  baseConfig.plugins.push(['cleanupIds', { remove: true, minify: true }]);
+  baseConfig.plugins.push(['cleanupIds',
+{ remove: true, minify: true }]);
 }
 
 let totalSaved = 0;
