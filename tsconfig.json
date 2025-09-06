@@ -27,7 +27,6 @@
   },
   "include": [
     "app/[LOCALE]/page.tsx",
-    "middleware.ts",
     "src/**/*",
     ".next/types/**/*.ts",
     "types/**/*.d.ts"
