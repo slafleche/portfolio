@@ -17,7 +17,7 @@ export default function RootLayout({ children, params }: RootLayoutProps) {
       <head />
       <body>
         <LocaleProvider locale={locale}>
-          <Menu locale={locale} />
+          <Menu />
           {children}
         </LocaleProvider>
       </body>
