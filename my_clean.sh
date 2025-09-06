@@ -1,0 +1,1 @@
+../bash/generic_scripts/my_clean.sh

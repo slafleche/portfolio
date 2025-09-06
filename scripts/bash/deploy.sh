@@ -1,1 +1,0 @@
-../../../bash/project_scripts/deploy.sh
