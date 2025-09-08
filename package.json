@@ -53,9 +53,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "dev:open": "yarn dev & wait-on http://localhost:3000 && open-cli http://localhost:3000",
-    "format:svg": "prettier \"src/assets/**/*.{svg,SVG}\" --write",
-    "svgo": "node scripts/optimize-svgs.mjs --write",
+    "format:svg": "prettier --no-config --parser html \"src/assets/**/*.{svg,SVG}\" --write",
     "svg:clean": "yarn svgo && yarn format:svg",
+    "svgo": "node scripts/optimize-svgs.mjs --write",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
