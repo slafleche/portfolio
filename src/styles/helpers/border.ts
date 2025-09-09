@@ -1,7 +1,7 @@
 import * as csstype from 'csstype';
 
 import { measurement } from './measurement';
-import { borderVars, colors, IBorder } from '../vars.css';
+import { borderVars, colorVars, IBorder } from '../vars.css';
 
 interface IFinalBorder {
   borderColor?: csstype.Property.BorderColor;
@@ -12,7 +12,7 @@ interface IFinalBorder {
 
 const borders = (props: IBorder = {}) => {
   const {
-    color = colors.border,
+    color = colorVars.border,
     width = borderVars.width,
     style = borderVars.style,
     radius = borderVars.radius,

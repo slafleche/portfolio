@@ -1,7 +1,8 @@
-import { ReactNode, use } from "react";
-import { resolveLocale } from "@/lib/locales/locale";
-import LocaleProvider from "@/lib/locales/LocaleProvider"; 
-import Menu from "@/components/Menu";
+import { ReactNode, use } from 'react';
+import { resolveLocale } from '@/lib/locales/locale';
+import LocaleProvider from '@/lib/locales/LocaleProvider';
+import Menu from '@/components/Menu';
+import '@/styles/globals.css';
 
 interface RootLayoutProps {
   children: ReactNode;
