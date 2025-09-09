@@ -5,9 +5,9 @@ import { measurement } from './helpers/measurement';
 // These are separate so they can be manipulated individually if needed.
 // If they are set in globalVars, they need to use .css()
 export const colorVars = {
-  brand: chroma('#3d3380'),
-  bodyBg: chroma('#fff'),
-  bodyFg: chroma('#1d1d1f'),
+  brand: chroma('rgb(14,173,184)'),
+  bodyBg: chroma('rgb(46,43,61)'),
+  bodyFg: chroma('#fff'),
   headingFg: chroma('#484a4d'),
   contrast: chroma('#8e233f'),
   black: chroma('#000'),

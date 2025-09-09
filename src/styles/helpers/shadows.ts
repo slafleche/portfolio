@@ -1,5 +1,5 @@
 import { Color } from 'chroma-js';
-import { colors } from '../vars.css';
+import { colorVars } from '../vars.css';
 export interface IBoxShadow {
   x?: string | 0;
   y?: string | 0;
@@ -16,7 +16,7 @@ export const globalShadow = (props: IBoxShadow = {}) => {
     y = '4px',
     blur = '4px',
     spread = '2px',
-    color = colors.shadow,
+    color = colorVars.shadow,
     inset = false,
   } = props || {};
   return `${x} ${y} ${blur} ${spread} ${color.css()}${inset ? ' inset' : ''}`;
