@@ -1,0 +1,18 @@
+{
+  "label": "English",
+  "title": "Stéphane's Portfolio",
+  "description": "This is the English version",
+  "redirecting": "Redirecting...",
+
+  "href_about": "about",
+  "about": "about",
+
+  "philosophy": "Philosophy",
+  "href-philosophy": "philosophy",
+
+  "case_study": "case_study",
+  "href-case_study": "case_study",
+  
+  "clients": "clients",
+  "link-clients": "clients",
+}

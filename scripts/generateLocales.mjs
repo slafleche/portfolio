@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import stripJsonComments from 'strip-json-comments';
 
 // CONFIG
-const SRC_DIR = path.resolve('src', 'lib', 'locales', 'translations'); // your JSONs
+const SRC_DIR = path.resolve('src', 'lib', 'locales', 'translations'); // your JSONC inputs
 const OUT_FILE = path.resolve('src', 'data', 'locales.gen.ts'); // generated TS
 const TMP_FILE = OUT_FILE + '.tmp';
 const MINIFY = process.env.MINIFY === '0'; // MINIFY=1 yarn locales
@@ -10,16 +11,73 @@ const REF_LOCALE = 'en'; // prefer 'en' as reference
 
 // utils
 const pretty = (obj) => JSON.stringify(obj, null, MINIFY ? 0 : 2);
-const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 
-// 1) load all locale JSONs
+// Remove trailing commas from JSON-like text (outside strings)
+function removeTrailingCommas(input) {
+  let out = '';
+  let inString = false;
+  let stringQuote = '';
+  let escaping = false;
+  for (let i = 0; i < input.length; i++) {
+    const ch = input[i];
+    if (inString) {
+      out += ch;
+      if (escaping) {
+        escaping = false;
+      } else if (ch === '\\') {
+        escaping = true;
+      } else if (ch === stringQuote) {
+        inString = false;
+        stringQuote = '';
+      }
+      continue;
+    }
+
+    if (ch === '"' || ch === "'") {
+      inString = true;
+      stringQuote = ch;
+      out += ch;
+      continue;
+    }
+
+    if (ch === ',') {
+      // look ahead for next non-whitespace char
+      let j = i + 1;
+      while (j < input.length && /\s/.test(input[j])) j++;
+      if (j < input.length && (input[j] === '}' || input[j] === ']')) {
+        // skip writing this trailing comma
+        continue;
+      }
+      out += ch;
+      continue;
+    }
+
+    out += ch;
+  }
+  return out;
+}
+
+// Read JSONC (comments, trailing commas, etc.)
+const readJson = (p) => {
+  const raw = fs.readFileSync(p, 'utf8');
+  // Remove UTF-8 BOM, strip comments, then remove trailing commas
+  const noBom = raw.replace(/^\uFEFF/, '');
+  const noComments = stripJsonComments(noBom);
+  const normalized = removeTrailingCommas(noComments);
+  return JSON.parse(normalized);
+};
+
+// 1) load all locale files (.jsonc)
 if (!fs.existsSync(SRC_DIR)) throw new Error(`Locales dir missing: ${SRC_DIR}`);
-const files = fs.readdirSync(SRC_DIR).filter((f) => f.endsWith('.json'));
+const files = fs
+  .readdirSync(SRC_DIR)
+  .filter((f) => f.endsWith('.jsonc'));
 if (files.length === 0)
-  throw new Error(`No *.json locales found in ${SRC_DIR}`);
+  throw new Error(`No *.jsonc locales found in ${SRC_DIR}`);
 
 const entries = files.map((file) => {
-  const locale = path.basename(file, '.json');
+  const base = path.basename(file);
+  const locale = base.replace(/\.(jsonc)$/, '');
   const json = readJson(path.join(SRC_DIR, file));
 
   // require a non-empty "label"

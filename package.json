@@ -40,6 +40,7 @@
     "postcss-cli": "^11.0.1",
     "prettier": "^3.6.2",
     "prettier-plugin-xml": "^0.1.0",
+    "strip-json-comments": "^3.1.1",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.42.0",
     "wait-on": "^7.0.1"
