@@ -1,18 +1,21 @@
 {
   "label": "English",
   "title": "Stéphane's Portfolio",
-  "description": "This is the English version",
   "redirecting": "Redirecting...",
 
-  "href_about": "about",
-  "about": "about",
+  "about": "About",
+  "href-about": "about",
+  "content-about": "## About - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
 
   "philosophy": "Philosophy",
   "href-philosophy": "philosophy",
+  "content-philosophy": "## Philosophy - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
 
   "case_study": "case_study",
   "href-case_study": "case_study",
-  
+  "content-case_study": "## Case_study - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
+
   "clients": "clients",
-  "link-clients": "clients",
+  "href-clients": "clients",
+  "content-clients": "## Clients - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
 }

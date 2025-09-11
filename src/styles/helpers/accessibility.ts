@@ -1,9 +1,9 @@
-import { ComplexStyleRule, StyleRule } from "@vanilla-extract/css";
+import { ComplexStyleRule, StyleRule } from '@vanilla-extract/css';
 
 // Reduced Motion
 export enum ReducedMotion {
-  on = "reduce",
-  off = "no-preference",
+  on = 'reduce',
+  off = 'no-preference',
 }
 
 export const reducedMotion = (
@@ -11,7 +11,7 @@ export const reducedMotion = (
   styles: ComplexStyleRule,
 ) => {
   return {
-    "@media": {
+    '@media': {
       [`(prefers-reduced-motion: ${preference})`]: styles,
     },
   } as StyleRule;

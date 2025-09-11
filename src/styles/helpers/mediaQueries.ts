@@ -54,10 +54,7 @@ export const addOnePixel = (length: string) => {
 // Example: const isFullSize = useMediaQuery(globalMediaQueries.fullSize);
 const globalMediaQueries = {
   fullSize: {
-    minWidth: `${calc.add(
-      layoutVars.contentWidth,
-      calc.multiply(layoutVars.contentPadding, 2),
-    )}`,
+    minWidth: `${calc.add(layoutVars.contentWidth, calc.multiply(layoutVars.contentPadding, 2))}`,
   } as IMediaQueryProps,
 
   compact: {

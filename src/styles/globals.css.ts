@@ -1,5 +1,4 @@
 import { globalStyle, keyframes } from '@vanilla-extract/css';
-import content from './components/content.css';
 import { backgroundHelper } from './helpers/background';
 import * as csstype from 'csstype';
 import { globalShadow } from './helpers/shadows';
@@ -41,8 +40,6 @@ globalStyle('h1, h2, h3, h4, h5, h6', {
 globalStyle("*, *:after, *:before, input[type='search']", {
   boxSizing: 'border-box',
 });
-
-globalStyle(`${content.root} h1`, {});
 
 globalStyle('h1', {
   fontSize: '60px',

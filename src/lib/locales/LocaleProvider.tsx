@@ -1,7 +1,7 @@
-"use client";
-import React from "react";
-import { LocaleProvider as BaseLocaleProvider } from "./localeContext";
-import type { Locale } from "@/data/locales";
+'use client';
+import React from 'react';
+import { LocaleProvider as BaseLocaleProvider } from './localeContext';
+import type { Locale } from '@/data/locales';
 
 export default function LocaleProvider({
   locale,

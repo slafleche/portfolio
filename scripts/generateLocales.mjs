@@ -69,9 +69,7 @@ const readJson = (p) => {
 
 // 1) load all locale files (.jsonc)
 if (!fs.existsSync(SRC_DIR)) throw new Error(`Locales dir missing: ${SRC_DIR}`);
-const files = fs
-  .readdirSync(SRC_DIR)
-  .filter((f) => f.endsWith('.jsonc'));
+const files = fs.readdirSync(SRC_DIR).filter((f) => f.endsWith('.jsonc'));
 if (files.length === 0)
   throw new Error(`No *.jsonc locales found in ${SRC_DIR}`);
 
@@ -86,15 +84,13 @@ const entries = files.map((file) => {
   }
 
   // require all values to be strings (including label)
-  for (const [k,
-v] of Object.entries(json)) {
+  for (const [k, v] of Object.entries(json)) {
     if (typeof v !== 'string') {
       throw new Error(`Locale "${locale}" has non-string value at key "${k}"`);
     }
   }
 
-  return [locale,
-json];
+  return [locale, json];
 });
 
 // stable order
@@ -102,13 +98,11 @@ entries.sort(([a], [b]) => a.localeCompare(b));
 
 // 2) strict key equality across ALL locales (includes "label")
 const refEntry = entries.find(([l]) => l === REF_LOCALE) ?? entries[0];
-const [refLocale,
-refJson] = refEntry;
+const [refLocale, refJson] = refEntry;
 const refKeys = Object.keys(refJson).sort();
 
 let hasIssues = false;
-for (const [loc,
-json] of entries) {
+for (const [loc, json] of entries) {
   const keys = Object.keys(json).sort();
 
   const missing = refKeys.filter((k) => !keys.includes(k));
@@ -126,12 +120,10 @@ if (hasIssues) process.exit(1); // hard fail before dev/build
 // 3) emit generated TS (labels + full translations)
 const available = entries.map(([l]) => `"${l}"`).join(', ');
 const labels = entries
-  .map(([l,
-json]) => `  "${l}": ${JSON.stringify(json.label)}`)
+  .map(([l, json]) => `  "${l}": ${JSON.stringify(json.label)}`)
   .join(',\n');
 const translations = entries
-  .map(([l,
-json]) => `  "${l}": ${pretty(json).replace(/\n/g, '\n  ')}`)
+  .map(([l, json]) => `  "${l}": ${pretty(json).replace(/\n/g, '\n  ')}`)
   .join(',\n');
 
 const output = `// AUTO-GENERATED FILE — DO NOT EDIT
