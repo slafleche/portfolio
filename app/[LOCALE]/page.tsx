@@ -1,6 +1,7 @@
 'use client';
 import { useT } from '@/lib/locales/useT';
 import * as s from '@/styles/components/userContent.css';
+import { Head } from 'next/document';
 import ReactMarkdown from 'react-markdown';
 
 export default function HomePage() {
@@ -8,6 +9,13 @@ export default function HomePage() {
 
   return (
     <>
+      <Head>
+        <title>{t('title')}</title>
+        <meta name="description" content={t('description')} />
+        <meta property="og:title" content={t('title')} />
+        <meta property="og:description" content={t('description')} />
+        <meta property="og:type" content="website" />
+      </Head>
       <h1>{t('title')}</h1>
 
       <section id={t('href-about')}>
@@ -28,9 +36,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id={t('href-clients')}>
+      <section id={t('href-projects')}>
         <div className={s.userContent}>
-          <ReactMarkdown>{t('content-clients')}</ReactMarkdown>
+          <ReactMarkdown>{t('content-projects')}</ReactMarkdown>
         </div>
       </section>
     </>

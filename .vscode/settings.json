@@ -29,6 +29,11 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
     "source.fixAll.eslint": true
+  },{
+  "editor.wordWrap": "off",
+  "[jsonc]": {
+    "editor.wordWrap": "on",
+    "editor.wordWrapColumn": 80
   },
   "eslint.validate": [
     "javascript",

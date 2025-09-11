@@ -1,8 +1,18 @@
 {
   "label": "Français",
   "abbreviated-label": "FR",
-  "title": "Portfolio à Stéphane",
   "redirecting": "Redirection...",
+  "title": "Développeur Front-End | Portfolio de Stéphane L.",
+  "description": "Stéphane L. développe des composants réutilisables, des expériences responsives et des interfaces fidèles aux marques — pour élever les projets au-delà du simple passage entre design et développement.",
+
+  "hero": "Collaborer entre design et développement — pour élever les projets",
+  "hero-subtitle": "Développeur front-end créant des composants réutilisables, des expériences responsives et des interfaces fidèles aux marques — anticipant les problèmes UX et élevant les projets au-delà du simple passage entre design et développement",
+
+  "split-dev_title": "Ce que je conçois",
+  "split-dev_content": "* Des systèmes de thématisation évolutifs\n* Des modèles de composants et d’UX\n* Des ajustements qui améliorent la vision initiale",
+
+  "split-design_title": "Ce que je livre",
+  "split-design_content": "* Des interfaces fidèles au design\n* Des mises en page réactives sur tous les appareils\n* L’accessibilité dès la conception",
 
   "about": "À propos",
   "href-about": "a-propos",
@@ -16,7 +26,7 @@
   "href-case_study": "etude-de-cas",
   "content-case_study": "## Étude de cas - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
 
-  "clients": "Clients",
-  "href-clients": "clients",
-  "content-clients": "## Clients - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
+  "projects": "Projets",
+  "href-projects": "projets",
+  "content-projects": "## Quelques clients avec qui j’ai collaboré.",
 }
