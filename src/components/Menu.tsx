@@ -1,14 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import * as s from '@/styles/components/menu.css';
+import * as s from '@/styles/menu.css';
 import Logo from '@/assets/SVG/logo.svg';
 import { useT } from '@/lib/locales/useT';
 import { useLocale } from '@/lib/locales/localeContext';
+import { AVAILABLE_LOCALES, TRANSLATIONS } from '@/data/locales';
 
 export default function Menu() {
   const t = useT();
-  const { locale, label, root } = useLocale({ withLabel: true });
+  const { locale, root } = useLocale({ withLabel: true });
 
   // Todo add active link state and data-prop
 
@@ -39,8 +40,11 @@ export default function Menu() {
             </li>
 
             <li className={s.headerNavItem}>
-              <Link className={s.link} href={'#about'}></Link>
-              {/* If you need the current locale here, call useLocale() locally. */}
+              {AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
+                <Link key={l} href={`/${l}`} className={s.link} hrefLang={l}>
+                  {TRANSLATIONS[l]['abbreviated-label']}
+                </Link>
+              ))}
             </li>
           </ul>
         </nav>

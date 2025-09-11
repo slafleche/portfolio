@@ -8,7 +8,7 @@ export const colorVars = {
   brand: chroma('rgb(14,173,184)'),
   bodyBg: chroma('rgb(46,43,61)'),
   bodyFg: chroma('#fff'),
-  headingFg: chroma('#484a4d'),
+  headingFg: chroma('#fff'),
   contrast: chroma('#8e233f'),
   black: chroma('#000'),
   white: chroma('#FFF'),

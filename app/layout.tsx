@@ -1,27 +1,17 @@
-import { ReactNode, use } from 'react';
+import { ReactNode } from 'react';
+import { cookies } from 'next/headers';
 import { resolveLocale } from '@/lib/locales/locale';
-import LocaleProvider from '@/lib/locales/LocaleProvider';
-import Menu from '@/components/Menu';
 import '@/styles/globals.css';
-import Script from 'next/script';
 interface RootLayoutProps {
   children: ReactNode;
-  params: Promise<{ LOCALE?: string }>;
 }
 
-export default function RootLayout({ children, params }: RootLayoutProps) {
-  const { LOCALE } = use(params);
-  const locale = resolveLocale(LOCALE);
-
+export default function RootLayout({ children }: RootLayoutProps) {
+  const cookieLocale = cookies().get('locale')?.value;
+  const lang = resolveLocale(cookieLocale);
   return (
-    <html lang={locale}>
-      <head></head>
-      <body>
-        <LocaleProvider locale={locale}>
-          <Menu />
-          {children}
-        </LocaleProvider>
-      </body>
+    <html lang={lang}>
+      <body>{children}</body>
     </html>
   );
 }
