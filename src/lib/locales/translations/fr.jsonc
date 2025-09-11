@@ -1,0 +1,18 @@
+{
+  "label": "Français",
+  "title": "Portfolio à Stéphane",
+  "description": "Ceci est la version française",
+  "redirecting": "Redirection...",
+
+  "href_about": "a-propos",
+  "about": "À propos",
+
+  "philosophy": "philosophie",
+  "href-philosophy": "Philosophie",
+
+  "case_study": "etude-de-cas",
+  "href-case_study": "Étude de cas",
+  
+  "clients": "clients",
+  "link-clients": "clients",
+}
