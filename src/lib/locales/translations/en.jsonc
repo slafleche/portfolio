@@ -1,5 +1,6 @@
 {
   "label": "English",
+  "abbreviated-label": "EN",
   "title": "Stéphane's Portfolio",
   "redirecting": "Redirecting...",
 
@@ -11,11 +12,11 @@
   "href-philosophy": "philosophy",
   "content-philosophy": "## Philosophy - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
 
-  "case_study": "case_study",
+  "case_study": " Study",
   "href-case_study": "case_study",
   "content-case_study": "## Case_study - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
 
-  "clients": "clients",
+  "clients": "Clients",
   "href-clients": "clients",
   "content-clients": "## Clients - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
 }
