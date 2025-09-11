@@ -1,18 +1,21 @@
 {
   "label": "Français",
   "title": "Portfolio à Stéphane",
-  "description": "Ceci est la version française",
   "redirecting": "Redirection...",
 
-  "href_about": "a-propos",
   "about": "À propos",
+  "href-about": "a-propos",
+  "content-about": "## À propos - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
 
-  "philosophy": "philosophie",
-  "href-philosophy": "Philosophie",
+  "philosophy": "Philosophie",
+  "href-philosophy": "philosophie",
+  "content-philosophy": "## Philosophie - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
 
-  "case_study": "etude-de-cas",
-  "href-case_study": "Étude de cas",
-  
-  "clients": "clients",
-  "link-clients": "clients",
+  "case_study": "Étude de cas",
+  "href-case_study": "etude-de-cas",
+  "content-case_study": "## Étude de cas - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
+
+  "clients": "Clients",
+  "href-clients": "clients",
+  "content-clients": "## Clients - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
 }

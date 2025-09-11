@@ -4,18 +4,19 @@ export const header = style({
   display: 'flex',
 });
 
-export const headerBar = style({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  maxWidth: '960px',
-  margin: '0 auto',
-  padding: '1rem',
-});
-
 export const nav = style({
   display: 'flex',
-  gap: '0.75rem',
+  alignItems: 'center',
+});
+
+export const list = style({
+  display: 'flex',
+  alignItems: 'center',
+});
+
+export const item = style({
+  display: 'flex',
+  alignItems: 'center',
 });
 
 export const link = style({
@@ -30,11 +31,12 @@ export const link = style({
   },
 });
 
-export const bridge = style({
-  filter: 'drop-shadow( 0px 10px 2px rgba(0, 0, 0, .7))',
+export const logo = style({
+  // fill: 'white',
+  // filter: 'drop-shadow( 0px 10px 2px rgba(0, 0, 0, .7))',
 });
 
-export const logo = style({
-  fill: 'white',
-  filter: 'drop-shadow( 0px 10px 2px rgba(0, 0, 0, .7))',
-});
+export const logoLink = style({});
+
+export const headerNav = style({});
+export const headerNavItem = style({});

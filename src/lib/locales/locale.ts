@@ -7,8 +7,8 @@ import {
 export const DEFAULT_LOCALE: Locale = 'en';
 
 /**
- * Only validate an explicit candidate (e.g. from the URL).
- * NOTE: No browser checks here — explicit URL always wins.
+ * Only validate an explicit candidate (e.g. from the URL). NOTE: No browser
+ * checks here — explicit URL always wins.
  */
 export function resolveLocale(candidate?: string): Locale {
   return candidate &&

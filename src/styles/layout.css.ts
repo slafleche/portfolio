@@ -1,21 +1,21 @@
-import { style } from "@vanilla-extract/css";
-import { globalMediaQueryStyles } from "../helpers/mediaQueries";
-import { paddings } from "styles/helpers/spacing";
-import { layoutVars } from "styles/components/layoutVars.css";
+import { style } from '@vanilla-extract/css';
+import { globalMediaQueryStyles } from './helpers/mediaQueries';
+import { paddings } from './helpers/spacing';
+import { layoutVars } from './layoutVars.css';
 
 const layoutStyles = {
   frame: style({
-    minHeight: "100vh",
+    minHeight: '100vh',
   }),
 
   main: style({
-    position: "relative",
+    position: 'relative',
   }),
 
   content: style({
-    width: "100%",
+    width: '100%',
     maxWidth: layoutVars.contentWidth,
-    margin: "auto",
+    margin: 'auto',
     ...paddings({
       horizontal: layoutVars.contentPadding,
     }),
@@ -34,7 +34,7 @@ const layoutStyles = {
   }),
 
   fullWidth: style({
-    margin: "auto",
+    margin: 'auto',
     ...paddings({
       horizontal: layoutVars.contentPadding,
     }),
@@ -53,14 +53,14 @@ const layoutStyles = {
   }),
 
   bodyWrap: style({
-    overflow: "hidden",
-    position: "relative",
+    overflow: 'hidden',
+    position: 'relative',
   }),
 
   stickyFooter: style({
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "100vh",
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
   }),
 
   mainSection: style({

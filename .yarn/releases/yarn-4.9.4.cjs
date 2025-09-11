@@ -1,5 +1,5 @@
 #!/usr/bin/env node
- 
+
 //prettier-ignore
 (()=>{var EGe=Object.create;var hU=Object.defineProperty;var IGe=Object.getOwnPropertyDescriptor;var CGe=Object.getOwnPropertyNames;var wGe=Object.getPrototypeOf,BGe=Object.prototype.hasOwnProperty;var Ie=(t=>typeof require<"u"?require:typeof Proxy<"u"?new Proxy(t,{get:(e,r)=>(typeof require<"u"?require:e)[r]}):t)(function(t){if(typeof require<"u")return require.apply(this,arguments);throw Error('Dynamic require of "'+t+'" is not supported')});var Ze=(t,e)=>()=>(t&&(e=t(t=0)),e);var _=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports),Vt=(t,e)=>{for(var r in e)hU(t,r,{get:e[r],enumerable:!0})},vGe=(t,e,r,s)=>{if(e&&typeof e=="object"||typeof e=="function")for(let a of CGe(e))!BGe.call(t,a)&&a!==r&&hU(t,a,{get:()=>e[a],enumerable:!(s=IGe(e,a))||s.enumerable});return t};var ut=(t,e,r)=>(r=t!=null?EGe(wGe(t)):{},vGe(e||!t||!t.__esModule?hU(r,"default",{value:t,enumerable:!0}):r,t));var fi={};Vt(fi,{SAFE_TIME:()=>NX,S_IFDIR:()=>YP,S_IFLNK:()=>VP,S_IFMT:()=>Mf,S_IFREG:()=>T2});var Mf,YP,T2,VP,NX,OX=Ze(()=>{Mf=61440,YP=16384,T2=32768,VP=40960,NX=456789e3});var or={};Vt(or,{EBADF:()=>Mo,EBUSY:()=>SGe,EEXIST:()=>QGe,EINVAL:()=>bGe,EISDIR:()=>kGe,ENOENT:()=>PGe,ENOSYS:()=>DGe,ENOTDIR:()=>xGe,ENOTEMPTY:()=>TGe,EOPNOTSUPP:()=>FGe,EROFS:()=>RGe,ERR_DIR_CLOSED:()=>gU});function Cc(t,e){return Object.assign(new Error(`${t}: ${e}`),{code:t})}function SGe(t){return Cc("EBUSY",t)}function DGe(t,e){return Cc("ENOSYS",`${t}, ${e}`)}function bGe(t){return Cc("EINVAL",`invalid argument, ${t}`)}function Mo(t){return Cc("EBADF",`bad file descriptor, ${t}`)}function PGe(t){return Cc("ENOENT",`no such file or directory, ${t}`)}function xGe(t){return Cc("ENOTDIR",`not a directory, ${t}`)}function kGe(t){return Cc("EISDIR",`illegal operation on a directory, ${t}`)}function QGe(t){return Cc("EEXIST",`file already exists, ${t}`)}function RGe(t){return Cc("EROFS",`read-only filesystem, ${t}`)}function TGe(t){return Cc("ENOTEMPTY",`directory not empty, ${t}`)}function FGe(t){return Cc("EOPNOTSUPP",`operation not supported, ${t}`)}function gU(){return Cc("ERR_DIR_CLOSED","Directory handle was closed")}var JP=Ze(()=>{});var $a={};Vt($a,{BigIntStatsEntry:()=>iE,DEFAULT_MODE:()=>yU,DirEntry:()=>dU,StatEntry:()=>nE,areStatsEqual:()=>EU,clearStats:()=>KP,convertToBigIntStats:()=>OGe,makeDefaultStats:()=>LX,makeEmptyStats:()=>NGe});function LX(){return new nE}function NGe(){return KP(LX())}function KP(t){for(let e in t)if(Object.hasOwn(t,e)){let r=t[e];typeof r=="number"?t[e]=0:typeof r=="bigint"?t[e]=BigInt(0):mU.types.isDate(r)&&(t[e]=new Date(0))}return t}function OGe(t){let e=new iE;for(let r in t)if(Object.hasOwn(t,r)){let s=t[r];typeof s=="number"?e[r]=BigInt(s):mU.types.isDate(s)&&(e[r]=new Date(s))}return e.atimeNs=e.atimeMs*BigInt(1e6),e.mtimeNs=e.mtimeMs*BigInt(1e6),e.ctimeNs=e.ctimeMs*BigInt(1e6),e.birthtimeNs=e.birthtimeMs*BigInt(1e6),e}function EU(t,e){if(t.atimeMs!==e.atimeMs||t.birthtimeMs!==e.birthtimeMs||t.blksize!==e.blksize||t.blocks!==e.blocks||t.ctimeMs!==e.ctimeMs||t.dev!==e.dev||t.gid!==e.gid||t.ino!==e.ino||t.isBlockDevice()!==e.isBlockDevice()||t.isCharacterDevice()!==e.isCharacterDevice()||t.isDirectory()!==e.isDirectory()||t.isFIFO()!==e.isFIFO()||t.isFile()!==e.isFile()||t.isSocket()!==e.isSocket()||t.isSymbolicLink()!==e.isSymbolicLink()||t.mode!==e.mode||t.mtimeMs!==e.mtimeMs||t.nlink!==e.nlink||t.rdev!==e.rdev||t.size!==e.size||t.uid!==e.uid)return!1;let r=t,s=e;return!(r.atimeNs!==s.atimeNs||r.mtimeNs!==s.mtimeNs||r.ctimeNs!==s.ctimeNs||r.birthtimeNs!==s.birthtimeNs)}var mU,yU,dU,nE,iE,IU=Ze(()=>{mU=ut(Ie("util")),yU=33188,dU=class{constructor(){this.name="";this.path="";this.mode=0}isBlockDevice(){return!1}isCharacterDevice(){return!1}isDirectory(){return(this.mode&61440)===16384}isFIFO(){return!1}isFile(){return(this.mode&61440)===32768}isSocket(){return!1}isSymbolicLink(){return(this.mode&61440)===40960}},nE=class{constructor(){this.uid=0;this.gid=0;this.size=0;this.blksize=0;this.atimeMs=0;this.mtimeMs=0;this.ctimeMs=0;this.birthtimeMs=0;this.atime=new Date(0);this.mtime=new Date(0);this.ctime=new Date(0);this.birthtime=new Date(0);this.dev=0;this.ino=0;this.mode=yU;this.nlink=1;this.rdev=0;this.blocks=1}isBlockDevice(){return!1}isCharacterDevice(){return!1}isDirectory(){return(this.mode&61440)===16384}isFIFO(){return!1}isFile(){return(this.mode&61440)===32768}isSocket(){return!1}isSymbolicLink(){return(this.mode&61440)===40960}},iE=class{constructor(){this.uid=BigInt(0);this.gid=BigInt(0);this.size=BigInt(0);this.blksize=BigInt(0);this.atimeMs=BigInt(0);this.mtimeMs=BigInt(0);this.ctimeMs=BigInt(0);this.birthtimeMs=BigInt(0);this.atimeNs=BigInt(0);this.mtimeNs=BigInt(0);this.ctimeNs=BigInt(0);this.birthtimeNs=BigInt(0);this.atime=new Date(0);this.mtime=new Date(0);this.ctime=new Date(0);this.birthtime=new Date(0);this.dev=BigInt(0);this.ino=BigInt(0);this.mode=BigInt(yU);this.nlink=BigInt(1);this.rdev=BigInt(0);this.blocks=BigInt(1)}isBlockDevice(){return!1}isCharacterDevice(){return!1}isDirectory(){return(this.mode&BigInt(61440))===BigInt(16384)}isFIFO(){return!1}isFile(){return(this.mode&BigInt(61440))===BigInt(32768)}isSocket(){return!1}isSymbolicLink(){return(this.mode&BigInt(61440))===BigInt(40960)}}});function HGe(t){let e,r;if(e=t.match(UGe))t=e[1];else if(r=t.match(_Ge))t=`\\\\${r[1]?".\\":""}${r[2]}`;else return t;return t.replace(/\//g,"\\")}function jGe(t){t=t.replace(/\\/g,"/");let e,r;return(e=t.match(LGe))?t=`/${e[1]}`:(r=t.match(MGe))&&(t=`/unc/${r[1]?".dot/":""}${r[2]}`),t}function zP(t,e){return t===fe?UX(e):CU(e)}var F2,vt,Er,fe,J,MX,LGe,MGe,UGe,_Ge,CU,UX,el=Ze(()=>{F2=ut(Ie("path")),vt={root:"/",dot:".",parent:".."},Er={home:"~",nodeModules:"node_modules",manifest:"package.json",lockfile:"yarn.lock",virtual:"__virtual__",pnpJs:".pnp.js",pnpCjs:".pnp.cjs",pnpData:".pnp.data.json",pnpEsmLoader:".pnp.loader.mjs",rc:".yarnrc.yml",env:".env"},fe=Object.create(F2.default),J=Object.create(F2.default.posix);fe.cwd=()=>process.cwd();J.cwd=process.platform==="win32"?()=>CU(process.cwd()):process.cwd;process.platform==="win32"&&(J.resolve=(...t)=>t.length>0&&J.isAbsolute(t[0])?F2.default.posix.resolve(...t):F2.default.posix.resolve(J.cwd(),...t));MX=function(t,e,r){return e=t.normalize(e),r=t.normalize(r),e===r?".":(e.endsWith(t.sep)||(e=e+t.sep),r.startsWith(e)?r.slice(e.length):null)};fe.contains=(t,e)=>MX(fe,t,e);J.contains=(t,e)=>MX(J,t,e);LGe=/^([a-zA-Z]:.*)$/,MGe=/^\/\/(\.\/)?(.*)$/,UGe=/^\/([a-zA-Z]:.*)$/,_Ge=/^\/unc\/(\.dot\/)?(.*)$/;CU=process.platform==="win32"?jGe:t=>t,UX=process.platform==="win32"?HGe:t=>t;fe.fromPortablePath=UX;fe.toPortablePath=CU});async function ZP(t,e){let r="0123456789abcdef";await t.mkdirPromise(e.indexPath,{recursive:!0});let s=[];for(let a of r)for(let n of r)s.push(t.mkdirPromise(t.pathUtils.join(e.indexPath,`${a}${n}`),{recursive:!0}));return await Promise.all(s),e.indexPath}async function _X(t,e,r,s,a){let n=t.pathUtils.normalize(e),c=r.pathUtils.normalize(s),f=[],p=[],{atime:h,mtime:E}=a.stableTime?{atime:dd,mtime:dd}:await r.lstatPromise(c);await t.mkdirpPromise(t.pathUtils.dirname(e),{utimes:[h,E]}),await wU(f,p,t,n,r,c,{...a,didParentExist:!0});for(let w of f)await w();await Promise.all(p.map(w=>w()))}async function wU(t,e,r,s,a,n,c){let f=c.didParentExist?await HX(r,s):null,p=await a.lstatPromise(n),{atime:h,mtime:E}=c.stableTime?{atime:dd,mtime:dd}:p,w;switch(!0){case p.isDirectory():w=await qGe(t,e,r,s,f,a,n,p,c);break;case p.isFile():w=await VGe(t,e,r,s,f,a,n,p,c);break;case p.isSymbolicLink():w=await JGe(t,e,r,s,f,a,n,p,c);break;default:throw new Error(`Unsupported file type (${p.mode})`)}return(c.linkStrategy?.type!=="HardlinkFromIndex"||!p.isFile())&&((w||f?.mtime?.getTime()!==E.getTime()||f?.atime?.getTime()!==h.getTime())&&(e.push(()=>r.lutimesPromise(s,h,E)),w=!0),(f===null||(f.mode&511)!==(p.mode&511))&&(e.push(()=>r.chmodPromise(s,p.mode&511)),w=!0)),w}async function HX(t,e){try{return await t.lstatPromise(e)}catch{return null}}async function qGe(t,e,r,s,a,n,c,f,p){if(a!==null&&!a.isDirectory())if(p.overwrite)t.push(async()=>r.removePromise(s)),a=null;else return!1;let h=!1;a===null&&(t.push(async()=>{try{await r.mkdirPromise(s,{mode:f.mode})}catch(S){if(S.code!=="EEXIST")throw S}}),h=!0);let E=await n.readdirPromise(c),w=p.didParentExist&&!a?{...p,didParentExist:!1}:p;if(p.stableSort)for(let S of E.sort())await wU(t,e,r,r.pathUtils.join(s,S),n,n.pathUtils.join(c,S),w)&&(h=!0);else(await Promise.all(E.map(async x=>{await wU(t,e,r,r.pathUtils.join(s,x),n,n.pathUtils.join(c,x),w)}))).some(x=>x)&&(h=!0);return h}async function WGe(t,e,r,s,a,n,c,f,p,h){let E=await n.checksumFilePromise(c,{algorithm:"sha1"}),w=420,S=f.mode&511,x=`${E}${S!==w?S.toString(8):""}`,I=r.pathUtils.join(h.indexPath,E.slice(0,2),`${x}.dat`),T;(le=>(le[le.Lock=0]="Lock",le[le.Rename=1]="Rename"))(T||={});let N=1,U=await HX(r,I);if(a){let ie=U&&a.dev===U.dev&&a.ino===U.ino,ue=U?.mtimeMs!==GGe;if(ie&&ue&&h.autoRepair&&(N=0,U=null),!ie)if(p.overwrite)t.push(async()=>r.removePromise(s)),a=null;else return!1}let W=!U&&N===1?`${I}.${Math.floor(Math.random()*4294967296).toString(16).padStart(8,"0")}`:null,ee=!1;return t.push(async()=>{if(!U&&(N===0&&await r.lockPromise(I,async()=>{let ie=await n.readFilePromise(c);await r.writeFilePromise(I,ie)}),N===1&&W)){let ie=await n.readFilePromise(c);await r.writeFilePromise(W,ie);try{await r.linkPromise(W,I)}catch(ue){if(ue.code==="EEXIST")ee=!0,await r.unlinkPromise(W);else throw ue}}a||await r.linkPromise(I,s)}),e.push(async()=>{U||(await r.lutimesPromise(I,dd,dd),S!==w&&await r.chmodPromise(I,S)),W&&!ee&&await r.unlinkPromise(W)}),!1}async function YGe(t,e,r,s,a,n,c,f,p){if(a!==null)if(p.overwrite)t.push(async()=>r.removePromise(s)),a=null;else return!1;return t.push(async()=>{let h=await n.readFilePromise(c);await r.writeFilePromise(s,h)}),!0}async function VGe(t,e,r,s,a,n,c,f,p){return p.linkStrategy?.type==="HardlinkFromIndex"?WGe(t,e,r,s,a,n,c,f,p,p.linkStrategy):YGe(t,e,r,s,a,n,c,f,p)}async function JGe(t,e,r,s,a,n,c,f,p){if(a!==null)if(p.overwrite)t.push(async()=>r.removePromise(s)),a=null;else return!1;return t.push(async()=>{await r.symlinkPromise(zP(r.pathUtils,await n.readlinkPromise(c)),s)}),!0}var dd,GGe,BU=Ze(()=>{el();dd=new Date(456789e3*1e3),GGe=dd.getTime()});function XP(t,e,r,s){let a=()=>{let n=r.shift();if(typeof n>"u")return null;let c=t.pathUtils.join(e,n);return Object.assign(t.statSync(c),{name:n,path:void 0})};return new N2(e,a,s)}var N2,jX=Ze(()=>{JP();N2=class{constructor(e,r,s={}){this.path=e;this.nextDirent=r;this.opts=s;this.closed=!1}throwIfClosed(){if(this.closed)throw gU()}async*[Symbol.asyncIterator](){try{let e;for(;(e=await this.read())!==null;)yield e}finally{await this.close()}}read(e){let r=this.readSync();return typeof e<"u"?e(null,r):Promise.resolve(r)}readSync(){return this.throwIfClosed(),this.nextDirent()}close(e){return this.closeSync(),typeof e<"u"?e(null):Promise.resolve()}closeSync(){this.throwIfClosed(),this.opts.onClose?.(),this.closed=!0}}});function GX(t,e){if(t!==e)throw new Error(`Invalid StatWatcher status: expected '${e}', got '${t}'`)}var qX,$P,WX=Ze(()=>{qX=Ie("events");IU();$P=class t extends qX.EventEmitter{constructor(r,s,{bigint:a=!1}={}){super();this.status="ready";this.changeListeners=new Map;this.startTimeout=null;this.fakeFs=r,this.path=s,this.bigint=a,this.lastStats=this.stat()}static create(r,s,a){let n=new t(r,s,a);return n.start(),n}start(){GX(this.status,"ready"),this.status="running",this.startTimeout=setTimeout(()=>{this.startTimeout=null,this.fakeFs.existsSync(this.path)||this.emit("change",this.lastStats,this.lastStats)},3)}stop(){GX(this.status,"running"),this.status="stopped",this.startTimeout!==null&&(clearTimeout(this.startTimeout),this.startTimeout=null),this.emit("stop")}stat(){try{return this.fakeFs.statSync(this.path,{bigint:this.bigint})}catch{let r=this.bigint?new iE:new nE;return KP(r)}}makeInterval(r){let s=setInterval(()=>{let a=this.stat(),n=this.lastStats;EU(a,n)||(this.lastStats=a,this.emit("change",a,n))},r.interval);return r.persistent?s:s.unref()}registerChangeListener(r,s){this.addListener("change",r),this.changeListeners.set(r,this.makeInterval(s))}unregisterChangeListener(r){this.removeListener("change",r);let s=this.changeListeners.get(r);typeof s<"u"&&clearInterval(s),this.changeListeners.delete(r)}unregisterAllChangeListeners(){for(let r of this.changeListeners.keys())this.unregisterChangeListener(r)}hasChangeListeners(){return this.changeListeners.size>0}ref(){for(let r of this.changeListeners.values())r.ref();return this}unref(){for(let r of this.changeListeners.values())r.unref();return this}}});function sE(t,e,r,s){let a,n,c,f;switch(typeof r){case"function":a=!1,n=!0,c=5007,f=r;break;default:({bigint:a=!1,persistent:n=!0,interval:c=5007}=r),f=s;break}let p=ex.get(t);typeof p>"u"&&ex.set(t,p=new Map);let h=p.get(e);return typeof h>"u"&&(h=$P.create(t,e,{bigint:a}),p.set(e,h)),h.registerChangeListener(f,{persistent:n,interval:c}),h}function md(t,e,r){let s=ex.get(t);if(typeof s>"u")return;let a=s.get(e);typeof a>"u"||(typeof r>"u"?a.unregisterAllChangeListeners():a.unregisterChangeListener(r),a.hasChangeListeners()||(a.stop(),s.delete(e)))}function yd(t){let e=ex.get(t);if(!(typeof e>"u"))for(let r of e.keys())md(t,r)}var ex,vU=Ze(()=>{WX();ex=new WeakMap});function KGe(t){let e=t.match(/\r?\n/g);if(e===null)return VX.EOL;let r=e.filter(a=>a===`\r
 `).length,s=e.length-r;return r>s?`\r
@@ -752,90 +752,89 @@ ${Bbt}
   ${G.prettyLocator(r,Ce.anchoredLocator)}`);let w=[],S=!1;if(c?.includes(":")){for(let Ce of s.workspaces)if(Ce.manifest.scripts.has(c)&&(S=!S,S===!1))break}for(let Ce of h){if(c&&!Ce.manifest.scripts.has(c)&&!S&&!(await In.getWorkspaceAccessibleBinaries(Ce)).has(c)){f(`Excluding ${Ce.relativeCwd} because it doesn't have a "${c}" script`);continue}if(!(c===r.env.npm_lifecycle_event&&Ce.cwd===a.cwd)){if(this.include.length>0&&!J1.default.isMatch(G.stringifyIdent(Ce.anchoredLocator),this.include)&&!J1.default.isMatch(Ce.relativeCwd,this.include)){f(`Excluding ${Ce.relativeCwd} because it doesn't match the --include filter`);continue}if(this.exclude.length>0&&(J1.default.isMatch(G.stringifyIdent(Ce.anchoredLocator),this.exclude)||J1.default.isMatch(Ce.relativeCwd,this.exclude))){f(`Excluding ${Ce.relativeCwd} because it matches the --exclude filter`);continue}if(this.publicOnly&&Ce.manifest.private===!0){f(`Excluding ${Ce.relativeCwd} because it's a private workspace and --no-private was set`);continue}w.push(Ce)}}if(this.dryRun)return 0;let x=this.verbose??(this.context.stdout.isTTY?1/0:0),I=x>0,T=x>1,N=this.parallel?this.jobs==="unlimited"?1/0:Number(this.jobs)||Math.ceil(fs.availableParallelism()/2):1,U=N===1?!1:this.parallel,W=U?this.interlaced:!0,ee=(0,ske.default)(N),ie=new Map,ue=new Set,le=0,me=null,pe=!1,Be=await Ot.start({configuration:r,stdout:this.context.stdout,includePrefix:!1},async Ce=>{let g=async(we,{commandIndex:ye})=>{if(pe)return-1;!U&&T&&ye>1&&Ce.reportSeparator();let Ae=Ybt(we,{configuration:r,label:I,commandIndex:ye}),[se,X]=ike(Ce,{prefix:Ae,interlaced:W}),[De,Te]=ike(Ce,{prefix:Ae,interlaced:W});try{T&&Ce.reportInfo(null,`${Ae?`${Ae} `:""}Process started`);let mt=Date.now(),j=await this.cli.run([this.commandName,...this.args],{cwd:we.cwd,stdout:se,stderr:De})||0;se.end(),De.end(),await X,await Te;let rt=Date.now();if(T){let Fe=r.get("enableTimers")?`, completed in ${he.pretty(r,rt-mt,he.Type.DURATION)}`:"";Ce.reportInfo(null,`${Ae?`${Ae} `:""}Process exited (exit code ${j})${Fe}`)}return j===130&&(pe=!0,me=j),j}catch(mt){throw se.end(),De.end(),await X,await Te,mt}};for(let we of w)ie.set(we.anchoredLocator.locatorHash,we);for(;ie.size>0&&!Ce.hasErrors();){let we=[];for(let[X,De]of ie){if(ue.has(De.anchoredDescriptor.descriptorHash))continue;let Te=!0;if(this.topological||this.topologicalDev){let mt=this.topologicalDev?new Map([...De.manifest.dependencies,...De.manifest.devDependencies]):De.manifest.dependencies;for(let j of mt.values()){let rt=s.tryWorkspaceByDescriptor(j);if(Te=rt===null||!ie.has(rt.anchoredLocator.locatorHash),!Te)break}}if(Te&&(ue.add(De.anchoredDescriptor.descriptorHash),we.push(ee(async()=>{let mt=await g(De,{commandIndex:++le});return ie.delete(X),ue.delete(De.anchoredDescriptor.descriptorHash),{workspace:De,exitCode:mt}})),!U))break}if(we.length===0){let X=Array.from(ie.values()).map(De=>G.prettyLocator(r,De.anchoredLocator)).join(", ");Ce.reportError(3,`Dependency cycle detected (${X})`);return}let ye=await Promise.all(we);ye.forEach(({workspace:X,exitCode:De})=>{De!==0&&Ce.reportError(0,`The command failed in workspace ${G.prettyLocator(r,X.anchoredLocator)} with exit code ${De}`)});let se=ye.map(X=>X.exitCode).find(X=>X!==0);(this.topological||this.topologicalDev)&&typeof se<"u"&&Ce.reportError(0,"The command failed for workspaces that are depended upon by other workspaces; can't satisfy the dependency graph")}});return me!==null?me:Be.exitCode()}};function ike(t,{prefix:e,interlaced:r}){let s=t.createStreamReporter(e),a=new je.DefaultStream;a.pipe(s,{end:!1}),a.on("finish",()=>{s.end()});let n=new Promise(f=>{s.on("finish",()=>{f(a.active)})});if(r)return[a,n];let c=new je.BufferStream;return c.pipe(a,{end:!1}),c.on("finish",()=>{a.end()}),[c,n]}function Ybt(t,{configuration:e,commandIndex:r,label:s}){if(!s)return null;let n=`[${G.stringifyIdent(t.anchoredLocator)}]:`,c=["#2E86AB","#A23B72","#F18F01","#C73E1D","#CCE2A3"],f=c[r%c.length];return he.pretty(e,n,f)}var Vbt={commands:[V1,K1]},Jbt=Vbt;var eC=()=>({modules:new Map([["@yarnpkg/cli",jv],["@yarnpkg/core",Hv],["@yarnpkg/fslib",M2],["@yarnpkg/libzip",uv],["@yarnpkg/parsers",Y2],["@yarnpkg/shell",dv],["clipanion",iB],["semver",Kbt],["typanion",ya],["@yarnpkg/plugin-essentials",cq],["@yarnpkg/plugin-compat",hq],["@yarnpkg/plugin-constraints",Qq],["@yarnpkg/plugin-dlx",Rq],["@yarnpkg/plugin-exec",Nq],["@yarnpkg/plugin-file",Lq],["@yarnpkg/plugin-git",lq],["@yarnpkg/plugin-github",_q],["@yarnpkg/plugin-http",Hq],["@yarnpkg/plugin-init",jq],["@yarnpkg/plugin-interactive-tools",UW],["@yarnpkg/plugin-jsr",HW],["@yarnpkg/plugin-link",jW],["@yarnpkg/plugin-nm",SY],["@yarnpkg/plugin-npm",SK],["@yarnpkg/plugin-npm-cli",FK],["@yarnpkg/plugin-pack",yV],["@yarnpkg/plugin-patch",HK],["@yarnpkg/plugin-pnp",pY],["@yarnpkg/plugin-pnpm",qK],["@yarnpkg/plugin-stage",ZK],["@yarnpkg/plugin-typescript",XK],["@yarnpkg/plugin-version",nz],["@yarnpkg/plugin-workspace-tools",iz]]),plugins:new Set(["@yarnpkg/plugin-essentials","@yarnpkg/plugin-compat","@yarnpkg/plugin-constraints","@yarnpkg/plugin-dlx","@yarnpkg/plugin-exec","@yarnpkg/plugin-file","@yarnpkg/plugin-git","@yarnpkg/plugin-github","@yarnpkg/plugin-http","@yarnpkg/plugin-init","@yarnpkg/plugin-interactive-tools","@yarnpkg/plugin-jsr","@yarnpkg/plugin-link","@yarnpkg/plugin-nm","@yarnpkg/plugin-npm","@yarnpkg/plugin-npm-cli","@yarnpkg/plugin-pack","@yarnpkg/plugin-patch","@yarnpkg/plugin-pnp","@yarnpkg/plugin-pnpm","@yarnpkg/plugin-stage","@yarnpkg/plugin-typescript","@yarnpkg/plugin-version","@yarnpkg/plugin-workspace-tools"])});function lke({cwd:t,pluginConfiguration:e}){let r=new Ia({binaryLabel:"Yarn Package Manager",binaryName:"yarn",binaryVersion:un??"<unknown>"});return Object.assign(r,{defaultContext:{...Ia.defaultContext,cwd:t,plugins:e,quiet:!1,stdin:process.stdin,stdout:process.stdout,stderr:process.stderr}})}function zbt(t){if(je.parseOptionalBoolean(process.env.YARN_IGNORE_NODE))return!0;let r=process.versions.node,s=">=18.12.0";if(Or.satisfiesWithPrereleases(r,s))return!0;let a=new nt(`This tool requires a Node version compatible with ${s} (got ${r}). Upgrade Node, or set \`YARN_IGNORE_NODE=1\` in your environment.`);return Ia.defaultContext.stdout.write(t.error(a)),!1}async function cke({selfPath:t,pluginConfiguration:e}){return await ze.find(fe.toPortablePath(process.cwd()),e,{strict:!1,usePathCheck:t})}function Zbt(t,e,{yarnPath:r}){if(!ce.existsSync(r))return t.error(new Error(`The "yarn-path" option has been set, but the specified location doesn't exist (${r}).`)),1;process.on("SIGINT",()=>{});let s={stdio:"inherit",env:{...process.env,YARN_IGNORE_PATH:"1"}};try{(0,oke.execFileSync)(process.execPath,[fe.fromPortablePath(r),...e],s)}catch(a){return a.status??1}return 0}function Xbt(t,e){let r=null,s=e;return e.length>=2&&e[0]==="--cwd"?(r=fe.toPortablePath(e[1]),s=e.slice(2)):e.length>=1&&e[0].startsWith("--cwd=")?(r=fe.toPortablePath(e[0].slice(6)),s=e.slice(1)):e[0]==="add"&&e[e.length-2]==="--cwd"&&(r=fe.toPortablePath(e[e.length-1]),s=e.slice(0,e.length-2)),t.defaultContext.cwd=r!==null?J.resolve(r):J.cwd(),s}function $bt(t,{configuration:e}){if(!e.get("enableTelemetry")||ake.isCI||!process.stdout.isTTY)return;ze.telemetry=new ZI(e,"puba9cdc10ec5790a2cf4969dd413a47270");let s=/^@yarnpkg\/plugin-(.*)$/;for(let a of e.plugins.keys())XI.has(a.match(s)?.[1]??"")&&ze.telemetry?.reportPluginName(a);t.binaryVersion&&ze.telemetry.reportVersion(t.binaryVersion)}function uke(t,{configuration:e}){for(let r of e.plugins.values())for(let s of r.commands||[])t.register(s)}async function ePt(t,e,{selfPath:r,pluginConfiguration:s}){if(!zbt(t))return 1;let a=await cke({selfPath:r,pluginConfiguration:s}),n=a.get("yarnPath"),c=a.get("ignorePath");if(n&&!c)return Zbt(t,e,{yarnPath:n});delete process.env.YARN_IGNORE_PATH;let f=Xbt(t,e);$bt(t,{configuration:a}),uke(t,{configuration:a});let p=t.process(f,t.defaultContext);return p.help||ze.telemetry?.reportCommandName(p.path.join(" ")),await t.run(p,t.defaultContext)}async function mde({cwd:t=J.cwd(),pluginConfiguration:e=eC()}={}){let r=lke({cwd:t,pluginConfiguration:e}),s=await cke({pluginConfiguration:e,selfPath:null});return uke(r,{configuration:s}),r}async function qT(t,{cwd:e=J.cwd(),selfPath:r,pluginConfiguration:s}){let a=lke({cwd:e,pluginConfiguration:s});function n(){Ia.defaultContext.stdout.write(`ERROR: Yarn is terminating due to an unexpected empty event loop.
 Please report this issue at https://github.com/yarnpkg/berry/issues.`)}process.once("beforeExit",n);try{process.exitCode=42,process.exitCode=await ePt(a,t,{selfPath:r,pluginConfiguration:s})}catch(c){Ia.defaultContext.stdout.write(a.error(c)),process.exitCode=1}finally{process.off("beforeExit",n),await ce.rmtempPromise()}}qT(process.argv.slice(2),{cwd:J.cwd(),selfPath:fe.toPortablePath(fe.resolve(process.argv[1])),pluginConfiguration:eC()});})();
 /**
-  @license
-  Copyright (c) 2015, Rebecca Turner
-
-  Permission to use, copy, modify, and/or distribute this software for any
-  purpose with or without fee is hereby granted, provided that the above
-  copyright notice and this permission notice appear in all copies.
-
-  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
-  FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-  PERFORMANCE OF THIS SOFTWARE.
+ * @license \
+ *   Copyright (c) 2015, Rebecca Turner
+ *
+ *   Permission to use, copy, modify, and/or distribute this software for any
+ *   purpose with or without fee is hereby granted, provided that the above
+ *   copyright notice and this permission notice appear in all copies.
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+ *   REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+ *   AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL,
+ *   DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
+ *   RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
+ *   CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+ *   CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 /**
-  @license
-  Copyright Node.js contributors. All rights reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
-*/
+ * @license \
+ *   Copyright Node.js contributors. All rights reserved.
+ *
+ *   Permission is hereby granted, free of charge, to any person obtaining a copy
+ *   of this software and associated documentation files (the "Software"), to
+ *   deal in the Software without restriction, including without limitation the
+ *   rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ *   sell copies of the Software, and to permit persons to whom the Software is
+ *   furnished to do so, subject to the following conditions:
+ *
+ *   The above copyright notice and this permission notice shall be included in
+ *   all copies or substantial portions of the Software.
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ *   DEALINGS IN THE SOFTWARE.
+ */
 /**
-  @license
-  The MIT License (MIT)
-
-  Copyright (c) 2014 Blake Embrey (hello@blakeembrey.com)
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to deal
-  in the Software without restriction, including without limitation the rights
-  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  THE SOFTWARE.
-*/
+ * @license \
+ *   The MIT License (MIT)
+ *
+ *   Copyright (c) 2014 Blake Embrey (hello@blakeembrey.com)
+ *
+ *   Permission is hereby granted, free of charge, to any person obtaining a copy
+ *   of this software and associated documentation files (the "Software"), to
+ *   deal in the Software without restriction, including without limitation the
+ *   rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ *   sell copies of the Software, and to permit persons to whom the Software is
+ *   furnished to do so, subject to the following conditions:
+ *
+ *   The above copyright notice and this permission notice shall be included in
+ *   all copies or substantial portions of the Software.
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ *   DEALINGS IN THE SOFTWARE.
+ */
 /**
-  @license
-  Copyright Joyent, Inc. and other Node contributors.
-
-  Permission is hereby granted, free of charge, to any person obtaining a
-  copy of this software and associated documentation files (the
-  "Software"), to deal in the Software without restriction, including
-  without limitation the rights to use, copy, modify, merge, publish,
-  distribute, sublicense, and/or sell copies of the Software, and to permit
-  persons to whom the Software is furnished to do so, subject to the
-  following conditions:
-
-  The above copyright notice and this permission notice shall be included
-  in all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-  NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-  USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+ * @license \
+ *   Copyright Joyent, Inc. and other Node contributors.
+ *
+ *   Permission is hereby granted, free of charge, to any person obtaining a copy
+ *   of this software and associated documentation files (the "Software"), to
+ *   deal in the Software without restriction, including without limitation the
+ *   rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ *   sell copies of the Software, and to permit persons to whom the Software is
+ *   furnished to do so, subject to the following conditions:
+ *
+ *   The above copyright notice and this permission notice shall be included in
+ *   all copies or substantial portions of the Software.
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ *   DEALINGS IN THE SOFTWARE.
+ */
 /*! Bundled license information:
 
 is-number/index.js:

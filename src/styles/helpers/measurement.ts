@@ -10,18 +10,18 @@ export const measurement = (value: string | IMeasurement, newVal?: number) => {
   let val;
   let unit: string;
   // For easlier type checking, pass through value if it's already converted.
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     // Modify value into object
     val = value.trim();
-    unit = val.replace(/^-?(0|[1-9]\d*)?([.][0-9]*)?/, ""); // not yet trimmed
+    unit = val.replace(/^-?(0|[1-9]\d*)?([.][0-9]*)?/, ''); // not yet trimmed
     val = val.substring(0, val.length - unit.length);
-    if (val === "-0") {
-      val = "0";
+    if (val === '-0') {
+      val = '0';
     }
     valParsed = Number(val);
     unit = unit.trim();
   } else {
-    if (typeof newVal === "number") {
+    if (typeof newVal === 'number') {
       // Setting new value for measurement
       valParsed = newVal;
       val = value.val;

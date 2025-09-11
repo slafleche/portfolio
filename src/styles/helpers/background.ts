@@ -1,5 +1,5 @@
-import { style } from "@vanilla-extract/css";
-import * as csstype from "csstype";
+import { style } from '@vanilla-extract/css';
+import * as csstype from 'csstype';
 
 export interface IBackground {
   color?: csstype.Property.BackgroundColor;
@@ -19,7 +19,7 @@ export const getBackgroundImage = (
     return undefined;
   }
 
-  if (image.startsWith("linear-gradient(")) {
+  if (image.startsWith('linear-gradient(')) {
     return image;
   }
 
@@ -30,7 +30,7 @@ export const getBackgroundImage = (
 export const backgroundHelper = (props: IBackground) => {
   const styles = {
     backgroundPosition: props.position || `50% 50%`,
-    backgroundRepeat: props.repeat || "no-repeat",
+    backgroundRepeat: props.repeat || 'no-repeat',
     backgroundImage: getBackgroundImage(props.image),
   } as any;
 
@@ -56,20 +56,20 @@ export const backgroundHelper = (props: IBackground) => {
 
 export const objectFitWithFallback = () => {
   return {
-    position: "absolute" as csstype.Property.Position,
+    position: 'absolute' as csstype.Property.Position,
     top: 0,
     right: 0,
     bottom: 0,
     left: 0,
-    margin: "auto",
-    height: "auto",
-    width: "100%",
+    margin: 'auto',
+    height: 'auto',
+    width: '100%',
     $nest: {
-      "@supports (object-fit: cover)": {
-        position: "relative !important",
-        objectFit: "cover" as csstype.Property.ObjectFit,
-        objectPosition: "center",
-        height: "100% !important",
+      '@supports (object-fit: cover)': {
+        position: 'relative !important',
+        objectFit: 'cover' as csstype.Property.ObjectFit,
+        objectPosition: 'center',
+        height: '100% !important',
       },
     },
   };
@@ -77,21 +77,21 @@ export const objectFitWithFallback = () => {
 
 export function fakeBackgroundFixed() {
   return {
-    content: "",
-    display: "block",
-    position: "fixed",
-    top: "0px",
-    left: "0px",
-    width: "100vw",
-    height: "100vh",
+    content: '',
+    display: 'block',
+    position: 'fixed',
+    top: '0px',
+    left: '0px',
+    width: '100vw',
+    height: '100vh',
   };
 }
 
 export function centeredBackground(image: csstype.Property.BackgroundImage) {
   return {
-    backgroundSize: "cover",
+    backgroundSize: 'cover',
     backgroundPosition: `50% 50%`,
-    backgroundRepeat: "no-repeat",
+    backgroundRepeat: 'no-repeat',
     backgroundImage: getBackgroundImage(image),
   };
 }

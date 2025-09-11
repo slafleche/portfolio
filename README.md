@@ -16,4 +16,5 @@
 ### Install
 
 - Run `yarn`
-- You need to run the `locale` function to build missing locale files from the src data. It will automatically run on `yarn dev`
+- You need to run the `locale` function to build missing locale files from the
+  src data. It will automatically run on `yarn dev`
