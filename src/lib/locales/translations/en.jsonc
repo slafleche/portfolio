@@ -1,12 +1,22 @@
 {
   "label": "English",
   "abbreviated-label": "EN",
-  "title": "Stéphane's Portfolio",
   "redirecting": "Redirecting...",
+  "title": "Front-End Developer | Stéphane L. Portfolio",
+  "description": "Stéphane L. builds reusable components, responsive experiences, and brand-faithful interfaces — elevating projects beyond the handoff between design and development.",
+
+  "hero": "Collaborating across design and development — lifting projects higher",
+  "hero-subtitle": "Front-end developer building reusable components, responsive experiences, and brand-faithful interfaces — catching UX issues early and elevating projects beyond the design-to-development handoff",
+
+  "split-dev_title": "What I Conceptualize",
+  "split-dev_content": "* Theming systems that scale\n* Component and UX patterns\n* Refinements that improve the design vision",
+
+  "split-design_title": "What I Deliver",
+  "split-design_content": "* Interfaces faithful to design\n* Responsive layouts across devices\n* Accessibility from the start",
 
   "about": "About",
   "href-about": "about",
-  "content-about": "## About - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
+  "content-about": "## About - I started my career as a **3D modeler**, which gave me a foundation in precision, attention to detail, and creating assets that balance both technical and visual requirements.\nThose same skills translate directly into my front-end work today: building UI components that are both **functional** and **aesthetically aligned** with your brand design. Over time, I’ve grown into a role where I naturally act as a **bridge between designers and developers**, ensuring both sides see their work realized in the final product.",
 
   "philosophy": "Philosophy",
   "href-philosophy": "philosophy",
@@ -16,7 +26,7 @@
   "href-case_study": "case_study",
   "content-case_study": "## Case_study - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
 
-  "clients": "Clients",
-  "href-clients": "clients",
-  "content-clients": "## Clients - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.",
+  "projects": "Projets",
+  "href-projects": "projets",
+  "content-projects": "## Projects I’ve been part of along the journey",
 }
