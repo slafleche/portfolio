@@ -4,8 +4,8 @@ import { LocaleProvider as BaseLocaleProvider } from './localeContext';
 import type { Locale } from '@/data/locales';
 
 export default function LocaleProvider({
-  locale,
-  children,
+	locale,
+	children,
 }: React.PropsWithChildren<{ locale: Locale }>) {
-  return <BaseLocaleProvider locale={locale}>{children}</BaseLocaleProvider>;
+	return <BaseLocaleProvider locale={locale}>{children}</BaseLocaleProvider>;
 }

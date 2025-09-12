@@ -30,14 +30,11 @@ export default [
     },
     plugins: { 'react-hooks': reactHooks }, // ✅ flat-config style
     rules: {
-      // React Hooks rules back on
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-
-      // your style prefs
       'array-element-newline': ['error', { minItems: 2 }],
+      'array-bracket-newline': ['error', { multiline: true }],
       'comma-dangle': ['error', 'always-multiline'],
-
       // keep noise down for now
       'no-unused-expressions': 'off',
     },

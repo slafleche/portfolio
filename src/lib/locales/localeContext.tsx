@@ -9,35 +9,35 @@ type Ctx = { locale: Locale };
 const Ctx = createContext<Ctx>({ locale: 'en' });
 
 export function LocaleProvider({
-  locale,
-  children,
+	locale,
+	children,
 }: React.PropsWithChildren<{ locale: Locale }>) {
-  const value = useMemo(() => ({ locale }), [locale]);
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+	const value = useMemo(() => ({ locale }), [locale]);
+	return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
 // Overloads: default returns `Locale`; with `{ withLabel: true }` returns `{ locale, label }`.
 export function useLocale(): Locale;
 export function useLocale(options: { withLabel: true }): {
-  locale: Locale;
-  label: string;
-  root: string;
+	locale: Locale;
+	label: string;
+	root: string;
 };
 export function useLocale(options: { withRoot: true }): {
-  locale: Locale;
-  root: string;
+	locale: Locale;
+	root: string;
 };
 export function useLocale(options?: {
-  withLabel?: boolean;
-  withRoot?: boolean;
+	withLabel?: boolean;
+	withRoot?: boolean;
 }) {
-  const locale = useContext(Ctx).locale;
-  const root = `/${locale}`;
-  if (options?.withLabel) {
-    return { locale, label: LOCALE_LABELS[locale], root } as const;
-  }
-  if (options?.withRoot) {
-    return { locale, root } as const;
-  }
-  return locale;
+	const locale = useContext(Ctx).locale;
+	const root = `/${locale}`;
+	if (options?.withLabel) {
+		return { locale, label: LOCALE_LABELS[locale], root } as const;
+	}
+	if (options?.withRoot) {
+		return { locale, root } as const;
+	}
+	return locale;
 }
