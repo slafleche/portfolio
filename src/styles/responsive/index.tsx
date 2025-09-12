@@ -15,6 +15,8 @@ export const useIsFullwidth = () => useMediaQuery(mqStrings.fullSize);
 export const useIsCompact = () => useMediaQuery(mqStrings.compact);
 export const useIsCompressed = () => useMediaQuery(mqStrings.compressed);
 
+export type IMode = 'fullSize' | 'compact' | 'compressed' | undefined;
+
 // 3) Aggregate when you need multiple flags at once
 export const useMedia = () =>
 	useMediaFromMap({
