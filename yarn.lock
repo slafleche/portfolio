@@ -6683,6 +6683,7 @@ __metadata:
     react-markdown: "npm:^10.1.0"
     react-router-dom: "npm:^7.8.2"
     remark-gfm: "npm:^4.0.1"
+    sharp: "npm:^0.34.3"
     strip-json-comments: "npm:^3.1.1"
     typescript: "npm:^5.9.2"
     typescript-eslint: "npm:^8.42.0"
