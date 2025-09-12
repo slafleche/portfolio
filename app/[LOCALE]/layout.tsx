@@ -1,12 +1,12 @@
 import { ReactNode, use } from 'react';
-import { resolveLocale } from '@/lib/locales/locale';
+import type { Metadata } from 'next';
+import { resolveLocale, getTranslator } from '@/lib/locales/locale';
 import LocaleProvider from '@/lib/locales/LocaleProvider';
 import Menu from '@/components/Menu';
-import SetHtmlLang from '@/components/SetHtmlLang';
 
 interface SegmentLayoutProps {
   children: ReactNode;
-  params: Promise<{ LOCALE?: string }> | { LOCALE?: string };
+  params: any;
 }
 
 export default function LocaleSegmentLayout({
@@ -14,17 +14,30 @@ export default function LocaleSegmentLayout({
   params,
 }: SegmentLayoutProps) {
   const resolved =
-    typeof (params as any)?.then === 'function'
-      ? use(params as Promise<{ LOCALE?: string }>)
-      : (params as { LOCALE?: string });
+    typeof (params as any)?.then === 'function' ? use(params as Promise<any>) : (params as any);
 
   const locale = resolveLocale(resolved?.LOCALE);
 
   return (
     <LocaleProvider locale={locale}>
-      <SetHtmlLang />
       <Menu />
       {children}
     </LocaleProvider>
   );
+}
+
+export function generateMetadata({ params }: { params: any }): Metadata {
+  const locale = resolveLocale(params?.LOCALE);
+  const t = getTranslator(locale);
+  const title = t('title' as any);
+  const description = t('description' as any);
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+    },
+  };
 }
