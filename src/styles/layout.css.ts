@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { globalMediaQueryStyles } from './helpers/mediaQueries';
+import { globalMediaQueryStyles } from './responsive/mediaQueries';
 import { paddings } from './helpers/spacing';
 import { layoutVars } from './layoutVars.css';
 

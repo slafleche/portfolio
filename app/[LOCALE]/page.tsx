@@ -3,6 +3,7 @@ import { useT } from '@/lib/locales/useT';
 import * as s from '@/styles/components/userContent.css';
 import ReactMarkdown from 'react-markdown';
 import Card from '../../src/components/Card';
+import ImageByName from '../../src/components/ImageByName';
 
 export default function HomePage() {
   const t = useT();
@@ -16,7 +17,11 @@ export default function HomePage() {
           <ReactMarkdown>{t('split-dev_content')}</ReactMarkdown>
         </Card>
 
-        <Photo/>
+        <ImageByName
+          name="portrait"
+          title={t('image-portrait-title')}
+          alt={t('image-portrait-alt')}
+        />
 
         <Card title={t('split-design_title')}>
           <ReactMarkdown>{t('split-design_content')}</ReactMarkdown>
