@@ -1,17 +1,23 @@
 'use client';
 import * as s from '@/styles/components/card.css.ts';
 import type { ReactNode } from 'react';
+import Heading, { IHeadingDepth } from './Heading';
+import clsx from 'clsx';
 
-type Props = {
+type Props = IHeadingDepth & {
   title?: ReactNode;
   children?: ReactNode;
-  level?: '3' | '4' | '5';
+  className?: string;
 };
 
-export default function Card({ title, children }: Props) {
+export default function Card({ title, depth = 3, className, children }: Props) {
   return (
-    <div className={s.card}>
-      {title && <h3>{title}</h3>}
+    <div className={clsx(s.card, className)}>
+      {title && (
+        <Heading className={s.title} depth={depth}>
+          {title}
+        </Heading>
+      )}
       {children}
     </div>
   );

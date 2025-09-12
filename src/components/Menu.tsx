@@ -15,7 +15,7 @@ export default function Menu() {
 
   return (
     <>
-      <div className={s.header}>
+      <div className={s.menu}>
         <nav className={s.nav}>
           <ul className={s.list}>
             <li className={s.item}>
@@ -36,7 +36,7 @@ export default function Menu() {
             </li>
 
             <li className={s.item}>
-              <Link href={`#${t('href-clients')}`}>{t('clients')}</Link>
+              <Link href={`#${t('href-projects')}`}>{t('projects')}</Link>
             </li>
 
             <li className={s.headerNavItem}>
