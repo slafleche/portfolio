@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState, type PropsWithChildren } from 'react';
-import type { IMediaQueryProps } from '@/styles/responsive/mediaQueries';
+import { useEffect, useMemo, useState } from 'react';
+import type { IMediaQueryProps } from './mediaQueries';
 
 // ---------- Query shaping ----------
 export function toQueryString(q: IMediaQueryProps): string {
@@ -12,13 +12,13 @@ export function toQueryString(q: IMediaQueryProps): string {
 
 export function queriesToStrings<
   T extends Record<string, IMediaQueryProps | string>,
->(queries: T) {
+>(queries: T): { [K in keyof T]: string } {
   return Object.fromEntries(
     Object.entries(queries).map(([k, v]) => [
       k,
       typeof v === 'string' ? v : toQueryString(v),
     ]),
-  ) as Record<keyof T & string, string>;
+  ) as { [K in keyof T]: string };
 }
 
 // ---------- Core hooks ----------
@@ -38,23 +38,28 @@ export function useMediaQuery(queryString: string) {
   return matches;
 }
 
-/**
- * Aggregate hook for a map of query strings (e.g. { fullSize, compact,
- * compressed }). Avoids calling hooks in a loop by managing all listeners
- * inside one effect.
- */
-// Aggregate hook (ESLint-safe: no hooks-in-loops, no missing deps)
+// Aggregate hook with guarded updates to avoid loops
 export function useMediaFromMap<T extends Record<string, string>>(strings: T) {
   type K = keyof T & string;
 
-  // Precompute a stable, sorted list of [key, queryString] pairs
+  const shallowEqual = (
+    a: Record<K, boolean | undefined>,
+    b: Record<K, boolean | undefined>,
+  ) => {
+    const ak = Object.keys(a) as K[];
+    const bk = Object.keys(b) as K[];
+    if (ak.length !== bk.length) return false;
+    for (const k of ak) if (a[k] !== b[k]) return false;
+    return true;
+  };
+
+  // Stable, sorted list of [key, queryString]
   const entries = useMemo(() => {
     const e = Object.entries(strings) as [K, string][];
     e.sort((a, b) => a[0].localeCompare(b[0]));
     return e;
   }, [strings]);
 
-  // State for all matches (server = empty; filled in effect)
   const [matches, setMatches] = useState<Record<K, boolean | undefined>>(
     () => Object.create(null) as Record<K, boolean | undefined>,
   );
@@ -62,32 +67,35 @@ export function useMediaFromMap<T extends Record<string, string>>(strings: T) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Build MediaQueryList objects from the memoized entries
     const mqls = entries.map(([k, qs]) => [k, window.matchMedia(qs)] as const);
 
-    // Initial snapshot
-    setMatches(
-      Object.fromEntries(mqls.map(([k, mql]) => [k, mql.matches])) as Record<
-        K,
-        boolean | undefined
-      >,
-    );
+    // Initial snapshot — only set if changed
+    const initial = Object.fromEntries(
+      mqls.map(([k, mql]) => [k, mql.matches]),
+    ) as Record<K, boolean | undefined>;
 
-    // Subscribe to changes
+    setMatches((prev) => (shallowEqual(prev, initial) ? prev : initial));
+
+    // Subscribe with guarded setState
     const handlers = mqls.map(([k, mql]) => {
       const onChange = () =>
-        setMatches((prev) => ({ ...prev, [k]: mql.matches }));
+        setMatches((prev) => {
+          const next = { ...prev, [k]: mql.matches } as Record<
+            K,
+            boolean | undefined
+          >;
+          return shallowEqual(prev, next) ? prev : next;
+        });
       mql.addEventListener?.('change', onChange);
       return [mql, onChange] as const;
     });
 
-    // Cleanup
     return () => {
-      handlers.forEach(([mql, onChange]) =>
-        mql.removeEventListener?.('change', onChange),
-      );
+      for (const [mql, onChange] of handlers) {
+        mql.removeEventListener?.('change', onChange);
+      }
     };
-  }, [entries]); // ✅ depends only on entries (derived from `strings`)
+  }, [entries]);
 
   return matches as { [P in keyof T]: boolean | undefined };
 }
@@ -103,15 +111,4 @@ export function makeClientFns<T extends Record<string, string>>(strings: T) {
         : false;
   });
   return out;
-}
-
-// ---------- Generic component wrapper (optional) ----------
-/** Usage: <MatchMedia query={mqStrings.fullSize}>…</MatchMedia> */
-export function MatchMedia({
-  query,
-  children,
-}: PropsWithChildren<{ query: string }>) {
-  const match = useMediaQuery(query);
-  if (match !== true) return null; // null on server or non-match
-  return <>{children}</>;
 }
