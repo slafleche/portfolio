@@ -1,55 +1,44 @@
-import { ReactNode, use } from 'react';
+import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { resolveLocale, getTranslator } from '@/lib/locales/locale';
-import {
-	ResponsiveProvider,
-	useResponsive,
-} from '@/lib/responsive/ResponsiveProvider';
+import { ResponsiveProvider } from '@/lib/responsive/ResponsiveProvider';
 import LocaleProvider from '@/lib/locales/LocaleProvider';
 import Menu from '@/components/Menu';
 
 interface SegmentLayoutProps {
-	children: ReactNode;
-	params: any;
+  children: ReactNode;
+  params: Promise<{ LOCALE: string }>;
 }
 
-export default function LocaleSegmentLayout({
-	children,
-	params,
+export default async function LocaleSegmentLayout({
+  children,
+  params,
 }: SegmentLayoutProps) {
-	const resolved =
-		typeof (params as any)?.then === 'function'
-			? use(params as Promise<any>)
-			: (params as any);
+  // ✅ Next 15: params is a Promise — await it in server component
+  const { LOCALE } = await params;
+  const locale = resolveLocale(LOCALE);
 
-	const locale = resolveLocale(resolved?.LOCALE);
-
-	// Test
-	const { mode } = useResponsive(); // 'fullSize' | 'compact' | 'compressed' | undefined
-
-	return (
-		<LocaleProvider locale={locale}>
-			<ResponsiveProvider>
-				<Menu />
-				<div data-mode={mode ?? '—'}>{mode ?? '—'}</div>
-				{children}
-			</ResponsiveProvider>
-		</LocaleProvider>
-	);
+  return (
+    <LocaleProvider locale={locale}>
+      <ResponsiveProvider>
+        <Menu />
+        {children}
+      </ResponsiveProvider>
+    </LocaleProvider>
+  );
 }
 
-export function generateMetadata({ params }: { params: any }): Metadata {
-	const locale = resolveLocale(params?.LOCALE);
-	const t = getTranslator(locale);
-	const title = t('title' as any);
-	const description = t('description' as any);
-	return {
-		title,
-		description,
-		openGraph: {
-			title,
-			description,
-			type: 'website',
-		},
-	};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ LOCALE: string }>;
+}): Promise<Metadata> {
+  // ✅ Also await params here
+  const { LOCALE } = await params;
+  const locale = resolveLocale(LOCALE);
+  const t = getTranslator(locale);
+  return {
+    title: t('title' as const),
+    description: t('description' as const),
+  };
 }
