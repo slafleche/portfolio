@@ -68,11 +68,7 @@ function unitTangentAtX(cx, cy, rx, ry, x) {
 	let tx = -a * sinT,
 		ty = b * cosT;
 	const L = Math.hypot(tx, ty) || 1;
-	return [
-tx / L,
-ty / L,
-y,
-];
+	return [tx / L, ty / L, y];
 }
 
 /** Return a SINGLE-PATH "d" for the nav arch + optional OUTWARD bulge */
@@ -116,16 +112,8 @@ export function archNavPath(params) {
 	const half = Math.max(8, Math.min(bulgeWidth / 2, rx - 2, W / 2 - 2));
 	const xR = cx + half,
 		xL = cx - half;
-	const [
-tRx,
-tRy,
-yR,
-] = unitTangentAtX(cx, cy, rx, ryUsed, xR);
-	const [
-_tLx,
-_tLy,
-yL,
-] = unitTangentAtX(cx, cy, rx, ryUsed, xL);
+	const [tRx, tRy, yR] = unitTangentAtX(cx, cy, rx, ryUsed, xR);
+	const [_tLx, _tLy, yL] = unitTangentAtX(cx, cy, rx, ryUsed, xL);
 	// mirror the tangent horizontally for the left side to stay symmetric
 	let tLx = -tRx,
 		tLy = tRy;

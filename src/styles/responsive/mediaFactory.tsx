@@ -1,10 +1,4 @@
-import {
-	useEffect,
-	useMemo,
-	useState,
-	type FC,
-	type PropsWithChildren,
-} from 'react';
+import { useEffect, useMemo, useState, type PropsWithChildren } from 'react';
 import type { IMediaQueryProps } from '@/styles/responsive/mediaQueries';
 
 // ---------- Query shaping ----------
@@ -20,10 +14,7 @@ export function queriesToStrings<
 	T extends Record<string, IMediaQueryProps | string>,
 >(queries: T) {
 	return Object.fromEntries(
-		Object.entries(queries).map(([
-k,
-v,
-]) => [
+		Object.entries(queries).map(([k, v]) => [
 			k,
 			typeof v === 'string' ? v : toQueryString(v),
 		]),
@@ -33,10 +24,7 @@ v,
 // ---------- Core hooks ----------
 /** SSR-safe: undefined on server, boolean on client; subscribes to changes. */
 export function useMediaQuery(queryString: string) {
-	const [
-matches,
-setMatches,
-] = useState<boolean | undefined>(undefined);
+	const [matches, setMatches] = useState<boolean | undefined>(undefined);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -67,10 +55,7 @@ export function useMediaFromMap<T extends Record<string, string>>(strings: T) {
 	}, [strings]);
 
 	// State for all matches (server = empty; filled in effect)
-	const [
-matches,
-setMatches,
-] = useState<Record<K, boolean | undefined>>(
+	const [matches, setMatches] = useState<Record<K, boolean | undefined>>(
 		{} as any,
 	);
 
@@ -78,48 +63,27 @@ setMatches,
 		if (typeof window === 'undefined') return;
 
 		// Build MediaQueryList objects from the memoized entries
-		const mqls = entries.map(([
-k,
-qs,
-]) => [
-k,
-window.matchMedia(qs),
-] as const);
+		const mqls = entries.map(([k, qs]) => [k, window.matchMedia(qs)] as const);
 
 		// Initial snapshot
 		setMatches(
-			Object.fromEntries(mqls.map(([
-k,
-mql,
-]) => [
-k,
-mql.matches,
-])) as Record<
+			Object.fromEntries(mqls.map(([k, mql]) => [k, mql.matches])) as Record<
 				K,
 				boolean | undefined
 			>,
 		);
 
 		// Subscribe to changes
-		const handlers = mqls.map(([
-k,
-mql,
-]) => {
+		const handlers = mqls.map(([k, mql]) => {
 			const onChange = () =>
 				setMatches((prev) => ({ ...prev, [k]: mql.matches }));
 			mql.addEventListener?.('change', onChange);
-			return [
-mql,
-onChange,
-] as const;
+			return [mql, onChange] as const;
 		});
 
 		// Cleanup
 		return () => {
-			handlers.forEach(([
-mql,
-onChange,
-]) =>
+			handlers.forEach(([mql, onChange]) =>
 				mql.removeEventListener?.('change', onChange),
 			);
 		};
@@ -143,11 +107,11 @@ export function makeClientFns<T extends Record<string, string>>(strings: T) {
 
 // ---------- Generic component wrapper (optional) ----------
 /** Usage: <MatchMedia query={mqStrings.fullSize}>…</MatchMedia> */
-export const MatchMedia: FC<PropsWithChildren<{ query: string }>> = ({
+export function MatchMedia({
 	query,
 	children,
-}) => {
+}: PropsWithChildren<{ query: string }>) {
 	const match = useMediaQuery(query);
 	if (match !== true) return null; // null on server or non-match
 	return <>{children}</>;
-};
+}

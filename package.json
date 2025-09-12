@@ -31,6 +31,7 @@
 		"chokidar": "^3.5.1",
 		"esbuild": "^0.25.9",
 		"eslint": "^9.35.0",
+		"eslint-config-prettier": "^10.1.8",
 		"eslint-config-standard": "^17.1.0",
 		"eslint-plugin-import": "^2.29.1",
 		"eslint-plugin-node": "^11.1.0",
@@ -55,16 +56,15 @@
 		"prebuild": "MINIFY=1 yarn locales && yarn format:img",
 		"dev": "next dev",
 		"build": "next build",
-		"format": "prettier --write .",
-		"format:check": "prettier --check .",
+		"format:code": "prettier --write .",
+		"lint": "eslint .",
+		"lint:fix": "eslint --fix .",
 		"dev:open": "yarn dev & wait-on http://localhost:3000 && open-cli http://localhost:3000",
 		"dev:all": "yarn locales && yarn format:img && yarn dev:open",
 		"format:svg": "prettier --no-config --parser html \"src/assets/**/*.{svg,SVG}\" --write",
 		"svg:clean": "yarn svgo && yarn format:svg && yarn format:img",
 		"svgo": "node scripts/optimizeSvgs.mjs --write",
-		"format:img": "node scripts/generateImages.mjs",
-		"lint": "eslint .",
-		"lint:fix": "eslint --fix ."
+		"format:img": "node scripts/generateImages.mjs"
 	},
 	"packageManager": "yarn@4.9.4"
 }

@@ -1,42 +1,49 @@
 /** @type {import('eslint').FlatConfig.Config[]} */
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
+import react from 'eslint-plugin-react';
+import eslintConfigPrettier from 'eslint-config-prettier'; // ⬅ add this
 
 export default [
-  // ignore build/generated
-  {
-    ignores: [
-      'node_modules/**',
-      '.next/**',
-      'dist/**',
-      'build/**',
-      'public/**',
-      'src/data/locales.gen.ts',
-    ],
-  },
+	// ignores etc…
+	{
+		ignores: [
+			'node_modules/**',
+			'.next/**',
+			'dist/**',
+			'build/**',
+			'public/**',
+			'src/data/locales.gen.ts',
+		],
+	},
 
-  // lint your code
-  {
-    files: [
-      'app/**/*.{js,ts,tsx}',
-      'src/**/*.{js,ts,tsx}',
-      'scripts/**/*.{js,mjs,ts}',
-    ],
-    languageOptions: {
-      parser: tseslint.parser,
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      parserOptions: { ecmaFeatures: { jsx: true } },
-    },
-    plugins: { 'react-hooks': reactHooks }, // ✅ flat-config style
-    rules: {
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-      'array-element-newline': ['error', { minItems: 2 }],
-      'array-bracket-newline': ['error', { multiline: true }],
-      'comma-dangle': ['error', 'always-multiline'],
-      // keep noise down for now
-      'no-unused-expressions': 'off',
-    },
-  },
+	// Your main TypeScript / JS config (example; keep what you already had)
+	...tseslint.configs.recommendedTypeChecked, // if you're already using this
+	{
+		files: ['**/*.{ts,tsx,js,jsx}'],
+		languageOptions: {
+			parserOptions: {
+				project: true,
+				ecmaVersion: 'latest',
+				sourceType: 'module',
+			},
+		},
+		plugins: {
+			'react-hooks': reactHooks,
+			react,
+		},
+		rules: {
+			// Let Prettier handle indentation & wrapping:
+			indent: 'off',
+			'react/jsx-indent': 'off',
+			'react/jsx-indent-props': 'off',
+			'react/jsx-uses-react': 'off',
+			'react/react-in-jsx-scope': 'off',
+			'react-hooks/rules-of-hooks': 'error',
+			'react-hooks/exhaustive-deps': 'warn',
+		},
+	},
+
+	// ⬇ MUST be last: disables any remaining conflicting stylistic rules
+	eslintConfigPrettier,
 ];
