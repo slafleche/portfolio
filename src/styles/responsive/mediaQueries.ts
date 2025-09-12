@@ -67,6 +67,18 @@ const globalMediaQueries = {
   } as IMediaQueryProps,
 };
 
+// Example use:
+// const exampleStyles = {
+//   label: style({
+//     fontSize: "0.8em",
+//     ...mediaQueryStyle({
+//       props: mediaQueries.smallerText,
+//       styles: {
+//         fontSize: "0.5em",
+//       },
+//     }),
+//   }),
+// };
 export const mediaQueryStyle = (
   queryAndStyles: IMediaQuery | IMediaQueries,
   debug = false,
