@@ -8,15 +8,9 @@ export const userContent = style({});
 
 // child elements
 globalStyle(`${userContent} h1`, {
-  fontSize: '2rem',
-  
+	fontSize: '2rem',
 });
 
-globalStyle(`${userContent} h2`, {
-  
-  
-});
+globalStyle(`${userContent} h2`, {});
 
-globalStyle(`${userContent} p`, {
-  
-});
+globalStyle(`${userContent} p`, {});

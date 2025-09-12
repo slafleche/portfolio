@@ -45,6 +45,7 @@ src/data/*
 !src/data/.gitkeep
 public/images/*
 
+
 # -----------------------
 # Local env files
 # -----------------------

@@ -1,16 +1,16 @@
 /* vanilla-extract-css-ns:src/styles/styles.css.ts.vanilla.css?source=LnN0eWxlc19jb250YWluZXJfX3h3b2tmaDAgewogIGRpc3BsYXk6IGZsZXg7CiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjsKICBhbGlnbi1pdGVtczogY2VudGVyOwogIGp1c3RpZnktY29udGVudDogY2VudGVyOwogIG1pbi1oZWlnaHQ6IDEwMHZoOwogIGZvbnQtZmFtaWx5OiBzYW5zLXNlcmlmOwogIGJhY2tncm91bmQ6ICNmNGY0ZjQ7Cn0KLnN0eWxlc190aXRsZV9feHdva2ZoMSB7CiAgY29sb3I6ICMzMzM7CiAgZm9udC1zaXplOiAzcmVtOwogIG1hcmdpbi1ib3R0b206IDFyZW07Cn0= */
 .styles_container__xwokfh0 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  font-family: sans-serif;
-  background: #f4f4f4;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	font-family: sans-serif;
+	background: #f4f4f4;
 }
 .styles_title__xwokfh1 {
-  color: #333;
-  font-size: 3rem;
-  margin-bottom: 1rem;
+	color: #333;
+	font-size: 3rem;
+	margin-bottom: 1rem;
 }
 /*# sourceMappingURL=main.css.map */

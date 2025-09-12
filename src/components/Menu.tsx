@@ -8,49 +8,49 @@ import { useLocale } from '@/lib/locales/localeContext';
 import { AVAILABLE_LOCALES, TRANSLATIONS } from '@/data/locales';
 
 export default function Menu() {
-  const t = useT();
-  const { locale, root } = useLocale({ withLabel: true });
+	const t = useT();
+	const { locale, root } = useLocale({ withLabel: true });
 
-  // Todo add active link state and data-prop
+	// Todo add active link state and data-prop
 
-  return (
-    <>
-      <div className={s.menu}>
-        <nav className={s.nav}>
-          <ul className={s.list}>
-            <li className={s.item}>
-              <Link href={`#${t('href-about')}`}>{t('about')}</Link>
-            </li>
-            <li className={s.item}>
-              <Link href={`#${t('href-philosophy')}`}>{t('philosophy')}</Link>
-            </li>
+	return (
+		<>
+			<div className={s.menu}>
+				<nav className={s.nav}>
+					<ul className={s.list}>
+						<li className={s.item}>
+							<Link href={`#${t('href-about')}`}>{t('about')}</Link>
+						</li>
+						<li className={s.item}>
+							<Link href={`#${t('href-philosophy')}`}>{t('philosophy')}</Link>
+						</li>
 
-            <li className={s.logo}>
-              <Link href={root} className={s.logoLink} prefetch={false}>
-                <Logo className={s.logo} />
-              </Link>
-            </li>
+						<li className={s.logo}>
+							<Link href={root} className={s.logoLink} prefetch={false}>
+								<Logo className={s.logo} />
+							</Link>
+						</li>
 
-            <li className={s.item}>
-              <Link href={`#${t('href-case_study')}`}>{t('case_study')}</Link>
-            </li>
+						<li className={s.item}>
+							<Link href={`#${t('href-case_study')}`}>{t('case_study')}</Link>
+						</li>
 
-            <li className={s.item}>
-              <Link href={`#${t('href-projects')}`}>{t('projects')}</Link>
-            </li>
+						<li className={s.item}>
+							<Link href={`#${t('href-projects')}`}>{t('projects')}</Link>
+						</li>
 
-            <li className={s.headerNavItem}>
-              {AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
-                <Link key={l} href={`/${l}`} className={s.link} hrefLang={l}>
-                  {TRANSLATIONS[l]['abbreviated-label']}
-                </Link>
-              ))}
-            </li>
-          </ul>
-        </nav>
-      </div>
+						<li className={s.headerNavItem}>
+							{AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
+								<Link key={l} href={`/${l}`} className={s.link} hrefLang={l}>
+									{TRANSLATIONS[l]['abbreviated-label']}
+								</Link>
+							))}
+						</li>
+					</ul>
+				</nav>
+			</div>
 
-      {/* 
+			{/* 
         <div className={s.nav}>
           {locales
             .filter((l) => l !== current) // only other locales (your rule)
@@ -70,6 +70,6 @@ export default function Menu() {
             {LOCALE_LABELS[current]}
           </span>
           */}
-    </>
-  );
+		</>
+	);
 }
