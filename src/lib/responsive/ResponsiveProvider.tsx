@@ -6,15 +6,13 @@ import {
 	useMemo,
 	type PropsWithChildren,
 } from 'react';
-import { useMedia } from '../../styles/responsive';
-
-type Mode = 'fullSize' | 'compact' | 'compressed' | undefined;
+import { IMode, useMedia } from '../../styles/responsive';
 
 export type ResponsiveState = {
 	fullSize?: boolean;
 	compact?: boolean;
 	compressed?: boolean;
-	mode: Mode;
+	mode?: IMode;
 };
 
 const defaultState: ResponsiveState = {
@@ -27,15 +25,19 @@ const defaultState: ResponsiveState = {
 const ResponsiveContext = createContext<ResponsiveState>(defaultState);
 
 export function ResponsiveProvider({ children }: PropsWithChildren) {
-	const { fullSize, compact, compressed } = useMedia(); // uses our aggregate hook (SSR-safe: undefined on server)
+	const { fullSize, compact, compressed } = useMedia();
 
-	const mode: Mode = fullSize
-		? 'fullSize'
-		: compact
-			? 'compact'
-			: compressed
-				? 'compressed'
-				: undefined;
+	// readable, Prettier-friendly (no nested ternaries)
+	let mode: IMode | undefined;
+	if (fullSize) {
+		mode = 'fullSize';
+	} else if (compact) {
+		mode = 'compact';
+	} else if (compressed) {
+		mode = 'compressed';
+	} else {
+		mode = undefined;
+	}
 
 	const value = useMemo(
 		() => ({ fullSize, compact, compressed, mode }),
@@ -55,5 +57,5 @@ mode,
 }
 
 export function useResponsive() {
-	return useContext(ResponsiveContext); // returns defaultState if no provider is mounted
+	return useContext(ResponsiveContext);
 }
