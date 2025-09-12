@@ -28,5 +28,7 @@
 
   "projects": "Projets",
   "href-projects": "projets",
-  "content-projects": "## Quelques clients avec qui j’ai collaboré.",
+  "content-projects": "## Quelques clients avec qui j’ai collaboré.", 
+  "image-portrait-title": "Portrait de Stéphane L.",
+  "image-portrait-alt": "Une photo de Stéphane L. en train de travailler, avec un arrière-plan flou.",  
 }
