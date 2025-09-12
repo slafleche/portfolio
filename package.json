@@ -50,21 +50,27 @@
 		"typescript-eslint": "^8.42.0",
 		"wait-on": "^7.0.1"
 	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx,mjs}": [
+			"prettier --write",
+			"eslint --fix"
+		]
+	},
 	"scripts": {
 		"locales": "node scripts/generateLocales.mjs",
-		"predev": "yarn locales && yarn format:img",
-		"prebuild": "MINIFY=1 yarn locales && yarn format:img",
-		"dev": "next dev",
-		"build": "next build",
-		"format:code": "prettier --write .",
-		"lint": "eslint .",
-		"lint:fix": "eslint --fix .",
 		"dev:open": "yarn dev & wait-on http://localhost:3000 && open-cli http://localhost:3000",
 		"dev:all": "yarn locales && yarn format:img && yarn dev:open",
+		"predev": "yarn locales && yarn format:img",
+		"dev": "next dev",
+		"prebuild": "MINIFY=1 && yarn yarn locales && yarn format:img",
+		"build": "next build",
+		"lint": "eslint .",
+		"lint:fix": "eslint --fix .",
+		"format:code": "prettier --write .",
 		"format:svg": "prettier --no-config --parser html \"src/assets/**/*.{svg,SVG}\" --write",
+		"format:img": "node scripts/generateImages.mjs",
 		"svg:clean": "yarn svgo && yarn format:svg && yarn format:img",
-		"svgo": "node scripts/optimizeSvgs.mjs --write",
-		"format:img": "node scripts/generateImages.mjs"
+		"svgo": "node scripts/optimizeSvgs.mjs --write"
 	},
 	"packageManager": "yarn@4.9.4"
 }
