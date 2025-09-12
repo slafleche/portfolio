@@ -1,4 +1,3 @@
-// responsive/index.tsx
 import type { FC, PropsWithChildren } from 'react';
 import mediaQueries from '@/styles/responsive/mediaQueries'; // <-- default export (globalMediaQueries)
 import {
@@ -19,18 +18,18 @@ export const useIsCompressed = () => useMediaQuery(mqStrings.compressed);
 // 3) Aggregate when you need multiple flags at once
 export const useMedia = () =>
 	useMediaFromMap({
-		fullwidth: mqStrings.fullSize,
+		fullSize: mqStrings.fullSize,
 		compact: mqStrings.compact,
 		compressed: mqStrings.compressed,
 	});
 
 // 4) Client-only predicate functions (don’t call during SSR render)
 export const {
-	fullwidth: isFullwidthClient,
+	fullSize: isFullwidthClient,
 	compact: isCompactClient,
 	compressed: isCompressedClient,
 } = makeClientFns({
-	fullwidth: mqStrings.fullSize,
+	fullSize: mqStrings.fullSize,
 	compact: mqStrings.compact,
 	compressed: mqStrings.compressed,
 });

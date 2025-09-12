@@ -1,6 +1,10 @@
 import { ReactNode, use } from 'react';
 import type { Metadata } from 'next';
 import { resolveLocale, getTranslator } from '@/lib/locales/locale';
+import {
+	ResponsiveProvider,
+	useResponsive,
+} from '@/lib/responsive/ResponsiveProvider';
 import LocaleProvider from '@/lib/locales/LocaleProvider';
 import Menu from '@/components/Menu';
 
@@ -20,10 +24,16 @@ export default function LocaleSegmentLayout({
 
 	const locale = resolveLocale(resolved?.LOCALE);
 
+	// Test
+	const { mode } = useResponsive(); // 'fullSize' | 'compact' | 'compressed' | undefined
+
 	return (
 		<LocaleProvider locale={locale}>
-			<Menu />
-			{children}
+			<ResponsiveProvider>
+				<Menu />
+				<div data-mode={mode ?? '—'}>{mode ?? '—'}</div>
+				{children}
+			</ResponsiveProvider>
 		</LocaleProvider>
 	);
 }
