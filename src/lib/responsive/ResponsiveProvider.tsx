@@ -41,12 +41,7 @@ export function ResponsiveProvider({ children }: PropsWithChildren) {
 
 	const value = useMemo(
 		() => ({ fullSize, compact, compressed, mode }),
-		[
-fullSize,
-compact,
-compressed,
-mode,
-],
+		[fullSize, compact, compressed, mode],
 	);
 
 	return (

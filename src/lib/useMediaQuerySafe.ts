@@ -2,10 +2,7 @@
 import { useEffect, useState } from 'react';
 
 export function useMediaQuerySafe(query: string) {
-	const [
-matches,
-setMatches,
-] = useState<boolean | undefined>(undefined);
+	const [matches, setMatches] = useState<boolean | undefined>(undefined);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;

@@ -7,16 +7,7 @@ const SRC_DIR = 'src/assets/images';
 const OUT_ROOT = 'public/images'; // cleaned each run
 const MANIFEST_PATH = 'src/data/images.manifest.json';
 
-const WIDTHS = [
-320,
-480,
-640,
-750,
-828,
-1080,
-1200,
-1920,
-];
+const WIDTHS = [320, 480, 640, 750, 828, 1080, 1200, 1920];
 const FORMATS = [
 	{ ext: 'avif', to: (img) => img.avif({ quality: 50 }) },
 	{ ext: 'webp', to: (img) => img.webp({ quality: 70 }) },
