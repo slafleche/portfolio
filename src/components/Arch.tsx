@@ -3,16 +3,7 @@ import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
-
-export interface IArch {
-  containerHeight: number; // Space above the arch, the space for the nav items
-  curveHeight: number; // This is the height of the arch under the containerHeight. Full height is containerHeight + curveHeight
-  maskOffset: number; // Modifies curve of arch. the higher this number, the more round, the lower, the more flat.
-  bumpHeight: number; // Height of the "bump" in the middle of the arch
-  bumpWidth: number; // Width of the "bump" at the base, the part touching the arch
-  bumpRoundness: number; // Roundness of "bump"
-  bumpSpan: number; // This adjusts how wide the "bump" is at the tip
-}
+import { IArch } from '../lib/arch/archHelper';
 
 type Props = IArch & {
   className?: string;
