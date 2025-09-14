@@ -13,12 +13,16 @@ type Props = IHeadingDepth & {
 export default function Card({ title, depth = 3, className, children }: Props) {
 	return (
 		<div className={clsx(s.card, className)}>
-			{title && (
-				<Heading className={s.title} depth={depth}>
-					{title}
-				</Heading>
-			)}
-			{children}
+			<div className={s.fakeBorder}>
+				<div className={s.bgHelper}>
+					{title && (
+						<Heading className={s.title} depth={depth}>
+							{title}
+						</Heading>
+					)}
+					{children}
+				</div>
+			</div>
 		</div>
 	);
 }
