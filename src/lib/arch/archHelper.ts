@@ -1,175 +1,154 @@
-/**
- * @typedef {Object} ArchParams
- * @property {number} width Total width (W)
- * @property {number} top Minimum space above the arch apex
- * @property {number} curve Extra height under the apex (total height =
- *   top+curve)
- * @property {number} [ry=120] Base ellipse y-radius (will be clamped so shape
- *   cannot invert). Default is `120`
- * @property {number} [bulgeDepth=0] Pixels below the base ellipse at the center
- *   (0 = no bulge). Default is `0`
- * @property {number} [bulgeWidth=0] Distance between the two join points on the
- *   ellipse (0 = no bulge). Default is `0`
- * @property {number} [shoulder=0.42] Shoulder handle scale (0..1) — smaller =
- *   softer entry, larger = tighter. Default is `0.42`
- * @property {number} [tipRound=2.3] Tip rounding factor — scales mirrored
- *   vertical handles at tip. Default is `2.3`
- * @property {boolean} [forceConcaveUp=true] Internal orientation guard (leave
- *   true). Default is `true`
- */
-
-/** Format to fixed decimals without trailing noise */
-function f(n) {
-	return Number(n.toFixed(6));
+export interface IArch {
+  containerHeight: number; // Space above the arch, the space for the nav items
+  curveHeight: number; // This is the height of the arch under the containerHeight. Full height is containerHeight + curveHeight
+  maskOffset: number; // Modifies curve of arch. the higher this number, the more round, the lower, the more flat.
+  bumpHeight: number; // Height of the "bump" in the middle of the arch
+  bumpWidth: number; // Width of the "bump" at the base, the part touching the arch
+  bumpRoundness: number; // Roundness of "bump"
+  bumpSpan: number; // This adjusts how wide the "bump" is at the tip
 }
 
-/** Clamp helper */
-function clamp(v, lo, hi) {
-	return Math.max(lo, Math.min(hi, v));
-}
-
-/**
- * Compute rx so the ellipse with center (cx,cy) and ry passes through (0,H) and
- * (W,H).
- */
-function rxForCorners(W, H, cy, ry) {
-	const term = 1 - Math.pow((H - cy) / ry, 2);
-	return W / 2 / Math.sqrt(Math.max(term, 1e-12));
-}
-
-/** Y on the UPPER branch of the ellipse (the arch line) at x */
-function yUpperOnEllipse(cx, cy, rx, ry, x) {
-	const dx = x - cx;
-	const t = 1 - (dx * dx) / (rx * rx);
-	return cy - ry * Math.sqrt(Math.max(0, t));
-}
-
-/** Unit tangent vector on the UPPER branch at x */
-function unitTangentAtX(cx, cy, rx, ry, x) {
-	const y = yUpperOnEllipse(cx, cy, rx, ry, x);
-	const cosT = clamp((x - cx) / rx, -1, 1);
-	const sinT = (y - cy) / ry; // negative on upper branch
-	// param ellipse derivative (-a sin t, b cos t)
-	const a = rx,
-		b = ry;
-	let tx = -a * sinT,
-		ty = b * cosT;
-	const L = Math.hypot(tx, ty) || 1;
-	return [tx / L, ty / L, y];
+interface IProps extends IArch {
+  width: number;
 }
 
 /** Return a SINGLE-PATH "d" for the nav arch + optional OUTWARD bulge */
-export function archNavPath(params) {
-	const {
-		width: W,
-		top,
-		curve,
-		ry = 120,
-		bulgeDepth = 0,
-		bulgeWidth = 0,
-		shoulder = 0.42,
-		tipRound = 2.3,
-		forceConcaveUp = true,
-	} = params;
+export function archNavPath(props: IProps) {
+  const {
+    W = props.width,
+    top,
+    curve,
+    ry = 120,
+    bulgeDepth = 0,
+    bulgeWidth = 0,
+    shoulder = 0.42,
+    tipRound = 2.3,
+    forceConcaveUp = true,
+  } = props;
 
-	if (!(W > 0) || !(top >= 0) || !(curve > 0))
-		throw new Error('width>0, top>=0, curve>0 are required');
+  const f = (n) => Number(n.toFixed(6));
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-	const H = top + curve;
-	// Anti-flip guard: ensure ellipse center is at/below bottom edge so rx stays real
-	const ryUsed = Math.max(ry, curve + 0.01);
-	const cx = W / 2;
-	const cy = top + ryUsed;
-	const rx = rxForCorners(W, H, cy, ryUsed);
-	const sweep = cy > H || forceConcaveUp ? 0 : 1; // typical case: 0
+  function rxFrom(W, curve, ry) {
+    const c = curve / ry;
+    const denom = Math.max(1e-6, 2 * c - c * c);
+    return W / 2 / Math.sqrt(denom);
+  }
+  function yEllipse(cx, cy, rx, ry, x) {
+    const dx = (x - cx) / rx;
+    const t = 1 - dx * dx;
+    const root = Math.sqrt(Math.max(0, t));
+    return cy - ry * root;
+  }
+  function tangentAtX(cx, cy, rx, ry, x) {
+    const cosT = clamp((x - cx) / rx, -1, 1);
+    const sinT = Math.sqrt(Math.max(0, 1 - cosT * cosT));
+    const tx = -rx * sinT,
+      ty = -ry * cosT;
+    const L = Math.hypot(tx, ty) || 1;
+    return { tx: tx / L, ty: ty / L };
+  }
 
-	// No bulge => exact two-arc base
-	if (bulgeDepth <= 0 || bulgeWidth <= 0) {
-		return [
-			`M 0 0`,
-			`H ${f(W)}`,
-			`V ${f(H)}`,
-			`A ${f(rx)} ${f(ryUsed)} 0 0 ${sweep} ${f(cx)} ${f(top)}`,
-			`A ${f(rx)} ${f(ryUsed)} 0 0 ${sweep} 0 ${f(H)}`,
-			`Z`,
-		].join(' ');
-	}
+  function archPath(o = {}) {
+    const W = Math.max(200, +o.width || 1200);
+    const top = Math.max(0, +o.top || 100);
+    const curve = Math.max(10, +o.curve || 80);
+    const ry = Math.max(curve + 4, +o.ry || 120);
+    const H = top + curve;
 
-	// Bulge join points at ± bulgeWidth/2, clamped to ellipse extent
-	const half = Math.max(8, Math.min(bulgeWidth / 2, rx - 2, W / 2 - 2));
-	const xR = cx + half,
-		xL = cx - half;
-	const [tRx, tRy, yR] = unitTangentAtX(cx, cy, rx, ryUsed, xR);
-	const [_tLx, _tLy, yL] = unitTangentAtX(cx, cy, rx, ryUsed, xL);
-	// mirror the tangent horizontally for the left side to stay symmetric
-	let tLx = -tRx,
-		tLy = tRy;
+    const cx = W / 2,
+      cy = top + ry;
+    const rx = rxFrom(W, curve, ry);
 
-	// Tip: OUTWARD (down) from the center of arch
-	const yC = yUpperOnEllipse(cx, cy, rx, ryUsed, cx); // equals 'top'
-	const tipX = cx;
-	const tipY = Math.min(H - 1e-3, yC + Math.max(0, bulgeDepth));
+    const half = Math.max(
+      12,
+      Math.min((+o.bulgeWidth || 240) / 2, rx - 6, W / 2 - 6),
+    );
+    const xL = cx - half,
+      xR = cx + half;
+    const yA = yEllipse(cx, cy, rx, ry, cx);
+    const yL = yEllipse(cx, cy, rx, ry, xL);
+    const yR = yEllipse(cx, cy, rx, ry, xR);
+    const maxDepth = H - yA - 1.0;
+    const depth = clamp(+o.bulgeHeight || 28, 0, maxDepth);
+    const tipY = yA + depth;
 
-	// Make sure join tangents point toward the tip (avoid inward-pinched shoulders)
-	const vRx = tipX - xR,
-		vRy = tipY - yR;
-	if (tRx * vRx + tRy * vRy < 0) {
-		// flip right tangent
-		// when the ellipse is very shallow, the param tangent may face away; flip it
-		var _tRx = -tRx,
-			_tRy = -tRy;
-		tLx = -_tRx;
-		tLy = _tRy;
-	}
+    const tR = tangentAtX(cx, cy, rx, ry, xR);
+    const tL = tangentAtX(cx, cy, rx, ry, xL);
+    const vRx = cx - xR,
+      vRy = tipY - yR;
+    if (tR.tx * vRx + tR.ty * vRy < 0) {
+      tR.tx *= -1;
+      tR.ty *= -1;
+    }
+    const vLx = cx - xL,
+      vLy = tipY - yL;
+    if (tL.tx * vLx + tL.ty * vLy < 0) {
+      tL.tx *= -1;
+      tL.ty *= -1;
+    }
 
-	// Shoulder handle length (clamped) — smaller for softer entry
-	const chordR = Math.hypot(vRx, vRy);
-	const chordL = Math.hypot(tipX - xL, tipY - yL);
-	const chord = 0.5 * (chordR + chordL);
-	const L1 = Math.max(
-		6,
-		Math.min((0.25 + 0.55 * clamp(shoulder, 0, 1)) * chord, half * 0.75),
-	);
+    const chordR = Math.hypot(vRx, vRy),
+      chordL = Math.hypot(vLx, vLy);
+    const chord = 0.5 * (chordR + chordL);
+    const joinToTip = Math.max(6, Math.hypot(cx - xR, tipY - yR));
+    const rnd = clamp(+o.roundness ?? 0.6, 0, 1);
 
-	// Rounder tip by stretching the mirrored vertical handles
-	const Lc = clamp(tipRound, 0.5, 4.0) * (tipY - yC);
+    const Ls = Math.max(
+      8,
+      Math.min(
+        (0.22 + 0.6 * rnd) * chord,
+        joinToTip * 0.7,
+        half * 0.75,
+        (depth + 8) * 1.2,
+      ),
+    );
+    let tspan =
+      typeof o.tipSpan === 'number'
+        ? Math.abs(o.tipSpan)
+        : Math.max(
+            8,
+            Math.min(
+              half * 0.25,
+              (0.35 + 0.5 * rnd) * Math.sqrt(Math.max(1, depth)) * 1.25,
+            ),
+          );
+    tspan = Math.min(tspan, half - 6);
 
-	// Control points
-	const c1x = xR + tRx * L1,
-		c1y = yR + tRy * L1;
-	const c4x = xL + tLx * L1,
-		c4y = yL + tLy * L1;
-	const c2x = tipX,
-		c2y = tipY - Lc; // mirrored vertical at tip
-	const c3x = tipX,
-		c3y = tipY - Lc;
+    const c1x = xR + tR.tx * Ls,
+      c1y = yR + tR.ty * Ls;
+    const c4x = xL + tL.tx * Ls,
+      c4y = yL + tL.ty * Ls;
+    // Corrected tip flow: first cubic ends with control to the RIGHT of tip,
+    // second cubic starts with control to the LEFT of tip (both tangents leftward).
+    const c2x = cx + tspan,
+      c2y = tipY;
+    const c3x = cx - tspan,
+      c3y = tipY;
 
-	// Single path: rect → corner → arc→join → cubic→tip → cubic→join → arc→corner → close
-	return [
-		`M 0 0`,
-		`H ${f(W)}`,
-		`V ${f(H)}`,
-		`A ${f(rx)} ${f(ryUsed)} 0 0 ${sweep} ${f(xR)} ${f(yR)}`,
-		`C ${f(c1x)} ${f(c1y)} ${f(c2x)} ${f(c2y)} ${f(tipX)} ${f(tipY)}`,
-		`C ${f(c3x)} ${f(c3y)} ${f(c4x)} ${f(c4y)} ${f(xL)} ${f(yL)}`,
-		`A ${f(rx)} ${f(ryUsed)} 0 0 ${sweep} 0 ${f(H)}`,
-		`Z`,
-	].join(' ');
+    const nR = Math.max(48, Math.round((W - xR) / 12));
+    const nL = Math.max(48, Math.round(xL / 12));
+
+    let d = `M 0 0 H ${f(W)} V ${f(H)}`;
+
+    for (let i = 0; i <= nR; i++) {
+      const t = i / nR;
+      const x = W - t * (W - xR);
+      const y = Math.min(yEllipse(cx, cy, rx, ry, x), H - 1e-3);
+      d += ` L ${f(x)} ${f(y)}`;
+    }
+    d += ` C ${f(c1x)} ${f(c1y)} ${f(c2x)} ${f(c2y)} ${f(cx)} ${f(tipY)}`;
+    d += ` C ${f(c3x)} ${f(c3y)} ${f(c4x)} ${f(c4y)} ${f(xL)} ${f(yL)}`;
+
+    for (let i = 1; i <= nL; i++) {
+      const t = i / nL;
+      const x = xL * (1 - t);
+      const y = Math.min(yEllipse(cx, cy, rx, ry, x), H - 1e-3);
+      d += ` L ${f(x)} ${f(y)}`;
+    }
+    d += ` L 0 ${f(H)} Z`;
+
+    //   return { d, width: W, height: H };
+    return d;
+  }
 }
-
-// /** Build a complete one-path SVG string */
-// export function buildNavSVG(params) {
-// 	const { width: W, top, curve, fill = 'currentColor' } = params;
-// 	const H = top + curve;
-// 	const d = archNavPath(params);
-// 	return `<?xml version="1.0" encoding="UTF-8"?>
-// <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(W)} ${f(H)}" width="${f(W)}" height="${f(H)}" preserveAspectRatio="none">
-//   <path d="${d}" fill="${fill}"/>
-// </svg>`;
-// }
-
-// // CommonJS fallback (optional)
-// try {
-// 	if (typeof module !== 'undefined')
-// 		module.exports = { archNavPath, buildNavSVG };
-// } catch {}
