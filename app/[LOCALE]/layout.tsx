@@ -33,7 +33,6 @@ export async function generateMetadata({
 }: {
   params: Promise<{ LOCALE: string }>;
 }): Promise<Metadata> {
-  // ✅ Also await params here
   const { LOCALE } = await params;
   const locale = resolveLocale(LOCALE);
   const t = getTranslator(locale);

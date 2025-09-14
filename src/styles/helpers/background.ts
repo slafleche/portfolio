@@ -1,174 +1,176 @@
 import * as csstype from 'csstype';
+import type { GlobalStyleRule } from '@vanilla-extract/css';
 import { getImage } from '@/lib/images';
 
 export interface IBackground {
-	color?: csstype.Property.BackgroundColor;
-	attachment?: csstype.Property.BackgroundAttachment;
-	position?: csstype.Property.Position;
-	repeat?: csstype.Property.BackgroundRepeat;
-	size?: csstype.Property.BackgroundSize;
-	image?: csstype.Property.BackgroundImage;
-	fallbackImage?: csstype.Property.BackgroundImage;
-	opacity?: csstype.Property.Opacity;
+  color?: csstype.Property.BackgroundColor;
+  attachment?: csstype.Property.BackgroundAttachment;
+  position?: csstype.Property.Position;
+  repeat?: csstype.Property.BackgroundRepeat;
+  size?: csstype.Property.BackgroundSize;
+  image?: csstype.Property.BackgroundImage;
+  fallbackImage?: csstype.Property.BackgroundImage;
+  opacity?: csstype.Property.Opacity;
 }
 
 type Variant = { w: number; url: string };
-// background.ts (add this)
-type BgKind = 'hero' | 'section' | 'cardBg';
 
-// Rework to use mediaQueries
-const bgTargets: Record<BgKind, { mobile: number; desktop: number }> = {
-	hero: { mobile: 640, desktop: 1400 },
-	section: { mobile: 640, desktop: 1100 },
-	cardBg: { mobile: 360, desktop: 600 },
-};
+/* ------------------------- manifest-driven widths ------------------------- */
 
-/**
- * Build background styles from manifest by name, with fallback and image-set.
- * Usage: style(backgroundFromManifest("hero-banner", "hero"))
- */
-export function backgroundFromManifest(name: string, kind: BgKind = 'section') {
-	const { mobile, desktop } = bgTargets[kind];
-	const m = buildImageSet(name, mobile);
-	const d = buildImageSet(name, desktop);
-
-	const base: Record<string, any> = {
-		backgroundRepeat: 'no-repeat',
-		backgroundSize: 'cover',
-		backgroundPosition: 'center',
-	};
-
-	// Fallback first (works everywhere)
-	if (m.fallback) {
-		base.backgroundImage = `url("${m.fallback}")`;
-	}
-
-	// Progressive enhancement: overwrite with image-set in MQs
-	base['@media'] = {
-		'(max-width: 767px)': m.imageSet ? { backgroundImage: m.imageSet } : {},
-		'(min-width: 768px)': d.imageSet
-			? { backgroundImage: d.imageSet }
-			: m.imageSet
-				? { backgroundImage: m.imageSet }
-				: {},
-	};
-
-	return base;
+function getAvailableWidths(name: string): number[] {
+  const data = getImage(name);
+  if (!data) return [];
+  const widths = new Set<number>();
+  const push = (arr?: Variant[]) => arr?.forEach((v) => widths.add(v.w));
+  push(data.variants.avif);
+  push(data.variants.webp);
+  push(data.variants.jpg);
+  return Array.from(widths).sort((a, b) => a - b);
 }
 
 function pickNearestAtMost(list: Variant[] | undefined, target: number) {
-	if (!list || list.length === 0) return undefined;
-	const under = list.filter((v) => v.w <= target).sort((a, b) => b.w - a.w);
-	return (under[0] ?? [...list].sort((a, b) => a.w - b.w)[0])?.url;
+  if (!list || list.length === 0) return undefined;
+  const under = list.filter((v) => v.w <= target).sort((a, b) => b.w - a.w);
+  return (under[0] ?? [...list].sort((a, b) => a.w - b.w)[0])?.url;
 }
 
 function buildImageSet(name: string, targetWidth: number) {
-	const data = getImage(name);
-	if (!data)
-		return {
-			imageSet: undefined as string | undefined,
-			fallback: undefined as string | undefined,
-		};
+  const data = getImage(name);
+  if (!data) {
+    return {
+      imageSet: undefined as string | undefined,
+      fallback: undefined as string | undefined,
+    };
+  }
 
-	const avif = pickNearestAtMost(data.variants.avif, targetWidth);
-	const webp = pickNearestAtMost(data.variants.webp, targetWidth);
-	const jpg = pickNearestAtMost(data.variants.jpg, targetWidth);
-	const fallback = data.original.url; // always exists
+  const avif = pickNearestAtMost(data.variants.avif, targetWidth);
+  const webp = pickNearestAtMost(data.variants.webp, targetWidth);
+  const jpg = pickNearestAtMost(data.variants.jpg, targetWidth);
+  const fallback = data.original.url; // always exists per your manifest
 
-	const parts: string[] = [];
-	if (avif) parts.push(`url("${avif}") type("image/avif")`);
-	if (webp) parts.push(`url("${webp}") type("image/webp")`);
-	if (jpg) parts.push(`url("${jpg}")`);
+  const parts: string[] = [];
+  if (avif) parts.push(`url("${avif}") type("image/avif")`);
+  if (webp) parts.push(`url("${webp}") type("image/webp")`);
+  if (jpg) parts.push(`url("${jpg}")`);
+  if (fallback) parts.push(`url("${fallback}")`);
 
-	// include fallback at the end of image-set for extra safety
-	if (fallback) parts.push(`url("${fallback}")`);
-
-	return {
-		imageSet: parts.length ? `image-set(${parts.join(', ')})` : undefined,
-		fallback,
-	};
+  return {
+    imageSet: parts.length ? `image-set(${parts.join(', ')})` : undefined,
+    fallback,
+  };
 }
+
+/* ------------------------------ public helpers --------------------------- */
+/* Base background: no MQs, just a safe fallback from the smallest asset. */
+export function backgroundFromManifest(name: string): GlobalStyleRule {
+  const widths = getAvailableWidths(name);
+  const fallbackWidth = widths[0] ?? Number.POSITIVE_INFINITY;
+  const { fallback } = buildImageSet(name, fallbackWidth);
+
+  return {
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    ...(fallback ? { backgroundImage: `url("${fallback}")` } : {}),
+  } satisfies GlobalStyleRule;
+}
+
+/* Override by explicit target width (compose in YOUR MQ/container queries). */
+export function backgroundImageForWidth(
+  name: string,
+  targetWidth: number,
+): GlobalStyleRule {
+  const { imageSet } = buildImageSet(name, targetWidth);
+  return imageSet ? { backgroundImage: imageSet } : {};
+}
+
+/* Step-based override across the manifest’s available widths (0..N). */
+export function backgroundImageForStep(
+  name: string,
+  step: number,
+): GlobalStyleRule {
+  const widths = getAvailableWidths(name);
+  if (widths.length === 0) return {};
+  const idx = Math.max(0, Math.min(widths.length - 1, step));
+  const { imageSet } = buildImageSet(name, widths[idx]);
+  return imageSet ? { backgroundImage: imageSet } : {};
+}
+
+/* ----------------------------- misc utilities ---------------------------- */
 
 export const getBackgroundImage = (
-	image?: csstype.Property.BackgroundImage,
+  image?: csstype.Property.BackgroundImage,
 ) => {
-	if (!image) {
-		return undefined;
-	}
-
-	if (image.startsWith('linear-gradient(')) {
-		return image;
-	}
-
-	// Fallback to a general asset URL.
-	return `url(${image})`;
+  if (!image) return undefined;
+  if (image.startsWith('linear-gradient(')) return image;
+  return `url(${image})`;
 };
 
-export const backgroundHelper = (props: IBackground) => {
-	const styles = {
-		backgroundPosition: props.position || `50% 50%`,
-		backgroundRepeat: props.repeat || 'no-repeat',
-		backgroundImage: getBackgroundImage(props.image),
-	} as any;
-
-	if (props.size) {
-		styles.backgroundSize = props.size as csstype.Property.BackgroundSize;
-	}
-
-	if (props.color) {
-		styles.backgroundColor = props.color as csstype.Property.BackgroundColor;
-	}
-
-	if (props.attachment) {
-		styles.backgroundAttachment =
-			props.attachment as csstype.Property.BackgroundAttachment;
-	}
-
-	if (props.opacity) {
-		styles.opacity = props.opacity as csstype.Property.Opacity;
-	}
-
-	return styles;
+/* Typed helper you can safely spread into globalStyle(...) */
+export const backgroundHelper = (props: IBackground): GlobalStyleRule => {
+  const styles: GlobalStyleRule = {
+    backgroundPosition: props.position ?? '50% 50%',
+    backgroundRepeat: props.repeat ?? 'no-repeat',
+    ...(props.image
+      ? { backgroundImage: getBackgroundImage(props.image) }
+      : {}),
+  };
+  if (props.size) styles.backgroundSize = props.size;
+  if (props.color) styles.backgroundColor = props.color;
+  if (props.attachment) styles.backgroundAttachment = props.attachment;
+  if (props.opacity !== undefined) styles.opacity = props.opacity;
+  return styles;
 };
 
+/* This one likely isn’t used with globalStyle; keep as a plain object shape. */
 export const objectFitWithFallback = () => {
-	return {
-		position: 'absolute' as csstype.Property.Position,
-		top: 0,
-		right: 0,
-		bottom: 0,
-		left: 0,
-		margin: 'auto',
-		height: 'auto',
-		width: '100%',
-		$nest: {
-			'@supports (object-fit: cover)': {
-				position: 'relative !important',
-				objectFit: 'cover' as csstype.Property.ObjectFit,
-				objectPosition: 'center',
-				height: '100% !important',
-			},
-		},
-	};
+  return {
+    position: 'absolute' as csstype.Property.Position,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    margin: 'auto',
+    height: 'auto',
+    width: '100%',
+    $nest: {
+      '@supports (object-fit: cover)': {
+        position: 'relative !important',
+        objectFit: 'cover' as csstype.Property.ObjectFit,
+        objectPosition: 'center',
+        height: '100% !important',
+      },
+    },
+  };
 };
 
-export function fakeBackgroundFixed() {
-	return {
-		content: '',
-		display: 'block',
-		position: 'fixed',
-		top: '0px',
-		left: '0px',
-		width: '100vw',
-		height: '100vh',
-	};
+export function fakeBackgroundFixed(): GlobalStyleRule {
+  return {
+    content: '',
+    display: 'block',
+    position: 'fixed',
+    top: '0px',
+    left: '0px',
+    width: '100vw',
+    height: '100vh',
+  };
 }
 
-export function centeredBackground(image: csstype.Property.BackgroundImage) {
-	return {
-		backgroundSize: 'cover',
-		backgroundPosition: `50% 50%`,
-		backgroundRepeat: 'no-repeat',
-		backgroundImage: getBackgroundImage(image),
-	};
+export function centeredBackground(
+  image: csstype.Property.BackgroundImage,
+): GlobalStyleRule {
+  return {
+    backgroundSize: 'cover',
+    backgroundPosition: '50% 50%',
+    backgroundRepeat: 'no-repeat',
+    backgroundImage: getBackgroundImage(image),
+  } satisfies GlobalStyleRule;
 }
+
+// globalStyle('.Hero', {
+//   ...backgroundFromManifest('hero-banner'),
+//   '@media': {
+//     [mqStrings.compact]: backgroundImageForStep('hero-banner', 2),
+//     [mqStrings.fullSize]: backgroundImageForWidth('hero-banner', 1680),
+//   },
+// });
