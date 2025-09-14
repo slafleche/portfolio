@@ -1,16 +1,3 @@
-// archNavPath.js — single-path nav arch with optional OUTWARD bulge
-// Exports:
-//   - archNavPath(params): returns an SVG path "d" string
-//   - buildNavSVG(params): returns a complete <svg> string (one <path>)
-// Usage:
-//   import { archNavPath, buildNavSVG } from './archNavPath.js';
-//   const d = archNavPath({ width: 1200, top: 100, curve: 80, ry: 120, bulgeDepth: 30, bulgeWidth: 230, shoulder: 0.42, tipRound: 2.3 });
-//   // <path d={d} fill="currentColor"/>
-//
-// All units are pixels. Coordinate system: y grows downward.
-// Apex of the arch is exactly at y = top.
-// Total height = top + curve. Bottom corners are (0,H) and (W,H).
-
 /**
  * @typedef {Object} ArchParams
  * @property {number} width Total width (W)
@@ -170,19 +157,19 @@ export function archNavPath(params) {
 	].join(' ');
 }
 
-/** Build a complete one-path SVG string */
-export function buildNavSVG(params) {
-	const { width: W, top, curve, fill = 'currentColor' } = params;
-	const H = top + curve;
-	const d = archNavPath(params);
-	return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(W)} ${f(H)}" width="${f(W)}" height="${f(H)}" preserveAspectRatio="none">
-  <path d="${d}" fill="${fill}"/>
-</svg>`;
-}
+// /** Build a complete one-path SVG string */
+// export function buildNavSVG(params) {
+// 	const { width: W, top, curve, fill = 'currentColor' } = params;
+// 	const H = top + curve;
+// 	const d = archNavPath(params);
+// 	return `<?xml version="1.0" encoding="UTF-8"?>
+// <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(W)} ${f(H)}" width="${f(W)}" height="${f(H)}" preserveAspectRatio="none">
+//   <path d="${d}" fill="${fill}"/>
+// </svg>`;
+// }
 
-// CommonJS fallback (optional)
-try {
-	if (typeof module !== 'undefined')
-		module.exports = { archNavPath, buildNavSVG };
-} catch {}
+// // CommonJS fallback (optional)
+// try {
+// 	if (typeof module !== 'undefined')
+// 		module.exports = { archNavPath, buildNavSVG };
+// } catch {}
