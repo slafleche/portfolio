@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css';
 import { colorVars } from '../vars.css';
-import { absolutePosition } from '../helpers/positioning';
 
 export const cardVars = {};
 
