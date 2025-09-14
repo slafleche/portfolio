@@ -4,6 +4,7 @@ import { resolveLocale, getTranslator } from '@/lib/locales/locale';
 import { ResponsiveProvider } from '@/lib/responsive/ResponsiveProvider';
 import LocaleProvider from '@/lib/locales/LocaleProvider';
 import Menu from '@/components/Menu';
+import { WindowSizeProvider } from '@/lib/responsive/WindowSizeContext';
 
 interface SegmentLayoutProps {
   children: ReactNode;
@@ -20,10 +21,12 @@ export default async function LocaleSegmentLayout({
 
   return (
     <LocaleProvider locale={locale}>
-      <ResponsiveProvider>
-        <Menu />
-        {children}
-      </ResponsiveProvider>
+      <WindowSizeProvider>
+        <ResponsiveProvider>
+          <Menu />
+          {children}
+        </ResponsiveProvider>
+      </WindowSizeProvider>
     </LocaleProvider>
   );
 }
