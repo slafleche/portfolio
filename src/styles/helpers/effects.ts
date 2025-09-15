@@ -1,4 +1,4 @@
-import { colors, fontVars } from '../vars.css';
+import { colors, fontVars } from '../vars';
 import { absolutePosition, flexPosition } from '../helpers/positioning';
 import * as csstype from 'csstype';
 import { ReducedMotion, reducedMotion } from './accessibility';

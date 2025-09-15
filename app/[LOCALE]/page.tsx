@@ -4,14 +4,12 @@ import * as s from '@/styles/components/userContent.css';
 import ReactMarkdown from 'react-markdown';
 import Card from '../../src/components/Card';
 import ImageByName from '../../src/components/ImageByName';
-import Menu from '../../src/components/Menu';
 
 export default function HomePage() {
   const t = useT();
 
   return (
     <>
-      <Menu />
       <h1>{t('hero')}</h1>
 
       <section>
