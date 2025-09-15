@@ -1,7 +1,7 @@
 import { globalStyle } from '@vanilla-extract/css';
 import { backgroundHelper } from './helpers/background';
 import { globalShadow } from './helpers/shadows';
-import { colorVars, fontVars } from './vars.css';
+import { colorVars, fontVars } from './vars';
 import { ReducedMotion, reducedMotion } from './helpers/accessibility';
 
 globalStyle('body', {
@@ -17,7 +17,7 @@ globalStyle('body', {
 });
 
 globalStyle('html, body', {
-  color: fontVars.body.color,
+  color: fontVars.body.color.css(),
   fontFamily: fontVars.body.family,
   fontSize: fontVars.body.size,
   fontWeight: fontVars.body.weight,
@@ -30,7 +30,7 @@ globalStyle('html, body', {
 
 globalStyle('h1, h2, h3, h4, h5, h6', {
   position: 'relative',
-  color: fontVars.heading.color,
+  color: fontVars.heading.color.css(),
   fontFamily: fontVars.heading.family,
   fontSize: fontVars.heading.size,
   fontWeight: fontVars.heading.weight,
