@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { colorVars } from '../vars.css';
+import { colorVars } from '../vars';
 
 export const arch = style({});
 

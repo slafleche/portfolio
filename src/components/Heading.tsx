@@ -1,7 +1,7 @@
 'use client';
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
-import * as s from '@/styles/helpers/typography';
+import * as s from '@/styles/typography.css';
 
 export interface IHeadingDepth {
   depth?: 2 | 3 | 4 | 5 | 6;
