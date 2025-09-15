@@ -28,27 +28,27 @@ export default function HomePage() {
         </Card>
       </section>
 
-      <section id={t('href-about')}>
+      <section id={t('about-href')}>
         <div className={s.userContent}>
-          <ReactMarkdown>{t('content-about')}</ReactMarkdown>
+          <ReactMarkdown>{t('about-content')}</ReactMarkdown>
         </div>
       </section>
 
-      <section id={t('href-philosophy')}>
+      <section id={t('approach-href')}>
         <div className={s.userContent}>
-          <ReactMarkdown>{t('content-philosophy')}</ReactMarkdown>
+          <ReactMarkdown>{t('approach-content')}</ReactMarkdown>
         </div>
       </section>
 
-      <section id={t('href-case_study')}>
+      <section id={t('case_study-href')}>
         <div className={s.userContent}>
-          <ReactMarkdown>{t('content-case_study')}</ReactMarkdown>
+          <ReactMarkdown>{t('case_study-content')}</ReactMarkdown>
         </div>
       </section>
 
-      <section id={t('href-projects')}>
+      <section id={t('projects-href')}>
         <div className={s.userContent}>
-          <ReactMarkdown>{t('content-projects')}</ReactMarkdown>
+          <ReactMarkdown>{t('projects-content')}</ReactMarkdown>
         </div>
       </section>
     </>

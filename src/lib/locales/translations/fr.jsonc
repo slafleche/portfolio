@@ -1,34 +1,37 @@
 {
-	"label": "Français",
-	"abbreviated-label": "FR",
-	"redirecting": "Redirection...",
-	"title": "Développeur Front-End | Portfolio de Stéphane L.",
-	"description": "Stéphane L. développe des composants réutilisables, des expériences responsives et des interfaces fidèles aux marques — pour élever les projets au-delà du simple passage entre design et développement.",
+  "label": "Français",
+  "abbreviated-label": "FR",
+  "redirecting": "Redirection...",
+  "title": "Développeur Front-End | Portfolio de Stéphane L.",
+  "description": "Stéphane L. développe des composants réutilisables, des expériences responsives et des interfaces fidèles aux marques — pour élever les projets au-delà du simple passage entre design et développement.",
 
-	"hero": "Collaborer entre design et développement — pour élever les projets",
-	"hero-subtitle": "Développeur front-end créant des composants réutilisables, des expériences responsives et des interfaces fidèles aux marques — anticipant les problèmes UX et élevant les projets au-delà du simple passage entre design et développement",
+  "localeChange": "Choix de la langue",
 
-	"split-dev_title": "Ce que je conçois",
-	"split-dev_content": "* Des systèmes de thématisation évolutifs\n* Des modèles de composants et d’UX\n* Des ajustements qui améliorent la vision initiale",
+  "hero": "Collaborer entre design et développement — pour élever les projets",
+  "hero-subtitle": "Développeur front-end créant des composants réutilisables, des expériences responsives et des interfaces fidèles aux marques — anticipant les problèmes UX et élevant les projets au-delà du simple passage entre design et développement",
 
-	"split-design_title": "Ce que je livre",
-	"split-design_content": "* Des interfaces fidèles au design\n* Des mises en page réactives sur tous les appareils\n* L’accessibilité dès la conception",
+  "image-portrait-title": "Portrait de Stéphane L.",
+  "image-portrait-alt": "Une photo de Stéphane L. en train de travailler, avec un arrière-plan flou.",
 
-	"about": "À propos",
-	"href-about": "a-propos",
-	"content-about": "## À propos - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
+  "split-dev_title": "Ce que je conçois",
+  "split-dev_content": "* Des systèmes de thématisation évolutifs\n* Des modèles de composants et d’UX\n* Des ajustements qui améliorent la vision initiale",
 
-	"philosophy": "Philosophie",
-	"href-philosophy": "philosophie",
-	"content-philosophy": "## Philosophie - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
+  "split-design_title": "Ce que je livre",
+  "split-design_content": "* Des interfaces fidèles au design\n* Des mises en page réactives sur tous les appareils\n* L’accessibilité dès la conception",
 
-	"case_study": "Étude de cas",
-	"href-case_study": "etude-de-cas",
-	"content-case_study": "## Étude de cas - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
+  "about": "À propos",
+  "about-href": "a-propos",
+  "about-content": "## À propos - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
 
-	"projects": "Projets",
-	"href-projects": "projets",
-	"content-projects": "## Quelques clients avec qui j’ai collaboré.",
-	"image-portrait-title": "Portrait de Stéphane L.",
-	"image-portrait-alt": "Une photo de Stéphane L. en train de travailler, avec un arrière-plan flou.",
+  "case_study": "Étude de cas",
+  "case_study-href": "etude-de-cas",
+  "case_study-content": "## Étude de cas - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
+
+  "approach": "Approche",
+  "approach-href": "philosophie",
+  "approach-content": "## Philosophie - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.",
+
+  "projects": "Projets",
+  "projects-href": "projets",
+  "projects-content": "## Quelques clients avec qui j’ai collaboré.",
 }
