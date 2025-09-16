@@ -4,8 +4,8 @@ import { ReactNode } from 'react';
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPath } from '../lib/arch/archHelper';
-import { archVars } from '../styles/vars';
-import { glassyBg } from '../styles/glassy.css';
+import { archVars, colorVars } from '../styles/vars';
+import { glassGrain, glassyBg, glassyElement } from '../styles/glassy.css';
 import { useSafeId } from '../lib/dom';
 
 type Props = {
@@ -16,6 +16,7 @@ type Props = {
 export default function Arch({ className, children }: Props) {
   const windowSize = useWindowSize().width;
   const id = useSafeId('arch-');
+  const archPathId = `${id}-arch`;
 
   if (!windowSize) {
     // If we have no height yet, at least render a placeholder with the right dimensions
@@ -53,10 +54,13 @@ export default function Arch({ className, children }: Props) {
           <clipPath id={`clip-${id}`} clipPathUnits="userSpaceOnUse">
             <path d={d} />
           </clipPath>
+          <path id={archPathId} d={d} />
         </defs>
 
-        <path d={d} fill="transparent" className={s.path} />
+        {/* Make a pseudo shadow */}
+        <use href={`#${archPathId}`} fill={colorVars.shadow.css()} />
 
+        {/* Makes the glass effect */}
         <foreignObject
           x="0"
           y="0"
@@ -64,11 +68,9 @@ export default function Arch({ className, children }: Props) {
           height="100%"
           clipPath={`url(#clip-${id})`}
         >
-          <div
-            // xmlns="http://www.w3.org/1999/xhtml"
-            className={glassyBg}
-            style={{ width: '100%', height: '100%' }}
-          />
+          <div className={clsx(glassyBg, glassyElement)}>
+            <div className={glassGrain} />
+          </div>
         </foreignObject>
       </svg>
 
