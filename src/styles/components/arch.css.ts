@@ -6,7 +6,9 @@ export const arch = style({
   position: 'relative',
 });
 
-export const svg = style({});
+export const svg = style({
+  overflow: 'visible',
+});
 
 export const shadow = style({
   fill: colorVars.shadow.css() as csstype.Property.Fill,
