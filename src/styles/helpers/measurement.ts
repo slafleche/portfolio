@@ -6,19 +6,7 @@ export interface IMeasurement {
 
 // Allows keeping measurement values as a number for easier math,
 // and then convert to string for use
-export const measurement = (measurement: IMeasurement | number) => {
-  let value;
-  let unit;
-
-  // Shorthand for simple px values
-  if (typeof measurement === 'number') {
-    value = measurement;
-    unit = 'px';
-  } else {
-    value = measurement.value;
-    unit = measurement.unit || 'px';
-  }
-
+export const measurement = (value: number, unit: string = 'px') => {
   return {
     value,
     unit,
@@ -28,3 +16,15 @@ export const measurement = (measurement: IMeasurement | number) => {
   };
 };
 
+export const parseStringMeasurement = (measurement: string) => {
+  let value = measurement.trim();
+  const unit = value.replace(/^-?(0|[1-9]\d*)?([.][0-9]*)?/, '');
+  value = value.substring(0, value.length - unit.length);
+  if (value === '-0') {
+    value = '0';
+  }
+  const finalValue = Number(value);
+  const finalUnit = `${unit.trim()}`;
+
+  return measurement(finalValue, finalUnit);
+};

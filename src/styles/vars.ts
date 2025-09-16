@@ -1,6 +1,6 @@
 import chroma, { type Color } from 'chroma-js';
-import * as csstype from 'csstype';
-import { measurement } from './helpers/measurement';
+import * as CSS from 'csstype';
+import { IMeasurement, measurement } from './helpers/measurement';
 export type ColorKeys = keyof typeof colors;
 export type ChromaColor = Color;
 
@@ -103,10 +103,10 @@ export const colorVars = {
 };
 
 export interface IBorder {
-  color?: csstype.Property.BorderColor;
-  width?: csstype.Property.BorderWidth;
+  color?: CSS.Property.BorderColor;
+  width?: IMeasurement;
   style?: 'none' | 'solid';
-  radius?: csstype.Property.BorderRadius;
+  radius?: IMeasurement;
 }
 
 export const borderVars = {

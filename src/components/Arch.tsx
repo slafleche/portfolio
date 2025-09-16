@@ -17,6 +17,7 @@ export default function Arch({ className, children }: Props) {
   const windowSize = useWindowSize().width;
   const id = useSafeId();
   const archPathId = `${id}-arch`;
+  const clipPathId = `${id}-clip`;
 
   if (!windowSize) {
     // If we have no height yet, at least render a placeholder with the right dimensions
@@ -51,7 +52,7 @@ export default function Arch({ className, children }: Props) {
         preserveAspectRatio="none"
       >
         <defs>
-          <clipPath id={`clip-${id}`} clipPathUnits="userSpaceOnUse">
+          <clipPath id={clipPathId} clipPathUnits="userSpaceOnUse">
             <path d={d} />
           </clipPath>
           <path id={archPathId} d={d} />
@@ -71,7 +72,7 @@ export default function Arch({ className, children }: Props) {
           y="0"
           width="100%"
           height="100%"
-          clipPath={`url(#clip-${id})`}
+          clipPath={`url(${clipPathId})`}
         >
           <div className={clsx(glassyBg, glassyElement)}>
             <div className={glassGrain} />

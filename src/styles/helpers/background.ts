@@ -1,16 +1,16 @@
-import * as csstype from 'csstype';
+import * as CSS from 'csstype';
 import type { GlobalStyleRule } from '@vanilla-extract/css';
 import { getImage } from '@/lib/images';
 
 export interface IBackground {
-  color?: csstype.Property.BackgroundColor;
-  attachment?: csstype.Property.BackgroundAttachment;
-  position?: csstype.Property.Position;
-  repeat?: csstype.Property.BackgroundRepeat;
-  size?: csstype.Property.BackgroundSize;
-  image?: csstype.Property.BackgroundImage;
-  fallbackImage?: csstype.Property.BackgroundImage;
-  opacity?: csstype.Property.Opacity;
+  color?: CSS.Property.BackgroundColor;
+  attachment?: CSS.Property.BackgroundAttachment;
+  position?: CSS.Property.Position;
+  repeat?: CSS.Property.BackgroundRepeat;
+  size?: CSS.Property.BackgroundSize;
+  image?: CSS.Property.BackgroundImage;
+  fallbackImage?: CSS.Property.BackgroundImage;
+  opacity?: CSS.Property.Opacity;
 }
 
 type Variant = { w: number; url: string };
@@ -98,9 +98,7 @@ export function backgroundImageForStep(
 
 /* ----------------------------- misc utilities ---------------------------- */
 
-export const getBackgroundImage = (
-  image?: csstype.Property.BackgroundImage,
-) => {
+export const getBackgroundImage = (image?: CSS.Property.BackgroundImage) => {
   if (!image) return undefined;
   if (image.startsWith('linear-gradient(')) return image;
   return `url(${image})`;
@@ -125,7 +123,7 @@ export const backgroundHelper = (props: IBackground): GlobalStyleRule => {
 /* This one likely isn’t used with globalStyle; keep as a plain object shape. */
 export const objectFitWithFallback = () => {
   return {
-    position: 'absolute' as csstype.Property.Position,
+    position: 'absolute' as CSS.Property.Position,
     top: 0,
     right: 0,
     bottom: 0,
@@ -136,7 +134,7 @@ export const objectFitWithFallback = () => {
     $nest: {
       '@supports (object-fit: cover)': {
         position: 'relative !important',
-        objectFit: 'cover' as csstype.Property.ObjectFit,
+        objectFit: 'cover' as CSS.Property.ObjectFit,
         objectPosition: 'center',
         height: '100% !important',
       },
@@ -157,7 +155,7 @@ export function fakeBackgroundFixed(): GlobalStyleRule {
 }
 
 export function centeredBackground(
-  image: csstype.Property.BackgroundImage,
+  image: CSS.Property.BackgroundImage,
 ): GlobalStyleRule {
   return {
     backgroundSize: 'cover',

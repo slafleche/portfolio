@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
-import { glassVars } from './helpers/effects';
-import * as csstype from 'csstype';
+import { glassVars, glossyBorderVars } from './helpers/effects';
+import * as CSS from 'csstype';
 import { absolutePosition } from './helpers/positioning';
+import borders from './helpers/border';
 
 export const glassyBg = style({
   position: 'relative',
@@ -12,7 +13,13 @@ export const glassyBg = style({
   //   boxShadow: glassVars.shadow,
   backdropFilter: `blur(${glassVars.blur})`,
   WebkitBackdropFilter:
-    `blur(${glassVars.blur})` as csstype.Property.BackdropFilter,
+    `blur(${glassVars.blur})` as CSS.Property.BackdropFilter,
+
+  // Glossy border
+  ...borders({
+    width: glossyBorderVars.thickness.css(),
+    color: 'transparent',
+  }),
 });
 
 export const glassyElement = style({
