@@ -1,6 +1,6 @@
 import { globalStyle } from '@vanilla-extract/css';
 import { backgroundHelper } from './helpers/background';
-import { globalShadow } from './helpers/shadows';
+import { globalShadow } from './helpers/shadows.css';
 import { colorVars, fontVars } from './vars';
 import { ReducedMotion, reducedMotion } from './helpers/accessibility';
 
@@ -19,7 +19,7 @@ globalStyle('body', {
 globalStyle('html, body', {
   color: fontVars.body.color.css(),
   fontFamily: fontVars.body.family,
-  fontSize: fontVars.body.size,
+  fontSize: fontVars.body.size.css(),
   fontWeight: fontVars.body.weight,
   scrollBehavior: 'smooth',
   lineHeight: 1.8,
@@ -32,8 +32,6 @@ globalStyle('h1, h2, h3, h4, h5, h6', {
   position: 'relative',
   color: fontVars.heading.color.css(),
   fontFamily: fontVars.heading.family,
-  fontSize: fontVars.heading.size,
-  fontWeight: fontVars.heading.weight,
   lineHeight: '1.4',
 });
 
@@ -127,12 +125,18 @@ globalStyle('strong, b', {
 // 	backgroundColor: colorVars.black.alpha(0.8).css(),
 // });
 
-globalStyle('ul', {
+globalStyle('ul, li', {
   margin: 0,
   listStyleType: 'none',
+  listStyle: 'none',
   marginBlockStart: 0,
   marginBlockEnd: 0,
   marginInlineStart: 0,
   marginInlineEnd: 0,
   paddingInlineStart: 0,
+});
+
+globalStyle('svg', {
+  display: 'block',
+  position: 'relative',
 });

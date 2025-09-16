@@ -1,50 +1,50 @@
 {
-	"editor.formatOnSave": true,
-	"prettier.requireConfig": true,
-	"prettier.prettierPath": "node_modules/prettier",
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"[javascript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
-		"editor.formatOnSave": true
-	},
-	"[typescript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
-		"editor.formatOnSave": true
-	},
-	"[json]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
-		"editor.formatOnSave": true
-	},
-	"[javascriptreact]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
-		"editor.formatOnSave": true
-	},
-	"[svg]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	},
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
-		"editor.formatOnSave": true
-	},
-	"editor.codeActionsOnSave": {
-		"source.fixAll": true,
-		"source.fixAll.eslint": true
-	},
-	"editor.wordWrap": "off",
-	"[jsonc]": {
-		"editor.wordWrap": "on",
-		"editor.wordWrapColumn": 80
-	},
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact"
-	],
-	"json.schemas": [
-		{
-			"fileMatch": ["settings.json"],
-			"url": "https://raw.githubusercontent.com/microsoft/vscode/main/extensions/configuration-editing/schemas/settings.schema.json"
-		}
-	]
+  "editor.formatOnSave": true,
+  "prettier.requireConfig": true,
+  "prettier.prettierPath": "node_modules/prettier",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[svg]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.eslint": true
+  },
+  "editor.wordWrap": "off",
+  "[jsonc]": {
+    "editor.wordWrap": "on",
+    "editor.wordWrapColumn": 80
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "json.schemas": [
+    {
+      "fileMatch": ["settings.json"],
+      "url": "https://raw.githubusercontent.com/microsoft/vscode/main/extensions/configuration-editing/schemas/settings.schema.json"
+    }
+  ]
 }

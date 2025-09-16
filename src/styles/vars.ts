@@ -1,5 +1,6 @@
 import chroma, { type Color } from 'chroma-js';
 import * as csstype from 'csstype';
+import { measurement } from './helpers/measurement';
 export type ColorKeys = keyof typeof colors;
 export type ChromaColor = Color;
 
@@ -10,7 +11,7 @@ export type ChromaColor = Color;
 export const colors = {
   // Main Colours
   brand: chroma('rgb(14,173,184)'),
-  contrast: chroma('#8e233f'),
+  contrast: chroma('rgba(10, 133, 142, 1)'),
   // Nav
   navBg: chroma('#252136'),
   navFg: chroma('#ffffff'),
@@ -45,12 +46,22 @@ export const colors = {
 export const font = {
   heading: {
     family: 'Comfortaa, Poppins, Helvetica, Arial, sans-serif',
-    size: '45px',
+  },
+  h1: {
+    size: measurement(45),
+    weight: '500',
+  },
+  h2: {
+    size: measurement(25),
+    weight: '500',
+  },
+  h3: {
+    size: measurement(20),
     weight: '500',
   },
   body: {
     family: 'Poppins, Helvetica, Arial, sans-serif',
-    size: '22px',
+    size: measurement(22),
     weight: '300',
     semiBold: '400',
   },
@@ -101,16 +112,23 @@ export interface IBorder {
 export const borderVars = {
   color: colorVars.border,
   style: 'solid' as const,
-  width: '4px',
-  radius: '6px',
+  width: measurement(4),
+  radius: measurement(6),
 };
 
 export const fontVars = {
   heading: {
     color: colorVars.headingFg,
     family: font.heading.family,
-    size: font.heading.size,
-    weight: font.heading.weight,
+  },
+  h1: {
+    ...font.h1,
+  },
+  h2: {
+    ...font.h2,
+  },
+  h3: {
+    ...font.h3,
   },
   body: {
     family: font.body.family,
@@ -119,4 +137,18 @@ export const fontVars = {
     semiBold: font.body.semiBold,
     color: colorVars.bodyFg,
   },
+};
+
+export const archVars = {
+  top: 40,
+  curveHeight: 16,
+  ry: 70,
+  bumpHeight: 12,
+  bumpWidth: 50,
+  bumpBaseWidth: 0.85,
+  bumpTipWidth: 7,
+};
+
+export const logoVars = {
+  width: measurement(45),
 };

@@ -1,43 +1,85 @@
 import { style } from '@vanilla-extract/css';
-import { colorVars } from './vars';
+import { absolutePosition, flexPosition } from './helpers/positioning';
+import { archVars, colorVars, logoVars } from './vars';
+import chroma from 'chroma-js';
 
-export const menu = style({
-  display: 'flex',
-  backgroundColor: colorVars.navBg.css(),
-});
-
-export const headerNav = style({});
+export const menu = style({});
 
 export const nav = style({
   display: 'flex',
   alignItems: 'center',
+  flexWrap: 'nowrap',
+  width: '100%',
+  height: archVars.top + archVars.curveHeight,
+  ...absolutePosition.topLeft(),
+  // padding: '0 46px', // Protects space for locale change link
 });
 
+// One side
 export const list = style({
   display: 'flex',
   alignItems: 'center',
+  flexWrap: 'nowrap',
+  flexGrow: '1',
+  width: '50%',
+  selectors: {
+    '&[data-side="left"]': {
+      justifyContent: 'flex-end',
+      order: 0,
+      paddingRight: '50px', // TODO set dynamically with width of logo
+    },
+    '&[data-side="right"]': {
+      justifyContent: 'flex-start',
+      order: 1,
+      paddingLeft: '50px', // TODO set dynamically with width of logo
+    },
+  },
 });
 
 export const item = style({
-  display: 'flex',
-  alignItems: 'center',
+  // flex: '0 0 auto',
+  // whiteSpace: 'nowrap',
+  // display: 'flex',
+  // alignItems: 'center',
 });
 
 // Intentionally reorder so the logo is the first item visually but not in DOM
-export const logoItem = style({
-  order: 3,
-});
 export const item_1 = style({
-  order: 1,
+  // order: 0,
 });
 export const item_2 = style({
+  // order: 0,
+});
+
+// Logo in the middle
+export const logoItem = style({
+  position: 'absolute',
+  top: 0,
+  left: '50%',
+  transform: `translateX(-${logoVars.width.value / 2}${logoVars.width.unit})`,
+  width: logoVars.width.css(),
+  height: logoVars.width.css(),
+  ...flexPosition.center(),
+  backgroundColor: chroma('#ffffffc6').alpha(0.2).css(),
+});
+
+export const logoLink = style({
+  ...flexPosition.center(),
+  width: logoVars.width.css(),
+  height: logoVars.width.css(),
+});
+
+export const item_3 = style({
   order: 2,
 });
-export const item_3 = style({
-  order: 3,
-});
+
 export const item_4 = style({
-  order: 4,
+  order: 2,
+});
+
+export const headerNavItem = style({
+  ...absolutePosition.topRight(),
+  order: 5,
 });
 
 export const link = style({
@@ -53,13 +95,17 @@ export const link = style({
 });
 
 export const logo = style({
-  width: '60px',
+  width: logoVars.width.css(),
   height: 'auto',
   // filter: 'drop-shadow( 0px 10px 2px rgba(0, 0, 0, .7))',
 });
 
-export const logoLink = style({});
-
-export const headerNavItem = style({
-  order: 5,
+export const navLink = style({
+  color: colorVars.navFg.css(),
+  textDecoration: 'none',
+  selectors: {
+    '&:visited': {
+      color: colorVars.navFg.css(),
+    },
+  },
 });
