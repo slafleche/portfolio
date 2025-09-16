@@ -15,7 +15,7 @@ type Props = {
 
 export default function Arch({ className, children }: Props) {
   const windowSize = useWindowSize().width;
-  const id = useSafeId('arch-');
+  const id = useSafeId();
   const archPathId = `${id}-arch`;
 
   if (!windowSize) {
@@ -43,7 +43,7 @@ export default function Arch({ className, children }: Props) {
   return (
     <div className={clsx(className, s.arch)}>
       <svg
-        className={clsx(s.svg)}
+        className={s.svg}
         xmlns="http://www.w3.org/2000/svg"
         viewBox={`0 0 ${windowSize} ${fullHeight}`}
         width={windowSize}
@@ -58,7 +58,12 @@ export default function Arch({ className, children }: Props) {
         </defs>
 
         {/* Make a pseudo shadow */}
-        <use href={`#${archPathId}`} fill={colorVars.shadow.css()} />
+        <use
+          href={`#${archPathId}`}
+          fill={colorVars.shadow.css()}
+          transform="translate(0 6)"
+          style={{ filter: 'blur(4px)' }}
+        />
 
         {/* Makes the glass effect */}
         <foreignObject

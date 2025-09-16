@@ -21,7 +21,7 @@ export const colors = {
   // Text
   headingFg: chroma('#ffffff'),
   // Shadows
-  shadow: chroma('rgb(3, 3, 3)').alpha(0.34),
+  shadow: chroma('rgb(3, 3, 3)').alpha(0.6),
   // Borders
   border: chroma('#1d1d1f'),
 
