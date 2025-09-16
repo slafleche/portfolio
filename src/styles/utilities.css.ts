@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import * as csstype from 'csstype';
+import * as CSS from 'csstype';
 import { flexPosition } from './helpers/positioning';
 
 // Utility classes

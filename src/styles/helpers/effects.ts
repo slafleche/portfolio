@@ -1,3 +1,5 @@
+import { measurement } from './measurement';
+
 const noiseSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60">
   <filter id="n">
@@ -17,6 +19,25 @@ export const glassVars = {
   // padding: '24px',
   blur: '20px',
   noiseDataUri: `url("data:image/svg+xml;utf8,${encodeURIComponent(noiseSvg)}")`,
+};
+
+export const glossyBorderVars = {
+  thickness: measurement(7),
+  // Smooth sweep around the edge
+  base: `conic-gradient(
+    from 200deg at 50% 50%,
+    hsla(0,0%,100%,0.55) 0deg,
+    hsla(0,0%,100%,0.22) 120deg,
+    hsla(0,0%,100%,0.06) 210deg,
+    transparent 1turn
+  )`,
+  // Bottom-center hotspot to accent the “tip”
+  hot: `radial-gradient(
+    120% 80% at 50% 92%,
+    hsla(0,0%,100%,0.26) 0%,
+    hsla(0,0%,100%,0.08) 55%,
+    transparent 70%
+  )`,
 };
 
 // export const roundButton = (buttonSize: csstype.Property.Width) => {
