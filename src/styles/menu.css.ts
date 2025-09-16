@@ -1,9 +1,14 @@
 import { style } from '@vanilla-extract/css';
 import { absolutePosition, flexPosition } from './helpers/positioning';
 import { archVars, colorVars, logoVars } from './vars';
-import chroma from 'chroma-js';
 
-export const menu = style({});
+export const menu = style({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  zIndex: 100,
+});
 
 export const nav = style({
   display: 'flex',
@@ -60,7 +65,6 @@ export const logoItem = style({
   width: logoVars.width.css(),
   height: logoVars.width.css(),
   ...flexPosition.center(),
-  backgroundColor: chroma('#ffffffc6').alpha(0.2).css(),
 });
 
 export const logoLink = style({
@@ -98,6 +102,10 @@ export const logo = style({
   width: logoVars.width.css(),
   height: 'auto',
   // filter: 'drop-shadow( 0px 10px 2px rgba(0, 0, 0, .7))',
+});
+
+export const localeChanger = style({
+  ...absolutePosition.topRight(),
 });
 
 export const navLink = style({
