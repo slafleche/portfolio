@@ -19,8 +19,8 @@ export default function HomePage() {
 
         <ImageByName
           name="portrait"
-          title={t('image-portrait-title')}
-          alt={t('image-portrait-alt')}
+          title={t('image_portrait-title')}
+          alt={t('image_portrait-alt')}
         />
 
         <Card title={t('split-design_title')}>

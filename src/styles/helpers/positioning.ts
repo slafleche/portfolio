@@ -12,7 +12,7 @@ export const absolutePosition = {
 		};
 	},
 	topLeft: (
-		top: string | number = '0',
+		top: string | number = '0px',
 		left: csstype.Property.Left = '0px',
 	) => {
 		return {
