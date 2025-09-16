@@ -27,7 +27,11 @@ export function WindowSizeProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return;
 
     const handleResize = () =>
-      setSize({ width: window.innerWidth, height: window.innerHeight });
+      setSize({
+        // use layout viewport (excludes vertical scrollbar)
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight,
+      });
 
     handleResize(); // set initial
     window.addEventListener('resize', handleResize);

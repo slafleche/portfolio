@@ -62,7 +62,7 @@ export default function Menu() {
               </li>
             </ul>
           </nav>
-          <nav aria-label={t('localeChange')}>
+          <nav className={s.localeChanger} aria-label={t('localeChange')}>
             {AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
               <Link key={l} href={`/${l}`} className={s.link} hrefLang={l}>
                 {TRANSLATIONS[l]['abbreviated-label']}
