@@ -1,5 +1,5 @@
 import { calc } from '@vanilla-extract/css-utils';
-import { ComplexStyleRule } from '@vanilla-extract/css';
+import { ComplexStyleRule, StyleRule } from '@vanilla-extract/css';
 import * as CSS from 'csstype';
 import { measurement, parseStringMeasurement } from '../helpers/measurement';
 import { layoutVars } from '../layoutVars.css';
@@ -12,7 +12,7 @@ export interface IMediaQueryProps {
 
 export interface IMediaQuery {
   props: IMediaQueryProps;
-  styles: ComplexStyleRule;
+  styles: StyleRule;
 }
 
 export type IMediaQueries = IMediaQuery[];
@@ -82,7 +82,7 @@ export const mediaQueryStyle = (
   if (!Array.isArray(queryAndStyles)) {
     queryAndStyles = [queryAndStyles];
   }
-  const result: any = {};
+  const result: Record<string, StyleRule> = {};
   queryAndStyles.forEach((mq) => {
     const { props, styles } = mq;
     const minWidth =
@@ -94,9 +94,9 @@ export const mediaQueryStyle = (
     const rule = `${props.type ?? 'screen'}${minWidth}${maxWidth}`;
     result[rule] = styles;
   });
-  const mediaQuery = {
+  const mediaQuery: ComplexStyleRule = {
     '@media': result,
-  } as ComplexStyleRule;
+  };
   if (debug) {
     console.log('mediaQuery: ', mediaQuery);
   }
@@ -104,10 +104,10 @@ export const mediaQueryStyle = (
 };
 
 interface IGlobalMediaQueryStyles {
-  fullSize?: ComplexStyleRule;
-  noBleed?: ComplexStyleRule;
-  compact?: ComplexStyleRule;
-  compressed?: ComplexStyleRule;
+  fullSize?: StyleRule;
+  noBleed?: StyleRule;
+  compact?: StyleRule;
+  compressed?: StyleRule;
 }
 
 export const globalMediaQueryStyles = (
