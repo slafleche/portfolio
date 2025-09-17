@@ -17,7 +17,7 @@ export const glassyBg = style({
 
   // Glossy border
   ...borders({
-    width: glossyBorderVars.thickness.css(),
+    width: glossyBorderVars.thickness,
     color: 'transparent',
   }),
 });
