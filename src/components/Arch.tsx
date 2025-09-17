@@ -72,7 +72,7 @@ export default function Arch({ className, children }: Props) {
           y="0"
           width="100%"
           height="100%"
-          clipPath={`url(${clipPathId})`}
+          clipPath={`url(#${clipPathId})`}
         >
           <div className={clsx(glassyBg, glassyElement)}>
             <div className={glassGrain} />

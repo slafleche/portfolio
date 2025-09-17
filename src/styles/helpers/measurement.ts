@@ -1,3 +1,14 @@
+// We accept multiple input shapes here to keep call sites ergonomic while
+
+import { CssLike } from '../utilities.css';
+
+// ensuring that this helper always outputs strings.
+export type MeasurementLike =
+  | { value: number; unit?: string }
+  | CssLike
+  | string
+  | undefined;
+
 // Object representing a CSS measurement (eg. "10px" or "30vh");
 export interface IMeasurement {
   value: number;
