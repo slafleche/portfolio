@@ -21,9 +21,10 @@ export const glassVars = {
 
 export const glossyBorderVars = {
   thickness: m(4),
-  shadowBlur: m(4),
+  shadowBlur: m(2),
   shadowOffsetX: m(0),
-  shadowOffsetY: m(6),
+  shadowOffsetY: m(8),
+  shadowColor: colorVars.shadow,
   rimColor: colorVars.white,
   rimHotPosX: 0.51, // 0..1 → where the hotspot peaks along the stroke
   rimHotCoverage: 0.2, // 0..1 → how much of the stroke is influenced by the hotspot

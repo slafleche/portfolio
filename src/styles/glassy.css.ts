@@ -45,4 +45,5 @@ export const stroke = style({
 export const shadow = style({
   filter: `blur(${glossyBorderVars.shadowBlur.css()})`,
   transform: `translate(${glossyBorderVars.shadowOffsetX.css()}, ${glossyBorderVars.shadowOffsetY.css()})`,
+  fill: glossyBorderVars.shadowColor.css(),
 });

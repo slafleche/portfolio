@@ -14,15 +14,15 @@ export const colors = {
   brand: chroma('rgb(14,173,184)'),
   contrast: chroma('rgba(10, 133, 142, 1)'),
   // Nav
-  navBg: chroma('#252136'),
+  // navBg: chroma('#252136'),
   navFg: chroma('#ffffff'),
   // Body
-  bodyBg: chroma('rgb(46,43,61)'),
+  bodyBg: chroma('#362C59'),
   bodyFg: chroma('#ffffff'),
   // Text
   headingFg: chroma('#ffffff'),
   // Shadows
-  shadow: chroma('rgb(3, 3, 3)').alpha(0.6),
+  shadow: chroma('rgb(42, 34, 70)').alpha(0.3),
   // Borders
   border: chroma('#1d1d1f'),
 
