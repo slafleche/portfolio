@@ -1,6 +1,6 @@
 import chroma, { type Color } from 'chroma-js';
 import * as CSS from 'csstype';
-import { IMeasurement, measurement } from './helpers/measurement';
+import { IMeasurement, m } from './helpers/measurement';
 export type ColorKeys = keyof typeof colors;
 export type ChromaColor = Color;
 
@@ -49,20 +49,20 @@ export const font = {
     family: 'Comfortaa, Poppins, Helvetica, Arial, sans-serif',
   },
   h1: {
-    size: measurement(45),
+    size: m(45),
     weight: '500',
   },
   h2: {
-    size: measurement(25),
+    size: m(25),
     weight: '500',
   },
   h3: {
-    size: measurement(20),
+    size: m(20),
     weight: '500',
   },
   body: {
     family: 'Poppins, Helvetica, Arial, sans-serif',
-    size: measurement(22),
+    size: m(22),
     weight: '300',
     semiBold: '400',
   },
@@ -113,8 +113,8 @@ export interface IBorder {
 export const borderVars = {
   color: colorVars.border,
   style: 'solid' as string,
-  width: measurement(4),
-  radius: measurement(6),
+  width: m(4),
+  radius: m(6),
 };
 
 export const fontVars = {
@@ -151,5 +151,5 @@ export const archVars = {
 };
 
 export const logoVars = {
-  width: measurement(45),
+  width: m(45),
 };

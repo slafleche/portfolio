@@ -41,3 +41,8 @@ export const stroke = style({
     glossyBorderVars.thickness.value * -0.25,
   ).css()})`,
 });
+
+export const shadow = style({
+  filter: `blur(${glossyBorderVars.shadowBlur.css()})`,
+  transform: `translate(0px, 6px)`,
+});
