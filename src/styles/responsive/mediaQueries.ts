@@ -1,7 +1,7 @@
 import { calc } from '@vanilla-extract/css-utils';
 import { ComplexStyleRule } from '@vanilla-extract/css';
 import * as CSS from 'csstype';
-import { measurement } from '../helpers/measurement';
+import { measurement, parseStringMeasurement } from '../helpers/measurement';
 import { layoutVars } from '../layoutVars.css';
 
 export interface IMediaQueryProps {
@@ -21,11 +21,12 @@ export type IMediaQueries = IMediaQuery[];
 
 export const substractOnePixel = (length: string) => {
   try {
-    const props = measurement(length);
+    const props = parseStringMeasurement(length);
     if (props && props.unit !== 'px') {
       throw Error(`Error in substractOnePixel: "${length}" is not in pixels`);
     }
-    return measurement(props, props.value - 1).css() as CSS.Property.Width;
+    const finalValue = measurement(props.value - 1, props.unit);
+    return finalValue.css() as CSS.Property.Width;
   } catch (e) {
     console.log(e);
   }
@@ -33,11 +34,12 @@ export const substractOnePixel = (length: string) => {
 
 export const addOnePixel = (length: string) => {
   try {
-    const props = measurement(length);
+    const props = parseStringMeasurement(length);
     if (props && props.unit !== 'px') {
-      throw `Error in addOnePixel: "${length}" is not in pixels`;
+      throw Error(`Error in addOnePixel: "${length}" is not in pixels`);
     }
-    return measurement(props, props.val + 1).toString() as CSS.Property.Width;
+    const finalValue = measurement(props.value + 1, props.unit);
+    return finalValue.css() as CSS.Property.Width;
   } catch (e) {
     console.log(e);
   }
