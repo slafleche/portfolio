@@ -16,8 +16,8 @@ export const measurement = (value: number, unit: string = 'px') => {
   };
 };
 
-export const parseStringMeasurement = (measurement: string) => {
-  let value = measurement.trim();
+export const parseStringMeasurement = (cssValue: string) => {
+  let value = cssValue.trim();
   const unit = value.replace(/^-?(0|[1-9]\d*)?([.][0-9]*)?/, '');
   value = value.substring(0, value.length - unit.length);
   if (value === '-0') {

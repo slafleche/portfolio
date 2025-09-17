@@ -1,6 +1,6 @@
-import { style } from '@vanilla-extract/css';
-import * as CSS from 'csstype';
-import { flexPosition } from './helpers/positioning';
+// import { style } from '@vanilla-extract/css';
+// import * as CSS from 'csstype';
+// import { flexPosition } from './helpers/positioning';
 
 // Utility classes
 // Note that in contrast to helper functions, they output a ready made class,
