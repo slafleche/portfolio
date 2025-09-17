@@ -111,7 +111,7 @@ export interface IBorder {
 
 export const borderVars = {
   color: colorVars.border,
-  style: 'solid' as const,
+  style: 'solid' as string,
   width: measurement(4),
   radius: measurement(6),
 };

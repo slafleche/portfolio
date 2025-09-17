@@ -17,7 +17,6 @@ export const nav = style({
   width: '100%',
   height: archVars.top + archVars.curveHeight,
   ...absolutePosition.topLeft(),
-  // padding: '0 46px', // Protects space for locale change link
 });
 
 // One side
