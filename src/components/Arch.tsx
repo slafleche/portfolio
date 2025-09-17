@@ -1,91 +1,78 @@
 'use client';
 import clsx from 'clsx';
-import { ReactNode } from 'react';
+import { ReactNode } from 'react'; // useEffect avoids hydration warnings
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
-import { generateArchPath } from '../lib/arch/archHelper';
+import { generateArchPaths } from '../lib/arch/archHelper';
 import { archVars, colorVars } from '../styles/vars';
-import { glassGrain, glassyBg, glassyElement } from '../styles/glassy.css';
+import * as glassyStyles from '../styles/glassy.css';
 import { useSafeId } from '../lib/dom';
 import { glossyBorderVars } from '../styles/helpers/effects';
 
-type Props = {
-  className?: string;
-  children?: ReactNode;
-};
+type Props = { className?: string; children?: ReactNode };
 
 export default function Arch({ className, children }: Props) {
   const windowSize = useWindowSize().width;
   const baseId = useSafeId();
-  const archPathId = `${baseId}-arch`;
-  const clipPathId = `${baseId}-clip`;
-  // alongside your existing ids (e.g., baseId/archPathId/clipId)
-  const rimHotId = `${baseId}-rimHot`; // use your actual base id var name here
+  if (!windowSize) return; // Bail early if window size is bad
 
-  if (!windowSize) {
-    // If we have no height yet, at least render a placeholder with the right dimensions
-    return (
-      <div
-        className={clsx(className, s.arch)}
-        style={{
-          position: 'relative',
-          display: 'block',
-          width: '100%',
-          height: `${archVars.top + archVars.curveHeight}px`,
-        }}
-      />
-    );
-  }
-
-  const d = generateArchPath({
-    ...archVars,
-    width: windowSize,
-  });
-
+  // Safe numbers even before windowSize is known
+  const ws = Math.max(1, windowSize ?? 0);
   const fullHeight = archVars.top + archVars.curveHeight;
+
+  const archPathId = `${baseId}-arch`;
+  const bottomPathId = `${baseId}-archBottom`;
+  const clipPathId = `${baseId}-clip`;
+  const rimXId = `${baseId}-rimX`;
+
+  // Build both paths from safe width (will update when windowSize arrives)
+  const { archD, bottomCurveD } = generateArchPaths({
+    ...archVars,
+    width: ws,
+  });
 
   return (
     <div className={clsx(className, s.arch)}>
       <svg
         className={s.svg}
         xmlns="http://www.w3.org/2000/svg"
-        viewBox={`0 0 ${windowSize} ${fullHeight}`}
-        width={windowSize}
+        viewBox={`0 0 ${ws} ${fullHeight}`}
+        width={ws}
         height={fullHeight}
         preserveAspectRatio="none"
       >
         <defs>
+          <path id={archPathId} d={archD} />
+          <path id={bottomPathId} d={bottomCurveD} />
+
           <clipPath id={clipPathId} clipPathUnits="userSpaceOnUse">
             <use href={`#${archPathId}`} />
           </clipPath>
 
-          <path id={archPathId} d={d} />
-
-          <radialGradient
-            id={rimHotId}
-            gradientUnits="objectBoundingBox"
-            cx={glossyBorderVars.hotCx}
-            cy={glossyBorderVars.hotCy}
-            r={glossyBorderVars.hotR}
+          {/* Gradient for rim */}
+          <linearGradient
+            id={rimXId}
+            x1="0"
+            y1="0"
+            x2={windowSize}
+            y2="0"
+            gradientUnits="userSpaceOnUse"
           >
-            <stop
-              offset="0%"
-              stopColor={`rgba(255,255,255,${glossyBorderVars.hotAlpha})`}
-            />
-            <stop offset="60%" stopColor="rgba(255,255,255,0.08)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
-          </radialGradient>
+            <stop offset="0%" stopColor="rgba(255,255,255,0.16)" />
+            <stop offset="55%" stopColor="rgba(255,255,255,0.20)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0.30)" />
+          </linearGradient>
         </defs>
 
-        {/* Make a pseudo shadow */}
+        {/* optional pseudo shadow; safe to comment out while debugging bands */}
         <use
-          xlinkHref={`#${archPathId}`}
+          href={`#${archPathId}`}
           fill={colorVars.shadow.css()}
           transform="translate(0 6)"
           style={{ filter: 'blur(4px)' }}
         />
 
-        {/* Makes the glass effect */}
+        {/* frosted body */}
         <foreignObject
           x="0"
           y="0"
@@ -93,23 +80,23 @@ export default function Arch({ className, children }: Props) {
           height="100%"
           clipPath={`url(#${clipPathId})`}
         >
-          <div className={clsx(glassyBg, glassyElement)}>
-            <div className={glassGrain} />
+          <div className={clsx(glassyStyles.bg, glassyStyles.element)}>
+            <div className={glassyStyles.grain} />
           </div>
         </foreignObject>
 
+        {/* bottom-only rim: solid stroke; no sides, no top */}
         <use
-          xlinkHref={`#${archPathId}`}
+          href={`#${bottomPathId}`}
           fill="none"
-          stroke={`url(#${rimHotId})`}
+          stroke={`url(#${rimXId})`}
           strokeWidth={glossyBorderVars.thickness.css()}
-          strokeLinecap="round"
-          strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
           pointerEvents="none"
+          className={glassyStyles.stroke}
         />
+        {/* Dnd of SVG */}
       </svg>
-
       {children}
     </div>
   );

@@ -13,7 +13,7 @@ interface IProps extends IArch {
   width: number;
 }
 
-export function generateArchPath(p: IProps): string {
+export function generateArchPaths(p: IProps) {
   const f = (n: number) => Number(n.toFixed(6));
   const clamp = (v: number, lo: number, hi: number) =>
     Math.max(lo, Math.min(hi, v));
@@ -71,6 +71,9 @@ export function generateArchPath(p: IProps): string {
   const yA = yEllipse(cx, cy, rx, ry, cx);
   const yL = yEllipse(cx, cy, rx, ry, xL);
   const yR = yEllipse(cx, cy, rx, ry, xR);
+  const y0 = Math.min(yEllipse(cx, cy, rx, ry, 0), H - 1e-3);
+  const yW = Math.min(yEllipse(cx, cy, rx, ry, W), H - 1e-3);
+
   const maxDepth = H - yA - 1.0;
   const depth = clamp(p.bumpHeight, 0, maxDepth);
   const tipY = yA + depth;
@@ -78,7 +81,6 @@ export function generateArchPath(p: IProps): string {
   const tR0 = tangentAtX(cx, cy, rx, ry, xR);
   const tL0 = tangentAtX(cx, cy, rx, ry, xL);
 
-  // Orient tangents toward the tip segment
   const vRx = cx - xR,
     vRy = tipY - yR;
   const dotR = tR0.tx * vRx + tR0.ty * vRy;
@@ -89,7 +91,6 @@ export function generateArchPath(p: IProps): string {
   const dotL = tL0.tx * vLx + tL0.ty * vLy;
   const tL = dotL < 0 ? { tx: -tL0.tx, ty: -tL0.ty } : tL0;
 
-  // Base control distance along tangents ("roundness")
   const chordR = Math.hypot(vRx, vRy);
   const chordL = Math.hypot(vLx, vLy);
   const chord = 0.5 * (chordR + chordL);
@@ -106,7 +107,6 @@ export function generateArchPath(p: IProps): string {
     ),
   );
 
-  // Tip control spread
   const tspanRaw = p.bumpTipWidth;
   const tspanClamped = Math.max(8, Math.min(tspanRaw, half - 6));
   const c2x = cx + tspanClamped,
@@ -114,49 +114,76 @@ export function generateArchPath(p: IProps): string {
   const c3x = cx - tspanClamped,
     c3y = tipY;
 
-  // Tangent control points at the join
-  const c1x = xR + tR.tx * Ls;
-  const c1y = yR + tR.ty * Ls;
-  const c4x = xL + tL.tx * Ls;
-  const c4y = yL + tL.ty * Ls;
+  const c1x = xR + tR.tx * Ls,
+    c1y = yR + tR.ty * Ls;
+  const c4x = xL + tL.tx * Ls,
+    c4y = yL + tL.ty * Ls;
 
-  // Sampling density along ellipse edges
   const nR = Math.max(48, Math.round((W - xR) / 12));
   const nL = Math.max(48, Math.round(xL / 12));
 
-  // Build path: top rectangle -> right edge -> bump (2 cubics) -> left edge -> close
   const head = `M 0 0 H ${f(W)} V ${f(H)}`;
-  const rightEdge = (() => {
-    const pts = new Array(nR + 1)
-      .fill(0)
-      .map((_, i) => {
-        const t = i / nR;
-        const x = W - t * (W - xR);
-        const y = Math.min(yEllipse(cx, cy, rx, ry, x), H - 1e-3);
-        return ` L ${f(x)} ${f(y)}`;
-      })
-      .join('');
-    return pts;
-  })();
+  const rightEdge = new Array(nR + 1)
+    .fill(0)
+    .map((_, i) => {
+      const t = i / nR;
+      const x = W - t * (W - xR);
+      const y = Math.min(yEllipse(cx, cy, rx, ry, x), H - 1e-3);
+      return ` L ${f(x)} ${f(y)}`;
+    })
+    .join('');
 
   const bump =
     ` C ${f(c1x)} ${f(c1y)} ${f(c2x)} ${f(c2y)} ${f(cx)} ${f(tipY)}` +
     ` C ${f(c3x)} ${f(c3y)} ${f(c4x)} ${f(c4y)} ${f(xL)} ${f(yL)}`;
 
-  const leftEdge = (() => {
-    const pts = new Array(nL)
-      .fill(0)
-      .map((_, i) => {
-        const t = (i + 1) / nL;
-        const x = xL * (1 - t);
-        const y = Math.min(yEllipse(cx, cy, rx, ry, x), H - 1e-3);
-        return ` L ${f(x)} ${f(y)}`;
-      })
-      .join('');
-    return pts;
-  })();
+  const leftEdge = new Array(nL)
+    .fill(0)
+    .map((_, i) => {
+      const t = (i + 1) / nL;
+      const x = xL * (1 - t);
+      const y = Math.min(yEllipse(cx, cy, rx, ry, x), H - 1e-3);
+      return ` L ${f(x)} ${f(y)}`;
+    })
+    .join('');
 
   const tail = ` L 0 ${f(H)} Z`;
 
-  return head + rightEdge + bump + leftEdge + tail;
+  const archD = head + rightEdge + bump + leftEdge + tail;
+
+  // Right ellipse segment: from right corner (W,yW) down to the join (xR,yR)
+  // Skip i=0 to avoid repeating the move point.
+  const rightEdgeForRim = new Array(nR)
+    .fill(0)
+    .map((_, i) => {
+      const t = (i + 1) / nR; // 1..nR
+      const x = W - t * (W - xR);
+      const y = Math.min(yEllipse(cx, cy, rx, ry, x), H - 1e-3);
+      return ` L ${f(x)} ${f(y)}`;
+    })
+    .join('');
+
+  // Left ellipse segment: from the join (xL,yL) to the left corner (0,y0)
+  // Again start at i=1 to step away from the join point.
+  const leftEdgeForRim = new Array(nL)
+    .fill(0)
+    .map((_, i) => {
+      const t = (i + 1) / nL; // 1..nL
+      const x = xL * (1 - t); // → 0
+      const y = Math.min(yEllipse(cx, cy, rx, ry, x), H - 1e-3);
+      return ` L ${f(x)} ${f(y)}`;
+    })
+    .join('');
+
+  const bottomCurveD =
+    `M ${f(W)} ${f(yW)}` + // start at bottom-right corner
+    rightEdgeForRim + // along ellipse to (xR,yR)
+    bump + // the two cubic segments across the tip to (xL,yL)
+    leftEdgeForRim; // along ellipse to bottom-left corner
+
+  return { archD, bottomCurveD, width: W, height: H };
+}
+
+export function generateArchPath(p: IProps) {
+  return generateArchPaths(p).archD;
 }
