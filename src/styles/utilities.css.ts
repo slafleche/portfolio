@@ -31,44 +31,38 @@ export const utilityStyles = style({
       pointerEvents: 'none',
     },
     // Accessibility, focus on visible only
-    ...nest(
-      '&[data-focus-visibility="focus"]',
+    '&[data-focus-visibility="focus"]': {
+      position: 'absolute',
+      clip: 'rect(0 0 0 0)',
+      height: '1px',
+      width: '1px',
+      margin: '-1px',
+      overflow: 'hidden',
+      padding: 0,
+    },
+    ...nest('&[data-focus-visibility="focus"]', [
       {
-        position: 'absolute',
-        clip: 'rect(0 0 0 0)',
-        height: '1px',
-        width: '1px',
-        margin: '-1px',
-        overflow: 'hidden',
-        padding: 0,
-      },
-      [
-        {
-          '&:focus, &.focus-visible': {
-            zIndex: 1,
-            width: 'auto',
-            height: 'auto',
-            clip: 'auto',
-          },
+        '&:focus, &.focus-visible': {
+          zIndex: 1,
+          width: 'auto',
+          height: 'auto',
+          clip: 'auto',
         },
-      ],
-    ),
+      },
+    ]),
 
     // Set UI specific links with this reset to leave "user" content, e.g. markdown natural with the defaults
-    ...nest(
-      '&[data-ui="link"]',
+    '&[data-ui="link"]': {
+      textDecoration: 'none',
+      color: 'inherit',
+    },
+    ...nest('&[data-ui="link"]', [
       {
-        textDecoration: 'none',
-        color: 'inherit',
-      },
-      [
-        {
-          '&:visited': {
-            color: 'inherit',
-          },
+        '&:visited': {
+          color: 'inherit',
         },
-      ],
-    ),
+      },
+    ]),
   },
 });
 

@@ -1,25 +1,25 @@
 import type { StyleRule } from '@vanilla-extract/css';
 
-// Build a StyleRule by combining a base selector with one or more nested
-// selector maps. This keeps .css.ts output flat (no multi-level nesting),
-// while letting you compose selectors ergonomically in code.
+// Build a flattened selector map by combining a base selector with one or more
+// nested selector maps. Use this to spread under `selectors: { ... }`.
 //
-// Example:
-//   nest('&[data-focus-visibility="focus"]', { outlineOffset: 2 }, [
-//     { '&:focus': { outline: '2px solid currentColor' } },
-//     { '&:hover, &.focus-class': { textDecoration: 'underline' } },
-//   ]);
-//
-//...nest('&[data-focus-visibility="focus"]', {}, [{}]),
+// Example (usage under selectors):
+//   selectors: {
+//     ...nest('&[data-focus-visibility="focus"]', [
+//       { '&:focus': { outline: '2px solid currentColor' } },
+//       { '&:hover, &.focus-class': { textDecoration: 'underline' } },
+//     ]),
+//   }
+// Quick copy:
+// ...nest('&[data-focus-visibility="focus"]', {}, [{}]),
 
 export type NestedSelectors = Record<string, StyleRule>;
 export type NestedInput = NestedSelectors | NestedSelectors[];
 
 export function nest(
   base: string,
-  baseStyles: StyleRule = {},
   nested: NestedInput = [],
-): StyleRule {
+): Record<string, StyleRule> {
   const items = Array.isArray(nested) ? nested : [nested];
   const selectors: Record<string, StyleRule> = {};
 
@@ -45,11 +45,9 @@ export function nest(
     }
   }
 
-  const result: StyleRule = { ...baseStyles };
-  if (Object.keys(selectors).length > 0) {
-    result.selectors = { ...(baseStyles.selectors ?? {}), ...selectors };
-  }
-  return result;
+  return selectors;
 }
+
+export default nest;
 
 export default nest;
