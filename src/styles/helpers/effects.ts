@@ -1,4 +1,4 @@
-import { measurement } from './measurement';
+import { m } from './measurement';
 
 const noiseSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60">
@@ -22,7 +22,7 @@ export const glassVars = {
 };
 
 export const glossyBorderVars = {
-  thickness: measurement(4),
+  thickness: m(4),
   baseColor: 'rgba(255,255,255,0.18)', // subtle glass sweep
   hotAlpha: 0.22, // hotspot strength
   hotCx: 0.5, // hotspot center (objectBoundingBox coords 0..1)
@@ -30,12 +30,14 @@ export const glossyBorderVars = {
   hotR: 0.42,
   hotScaleX: 0.4,
   hotScaleY: 0.32,
+  shadowBlur: m(4),
+  shadowOffsetX: m()
   // Smooth sweep around the edge
   base: `conic-gradient(
     from 200deg at 50% 50%,
     hsla(0,0%,100%,0.55) 0deg,
     hsla(0,0%,100%,0.22) 120deg,
-    hsla(0,0%,100%,0.06) 210deg,
+    #ffffff0f 210deg,
     transparent 1turn
   )`,
   // Bottom-center hotspot to accent the “tip”

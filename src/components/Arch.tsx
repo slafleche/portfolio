@@ -23,7 +23,8 @@ export default function Arch({ className, children }: Props) {
   const archPathId = `${baseId}-arch`;
   const bottomPathId = `${baseId}-archBottom`;
   const clipPathId = `${baseId}-clip`;
-  const rimXId = `${baseId}-rimX`;
+  const rimXId = `${baseId}-rimId`;
+  const rimXHotId = `${baseId}-rimHot`;
 
   // Build both paths from safe width (will update when windowSize arrives)
   const { archD, bottomCurveD } = generateArchPaths({
@@ -58,9 +59,28 @@ export default function Arch({ className, children }: Props) {
             y2="0"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0%" stopColor="rgba(255,255,255,0.16)" />
-            <stop offset="55%" stopColor="rgba(255,255,255,0.20)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0.30)" />
+            {/* soft start on the left */}
+            <stop offset="0%" stopColor="hsla(0,0%,100%,0.14)" />
+            <stop offset="45%" stopColor="hsla(0,0%,100%,0.20)" />
+            {/* ramp up toward the right */}
+            <stop offset="82%" stopColor="hsla(0,0%,100%,0.28)" />
+            <stop offset="97%" stopColor="hsla(0,0%,100%,0.36)" />
+            <stop offset="100%" stopColor="hsla(0,0%,100%,0.40)" />
+          </linearGradient>
+
+          {/* Extra hot spot on rim */}
+          <linearGradient
+            id={rimXHotId}
+            x1="0"
+            y1="0"
+            x2={windowSize}
+            y2="0"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0%" stopColor="hsla(0,0%,100%,0)" />
+            <stop offset="90%" stopColor="hsla(0,0%,100%,0)" />
+            <stop offset="96%" stopColor="hsla(0,0%,100%,0.26)" />
+            <stop offset="100%" stopColor="hsla(0,0%,100%,0.42)" />
           </linearGradient>
         </defs>
 
@@ -68,8 +88,7 @@ export default function Arch({ className, children }: Props) {
         <use
           href={`#${archPathId}`}
           fill={colorVars.shadow.css()}
-          transform="translate(0 6)"
-          style={{ filter: 'blur(4px)' }}
+          className={glassyStyles.shadow}
         />
 
         {/* frosted body */}
@@ -91,9 +110,22 @@ export default function Arch({ className, children }: Props) {
           fill="none"
           stroke={`url(#${rimXId})`}
           strokeWidth={glossyBorderVars.thickness.css()}
+          strokeLinecap="round"
+          strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
           pointerEvents="none"
-          className={glassyStyles.stroke}
+        />
+
+        {/* Second rim highlight */}
+        <use
+          href={`#${bottomPathId}`}
+          fill="none"
+          stroke={`url(#${rimXHotId})`}
+          strokeWidth={glossyBorderVars.thickness.css()}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+          pointerEvents="none"
         />
         {/* Dnd of SVG */}
       </svg>

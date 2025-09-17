@@ -17,7 +17,7 @@ export interface IMeasurement {
 
 // Allows keeping measurement values as a number for easier math,
 // and then convert to string for use
-export const measurement = (value: number, unit: string = 'px') => {
+export const m = (value: number, unit: string = 'px') => {
   return {
     value,
     unit,
@@ -28,7 +28,7 @@ export const measurement = (value: number, unit: string = 'px') => {
 };
 
 export const modify = (oldMeasurement: IMeasurement, newVal: number) => {
-  return measurement(newVal, oldMeasurement.unit);
+  return m(newVal, oldMeasurement.unit);
 };
 
 export const parseStringMeasurement = (cssValue: string) => {
@@ -41,5 +41,5 @@ export const parseStringMeasurement = (cssValue: string) => {
   const finalValue = Number(value);
   const finalUnit = `${unit.trim()}`;
 
-  return measurement(finalValue, finalUnit);
+  return m(finalValue, finalUnit);
 };
