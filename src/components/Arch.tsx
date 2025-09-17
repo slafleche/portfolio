@@ -4,7 +4,7 @@ import { ReactNode } from 'react'; // useEffect avoids hydration warnings
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
-import { archVars, colorVars } from '../styles/vars';
+import { archVars } from '../styles/vars';
 import * as glassyStyles from '../styles/glassy.css';
 import { useSafeId } from '../lib/dom';
 import { glossyBorderVars } from '../styles/helpers/effects';
@@ -102,11 +102,7 @@ export default function Arch({ className, children }: Props) {
         </defs>
 
         {/* optional pseudo shadow; safe to comment out while debugging bands */}
-        <use
-          href={`#${archPathId}`}
-          fill={colorVars.shadow.css()}
-          className={glassyStyles.shadow}
-        />
+        <use href={`#${archPathId}`} className={glassyStyles.shadow} />
 
         {/* frosted body */}
         <foreignObject
