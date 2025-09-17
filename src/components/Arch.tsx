@@ -24,7 +24,6 @@ export default function Arch({ className, children }: Props) {
   const bottomPathId = `${baseId}-archBottom`;
   const clipPathId = `${baseId}-clip`;
   const rimXId = `${baseId}-rimId`;
-  const rimXHotId = `${baseId}-rimHot`;
 
   // Build both paths from safe width (will update when windowSize arrives)
   const { archD, bottomCurveD } = generateArchPaths({
@@ -59,15 +58,46 @@ export default function Arch({ className, children }: Props) {
             y2="0"
             gradientUnits="userSpaceOnUse"
           >
-            {/* left stays subtle */}
-            <stop offset="0%" stopColor="hsla(0,0%,100%,0.14)" />
-            <stop offset="40%" stopColor="hsla(0,0%,100%,0.20)" />
-            {/* hotspot ~65% across */}
-            <stop offset="60%" stopColor="hsla(0,0%,100%,0.32)" />
-            <stop offset="66%" stopColor="hsla(0,0%,100%,0.44)" />
-            {/* ease down toward right corner so edge isn’t the brightest */}
-            <stop offset="82%" stopColor="hsla(0,0%,100%,0.34)" />
-            <stop offset="100%" stopColor="hsla(0,0%,100%,0.24)" />
+            {(() => {
+              const clamp = (v: number, a = 0, b = 1) =>
+                Math.min(b, Math.max(a, v));
+              const {
+                rimHotPosX: pos0,
+                rimHotCoverage: cov0,
+                rimBaseLeft, // e.g. 0.14
+                rimBaseMid, // e.g. 0.20
+                rimPeak, // e.g. 0.44
+                rimBaseRight, // e.g. 0.24
+                rimColor, //  chroma color
+              } = glossyBorderVars;
+
+              const pos = clamp(pos0);
+              const cov = clamp(cov0);
+              const s = clamp(pos - cov / 2);
+              const e = clamp(pos + cov / 2);
+              const rise = clamp(s + (pos - s) * 0.6);
+              const fall = clamp(pos + (e - pos) * 0.4);
+              const pc = (x: number) => `${(x * 100).toFixed(2)}%`;
+              const col = (a: number) => rimColor.alpha(a).css(); // chroma → css rgba()
+
+              return (
+                <>
+                  <stop offset={pc(0)} stopColor={col(rimBaseLeft)} />
+                  <stop offset={pc(s)} stopColor={col(rimBaseMid)} />
+                  <stop
+                    offset={pc(rise)}
+                    stopColor={col((rimBaseMid + rimPeak) / 2)}
+                  />
+                  <stop offset={pc(pos)} stopColor={col(rimPeak)} />
+                  <stop
+                    offset={pc(fall)}
+                    stopColor={col((rimBaseMid + rimPeak * 0.75) / 2)}
+                  />
+                  <stop offset={pc(e)} stopColor={col(rimBaseMid)} />
+                  <stop offset={pc(1)} stopColor={col(rimBaseRight)} />
+                </>
+              );
+            })()}
           </linearGradient>
         </defs>
 
