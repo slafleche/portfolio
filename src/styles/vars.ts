@@ -7,7 +7,8 @@ export type ChromaColor = Color;
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
 // meant to be more abstract and used in different wayt. For example, you
-// could flip the fg and bg colours if you want a dark/light mode
+// could flip the fg and bg colours if you want a dark/light mode or you
+// could do math on a value.
 export const colors = {
   // Main Colours
   brand: chroma('rgb(14,173,184)'),
