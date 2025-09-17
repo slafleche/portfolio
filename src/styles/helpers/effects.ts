@@ -23,6 +23,15 @@ export const glassVars = {
 
 export const glossyBorderVars = {
   thickness: measurement(7),
+  baseColor: 'rgba(255,255,255,0.18)', // subtle glass sweep
+  hotAlpha: 0.22, // hotspot strength
+  hotCx: 0.5, // hotspot center (objectBoundingBox coords 0..1)
+  hotCy: 0.92, // near bottom tip
+  clipRx: 0.36, // horizontal radius (0..1, bbox units)
+  clipRy: 0.22, // vertical radius   (0..1, bbox units)
+  hotR: 0.42,
+  hotScaleX: 0.4,
+  hotScaleY: 0.32,
   // Smooth sweep around the edge
   base: `conic-gradient(
     from 200deg at 50% 50%,
@@ -39,118 +48,3 @@ export const glossyBorderVars = {
     transparent 70%
   )`,
 };
-
-// export const roundButton = (buttonSize: csstype.Property.Width) => {
-// 	return {
-// 		...flexPosition.center(),
-// 		position: 'relative',
-// 		textDecoration: 'none',
-// 		borderRadius: '50%',
-// 		fontWeight: fontVars.body.semiBold,
-// 		transition: 'background, color 0.3s, 0.2s ease-in',
-// 		width: buttonSize,
-// 		height: buttonSize,
-// 		minHeight: buttonSize,
-// 		minWidth: buttonSize,
-// 		border: `solid ${colors.brand.css()} 3px`,
-// 		...reducedMotion(ReducedMotion.off, {
-// 			border: `solid ${colors.white.css()} 1px`,
-// 		}),
-// 		selectors: {
-// 			['&&']: {
-// 				color: colors.brand.css(),
-// 				outlineColor: colors.white.css(),
-// 			},
-// 			['&:after']: {
-// 				...reducedMotion(ReducedMotion.off, {
-// 					content: '',
-// 					...absolutePosition.fullSize(),
-// 					border: `solid ${colors.brand.css()} 3px`,
-// 					borderRadius: '50%',
-// 					transform: 'scale(1)',
-// 					transition: 'opacity, transform, filter 0.3s, 0.2s ease-out',
-// 				}),
-// 			},
-// 			['&:hover:after, &:focus:after']: {
-// 				opacity: 0,
-// 				transform: 'scale(2)',
-// 			},
-
-// 			['&:hover, &:focus']: {
-// 				backgroundColor: colors.brand.css(),
-// 				color: colors.white.css(),
-// 			},
-// 			['&:focus-visible, &.focus-visible']: {
-// 				outline: `solid ${colors.white.css()} 1px`,
-// 				outlineStyle: 'dotted',
-// 				outlineOffset: '-5px',
-// 			},
-// 		},
-// 	};
-// };
-
-// export const glassyBg = (idPrefix) => {
-// 	return {
-
-// 	}
-
-//     <!-- Frosted glass: blur the background under the panel -->
-//     <filter id="frostBlur" x="-20%" y="-20%" width="140%" height="140%">
-//       <feGaussianBlur stdDeviation="8"/>
-//     </filter>
-
-//     <!-- Soft inner shadow -->
-//     <filter id="innerSoft" x="-20%" y="-20%" width="140%" height="140%">
-//       <feGaussianBlur in="SourceAlpha" stdDeviation="14" result="blur"/>
-//       <feOffset dy="10" result="off"/>
-//       <feComposite in="off" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="inner"/>
-//       <feColorMatrix in="inner" type="matrix"
-//         values="0 0 0 0 0
-//                 0 0 0 0 0
-//                 0 0 0 0 0
-//                 0 0 0 .22 0"/>
-//     </filter>
-
-//     <!-- Frosty fill tint -->
-//     <linearGradient id="frostFill" x1="0%" y1="0%" x2="100%" y2="100%">
-//       <stop offset="0%"   stop-color="white" stop-opacity="0.28"/>
-//       <stop offset="55%"  stop-color="white" stop-opacity="0.16"/>
-//       <stop offset="100%" stop-color="white" stop-opacity="0.10"/>
-//     </linearGradient>
-
-//     <!-- Rim highlight gradient -->
-//     <linearGradient id="rimBase" x1="0%" y1="0%" x2="100%" y2="40%">
-//       <stop offset="0%"   stop-color="white" stop-opacity="0.65"/>
-//       <stop offset="40%"  stop-color="white" stop-opacity="0.22"/>
-//       <stop offset="100%" stop-color="white" stop-opacity="0"/>
-//     </linearGradient>
-//   </defs>
-
-//   <!-- (Optional) a subtle vignette so glass reads better -->
-//   <radialGradient id="vign" cx="50%" cy="50%" r="75%">
-//     <stop offset="60%" stop-color="black" stop-opacity="0"/>
-//     <stop offset="100%" stop-color="black" stop-opacity="0.25"/>
-//   </radialGradient>
-//   <rect width="100%" height="100%" fill="url(#vign)"/>
-
-//   <!-- GLASS PANEL: blur the background only where the shape is -->
-//   <g clip-path="url(#clipS)">
-//     <!-- blurred copy of the background under the shape -->
-//     <use href="#bgImg" filter="url(#frostBlur)"/>
-//     <!-- frosty white tint -->
-//     <use href="#S" fill="url(#frostFill)"/>
-//   </g>
-
-//   <!-- Inner shadow on the panel -->
-//   <use href="#S" fill="transparent" filter="url(#innerSoft)"/>
-
-//   <!-- Rim highlight (thin glowing edge) -->
-//   <g mask="url(#rimMask)">
-//     <use href="#S" fill="url(#rimBase)"/>
-//   </g>
-
-//   <!-- (Optional) hairline stroke to crispen the edge on dark BGs -->
-//   <use href="#S" fill="none" stroke="white" stroke-opacity="0.06" stroke-width="1"/>
-// </svg>
-
-// };
