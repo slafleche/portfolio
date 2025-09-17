@@ -12,10 +12,10 @@ interface IFinalBorder {
 
 const borders = (props: IBorder = {}) => {
   const {
-    color = colorVars.border,
-    width = borderVars.width,
-    style = borderVars.style,
-    radius = borderVars.radius,
+    color = colorVars.border, // Colour
+    width = borderVars.width, // Measurement
+    style = borderVars.style, // String
+    radius = borderVars.radius, // Measurement
   } = props;
 
   // If border-style: "none"; bypass the rest
@@ -24,18 +24,43 @@ const borders = (props: IBorder = {}) => {
   };
 
   if (style != 'none') {
-    if (width) {
-      finalBorder.borderWidth = width.css() as CSS.Property.BorderWidth;
+    if (!!width) {
+      if (typeof width === 'string') {
+        finalBorder.borderWidth = width;
+      } else {
+        finalBorder.borderWidth = width.css();
+      }
     } else {
       finalBorder.borderWidth = borderVars.width.css();
     }
 
-    if (radius && radius.value != 0) {
-      finalBorder.borderRadius = radius.css() as CSS.Property.BorderRadius;
+    if (radius) {
+      if (!!radius) {
+        if (typeof radius === 'string') {
+          finalBorder.borderRadius = width;
+        } else {
+          finalBorder.borderRadius = width.css();
+        }
+      } else {
+        finalBorder.borderRadius = borderVars.radius.css();
+      }
     }
+
+    if (color) {
+      if (!!radius) {
+        if (typeof color === 'string') {
+          finalBorder.borderColor = color;
+        } else {
+          finalBorder.borderColor = color.css();
+        }
+      } else {
+        finalBorder.borderColor = borderVars.color.css();
+      }
+    }
+
     return {
       ...finalBorder,
-      borderColor: color,
+      borderStyle: borderStyle,
     };
   } else {
     return { border: 'none' };
