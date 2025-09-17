@@ -22,13 +22,11 @@ export const glassVars = {
 };
 
 export const glossyBorderVars = {
-  thickness: measurement(7),
+  thickness: measurement(4),
   baseColor: 'rgba(255,255,255,0.18)', // subtle glass sweep
   hotAlpha: 0.22, // hotspot strength
   hotCx: 0.5, // hotspot center (objectBoundingBox coords 0..1)
   hotCy: 0.92, // near bottom tip
-  clipRx: 0.36, // horizontal radius (0..1, bbox units)
-  clipRy: 0.22, // vertical radius   (0..1, bbox units)
   hotR: 0.42,
   hotScaleX: 0.4,
   hotScaleY: 0.32,

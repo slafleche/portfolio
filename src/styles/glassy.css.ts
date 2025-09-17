@@ -2,9 +2,10 @@ import { style } from '@vanilla-extract/css';
 import { glassVars, glossyBorderVars } from './helpers/effects';
 import * as CSS from 'csstype';
 import { absolutePosition } from './helpers/positioning';
-import borders from './helpers/border';
+import { modify } from './helpers/measurement';
+// import borders from './helpers/border';
 
-export const glassyBg = style({
+export const bg = style({
   position: 'relative',
   background: [
     `linear-gradient(135deg, ${glassVars.tint1}, ${glassVars.tint2})`,
@@ -14,21 +15,15 @@ export const glassyBg = style({
   backdropFilter: `blur(${glassVars.blur})`,
   WebkitBackdropFilter:
     `blur(${glassVars.blur})` as CSS.Property.BackdropFilter,
-
-  // Glossy border
-  ...borders({
-    width: glossyBorderVars.thickness,
-    color: 'transparent',
-  }),
 });
 
-export const glassyElement = style({
+export const element = style({
   position: 'relative',
   width: '100%',
   height: '100%',
 });
 
-export const glassGrain = style({
+export const grain = style({
   ...absolutePosition.fullSize(),
   inset: 0,
   pointerEvents: 'none',
@@ -38,4 +33,11 @@ export const glassGrain = style({
   backgroundSize: '240px 240px',
   mixBlendMode: 'overlay',
   opacity: '0.03',
+});
+
+export const stroke = style({
+  transform: `translateY(${modify(
+    glossyBorderVars.thickness,
+    glossyBorderVars.thickness.value * -0.25,
+  ).css()})`,
 });

@@ -27,6 +27,10 @@ export const measurement = (value: number, unit: string = 'px') => {
   };
 };
 
+export const modify = (oldMeasurement: IMeasurement, newVal: number) => {
+  return measurement(newVal, oldMeasurement.unit);
+};
+
 export const parseStringMeasurement = (cssValue: string) => {
   let value = cssValue.trim();
   const unit = value.replace(/^-?(0|[1-9]\d*)?([.][0-9]*)?/, '');
