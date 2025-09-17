@@ -14,7 +14,7 @@ type Props = { className?: string; children?: ReactNode };
 export default function Arch({ className, children }: Props) {
   const windowSize = useWindowSize().width;
   const baseId = useSafeId();
-  if (!windowSize) return; // Bail early if window size is bad
+  if (!windowSize) return null; // Bail early if window size is bad
 
   // Safe numbers even before windowSize is known
   const ws = Math.max(1, windowSize ?? 0);
@@ -55,32 +55,19 @@ export default function Arch({ className, children }: Props) {
             id={rimXId}
             x1="0"
             y1="0"
-            x2={windowSize}
+            x2={ws}
             y2="0"
             gradientUnits="userSpaceOnUse"
           >
-            {/* soft start on the left */}
+            {/* left stays subtle */}
             <stop offset="0%" stopColor="hsla(0,0%,100%,0.14)" />
-            <stop offset="45%" stopColor="hsla(0,0%,100%,0.20)" />
-            {/* ramp up toward the right */}
-            <stop offset="82%" stopColor="hsla(0,0%,100%,0.28)" />
-            <stop offset="97%" stopColor="hsla(0,0%,100%,0.36)" />
-            <stop offset="100%" stopColor="hsla(0,0%,100%,0.40)" />
-          </linearGradient>
-
-          {/* Extra hot spot on rim */}
-          <linearGradient
-            id={rimXHotId}
-            x1="0"
-            y1="0"
-            x2={windowSize}
-            y2="0"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0%" stopColor="hsla(0,0%,100%,0)" />
-            <stop offset="90%" stopColor="hsla(0,0%,100%,0)" />
-            <stop offset="96%" stopColor="hsla(0,0%,100%,0.26)" />
-            <stop offset="100%" stopColor="hsla(0,0%,100%,0.42)" />
+            <stop offset="40%" stopColor="hsla(0,0%,100%,0.20)" />
+            {/* hotspot ~65% across */}
+            <stop offset="60%" stopColor="hsla(0,0%,100%,0.32)" />
+            <stop offset="66%" stopColor="hsla(0,0%,100%,0.44)" />
+            {/* ease down toward right corner so edge isn’t the brightest */}
+            <stop offset="82%" stopColor="hsla(0,0%,100%,0.34)" />
+            <stop offset="100%" stopColor="hsla(0,0%,100%,0.24)" />
           </linearGradient>
         </defs>
 
@@ -116,17 +103,6 @@ export default function Arch({ className, children }: Props) {
           pointerEvents="none"
         />
 
-        {/* Second rim highlight */}
-        <use
-          href={`#${bottomPathId}`}
-          fill="none"
-          stroke={`url(#${rimXHotId})`}
-          strokeWidth={glossyBorderVars.thickness.css()}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-          pointerEvents="none"
-        />
         {/* Dnd of SVG */}
       </svg>
       {children}

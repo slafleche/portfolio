@@ -31,7 +31,8 @@ export const glossyBorderVars = {
   hotScaleX: 0.4,
   hotScaleY: 0.32,
   shadowBlur: m(4),
-  shadowOffsetX: m()
+  shadowOffsetX: m(0),
+  shadowOffsetY: m(6),
   // Smooth sweep around the edge
   base: `conic-gradient(
     from 200deg at 50% 50%,
