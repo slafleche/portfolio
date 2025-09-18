@@ -9,7 +9,7 @@ export default function LocaleAutoRedirect({ fallback }: { fallback: Locale }) {
 	const router = useRouter();
 	useEffect(() => {
 		const ui = getBrowserLocale(); // Current browser UI on root only
-		const target = (ui ?? fallback ?? DEFAULT_LOCALE) as Locale;
+		const target: Locale = ui ?? fallback ?? DEFAULT_LOCALE;
 		router.replace(`/${target}`);
 	}, [router, fallback]);
 
