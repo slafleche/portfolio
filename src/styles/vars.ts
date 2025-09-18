@@ -9,26 +9,55 @@ export type ChromaColor = Color;
 // meant to be more abstract and used in different wayt. For example, you
 // could flip the fg and bg colours if you want a dark/light mode or you
 // could do math on a value.
+
+const backgroundColour = chroma('#453564');
+// Target colour: #2c244b on #453564
+const shadow = backgroundColour.darken(0.8).desaturate(0.2).alpha(0.5);
+
+const gradients = {
+  a_start: chroma('#322b4d'),
+  a_mid: chroma('#6263b5'),
+  a_end: chroma('#322b4d'),
+
+  b_start: chroma('#2f70aa'),
+  b_mid: chroma('#5dbad9'),
+  b_end: chroma('#92e6f1'),
+
+  c_start: chroma('#94439f'),
+  c_mid: chroma('#ec8694'),
+  c_end: chroma('#fcd2a2'),
+};
+
+// Meant to easily overwrite the defaults with theming
+// Note the goal isn't for the new theme to use exactly the same calculations
+// for the shadows or anything else, the goal is to write a custom .ts file
+// with the new themes's rules.
+
+export const defaults = {
+  backgroundColour,
+  shadow,
+  gradients,
+  fg: chroma('#ffffff'),
+  bg: chroma('#000000'),
+};
+
 export const colors = {
   // Main Colours
   brand: chroma('rgb(14,173,184)'),
   contrast: chroma('rgba(10, 133, 142, 1)'),
   // Nav
   // navBg: chroma('#252136'),
-  navFg: chroma('#ffffff'),
+  navFg: defaults.fg,
   // Body
-  bodyBg: chroma('#362C59'),
-  bodyFg: chroma('#ffffff'),
+  bodyBg: defaults.backgroundColour,
+
+  bodyFg: defaults.fg,
   // Text
-  headingFg: chroma('#ffffff'),
+  headingFg: defaults.fg,
   // Shadows
-  shadow: chroma('rgb(42, 34, 70)').alpha(0.3),
+  shadow,
   // Borders
   border: chroma('#1d1d1f'),
-
-  // Contrast Section
-  contrastBg: chroma('#252136'),
-  contrastFg: chroma('#ffffff'),
 
   // Gradient A
   gradientA_main_start: chroma('#573f97'),
