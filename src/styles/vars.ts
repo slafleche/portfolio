@@ -14,10 +14,24 @@ const backgroundColour = chroma('#453564');
 // Target colour: #2c244b on #453564
 const shadow = backgroundColour.darken(0.8).desaturate(0.2).alpha(0.5);
 
+// <linearGradient id="c">
+//   <stop offset=".17753" stopColor="#e6a87f" stopOpacity={1} />
+//   <stop offset=".471" stopColor="#f27e8c" stopOpacity={1} />
+//   <stop offset="1" stopColor="#ff549a" stopOpacity={1} />
+// </linearGradient>
+// <linearGradient id="b">
+//   <stop offset=".0692" stopColor="#4744a0" stopOpacity={1} />
+//   <stop offset=".36528" stopColor="#64eaeb" stopOpacity={1} />
+// </linearGradient>
+// <linearGradient id="a">
+//   <stop offset=".20466" stopColor="#3e43a0" stopOpacity={1} />
+//   <stop offset="1" stopColor="#fe5998" stopOpacity={1} />
+// </linearGradient>
+
 const gradients = {
-  a_start: chroma('#322b4d'),
-  a_mid: chroma('#6263b5'),
-  a_end: chroma('#322b4d'),
+  // a_start: chroma('#322b4d'),
+  // a_mid: chroma('#6263b5'),
+  // a_end: chroma('#5d4cb9'),
 
   b_start: chroma('#2f70aa'),
   b_mid: chroma('#5dbad9'),
@@ -181,4 +195,5 @@ export const archVars = {
 
 export const logoVars = {
   width: m(45),
+  shadowRatio: 782.49392 / 948.31276, // from SVG shadow h/w
 };

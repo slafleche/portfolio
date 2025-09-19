@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { colorVars } from '../vars';
+// import { colorVars } from '../vars';
 
 export const cardVars = {};
 
@@ -9,8 +9,8 @@ export const card = style({
   minHeight: '100px',
   maxWidth: '50vw',
   margin: 'auto',
-  background: colorVars.contrastBg.css(),
-  color: colorVars.contrastFg.css(),
+  // background: colorVars.contrastBg.css(),
+  // color: colorVars.contrastFg.css(),
 
   //   selectors: {
   //     // pseudo-elements
