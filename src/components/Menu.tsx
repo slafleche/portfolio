@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import * as s from '@/styles/menu.css';
-import Logo from '@/assets/SVG/logo.svg';
 import { useT } from '@/lib/locales/useT';
 import { useLocale } from '@/lib/locales/localeContext';
 import { AVAILABLE_LOCALES, TRANSLATIONS } from '@/data/locales';
 import clsx from 'clsx';
 import Arch from './Arch';
+import Logo from './Logo';
 
 export default function Menu() {
   const t = useT();
