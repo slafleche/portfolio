@@ -13,25 +13,22 @@ export type MeasurementLike =
 export interface IMeasurement {
   value: number;
   unit?: string;
+  css: () => string;
 }
 
 // Allows keeping measurement values as a number for easier math,
 // and then convert to string for use
-export const m = (value: number, unit: string = 'px') => {
-  return {
-    value,
-    unit,
-    css: () => {
-      return `${value}${unit}`;
-    },
-  };
+export const m = (value: number, unit: string = 'px'): IMeasurement => ({
+  value,
+  unit,
+  css: () => `${value}${unit}`,
+});
+
+export const modify = (oldMeasurement: IMeasurement, newVal: number): IMeasurement => {
+  return m(newVal, oldMeasurement.unit ?? 'px');
 };
 
-export const modify = (oldMeasurement: IMeasurement, newVal: number) => {
-  return m(newVal, oldMeasurement.unit);
-};
-
-export const parseStringMeasurement = (cssValue: string) => {
+export const parseStringMeasurement = (cssValue: string): IMeasurement => {
   let value = cssValue.trim();
   const unit = value.replace(/^-?(0|[1-9]\d*)?([.][0-9]*)?/, '');
   value = value.substring(0, value.length - unit.length);
@@ -39,7 +36,7 @@ export const parseStringMeasurement = (cssValue: string) => {
     value = '0';
   }
   const finalValue = Number(value);
-  const finalUnit = `${unit.trim()}`;
+  const finalUnit = unit.trim() || 'px';
 
   return m(finalValue, finalUnit);
 };
