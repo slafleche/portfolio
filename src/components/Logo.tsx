@@ -2,6 +2,7 @@
 import clsx from 'clsx';
 import * as s from '@/styles/components/logo.css';
 import chroma, { type Color } from 'chroma-js';
+import { useSafeId } from '../lib/dom';
 
 const LogoMode = { light: 'light', dark: 'dark' } as const;
 type LogoMode = (typeof LogoMode)[keyof typeof LogoMode];
@@ -22,9 +23,65 @@ export default function Logo({
   bgColour = chroma('#251a38'),
 }: Props) {
   const bgFill = mode === LogoMode.light ? chroma('#fff').alpha(0.3) : bgColour;
-  
+  const baseId = useSafeId();
+
+  const gradientA = `${baseId}-a`;
+  const gradientB = `${baseId}-b`;
+  const gradientC = `${baseId}-c`;
+
+  const gradientD = `${baseId}-d`;
+  const gradientE = `${baseId}-e`;
+  const gradientF = `${baseId}-f`;
+
+  const shadowGradientA = `${baseId}-shadowA`;
+  const shadowGradientB = `${baseId}-shadowB`;
+
   return (
     <div className={clsx(s.logo, className)}>
+      {shadow && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlnsXlink="http://www.w3.org/1999/xlink"
+          xmlSpace="preserve"
+          width="948.31276"
+          height="782.49392"
+          viewBox="0 0 250.90776 207.03484"
+          focusable="false"
+          className={s.shadow}
+        >
+          <defs>
+            <linearGradient id={shadowGradientA}>
+              <stop offset="0" stopColor="#251a38" stopOpacity={1} />
+              <stop offset=".18656" stopColor="#251a38" stopOpacity={1} />
+              <stop
+                offset=".513"
+                stopColor="#251a38"
+                stopOpacity={0.63636363}
+              />
+              <stop offset="1" stopColor="#251a38" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient
+              xlinkHref={`#${shadowGradientA}`}
+              id={shadowGradientB}
+              x1="42.0508"
+              x2="128.7097"
+              y1="41.52238"
+              y2="106.24017"
+              gradientTransform="translate(-3.25583 -2.51857)"
+              gradientUnits="userSpaceOnUse"
+            />
+          </defs>
+          <path
+            d="M30.9364.42905C25.63106.52566 19.75754.98677 12.23366 2.4806l-.0036.00052C7.22486 6.41332 1.50708 12.08196.34808 14.14036-.5666 15.73766.6106 22.0055.6106 22.0055l57.4013 101.24456 87.97904 83.78479 104.91681-86.33398L135.15721.93178c-2.05324-1.92266-7.39514-.27384-7.79826-.27384-2.4595 0-52.52725-.43755-81.12425-.09508h-.0052C40.97916.60014 36.24229.33294 30.9374.42953l-.0005-.00051zm92.18559 50.4517-.005.0093-.0196.0336c.006-.01115.0129-.02247.0191-.0336.002-.0031.003-.0062.005-.0093z"
+            fill={`url(#${shadowGradientB})`}
+            stroke="none"
+            strokeWidth={1}
+            strokeLinejoin="round"
+            strokeOpacity={0.6}
+          />
+        </svg>
+      )}
+      {/* End of shadow, start of logo */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -38,22 +95,25 @@ export default function Logo({
       >
         <title>{title}</title>
         <defs>
-          <linearGradient id="c">
+          <linearGradient id={gradientA}>
+            <stop offset=".20466" stopColor="#3e43a0" stopOpacity={1} />
+            <stop offset="1" stopColor="#fe5998" stopOpacity={1} />
+          </linearGradient>
+
+          <linearGradient id={gradientB}>
+            <stop offset=".0692" stopColor="#4744a0" stopOpacity={1} />
+            <stop offset=".36528" stopColor="#64eaeb" stopOpacity={1} />
+          </linearGradient>
+
+          <linearGradient id={gradientC}>
             <stop offset=".17753" stopColor="#e6a87f" stopOpacity={1} />
             <stop offset=".471" stopColor="#f27e8c" stopOpacity={1} />
             <stop offset="1" stopColor="#ff549a" stopOpacity={1} />
           </linearGradient>
-          <linearGradient id="b">
-            <stop offset=".0692" stopColor="#4744a0" stopOpacity={1} />
-            <stop offset=".36528" stopColor="#64eaeb" stopOpacity={1} />
-          </linearGradient>
-          <linearGradient id="a">
-            <stop offset=".20466" stopColor="#3e43a0" stopOpacity={1} />
-            <stop offset="1" stopColor="#fe5998" stopOpacity={1} />
-          </linearGradient>
+
           <linearGradient
-            xlinkHref="#a"
-            id="d"
+            xlinkHref={`#${gradientA}`}
+            id={gradientD}
             x1="6.12851"
             x2="125.56756"
             y1="7.78527"
@@ -61,8 +121,8 @@ export default function Logo({
             gradientUnits="userSpaceOnUse"
           />
           <linearGradient
-            xlinkHref="#b"
-            id="e"
+            xlinkHref={`#${gradientB}`}
+            id={gradientE}
             x1="59.47199"
             x2=".03403"
             y1="119.79919"
@@ -70,8 +130,8 @@ export default function Logo({
             gradientUnits="userSpaceOnUse"
           />
           <linearGradient
-            xlinkHref="#c"
-            id="f"
+            xlinkHref={`#${gradientC}`}
+            id={gradientF}
             x1="75.32434"
             x2="133.23373"
             y1="117.98453"
@@ -91,7 +151,7 @@ export default function Logo({
         />
         <path
           d="M31.2623.12844c-5.3064.0966-11.181.55761-18.707 2.0521-5.0052 3.9322-10.723 9.6006-11.882 11.659-.91468 1.5973-.96721 5.7352.26252 7.8652 1.2297 2.13 25.885 45.709 40.48 70.303 5.3174 9.0602 8.5494 16.949 18.663 28.489 5.908 2.3686 13.676 4.4866 16.038 4.4612 1.8407-.007 5.4505-2.0305 6.6802-4.1605s26.643-45.271 40.645-70.208c5.1876-9.1351 10.404-15.878 15.341-30.407-.90278-6.3008-2.9531-14.087-4.1563-16.12-.92598-1.5908-4.4833-3.7052-6.9427-3.7052-2.4595 0-52.527-.43757-81.124-.0951-5.2525.0375-9.9903-.22995-15.297-.13332zm94.306 14.329c-1.2653 3.7265-18.198 32.521-18.198 32.521-3.8992 6.7536-16.69104 31.53531-20.651 34.994-3.95997 3.45868-6.527.55794-8.2904-2.743-4.8061-8.3783-12.508-27.012-17.174-35.47l-22.038-2.2076s-2.9629.87345-1.7436 4.9522c1.2194 4.0787 31.705 60.223 34.171 65.41-2.5946-2.959-19.064-32.021-19.064-32.021-3.8992-6.7536-18.9654-30.22288-19.981-35.382-1.01562-5.15912 2.7806-5.9312 6.521-5.8079 9.6589.02695 29.647 2.6743 39.305 2.8618l12.931-17.982s.72457-3.003-3.4174-3.9863c-4.1419-.98336-68.007-2.6544-73.732-3.1125 3.8599-.7675 37.263-.49971 37.263-.49971 7.7984 0 35.6564-1.31291 40.632.38706s3.7469 5.3738 1.7699 8.5514c-4.8528 8.3514-17.14 24.338-22.131 32.608l9.1075 20.189s2.2378 2.1295 5.1604-.96583c2.9226-3.0953 36.302-57.569 39.562-62.299z"
-          fill="url(#d)"
+          fill={`url(#${gradientD})`}
           fillOpacity={1}
           stroke="none"
           strokeWidth={0.2}
@@ -101,61 +161,17 @@ export default function Logo({
         />
         <path
           d="M.02997 16.4729c-.12988 1.78854.13792 3.90152.90589 5.23172 1.2297 2.13 25.8847 45.7092 40.4797 70.3032 5.3174 9.0602 8.54986 16.9487 18.66346 28.4887 5.908 2.3686 13.67578 4.48663 16.03778 4.46123.76647-.003 1.83985-.35554 2.92024-.91984L71.6442 111.9141c-2.5946-2.959-19.06396-32.0213-19.06396-32.0213-3.8992-6.7536-18.9656-30.2227-19.9812-35.38182-1.01562-5.15912 2.78064-5.93122 6.52104-5.80792 9.6589.02695 29.6471 2.67434 39.3051 2.86184l12.931-17.98184s.7246-3.00302-3.41737-3.98632c-4.1419-.98336-70.86943-2.88342-73.73193-3.11247s-7.4754-.0061-14.17692-.01137"
-          fill="url(#e)"
+          fill={`url(#${gradientE})`}
           strokeWidth={0.35278}
           transform="translate(2.93051 2.81924)"
         />
         <path
           d="M133.23373 2.59932s-7.03063 9.9925-7.6662 11.86026-18.19734 32.51895-18.19734 32.51895c-3.8992 6.7536-16.69097 31.53504-20.65093 34.99373-3.95997 3.45868-6.52706.55795-8.29046-2.74299-4.8061-8.3783-12.50814-27.01167-17.17414-35.46967L39.21673 41.552s-2.96286.8734-1.74356 4.95215c1.2194 4.0787 31.70504 60.22296 34.17104 65.40996l7.36027 12.14086c1.52471-.79052 3.06978-2.00578 3.79253-3.25768 1.2297-2.13 26.64307-45.2706 40.64507-70.2076 5.1876-9.1351 10.40418-15.87845 15.34118-30.40745-.90278-6.3008-2.95314-14.08695-4.15634-16.11995-.27058-.46485-.76627-.9745-1.39319-1.46296"
-          fill="url(#f)"
+          fill={`url(#${gradientF})`}
           strokeWidth={0.35278}
           transform="translate(2.93051 2.81924)"
         />
       </svg>
-
-      {shadow && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          xmlSpace="preserve"
-          width="948.31276"
-          height="782.49392"
-          viewBox="0 0 250.90776 207.03484"
-          focusable="false"
-          className={s.shadow}
-        >
-          <defs>
-            <linearGradient id="logoShadowGradientBase">
-              <stop offset="0" stopColor="#251a38" stopOpacity={1} />
-              <stop offset=".18656" stopColor="#251a38" stopOpacity={1} />
-              <stop
-                offset=".513"
-                stopColor="#251a38"
-                stopOpacity={0.63636363}
-              />
-              <stop offset="1" stopColor="#251a38" stopOpacity={0} />
-            </linearGradient>
-            <linearGradient
-              xlinkHref="#logoShadowGradientBase"
-              id="logoShadowGradient"
-              x1="42.0508"
-              x2="128.7097"
-              y1="41.52238"
-              y2="106.24017"
-              gradientTransform="translate(-3.25583 -2.51857)"
-              gradientUnits="userSpaceOnUse"
-            />
-          </defs>
-          <path
-            d="M30.9364.42905C25.63106.52566 19.75754.98677 12.23366 2.4806l-.0036.00052C7.22486 6.41332 1.50708 12.08196.34808 14.14036-.5666 15.73766.6106 22.0055.6106 22.0055l57.4013 101.24456 87.97904 83.78479 104.91681-86.33398L135.15721.93178c-2.05324-1.92266-7.39514-.27384-7.79826-.27384-2.4595 0-52.52725-.43755-81.12425-.09508h-.0052C40.97916.60014 36.24229.33294 30.9374.42953l-.0005-.00051zm92.18559 50.4517-.005.0093-.0196.0336c.006-.01115.0129-.02247.0191-.0336.002-.0031.003-.0062.005-.0093z"
-            fill="url(#logoShadowGradient)"
-            stroke="none"
-            strokeWidth={1}
-            strokeLinejoin="round"
-            strokeOpacity={0.6}
-          />
-        </svg>
-      )}
     </div>
   );
 }
