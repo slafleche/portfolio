@@ -40,7 +40,27 @@ const gradients = {
   c_start: chroma('#94439f'),
   c_mid: chroma('#ec8694'),
   c_end: chroma('#fcd2a2'),
+
+
+  // var gradientBlues = {
+
+  //   #5A2D92 0%,   /* deep violet */
+  //   #5A8CC7 45%,  /* blue */
+  //   #5ECCE5 75%,  /* cyan */
+  //   #63E3F0 90%,  /* aqua highlight */
+  //   #7C73A0 100%  /* muted violet tail */
+  // }
+  
 };
+// var gradeintLarge = { 
+//   #6AC1CE "0%",   /* aqua */
+//   #9F98BD "18%",  /* lavender */
+//   #DB89C9 "38%",  /* pink-magenta */
+//   #C53FCE "52%",  /* violet-magenta */
+//   #F27CB8 "68%",  /* hot pink */
+//   #F99FA8 "80%",  /* pink-orange/peach */
+//   #7C739F "100%"  /* deep violet */
+// }
 
 // Meant to easily overwrite the defaults with theming
 // Note the goal isn't for the new theme to use exactly the same calculations
