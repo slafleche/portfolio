@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
 import { absolutePosition, flexPosition } from './helpers/positioning';
-import { archVars, colorVars, dropShadowVars, logoVars } from './vars';
+import { archVars, colorVars, dropShadowVars, fontVars, logoVars } from './vars';
+import { globalBoxShadow } from './helpers/shadow';
+import { m } from './helpers/measurement';
 
 export const menu = style({
   position: 'fixed',
@@ -99,7 +101,7 @@ export const logoLink = style({
   ...flexPosition.center(),
   width: logoVars.width.css(),
   height: logoVars.width.css(),
-  transform: `translateY(${logoVars.offsetY.css()})`,
+  transform: `translate(${logoVars.offsetX.css()}, ${logoVars.offsetY.css()})`,
 });
 
 export const link = style({
@@ -127,9 +129,18 @@ export const localeChanger = style({
 export const navLink = style({
   color: colorVars.navFg.css(),
   textDecoration: 'none',
+  fontSize: fontVars.menu.size.css(),
+  letterSpacing: '0.5px',
+  display: 'inline-block',
+  position: 'relative',
+  borderRadius: 8,
+  backgroundColor: 'transparent',
+  boxShadow: 'none',
+
   selectors: {
     '&:visited': {
       color: colorVars.navFg.css(),
     },
+    '&:hover, &:focus-visible': { boxShadow: 'none' },
   },
 });

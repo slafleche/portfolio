@@ -22,7 +22,7 @@ export default function Logo({
   title = 'Logo',
   bgColour = chroma('#251a38'),
 }: Props) {
-  const bgFill = mode === LogoMode.light ? chroma('#fff').alpha(0.3) : bgColour;
+  const bgFill = mode === LogoMode.light ? chroma('#fff').alpha(0.5) : bgColour;
   const baseId = useSafeId();
 
   const gradientA = `${baseId}-a`;
