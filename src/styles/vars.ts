@@ -50,9 +50,12 @@ const gradients = {
   b_spot_b: chroma('#F7D354'),
 };
 
+export const bokenVars = {
+  opacity: 0.2,
+};
 // export const bokehColours = {
 //   a: a_liear_a,
-//   b: 
+//   b:
 // };
 
 export const gradientA = {

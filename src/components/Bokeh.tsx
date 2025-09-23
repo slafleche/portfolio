@@ -1,11 +1,12 @@
 'use client';
 
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import chroma, { Color } from 'chroma-js';
 import * as s from '@/styles/components/bokeh.css';
 import { useSafeId } from '../lib/dom';
 import clsx from 'clsx';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
+import { bokenVars } from '@/styles/vars';
 
 // A simple, deterministic layout for ~10 circles.
 // You can tweak cx, cy, r as you like.
@@ -48,7 +49,7 @@ function BokehOverlay({
     chroma('#E15DAE'),
     chroma('#5d4cb9'),
   ],
-  opacity = 0.2,
+  opacity = bokenVars.opacity,
   blendMode = 'screen',
   blur = 60,
   blurScale = 1,
@@ -57,9 +58,26 @@ function BokehOverlay({
 }: BokehOverlayProps) {
   const id = useSafeId();
   const { width, height } = useWindowSize();
+  const [mounted, setMounted] = useState(false);
+
+  // Fade-in on mount to avoid jarring first paint
+  useEffect(() => {
+    let f1 = requestAnimationFrame(() => {
+      let f2 = requestAnimationFrame(() => setMounted(true));
+      (window as any).__bokeh_f2 = f2;
+    });
+    return () => {
+      cancelAnimationFrame(f1);
+      if ((window as any).__bokeh_f2) cancelAnimationFrame((window as any).__bokeh_f2);
+    };
+  }, []);
 
   // Precompute color strings
   const colorStrs = useMemo(() => colors.map((c) => c.css()), [colors]);
+
+  // Split blobs per group once (and keep hooks at top level)
+  const blobs0 = useMemo(() => BLOBS.filter((b) => b.group === 0), []);
+  const blobs1 = useMemo(() => BLOBS.filter((b) => b.group === 1), []);
 
   // Convert blur (CSS px) to viewBox units (0..100) and memoize
   const { stdDev, pad } = useMemo(() => {
@@ -76,7 +94,7 @@ function BokehOverlay({
     <div
       className={clsx(s.overlay, className)}
       style={{
-        opacity,
+        opacity: mounted ? opacity : 0,
         mixBlendMode: blendMode,
         // isolate blending to this overlay so filter edges don't interact oddly
         isolation: 'isolate',
@@ -101,16 +119,24 @@ function BokehOverlay({
             y={`${-pad}%`}
             width={`${100 + pad * 2}%`}
             height={`${100 + pad * 2}%`}
-            colorInterpolationFilters="sRGB"
+            colorInterpolationFilters="linearRGB"
+            filterRes="512"
           >
-            <feGaussianBlur stdDeviation={stdDev} edgeMode="none" />
+            {/* Main blur */}
+            <feGaussianBlur in="SourceGraphic" stdDeviation={stdDev} edgeMode="none" result="blur" />
+            {/* Noise used both for dithering and tiny spatial jitter to break bands */}
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="2" result="noise" />
+            {/* Micro displacement to reduce residual band edges */}
+            <feDisplacementMap in="blur" in2="noise" scale="0.3" xChannelSelector="R" yChannelSelector="G" result="jitter" />
+            {/* Very low-alpha noise for dithering */}
+            <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.02 0" result="noiseA" />
+            <feBlend in="jitter" in2="noiseA" mode="overlay" />
           </filter>
         </defs>
 
         {/* Two counter-rotating groups for a gentle parallax feel */}
-        <g className={s.rotating}>
-          {useMemo(() => BLOBS.filter((b) => b.group === 0), [])
-            .map((b, i) => (
+        <g className={s.rotating} filter={`url(#${id})`}>
+          {blobs0.map((b, i) => (
             <circle
               key={`g0-${i}`}
               cx={b.cx}
@@ -118,22 +144,19 @@ function BokehOverlay({
               r={b.r * sizeScale}
               // chroma -> CSS-safe string
               fill={colorStrs[i % colorStrs.length]}
-              filter={`url(#${id})`}
               opacity={0.9}
             />
           ))}
         </g>
 
-        <g className={s.rotatingSlow} style={{ animationDirection: 'reverse' }}>
-          {useMemo(() => BLOBS.filter((b) => b.group === 1), [])
-            .map((b, i) => (
+        <g className={s.rotatingSlow} style={{ animationDirection: 'reverse' }} filter={`url(#${id})`}>
+          {blobs1.map((b, i) => (
             <circle
               key={`g1-${i}`}
               cx={b.cx}
               cy={b.cy}
               r={b.r * sizeScale}
               fill={colorStrs[(i + 3) % colorStrs.length]}
-              filter={`url(#${id})`}
               opacity={0.9}
             />
           ))}
