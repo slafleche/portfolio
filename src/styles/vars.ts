@@ -136,7 +136,7 @@ export const defaults = {
 
 export const colors = {
   // Main Colours
-  brand: chroma('rgb(14,173,184)'),
+  brand: chroma('#573f97'),
   contrast: chroma('rgba(10, 133, 142, 1)'),
   // Nav
   // navBg: chroma('#252136'),
@@ -238,6 +238,9 @@ export const borderVars = {
 };
 
 export const fontVars = {
+  menu: {
+    size: m(15),
+  },
   heading: {
     color: colorVars.headingFg,
     family: font.heading.family,
@@ -273,6 +276,7 @@ export const archVars = {
 export const logoVars = {
   width: m(40),
   offsetY: m(4),
+  offsetX: m(-1),
   shadowRatio: 948.31276 / 546.93464, // from shadow width (in the SVG) / logo width
 };
 
