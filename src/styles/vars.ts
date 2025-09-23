@@ -34,6 +34,13 @@ const gradients = {
   // a_mid: chroma('#6263b5'),
   // a_end: chroma('#5d4cb9'),
 
+  a_liear_a: chroma('#322b4d'),
+  a_liear_b: chroma('#6263b5'),
+  a_liear_c: chroma('#5d4cb9'),
+
+  a_spot_a: chroma('#99b7fd'),
+  a_spot_b: chroma('#90faf7'),
+
   // Card B
   b_liear_a: chroma('#5b419a'),
   b_liear_b: chroma('#b98cde'),
@@ -43,10 +50,15 @@ const gradients = {
   b_spot_b: chroma('#F7D354'),
 };
 
+// export const bokehColours = {
+//   a: a_liear_a,
+//   b: 
+// };
+
 export const gradientA = {
-  overlayA: gradients.b_spot_a,
-  overlayB: gradients.b_spot_b,
-  linear: [gradients.b_liear_a, gradients.b_liear_b, gradients.b_liear_c],
+  overlayA: gradients.a_spot_a,
+  overlayB: gradients.a_spot_b,
+  linear: [gradients.a_liear_a, gradients.a_liear_b, gradients.a_liear_c],
 };
 
 // To update

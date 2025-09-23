@@ -6,15 +6,17 @@ import Card from '../../src/components/Card';
 // import * as hero from '@/styles/components/hero.css';
 import * as card from '@/styles/components/card.css';
 import ImageByName from '../../src/components/ImageByName';
+import Hero from '../../src/components/Hero';
+import BokehOverlay from '../../src/components/Bokeh';
 
 export default function HomePage() {
   const t = useT();
 
   return (
     <>
-      {/* <ImageByName className={hero.image} name={'tech_bg'} alt={'Temp'} /> */}
+      <BokehOverlay />
 
-      <h1>{t('hero')}</h1>
+      <Hero />
 
       <section>
         <Card title={t('split-dev_title')}>
