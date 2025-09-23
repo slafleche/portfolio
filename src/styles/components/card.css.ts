@@ -1,5 +1,8 @@
 import { style } from '@vanilla-extract/css';
-// import { colorVars } from '../vars';
+import { makeCardGradients } from '../helpers/card';
+import { gradientA, gradientB } from '../vars';
+import nest from '../helpers/nesting';
+import { Color } from 'chroma-js';
 
 export const cardVars = {};
 
@@ -24,8 +27,22 @@ export const card = style({
 
 export const title = style({});
 
-// Simulate the gradient border from mockup
 export const fakeBorder = style({});
 
-// Repeat gradients here so there's a fake "punch out" of the border
 export const bgHelper = style({});
+
+export const cardGradientA = style(
+  makeCardGradients({
+    spotA: gradientA.overlayA,
+    spotB: gradientA.overlayB,
+    linearColors: gradientA.linear as [Color, Color, Color],
+  }),
+);
+
+export const cardGradientB = style(
+  makeCardGradients({
+    spotA: gradientB.overlayA,
+    spotB: gradientB.overlayB,
+    linearColors: gradientB.linear as [Color, Color, Color],
+  }),
+);

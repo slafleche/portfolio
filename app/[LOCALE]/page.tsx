@@ -3,17 +3,23 @@ import { useT } from '@/lib/locales/useT';
 import * as s from '@/styles/components/userContent.css';
 import ReactMarkdown from 'react-markdown';
 import Card from '../../src/components/Card';
+// import * as hero from '@/styles/components/hero.css';
 import ImageByName from '../../src/components/ImageByName';
+
 
 export default function HomePage() {
   const t = useT();
 
   return (
     <>
+      {/* <ImageByName className={hero.image} name={'tech_bg'} alt={'Temp'} /> */}
+
       <h1>{t('hero')}</h1>
 
       <section>
-        <Card title={t('split-dev_title')}>
+        <Card
+          title={t('split-dev_title')}
+        >
           <ReactMarkdown>{t('split-dev_content')}</ReactMarkdown>
         </Card>
 
@@ -23,7 +29,8 @@ export default function HomePage() {
           alt={t('image_portrait-alt')}
         />
 
-        <Card title={t('split-design_title')}>
+        <Card title={t('split-design_title')}
+        gradient="b">
           <ReactMarkdown>{t('split-design_content')}</ReactMarkdown>
         </Card>
       </section>

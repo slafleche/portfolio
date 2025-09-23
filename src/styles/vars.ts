@@ -10,7 +10,8 @@ export type ChromaColor = Color;
 // could flip the fg and bg colours if you want a dark/light mode or you
 // could do math on a value.
 
-const backgroundColour = chroma('#453564');
+// const backgroundColour = chroma('#453564');
+const backgroundColour = chroma('#251e32');
 // Target colour: #2c244b on #453564
 const shadow = backgroundColour.darken(0.8).desaturate(0.2).alpha(0.5);
 
@@ -33,34 +34,67 @@ const gradients = {
   // a_mid: chroma('#6263b5'),
   // a_end: chroma('#5d4cb9'),
 
-  b_start: chroma('#2f70aa'),
-  b_mid: chroma('#5dbad9'),
-  b_end: chroma('#92e6f1'),
-
-  c_start: chroma('#94439f'),
-  c_mid: chroma('#ec8694'),
-  c_end: chroma('#fcd2a2'),
 
 
-  // var gradientBlues = {
 
-  //   #5A2D92 0%,   /* deep violet */
-  //   #5A8CC7 45%,  /* blue */
-  //   #5ECCE5 75%,  /* cyan */
-  //   #63E3F0 90%,  /* aqua highlight */
-  //   #7C73A0 100%  /* muted violet tail */
-  // }
-  
+  // Card B
+  b_liear_a: chroma('#5b419a'),
+  b_liear_b: chroma('#b98cde'),
+  b_liear_c: chroma('#e1864e'),
+
+  b_spot_a: chroma('#E15DAE'),
+  b_spot_b: chroma('#F7D354'),
 };
-// var gradeintLarge = { 
-//   #6AC1CE "0%",   /* aqua */
-//   #9F98BD "18%",  /* lavender */
-//   #DB89C9 "38%",  /* pink-magenta */
-//   #C53FCE "52%",  /* violet-magenta */
-//   #F27CB8 "68%",  /* hot pink */
-//   #F99FA8 "80%",  /* pink-orange/peach */
-//   #7C739F "100%"  /* deep violet */
+
+export const gradientA = {
+  overlayA: gradients.b_spot_a,
+  overlayB: gradients.b_spot_b,
+  linear: [gradients.b_liear_a, gradients.b_liear_b, gradients.b_liear_c],
+};
+
+// To update
+export const gradientB = {
+  overlayA: gradients.b_spot_a,
+  overlayB: gradients.b_spot_b,
+  linear: [gradients.b_liear_a, gradients.b_liear_b, gradients.b_liear_c],
+};
+
+// var gradientBlues = {
+
+//   #5A2D92 0%,   /* deep violet */
+//   #5A8CC7 45%,  /* blue */
+//   #5ECCE5 75%,  /* cyan */
+//   #63E3F0 90%,  /* aqua highlight */
+//   #7C73A0 100%  /* muted violet tail */
 // }
+
+// background-image:
+//   radial-gradient(chroma
+//     circle at 100% 49%,
+//     rgba(225,93,174,1.0) 0%,
+//     rgba(225,93,174,0.85) 25%,
+//     rgba(225,93,174,0.65) 40%,
+//     rgba(225,93,174,0.35) 60%,
+//     rgba(225,93,174,0.0) 80%
+//   ),
+//   radial-gradient(
+//     circle at 97% 98%,
+//     rgba(247,211,84,0.6) 0%,
+//     rgba(247,211,84,0.0) 30%
+//   ),
+//   linear-gradient(
+//     to bottom,
+//     #5b419a 20%,
+//     #b98cde 55%,
+//     #e1864e 90%
+//   );
+// background-blend-mode: overlay, screen, normal;
+
+// background-image:
+//   radial-gradient(circle at 100% 49%, rgba(225,93,174,1.00) 0%, rgba(225,93,174,0.90) 18%, rgba(225,93,174,0.55) 30%, rgba(225,93,174,0.20) 42%, rgba(225,93,174,0.00) 62%),
+//   radial-gradient(circle at 97% 98%, rgba(247,211,84,0.63) 0%, rgba(247,211,84,0.00) 26%),
+//   linear-gradient(to bottom, #5b419a 19%, #b98cde 55%, #e1864e 93%);
+// background-blend-mode: overlay, screen, normal;
 
 // Meant to easily overwrite the defaults with theming
 // Note the goal isn't for the new theme to use exactly the same calculations
@@ -136,7 +170,6 @@ export const colorVars = {
   brand: colors.brand,
   contrast: colors.contrast,
   // Nav
-  navBg: colors.navBg,
   navFg: colors.navFg,
   // Body
   bodyBg: colors.bodyBg,
@@ -149,8 +182,7 @@ export const colorVars = {
   border: colors.border,
 
   // Contrast Section
-  contrastBg: colors.contrastBg,
-  contrastFg: colors.contrastFg,
+  // contrastBg: colors.contrastBg,
 
   // Gradient A
   gradientA_main_start: colors.gradientA_main_start,
