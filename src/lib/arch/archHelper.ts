@@ -71,7 +71,6 @@ export function generateArchPaths(p: IProps) {
   const yA = yEllipse(cx, cy, rx, ry, cx);
   const yL = yEllipse(cx, cy, rx, ry, xL);
   const yR = yEllipse(cx, cy, rx, ry, xR);
-  const y0 = Math.min(yEllipse(cx, cy, rx, ry, 0), H - 1e-3);
   const yW = Math.min(yEllipse(cx, cy, rx, ry, W), H - 1e-3);
 
   const maxDepth = H - yA - 1.0;

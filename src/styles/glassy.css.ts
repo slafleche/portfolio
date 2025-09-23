@@ -11,7 +11,6 @@ export const bg = style({
     `linear-gradient(135deg, ${glassVars.tint1}, ${glassVars.tint2})`,
     glassVars.bg,
   ].join(', '),
-  //   boxShadow: glassVars.shadow,
   backdropFilter: `blur(${glassVars.blur})`,
   WebkitBackdropFilter:
     `blur(${glassVars.blur})` as CSS.Property.BackdropFilter,
@@ -35,6 +34,7 @@ export const grain = style({
   opacity: '0.03',
 });
 
+// Stroke on bottom
 export const stroke = style({
   transform: `translateY(${modify(
     glossyBorderVars.thickness,
@@ -42,6 +42,7 @@ export const stroke = style({
   ).css()})`,
 });
 
+// Shadow on the bottom
 export const shadow = style({
   filter: `blur(${glossyBorderVars.shadowBlur.css()})`,
   transform: `translate(${glossyBorderVars.shadowOffsetX.css()}, ${glossyBorderVars.shadowOffsetY.css()})`,

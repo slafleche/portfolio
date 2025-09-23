@@ -1,4 +1,4 @@
-import { colorVars } from '../vars';
+import { colorVars, dropShadowVars } from '../vars';
 import { m } from './measurement';
 
 const noiseSvg = `
@@ -20,10 +20,10 @@ export const glassVars = {
 };
 
 export const glossyBorderVars = {
-  thickness: m(4),
-  shadowBlur: m(2),
-  shadowOffsetX: m(0),
-  shadowOffsetY: m(8),
+  thickness: m(2),
+  shadowBlur: dropShadowVars.blur,
+  shadowOffsetX: dropShadowVars.offsetX,
+  shadowOffsetY: dropShadowVars.offsetY,
   shadowColor: colorVars.shadow,
   rimColor: colorVars.white,
   rimHotPosX: 0.51, // 0..1 → where the hotspot peaks along the stroke

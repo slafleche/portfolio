@@ -25,7 +25,7 @@ export const nav = style({
   alignItems: 'center',
   flexWrap: 'nowrap',
   width: '100%',
-  height: archVars.top + archVars.curveHeight,
+  height: archVars.top,
   ...absolutePosition.topLeft(),
 });
 
@@ -76,12 +76,6 @@ export const logoItem = style({
   ...flexPosition.center(),
 });
 
-export const logoLink = style({
-  ...flexPosition.center(),
-  width: logoVars.width.css(),
-  height: logoVars.width.css(),
-});
-
 export const item_3 = style({
   order: 2,
 });
@@ -93,6 +87,13 @@ export const item_4 = style({
 export const headerNavItem = style({
   ...absolutePosition.topRight(),
   order: 5,
+});
+
+export const logoLink = style({
+  ...flexPosition.center(),
+  width: logoVars.width.css(),
+  height: logoVars.width.css(),
+  transform: `translateY(${logoVars.offsetY.css()})`,
 });
 
 export const link = style({
