@@ -9,7 +9,7 @@ export const menu = style({
   width: '100%',
   zIndex: 100,
   transform: `translate3d(0, -${(archVars.top + archVars.curveHeight) * 1.1}px, 0)`,
-  transition: 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s',
+  transition: 'transform 0.8s cubic-bezier(0.69, 0.42, 0.01, 1) 0.2s',
   willChange: 'transform',
   backfaceVisibility: 'hidden',
   contain: 'layout paint',
