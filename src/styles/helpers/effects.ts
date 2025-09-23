@@ -15,7 +15,7 @@ export const glassVars = {
   tint2: 'hsla(280 80% 70% / 0.14)',
   border: 'hsla(0 0% 100% / 0.25)',
   innerRim: 'hsla(0 0% 100% / 0.22)',
-  blur: '20px',
+  blur: '15px',
   noiseDataUri: `url("data:image/svg+xml;utf8,${encodeURIComponent(noiseSvg)}")`,
 };
 
