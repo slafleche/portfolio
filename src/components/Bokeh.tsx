@@ -5,6 +5,7 @@ import chroma, { Color } from 'chroma-js';
 import * as s from '@/styles/components/bokeh.css';
 import { useSafeId } from '../lib/dom';
 import clsx from 'clsx';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 
 // A simple, deterministic layout for ~10 circles.
 // You can tweak cx, cy, r as you like.
@@ -32,6 +33,10 @@ export type BokehOverlayProps = {
   blendMode?: React.CSSProperties['mixBlendMode'];
   /** Blur radius in CSS/SVG px (stdDeviation ~= blur/2) */
   blur?: number;
+  /** Multiplier applied to blur for finer control (e.g., 0.5 for smaller blur) */
+  blurScale?: number;
+  /** Multiplier applied to all circle radii (1 = as defined) */
+  sizeScale?: number;
   className?: string;
 };
 
@@ -45,17 +50,25 @@ export default function BokehOverlay({
   ],
   opacity = 0.45,
   blendMode = 'screen',
-  blur = 50,
+  blur = 60,
+  blurScale = 1,
+  sizeScale = 0.6,
   className,
 }: BokehOverlayProps) {
   const id = useSafeId();
+  const { width, height } = useWindowSize();
 
-  // SVG Gaussian blur: stdDeviation ≈ blur / 2
-  const stdDev = Math.max(1, blur / 2);
+  // Convert a desired blur in CSS px to viewBox units
+  // viewBox is 0..100 on the shorter side, so 1 unit ~= min(width,height)/100 px
+  const minSidePx = Math.max(1, Math.min(width ?? 0, height ?? 0));
+  const blurUnitsBase = minSidePx ? (blur / minSidePx) * 100 : blur / 10; // fallback if size unknown
+  const blurUnits = Math.max(0, blurUnitsBase * blurScale);
+  // SVG Gaussian blur: stdDeviation ≈ blur / 2 (in same units)
+  const stdDev = Math.max(0.5, blurUnits / 2);
 
   // For very large blurs, expand filter region to avoid clipping
   // (force a BIG padding to prevent the "square" artifact)
-  const pad = Math.max(300, Math.ceil((blur / 100) * 20)); // percent padding, min 300%
+  const pad = Math.max(300, Math.ceil((blurUnits / 100) * 20)); // percent padding, min 300%
 
   return (
     <div
@@ -99,7 +112,7 @@ export default function BokehOverlay({
               key={`g0-${i}`}
               cx={b.cx}
               cy={b.cy}
-              r={b.r}
+              r={b.r * sizeScale}
               // chroma -> CSS-safe string
               fill={colors[i % colors.length].css()}
               filter={`url(#${id})`}
@@ -114,7 +127,7 @@ export default function BokehOverlay({
               key={`g1-${i}`}
               cx={b.cx}
               cy={b.cy}
-              r={b.r}
+              r={b.r * sizeScale}
               fill={colors[(i + 3) % colors.length].css()}
               filter={`url(#${id})`}
               opacity={0.9}
