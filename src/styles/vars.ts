@@ -51,7 +51,20 @@ const gradients = {
 };
 
 export const bokenVars = {
+  // Default Bokeh overlay settings (consumed by components)
+  colors: [
+    gradients.b_liear_a,
+    gradients.b_liear_b,
+    gradients.b_liear_c,
+    gradients.b_spot_a,
+    gradients.a_liear_c,
+  ],
   opacity: 0.2,
+  blendMode: 'screen' as CSS.Property.MixBlendMode,
+  blur: 60,
+  blurScale: 1,
+  sizeScale: 0.7,
+  fadeMs: 300,
 };
 // export const bokehColours = {
 //   a: a_liear_a,
