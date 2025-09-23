@@ -96,7 +96,8 @@ function BokehOverlay({
       }}
       aria-hidden
     >
-      <svg
+      {mounted && width != null && height != null && (
+        <svg
         className={s.svg}
         viewBox="0 0 100 100"
         preserveAspectRatio="xMidYMid slice"
@@ -184,6 +185,7 @@ function BokehOverlay({
           ))}
         </g>
       </svg>
+      )}
     </div>
   );
 }
