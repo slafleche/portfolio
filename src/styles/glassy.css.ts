@@ -1,5 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { glassVars, glossyBorderVars } from './helpers/effects';
+import { globalDropShadowFilter } from './helpers/shadow';
 import * as CSS from 'csstype';
 import { absolutePosition } from './helpers/positioning';
 import { modify } from './helpers/measurement';
@@ -44,7 +45,6 @@ export const stroke = style({
 
 // Shadow on the bottom
 export const shadow = style({
-  filter: `blur(${glossyBorderVars.shadowBlur.css()})`,
-  transform: `translate(${glossyBorderVars.shadowOffsetX.css()}, ${glossyBorderVars.shadowOffsetY.css()})`,
-  fill: glossyBorderVars.shadowColor.css(),
+  // Use a global drop-shadow() based on dropShadowVars so it’s configurable in vars.ts
+  filter: globalDropShadowFilter(),
 });
