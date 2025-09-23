@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import chroma, { Color } from 'chroma-js';
 import * as s from '@/styles/components/bokeh.css';
 import { useSafeId } from '../lib/dom';
@@ -40,35 +40,37 @@ export type BokehOverlayProps = {
   className?: string;
 };
 
-export default function BokehOverlay({
+function BokehOverlay({
   colors = [
     chroma('#5b419a'),
     chroma('#b98cde'),
     chroma('#e1864e'),
     chroma('#E15DAE'),
-    chroma('#F7D354'),
+    chroma('#5d4cb9'),
   ],
-  opacity = 0.45,
+  opacity = 0.2,
   blendMode = 'screen',
   blur = 60,
   blurScale = 1,
-  sizeScale = 0.6,
+  sizeScale = 0.7,
   className,
 }: BokehOverlayProps) {
   const id = useSafeId();
   const { width, height } = useWindowSize();
 
-  // Convert a desired blur in CSS px to viewBox units
-  // viewBox is 0..100 on the shorter side, so 1 unit ~= min(width,height)/100 px
-  const minSidePx = Math.max(1, Math.min(width ?? 0, height ?? 0));
-  const blurUnitsBase = minSidePx ? (blur / minSidePx) * 100 : blur / 10; // fallback if size unknown
-  const blurUnits = Math.max(0, blurUnitsBase * blurScale);
-  // SVG Gaussian blur: stdDeviation ≈ blur / 2 (in same units)
-  const stdDev = Math.max(0.5, blurUnits / 2);
+  // Precompute color strings
+  const colorStrs = useMemo(() => colors.map((c) => c.css()), [colors]);
 
-  // For very large blurs, expand filter region to avoid clipping
-  // (force a BIG padding to prevent the "square" artifact)
-  const pad = Math.max(300, Math.ceil((blurUnits / 100) * 20)); // percent padding, min 300%
+  // Convert blur (CSS px) to viewBox units (0..100) and memoize
+  const { stdDev, pad } = useMemo(() => {
+    const minSidePx = Math.max(1, Math.min(width ?? 0, height ?? 0));
+    const baseUnits = minSidePx ? (blur / minSidePx) * 100 : blur / 10;
+    const units = Math.max(0, baseUnits * blurScale);
+    return {
+      stdDev: Math.max(0.5, units / 2),
+      pad: Math.max(300, Math.ceil((units / 100) * 20)),
+    };
+  }, [width, height, blur, blurScale]);
 
   return (
     <div
@@ -107,14 +109,15 @@ export default function BokehOverlay({
 
         {/* Two counter-rotating groups for a gentle parallax feel */}
         <g className={s.rotating}>
-          {BLOBS.filter((b) => b.group === 0).map((b, i) => (
+          {useMemo(() => BLOBS.filter((b) => b.group === 0), [])
+            .map((b, i) => (
             <circle
               key={`g0-${i}`}
               cx={b.cx}
               cy={b.cy}
               r={b.r * sizeScale}
               // chroma -> CSS-safe string
-              fill={colors[i % colors.length].css()}
+              fill={colorStrs[i % colorStrs.length]}
               filter={`url(#${id})`}
               opacity={0.9}
             />
@@ -122,13 +125,14 @@ export default function BokehOverlay({
         </g>
 
         <g className={s.rotatingSlow} style={{ animationDirection: 'reverse' }}>
-          {BLOBS.filter((b) => b.group === 1).map((b, i) => (
+          {useMemo(() => BLOBS.filter((b) => b.group === 1), [])
+            .map((b, i) => (
             <circle
               key={`g1-${i}`}
               cx={b.cx}
               cy={b.cy}
               r={b.r * sizeScale}
-              fill={colors[(i + 3) % colors.length].css()}
+              fill={colorStrs[(i + 3) % colorStrs.length]}
               filter={`url(#${id})`}
               opacity={0.9}
             />
@@ -138,3 +142,5 @@ export default function BokehOverlay({
     </div>
   );
 }
+
+export default memo(BokehOverlay);
