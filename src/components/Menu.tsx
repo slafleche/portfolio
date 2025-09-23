@@ -8,14 +8,22 @@ import { AVAILABLE_LOCALES, TRANSLATIONS } from '@/data/locales';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
+import { useEffect, useState } from 'react';
 
 export default function Menu() {
   const t = useT();
   const { locale, root } = useLocale({ withLabel: true });
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const f1 = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setMounted(true));
+    });
+    return () => cancelAnimationFrame(f1);
+  }, []);
   return (
     <>
-      <div className={s.menu}>
-        <Arch>
+      <div className={s.menu} data-mounted={mounted}>
+        <Arch ready={mounted}>
           <nav className={clsx(s.nav)}>
             <li className={clsx(s.logoItem, s.item)}>
               <Link href={root} className={s.logoLink} prefetch={false}>
