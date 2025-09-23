@@ -12,9 +12,6 @@ import Logo from './Logo';
 export default function Menu() {
   const t = useT();
   const { locale, root } = useLocale({ withLabel: true });
-
-  // Todo add active link state and data-prop
-
   return (
     <>
       <div className={s.menu}>

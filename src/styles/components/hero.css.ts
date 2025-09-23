@@ -1,11 +1,10 @@
 import { style } from '@vanilla-extract/css';
 // import { colorVars } from '../vars';
-import { absolutePosition } from '../helpers/positioning';
+// import { absolutePosition } from '../helpers/positioning';
 
-export const image = style({
-  ...absolutePosition.topLeft(),
-  width: '100%',
-  height: '100vh',
-  //   mixBlendMode: 'multiply',
-  overflow: 'hidden',
-});
+export const hero = style({});
+export const heading = style({});
+export const paragraph = style({});
+// export const overlay = style({
+//   ...absolutePosition.fullSize(),
+// });

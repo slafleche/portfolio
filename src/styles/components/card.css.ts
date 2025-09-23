@@ -23,6 +23,29 @@ export const fakeBorder = style({});
 
 export const bgHelper = style({});
 
+export const image = style({
+  position: 'relative',
+  display: 'block',
+  maxWidth: '100%',
+  height: 'auto',
+  width: '200px',
+  overflow: 'hidden',
+  borderRadius: '50%',
+  boxShadow: globalBoxShadow(),
+  ...border({
+    color: colorVars.bodyFg.css(),
+    width: m(6),
+  }),
+  selectors: {
+    '&:after': {
+      content: '',
+      ...absolutePosition.fullSize(),
+      borderRadius: '50%',
+      boxShadow: globalBoxShadow({ inset: true }),
+    },
+  },
+});
+
 export const cardGradientA = style(
   makeCardGradients({
     spotA: gradientA.overlayA,
@@ -38,26 +61,3 @@ export const cardGradientB = style(
     linearColors: gradientB.linear as [Color, Color, Color],
   }),
 );
-
-export const image = style({
-  position: 'relative',
-  display: 'block',
-  maxWidth: '100%',
-  height: 'auto',
-  width: '150px',
-  overflow: 'hidden',
-  borderRadius: '50%',
-  boxShadow: globalBoxShadow(),
-  ...border({
-    color: colorVars.bodyFg.css(),
-    width: m(3),
-  }),
-  selectors: {
-    '&:after': {
-      content: '',
-      ...absolutePosition.fullSize(),
-      borderRadius: '50%',
-      boxShadow: globalBoxShadow({ inset: true }),
-    },
-  },
-});
