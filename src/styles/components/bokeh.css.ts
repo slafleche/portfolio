@@ -6,8 +6,8 @@ export const overlay = style({
   inset: 0,
   pointerEvents: 'none',
   mixBlendMode: 'screen',
-  opacity: 0.45,
-  //   zIndex: 10,
+  opacity: 0,
+  transition: 'opacity 0.8s ease-out',
   width: '100vw',
   height: '100vh',
 });
