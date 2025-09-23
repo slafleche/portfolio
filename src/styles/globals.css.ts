@@ -1,9 +1,7 @@
 import { globalStyle } from '@vanilla-extract/css';
 // import { backgroundHelper } from './helpers/background';
-import { globalShadow } from './helpers/shadows.css';
 import { colorVars, fontVars } from './vars';
 import { ReducedMotion, reducedMotion } from './helpers/accessibility';
-import { globalBoxShadow } from './helpers/shadow';
 
 globalStyle('body', {
   minHeight: '100vh',

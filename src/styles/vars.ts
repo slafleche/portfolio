@@ -59,9 +59,9 @@ export const bokenVars = {
     gradients.b_spot_a,
     gradients.a_liear_c,
   ],
-  opacity: 0.1,
+  opacity: 0.2,
   blendMode: 'screen' as CSS.Property.MixBlendMode,
-  blur: 60,
+  blur: 50,
   blurScale: 1,
   sizeScale: 0.7,
   fadeMs: 300,
@@ -265,19 +265,20 @@ export const archVars = {
   curveHeight: 16,
   ry: 70,
   bumpHeight: 12,
-  bumpWidth: 50,
-  bumpBaseWidth: 0.85,
-  bumpTipWidth: 7,
+  bumpWidth: 60,
+  bumpBaseWidth: 0.9,
+  bumpTipWidth: 9,
 };
 
 export const logoVars = {
-  width: m(45),
+  width: m(40),
+  offsetY: m(4),
   shadowRatio: 948.31276 / 546.93464, // from shadow width (in the SVG) / logo width
 };
 
 export const dropShadowVars = {
   offsetX: m(10),
-  offsetY: m(10),
+  offsetY: m(12),
   blur: m(5),
   spread: m(2),
   color: colorVars.shadow,
