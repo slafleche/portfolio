@@ -9,9 +9,9 @@ import * as glassyStyles from '../styles/glassy.css';
 import { useSafeId } from '../lib/dom';
 import { glossyBorderVars } from '../styles/helpers/effects';
 
-type Props = { className?: string; children?: ReactNode };
+type Props = { className?: string; children?: ReactNode; ready?: boolean };
 
-function Arch({ className, children }: Props) {
+function Arch({ className, children, ready = false }: Props) {
   const windowSize = useWindowSize().width;
   const baseId = useSafeId();
   const [mounted, setMounted] = useState(false);
@@ -39,7 +39,7 @@ function Arch({ className, children }: Props) {
   if (!windowSize) return null; // Bail early if window size is bad
   return (
     <div className={clsx(className, s.arch)}>
-      {mounted && (
+      {mounted && ready && (
         <svg
         className={s.svg}
         xmlns="http://www.w3.org/2000/svg"
