@@ -1,8 +1,11 @@
 import { style } from '@vanilla-extract/css';
 import { makeCardGradients } from '../helpers/card';
-import { gradientA, gradientB } from '../vars';
-import nest from '../helpers/nesting';
+import { colorVars, gradientA, gradientB } from '../vars';
 import { Color } from 'chroma-js';
+import border from '../helpers/border';
+import { m } from '../helpers/measurement';
+import { absolutePosition } from '../helpers/positioning';
+import { globalBoxShadow } from '../helpers/shadow';
 
 export const cardVars = {};
 
@@ -12,17 +15,6 @@ export const card = style({
   minHeight: '100px',
   maxWidth: '50vw',
   margin: 'auto',
-  // background: colorVars.contrastBg.css(),
-  // color: colorVars.contrastFg.css(),
-
-  //   selectors: {
-  //     // pseudo-elements
-  //     '&::before': {
-  //       content: '""',
-  //       ...absolutePosition.topRight(),
-  //       width: '100%',
-  //       height: '100%',
-  //     },
 });
 
 export const title = style({});
@@ -46,3 +38,26 @@ export const cardGradientB = style(
     linearColors: gradientB.linear as [Color, Color, Color],
   }),
 );
+
+export const image = style({
+  position: 'relative',
+  display: 'block',
+  maxWidth: '100%',
+  height: 'auto',
+  width: '150px',
+  overflow: 'hidden',
+  borderRadius: '50%',
+  boxShadow: globalBoxShadow(),
+  ...border({
+    color: colorVars.bodyFg.css(),
+    width: m(3),
+  }),
+  selectors: {
+    '&:after': {
+      content: '',
+      ...absolutePosition.fullSize(),
+      borderRadius: '50%',
+      boxShadow: globalBoxShadow({ inset: true }),
+    },
+  },
+});

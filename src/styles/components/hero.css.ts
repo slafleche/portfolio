@@ -1,4 +1,4 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 // import { colorVars } from '../vars';
 import { absolutePosition } from '../helpers/positioning';
 
@@ -9,12 +9,3 @@ export const image = style({
   //   mixBlendMode: 'multiply',
   overflow: 'hidden',
 });
-
-// Required to style img without giving an explicit img tag
-globalStyle(`.${image} > img`, {
-  display: 'block',
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-});
-
