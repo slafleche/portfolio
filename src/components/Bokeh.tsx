@@ -1,7 +1,7 @@
 'use client';
 
-import React, { memo, useEffect, useMemo, useState } from 'react';
-import chroma, { Color } from 'chroma-js';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { Color } from 'chroma-js';
 import * as s from '@/styles/components/bokeh.css';
 import { useSafeId } from '../lib/dom';
 import clsx from 'clsx';
@@ -53,17 +53,17 @@ function BokehOverlay({
   const id = useSafeId();
   const { width, height } = useWindowSize();
   const [mounted, setMounted] = useState(false);
+  const raf1 = useRef<number | null>(null);
+  const raf2 = useRef<number | null>(null);
 
   // Fade-in on mount to avoid jarring first paint
   useEffect(() => {
-    const f1 = requestAnimationFrame(() => {
-      const f2 = requestAnimationFrame(() => setMounted(true));
-      (window as any).__bokeh_f2 = f2;
+    raf1.current = requestAnimationFrame(() => {
+      raf2.current = requestAnimationFrame(() => setMounted(true));
     });
     return () => {
-      cancelAnimationFrame(f1);
-      if ((window as any).__bokeh_f2)
-        cancelAnimationFrame((window as any).__bokeh_f2);
+      if (raf1.current != null) cancelAnimationFrame(raf1.current);
+      if (raf2.current != null) cancelAnimationFrame(raf2.current);
     };
   }, []);
 
