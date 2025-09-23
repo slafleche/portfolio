@@ -4,8 +4,8 @@ import * as s from '@/styles/components/userContent.css';
 import ReactMarkdown from 'react-markdown';
 import Card from '../../src/components/Card';
 // import * as hero from '@/styles/components/hero.css';
+import * as card from '@/styles/components/card.css';
 import ImageByName from '../../src/components/ImageByName';
-
 
 export default function HomePage() {
   const t = useT();
@@ -17,20 +17,18 @@ export default function HomePage() {
       <h1>{t('hero')}</h1>
 
       <section>
-        <Card
-          title={t('split-dev_title')}
-        >
+        <Card title={t('split-dev_title')}>
           <ReactMarkdown>{t('split-dev_content')}</ReactMarkdown>
         </Card>
 
         <ImageByName
           name="portrait"
+          className={card.image}
           title={t('image_portrait-title')}
           alt={t('image_portrait-alt')}
         />
 
-        <Card title={t('split-design_title')}
-        gradient="b">
+        <Card title={t('split-design_title')} gradient="b">
           <ReactMarkdown>{t('split-design_content')}</ReactMarkdown>
         </Card>
       </section>

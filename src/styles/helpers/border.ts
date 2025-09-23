@@ -1,5 +1,4 @@
 import * as CSS from 'csstype';
-
 import { borderVars, colorVars, IBorder } from '../vars';
 import { CssLike } from '../utilities.css';
 import { MeasurementLike } from './measurement';

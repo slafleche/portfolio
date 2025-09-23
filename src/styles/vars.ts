@@ -34,9 +34,6 @@ const gradients = {
   // a_mid: chroma('#6263b5'),
   // a_end: chroma('#5d4cb9'),
 
-
-
-
   // Card B
   b_liear_a: chroma('#5b419a'),
   b_liear_b: chroma('#b98cde'),
@@ -248,4 +245,12 @@ export const archVars = {
 export const logoVars = {
   width: m(45),
   shadowRatio: 948.31276 / 546.93464, // from shadow width (in the SVG) / logo width
+};
+
+export const dropShadowVars = {
+  offsetX: m(10),
+  offsetY: m(10),
+  blur: m(5),
+  spread: m(2),
+  color: colorVars.shadow,
 };

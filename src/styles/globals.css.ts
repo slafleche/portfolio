@@ -3,6 +3,7 @@ import { globalStyle } from '@vanilla-extract/css';
 import { globalShadow } from './helpers/shadows.css';
 import { colorVars, fontVars } from './vars';
 import { ReducedMotion, reducedMotion } from './helpers/accessibility';
+import { globalBoxShadow } from './helpers/shadow';
 
 globalStyle('body', {
   minHeight: '100vh',
@@ -102,14 +103,14 @@ globalStyle("a[aria-current='true']", {
   fontWeight: fontVars.body.weight,
 });
 
-// Skip to content link
-globalStyle('a[data-reach-skip-link]', {
-  background: '#3f3f3f',
-  color: '#4b4b4b',
-  fontWeight: fontVars.body.weight,
-  border: 'solid 1px #ccc',
-  boxShadow: globalShadow(),
-});
+// // Skip to content link
+// globalStyle('a[data-reach-skip-link]', {
+//   background: '#3f3f3f',
+//   color: '#4b4b4b',
+//   fontWeight: fontVars.body.weight,
+//   border: 'solid 1px #ccc',
+//   boxShadow: globalBoxShadow(),
+// });
 
 globalStyle('strong, b', {
   fontWeight: fontVars.body.semiBold,
@@ -139,4 +140,11 @@ globalStyle('ul, li', {
 globalStyle('svg', {
   display: 'block',
   position: 'relative',
+});
+
+globalStyle(`picture img`, {
+  display: 'block',
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
 });
