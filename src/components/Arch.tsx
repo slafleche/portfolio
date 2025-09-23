@@ -1,6 +1,6 @@
 'use client';
 import clsx from 'clsx';
-import { ReactNode, memo, useMemo } from 'react'; // useEffect avoids hydration warnings
+import { ReactNode, memo, useEffect, useMemo, useState } from 'react'; // useEffect avoids hydration warnings
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
@@ -14,6 +14,8 @@ type Props = { className?: string; children?: ReactNode };
 function Arch({ className, children }: Props) {
   const windowSize = useWindowSize().width;
   const baseId = useSafeId();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Safe numbers even before windowSize is known
   const ws = Math.max(1, windowSize ?? 0);
@@ -37,7 +39,8 @@ function Arch({ className, children }: Props) {
   if (!windowSize) return null; // Bail early if window size is bad
   return (
     <div className={clsx(className, s.arch)}>
-      <svg
+      {mounted && (
+        <svg
         className={s.svg}
         xmlns="http://www.w3.org/2000/svg"
         viewBox={`0 0 ${ws} ${fullHeight}`}
@@ -135,6 +138,7 @@ function Arch({ className, children }: Props) {
 
         {/* End of SVG */}
       </svg>
+      )}
       {children}
     </div>
   );

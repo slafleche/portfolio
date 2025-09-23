@@ -59,7 +59,7 @@ export const bokenVars = {
     gradients.b_spot_a,
     gradients.a_liear_c,
   ],
-  opacity: 0.2,
+  opacity: 0.1,
   blendMode: 'screen' as CSS.Property.MixBlendMode,
   blur: 60,
   blurScale: 1,
