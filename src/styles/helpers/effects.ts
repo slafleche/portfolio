@@ -1,4 +1,5 @@
-import { colorVars, dropShadowVars } from '../vars';
+import { colorVars } from '../vars';
+import chroma from 'chroma-js';
 import { m } from './measurement';
 
 const noiseSvg = `
@@ -10,12 +11,21 @@ const noiseSvg = `
 </svg>`.trim();
 
 export const glassVars = {
-  bg: 'hsla(0 0% 100% / 0.06)',
-  tint1: 'hsla(210 80% 70% / 0.10)',
-  tint2: 'hsla(280 80% 70% / 0.14)',
-  border: 'hsla(0 0% 100% / 0.25)',
-  innerRim: 'hsla(0 0% 100% / 0.22)',
-  blur: '15px',
+  // Use chroma so callers can derive variants, call .css() where needed
+  bg: chroma('white').alpha(0.06),
+  tint1: chroma('hsl(210, 80%, 70%)').alpha(0.1),
+  tint2: chroma('hsl(280, 80%, 70%)').alpha(0.14),
+  border: chroma('white').alpha(0.25),
+  innerRim: chroma('white').alpha(0.22),
+  blur: m(15),
+  // Subtle white overlay settings used by glassy.bg
+  overlay: {
+    color: chroma('white'),
+    topAlpha: 0.05,
+    midStop: '45%',
+    bottomAlpha: 0.06,
+    direction: 'to bottom',
+  },
   noiseDataUri: `url("data:image/svg+xml;utf8,${encodeURIComponent(noiseSvg)}")`,
 };
 
