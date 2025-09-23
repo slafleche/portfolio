@@ -1,6 +1,6 @@
 'use client';
 import clsx from 'clsx';
-import { ReactNode } from 'react'; // useEffect avoids hydration warnings
+import { ReactNode, memo, useMemo } from 'react'; // useEffect avoids hydration warnings
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
@@ -11,10 +11,9 @@ import { glossyBorderVars } from '../styles/helpers/effects';
 
 type Props = { className?: string; children?: ReactNode };
 
-export default function Arch({ className, children }: Props) {
+function Arch({ className, children }: Props) {
   const windowSize = useWindowSize().width;
   const baseId = useSafeId();
-  if (!windowSize) return null; // Bail early if window size is bad
 
   // Safe numbers even before windowSize is known
   const ws = Math.max(1, windowSize ?? 0);
@@ -26,11 +25,16 @@ export default function Arch({ className, children }: Props) {
   const rimXId = `${baseId}-rimId`;
 
   // Build both paths from safe width (will update when windowSize arrives)
-  const { archD, bottomCurveD } = generateArchPaths({
-    ...archVars,
-    width: ws,
-  });
+  const { archD, bottomCurveD } = useMemo(
+    () =>
+      generateArchPaths({
+        ...archVars,
+        width: ws,
+      }),
+    [ws],
+  );
 
+  if (!windowSize) return null; // Bail early if window size is bad
   return (
     <div className={clsx(className, s.arch)}>
       <svg
@@ -129,9 +133,11 @@ export default function Arch({ className, children }: Props) {
           pointerEvents="none"
         />
 
-        {/* Dnd of SVG */}
+        {/* End of SVG */}
       </svg>
       {children}
     </div>
   );
 }
+
+export default memo(Arch);
