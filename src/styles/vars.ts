@@ -136,8 +136,8 @@ export const defaults = {
 
 export const colors = {
   // Main Colours
-  brand: chroma('#573f97'),
-  contrast: chroma('rgba(10, 133, 142, 1)'),
+  brand: chroma('#5b4199'),
+  contrast: chroma('#88dbfc'),
   // Nav
   // navBg: chroma('#252136'),
   navFg: defaults.fg,
