@@ -277,9 +277,8 @@ export const logoVars = {
 };
 
 export const dropShadowVars = {
-  offsetX: m(10),
+  offsetX: m(12),
   offsetY: m(12),
-  blur: m(5),
-  spread: m(2),
+  blur: m(3),
   color: colorVars.shadow,
 };

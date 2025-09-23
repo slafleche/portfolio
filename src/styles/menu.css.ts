@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { absolutePosition, flexPosition } from './helpers/positioning';
-import { archVars, colorVars, logoVars } from './vars';
+import { archVars, colorVars, dropShadowVars, logoVars } from './vars';
 
 export const menu = style({
   position: 'fixed',
@@ -8,11 +8,17 @@ export const menu = style({
   left: 0,
   width: '100%',
   zIndex: 100,
-  transform: `translate3d(0, -${(archVars.top + archVars.curveHeight) * 1.1}px, 0)`,
-  transition: 'transform 0.8s cubic-bezier(0.69, 0.42, 0.01, 1) 0.2s',
+  transform: `translate3d(0, -${
+    (archVars.top +
+      archVars.curveHeight +
+      dropShadowVars.offsetY.value +
+      dropShadowVars.blur.value) *
+    1.5
+  }px, 0)`,
+  transition: 'transform 0.8s cubic-bezier(0.69, 0.42, 0.01, 1) 0.3s',
   willChange: 'transform',
   backfaceVisibility: 'hidden',
-  contain: 'layout paint',
+
   selectors: {
     '&[data-mounted="true"]': {
       transform: 'translate3d(0, 0, 0)',
