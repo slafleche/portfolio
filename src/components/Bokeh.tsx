@@ -42,18 +42,12 @@ export type BokehOverlayProps = {
 };
 
 function BokehOverlay({
-  colors = [
-    chroma('#5b419a'),
-    chroma('#b98cde'),
-    chroma('#e1864e'),
-    chroma('#E15DAE'),
-    chroma('#5d4cb9'),
-  ],
+  colors = bokenVars.colors,
   opacity = bokenVars.opacity,
-  blendMode = 'screen',
-  blur = 60,
-  blurScale = 1,
-  sizeScale = 0.7,
+  blendMode = bokenVars.blendMode,
+  blur = bokenVars.blur,
+  blurScale = bokenVars.blurScale,
+  sizeScale = bokenVars.sizeScale,
   className,
 }: BokehOverlayProps) {
   const id = useSafeId();
@@ -62,13 +56,14 @@ function BokehOverlay({
 
   // Fade-in on mount to avoid jarring first paint
   useEffect(() => {
-    let f1 = requestAnimationFrame(() => {
-      let f2 = requestAnimationFrame(() => setMounted(true));
+    const f1 = requestAnimationFrame(() => {
+      const f2 = requestAnimationFrame(() => setMounted(true));
       (window as any).__bokeh_f2 = f2;
     });
     return () => {
       cancelAnimationFrame(f1);
-      if ((window as any).__bokeh_f2) cancelAnimationFrame((window as any).__bokeh_f2);
+      if ((window as any).__bokeh_f2)
+        cancelAnimationFrame((window as any).__bokeh_f2);
     };
   }, []);
 
@@ -123,13 +118,36 @@ function BokehOverlay({
             filterRes="512"
           >
             {/* Main blur */}
-            <feGaussianBlur in="SourceGraphic" stdDeviation={stdDev} edgeMode="none" result="blur" />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation={stdDev}
+              edgeMode="none"
+              result="blur"
+            />
             {/* Noise used both for dithering and tiny spatial jitter to break bands */}
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" seed="2" result="noise" />
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.8"
+              numOctaves="1"
+              seed="2"
+              result="noise"
+            />
             {/* Micro displacement to reduce residual band edges */}
-            <feDisplacementMap in="blur" in2="noise" scale="0.3" xChannelSelector="R" yChannelSelector="G" result="jitter" />
+            <feDisplacementMap
+              in="blur"
+              in2="noise"
+              scale="0.3"
+              xChannelSelector="R"
+              yChannelSelector="G"
+              result="jitter"
+            />
             {/* Very low-alpha noise for dithering */}
-            <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.02 0" result="noiseA" />
+            <feColorMatrix
+              in="noise"
+              type="matrix"
+              values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.02 0"
+              result="noiseA"
+            />
             <feBlend in="jitter" in2="noiseA" mode="overlay" />
           </filter>
         </defs>
@@ -149,7 +167,11 @@ function BokehOverlay({
           ))}
         </g>
 
-        <g className={s.rotatingSlow} style={{ animationDirection: 'reverse' }} filter={`url(#${id})`}>
+        <g
+          className={s.rotatingSlow}
+          style={{ animationDirection: 'reverse' }}
+          filter={`url(#${id})`}
+        >
           {blobs1.map((b, i) => (
             <circle
               key={`g1-${i}`}
