@@ -41,6 +41,8 @@ export type BokehOverlayProps = {
   className?: string;
 };
 
+let mountedOnce = false;
+
 function BokehOverlay({
   colors = bokenVars.colors,
   opacity = bokenVars.opacity,
@@ -52,20 +54,33 @@ function BokehOverlay({
 }: BokehOverlayProps) {
   const id = useSafeId();
   const { width, height } = useWindowSize();
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(() => mountedOnce);
   const raf1 = useRef<number | null>(null);
   const raf2 = useRef<number | null>(null);
+  const lastSize = useRef<{ width: number; height: number } | null>(null);
 
   // Fade-in on mount to avoid jarring first paint
   useEffect(() => {
+    if (mountedOnce) return;
+
     raf1.current = requestAnimationFrame(() => {
-      raf2.current = requestAnimationFrame(() => setMounted(true));
+      raf2.current = requestAnimationFrame(() => {
+        mountedOnce = true;
+        setMounted(true);
+      });
     });
     return () => {
       if (raf1.current != null) cancelAnimationFrame(raf1.current);
       if (raf2.current != null) cancelAnimationFrame(raf2.current);
     };
   }, []);
+
+  if (width != null && height != null) {
+    lastSize.current = { width, height };
+  }
+
+  const renderWidth = width ?? lastSize.current?.width ?? null;
+  const renderHeight = height ?? lastSize.current?.height ?? null;
 
   // Precompute color strings
   const colorStrs = useMemo(() => colors.map((c) => c.css()), [colors]);
@@ -76,14 +91,17 @@ function BokehOverlay({
 
   // Convert blur (CSS px) to viewBox units (0..100) and memoize
   const { stdDev, pad } = useMemo(() => {
-    const minSidePx = Math.max(1, Math.min(width ?? 0, height ?? 0));
+    const minSidePx = Math.max(
+      1,
+      Math.min(renderWidth ?? 0, renderHeight ?? 0),
+    );
     const baseUnits = minSidePx ? (blur / minSidePx) * 100 : blur / 10;
     const units = Math.max(0, baseUnits * blurScale);
     return {
       stdDev: Math.max(0.5, units / 2),
       pad: Math.max(300, Math.ceil((units / 100) * 20)),
     };
-  }, [width, height, blur, blurScale]);
+  }, [renderWidth, renderHeight, blur, blurScale]);
 
   return (
     <div
@@ -96,17 +114,17 @@ function BokehOverlay({
       }}
       aria-hidden
     >
-      {mounted && width != null && height != null && (
+      {mounted && renderWidth != null && renderHeight != null && (
         <svg
-        className={s.svg}
-        viewBox="0 0 100 100"
-        preserveAspectRatio="xMidYMid slice"
-        role="img"
-        // avoid any clipping from the root svg box
-        overflow="visible"
-        // helps sub-pixel edges on some GPUs
-        shapeRendering="geometricPrecision"
-      >
+          className={s.svg}
+          viewBox="0 0 100 100"
+          preserveAspectRatio="xMidYMid slice"
+          role="img"
+          // avoid any clipping from the root svg box
+          overflow="visible"
+          // helps sub-pixel edges on some GPUs
+          shapeRendering="geometricPrecision"
+        >
         <defs>
           <filter
             id={id}
@@ -184,7 +202,7 @@ function BokehOverlay({
             />
           ))}
         </g>
-      </svg>
+        </svg>
       )}
     </div>
   );
