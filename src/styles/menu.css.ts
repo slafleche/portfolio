@@ -35,6 +35,13 @@ export const menu = style({
 	},
 });
 
+export const contents = style({
+	display: 'flex',
+	alignItems: 'center',
+	flexWrap: 'nowrap',
+	width: '100%',
+	height: '100%',
+});
 export const nav = style({
 	display: 'flex',
 	alignItems: 'center',
