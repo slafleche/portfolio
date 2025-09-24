@@ -36,7 +36,6 @@ function Arch({ className, children, ready = false }: Props) {
     [ws],
   );
 
-  if (!windowSize) return null; // Bail early if window size is bad
   return (
     <div className={clsx(className, s.arch)}>
       {mounted && ready && (
