@@ -16,15 +16,15 @@ export default function Menu() {
   const [mounted, setMounted] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
-  const sectionIds = useMemo(
-    () => [
-      t('about-href'),
-      t('approach-href'),
-      t('case_study-href'),
-      t('projects-href'),
-    ],
-    [t, locale],
-  );
+  const sectionIds = useMemo(() => {
+    const strings = TRANSLATIONS[locale];
+    return [
+      strings['about-href'],
+      strings['approach-href'],
+      strings['case_study-href'],
+      strings['projects-href'],
+    ];
+  }, [locale]);
 
   const renderNavLink = (idKey: string, labelKey: string) => {
     const id = t(idKey);
@@ -87,13 +87,12 @@ export default function Menu() {
   }, [sectionIds]);
 
   useEffect(() => {
-    const base = `${window.location.pathname}${window.location.search}`;
-    const target = activeSection ? `${base}#${activeSection}` : base;
-    const current = `${base}${window.location.hash}`;
+    if (!activeSection) return;
 
-    if (target !== current) {
-      window.history.replaceState(null, '', target);
-    }
+    const currentHash = window.location.hash.replace(/^#/, '');
+    if (currentHash === activeSection) return;
+
+    window.history.replaceState(window.history.state, '', `#${activeSection}`);
   }, [activeSection]);
 
   useEffect(() => {
