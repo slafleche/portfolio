@@ -46,44 +46,37 @@ export default function Menu() {
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => Boolean(el));
 
-    if (!sections.length) {
-      setActiveSection(null);
+    if (!sections.length || typeof IntersectionObserver === 'undefined') {
+      setActiveSection(sections[0]?.id ?? null);
       return undefined;
     }
 
-    let ticking = false;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const active = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0]
+          ?.target.id;
 
-    const updateActiveSection = () => {
-      ticking = false;
-      const threshold = window.innerHeight * 0.25;
-      let currentId: string | null = sections[0]?.id ?? null;
-
-      for (const section of sections) {
-        const rect = section.getBoundingClientRect();
-        if (rect.top - threshold <= 0) {
-          currentId = section.id;
+        if (active) {
+          setActiveSection((prev) => (prev === active ? prev : active));
         }
-      }
+      },
+      {
+        root: null,
+        rootMargin: '-45% 0px -45% 0px',
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      },
+    );
 
-      setActiveSection((prev) => (prev === currentId ? prev : currentId));
-    };
+    sections.forEach((section) => observer.observe(section));
 
-    const handleScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(updateActiveSection);
-      }
-    };
+    // Ensure we start with an active section when mounting
+    if (sections.length) {
+      setActiveSection((prev) => prev ?? sections[0]!.id);
+    }
 
-    updateActiveSection();
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', updateActiveSection);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', updateActiveSection);
-    };
+    return () => observer.disconnect();
   }, [sectionIds]);
 
   useEffect(() => {

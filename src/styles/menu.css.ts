@@ -161,8 +161,11 @@ export const navLink = style({
 	// transition: 'transform 0.25s ease, filter 0.25s ease, text-shadow 0.25s ease',
 
 	selectors: {
+		'&[data-active="true"]': {
+			color: colorVars.contrast.css(),
+			textDecoration: 'underline',
+		},
 		'&:visited': {
-			// color: navLinkColor,
 			// color: colorVars.transparent.css(),
 		},
 		'&:hover, &:focus-visible': {
