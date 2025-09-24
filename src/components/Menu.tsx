@@ -8,12 +8,94 @@ import { AVAILABLE_LOCALES, TRANSLATIONS } from '@/data/locales';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export default function Menu() {
   const t = useT();
   const { locale, root } = useLocale({ withLabel: true });
   const [mounted, setMounted] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  const sectionIds = useMemo(
+    () => [
+      t('about-href'),
+      t('approach-href'),
+      t('case_study-href'),
+      t('projects-href'),
+    ],
+    [t, locale],
+  );
+
+  const renderNavLink = (idKey: string, labelKey: string) => {
+    const id = t(idKey);
+    const isActive = activeSection === id;
+    return (
+      <Link
+        href={`#${id}`}
+        className={s.navLink}
+        data-active={isActive}
+        aria-current={isActive ? 'true' : undefined}
+      >
+        {t(labelKey)}
+      </Link>
+    );
+  };
+
+  useEffect(() => {
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (!sections.length) {
+      setActiveSection(null);
+      return undefined;
+    }
+
+    let ticking = false;
+
+    const updateActiveSection = () => {
+      ticking = false;
+      const threshold = window.innerHeight * 0.25;
+      let currentId: string | null = sections[0]?.id ?? null;
+
+      for (const section of sections) {
+        const rect = section.getBoundingClientRect();
+        if (rect.top - threshold <= 0) {
+          currentId = section.id;
+        }
+      }
+
+      setActiveSection((prev) => (prev === currentId ? prev : currentId));
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateActiveSection);
+      }
+    };
+
+    updateActiveSection();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', updateActiveSection);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateActiveSection);
+    };
+  }, [sectionIds]);
+
+  useEffect(() => {
+    const base = `${window.location.pathname}${window.location.search}`;
+    const target = activeSection ? `${base}#${activeSection}` : base;
+    const current = `${base}${window.location.hash}`;
+
+    if (target !== current) {
+      window.history.replaceState(null, '', target);
+    }
+  }, [activeSection]);
+
   useEffect(() => {
     const f1 = requestAnimationFrame(() => {
       requestAnimationFrame(() => setMounted(true));
@@ -38,14 +120,10 @@ export default function Menu() {
               role="group"
             >
               <li className={clsx(s.item, s.item_1)}>
-                <Link href={`#${t('about-href')}`} className={s.navLink}>
-                  {t('about')}
-                </Link>
+                {renderNavLink('about-href', 'about')}
               </li>
               <li className={clsx(s.item, s.item_2)}>
-                <Link href={`#${t('approach-href')}`} className={s.navLink}>
-                  {t('approach')}
-                </Link>
+                {renderNavLink('approach-href', 'approach')}
               </li>
             </ul>
 
@@ -56,14 +134,10 @@ export default function Menu() {
               role="group"
             >
               <li className={clsx(s.item, s.item_3)}>
-                <Link href={`#${t('case_study-href')}`} className={s.navLink}>
-                  {t('case_study')}
-                </Link>
+                {renderNavLink('case_study-href', 'case_study')}
               </li>
               <li className={clsx(s.item, s.item_4)}>
-                <Link href={`#${t('projects-href')}`} className={s.navLink}>
-                  {t('projects')}
-                </Link>
+                {renderNavLink('projects-href', 'projects')}
               </li>
             </ul>
           </nav>
