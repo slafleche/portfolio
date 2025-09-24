@@ -97,9 +97,11 @@ function BokehOverlay({
     );
     const baseUnits = minSidePx ? (blur / minSidePx) * 100 : blur / 10;
     const units = Math.max(0, baseUnits * blurScale);
+    const stdDeviation = Math.max(0.5, units / 2);
+    const padUnits = Math.max(8, stdDeviation * 8);
     return {
-      stdDev: Math.max(0.5, units / 2),
-      pad: Math.max(300, Math.ceil((units / 100) * 20)),
+      stdDev: stdDeviation,
+      pad: padUnits,
     };
   }, [renderWidth, renderHeight, blur, blurScale]);
 
@@ -128,11 +130,11 @@ function BokehOverlay({
         <defs>
           <filter
             id={id}
-            filterUnits="objectBoundingBox"
-            x={`${-pad}%`}
-            y={`${-pad}%`}
-            width={`${100 + pad * 2}%`}
-            height={`${100 + pad * 2}%`}
+            filterUnits="userSpaceOnUse"
+            x={-pad}
+            y={-pad}
+            width={100 + pad * 2}
+            height={100 + pad * 2}
             colorInterpolationFilters="linearRGB"
             filterRes="512"
           >
