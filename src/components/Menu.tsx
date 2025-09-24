@@ -89,10 +89,12 @@ export default function Menu() {
   useEffect(() => {
     if (!activeSection) return;
 
-    const currentHash = window.location.hash.replace(/^#/, '');
+    const { pathname, search, hash } = window.location;
+    const currentHash = hash.replace(/^#/, '');
     if (currentHash === activeSection) return;
 
-    window.history.replaceState(window.history.state, '', `#${activeSection}`);
+    const url = `${pathname}${search}#${activeSection}`;
+    window.history.replaceState(window.history.state, '', url);
   }, [activeSection]);
 
   useEffect(() => {

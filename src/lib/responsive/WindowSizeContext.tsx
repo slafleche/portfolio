@@ -17,21 +17,24 @@ const WindowSizeContext = createContext<WindowSizeContextType | undefined>(
   undefined,
 );
 
+const getViewportSize = (): WindowSizeContextType => {
+  if (typeof window === 'undefined') {
+    return { width: null, height: null };
+  }
+  return {
+    width: document.documentElement.clientWidth,
+    height: document.documentElement.clientHeight,
+  };
+};
+
 export function WindowSizeProvider({ children }: { children: ReactNode }) {
-  const [size, setSize] = useState<WindowSizeContextType>({
-    width: null,
-    height: null,
-  });
+  const [size, setSize] = useState<WindowSizeContextType>(getViewportSize);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const handleResize = () =>
-      setSize({
-        // use layout viewport (excludes vertical scrollbar)
-        width: document.documentElement.clientWidth,
-        height: document.documentElement.clientHeight,
-      });
+      setSize(getViewportSize);
 
     handleResize(); // set initial
     window.addEventListener('resize', handleResize);
