@@ -1,0 +1,4 @@
+# Allow all user agents to crawl the site
+User-agent: *
+Allow: /
+
