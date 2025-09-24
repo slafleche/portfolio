@@ -1,5 +1,6 @@
 // styles/bokeh.css.ts
 import { style, keyframes } from '@vanilla-extract/css';
+import { ReducedMotion, reducedMotion } from '../helpers/accessibility';
 
 export const overlay = style({
   position: 'fixed',
@@ -27,10 +28,16 @@ export const rotating = style({
   transformOrigin: '50% 50%',
   animation: `${spin} 40s linear infinite`,
   willChange: 'transform',
+  ...reducedMotion(ReducedMotion.on, {
+    animation: 'none',
+  }),
 });
 
 export const rotatingSlow = style({
   transformOrigin: '50% 50%',
   animation: `${spin} 70s linear infinite`,
   willChange: 'transform',
+  ...reducedMotion(ReducedMotion.on, {
+    animation: 'none',
+  }),
 });
