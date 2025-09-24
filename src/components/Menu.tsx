@@ -113,7 +113,6 @@ export default function Menu() {
 								className={s.list}
 								aria-label={t('menu-left_label')}
 								data-side="left"
-								role="group"
 							>
 								<li className={clsx(s.item, s.item_1)}>
 									{renderNavLink('about-href', 'about')}
@@ -125,9 +124,8 @@ export default function Menu() {
 
 							<ul
 								className={s.list}
-								aria-label={t('menu-left_label')}
+								aria-label={t('menu-right_label')}
 								data-side="right"
-								role="group"
 							>
 								<li className={clsx(s.item, s.item_3)}>
 									{renderNavLink('case_study-href', 'case_study')}
