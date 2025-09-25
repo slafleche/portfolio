@@ -10,8 +10,10 @@ import {
 } from './vars';
 import { globalBoxShadow } from './helpers/shadow';
 import { m } from './helpers/measurement';
-import border from './helpers/border';
+import border from './helpers/borders';
 import { fontWeightStyle } from './helpers/typography';
+import chroma from 'chroma-js';
+import { margins } from './helpers/spacing';
 
 export const menu = style({
 	position: 'fixed',
@@ -138,19 +140,28 @@ export const localeChanger = style({
 
 const navLinkColor = colorVars.navFg.alpha(0.8).css();
 
-const menuFont = fontFamilies.comfortaa;
+const menuFont = fontFamilies.baloo;
+// used to calculate the position of the underline and the vertical offset to center it
+// const linkOffset =
 
 export const navLink = style({
 	position: 'relative',
 	display: 'block',
-	padding: `${m(2).css()} ${m(16).css()}`,
+	...margins({
+		top: m(50, '%'),
+		horizontal: 0,
+		bottom: 0,
+	}),
+	transform: 'translateY(-50%)',
+	padding: `${m(0).css()} ${m(16).css()} ${m(2).css()}`,
 	// fontSize: fontVars.menu.size.css(),
 	fontFamily: menuFont.family,
 	...fontWeightStyle(menuFont, 100),
 	fontSize: '16px',
+	lineHeight: 1,
 	textDecoration: 'none',
 	letterSpacing: '0.05rem',
-	borderRadius: '20%',
+	borderRadius: '50%',
 	color: navLinkColor,
 	// textShadow: `1px 1.2px 1.2px ${colorVars.black.alpha(0.45).css()}`,
 	// backgroundColor: colorVars.navFg.alpha(0.045).css(),
@@ -166,8 +177,18 @@ export const navLink = style({
 	// WebkitTextFillColor: 'transparent',
 
 	// filter:	'drop-shadow(0 1px 0 rgba(255,255,255,0.15)) drop-shadow(0 1px 2px rgba(0,0,0,0.35))',
-	// transition: 'all 0.25s ease',
+	transition: 'all 0.45s ease',
 	textShadow: `2px 2px 3px ${colorVars.navBg.css()}`,
+	backgroundRepeat: 'no-repeat',
+	backgroundSize: '100% 1.5px',
+	textTransform: 'uppercase',
+
+	backgroundImage: `
+	linear-gradient(${chroma.mix(colorVars.navFg, colorVars.navBg, 0.75).css()} 0 0), 
+	linear-gradient(${chroma.mix(colorVars.navFg, colorVars.navBg, 0.5).css()} 0 0)
+	`,
+	backgroundPosition: `left 200% bottom 0, left 200% bottom 0.3em`,
+
 	selectors: {
 		'&:hover': { textDecoration: 'underline' },
 		// '&[data-active="true"]': { background: 'rgba(0,0,0,0.06)' }, // state via data-attr
