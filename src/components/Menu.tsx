@@ -4,7 +4,11 @@ import Link from 'next/link';
 import * as s from '@/styles/menu.css';
 import { useT } from '@/lib/locales/useT';
 import { useLocale } from '@/lib/locales/localeContext';
-import { AVAILABLE_LOCALES, TRANSLATIONS } from '@/data/locales';
+import {
+	AVAILABLE_LOCALES,
+	TRANSLATIONS,
+	type Messages,
+} from '@/data/locales';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
@@ -16,28 +20,41 @@ export default function Menu() {
 	const [mounted, setMounted] = useState(false);
 	const [activeSection, setActiveSection] = useState<string | null>(null);
 
-	const sectionIds = useMemo(() => {
-		const strings = TRANSLATIONS[locale];
-		return [
-			strings['about-href'],
-			strings['approach-href'],
-			strings['case_study-href'],
-			strings['projects-href'],
-		];
-	}, [locale]);
+	type AnchorKey = Extract<keyof Messages, `${string}-href`>;
+	type AnchorEntry = { hrefKey: AnchorKey; labelKey: keyof Messages };
 
-	const renderNavLink = (idKey: string, labelKey: string) => {
-		const id = t(idKey);
+	const anchors = useMemo<readonly AnchorEntry[]>(
+		() => [
+			{ hrefKey: 'about-href', labelKey: 'about' },
+			{ hrefKey: 'approach-href', labelKey: 'approach' },
+			{ hrefKey: 'case_study-href', labelKey: 'case_study' },
+			{ hrefKey: 'projects-href', labelKey: 'projects' },
+		],
+		[],
+	);
+
+	const sectionIds = useMemo(() => {
+		const messages = TRANSLATIONS[locale];
+		return anchors.map(({ hrefKey }) => messages[hrefKey]);
+	}, [anchors, locale]);
+
+	const renderNavLink = (
+		entry: AnchorEntry,
+		classes?: { item?: string; index?: string },
+	) => {
+		const id = t(entry.hrefKey);
 		const isActive = activeSection === id;
 		return (
-			<Link
-				href={`#${id}`}
-				className={s.navLink}
-				data-active={isActive}
-				aria-current={isActive ? 'true' : undefined}
-			>
-				{t(labelKey)}
-			</Link>
+			<li className={clsx(classes?.item, classes?.index)}>
+				<Link
+					href={`#${id}`}
+					className={s.navLink}
+					data-active={isActive}
+					aria-current={isActive ? 'true' : undefined}
+				>
+					{t(entry.labelKey)}
+				</Link>
+			</li>
 		);
 	};
 
@@ -134,12 +151,8 @@ export default function Menu() {
 								aria-label={t('menu-left_label')}
 								data-side="left"
 							>
-								<li className={clsx(s.item, s.item_1)}>
-									{renderNavLink('about-href', 'about')}
-								</li>
-								<li className={clsx(s.item, s.item_2)}>
-									{renderNavLink('approach-href', 'approach')}
-								</li>
+								{renderNavLink(anchors[0], { item: s.item, index: s.item_1 })}
+								{renderNavLink(anchors[1], { item: s.item, index: s.item_2 })}
 							</ul>
 
 							<ul
@@ -147,12 +160,8 @@ export default function Menu() {
 								aria-label={t('menu-right_label')}
 								data-side="right"
 							>
-								<li className={clsx(s.item, s.item_3)}>
-									{renderNavLink('case_study-href', 'case_study')}
-								</li>
-								<li className={clsx(s.item, s.item_4)}>
-									{renderNavLink('projects-href', 'projects')}
-								</li>
+								{renderNavLink(anchors[2], { item: s.item, index: s.item_3 })}
+								{renderNavLink(anchors[3], { item: s.item, index: s.item_4 })}
 							</ul>
 						</div>
 					</nav>
