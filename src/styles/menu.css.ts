@@ -120,9 +120,9 @@ export const logoLink = style({
 
 export const link = style({
 	textDecoration: 'none',
-	fontWeight: 600,
 	borderRadius: 8,
 	padding: '0.25rem 0.5rem',
+	fontWeight: fontVars.menu.weight,
 	selectors: {
 		'&:hover': { textDecoration: 'underline' },
 		'&[data-active="true"]': { background: 'rgba(0,0,0,0.06)' }, // state via data-attr
