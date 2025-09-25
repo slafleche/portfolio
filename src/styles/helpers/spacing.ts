@@ -1,81 +1,57 @@
-import * as CSS from 'csstype';
+import { toCssMeasurement } from './style';
+import { MeasurementLike } from './measurement';
 
-interface IAdvancedSpacing {
-  all?: CSS.Property.PaddingTop;
-  horizontal?: CSS.Property.PaddingTop;
-  vertical?: CSS.Property.PaddingTop;
-  top?: CSS.Property.PaddingTop;
-  right?: CSS.Property.PaddingTop;
-  bottom?: CSS.Property.PaddingTop;
-  left?: CSS.Property.PaddingTop;
+type SpacingValue = MeasurementLike | number | null | undefined;
+
+export interface SpacingProps {
+	all?: SpacingValue;
+	horizontal?: SpacingValue;
+	vertical?: SpacingValue;
+	top?: SpacingValue;
+	right?: SpacingValue;
+	bottom?: SpacingValue;
+	left?: SpacingValue;
 }
 
-// Besides the name of the prop, there's no difference between "padding" and "margin". This is the generic function.
-const spacing = (props?: IAdvancedSpacing) => {
-  const {
-    all = 0,
-    horizontal,
-    vertical,
-    top,
-    right,
-    bottom,
-    left,
-  } = props || {};
+const resolve = (value: SpacingValue, fallback: string): string =>
+	toCssMeasurement(value) ?? fallback;
 
-  let topSpacing = all;
-  let rightSpacing = all;
-  let bottomSpacing = all;
-  let leftSpacing = all;
+const spacing = (props?: SpacingProps): string => {
+	const base = resolve(props?.all, '0');
+	const verticalBase = props?.vertical !== undefined ? resolve(props.vertical, base) : base;
+	const horizontalBase = props?.horizontal !== undefined ? resolve(props.horizontal, base) : base;
 
-  if (horizontal) {
-    rightSpacing = horizontal;
-    leftSpacing = horizontal;
-  }
+	const topSpacing = resolve(props?.top, verticalBase);
+	const rightSpacing = resolve(props?.right, horizontalBase);
+	const bottomSpacing = resolve(props?.bottom, verticalBase);
+	const leftSpacing = resolve(props?.left, horizontalBase);
 
-  if (vertical) {
-    topSpacing = vertical;
-    bottomSpacing = vertical;
-  }
+	const allEqual =
+		topSpacing === rightSpacing &&
+		rightSpacing === bottomSpacing &&
+		bottomSpacing === leftSpacing;
 
-  if (top) {
-    topSpacing = top;
-  }
+	if (allEqual) return topSpacing;
 
-  if (right) {
-    rightSpacing = right;
-  }
+	const verticalSymmetry = topSpacing === bottomSpacing;
+	const horizontalSymmetry = leftSpacing === rightSpacing;
 
-  if (bottom) {
-    bottomSpacing = bottom;
-  }
+	if (verticalSymmetry && horizontalSymmetry) {
+		return `${topSpacing} ${rightSpacing}`;
+	}
 
-  if (left) {
-    leftSpacing = left;
-  }
+	if (horizontalSymmetry) {
+		return `${topSpacing} ${rightSpacing} ${bottomSpacing}`;
+	}
 
-  const verticalSymmetry = topSpacing === bottomSpacing;
-  const horizontalSymmetry = leftSpacing === rightSpacing;
-
-  if (verticalSymmetry && horizontalSymmetry) {
-    if (topSpacing === leftSpacing) {
-      // all same border
-      return topSpacing;
-    } else {
-      // Vertical symmetry and horizontal symmetry, but not same value
-      return `${topSpacing} ${rightSpacing}`;
-    }
-  }
-  return `${topSpacing} ${rightSpacing} ${bottomSpacing} ${leftSpacing}`;
+	return `${topSpacing} ${rightSpacing} ${bottomSpacing} ${leftSpacing}`;
 };
 
-export const paddings = (props?: IAdvancedSpacing) => {
-  return {
-    padding: spacing(props),
-  };
-};
+export const paddings = (props?: SpacingProps) => ({
+	padding: spacing(props),
+});
 
-export const margins = (props?: IAdvancedSpacing) => {
-  return {
-    margin: spacing(props),
-  };
-};
+export const margins = (props?: SpacingProps) => ({
+	margin: spacing(props),
+});
+
