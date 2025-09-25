@@ -18,6 +18,8 @@ export interface IMeasurement {
   subtract: (delta: number) => IMeasurement;
   multiply: (factor: number) => IMeasurement;
   divide: (divisor: number) => IMeasurement;
+  double: () => IMeasurement;
+  half: () => IMeasurement;
 }
 
 // Allows keeping measurement values as a number for easier math,
@@ -31,10 +33,15 @@ export const m = (value: number, unit: string = 'px'): IMeasurement => {
     subtract: (delta: number) => build(nextValue - delta),
     multiply: (factor: number) => build(nextValue * factor),
     divide: (divisor: number) => build(nextValue / divisor),
+    double: () => build(nextValue * 2),
+    half: () => build(nextValue / 2),
   });
 
   return build(value);
 };
+
+export const double = (measurement: IMeasurement) => measurement.double();
+export const half = (measurement: IMeasurement) => measurement.half();
 
 export const modify = (oldMeasurement: IMeasurement, newVal: number): IMeasurement => {
   return m(newVal, oldMeasurement.unit ?? 'px');
