@@ -4,12 +4,14 @@ import {
 	archVars,
 	colorVars,
 	dropShadowVars,
+	fontFamilies,
 	fontVars,
 	logoVars,
 } from './vars';
 import { globalBoxShadow } from './helpers/shadow';
 import { m } from './helpers/measurement';
 import border from './helpers/border';
+import { fontWeightStyle } from './helpers/typography';
 
 export const menu = style({
 	position: 'fixed',
@@ -122,12 +124,6 @@ export const link = style({
 	textDecoration: 'none',
 	borderRadius: 8,
 	padding: '0.25rem 0.5rem',
-	fontWeight: fontVars.menu.weight,
-	selectors: {
-		'&:hover': { textDecoration: 'underline' },
-		'&[data-active="true"]': { background: 'rgba(0,0,0,0.06)' }, // state via data-attr
-		'&:focus-visible': { outline: '2px solid currentColor', outlineOffset: 2 },
-	},
 });
 
 export const logo = style({
@@ -142,35 +138,43 @@ export const localeChanger = style({
 
 const navLinkColor = colorVars.navFg.alpha(0.8).css();
 
+const menuFont = fontFamilies.comfortaa;
+
 export const navLink = style({
 	position: 'relative',
 	display: 'block',
 	padding: `${m(2).css()} ${m(16).css()}`,
 	// fontSize: fontVars.menu.size.css(),
+	fontFamily: menuFont.family,
+	...fontWeightStyle(menuFont, 100),
 	fontSize: '16px',
 	textDecoration: 'none',
-	letterSpacing: '0.5px',
+	letterSpacing: '0.05rem',
 	borderRadius: '20%',
 	color: navLinkColor,
+	// textShadow: `1px 1.2px 1.2px ${colorVars.black.alpha(0.45).css()}`,
 	// backgroundColor: colorVars.navFg.alpha(0.045).css(),
 	// backdropFilter: `blur(10px)`,
 	// ...border({
 	// 	width: m(1),
 	// 	color: colorVars.navFg.alpha(0.1).css(),
 	// }),
-	textShadow: `0px -0.5px 0px ${colorVars.white.alpha(0.4).css()},
-	0px 1.2px 1.2px ${colorVars.black.alpha(0.45).css()}`,
+	// textShadow: `0px -0.5px 0px ${colorVars.white.alpha(0.4).css()},
+	// 	0px 1.2px 1.2px ${colorVars.black.alpha(0.45).css()}`,
 	// backgroundClip: 'text',
 	// WebkitBackgroundClip: 'text',
 	// WebkitTextFillColor: 'transparent',
 
 	// filter:	'drop-shadow(0 1px 0 rgba(255,255,255,0.15)) drop-shadow(0 1px 2px rgba(0,0,0,0.35))',
-	// transition: 'transform 0.25s ease, filter 0.25s ease, text-shadow 0.25s ease',
-
+	// transition: 'all 0.25s ease',
+	textShadow: `2px 2px 3px ${colorVars.navBg.css()}`,
 	selectors: {
+		'&:hover': { textDecoration: 'underline' },
+		// '&[data-active="true"]': { background: 'rgba(0,0,0,0.06)' }, // state via data-attr
 		'&[data-active="true"]': {
-			color: colorVars.contrast.css(),
-			textDecoration: 'underline',
+			// color: colorVars.contrast.css(),
+			// transform: 'scale(1.2)',
+			// letterSpacing: '0.1rem',
 		},
 		'&:visited': {
 			// color: colorVars.transparent.css(),
@@ -185,6 +189,8 @@ export const navLink = style({
 			// 	'drop-shadow(0 2px 0 rgba(255,255,255,0.2)) drop-shadow(0 6px 14px rgba(0,0,0,0.45))',
 		},
 		'&:focus-visible': {
+			outline: '2px solid currentColor',
+			outlineOffset: 2,
 			// color: navLinkColor,
 			// outline: '2px solid currentColor', outlineOffset: 2
 			// color: colorVars.transparent.css(),
