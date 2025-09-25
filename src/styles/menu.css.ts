@@ -13,7 +13,7 @@ import { m } from './helpers/measurement';
 import border from './helpers/borders';
 import { fontWeightStyle } from './helpers/typography';
 import chroma from 'chroma-js';
-import { margins } from './helpers/spacing';
+import { margins, paddings } from './helpers/spacing';
 
 export const menu = style({
 	position: 'fixed',
@@ -125,7 +125,7 @@ export const logoLink = style({
 export const link = style({
 	textDecoration: 'none',
 	borderRadius: 8,
-	padding: '0.25rem 0.5rem',
+	...paddings({ vertical: '0.25rem', horizontal: '0.5rem' }),
 });
 
 export const logo = style({
@@ -147,13 +147,8 @@ const menuFont = fontFamilies.baloo;
 export const navLink = style({
 	position: 'relative',
 	display: 'block',
-	...margins({
-		top: m(50, '%'),
-		horizontal: 0,
-		bottom: 0,
-	}),
-	transform: 'translateY(-50%)',
-	padding: `${m(0).css()} ${m(16).css()} ${m(2).css()}`,
+	...paddings({ top: m(20), bottom: 0, horizontal: m(10) }),
+	// transform: 'translateY(-50%)',
 	// fontSize: fontVars.menu.size.css(),
 	fontFamily: menuFont.family,
 	...fontWeightStyle(menuFont, 100),

@@ -4,6 +4,7 @@ import { colorVars, gradientA, gradientB } from '../vars';
 import { Color } from 'chroma-js';
 import border from '../helpers/borders';
 import { m } from '../helpers/measurement';
+import { paddings } from '../helpers/spacing';
 import { absolutePosition } from '../helpers/positioning';
 import { globalBoxShadow } from '../helpers/shadow';
 
@@ -11,7 +12,7 @@ export const cardVars = {};
 
 export const card = style({
 	border: 'solid black 10px',
-	padding: '10px',
+	...paddings({ all: m(10) }),
 	minHeight: '100px',
 	maxWidth: '50vw',
 	margin: 'auto',
