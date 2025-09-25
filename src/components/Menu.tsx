@@ -46,38 +46,58 @@ export default function Menu() {
 			.map((id) => document.getElementById(id))
 			.filter((el): el is HTMLElement => Boolean(el));
 
-		if (!sections.length || typeof IntersectionObserver === 'undefined') {
-			setActiveSection(sections[0]?.id ?? null);
+		if (!sections.length) {
+			setActiveSection(null);
 			return undefined;
 		}
 
-		const observer = new IntersectionObserver(
-			(entries) => {
-				const active = entries
-					.filter((entry) => entry.isIntersecting)
-					.sort(
-						(a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
-					)[0]?.target.id;
+	let rafId = 0;
 
-				if (active) {
-					setActiveSection((prev) => (prev === active ? prev : active));
-				}
-			},
-			{
-				root: null,
-				rootMargin: '-45% 0px -45% 0px',
-				threshold: [0, 0.25, 0.5, 0.75, 1],
-			},
-		);
+	const updateActiveSection = () => {
+		const viewportAnchor = window.innerHeight * 0.4;
+		let nextId = sections[0]?.id ?? null;
 
-		sections.forEach((section) => observer.observe(section));
-
-		// Ensure we start with an active section when mounting
-		if (sections.length) {
-			setActiveSection((prev) => prev ?? sections[0].id);
+		for (const section of sections) {
+			const { top, bottom } = section.getBoundingClientRect();
+			if (bottom < 0) {
+				continue;
+			}
+			if (top <= viewportAnchor) {
+				nextId = section.id;
+			} else {
+				break;
+			}
 		}
 
-		return () => observer.disconnect();
+		// When scrolled to the bottom, force the last section
+		const nearBottom =
+			window.innerHeight + window.scrollY >=
+			document.body.scrollHeight - 2;
+		if (nearBottom && sections.length) {
+			nextId = sections[sections.length - 1].id;
+		}
+
+		setActiveSection((prev) => (prev === nextId ? prev : nextId));
+	};
+
+	const requestUpdate = () => {
+		if (rafId) return;
+		rafId = requestAnimationFrame(() => {
+			rafId = 0;
+			updateActiveSection();
+		});
+	};
+
+	updateActiveSection();
+
+	window.addEventListener('scroll', requestUpdate, { passive: true });
+	window.addEventListener('resize', requestUpdate);
+
+	return () => {
+		if (rafId) cancelAnimationFrame(rafId);
+		window.removeEventListener('scroll', requestUpdate);
+		window.removeEventListener('resize', requestUpdate);
+	};
 	}, [sectionIds]);
 
 	useEffect(() => {
