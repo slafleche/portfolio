@@ -4,7 +4,7 @@ import { ReactNode, memo, useEffect, useMemo, useState } from 'react'; // useEff
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
-import { archVars, dropShadowVars } from '../styles/vars';
+import { archVars } from '../styles/vars';
 import * as glassyStyles from '../styles/glassy.css';
 import { useSafeId } from '../lib/dom';
 import { glossyBorderVars } from '../styles/helpers/effects';
