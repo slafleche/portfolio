@@ -1,5 +1,9 @@
 import { style } from '@vanilla-extract/css';
-import { absolutePosition, flexPosition } from './helpers/positioning';
+import {
+	absolutePosition,
+	flexMiddle,
+	flexPosition,
+} from './helpers/positioning';
 import {
 	archVars,
 	colorVars,
@@ -94,12 +98,22 @@ export const item_2 = style({
 // Logo in the middle
 export const logoItem = style({
 	position: 'absolute',
-	top: 0,
+	top: logoVars.width.divide(2).css(),
 	left: '50%',
-	transform: `translateX(-${logoVars.width.value / 2}${logoVars.width.unit})`,
+	...flexMiddle(),
+	transform: `
+		translateX(-${logoVars.width.divide(2).css()})
+		translateY(${logoVars.width.divide(2).css()})
+		`,
 	width: logoVars.width.css(),
 	height: logoVars.width.css(),
+});
+
+export const logoLink = style({
 	...flexPosition.center(),
+	width: logoVars.width.css(),
+	height: logoVars.width.css(),
+	// transform: `translate(${logoVars.offsetX.css()}, ${logoVars.offsetY.css()})`,
 });
 
 export const item_3 = style({
@@ -113,13 +127,6 @@ export const item_4 = style({
 export const headerNavItem = style({
 	...absolutePosition.topRight(),
 	order: 5,
-});
-
-export const logoLink = style({
-	...flexPosition.center(),
-	width: logoVars.width.css(),
-	height: logoVars.width.css(),
-	transform: `translate(${logoVars.offsetX.css()}, ${logoVars.offsetY.css()})`,
 });
 
 export const link = style({

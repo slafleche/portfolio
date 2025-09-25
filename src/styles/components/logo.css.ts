@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css';
 import { logoVars } from '../vars';
-import { modify } from '../helpers/measurement';
 import { absolutePosition } from '../helpers/positioning';
 
 export const logo = style({
@@ -14,9 +13,6 @@ export const svg = style({
 
 export const shadow = style({
   ...absolutePosition.topLeft(),
-  width: modify(
-    logoVars.width,
-    logoVars.width.value * logoVars.shadowRatio,
-  ).css(),
+  width: logoVars.width.multiply(logoVars.shadowRatio).css(),
   height: 'auto',
 });

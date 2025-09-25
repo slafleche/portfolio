@@ -3,7 +3,6 @@ import { glassVars, glossyBorderVars } from './helpers/effects';
 import { globalDropShadowFilter } from './helpers/shadow';
 import * as CSS from 'csstype';
 import { absolutePosition } from './helpers/positioning';
-import { modify } from './helpers/measurement';
 // import borders from './helpers/border';
 
 export const bg = style({
@@ -43,10 +42,7 @@ export const grain = style({
 
 // Stroke on bottom
 export const stroke = style({
-  transform: `translateY(${modify(
-    glossyBorderVars.thickness,
-    glossyBorderVars.thickness.value * -0.25,
-  ).css()})`,
+  transform: `translateY(${glossyBorderVars.thickness.multiply(-0.25).css()})`,
 });
 
 // Shadow on the bottom
