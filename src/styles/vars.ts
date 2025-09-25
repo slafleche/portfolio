@@ -1,6 +1,7 @@
 import chroma, { type Color } from 'chroma-js';
 import * as CSS from 'csstype';
 import { IMeasurement, m } from './helpers/measurement';
+import { computeFontWeight, fontWeightStyle } from './helpers/typography';
 export type ColorKeys = keyof typeof colors;
 export type ChromaColor = Color;
 
@@ -166,27 +167,47 @@ export const colors = {
 	transparent: chroma('#ffffff').alpha(0),
 } as const;
 
+export const fontFamilies = {
+	baloo: {
+		family: '"Baloo 2", Poppins, Comfortaa, Helvetica, Arial, sans-serif',
+		weights: {
+			low: 400,
+			high: 800,
+		},
+		spacing: m(0.3, 'rem'),
+	},
+	comfortaa: {
+		family: 'Comfortaa, Poppins, Helvetica, Arial, sans-serif',
+		weights: {
+			low: 300,
+			high: 700,
+		},
+		spacing: m(0.3, 'rem'),
+	},
+};
+
 export const font = {
 	heading: {
-		family: 'Comfortaa, Poppins, Helvetica, Arial, sans-serif',
+		...fontFamilies.baloo,
 	},
 	h1: {
 		size: m(45),
-		weight: '500',
+		...fontWeightStyle(fontFamilies.baloo, 70),
 	},
 	h2: {
 		size: m(25),
-		weight: '500',
+		...fontWeightStyle(fontFamilies.baloo, 60),
 	},
 	h3: {
 		size: m(20),
-		weight: '500',
+		...fontWeightStyle(fontFamilies.baloo, 50),
 	},
 	body: {
-		family: 'Comfortaa, Poppins, Helvetica, Arial, sans-serif',
 		size: m(22),
-		weight: '300',
-		semiBold: '400',
+		...fontFamilies.comfortaa,
+		...fontWeightStyle(fontFamilies.comfortaa, 60),
+		weight: computeFontWeight(fontFamilies.comfortaa, 60),
+		semiBold: computeFontWeight(fontFamilies.comfortaa, 70),
 	},
 } as const;
 
@@ -200,8 +221,10 @@ export const colorVars = {
 	// Body
 	bodyBg: colors.bodyBg,
 	bodyFg: colors.bodyFg,
+
 	// Text
 	headingFg: colors.headingFg,
+
 	// Shadows
 	shadow: colors.shadow,
 	// Borders
@@ -241,6 +264,7 @@ export const borderVars = {
 export const fontVars = {
 	menu: {
 		size: m(15),
+		weight: 600,
 	},
 	heading: {
 		color: colorVars.headingFg,
