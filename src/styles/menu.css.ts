@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { style, keyframes } from '@vanilla-extract/css';
 import {
 	absolutePosition,
 	flexMiddle,
@@ -14,7 +14,6 @@ import {
 } from './vars';
 import { globalBoxShadow } from './helpers/shadow';
 import { m } from './helpers/measurement';
-import border from './helpers/borders';
 import { fontWeightStyle } from './helpers/typography';
 import chroma from 'chroma-js';
 import { margins, paddings } from './helpers/spacing';
@@ -26,8 +25,8 @@ export const menu = style({
 	width: '100%',
 	zIndex: 100,
 	transform: `translate3d(0, -${
-		(archVars.top +
-			archVars.curveHeight +
+		(archVars.top.value +
+			archVars.curveHeight.value +
 			dropShadowVars.offsetY.value +
 			dropShadowVars.blur.value) *
 		1.5
@@ -49,14 +48,76 @@ export const contents = style({
 	flexWrap: 'nowrap',
 	width: '100%',
 	height: '100%',
+	position: 'relative',
+	zIndex: 1,
 });
 export const nav = style({
 	display: 'flex',
 	alignItems: 'center',
 	flexWrap: 'nowrap',
 	width: '100%',
-	height: archVars.top,
+	height: archVars.top.css(),
 	...absolutePosition.topLeft(),
+	position: 'absolute',
+});
+
+export const highlightLayer = style({
+	position: 'absolute',
+	inset: 0,
+	pointerEvents: 'none',
+	zIndex: 0,
+});
+
+export const miniBokeh = style({
+	position: 'absolute',
+	borderRadius: '999px',
+	background: `radial-gradient(circle at 30% 30%,
+		${colorVars.contrast.alpha(0.4).css()},
+		${colorVars.navFg.alpha(0.05).css()} 65%,
+		${colorVars.transparent.css()} 85%)`,
+	filter: 'blur(14px)',
+	boxShadow: `0 0 30px ${colorVars.contrast.alpha(0.2).css()}`,
+	opacity: 0,
+	transform: 'translate3d(0, 0, 0)',
+	transition:
+		'opacity 180ms ease, transform 450ms cubic-bezier(0.4, 0, 0.2, 1), width 350ms ease, height 350ms ease',
+	mixBlendMode: 'screen',
+});
+
+const focusScale = logoVars.focus?.scale ?? 1.2;
+const pulseDeviation = logoVars.focus?.pulseDeviation ?? 0.08;
+const pulseDuration = logoVars.focus?.pulseDurationMs ?? 1800;
+const focusTransition = logoVars.focus?.transitionMs ?? 260;
+const pulseMin = Math.max(0, focusScale - pulseDeviation);
+const pulseMax = focusScale + pulseDeviation;
+const focusHaloColor =
+	typeof logoVars.focus?.haloColor?.css === 'function'
+		? logoVars.focus.haloColor.css()
+		: colorVars.contrast.alpha(0.35).css();
+
+const logoPulse = keyframes({
+	'0%': {
+		transform: `translate(-50%, -50%) scale(${pulseMin})`,
+		opacity: 0.28,
+	},
+	'50%': {
+		transform: `translate(-50%, -50%) scale(${pulseMax})`,
+		opacity: 0.42,
+	},
+	'100%': {
+		transform: `translate(-50%, -50%) scale(${pulseMin})`,
+		opacity: 0.28,
+	},
+});
+
+export const debugArch = style({
+	position: 'absolute',
+	left: 0,
+	top: 0,
+	width: '100%',
+	height: '100%',
+	fill: 'none',
+	pointerEvents: 'none',
 });
 
 // One side
@@ -113,7 +174,37 @@ export const logoLink = style({
 	...flexPosition.center(),
 	width: logoVars.width.css(),
 	height: logoVars.width.css(),
-	// transform: `translate(${logoVars.offsetX.css()}, ${logoVars.offsetY.css()})`,
+	position: 'relative',
+	transform: 'scale(1)',
+	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
+	willChange: 'transform',
+	selectors: {
+		'&::after': {
+			content: '',
+			position: 'absolute',
+			left: '50%',
+			top: '50%',
+			width: '100%',
+			height: '100%',
+			borderRadius: '50%',
+			background: `radial-gradient(circle, ${focusHaloColor} 0%, ${colorVars.transparent.css()} 70%)`,
+			opacity: 0,
+			transform: `translate(-50%, -50%) scale(${pulseMin})`,
+			transition: `opacity ${focusTransition}ms ease, transform ${focusTransition}ms ease`,
+			pointerEvents: 'none',
+		},
+		'&:hover, &:focus-visible': {
+			transform: `scale(${focusScale})`,
+		},
+		'&:hover::after, &:focus-visible::after': {
+			opacity: 1,
+			animation: `${logoPulse} ${pulseDuration}ms ease-in-out infinite`,
+			animationFillMode: 'both',
+		},
+		'&:not(:hover):not(:focus-visible)::after': {
+			animation: 'none',
+		},
+	},
 });
 
 export const item_3 = style({

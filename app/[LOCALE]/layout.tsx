@@ -7,40 +7,40 @@ import Menu from '@/components/Menu';
 import { WindowSizeProvider } from '@/lib/responsive/WindowSizeContext';
 
 interface SegmentLayoutProps {
-  children: ReactNode;
-  params: Promise<{ LOCALE: string }>;
+	children: ReactNode;
+	params: Promise<{ LOCALE: string }>;
 }
 
 export default async function LocaleSegmentLayout({
-  children,
-  params,
+	children,
+	params,
 }: SegmentLayoutProps) {
-  // ✅ Next 15: params is a Promise — await it in server component
-  const { LOCALE } = await params;
-  const locale = resolveLocale(LOCALE);
+	// ✅ Next 15: params is a Promise — await it in server component
+	const { LOCALE } = await params;
+	const locale = resolveLocale(LOCALE);
 
-  return (
-    <LocaleProvider locale={locale}>
-      <WindowSizeProvider>
-        <ResponsiveProvider>
-          <Menu />
-          {children}
-        </ResponsiveProvider>
-      </WindowSizeProvider>
-    </LocaleProvider>
-  );
+	return (
+		<LocaleProvider locale={locale}>
+			<WindowSizeProvider>
+				<ResponsiveProvider>
+					<Menu debugMiniBokeh={true} />
+					{children}
+				</ResponsiveProvider>
+			</WindowSizeProvider>
+		</LocaleProvider>
+	);
 }
 
 export async function generateMetadata({
-  params,
+	params,
 }: {
-  params: Promise<{ LOCALE: string }>;
+	params: Promise<{ LOCALE: string }>;
 }): Promise<Metadata> {
-  const { LOCALE } = await params;
-  const locale = resolveLocale(LOCALE);
-  const t = getTranslator(locale);
-  return {
-    title: t('title' as const),
-    description: t('description' as const),
-  };
+	const { LOCALE } = await params;
+	const locale = resolveLocale(LOCALE);
+	const t = getTranslator(locale);
+	return {
+		title: t('title' as const),
+		description: t('description' as const),
+	};
 }
