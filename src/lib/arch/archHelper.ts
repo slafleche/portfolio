@@ -1,12 +1,14 @@
+import type { IMeasurement } from '@/styles/helpers/measurement';
+
 export interface IArch {
-  top: number; // (px) - Space above the top of the arch (reserved for nav items)
-  curveHeight: number; // (px) - Height of curveHeight
+  top: IMeasurement; // Space above the top of the arch (reserved for nav items)
+  curveHeight: IMeasurement; // Height of the curved portion
   // Note that the total height is top + curveHeight
-  ry: number; // (px) - Offset of the ellipsis used to punch out the arch shape. (>= curveHeight + 4)
-  bumpHeight: number; //(px) - Height of bump in middle of arch
-  bumpWidth: number; //(px) - Width of base of bump in the middle
-  bumpBaseWidth: number; // (0 to 1) - Width of base of bump (wider or shorder slope)
-  bumpTipWidth: number; // (px) - controls control-point spread at the tip
+  ry: IMeasurement; // Offset of the ellipsis used to punch out the arch shape. (>= curveHeight + 4)
+  bumpHeight: IMeasurement; // Height of bump in middle of arch
+  bumpWidth: IMeasurement; // Width of base of bump in the middle
+  bumpBaseWidth: number; // (0 to 1) - Width of base of bump (wider or shorter slope)
+  bumpTipWidth: IMeasurement; // controls control-point spread at the tip
 }
 
 interface IProps extends IArch {
@@ -54,9 +56,9 @@ export function generateArchPaths(p: IProps) {
 
   // --- Geometry base
   const W = Math.max(200, p.width);
-  const top = Math.max(0, p.top);
-  const curveHeight = Math.max(10, p.curveHeight);
-  const ry = Math.max(curveHeight + 4, p.ry);
+  const top = Math.max(0, p.top.value);
+  const curveHeight = Math.max(10, p.curveHeight.value);
+  const ry = Math.max(curveHeight + 4, p.ry.value);
   const H = top + curveHeight;
 
   const cx = W / 2;
@@ -64,7 +66,8 @@ export function generateArchPaths(p: IProps) {
   const rx = rxFrom(W, curveHeight, ry);
 
   // --- Bump geometry
-  const half = Math.max(12, Math.min(p.bumpWidth / 2, rx - 6, W / 2 - 6));
+  const bumpWidthValue = p.bumpWidth.value;
+  const half = Math.max(12, Math.min(bumpWidthValue / 2, rx - 6, W / 2 - 6));
   const xL = cx - half;
   const xR = cx + half;
 
@@ -74,7 +77,7 @@ export function generateArchPaths(p: IProps) {
   const yW = Math.min(yEllipse(cx, cy, rx, ry, W), H - 1e-3);
 
   const maxDepth = H - yA - 1.0;
-  const depth = clamp(p.bumpHeight, 0, maxDepth);
+  const depth = clamp(p.bumpHeight.value, 0, maxDepth);
   const tipY = yA + depth;
 
   const tR0 = tangentAtX(cx, cy, rx, ry, xR);
@@ -106,7 +109,7 @@ export function generateArchPaths(p: IProps) {
     ),
   );
 
-  const tspanRaw = p.bumpTipWidth;
+  const tspanRaw = p.bumpTipWidth.value;
   const tspanClamped = Math.max(8, Math.min(tspanRaw, half - 6));
   const c2x = cx + tspanClamped,
     c2y = tipY;

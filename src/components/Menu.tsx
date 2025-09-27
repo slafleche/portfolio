@@ -9,19 +9,123 @@ import {
 	TRANSLATIONS,
 	type Messages,
 } from '@/data/locales';
+import { archVars, menuHighlightVars } from '@/styles/vars';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
-import { useEffect, useMemo, useState } from 'react';
+import {
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
+import type { CSSProperties, FocusEvent } from 'react';
 
-export default function Menu() {
+type AnchorKey = Extract<keyof Messages, `${string}-href`>;
+type AnchorEntry = { hrefKey: AnchorKey; labelKey: keyof Messages };
+
+type LinkMetric = {
+	centerX: number;
+	centerY: number;
+	width: number;
+	height: number;
+	archY: number;
+	highlightWidth: number;
+	highlightHeight: number;
+	left: number;
+	top: number;
+};
+
+type HighlightState = {
+	visible: boolean;
+	left: number;
+	top: number;
+	width: number;
+	height: number;
+};
+
+type DebugArch = {
+	path: string;
+	width: number;
+	height: number;
+};
+
+const clamp = (value: number, min: number, max: number) =>
+	Math.min(max, Math.max(min, value));
+
+const highlightTransition =
+	'opacity 180ms ease, transform 450ms cubic-bezier(0.4, 0, 0.2, 1), width 350ms ease, height 350ms ease';
+
+const rxFrom = (width: number, curveHeight: number, ry: number) => {
+	const c = curveHeight / ry;
+	const denom = Math.max(1e-6, 2 * c - c * c);
+	return width / 2 / Math.sqrt(denom);
+};
+
+const computeArchY = (width: number, x: number, includeBump = false) => {
+	const top = archVars.top.value;
+	const curveHeight = archVars.curveHeight.value;
+	const ry = archVars.ry.value;
+	const bumpWidth = archVars.bumpWidth.value;
+	const bumpHeight = archVars.bumpHeight.value;
+	const cx = width / 2;
+	const cy = top + ry;
+	const rx = rxFrom(width, curveHeight, ry);
+	const normalized = clamp((x - cx) / rx, -1, 1);
+	const ellipseComponent = Math.sqrt(Math.max(0, 1 - normalized * normalized));
+	let y = cy - ry * ellipseComponent;
+
+	const halfBump = bumpWidth / 2;
+	if (includeBump && halfBump > 0) {
+		const distance = Math.abs(x - cx);
+		if (distance <= halfBump) {
+			const t = 1 - distance / halfBump;
+			const eased = t * t;
+			y += bumpHeight * eased;
+		}
+	}
+
+	return Math.min(y, top + curveHeight);
+};
+
+type MenuProps = {
+	debugMiniBokeh?: boolean;
+};
+
+export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const t = useT();
 	const { locale, root } = useLocale({ withLabel: true });
 	const [mounted, setMounted] = useState(false);
 	const [activeSection, setActiveSection] = useState<string | null>(null);
+	const [activeIndex, setActiveIndex] = useState<number | null>(null);
+	const navRef = useRef<HTMLDivElement | null>(null);
+	const linkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+	const [linkMetrics, setLinkMetrics] = useState<Array<LinkMetric | null>>([]);
+	const [highlight, setHighlight] = useState<HighlightState>({
+		visible: false,
+		left: 0,
+		top: 0,
+		width: 0,
+		height: 0,
+	});
+	const [debugArch, setDebugArch] = useState<DebugArch | null>(null);
+	const navMetricsRef = useRef<{ width: number; height: number }>({ width: 0, height: 0 });
+	const highlightRef = useRef(highlight);
+	const animationFrameRef = useRef<number | null>(null);
+	const [transitionDisabled, setTransitionDisabled] = useState(false);
 
-	type AnchorKey = Extract<keyof Messages, `${string}-href`>;
-	type AnchorEntry = { hrefKey: AnchorKey; labelKey: keyof Messages };
+	useEffect(() => {
+		highlightRef.current = highlight;
+	}, [highlight]);
+
+	useEffect(() => () => {
+		if (animationFrameRef.current) {
+			cancelAnimationFrame(animationFrameRef.current);
+			animationFrameRef.current = null;
+		}
+	}, []);
 
 	const anchors = useMemo<readonly AnchorEntry[]>(
 		() => [
@@ -38,19 +142,241 @@ export default function Menu() {
 		return anchors.map(({ hrefKey }) => messages[hrefKey]);
 	}, [anchors, locale]);
 
+	const updateHighlightFromMetric = useCallback((metric?: LinkMetric) => {
+		if (!metric) return;
+
+		if (!highlightRef.current.visible) {
+			const navMetrics = navMetricsRef.current;
+			if (navMetrics.width > 0) {
+				setTransitionDisabled(true);
+				const centerX = navMetrics.width / 2;
+				const centerY =
+					computeArchY(navMetrics.width, centerX) +
+					menuHighlightVars.yOffset.value;
+				setHighlight({
+					visible: false,
+					left: centerX - metric.highlightWidth / 2,
+					top: Math.max(0, centerY - metric.highlightHeight / 2),
+					width: metric.highlightWidth,
+					height: metric.highlightHeight,
+				});
+				if (animationFrameRef.current) {
+					cancelAnimationFrame(animationFrameRef.current);
+				}
+				animationFrameRef.current = requestAnimationFrame(() => {
+					animationFrameRef.current = null;
+					setTransitionDisabled(false);
+					setHighlight({
+						visible: true,
+						left: metric.left,
+						top: metric.top,
+						width: metric.highlightWidth,
+						height: metric.highlightHeight,
+					});
+				});
+				return;
+			}
+		}
+
+		setHighlight({
+			visible: true,
+			left: metric.left,
+			top: metric.top,
+			width: metric.highlightWidth,
+			height: metric.highlightHeight,
+		});
+	}, []);
+
+	const hideHighlight = useCallback(() => {
+		if (animationFrameRef.current) {
+			cancelAnimationFrame(animationFrameRef.current);
+			animationFrameRef.current = null;
+		}
+		setActiveIndex(null);
+		setHighlight((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+	}, []);
+
+	const measure = useCallback(() => {
+		const navEl = navRef.current;
+		if (!navEl) return;
+
+		const navRect = navEl.getBoundingClientRect();
+		const width = navRect.width;
+		if (!width) return;
+		navMetricsRef.current = { width, height: navRect.height };
+
+		const metrics: Array<LinkMetric | null> = linkRefs.current.map(() => null);
+
+		linkRefs.current.forEach((el, index) => {
+			if (!el) return;
+			const rect = el.getBoundingClientRect();
+			const centerX = rect.left + rect.width / 2 - navRect.left;
+			const centerY = rect.top + rect.height / 2 - navRect.top;
+			const archBase =
+				computeArchY(width, centerX) + menuHighlightVars.yOffset.value;
+			metrics[index] = {
+				centerX,
+				centerY,
+				width: rect.width,
+				height: rect.height,
+				archY: archBase,
+				highlightWidth: 0,
+				highlightHeight: 0,
+				left: 0,
+				top: 0,
+			};
+		});
+
+		const definedMetrics = metrics.filter(
+			(metric): metric is LinkMetric => Boolean(metric),
+		);
+
+		if (!definedMetrics.length) {
+			setLinkMetrics(metrics);
+			return;
+		}
+
+		const adjustment = definedMetrics.reduce(
+			(sum, metric) => sum + (metric.centerY - metric.archY),
+			0,
+		) / definedMetrics.length;
+
+		const highlightHeightValue = menuHighlightVars.height.value;
+		const widthPaddingValue = menuHighlightVars.widthPadding.value;
+
+		definedMetrics.forEach((metric) => {
+			const archY = metric.archY + adjustment;
+			const highlightWidth = clamp(
+				metric.width + widthPaddingValue,
+				metric.width,
+				width,
+			);
+			const highlightHeight = highlightHeightValue;
+			const left = clamp(
+				metric.centerX - highlightWidth / 2,
+				0,
+				Math.max(0, width - highlightWidth),
+			);
+			const top = Math.max(0, archY - highlightHeight / 2);
+			metric.archY = archY;
+			metric.highlightWidth = highlightWidth;
+			metric.highlightHeight = highlightHeight;
+			metric.left = left;
+			metric.top = top;
+		});
+
+		setLinkMetrics(metrics);
+
+		if (activeIndex != null && highlightRef.current.visible) {
+			updateHighlightFromMetric(metrics[activeIndex] ?? undefined);
+		}
+
+		if (debugMiniBokeh) {
+			const sampleCount = Math.max(24, Math.round(width / 20));
+			let path = '';
+			for (let i = 0; i < sampleCount; i += 1) {
+				const x = (width * i) / (sampleCount - 1);
+				const y =
+					computeArchY(width, x) + menuHighlightVars.yOffset.value;
+				path += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
+			}
+			setDebugArch({
+				path: path.trim(),
+				width,
+				height: archVars.top.value + archVars.curveHeight.value,
+			});
+		} else {
+			setDebugArch(null);
+		}
+	}, [activeIndex, updateHighlightFromMetric, debugMiniBokeh]);
+
+	useEffect(() => {
+		linkRefs.current.length = anchors.length + 1;
+		measure();
+	}, [anchors.length, measure]);
+
+	useLayoutEffect(() => {
+		measure();
+	}, [measure, anchors, locale]);
+
+	useEffect(() => {
+		const navEl = navRef.current;
+		if (!navEl || typeof ResizeObserver === 'undefined') return;
+		const observer = new ResizeObserver(() => measure());
+		observer.observe(navEl);
+		return () => observer.disconnect();
+	}, [measure]);
+
+	const handleActivate = useCallback(
+		(index: number) => {
+			const metric = linkMetrics[index];
+			if (!metric) return;
+			setActiveIndex(index);
+			updateHighlightFromMetric(metric);
+		},
+		[linkMetrics, updateHighlightFromMetric],
+	);
+
+	const handleBlur = useCallback(
+		(event: FocusEvent<HTMLAnchorElement>) => {
+			const related = event.relatedTarget as HTMLElement | null;
+			if (related && navRef.current?.contains(related)) return;
+			hideHighlight();
+		},
+		[hideHighlight],
+	);
+
+	const handleNavMouseLeave = useCallback(() => {
+		const activeElement = document.activeElement as HTMLElement | null;
+		if (activeElement && navRef.current?.contains(activeElement)) return;
+		hideHighlight();
+	}, [hideHighlight]);
+
+	const highlightStyle = useMemo<CSSProperties>(() => {
+		if (!highlight.width || !highlight.height) {
+			return { opacity: 0, transform: 'translate3d(0, 0, 0)' };
+		}
+
+		const style: CSSProperties = {
+			width: `${highlight.width}px`,
+			height: `${highlight.height}px`,
+			transform: `translate3d(${highlight.left}px, ${highlight.top}px, 0)`,
+			opacity: highlight.visible ? 1 : 0,
+			transition: transitionDisabled ? 'none' : highlightTransition,
+		};
+
+		if (debugMiniBokeh) {
+			style.outline = '1px dashed rgba(255,255,255,0.4)';
+		}
+
+		return style;
+	}, [highlight, transitionDisabled, debugMiniBokeh]);
+
 	const renderNavLink = (
 		entry: AnchorEntry,
+		index: number,
 		classes?: { item?: string; index?: string },
 	) => {
 		const id = t(entry.hrefKey);
 		const isActive = activeSection === id;
+
 		return (
-			<li className={clsx(classes?.item, classes?.index)}>
+			<li className={clsx(classes?.item, classes?.index)} key={entry.hrefKey}>
 				<Link
 					href={`#${id}`}
 					className={s.navLink}
+					ref={(el) => {
+						linkRefs.current[index] = el;
+					}}
 					data-active={isActive}
 					aria-current={isActive ? 'true' : undefined}
+					onMouseEnter={() => handleActivate(index)}
+					onFocus={(event) => {
+						if (event.currentTarget.matches(':focus-visible')) {
+							handleActivate(index);
+						}
+					}}
+					onBlur={handleBlur}
 				>
 					{t(entry.labelKey)}
 				</Link>
@@ -138,10 +464,48 @@ export default function Menu() {
 		<>
 			<div className={s.menu} data-mounted={mounted}>
 				<Arch ready={mounted}>
-					<nav className={clsx(s.nav)}>
+					<nav
+						className={clsx(s.nav)}
+						ref={navRef}
+						onMouseLeave={handleNavMouseLeave}
+					>
+						<div className={s.highlightLayer} aria-hidden>
+							{debugMiniBokeh && debugArch ? (
+								<svg
+									className={s.debugArch}
+									viewBox={`0 0 ${debugArch.width} ${debugArch.height}`}
+									width={debugArch.width}
+									height={debugArch.height}
+									preserveAspectRatio="none"
+								>
+									<path
+										d={debugArch.path}
+										fill="none"
+										stroke="rgba(255,255,255,0.35)"
+										strokeWidth={1}
+										strokeDasharray="4 4"
+									/>
+								</svg>
+							) : null}
+							<div className={s.miniBokeh} style={highlightStyle} />
+						</div>
 						<div className={clsx(s.contents)}>
 							<div className={clsx(s.logoItem, s.item)}>
-								<Link href={root} className={s.logoLink} prefetch={false}>
+								<Link
+									href={root}
+									className={s.logoLink}
+									prefetch={false}
+									ref={(el) => {
+										linkRefs.current[0] = el;
+									}}
+									onMouseEnter={() => handleActivate(0)}
+									onFocus={(event) => {
+										if (event.currentTarget.matches(':focus-visible')) {
+											handleActivate(0);
+										}
+									}}
+									onBlur={handleBlur}
+								>
 									<Logo className={s.logo} />
 								</Link>
 							</div>
@@ -151,8 +515,12 @@ export default function Menu() {
 								aria-label={t('menu-left_label')}
 								data-side="left"
 							>
-								{renderNavLink(anchors[0], { item: s.item, index: s.item_1 })}
-								{renderNavLink(anchors[1], { item: s.item, index: s.item_2 })}
+								{anchors.slice(0, 2).map((entry, idx) =>
+									renderNavLink(entry, idx + 1, {
+										item: s.item,
+										index: idx === 0 ? s.item_1 : s.item_2,
+									}),
+								)}
 							</ul>
 
 							<ul
@@ -160,8 +528,12 @@ export default function Menu() {
 								aria-label={t('menu-right_label')}
 								data-side="right"
 							>
-								{renderNavLink(anchors[2], { item: s.item, index: s.item_3 })}
-								{renderNavLink(anchors[3], { item: s.item, index: s.item_4 })}
+								{anchors.slice(2).map((entry, idx) =>
+									renderNavLink(entry, idx + 3, {
+										item: s.item,
+										index: idx === 0 ? s.item_3 : s.item_4,
+									}),
+								)}
 							</ul>
 						</div>
 					</nav>

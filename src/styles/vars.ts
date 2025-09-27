@@ -289,13 +289,13 @@ export const fontVars = {
 };
 
 export const archVars = {
-	top: 40,
-	curveHeight: 16,
-	ry: 70,
-	bumpHeight: 12,
-	bumpWidth: 60,
+	top: m(50),
+	curveHeight: m(16),
+	ry: m(70),
+	bumpHeight: m(12),
+	bumpWidth: m(60),
 	bumpBaseWidth: 0.9,
-	bumpTipWidth: 9,
+	bumpTipWidth: m(9),
 };
 
 export const logoVars = {
@@ -303,6 +303,19 @@ export const logoVars = {
 	offsetY: m(4),
 	offsetX: m(-1),
 	shadowRatio: 948.31276 / 546.93464, // from shadow width (in the SVG) / logo width
+	focus: {
+		scale: 1.2,
+		pulseDeviation: 0.08,
+		pulseDurationMs: 1800,
+		transitionMs: 260,
+		haloColor: colorVars.contrast.alpha(0.35),
+	},
+};
+
+export const menuHighlightVars = {
+	height: archVars.top,
+	widthPadding: m(18),
+	yOffset: m(0),
 };
 
 export const dropShadowVars = {
