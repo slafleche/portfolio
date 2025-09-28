@@ -290,6 +290,10 @@ export const navLink = style({
 			// transform: 'scale(1.2)',
 			// letterSpacing: '0.1rem',
 		},
+		'&[aria-current="true"]': {
+			pointerEvents: 'auto',
+			cursor: 'pointer',
+		},
 		'&:visited': {
 			// color: colorVars.transparent.css(),
 		},
