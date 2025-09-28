@@ -4,11 +4,7 @@ import Link from 'next/link';
 import * as s from '@/styles/menu.css';
 import { useT } from '@/lib/locales/useT';
 import { useLocale } from '@/lib/locales/localeContext';
-import {
-	AVAILABLE_LOCALES,
-	TRANSLATIONS,
-	type Messages,
-} from '@/data/locales';
+import { AVAILABLE_LOCALES, TRANSLATIONS, type Messages } from '@/data/locales';
 import { archVars, menuHighlightVars } from '@/styles/vars';
 import clsx from 'clsx';
 import Arch from './Arch';
@@ -103,6 +99,8 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const navRef = useRef<HTMLDivElement | null>(null);
 	const linkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
 	const [linkMetrics, setLinkMetrics] = useState<Array<LinkMetric | null>>([]);
+	const linkMetricsRef = useRef<Array<LinkMetric | null>>([]);
+	const lastMetricRef = useRef<LinkMetric | null>(null);
 	const [highlight, setHighlight] = useState<HighlightState>({
 		visible: false,
 		left: 0,
@@ -111,7 +109,10 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		height: 0,
 	});
 	const [debugArch, setDebugArch] = useState<DebugArch | null>(null);
-	const navMetricsRef = useRef<{ width: number; height: number }>({ width: 0, height: 0 });
+	const navMetricsRef = useRef<{ width: number; height: number }>({
+		width: 0,
+		height: 0,
+	});
 	const highlightRef = useRef(highlight);
 	const animationFrameRef = useRef<number | null>(null);
 	const [transitionDisabled, setTransitionDisabled] = useState(false);
@@ -120,12 +121,15 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		highlightRef.current = highlight;
 	}, [highlight]);
 
-	useEffect(() => () => {
-		if (animationFrameRef.current) {
-			cancelAnimationFrame(animationFrameRef.current);
-			animationFrameRef.current = null;
-		}
-	}, []);
+	useEffect(
+		() => () => {
+			if (animationFrameRef.current) {
+				cancelAnimationFrame(animationFrameRef.current);
+				animationFrameRef.current = null;
+			}
+		},
+		[],
+	);
 
 	const anchors = useMemo<readonly AnchorEntry[]>(
 		() => [
@@ -137,45 +141,74 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		[],
 	);
 
+	const anchorCount = anchors.length + 1;
+
 	const sectionIds = useMemo(() => {
 		const messages = TRANSLATIONS[locale];
 		return anchors.map(({ hrefKey }) => messages[hrefKey]);
 	}, [anchors, locale]);
 
+	useEffect(() => {
+		const emptyRefs = new Array<HTMLAnchorElement | null>(anchorCount).fill(
+			null,
+		);
+		linkRefs.current = emptyRefs;
+		const emptyMetrics = new Array<LinkMetric | null>(anchorCount).fill(null);
+		linkMetricsRef.current = emptyMetrics;
+		setLinkMetrics(emptyMetrics);
+	}, [anchorCount]);
+
 	const updateHighlightFromMetric = useCallback((metric?: LinkMetric) => {
 		if (!metric) return;
 
+		const navMetrics = navMetricsRef.current;
+
 		if (!highlightRef.current.visible) {
-			const navMetrics = navMetricsRef.current;
-			if (navMetrics.width > 0) {
-				setTransitionDisabled(true);
+			setTransitionDisabled(true);
+			const previous = lastMetricRef.current;
+			let startLeft = metric.left;
+			let startTop = metric.top;
+			let startWidth = metric.highlightWidth;
+			let startHeight = metric.highlightHeight;
+
+			if (previous) {
+				startLeft = previous.left;
+				startTop = previous.top;
+				startWidth = previous.highlightWidth;
+				startHeight = previous.highlightHeight;
+			} else if (navMetrics.width > 0) {
 				const centerX = navMetrics.width / 2;
 				const centerY =
 					computeArchY(navMetrics.width, centerX) +
 					menuHighlightVars.yOffset.value;
+				startLeft = centerX - metric.highlightWidth / 2;
+				startTop = Math.max(0, centerY - metric.highlightHeight / 2);
+			}
+
+			setHighlight({
+				visible: false,
+				left: startLeft,
+				top: startTop,
+				width: startWidth,
+				height: startHeight,
+			});
+
+			if (animationFrameRef.current) {
+				cancelAnimationFrame(animationFrameRef.current);
+			}
+			animationFrameRef.current = requestAnimationFrame(() => {
+				animationFrameRef.current = null;
+				setTransitionDisabled(false);
 				setHighlight({
-					visible: false,
-					left: centerX - metric.highlightWidth / 2,
-					top: Math.max(0, centerY - metric.highlightHeight / 2),
+					visible: true,
+					left: metric.left,
+					top: metric.top,
 					width: metric.highlightWidth,
 					height: metric.highlightHeight,
 				});
-				if (animationFrameRef.current) {
-					cancelAnimationFrame(animationFrameRef.current);
-				}
-				animationFrameRef.current = requestAnimationFrame(() => {
-					animationFrameRef.current = null;
-					setTransitionDisabled(false);
-					setHighlight({
-						visible: true,
-						left: metric.left,
-						top: metric.top,
-						width: metric.highlightWidth,
-						height: metric.highlightHeight,
-					});
-				});
-				return;
-			}
+				lastMetricRef.current = metric;
+			});
+			return;
 		}
 
 		setHighlight({
@@ -185,6 +218,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			width: metric.highlightWidth,
 			height: metric.highlightHeight,
 		});
+		lastMetricRef.current = metric;
 	}, []);
 
 	const hideHighlight = useCallback(() => {
@@ -227,8 +261,8 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			};
 		});
 
-		const definedMetrics = metrics.filter(
-			(metric): metric is LinkMetric => Boolean(metric),
+		const definedMetrics = metrics.filter((metric): metric is LinkMetric =>
+			Boolean(metric),
 		);
 
 		if (!definedMetrics.length) {
@@ -236,10 +270,11 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			return;
 		}
 
-		const adjustment = definedMetrics.reduce(
-			(sum, metric) => sum + (metric.centerY - metric.archY),
-			0,
-		) / definedMetrics.length;
+		const adjustment =
+			definedMetrics.reduce(
+				(sum, metric) => sum + (metric.centerY - metric.archY),
+				0,
+			) / definedMetrics.length;
 
 		const highlightHeightValue = menuHighlightVars.height.value;
 		const widthPaddingValue = menuHighlightVars.widthPadding.value;
@@ -265,6 +300,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			metric.top = top;
 		});
 
+		linkMetricsRef.current = metrics;
 		setLinkMetrics(metrics);
 
 		if (activeIndex != null && highlightRef.current.visible) {
@@ -276,8 +312,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			let path = '';
 			for (let i = 0; i < sampleCount; i += 1) {
 				const x = (width * i) / (sampleCount - 1);
-				const y =
-					computeArchY(width, x) + menuHighlightVars.yOffset.value;
+				const y = computeArchY(width, x) + menuHighlightVars.yOffset.value;
 				path += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
 			}
 			setDebugArch({
@@ -307,15 +342,55 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		return () => observer.disconnect();
 	}, [measure]);
 
-	const handleActivate = useCallback(
-		(index: number) => {
-			const metric = linkMetrics[index];
-			if (!metric) return;
-			setActiveIndex(index);
-			updateHighlightFromMetric(metric);
-		},
-		[linkMetrics, updateHighlightFromMetric],
-	);
+const handleActivate = useCallback(
+	(index: number) => {
+		let metric = linkMetricsRef.current[index] ?? linkMetrics[index];
+		if (!metric) {
+			const navEl = navRef.current;
+			const linkEl = linkRefs.current[index];
+			if (navEl && linkEl) {
+				const navRect = navEl.getBoundingClientRect();
+				const width = navRect.width;
+				const rect = linkEl.getBoundingClientRect();
+				const centerX = rect.left + rect.width / 2 - navRect.left;
+				const centerY = rect.top + rect.height / 2 - navRect.top;
+				const archBase =
+					computeArchY(width, centerX) + menuHighlightVars.yOffset.value;
+				const highlightWidth = clamp(
+					rect.width + menuHighlightVars.widthPadding.value,
+					rect.width,
+					width,
+				);
+				const highlightHeight = menuHighlightVars.height.value;
+				metric = {
+					centerX,
+					centerY,
+					width: rect.width,
+					height: rect.height,
+					archY: archBase,
+					highlightWidth,
+					highlightHeight,
+					left: clamp(
+						centerX - highlightWidth / 2,
+						0,
+						Math.max(0, width - highlightWidth),
+					),
+					top: Math.max(0, archBase - highlightHeight / 2),
+				};
+				const nextMetrics = [...linkMetricsRef.current];
+				nextMetrics[index] = metric;
+				linkMetricsRef.current = nextMetrics;
+				setLinkMetrics(nextMetrics);
+			}
+		}
+		if (!metric) {
+			return;
+		}
+		setActiveIndex(index);
+		updateHighlightFromMetric(metric);
+	},
+	[updateHighlightFromMetric, linkMetrics],
+);
 
 	const handleBlur = useCallback(
 		(event: FocusEvent<HTMLAnchorElement>) => {
@@ -371,6 +446,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					data-active={isActive}
 					aria-current={isActive ? 'true' : undefined}
 					onMouseEnter={() => handleActivate(index)}
+					onMouseLeave={hideHighlight}
 					onFocus={(event) => {
 						if (event.currentTarget.matches(':focus-visible')) {
 							handleActivate(index);
@@ -394,53 +470,52 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			return undefined;
 		}
 
-	let rafId = 0;
+		let rafId = 0;
 
-	const updateActiveSection = () => {
-		const viewportAnchor = window.innerHeight * 0.4;
-		let nextId = sections[0]?.id ?? null;
+		const updateActiveSection = () => {
+			const viewportAnchor = window.innerHeight * 0.4;
+			let nextId = sections[0]?.id ?? null;
 
-		for (const section of sections) {
-			const { top, bottom } = section.getBoundingClientRect();
-			if (bottom < 0) {
-				continue;
+			for (const section of sections) {
+				const { top, bottom } = section.getBoundingClientRect();
+				if (bottom < 0) {
+					continue;
+				}
+				if (top <= viewportAnchor) {
+					nextId = section.id;
+				} else {
+					break;
+				}
 			}
-			if (top <= viewportAnchor) {
-				nextId = section.id;
-			} else {
-				break;
+
+			// When scrolled to the bottom, force the last section
+			const nearBottom =
+				window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+			if (nearBottom && sections.length) {
+				nextId = sections[sections.length - 1].id;
 			}
-		}
 
-		// When scrolled to the bottom, force the last section
-		const nearBottom =
-			window.innerHeight + window.scrollY >=
-			document.body.scrollHeight - 2;
-		if (nearBottom && sections.length) {
-			nextId = sections[sections.length - 1].id;
-		}
+			setActiveSection((prev) => (prev === nextId ? prev : nextId));
+		};
 
-		setActiveSection((prev) => (prev === nextId ? prev : nextId));
-	};
+		const requestUpdate = () => {
+			if (rafId) return;
+			rafId = requestAnimationFrame(() => {
+				rafId = 0;
+				updateActiveSection();
+			});
+		};
 
-	const requestUpdate = () => {
-		if (rafId) return;
-		rafId = requestAnimationFrame(() => {
-			rafId = 0;
-			updateActiveSection();
-		});
-	};
+		updateActiveSection();
 
-	updateActiveSection();
+		window.addEventListener('scroll', requestUpdate, { passive: true });
+		window.addEventListener('resize', requestUpdate);
 
-	window.addEventListener('scroll', requestUpdate, { passive: true });
-	window.addEventListener('resize', requestUpdate);
-
-	return () => {
-		if (rafId) cancelAnimationFrame(rafId);
-		window.removeEventListener('scroll', requestUpdate);
-		window.removeEventListener('resize', requestUpdate);
-	};
+		return () => {
+			if (rafId) cancelAnimationFrame(rafId);
+			window.removeEventListener('scroll', requestUpdate);
+			window.removeEventListener('resize', requestUpdate);
+		};
 	}, [sectionIds]);
 
 	useEffect(() => {
