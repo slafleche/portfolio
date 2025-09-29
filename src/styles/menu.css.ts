@@ -16,6 +16,7 @@ import {
 } from './vars';
 import { fontWeightStyle } from './helpers/typography';
 import { paddings } from './helpers/spacing';
+import transforms from './helpers/transforms';
 
 export const menu = style({
 	position: 'fixed',
@@ -23,20 +24,25 @@ export const menu = style({
 	left: 0,
 	width: '100%',
 	zIndex: 100,
-	transform: `translate3d(0, -${
-		(archVars.top.value +
-			archVars.curveHeight.value +
-			dropShadowVars.offsetY.value +
-			dropShadowVars.blur.value) *
-		1.5
-	}px, 0)`,
+	transform: transforms.value(
+		transforms.translate3d(
+			0,
+			-(
+				archVars.top.value +
+				archVars.curveHeight.value +
+				dropShadowVars.offsetY.value +
+				dropShadowVars.blur.value
+			) * 1.5,
+			0,
+		),
+	),
 	transition: 'transform 0.8s cubic-bezier(0.69, 0.42, 0.01, 1) 0.3s',
 	willChange: 'transform',
 	backfaceVisibility: 'hidden',
 
 	selectors: {
 		'&[data-mounted="true"]': {
-			transform: 'translate3d(0, 0, 0)',
+			transform: transforms.value(transforms.translate3d(0, 0, 0)),
 		},
 	},
 });
@@ -52,7 +58,6 @@ export const contents = style({
 });
 export const nav = style({
 	display: 'flex',
-	alignItems: 'center',
 	flexWrap: 'nowrap',
 	width: '100%',
 	height: archVars.top.css(),
@@ -84,7 +89,7 @@ export const miniBokeh = style({
 	filter: `blur(${menuVars.hover.blur.value}px)`,
 	boxShadow: `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast.alpha(menuVars.hover.shadow.opacity).css()}`,
 	opacity: 0,
-	transform: 'translate3d(0, 0, 0)',
+	transform: transforms.value(transforms.translate3d(0, 0, 0)),
 	transition:
 		'opacity 180ms ease, transform 450ms cubic-bezier(0.4, 0, 0.2, 1), width 350ms ease, height 350ms ease',
 	mixBlendMode: 'screen',
@@ -149,26 +154,74 @@ const logoHoverOutlineColor = (
 ).css();
 
 const logoOrbit = keyframes({
-	'0%': { transform: 'translate(-50%, -50%) rotate(0deg)' },
-	'100%': { transform: 'translate(-50%, -50%) rotate(360deg)' },
+	'0%': {
+		transform: transforms.value(
+			transforms.translate('-50%', '-50%'),
+			transforms.rotate(0),
+		),
+	},
+	'100%': {
+		transform: transforms.value(
+			transforms.translate('-50%', '-50%'),
+			transforms.rotate(360),
+		),
+	},
 });
 
 const logoHoverRotate = keyframes({
-	'0%': { transform: 'rotate(0deg) scale(1)' },
-	'20%': { transform: 'rotate(-16deg) scale(0.9)' },
-	'40%': { transform: 'rotate(-16deg) scale(0.9)' },
-	'55%': { transform: `rotate(138deg) scale(${focusScale * 1.015})` },
-	'85%': { transform: `rotate(118deg) scale(${focusScale * 0.992})` },
-	'100%': { transform: `rotate(120deg) scale(${focusScale})` },
+	'0%': {
+		transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
+	},
+	'20%': {
+		transform: transforms.value(transforms.rotate(-16), transforms.scale(0.9)),
+	},
+	'40%': {
+		transform: transforms.value(transforms.rotate(-16), transforms.scale(0.9)),
+	},
+	'55%': {
+		transform: transforms.value(
+			transforms.rotate(138),
+			transforms.scale(focusScale * 1.015),
+		),
+	},
+	'85%': {
+		transform: transforms.value(
+			transforms.rotate(118),
+			transforms.scale(focusScale * 0.992),
+		),
+	},
+	'100%': {
+		transform: transforms.value(
+			transforms.rotate(120),
+			transforms.scale(focusScale),
+		),
+	},
 });
 
 const logoHoverExitDuration = 560;
 
 const logoHoverRotateReverse = keyframes({
-	'0%': { transform: `rotate(120deg) scale(${focusScale})` },
-	'40%': { transform: `rotate(130deg) scale(${focusScale * 1.05})` },
-	'74%': { transform: 'rotate(-10deg) scale(0.985)' },
-	'100%': { transform: 'rotate(0deg) scale(1)' },
+	'0%': {
+		transform: transforms.value(
+			transforms.rotate(120),
+			transforms.scale(focusScale),
+		),
+	},
+	'40%': {
+		transform: transforms.value(
+			transforms.rotate(130),
+			transforms.scale(focusScale * 1.05),
+		),
+	},
+	'74%': {
+		transform: transforms.value(
+			transforms.rotate(-10),
+			transforms.scale(0.985),
+		),
+	},
+	'100%': {
+		transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
+	},
 });
 
 export const debugArch = style({
@@ -189,19 +242,25 @@ export const list = style({
 	flexWrap: 'nowrap',
 	flexGrow: '1',
 	width: '50%',
-	top: menuVars.verticalOffset.css(),
+	// top: menuVars.verticalOffset.css(),
 	selectors: {
 		'&[data-side="left"]': {
 			justifyContent: 'flex-end',
 			order: 0,
-			paddingRight: logoVars.width.css(),
+			...paddings({
+				right: logoVars.width.css(),
+				left: logoVars.width.css(),
+			}),
 			transformOrigin: 'right center',
 		},
 
 		'&[data-side="right"]': {
 			justifyContent: 'flex-start',
 			order: 1,
-			paddingLeft: logoVars.width.css(),
+			...paddings({
+				right: logoVars.width.css(),
+				left: logoVars.width.css(),
+			}),
 			transformOrigin: 'left center',
 		},
 	},
@@ -229,7 +288,7 @@ export const logoItem = style({
 	top: archVars.top.half().add(logoVars.offsetY.value).css(),
 	left: '50%',
 	...flexMiddle(),
-	transform: 'translate(-50%, -50%)',
+	transform: transforms.value(transforms.translate('-50%', '-50%')),
 	width: logoVars.width.css(),
 	height: logoVars.width.css(),
 });
@@ -245,11 +304,14 @@ export const logoLink = style({
 			position: 'absolute',
 			left: '50%',
 			top: '50%',
+			borderRadius: '50%',
 			width: logoHoverSizePercent,
 			height: logoHoverSizePercent,
-			transform: 'translate(-50%, -50%) rotate(0deg)',
+			transform: transforms.value(
+				transforms.translate('-50%', '-50%'),
+				transforms.rotate(0),
+			),
 			transformOrigin: '50% 50%',
-			borderRadius: '50%',
 			backgroundImage: logoHoverGradients,
 			backgroundRepeat: 'no-repeat',
 			backgroundSize: '100% 100%',
@@ -271,7 +333,10 @@ export const logoLink = style({
 			opacity: 0,
 			animationPlayState: 'paused',
 			animation: 'none',
-			transform: 'translate(-50%, -50%) rotate(0deg)',
+			transform: transforms.value(
+				transforms.translate('-50%', '-50%'),
+				transforms.rotate(0),
+			),
 		},
 		'&:focus-visible::before': {
 			opacity: 1,
@@ -311,7 +376,7 @@ export const logo = style({
 	height: 'auto',
 	position: 'relative',
 	zIndex: 1,
-	transform: 'rotate(0deg) scale(1)',
+	transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
 	transformOrigin: 'center',
 	transformBox: 'fill-box',
 	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
@@ -325,7 +390,10 @@ export const logo = style({
 		},
 		[`${logoLink}:focus-visible &`]: {
 			animation: 'none',
-			transform: `rotate(0deg) scale(${focusScale})`,
+			transform: transforms.value(
+				transforms.rotate(0),
+				transforms.scale(focusScale),
+			),
 		},
 	},
 	'@media': {
@@ -333,11 +401,17 @@ export const logo = style({
 			selectors: {
 				'[data-logo-anim="enter"] &': {
 					animation: 'none',
-					transform: `rotate(0deg) scale(${focusScale})`,
+					transform: transforms.value(
+						transforms.rotate(0),
+						transforms.scale(focusScale),
+					),
 				},
 				'[data-logo-anim="exit"] &': {
 					animation: 'none',
-					transform: 'rotate(0deg) scale(1)',
+					transform: transforms.value(
+						transforms.rotate(0),
+						transforms.scale(1),
+					),
 				},
 			},
 		},
@@ -350,13 +424,38 @@ const menuFont = fontFamilies.baloo;
 
 export const localeChanger = style({
 	...absolutePosition.topRight('50%', menuVars.padding.horizontal.half().css()),
+	display: 'flex',
+	alignContent: 'center',
+	height: '100%',
 	fontFamily: menuFont.family,
 	fontSize: fontVars.menu.size.css(),
 	...fontWeightStyle(menuFont, fontVars.menu.relativeWeight),
 	lineHeight: 1,
 	textDecoration: 'none',
 	zIndex: 1,
-	transform: `skewX(-${menuVars.rotationMax.css()}) rotate(0.5deg)`,
+	textShadow: `2px 2px 3px ${colorVars.navBg.css()}`,
+	transform: transforms.value(
+		transforms.skewX(menuVars.rotationMax).negate(),
+		transforms.rotate(2),
+		transforms.translateY('-50%'),
+	),
+});
+
+export const localeLink = style({
+	position: 'relative',
+	top: menuVars.locale.offsetY.css(),
+	color: colors.navFg.css(),
+	alignSelf: 'center',
+	transition: 'opacity 0.2s ease-in',
+	opacity: menuVars.locale.opacity,
+	selectors: {
+		'&:visited': {
+			color: colors.navFg.css(),
+		},
+		'&:visited:hover, &:visited:focus-visible': {
+			opacity: 1,
+		},
+	},
 });
 
 export const navLink = style({
@@ -373,30 +472,11 @@ export const navLink = style({
 	letterSpacing: '0.05rem',
 	borderRadius: '50%',
 	color: colors.navFg.css(),
-	// textShadow: `1px 1.2px 1.2px ${colorVars.black.alpha(0.45).css()}`,
-	// backgroundColor: colorVars.navFg.alpha(0.045).css(),
-	// backdropFilter: `blur(10px)`,
-	// ...border({
-	// 	width: m(1),
-	// 	color: colorVars.navFg.alpha(0.1).css(),
-	// }),
-	// textShadow: `0px -0.5px 0px ${colorVars.white.alpha(0.4).css()},
-	// 	0px 1.2px 1.2px ${colorVars.black.alpha(0.45).css()}`,
-	// backgroundClip: 'text',
-	// WebkitBackgroundClip: 'text',
-	// WebkitTextFillColor: 'transparent',
-
-	// filter:	'drop-shadow(0 1px 0 rgba(255,255,255,0.15)) drop-shadow(0 1px 2px rgba(0,0,0,0.35))',
 	transition: 'all 0.45s ease',
 	textShadow: `2px 2px 3px ${colorVars.navBg.css()}`,
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: '100% 1.5px',
 	textTransform: 'uppercase',
-
-	// backgroundImage: `
-	// linear-gradient(${chroma.mix(colorVars.navFg, colorVars.navBg, 0.75).css()} 0 0),
-	// linear-gradient(${chroma.mix(colorVars.navFg, colorVars.navBg, 0.5).css()} 0 0)
-	// `,
 	backgroundPosition: `left 200% bottom 0, left 200% bottom 0.3em`,
 
 	selectors: {
@@ -428,10 +508,10 @@ export const navLink = style({
 
 // For hover effects. we already have 2 inline transform styles on the link, this makes it easier to write the other in CSS
 export const text = style({});
-globalStyle(`.${navLink}[data-side="left"]:hover ${text}`, {
+globalStyle(`.${navLink}[data-side="left"]:hover .${text}`, {
 	transform: `translate(-5px, -5px) scale(1.1)`,
 });
-globalStyle(`.${navLink}[data-side="right"]:hover ${text}`, {
+globalStyle(`.${navLink}[data-side="right"]:hover .${text}`, {
 	transform: `translate(5px, 5px) scale(1.1)`,
 });
 
