@@ -309,6 +309,34 @@ export const logoVars = {
 		haloColor: colorVars.contrast.alpha(0.35),
 	},
 	hover: {
+		blobs: [
+			{
+				color: gradients.b_linear_b,
+				posX: 24,
+				posY: 38,
+				radius: 46,
+				intensity: 0.32,
+			},
+			{
+				color: gradients.b_spot_a,
+				posX: 62,
+				posY: 58,
+				radius: 48,
+				intensity: 0.28,
+			},
+			{
+				color: gradients.b_linear_c,
+				posX: 42,
+				posY: 72,
+				radius: 44,
+				intensity: 0.24,
+			},
+		],
+		squareSizeMultiplier: 2.4,
+		squareBlur: 18,
+		squareOpacity: 1,
+		durationMs: 2000,
+		speedMultiplier: 1,
 		outline: {
 			color: colorVars.contrast.alpha(0.6),
 			width: m(2),
