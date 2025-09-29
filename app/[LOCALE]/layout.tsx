@@ -23,7 +23,8 @@ export default async function LocaleSegmentLayout({
 		<LocaleProvider locale={locale}>
 			<WindowSizeProvider>
 				<ResponsiveProvider>
-					<Menu debugMiniBokeh={true} />
+					{/* <Menu debugMiniBokeh={true} /> */}
+					<Menu />
 					{children}
 				</ResponsiveProvider>
 			</WindowSizeProvider>
