@@ -1,4 +1,4 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import {
 	absolutePosition,
 	flexMiddle,
@@ -90,6 +90,16 @@ export const miniBokeh = style({
 
 const focusScale = logoVars.focus?.scale ?? 1.1;
 const focusTransition = logoVars.focus?.transitionMs ?? 260;
+const logoHoverOutlineConfig = logoVars.hover?.outline ?? {};
+const logoHoverOutlineColor =
+	logoHoverOutlineConfig.color?.css?.() ??
+	(typeof logoHoverOutlineConfig.color === 'string'
+		? logoHoverOutlineConfig.color
+		: colorVars.contrast.alpha(0.55).css());
+const logoHoverOutlineWidth =
+	logoHoverOutlineConfig.width?.css?.() ?? '2px';
+const logoHoverOutlineOffset =
+	logoHoverOutlineConfig.offset?.css?.() ?? '6px';
 
 export const debugArch = style({
 	position: 'absolute',
@@ -158,7 +168,12 @@ export const logoLink = style({
 	...flexPosition.center(),
 	width: logoVars.width.css(),
 	height: logoVars.width.css(),
-	position: 'relative',
+	selectors: {
+		'&:hover, &:focus-visible': {
+			outline: `${logoHoverOutlineWidth} solid ${logoHoverOutlineColor}`,
+			outlineOffset: logoHoverOutlineOffset,
+		},
+	},
 });
 
 export const item_3 = style({
@@ -187,11 +202,10 @@ export const logo = style({
 	transformOrigin: '50% 50%',
 	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
 	// filter: 'drop-shadow( 0px 10px 2px rgba(0, 0, 0, .7))',
+	position: 'relative',
+	zIndex: 1,
 	selectors: {
 		[`${logoLink}:hover &`]: {
-			transform: `scale(${focusScale})`,
-		},
-		[`${logoLink}:focus-visible &`]: {
 			transform: `scale(${focusScale})`,
 		},
 	},
