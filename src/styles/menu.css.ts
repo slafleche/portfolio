@@ -68,12 +68,19 @@ export const highlightLayer = style({
 export const miniBokeh = style({
 	position: 'absolute',
 	borderRadius: '999px',
-	background: `radial-gradient(circle at 30% 30%,
-		${colorVars.contrast.alpha(0.4).css()},
-		${colorVars.navFg.alpha(0.05).css()} 65%,
-		${colorVars.transparent.css()} 85%)`,
-	filter: 'blur(14px)',
-	boxShadow: `0 0 30px ${colorVars.contrast.alpha(0.2).css()}`,
+	background: (() => {
+		const gradients = menuVars.hover.blobs.map(
+			({ color, posX, posY, radius, intensity }) => {
+				const chromaColor = color ?? colorVars.contrast;
+				const solid = chromaColor.alpha(intensity ?? 0.3).css();
+				const soft = chromaColor.alpha(0).css();
+				return `radial-gradient(circle at ${posX}% ${posY}%, ${solid} 0%, ${soft} ${radius}%)`;
+			},
+		);
+		return gradients.join(', ');
+	})(),
+	filter: `blur(${menuVars.hover.blur.value}px)`,
+	boxShadow: `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast.alpha(menuVars.hover.shadow.opacity).css()}`,
 	opacity: 0,
 	transform: 'translate3d(0, 0, 0)',
 	transition:
@@ -109,7 +116,6 @@ export const list = style({
 			order: 0,
 			paddingRight: logoVars.width.half().css(),
 			transformOrigin: 'right center',
-			// transform: 'rotate(-5deg)',
 		},
 
 		'&[data-side="right"]': {
@@ -117,7 +123,6 @@ export const list = style({
 			order: 1,
 			paddingLeft: logoVars.width.half().css(),
 			transformOrigin: 'left center',
-			// transform: 'rotate(5deg)',
 		},
 	},
 });
@@ -140,6 +145,7 @@ export const item_2 = style({
 // Logo in the middle
 export const logoItem = style({
 	position: 'absolute',
+	zIndex: 1,
 	top: archVars.top.half().add(logoVars.offsetY.value).css(),
 	left: '50%',
 	...flexMiddle(),
