@@ -486,20 +486,20 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			? highlight.top
 			: Math.max(0, centerY - height / 2);
 
-			const style: CSSProperties = {
-				width: `${width}px`,
-				height: `${height}px`,
-				opacity: hasMeasurements && highlight.visible ? 1 : 0,
-				transition:
-					transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
-			};
+		const style: CSSProperties = {
+			width: `${width}px`,
+			height: `${height}px`,
+			opacity: hasMeasurements && highlight.visible ? 1 : 0,
+			transition:
+				transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
+		};
 
-			const transformValue = transforms.value(
-				transforms.translate3d(left, top, 0),
-			);
-			if (transformValue) {
-				style.transform = transformValue;
-			}
+		const transformValue = transforms.value(
+			transforms.translate3d(left, top, 0),
+		);
+		if (transformValue) {
+			style.transform = transformValue;
+		}
 
 		const blobs = menuVars.hover.blobs;
 		const activeNavIndex =
@@ -563,13 +563,14 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					data-side={side}
 					data-active={isActive}
 					aria-current={isActive ? 'true' : undefined}
-					style={
-						transforms(
-							transforms.skewX(menuVars.skew).negate(side === 'right'),
-							transforms.translateY(0).when(isFirst),
-							transforms.rotate(0.5).negate(side === 'left').when(isFirst),
-						)
-					}
+					style={transforms(
+						transforms.skewX(menuVars.skew).negate(side === 'right'),
+						transforms.translateY(0).when(isFirst),
+						transforms
+							.rotate(0.5)
+							.negate(side === 'left')
+							.when(isFirst),
+					)}
 					onMouseEnter={() => handleActivate(index)}
 					onMouseLeave={hideHighlight}
 					onFocus={(event) => {
@@ -742,7 +743,13 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					</nav>
 					<nav className={s.localeChanger} aria-label={t('localeChange')}>
 						{AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
-							<Link key={l} href={`/${l}`} className={s.link} hrefLang={l}>
+							<Link
+								key={l}
+								href={`/${l}`}
+								className={clsx(s.link, s.localeLink)}
+								hrefLang={l}
+								data-ui="link"
+							>
 								{TRANSLATIONS[l]['abbreviated-label']}
 							</Link>
 						))}

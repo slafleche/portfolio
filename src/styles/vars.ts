@@ -351,6 +351,10 @@ export const menuVars = {
 	rotationMax: m(2, 'deg'),
 	skew: m(2, 'deg'),
 	verticalOffset: m(1),
+	locale: {
+		offsetY: m(2),
+		opacity: 0.6,
+	},
 	padding: {
 		horizontal: m(25),
 		vertical: m(10),
