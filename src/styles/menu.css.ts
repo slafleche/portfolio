@@ -105,6 +105,8 @@ type LogoHoverConfig = typeof logoVars.hover & {
 	squareSizeMultiplier?: number;
 	squareBlur?: number;
 	squareOpacity?: number;
+	durationMs?: number;
+	speedMultiplier?: number;
 };
 
 const logoHoverConfig = (logoVars.hover ?? {}) as LogoHoverConfig;
@@ -131,12 +133,24 @@ const logoHoverSizePercent = `${logoHoverSizeMultiplier * 100}%`;
 const logoHoverBlur = logoHoverConfig.squareBlur ?? 18;
 const logoHoverOpacity = logoHoverConfig.squareOpacity ?? 1;
 
+const logoHoverBaseDuration = logoHoverConfig.durationMs ?? 20000;
+const logoHoverSpeedMultiplier = logoHoverConfig.speedMultiplier ?? 1;
+const logoHoverDuration =
+	logoHoverSpeedMultiplier <= 0
+		? logoHoverBaseDuration
+		: logoHoverBaseDuration / logoHoverSpeedMultiplier;
+
 const logoHoverOutline = logoVars.hover?.outline;
 const logoHoverOutlineWidth = logoHoverOutline?.width.css() ?? '2px';
 const logoHoverOutlineOffset = logoHoverOutline?.offset.css() ?? '6px';
 const logoHoverOutlineColor = (
 	logoHoverOutline?.color ?? colorVars.contrast.alpha(0.6)
 ).css();
+
+const logoOrbit = keyframes({
+	'0%': { transform: 'translate(-50%, -50%) rotate(0deg)' },
+	'100%': { transform: 'translate(-50%, -50%) rotate(360deg)' },
+});
 
 const logoHoverRotate = keyframes({
 	'0%': { transform: 'rotate(0deg) scale(1)' },
@@ -231,12 +245,16 @@ export const logoLink = style({
 			mixBlendMode: 'screen',
 			filter: `blur(${logoHoverBlur}px)`,
 			opacity: 0,
+			animation: `${logoOrbit} ${logoHoverDuration}ms linear infinite`,
+			animationPlayState: 'paused',
+			willChange: 'transform',
 			pointerEvents: 'none',
 			transition: `opacity ${focusTransition}ms ease`,
 			zIndex: 0,
 		},
 		'&:hover::before': {
 			opacity: logoHoverOpacity,
+			animationPlayState: 'running',
 		},
 		'&:focus-visible::before': {
 			opacity: 1,
@@ -247,6 +265,7 @@ export const logoLink = style({
 			boxSizing: 'border-box',
 			width: `calc(100% + ${logoHoverOutlineOffset} * 2)`,
 			height: `calc(100% + ${logoHoverOutlineOffset} * 2)`,
+			animation: 'none',
 		},
 	},
 });
