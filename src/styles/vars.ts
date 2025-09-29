@@ -299,7 +299,7 @@ export const archVars = {
 };
 
 export const logoVars = {
-	width: m(45),
+	width: m(60),
 	offsetY: m(0),
 	offsetX: m(0),
 	shadowRatio: 948.31276 / 546.93464, // from shadow width (in the SVG) / logo width
