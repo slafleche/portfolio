@@ -1,5 +1,6 @@
 import type { IMeasurement } from '@/styles/helpers/measurement';
 import { menuVars } from '../../styles/vars';
+import transforms from '../../styles/helpers/transforms';
 
 export interface IArch {
 	top: IMeasurement; // Space above the top of the arch (reserved for nav items)
@@ -202,12 +203,11 @@ export function getRotationStyle(
 		k = menuVars.rotation.k,
 	} = opts;
 
-	if (!width) return { transform: 'rotate(0deg)' };
-
-	const result =
-		(direction === 'left' ? -1 : 1) *
-		(min + (max - min) * Math.exp(-width / k));
-	return {
-		transform: `rotate(${result}deg)`,
-	};
+	const zeroRotation = transforms.rotate(0).when(width <= 0);
+	const magnitude = min + (max - min) * Math.exp(-width / k);
+	const activeRotation = transforms
+		.rotate(magnitude)
+		.negate(direction === 'left')
+		.when(width > 0);
+	return transforms.style(zeroRotation, activeRotation);
 }

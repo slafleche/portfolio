@@ -35,15 +35,14 @@ type MeasurementDebugOptions = {
 };
 
 declare global {
-	// eslint-disable-next-line no-var
 	var __MEASUREMENT_DEBUG__: DebugEntry[] | undefined;
-	// eslint-disable-next-line no-var
+
 	var __MEASUREMENT_DEBUG_INDEX__: Map<string, number> | undefined;
-	// eslint-disable-next-line no-var
+
 	var measurementDebug:
 		| ((options?: MeasurementDebugOptions) => Promise<unknown>)
 		| undefined;
-	// eslint-disable-next-line no-var
+
 	var measurementDebugClear: (() => Promise<unknown>) | undefined;
 }
 
@@ -176,7 +175,10 @@ const measurementIds = new WeakMap<IMeasurement, string>();
 let measurementAutoLabelCounter = 0;
 let measurementIdCounter = 0;
 
-const rememberMeasurementMeta = (measurement: IMeasurement, state: DebugState) => {
+const rememberMeasurementMeta = (
+	measurement: IMeasurement,
+	state: DebugState,
+) => {
 	measurementIds.set(measurement, state.measurementId);
 	const label = state.label ?? state.autoLabel;
 	if (label) {
@@ -196,7 +198,10 @@ const getMeasurementLabel = (measurement: IMeasurement, state?: DebugState) =>
 
 const generateAutoLabel = () => `measurement-${measurementAutoLabelCounter++}`;
 
-const ensureDebugId = (label: string | undefined, measurement: IMeasurement) => {
+const ensureDebugId = (
+	label: string | undefined,
+	measurement: IMeasurement,
+) => {
 	const trimmed = label?.trim() ?? '';
 	if (trimmed) return trimmed;
 	const existing = measurementLabels.get(measurement)?.trim();
@@ -212,12 +217,11 @@ export const m = (value: number, unit: string = 'px'): IMeasurement => {
 	const measurementId = `m-${measurementIdCounter++}`;
 
 	const create = (nextValue: number, debug?: DebugState): IMeasurement => {
-		const state =
-			debug ?? ({ enabled: false, measurementId } as DebugState);
+		const state = debug ?? ({ enabled: false, measurementId } as DebugState);
 		if (!state.measurementId) {
 			state.measurementId = measurementId;
 		}
-	const measurement: IMeasurement = {
+		const measurement: IMeasurement = {
 			value: nextValue,
 			unit,
 			css: () => {
@@ -254,12 +258,12 @@ export const m = (value: number, unit: string = 'px'): IMeasurement => {
 				logDebug(state, 'half', result, unit);
 				return create(result, state);
 			},
-				negation: (shouldNegate = true) => {
-					if (!shouldNegate) return measurement;
-					const result = nextValue * -1;
-					logDebug(state, 'negation', result, unit);
-					return create(result, state);
-				},
+			negation: (shouldNegate = true) => {
+				if (!shouldNegate) return measurement;
+				const result = nextValue * -1;
+				logDebug(state, 'negation', result, unit);
+				return create(result, state);
+			},
 			absolute: () => {
 				const result = Math.abs(nextValue);
 				logDebug(state, 'absolute', result, unit);
@@ -267,14 +271,14 @@ export const m = (value: number, unit: string = 'px'): IMeasurement => {
 			},
 			debugChain: (label: string) => {
 				if (!enableDebug) return measurement;
-			const resolvedLabel = ensureDebugId(label, measurement);
-			assignMeasurementLabel(measurement, resolvedLabel);
-			const nextState: DebugState = {
-				enabled: true,
-				label: resolvedLabel,
-				autoLabel: resolvedLabel,
-				measurementId: state.measurementId,
-			};
+				const resolvedLabel = ensureDebugId(label, measurement);
+				assignMeasurementLabel(measurement, resolvedLabel);
+				const nextState: DebugState = {
+					enabled: true,
+					label: resolvedLabel,
+					autoLabel: resolvedLabel,
+					measurementId: state.measurementId,
+				};
 				logDebug(nextState, 'debugChain', nextValue, unit);
 				return create(nextValue, nextState);
 			},
