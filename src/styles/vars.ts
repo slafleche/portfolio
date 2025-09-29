@@ -289,8 +289,8 @@ export const fontVars = {
 };
 
 export const archVars = {
-	top: m(50),
-	curveHeight: m(16),
+	top: m(55),
+	curveHeight: m(20),
 	ry: m(70),
 	bumpHeight: m(12),
 	bumpWidth: m(60),
@@ -305,17 +305,25 @@ export const logoVars = {
 	shadowRatio: 948.31276 / 546.93464, // from shadow width (in the SVG) / logo width
 	focus: {
 		scale: 1.2,
-		pulseDeviation: 0.08,
-		pulseDurationMs: 1800,
 		transitionMs: 260,
 		haloColor: colorVars.contrast.alpha(0.35),
 	},
 };
 
-export const menuHighlightVars = {
+export const menuVars = {
 	height: archVars.top,
-	widthPadding: m(18),
 	yOffset: m(0),
+	rotationMax: m(2, 'deg'),
+	skewMax: m(2, 'deg'),
+	verticalOffset: m(1),
+	padding: {
+		horizontal: m(25),
+		vertical: m(10),
+	},
+	rotation: {
+		k: 1200, // modifies how "quickly" you meet the limit
+		max: 2, //Max rotation
+	},
 };
 
 export const dropShadowVars = {

@@ -5,7 +5,7 @@ import * as s from '@/styles/menu.css';
 import { useT } from '@/lib/locales/useT';
 import { useLocale } from '@/lib/locales/localeContext';
 import { AVAILABLE_LOCALES, TRANSLATIONS, type Messages } from '@/data/locales';
-import { archVars, menuHighlightVars } from '@/styles/vars';
+import { archVars, menuVars } from '@/styles/vars';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
@@ -18,6 +18,7 @@ import {
 	useState,
 } from 'react';
 import type { CSSProperties, FocusEvent } from 'react';
+import { getRotationStyle, getSkew } from '../lib/arch/archHelper';
 
 type AnchorKey = Extract<keyof Messages, `${string}-href`>;
 type AnchorEntry = { hrefKey: AnchorKey; labelKey: keyof Messages };
@@ -179,8 +180,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			} else if (navMetrics.width > 0) {
 				const centerX = navMetrics.width / 2;
 				const centerY =
-					computeArchY(navMetrics.width, centerX) +
-					menuHighlightVars.yOffset.value;
+					computeArchY(navMetrics.width, centerX) + menuVars.yOffset.value;
 				startLeft = centerX - metric.highlightWidth / 2;
 				startTop = Math.max(0, centerY - metric.highlightHeight / 2);
 			}
@@ -246,8 +246,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			const rect = el.getBoundingClientRect();
 			const centerX = rect.left + rect.width / 2 - navRect.left;
 			const centerY = rect.top + rect.height / 2 - navRect.top;
-			const archBase =
-				computeArchY(width, centerX) + menuHighlightVars.yOffset.value;
+			const archBase = computeArchY(width, centerX) + menuVars.yOffset.value;
 			metrics[index] = {
 				centerX,
 				centerY,
@@ -276,8 +275,8 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 				0,
 			) / definedMetrics.length;
 
-		const highlightHeightValue = menuHighlightVars.height.value;
-		const widthPaddingValue = menuHighlightVars.widthPadding.value;
+		const highlightHeightValue = menuVars.height.value;
+		const widthPaddingValue = menuVars.padding.horizontal.value;
 
 		definedMetrics.forEach((metric) => {
 			const archY = metric.archY + adjustment;
@@ -312,7 +311,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			let path = '';
 			for (let i = 0; i < sampleCount; i += 1) {
 				const x = (width * i) / (sampleCount - 1);
-				const y = computeArchY(width, x) + menuHighlightVars.yOffset.value;
+				const y = computeArchY(width, x) + menuVars.yOffset.value;
 				path += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
 			}
 			setDebugArch({
@@ -342,55 +341,55 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		return () => observer.disconnect();
 	}, [measure]);
 
-const handleActivate = useCallback(
-	(index: number) => {
-		let metric = linkMetricsRef.current[index] ?? linkMetrics[index];
-		if (!metric) {
-			const navEl = navRef.current;
-			const linkEl = linkRefs.current[index];
-			if (navEl && linkEl) {
-				const navRect = navEl.getBoundingClientRect();
-				const width = navRect.width;
-				const rect = linkEl.getBoundingClientRect();
-				const centerX = rect.left + rect.width / 2 - navRect.left;
-				const centerY = rect.top + rect.height / 2 - navRect.top;
-				const archBase =
-					computeArchY(width, centerX) + menuHighlightVars.yOffset.value;
-				const highlightWidth = clamp(
-					rect.width + menuHighlightVars.widthPadding.value,
-					rect.width,
-					width,
-				);
-				const highlightHeight = menuHighlightVars.height.value;
-				metric = {
-					centerX,
-					centerY,
-					width: rect.width,
-					height: rect.height,
-					archY: archBase,
-					highlightWidth,
-					highlightHeight,
-					left: clamp(
-						centerX - highlightWidth / 2,
-						0,
-						Math.max(0, width - highlightWidth),
-					),
-					top: Math.max(0, archBase - highlightHeight / 2),
-				};
-				const nextMetrics = [...linkMetricsRef.current];
-				nextMetrics[index] = metric;
-				linkMetricsRef.current = nextMetrics;
-				setLinkMetrics(nextMetrics);
+	const handleActivate = useCallback(
+		(index: number) => {
+			let metric = linkMetricsRef.current[index] ?? linkMetrics[index];
+			if (!metric) {
+				const navEl = navRef.current;
+				const linkEl = linkRefs.current[index];
+				if (navEl && linkEl) {
+					const navRect = navEl.getBoundingClientRect();
+					const width = navRect.width;
+					const rect = linkEl.getBoundingClientRect();
+					const centerX = rect.left + rect.width / 2 - navRect.left;
+					const centerY = rect.top + rect.height / 2 - navRect.top;
+					const archBase =
+						computeArchY(width, centerX) + menuVars.yOffset.value;
+					const highlightWidth = clamp(
+						rect.width + menuVars.padding.horizontal.value,
+						rect.width,
+						width,
+					);
+					const highlightHeight = menuVars.height.value;
+					metric = {
+						centerX,
+						centerY,
+						width: rect.width,
+						height: rect.height,
+						archY: archBase,
+						highlightWidth,
+						highlightHeight,
+						left: clamp(
+							centerX - highlightWidth / 2,
+							0,
+							Math.max(0, width - highlightWidth),
+						),
+						top: Math.max(0, archBase - highlightHeight / 2),
+					};
+					const nextMetrics = [...linkMetricsRef.current];
+					nextMetrics[index] = metric;
+					linkMetricsRef.current = nextMetrics;
+					setLinkMetrics(nextMetrics);
+				}
 			}
-		}
-		if (!metric) {
-			return;
-		}
-		setActiveIndex(index);
-		updateHighlightFromMetric(metric);
-	},
-	[updateHighlightFromMetric, linkMetrics],
-);
+			if (!metric) {
+				return;
+			}
+			setActiveIndex(index);
+			updateHighlightFromMetric(metric);
+		},
+		[updateHighlightFromMetric, linkMetrics],
+	);
 
 	const handleBlur = useCallback(
 		(event: FocusEvent<HTMLAnchorElement>) => {
@@ -414,17 +413,15 @@ const handleActivate = useCallback(
 		const width = hasMeasurements
 			? highlight.width
 			: Math.min(
-				navWidth,
-				menuHighlightVars.height.value + menuHighlightVars.widthPadding.value,
-			);
-		const height = hasMeasurements ? highlight.height : menuHighlightVars.height.value;
+					navWidth,
+					menuVars.height.value + menuVars.padding.vertical.value,
+				);
+		const height = hasMeasurements ? highlight.height : menuVars.height.value;
 		const centerX = navWidth ? navWidth / 2 : width / 2;
 		const centerY = navWidth
-			? computeArchY(navWidth, centerX) + menuHighlightVars.yOffset.value
+			? computeArchY(navWidth, centerX) + menuVars.yOffset.value
 			: height / 2;
-		const left = hasMeasurements
-			? highlight.left
-			: centerX - width / 2;
+		const left = hasMeasurements ? highlight.left : centerX - width / 2;
 		const top = hasMeasurements
 			? highlight.top
 			: Math.max(0, centerY - height / 2);
@@ -434,7 +431,8 @@ const handleActivate = useCallback(
 			height: `${height}px`,
 			transform: `translate3d(${left}px, ${top}px, 0)`,
 			opacity: hasMeasurements && highlight.visible ? 1 : 0,
-			transition: transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
+			transition:
+				transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
 		};
 
 		if (debugMiniBokeh) {
@@ -447,6 +445,8 @@ const handleActivate = useCallback(
 	const renderNavLink = (
 		entry: AnchorEntry,
 		index: number,
+		side: 'left' | 'right',
+		isFirst: boolean, // the outer link is slightly translated to make the curve effect
 		classes?: { item?: string; index?: string },
 	) => {
 		const id = t(entry.hrefKey);
@@ -462,6 +462,9 @@ const handleActivate = useCallback(
 					}}
 					data-active={isActive}
 					aria-current={isActive ? 'true' : undefined}
+					style={{
+						transform: `skewX(${side === 'right' ? '-' : ''}1deg)${isFirst ? ` translateY(1.5px) rotate(${side === 'left' ? '-' : ''}0.5deg)` : ''}`,
+					}}
 					onMouseEnter={() => handleActivate(index)}
 					onMouseLeave={hideHighlight}
 					onFocus={(event) => {
@@ -606,9 +609,10 @@ const handleActivate = useCallback(
 								className={s.list}
 								aria-label={t('menu-left_label')}
 								data-side="left"
+								style={getRotationStyle('left', navMetricsRef.current.width)}
 							>
 								{anchors.slice(0, 2).map((entry, idx) =>
-									renderNavLink(entry, idx + 1, {
+									renderNavLink(entry, idx + 1, 'left', idx === 0, {
 										item: s.item,
 										index: idx === 0 ? s.item_1 : s.item_2,
 									}),
@@ -619,9 +623,11 @@ const handleActivate = useCallback(
 								className={s.list}
 								aria-label={t('menu-right_label')}
 								data-side="right"
+								style={getRotationStyle('right', navMetricsRef.current.width)}
+								// style={getRotationAngle('right', navMetricsRef.current.width)}
 							>
 								{anchors.slice(2).map((entry, idx) =>
-									renderNavLink(entry, idx + 3, {
+									renderNavLink(entry, idx + 3, 'right', idx === 3, {
 										item: s.item,
 										index: idx === 0 ? s.item_3 : s.item_4,
 									}),

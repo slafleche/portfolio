@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import {
 	absolutePosition,
 	flexMiddle,
@@ -9,14 +9,11 @@ import {
 	colorVars,
 	dropShadowVars,
 	fontFamilies,
-	fontVars,
 	logoVars,
+	menuVars,
 } from './vars';
-import { globalBoxShadow } from './helpers/shadow';
-import { m } from './helpers/measurement';
 import { fontWeightStyle } from './helpers/typography';
-import chroma from 'chroma-js';
-import { margins, paddings } from './helpers/spacing';
+import { paddings } from './helpers/spacing';
 
 export const menu = style({
 	position: 'fixed',
@@ -99,21 +96,28 @@ export const debugArch = style({
 
 // One side
 export const list = style({
+	position: 'relative',
 	display: 'flex',
 	alignItems: 'center',
 	flexWrap: 'nowrap',
 	flexGrow: '1',
 	width: '50%',
+	top: menuVars.verticalOffset.css(),
 	selectors: {
 		'&[data-side="left"]': {
 			justifyContent: 'flex-end',
 			order: 0,
-			paddingRight: '50px', // TODO set dynamically with width of logo
+			paddingRight: logoVars.width.half().css(),
+			transformOrigin: 'right center',
+			// transform: 'rotate(-5deg)',
 		},
+
 		'&[data-side="right"]': {
 			justifyContent: 'flex-start',
 			order: 1,
-			paddingLeft: '50px', // TODO set dynamically with width of logo
+			paddingLeft: logoVars.width.half().css(),
+			transformOrigin: 'left center',
+			// transform: 'rotate(5deg)',
 		},
 	},
 });
@@ -177,7 +181,7 @@ export const logo = style({
 	transformOrigin: '50% 50%',
 	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
 	// filter: 'drop-shadow( 0px 10px 2px rgba(0, 0, 0, .7))',
- 	selectors: {
+	selectors: {
 		[`${logoLink}:hover &`]: {
 			transform: `scale(${focusScale})`,
 		},
@@ -200,7 +204,7 @@ const menuFont = fontFamilies.baloo;
 export const navLink = style({
 	position: 'relative',
 	display: 'block',
-	...paddings({ top: m(20), bottom: 0, horizontal: m(10) }),
+	...paddings(menuVars.padding),
 	// transform: 'translateY(-50%)',
 	// fontSize: fontVars.menu.size.css(),
 	fontFamily: menuFont.family,
@@ -231,10 +235,10 @@ export const navLink = style({
 	backgroundSize: '100% 1.5px',
 	textTransform: 'uppercase',
 
-	backgroundImage: `
-	linear-gradient(${chroma.mix(colorVars.navFg, colorVars.navBg, 0.75).css()} 0 0), 
-	linear-gradient(${chroma.mix(colorVars.navFg, colorVars.navBg, 0.5).css()} 0 0)
-	`,
+	// backgroundImage: `
+	// linear-gradient(${chroma.mix(colorVars.navFg, colorVars.navBg, 0.75).css()} 0 0),
+	// linear-gradient(${chroma.mix(colorVars.navFg, colorVars.navBg, 0.5).css()} 0 0)
+	// `,
 	backgroundPosition: `left 200% bottom 0, left 200% bottom 0.3em`,
 
 	selectors: {
@@ -269,4 +273,12 @@ export const navLink = style({
 			// color: colorVars.transparent.css(),
 		},
 	},
+});
+
+// For subtle rotation on links
+globalStyle(`${list}[data-side="left"] ${navLink}`, {
+	transformOrigin: 'right center',
+});
+globalStyle(`${list}[data-side="right"] ${navLink}`, {
+	transformOrigin: 'left center',
 });
