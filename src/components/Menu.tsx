@@ -408,16 +408,33 @@ const handleActivate = useCallback(
 	}, [hideHighlight]);
 
 	const highlightStyle = useMemo<CSSProperties>(() => {
-		if (!highlight.width || !highlight.height) {
-			return { opacity: 0, transform: 'translate3d(0, 0, 0)' };
-		}
+		const { width: navWidth, height: navHeight } = navMetricsRef.current;
+		const hasMeasurements = highlight.width && highlight.height;
+
+		const width = hasMeasurements
+			? highlight.width
+			: Math.min(
+				navWidth,
+				menuHighlightVars.height.value + menuHighlightVars.widthPadding.value,
+			);
+		const height = hasMeasurements ? highlight.height : menuHighlightVars.height.value;
+		const centerX = navWidth ? navWidth / 2 : width / 2;
+		const centerY = navWidth
+			? computeArchY(navWidth, centerX) + menuHighlightVars.yOffset.value
+			: height / 2;
+		const left = hasMeasurements
+			? highlight.left
+			: centerX - width / 2;
+		const top = hasMeasurements
+			? highlight.top
+			: Math.max(0, centerY - height / 2);
 
 		const style: CSSProperties = {
-			width: `${highlight.width}px`,
-			height: `${highlight.height}px`,
-			transform: `translate3d(${highlight.left}px, ${highlight.top}px, 0)`,
-			opacity: highlight.visible ? 1 : 0,
-			transition: transitionDisabled ? 'none' : highlightTransition,
+			width: `${width}px`,
+			height: `${height}px`,
+			transform: `translate3d(${left}px, ${top}px, 0)`,
+			opacity: hasMeasurements && highlight.visible ? 1 : 0,
+			transition: transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
 		};
 
 		if (debugMiniBokeh) {

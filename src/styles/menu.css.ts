@@ -1,4 +1,4 @@
-import { style, keyframes } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 import {
 	absolutePosition,
 	flexMiddle,
@@ -84,31 +84,8 @@ export const miniBokeh = style({
 	mixBlendMode: 'screen',
 });
 
-const focusScale = logoVars.focus?.scale ?? 1.2;
-const pulseDeviation = logoVars.focus?.pulseDeviation ?? 0.08;
-const pulseDuration = logoVars.focus?.pulseDurationMs ?? 1800;
+const focusScale = logoVars.focus?.scale ?? 1.1;
 const focusTransition = logoVars.focus?.transitionMs ?? 260;
-const pulseMin = Math.max(0, focusScale - pulseDeviation);
-const pulseMax = focusScale + pulseDeviation;
-const focusHaloColor =
-	typeof logoVars.focus?.haloColor?.css === 'function'
-		? logoVars.focus.haloColor.css()
-		: colorVars.contrast.alpha(0.35).css();
-
-const logoPulse = keyframes({
-	'0%': {
-		transform: `translate(-50%, -50%) scale(${pulseMin})`,
-		opacity: 0.28,
-	},
-	'50%': {
-		transform: `translate(-50%, -50%) scale(${pulseMax})`,
-		opacity: 0.42,
-	},
-	'100%': {
-		transform: `translate(-50%, -50%) scale(${pulseMin})`,
-		opacity: 0.28,
-	},
-});
 
 export const debugArch = style({
 	position: 'absolute',
@@ -159,13 +136,10 @@ export const item_2 = style({
 // Logo in the middle
 export const logoItem = style({
 	position: 'absolute',
-	top: logoVars.width.divide(2).css(),
+	top: archVars.top.half().add(logoVars.offsetY.value).css(),
 	left: '50%',
 	...flexMiddle(),
-	transform: `
-		translateX(-${logoVars.width.divide(2).css()})
-		translateY(${logoVars.width.divide(2).css()})
-		`,
+	transform: 'translate(-50%, -50%)',
 	width: logoVars.width.css(),
 	height: logoVars.width.css(),
 });
@@ -175,36 +149,6 @@ export const logoLink = style({
 	width: logoVars.width.css(),
 	height: logoVars.width.css(),
 	position: 'relative',
-	transform: 'scale(1)',
-	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
-	willChange: 'transform',
-	selectors: {
-		'&::after': {
-			content: '',
-			position: 'absolute',
-			left: '50%',
-			top: '50%',
-			width: '100%',
-			height: '100%',
-			borderRadius: '50%',
-			background: `radial-gradient(circle, ${focusHaloColor} 0%, ${colorVars.transparent.css()} 70%)`,
-			opacity: 0,
-			transform: `translate(-50%, -50%) scale(${pulseMin})`,
-			transition: `opacity ${focusTransition}ms ease, transform ${focusTransition}ms ease`,
-			pointerEvents: 'none',
-		},
-		'&:hover, &:focus-visible': {
-			transform: `scale(${focusScale})`,
-		},
-		'&:hover::after, &:focus-visible::after': {
-			opacity: 1,
-			animation: `${logoPulse} ${pulseDuration}ms ease-in-out infinite`,
-			animationFillMode: 'both',
-		},
-		'&:not(:hover):not(:focus-visible)::after': {
-			animation: 'none',
-		},
-	},
 });
 
 export const item_3 = style({
@@ -229,7 +173,18 @@ export const link = style({
 export const logo = style({
 	width: logoVars.width.css(),
 	height: 'auto',
+	transform: 'scale(1)',
+	transformOrigin: '50% 50%',
+	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
 	// filter: 'drop-shadow( 0px 10px 2px rgba(0, 0, 0, .7))',
+ 	selectors: {
+		[`${logoLink}:hover &`]: {
+			transform: `scale(${focusScale})`,
+		},
+		[`${logoLink}:focus-visible &`]: {
+			transform: `scale(${focusScale})`,
+		},
+	},
 });
 
 export const localeChanger = style({
