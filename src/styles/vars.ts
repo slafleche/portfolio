@@ -363,7 +363,19 @@ export const menuVars = {
 		k: 900, // modifies how "quickly" you meet the limit
 		max: 2, //Max rotation
 	},
+	textShadow: {
+		offsetX: m(2),
+		offsetY: m(2),
+		// blur: m(3),
+		blur: m(0),
+		color: colorVars.navBg,
+	},
 	hover: {
+		text: {
+			offsetX: m(2),
+			offsetY: m(-2),
+			scale: 1.05,
+		},
 		blobs: [
 			{
 				color: gradients.b_linear_b,
