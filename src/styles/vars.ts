@@ -308,6 +308,13 @@ export const logoVars = {
 		transitionMs: 260,
 		haloColor: colorVars.contrast.alpha(0.35),
 	},
+	hover: {
+		outline: {
+			color: colorVars.contrast.alpha(0.6),
+			width: m(2),
+			offset: m(6),
+		},
+	},
 };
 
 export const menuVars = {
@@ -321,20 +328,20 @@ export const menuVars = {
 		vertical: m(10),
 	},
 	rotation: {
-		k: 1200, // modifies how "quickly" you meet the limit
+		k: 900, // modifies how "quickly" you meet the limit
 		max: 2, //Max rotation
 	},
 	hover: {
 		blobs: [
 			{
-				color: gradients.a_linear_a,
+				color: gradients.b_linear_b,
 				posX: 22,
 				posY: 48,
-				radius: 40,
+				radius: 50,
 				intensity: 0.32,
 			},
 			{
-				color: gradients.a_linear_c,
+				color: gradients.b_spot_a,
 				posX: 50,
 				posY: 72,
 				radius: 50,
@@ -348,7 +355,7 @@ export const menuVars = {
 				intensity: 0.28,
 			},
 			{
-				color: gradients.b_spot_a,
+				color: gradients.a_spot_a,
 				posX: 34,
 				posY: 82,
 				radius: 54,
