@@ -507,6 +507,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 						}
 					}}
 					onBlur={handleBlur}
+					data-ui="link"
 				>
 					{t(entry.labelKey)}
 				</Link>
@@ -634,6 +635,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 										}
 									}}
 									onBlur={handleBlur}
+									data-ui="link"
 								>
 									<Logo className={s.logo} />
 								</Link>

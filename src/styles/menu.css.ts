@@ -6,6 +6,7 @@ import {
 } from './helpers/positioning';
 import {
 	archVars,
+	colors,
 	colorVars,
 	dropShadowVars,
 	fontFamilies,
@@ -90,16 +91,58 @@ export const miniBokeh = style({
 
 const focusScale = logoVars.focus?.scale ?? 1.1;
 const focusTransition = logoVars.focus?.transitionMs ?? 260;
-const logoHoverOutlineConfig = logoVars.hover?.outline ?? {};
-const logoHoverOutlineColor =
-	logoHoverOutlineConfig.color?.css?.() ??
-	(typeof logoHoverOutlineConfig.color === 'string'
-		? logoHoverOutlineConfig.color
-		: colorVars.contrast.alpha(0.55).css());
-const logoHoverOutlineWidth =
-	logoHoverOutlineConfig.width?.css?.() ?? '2px';
-const logoHoverOutlineOffset =
-	logoHoverOutlineConfig.offset?.css?.() ?? '6px';
+
+type LogoHoverBlobConfig = {
+	color?: typeof colorVars.contrast;
+	posX?: number;
+	posY?: number;
+	radius?: number;
+	intensity?: number;
+};
+
+type LogoHoverConfig = typeof logoVars.hover & {
+	blobs?: LogoHoverBlobConfig[];
+	squareSizeMultiplier?: number;
+	squareBlur?: number;
+	squareOpacity?: number;
+	durationMs?: number;
+	speedMultiplier?: number;
+};
+
+const logoHoverConfig = (logoVars.hover ?? {}) as LogoHoverConfig;
+const logoHoverGradientsList = (logoHoverConfig.blobs ?? []).map(
+	(blob): string => {
+		const { color, posX, posY, radius, intensity } = blob;
+		const chromaColor = color ?? colorVars.contrast;
+		const solid = chromaColor.alpha(intensity ?? 0.35).css();
+		const soft = chromaColor.alpha(0).css();
+		const x = posX ?? 50;
+		const y = posY ?? 50;
+		const r = radius ?? 48;
+		return `radial-gradient(circle at ${x}% ${y}%, ${solid} 0%, ${soft} ${r}%)`;
+	},
+);
+const logoHoverGradients =
+	logoHoverGradientsList.length > 0
+		? logoHoverGradientsList.join(', ')
+		: `radial-gradient(circle at 50% 50%, ${colorVars.contrast
+				.alpha(0.35)
+				.css()} 0%, ${colorVars.contrast.alpha(0).css()} 60%)`;
+const logoHoverSizeMultiplier = logoHoverConfig.squareSizeMultiplier ?? 2.4;
+const logoHoverSizePercent = `${logoHoverSizeMultiplier * 100}%`;
+const logoHoverBlur = logoHoverConfig.squareBlur ?? 18;
+const logoHoverOpacity = logoHoverConfig.squareOpacity ?? 1;
+const logoHoverBaseDuration = logoHoverConfig.durationMs ?? 20000;
+const logoHoverSpeedMultiplier = logoHoverConfig.speedMultiplier ?? 1;
+const logoHoverDuration =
+	logoHoverSpeedMultiplier <= 0
+		? logoHoverBaseDuration
+		: logoHoverBaseDuration / logoHoverSpeedMultiplier;
+
+const logoOrbit = keyframes({
+	'0%': { transform: 'translate(-50%, -50%) rotate(0deg)' },
+	'100%': { transform: 'translate(-50%, -50%) rotate(360deg)' },
+});
 
 export const debugArch = style({
 	position: 'absolute',
@@ -168,10 +211,34 @@ export const logoLink = style({
 	...flexPosition.center(),
 	width: logoVars.width.css(),
 	height: logoVars.width.css(),
+	position: 'relative',
 	selectors: {
-		'&:hover, &:focus-visible': {
-			outline: `${logoHoverOutlineWidth} solid ${logoHoverOutlineColor}`,
-			outlineOffset: logoHoverOutlineOffset,
+		'&::before': {
+			content: '',
+			position: 'absolute',
+			left: '50%',
+			top: '50%',
+			width: logoHoverSizePercent,
+			height: logoHoverSizePercent,
+			transform: 'translate(-50%, -50%)',
+			transformOrigin: '50% 50%',
+			borderRadius: '50%',
+			backgroundImage: logoHoverGradients,
+			backgroundRepeat: 'no-repeat',
+			backgroundSize: '100% 100%',
+			mixBlendMode: 'screen',
+			filter: `blur(${logoHoverBlur}px)`,
+			opacity: 0,
+			animation: `${logoOrbit} ${logoHoverDuration}ms linear infinite`,
+			animationPlayState: 'paused',
+			willChange: 'transform',
+			pointerEvents: 'none',
+			transition: `opacity ${focusTransition}ms ease`,
+			zIndex: 0,
+		},
+		'&:hover::before, &:focus-visible::before': {
+			opacity: logoHoverOpacity,
+			animationPlayState: 'running',
 		},
 	},
 });
@@ -215,8 +282,6 @@ export const localeChanger = style({
 	...absolutePosition.topRight(),
 });
 
-const navLinkColor = colorVars.navFg.alpha(0.8).css();
-
 const menuFont = fontFamilies.baloo;
 // used to calculate the position of the underline and the vertical offset to center it
 // const linkOffset =
@@ -228,13 +293,13 @@ export const navLink = style({
 	// transform: 'translateY(-50%)',
 	// fontSize: fontVars.menu.size.css(),
 	fontFamily: menuFont.family,
-	...fontWeightStyle(menuFont, 100),
+	...fontWeightStyle(menuFont, 50),
 	fontSize: '16px',
 	lineHeight: 1,
 	textDecoration: 'none',
 	letterSpacing: '0.05rem',
 	borderRadius: '50%',
-	color: navLinkColor,
+	color: colors.navFg.css(),
 	// textShadow: `1px 1.2px 1.2px ${colorVars.black.alpha(0.45).css()}`,
 	// backgroundColor: colorVars.navFg.alpha(0.045).css(),
 	// backdropFilter: `blur(10px)`,
@@ -262,7 +327,9 @@ export const navLink = style({
 	backgroundPosition: `left 200% bottom 0, left 200% bottom 0.3em`,
 
 	selectors: {
-		'&:hover': { textDecoration: 'underline' },
+		'&:hover': {
+			// textDecoration: 'underline',
+		},
 		// '&[data-active="true"]': { background: 'rgba(0,0,0,0.06)' }, // state via data-attr
 		'&[data-active="true"]': {
 			// color: colorVars.contrast.css(),
@@ -274,18 +341,9 @@ export const navLink = style({
 			cursor: 'pointer',
 		},
 		'&:visited': {
-			// color: colorVars.transparent.css(),
+			color: colors.navFg.css(),
 		},
-		'&:hover, &:focus-visible': {
-			// color: navLinkColor,
-			// color: colorVars.transparent.css(),
-			// transform: 'translateY(-1px)',
-			// textShadow:
-			// 	'0 -1px 0 rgba(255,255,255,0.55), 0 2px 2px rgba(0,0,0,0.85), 0 0 10px rgba(0,0,0,0.45), 0 10px 20px rgba(0,0,0,0.5)',
-			// filter:
-			// 	'drop-shadow(0 2px 0 rgba(255,255,255,0.2)) drop-shadow(0 6px 14px rgba(0,0,0,0.45))',
-		},
-		'&:focus-visible': {
+		'&[data-ui]:focus-visible': {
 			outline: '2px solid currentColor',
 			outlineOffset: 2,
 			// color: navLinkColor,
