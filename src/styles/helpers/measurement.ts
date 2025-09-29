@@ -165,7 +165,7 @@ export interface IMeasurement {
 	divide: (divisor: number) => IMeasurement;
 	double: () => IMeasurement;
 	half: () => IMeasurement;
-	negation: () => IMeasurement;
+	negation: (shouldNegate?: boolean) => IMeasurement;
 	absolute: () => IMeasurement;
 	debugChain: (debugId: string) => IMeasurement;
 	debug: (debugId: string) => IMeasurement;
@@ -254,11 +254,12 @@ export const m = (value: number, unit: string = 'px'): IMeasurement => {
 				logDebug(state, 'half', result, unit);
 				return create(result, state);
 			},
-			negation: () => {
-				const result = nextValue * -1;
-				logDebug(state, 'negation', result, unit);
-				return create(result, state);
-			},
+				negation: (shouldNegate = true) => {
+					if (!shouldNegate) return measurement;
+					const result = nextValue * -1;
+					logDebug(state, 'negation', result, unit);
+					return create(result, state);
+				},
 			absolute: () => {
 				const result = Math.abs(nextValue);
 				logDebug(state, 'absolute', result, unit);
@@ -302,7 +303,8 @@ export const m = (value: number, unit: string = 'px'): IMeasurement => {
 
 export const double = (measurement: IMeasurement) => measurement.double();
 export const half = (measurement: IMeasurement) => measurement.half();
-export const negation = (measurement: IMeasurement) => measurement.negation();
+export const negation = (measurement: IMeasurement, shouldNegate = true) =>
+	measurement.negation(shouldNegate);
 export const debugChain = (measurement: IMeasurement, debugId: string) =>
 	measurement.debugChain(debugId);
 export const debug = (measurement: IMeasurement, debugId: string) =>
