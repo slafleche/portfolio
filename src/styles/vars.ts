@@ -335,7 +335,7 @@ export const logoVars = {
 		squareSizeMultiplier: 2.4,
 		squareBlur: 18,
 		squareOpacity: 1,
-		durationMs: 2000,
+		durationMs: 1500,
 		speedMultiplier: 1,
 		outline: {
 			color: colorVars.contrast.alpha(0.6),
