@@ -581,6 +581,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					onBlur={handleBlur}
 					data-ui="link"
 				>
+					<span className={s.fakeShadow} aria-hidden={true}>
+						{t(entry.labelKey)}
+					</span>
 					<span className={s.text}>{t(entry.labelKey)}</span>
 				</Link>
 			</li>

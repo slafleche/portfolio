@@ -460,7 +460,10 @@ export const localeLink = style({
 
 export const navLink = style({
 	position: 'relative',
-	display: 'block',
+	display: 'inline-grid',
+	gridTemplateAreas: 'stack',
+	alignItems: 'start',
+	verticalAlign: 'baseline',
 	...paddings(menuVars.padding),
 	// transform: 'translateY(-50%)',
 	// fontSize: fontVars.menu.size.css(),
@@ -473,12 +476,11 @@ export const navLink = style({
 	borderRadius: '50%',
 	color: colors.navFg.css(),
 	transition: 'all 0.45s ease',
-	textShadow: `2px 2px 3px ${colorVars.navBg.css()}`,
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: '100% 1.5px',
 	textTransform: 'uppercase',
 	backgroundPosition: `left 200% bottom 0, left 200% bottom 0.3em`,
-
+	transformOrigin: '0 0',
 	selectors: {
 		'&:hover': {
 			// textDecoration: 'underline',
@@ -507,12 +509,45 @@ export const navLink = style({
 });
 
 // For hover effects. we already have 2 inline transform styles on the link, this makes it easier to write the other in CSS
-export const text = style({});
-globalStyle(`.${navLink}[data-side="left"]:hover .${text}`, {
-	transform: `translate(-5px, -5px) scale(1.1)`,
+export const text = style({
+	position: 'relative',
+	transition: 'all 0.2s ease-in',
+	gridArea: 'stack',
 });
+
+export const fakeShadow = style({
+	...absolutePosition.topLeft(),
+	// Keep transparent, but we'll add mirrored text shadow
+	color: colorVars.transparent.css(),
+	gridArea: 'stack',
+});
+
+globalStyle(`.${navLink}[data-side="left"] .${fakeShadow}`, {
+	textShadow: `${menuVars.textShadow.offsetX.css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
+});
+
+globalStyle(`.${navLink}[data-side="right"] .${fakeShadow}`, {
+	textShadow: `${menuVars.textShadow.offsetX.negation().css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
+});
+
+globalStyle(`.${navLink}[data-side="left"]:hover .${text}`, {
+	transform: transforms.value(
+		transforms.translate(
+			menuVars.hover.text.offsetX.negation(),
+			menuVars.hover.text.offsetY,
+		),
+		transforms.scale(menuVars.hover.text.scale),
+	),
+});
+
 globalStyle(`.${navLink}[data-side="right"]:hover .${text}`, {
-	transform: `translate(5px, 5px) scale(1.1)`,
+	transform: transforms.value(
+		transforms.translate(
+			menuVars.hover.text.offsetX,
+			menuVars.hover.text.offsetY,
+		),
+		transforms.scale(menuVars.hover.text.scale),
+	),
 });
 
 // For subtle rotation on links
