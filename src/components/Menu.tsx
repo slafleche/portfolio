@@ -6,6 +6,7 @@ import { useT } from '@/lib/locales/useT';
 import { useLocale } from '@/lib/locales/localeContext';
 import { AVAILABLE_LOCALES, TRANSLATIONS, type Messages } from '@/data/locales';
 import { archVars, colorVars, menuVars } from '@/styles/vars';
+import transforms from '@/styles/helpers/transforms';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
@@ -556,9 +557,13 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					data-side={side}
 					data-active={isActive}
 					aria-current={isActive ? 'true' : undefined}
-					style={{
-						transform: `skewX(${side === 'right' ? '-' : ''}${menuVars.skew.css()})${isFirst ? ` translateY(0px) rotate(${side === 'left' ? '-' : ''}0.5deg)` : ''}`,
-					}}
+					style={
+						transforms(
+							transforms.skewX(menuVars.skew).negate(side === 'right'),
+							transforms.translateY(0).when(isFirst),
+							transforms.rotate(0.5).negate(side === 'left').when(isFirst),
+						)
+					}
 					onMouseEnter={() => handleActivate(index)}
 					onMouseLeave={hideHighlight}
 					onFocus={(event) => {
