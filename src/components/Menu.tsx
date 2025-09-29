@@ -5,7 +5,7 @@ import * as s from '@/styles/menu.css';
 import { useT } from '@/lib/locales/useT';
 import { useLocale } from '@/lib/locales/localeContext';
 import { AVAILABLE_LOCALES, TRANSLATIONS, type Messages } from '@/data/locales';
-import { archVars, menuVars } from '@/styles/vars';
+import { archVars, colorVars, menuVars } from '@/styles/vars';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
@@ -18,7 +18,7 @@ import {
 	useState,
 } from 'react';
 import type { CSSProperties, FocusEvent } from 'react';
-import { getRotationStyle, getSkew } from '../lib/arch/archHelper';
+import { getRotationStyle } from '../lib/arch/archHelper';
 
 type AnchorKey = Extract<keyof Messages, `${string}-href`>;
 type AnchorEntry = { hrefKey: AnchorKey; labelKey: keyof Messages };
@@ -435,12 +435,46 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 				transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
 		};
 
+		const blobs = menuVars.hover.blobs;
+		const activeNavIndex =
+			highlight.visible && activeIndex != null && activeIndex > 0
+				? (activeIndex - 1) % Math.max(blobs.length, 1)
+				: null;
+		const ordered = blobs.map((blob, index) => ({
+			blob,
+			isActive: index === activeNavIndex,
+		}));
+		if (activeNavIndex != null) {
+			const activeEntry = ordered.splice(activeNavIndex, 1);
+			ordered.unshift(...activeEntry);
+		}
+		const backgroundImage = ordered
+			.map(({ blob, isActive }) => {
+				const baseColor = blob.color ?? colorVars.contrast;
+				const intensity = Math.min(
+					0.6,
+					(blob.intensity ?? 0.3) * (isActive ? 1.35 : 1),
+				);
+				const radius = (blob.radius ?? 50) * (isActive ? 1.25 : 1);
+				const solid = baseColor.alpha(intensity).css();
+				const soft = baseColor.alpha(0).css();
+				const posX = blob.posX ?? 50;
+				const posY = blob.posY ?? 50;
+				return `radial-gradient(circle at ${posX}% ${posY}%, ${solid} 0%, ${soft} ${radius}%)`;
+			})
+			.join(', ');
+		style.backgroundImage = backgroundImage;
+		style.filter = `blur(${menuVars.hover.blur.value}px)`;
+		style.boxShadow = `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast
+			.alpha(menuVars.hover.shadow.opacity)
+			.css()}`;
+
 		if (debugMiniBokeh) {
 			style.outline = '1px dashed rgba(255,255,255,0.4)';
 		}
 
 		return style;
-	}, [highlight, transitionDisabled, debugMiniBokeh]);
+	}, [highlight, transitionDisabled, debugMiniBokeh, activeIndex]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,
@@ -463,7 +497,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					data-active={isActive}
 					aria-current={isActive ? 'true' : undefined}
 					style={{
-						transform: `skewX(${side === 'right' ? '-' : ''}1deg)${isFirst ? ` translateY(1.5px) rotate(${side === 'left' ? '-' : ''}0.5deg)` : ''}`,
+						transform: `skewX(${side === 'right' ? '-' : ''}2deg)${isFirst ? ` translateY(0px) rotate(${side === 'left' ? '-' : ''}0.5deg)` : ''}`,
 					}}
 					onMouseEnter={() => handleActivate(index)}
 					onMouseLeave={hideHighlight}
@@ -627,7 +661,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 								// style={getRotationAngle('right', navMetricsRef.current.width)}
 							>
 								{anchors.slice(2).map((entry, idx) =>
-									renderNavLink(entry, idx + 3, 'right', idx === 3, {
+									renderNavLink(entry, idx + 3, 'right', idx === 1, {
 										item: s.item,
 										index: idx === 0 ? s.item_3 : s.item_4,
 									}),

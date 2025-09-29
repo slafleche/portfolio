@@ -35,17 +35,17 @@ const gradients = {
 	// a_mid: chroma('#6263b5'),
 	// a_end: chroma('#5d4cb9'),
 
-	a_liear_a: chroma('#322b4d'),
-	a_liear_b: chroma('#6263b5'),
-	a_liear_c: chroma('#5d4cb9'),
+	a_linear_a: chroma('#322b4d'),
+	a_linear_b: chroma('#6263b5'),
+	a_linear_c: chroma('#5d4cb9'),
 
 	a_spot_a: chroma('#99b7fd'),
 	a_spot_b: chroma('#90faf7'),
 
 	// Card B
-	b_liear_a: chroma('#5b419a'),
-	b_liear_b: chroma('#b98cde'),
-	b_liear_c: chroma('#e1864e'),
+	b_linear_a: chroma('#5b419a'),
+	b_linear_b: chroma('#b98cde'),
+	b_linear_c: chroma('#e1864e'),
 
 	b_spot_a: chroma('#E15DAE'),
 	b_spot_b: chroma('#F7D354'),
@@ -54,11 +54,11 @@ const gradients = {
 export const bokenVars = {
 	// Default Bokeh overlay settings (consumed by components)
 	colors: [
-		gradients.b_liear_a,
-		gradients.b_liear_b,
-		gradients.b_liear_c,
+		gradients.b_linear_a,
+		gradients.b_linear_b,
+		gradients.b_linear_c,
 		gradients.b_spot_a,
-		gradients.a_liear_c,
+		gradients.a_linear_c,
 	],
 	opacity: 0.2,
 	blendMode: 'screen' as CSS.Property.MixBlendMode,
@@ -68,21 +68,21 @@ export const bokenVars = {
 	fadeMs: 300,
 };
 // export const bokehColours = {
-//   a: a_liear_a,
+//   a: a_linear_a,
 //   b:
 // };
 
 export const gradientA = {
 	overlayA: gradients.a_spot_a,
 	overlayB: gradients.a_spot_b,
-	linear: [gradients.a_liear_a, gradients.a_liear_b, gradients.a_liear_c],
+	linear: [gradients.a_linear_a, gradients.a_linear_b, gradients.a_linear_c],
 };
 
 // To update
 export const gradientB = {
 	overlayA: gradients.b_spot_a,
 	overlayB: gradients.b_spot_b,
-	linear: [gradients.b_liear_a, gradients.b_liear_b, gradients.b_liear_c],
+	linear: [gradients.b_linear_a, gradients.b_linear_b, gradients.b_linear_c],
 };
 
 // var gradientBlues = {
@@ -323,6 +323,43 @@ export const menuVars = {
 	rotation: {
 		k: 1200, // modifies how "quickly" you meet the limit
 		max: 2, //Max rotation
+	},
+	hover: {
+		blobs: [
+			{
+				color: gradients.a_linear_a,
+				posX: 22,
+				posY: 48,
+				radius: 40,
+				intensity: 0.32,
+			},
+			{
+				color: gradients.a_linear_c,
+				posX: 50,
+				posY: 72,
+				radius: 50,
+				intensity: 0.3,
+			},
+			{
+				color: gradients.b_linear_c,
+				posX: 76,
+				posY: 30,
+				radius: 46,
+				intensity: 0.28,
+			},
+			{
+				color: gradients.b_spot_a,
+				posX: 34,
+				posY: 82,
+				radius: 54,
+				intensity: 0.26,
+			},
+		],
+		blur: m(14),
+		shadow: {
+			spread: m(28),
+			opacity: 0.14,
+		},
 	},
 };
 
