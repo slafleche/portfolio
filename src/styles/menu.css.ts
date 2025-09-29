@@ -10,6 +10,7 @@ import {
 	colorVars,
 	dropShadowVars,
 	fontFamilies,
+	fontVars,
 	logoVars,
 	menuVars,
 } from './vars';
@@ -343,13 +344,20 @@ export const logo = style({
 	},
 });
 
-export const localeChanger = style({
-	...absolutePosition.topRight(),
-});
-
 const menuFont = fontFamilies.baloo;
 // used to calculate the position of the underline and the vertical offset to center it
 // const linkOffset =
+
+export const localeChanger = style({
+	...absolutePosition.topRight('50%', menuVars.padding.horizontal.half().css()),
+	fontFamily: menuFont.family,
+	fontSize: fontVars.menu.size.css(),
+	...fontWeightStyle(menuFont, fontVars.menu.relativeWeight),
+	lineHeight: 1,
+	textDecoration: 'none',
+	zIndex: 1,
+	transform: `skewX(-${menuVars.rotationMax.css()}) rotate(0.5deg)`,
+});
 
 export const navLink = style({
 	position: 'relative',
@@ -358,8 +366,8 @@ export const navLink = style({
 	// transform: 'translateY(-50%)',
 	// fontSize: fontVars.menu.size.css(),
 	fontFamily: menuFont.family,
-	...fontWeightStyle(menuFont, 50),
-	fontSize: '16px',
+	fontSize: fontVars.menu.size.css(),
+	...fontWeightStyle(menuFont, fontVars.menu.relativeWeight),
 	lineHeight: 1,
 	textDecoration: 'none',
 	letterSpacing: '0.05rem',
