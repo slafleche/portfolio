@@ -89,7 +89,7 @@ export const miniBokeh = style({
 	mixBlendMode: 'screen',
 });
 
-const focusScale = logoVars.focus?.scale ?? 1.1;
+const focusScale = logoVars.focus?.scale ?? 1.05;
 const focusTransition = logoVars.focus?.transitionMs ?? 260;
 
 type LogoHoverBlobConfig = {
