@@ -32,9 +32,11 @@ function Arch({ className, children, ready = false }: Props) {
 			generateArchPaths({
 				...archVars,
 				width: ws,
-			}),
+      }),
+    
 		[ws],
-	);
+  );
+  
 
 	return (
 		<div className={clsx(className, s.arch)}>
