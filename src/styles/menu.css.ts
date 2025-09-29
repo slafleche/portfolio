@@ -105,8 +105,6 @@ type LogoHoverConfig = typeof logoVars.hover & {
 	squareSizeMultiplier?: number;
 	squareBlur?: number;
 	squareOpacity?: number;
-	durationMs?: number;
-	speedMultiplier?: number;
 };
 
 const logoHoverConfig = (logoVars.hover ?? {}) as LogoHoverConfig;
@@ -132,16 +130,20 @@ const logoHoverSizeMultiplier = logoHoverConfig.squareSizeMultiplier ?? 2.4;
 const logoHoverSizePercent = `${logoHoverSizeMultiplier * 100}%`;
 const logoHoverBlur = logoHoverConfig.squareBlur ?? 18;
 const logoHoverOpacity = logoHoverConfig.squareOpacity ?? 1;
-const logoHoverBaseDuration = logoHoverConfig.durationMs ?? 20000;
-const logoHoverSpeedMultiplier = logoHoverConfig.speedMultiplier ?? 1;
-const logoHoverDuration =
-	logoHoverSpeedMultiplier <= 0
-		? logoHoverBaseDuration
-		: logoHoverBaseDuration / logoHoverSpeedMultiplier;
 
-const logoOrbit = keyframes({
-	'0%': { transform: 'translate(-50%, -50%) rotate(0deg)' },
-	'100%': { transform: 'translate(-50%, -50%) rotate(360deg)' },
+const logoHoverOutline = logoVars.hover?.outline;
+const logoHoverOutlineWidth = logoHoverOutline?.width.css() ?? '2px';
+const logoHoverOutlineOffset = logoHoverOutline?.offset.css() ?? '6px';
+const logoHoverOutlineColor = (
+	logoHoverOutline?.color ?? colorVars.contrast.alpha(0.6)
+).css();
+
+const logoHoverRotate = keyframes({
+	'0%': { transform: 'rotate(0deg) scale(1)' },
+	'18%': { transform: 'rotate(-12deg) scale(1.02)' },
+	'55%': { transform: `rotate(132deg) scale(${focusScale})` },
+	'72%': { transform: `rotate(112deg) scale(${focusScale})` },
+	'100%': { transform: `rotate(120deg) scale(${focusScale})` },
 });
 
 export const debugArch = style({
@@ -229,16 +231,22 @@ export const logoLink = style({
 			mixBlendMode: 'screen',
 			filter: `blur(${logoHoverBlur}px)`,
 			opacity: 0,
-			animation: `${logoOrbit} ${logoHoverDuration}ms linear infinite`,
-			animationPlayState: 'paused',
-			willChange: 'transform',
 			pointerEvents: 'none',
 			transition: `opacity ${focusTransition}ms ease`,
 			zIndex: 0,
 		},
-		'&:hover::before, &:focus-visible::before': {
+		'&:hover::before': {
 			opacity: logoHoverOpacity,
-			animationPlayState: 'running',
+		},
+		'&:focus-visible::before': {
+			opacity: 1,
+			backgroundImage: 'none',
+			filter: 'none',
+			mixBlendMode: 'normal',
+			border: `${logoHoverOutlineWidth} solid ${logoHoverOutlineColor}`,
+			boxSizing: 'border-box',
+			width: `calc(100% + ${logoHoverOutlineOffset} * 2)`,
+			height: `calc(100% + ${logoHoverOutlineOffset} * 2)`,
 		},
 	},
 });
@@ -265,15 +273,30 @@ export const link = style({
 export const logo = style({
 	width: logoVars.width.css(),
 	height: 'auto',
-	transform: 'scale(1)',
-	transformOrigin: '50% 50%',
-	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
-	// filter: 'drop-shadow( 0px 10px 2px rgba(0, 0, 0, .7))',
 	position: 'relative',
 	zIndex: 1,
+	transform: 'rotate(0deg) scale(1)',
+	transformOrigin: 'center',
+	transformBox: 'fill-box',
+	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
+	willChange: 'transform',
 	selectors: {
 		[`${logoLink}:hover &`]: {
-			transform: `scale(${focusScale})`,
+			animation: `${logoHoverRotate} 780ms cubic-bezier(0.5, 1.55, 0.35, 1) forwards`,
+		},
+		[`${logoLink}:focus-visible &`]: {
+			animation: 'none',
+			transform: `rotate(0deg) scale(${focusScale})`,
+		},
+	},
+	'@media': {
+		'(prefers-reduced-motion: reduce)': {
+			selectors: {
+				[`${logoLink}:hover &`]: {
+					animation: 'none',
+					transform: `rotate(0deg) scale(${focusScale})`,
+				},
+			},
 		},
 	},
 });
