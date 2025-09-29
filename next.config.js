@@ -8,7 +8,13 @@ const __dirname = path.dirname(__filename);
 const withVanillaExtract = createVanillaExtractPlugin();
 
 /** @type {import('next').NextConfig} */
+const isDev = process.env.NODE_ENV !== 'production';
+
 const nextConfig = {
+	env: {
+		NEXT_PUBLIC_MEASUREMENT_DEBUG:
+			process.env.NEXT_PUBLIC_MEASUREMENT_DEBUG ?? (isDev ? '1' : '0'),
+	},
 	webpack(config) {
 		// keep your alias
 		config.resolve.alias['@'] = path.resolve(__dirname, 'src');
