@@ -486,14 +486,20 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			? highlight.top
 			: Math.max(0, centerY - height / 2);
 
-		const style: CSSProperties = {
-			width: `${width}px`,
-			height: `${height}px`,
-			transform: `translate3d(${left}px, ${top}px, 0)`,
-			opacity: hasMeasurements && highlight.visible ? 1 : 0,
-			transition:
-				transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
-		};
+			const style: CSSProperties = {
+				width: `${width}px`,
+				height: `${height}px`,
+				opacity: hasMeasurements && highlight.visible ? 1 : 0,
+				transition:
+					transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
+			};
+
+			const transformValue = transforms.value(
+				transforms.translate3d(left, top, 0),
+			);
+			if (transformValue) {
+				style.transform = transformValue;
+			}
 
 		const blobs = menuVars.hover.blobs;
 		const activeNavIndex =
