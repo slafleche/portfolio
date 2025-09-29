@@ -263,8 +263,8 @@ export const borderVars = {
 
 export const fontVars = {
 	menu: {
-		size: m(15),
-		weight: 600,
+		size: m(16),
+		relativeWeight: 50,
 	},
 	heading: {
 		color: colorVars.headingFg,
@@ -349,7 +349,7 @@ export const menuVars = {
 	height: archVars.top,
 	yOffset: m(0),
 	rotationMax: m(2, 'deg'),
-	skewMax: m(2, 'deg'),
+	skew: m(2, 'deg'),
 	verticalOffset: m(1),
 	padding: {
 		horizontal: m(25),

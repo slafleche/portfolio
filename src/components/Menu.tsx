@@ -117,8 +117,12 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const highlightRef = useRef(highlight);
 	const animationFrameRef = useRef<number | null>(null);
 	const [transitionDisabled, setTransitionDisabled] = useState(false);
-	const [logoAnimationState, setLogoAnimationState] = useState<'idle' | 'enter' | 'exit'>('idle');
-	const logoAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const [logoAnimationState, setLogoAnimationState] = useState<
+		'idle' | 'enter' | 'exit'
+	>('idle');
+	const logoAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+		null,
+	);
 	const LOGO_EXIT_DURATION = 560;
 
 	const clearLogoAnimationTimeout = useCallback(() => {
@@ -553,7 +557,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					data-active={isActive}
 					aria-current={isActive ? 'true' : undefined}
 					style={{
-						transform: `skewX(${side === 'right' ? '-' : ''}2deg)${isFirst ? ` translateY(0px) rotate(${side === 'left' ? '-' : ''}0.5deg)` : ''}`,
+						transform: `skewX(${side === 'right' ? '-' : ''}${menuVars.skew.css()})${isFirst ? ` translateY(0px) rotate(${side === 'left' ? '-' : ''}0.5deg)` : ''}`,
 					}}
 					onMouseEnter={() => handleActivate(index)}
 					onMouseLeave={hideHighlight}
@@ -565,9 +569,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					onBlur={handleBlur}
 					data-ui="link"
 				>
-					<span className={s.text}>
-					{t(entry.labelKey)}
-					</span>
+					<span className={s.text}>{t(entry.labelKey)}</span>
 				</Link>
 			</li>
 		);
@@ -679,20 +681,20 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 						</div>
 						<div className={clsx(s.contents)}>
 							<div className={clsx(s.logoItem, s.item)}>
-									<Link
-										href={root}
-										className={s.logoLink}
-										prefetch={false}
-										ref={(el) => {
-											linkRefs.current[0] = el;
-										}}
-										onMouseEnter={handleLogoMouseEnter}
-										onMouseLeave={handleLogoMouseLeave}
-										onFocus={handleLogoFocus}
-										onBlur={handleBlur}
-										data-ui="link"
-										data-logo-anim={logoAnimationState}
-									>
+								<Link
+									href={root}
+									className={s.logoLink}
+									prefetch={false}
+									ref={(el) => {
+										linkRefs.current[0] = el;
+									}}
+									onMouseEnter={handleLogoMouseEnter}
+									onMouseLeave={handleLogoMouseLeave}
+									onFocus={handleLogoFocus}
+									onBlur={handleBlur}
+									data-ui="link"
+									data-logo-anim={logoAnimationState}
+								>
 									<Logo className={s.logo} />
 								</Link>
 							</div>
