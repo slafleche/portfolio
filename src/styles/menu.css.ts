@@ -154,10 +154,20 @@ const logoOrbit = keyframes({
 
 const logoHoverRotate = keyframes({
 	'0%': { transform: 'rotate(0deg) scale(1)' },
-	'18%': { transform: 'rotate(-12deg) scale(1.02)' },
-	'55%': { transform: `rotate(132deg) scale(${focusScale})` },
-	'72%': { transform: `rotate(112deg) scale(${focusScale})` },
+	'20%': { transform: 'rotate(-16deg) scale(0.9)' },
+	'40%': { transform: 'rotate(-16deg) scale(0.9)' },
+	'55%': { transform: `rotate(138deg) scale(${focusScale * 1.015})` },
+	'85%': { transform: `rotate(118deg) scale(${focusScale * 0.992})` },
 	'100%': { transform: `rotate(120deg) scale(${focusScale})` },
+});
+
+const logoHoverExitDuration = 560;
+
+const logoHoverRotateReverse = keyframes({
+	'0%': { transform: `rotate(120deg) scale(${focusScale})` },
+	'40%': { transform: `rotate(130deg) scale(${focusScale * 1.05})` },
+	'74%': { transform: 'rotate(-10deg) scale(0.985)' },
+	'100%': { transform: 'rotate(0deg) scale(1)' },
 });
 
 export const debugArch = style({
@@ -183,14 +193,14 @@ export const list = style({
 		'&[data-side="left"]': {
 			justifyContent: 'flex-end',
 			order: 0,
-			paddingRight: logoVars.width.half().css(),
+			paddingRight: logoVars.width.css(),
 			transformOrigin: 'right center',
 		},
 
 		'&[data-side="right"]': {
 			justifyContent: 'flex-start',
 			order: 1,
-			paddingLeft: logoVars.width.half().css(),
+			paddingLeft: logoVars.width.css(),
 			transformOrigin: 'left center',
 		},
 	},
@@ -236,7 +246,7 @@ export const logoLink = style({
 			top: '50%',
 			width: logoHoverSizePercent,
 			height: logoHoverSizePercent,
-			transform: 'translate(-50%, -50%)',
+			transform: 'translate(-50%, -50%) rotate(0deg)',
 			transformOrigin: '50% 50%',
 			borderRadius: '50%',
 			backgroundImage: logoHoverGradients,
@@ -252,9 +262,15 @@ export const logoLink = style({
 			transition: `opacity ${focusTransition}ms ease`,
 			zIndex: 0,
 		},
-		'&:hover::before': {
+		'&[data-logo-anim="enter"]::before': {
 			opacity: logoHoverOpacity,
 			animationPlayState: 'running',
+		},
+		'&[data-logo-anim="exit"]::before': {
+			opacity: 0,
+			animationPlayState: 'paused',
+			animation: 'none',
+			transform: 'translate(-50%, -50%) rotate(0deg)',
 		},
 		'&:focus-visible::before': {
 			opacity: 1,
@@ -300,8 +316,11 @@ export const logo = style({
 	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
 	willChange: 'transform',
 	selectors: {
-		[`${logoLink}:hover &`]: {
+		'[data-logo-anim="enter"] &': {
 			animation: `${logoHoverRotate} 780ms cubic-bezier(0.5, 1.55, 0.35, 1) forwards`,
+		},
+		'[data-logo-anim="exit"] &': {
+			animation: `${logoHoverRotateReverse} ${logoHoverExitDuration}ms cubic-bezier(0.45, 0, 0.2, 1) forwards`,
 		},
 		[`${logoLink}:focus-visible &`]: {
 			animation: 'none',
@@ -311,9 +330,13 @@ export const logo = style({
 	'@media': {
 		'(prefers-reduced-motion: reduce)': {
 			selectors: {
-				[`${logoLink}:hover &`]: {
+				'[data-logo-anim="enter"] &': {
 					animation: 'none',
 					transform: `rotate(0deg) scale(${focusScale})`,
+				},
+				'[data-logo-anim="exit"] &': {
+					animation: 'none',
+					transform: 'rotate(0deg) scale(1)',
 				},
 			},
 		},
@@ -395,10 +418,19 @@ export const navLink = style({
 	},
 });
 
+// For hover effects. we already have 2 inline transform styles on the link, this makes it easier to write the other in CSS
+export const text = style({});
+globalStyle(`.${navLink}[data-side="left"]:hover ${text}`, {
+	transform: `translate(-5px, -5px) scale(1.1)`,
+});
+globalStyle(`.${navLink}[data-side="right"]:hover ${text}`, {
+	transform: `translate(5px, 5px) scale(1.1)`,
+});
+
 // For subtle rotation on links
-globalStyle(`${list}[data-side="left"] ${navLink}`, {
+globalStyle(`.${list}[data-side="left"] .${navLink}`, {
 	transformOrigin: 'right center',
 });
-globalStyle(`${list}[data-side="right"] ${navLink}`, {
+globalStyle(`.${list}[data-side="right"] .${navLink}`, {
 	transformOrigin: 'left center',
 });

@@ -117,6 +117,37 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const highlightRef = useRef(highlight);
 	const animationFrameRef = useRef<number | null>(null);
 	const [transitionDisabled, setTransitionDisabled] = useState(false);
+	const [logoAnimationState, setLogoAnimationState] = useState<'idle' | 'enter' | 'exit'>('idle');
+	const logoAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const LOGO_EXIT_DURATION = 560;
+
+	const clearLogoAnimationTimeout = useCallback(() => {
+		if (logoAnimationTimeoutRef.current !== null) {
+			clearTimeout(logoAnimationTimeoutRef.current);
+			logoAnimationTimeoutRef.current = null;
+		}
+	}, []);
+
+	const triggerLogoEnter = useCallback(() => {
+		clearLogoAnimationTimeout();
+		setLogoAnimationState('enter');
+	}, [clearLogoAnimationTimeout]);
+
+	const triggerLogoExit = useCallback(() => {
+		clearLogoAnimationTimeout();
+		setLogoAnimationState('exit');
+		logoAnimationTimeoutRef.current = setTimeout(() => {
+			setLogoAnimationState('idle');
+			logoAnimationTimeoutRef.current = null;
+		}, LOGO_EXIT_DURATION);
+	}, [clearLogoAnimationTimeout, LOGO_EXIT_DURATION]);
+
+	useEffect(
+		() => () => {
+			clearLogoAnimationTimeout();
+		},
+		[clearLogoAnimationTimeout],
+	);
 
 	useEffect(() => {
 		highlightRef.current = highlight;
@@ -396,15 +427,39 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			const related = event.relatedTarget as HTMLElement | null;
 			if (related && navRef.current?.contains(related)) return;
 			hideHighlight();
+			if (event.currentTarget === linkRefs.current[0]) {
+				triggerLogoExit();
+			}
 		},
-		[hideHighlight],
+		[hideHighlight, triggerLogoExit],
 	);
 
 	const handleNavMouseLeave = useCallback(() => {
 		const activeElement = document.activeElement as HTMLElement | null;
 		if (activeElement && navRef.current?.contains(activeElement)) return;
 		hideHighlight();
-	}, [hideHighlight]);
+		triggerLogoExit();
+	}, [hideHighlight, triggerLogoExit]);
+
+	const handleLogoMouseEnter = useCallback(() => {
+		triggerLogoEnter();
+		handleActivate(0);
+	}, [handleActivate, triggerLogoEnter]);
+
+	const handleLogoMouseLeave = useCallback(() => {
+		triggerLogoExit();
+	}, [triggerLogoExit]);
+
+	const handleLogoFocus = useCallback(
+		(event: FocusEvent<HTMLAnchorElement>) => {
+			clearLogoAnimationTimeout();
+			setLogoAnimationState('idle');
+			if (event.currentTarget.matches(':focus-visible')) {
+				handleActivate(0);
+			}
+		},
+		[clearLogoAnimationTimeout, handleActivate],
+	);
 
 	const highlightStyle = useMemo<CSSProperties>(() => {
 		const { width: navWidth, height: navHeight } = navMetricsRef.current;
@@ -494,6 +549,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					ref={(el) => {
 						linkRefs.current[index] = el;
 					}}
+					data-side={side}
 					data-active={isActive}
 					aria-current={isActive ? 'true' : undefined}
 					style={{
@@ -509,7 +565,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					onBlur={handleBlur}
 					data-ui="link"
 				>
+					<span className={s.text}>
 					{t(entry.labelKey)}
+					</span>
 				</Link>
 			</li>
 		);
@@ -621,22 +679,20 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 						</div>
 						<div className={clsx(s.contents)}>
 							<div className={clsx(s.logoItem, s.item)}>
-								<Link
-									href={root}
-									className={s.logoLink}
-									prefetch={false}
-									ref={(el) => {
-										linkRefs.current[0] = el;
-									}}
-									onMouseEnter={() => handleActivate(0)}
-									onFocus={(event) => {
-										if (event.currentTarget.matches(':focus-visible')) {
-											handleActivate(0);
-										}
-									}}
-									onBlur={handleBlur}
-									data-ui="link"
-								>
+									<Link
+										href={root}
+										className={s.logoLink}
+										prefetch={false}
+										ref={(el) => {
+											linkRefs.current[0] = el;
+										}}
+										onMouseEnter={handleLogoMouseEnter}
+										onMouseLeave={handleLogoMouseLeave}
+										onFocus={handleLogoFocus}
+										onBlur={handleBlur}
+										data-ui="link"
+										data-logo-anim={logoAnimationState}
+									>
 									<Logo className={s.logo} />
 								</Link>
 							</div>
