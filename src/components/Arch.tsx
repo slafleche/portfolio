@@ -32,14 +32,13 @@ function Arch({ className, children, ready = false }: Props) {
 			generateArchPaths({
 				...archVars,
 				width: ws,
-      }),
-    
+			}),
+
 		[ws],
-  );
-  
+	);
 
 	return (
-		<div className={clsx(className, s.arch)}>
+		<div className={clsx(className, s.root)}>
 			{mounted && ready && (
 				<>
 					{/* Shadow layer SVG rendered underneath, with padded viewBox to avoid clipping */}

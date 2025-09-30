@@ -37,7 +37,7 @@ export default function Logo({
 	const shadowGradientB = `${baseId}-shadowB`;
 
 	return (
-		<div className={clsx(s.logo, className)}>
+		<div className={clsx(s.root, className)}>
 			{shadow && (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

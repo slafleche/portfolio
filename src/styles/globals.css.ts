@@ -17,6 +17,8 @@ globalStyle('body', {
 });
 
 globalStyle('html, body', {
+	margin: 0,
+	padding: 0,
 	color: fontVars.body.color.css(),
 	fontFamily: fontVars.body.family,
 	fontSize: fontVars.body.size.css(),
@@ -32,6 +34,15 @@ globalStyle('html, body', {
 });
 
 globalStyle('h1, h2, h3, h4, h5, h6', {
+	all: 'unset',
+	margin: 0,
+	marginBlockStart: '0',
+	marginBlockEnd: '0',
+	marginInlineStart: '0',
+	marginInlineEnd: '0',
+	display: 'block',
+	padding: 0,
+	border: 0,
 	position: 'relative',
 	color: fontVars.heading.color.css(),
 	fontFamily: fontVars.heading.family,

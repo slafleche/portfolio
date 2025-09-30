@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import * as s from '@/styles/menu.css';
+import * as s from '@/styles/components/menu.css';
 import { useT } from '@/lib/locales/useT';
 import { useLocale } from '@/lib/locales/localeContext';
 import { AVAILABLE_LOCALES, TRANSLATIONS, type Messages } from '@/data/locales';
@@ -667,7 +667,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	}, []);
 	return (
 		<>
-			<div className={s.menu} data-mounted={mounted}>
+			<div className={s.root} data-mounted={mounted}>
 				<Arch ready={mounted}>
 					<nav
 						className={clsx(s.nav)}
@@ -733,7 +733,6 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 								aria-label={t('menu-right_label')}
 								data-side="right"
 								style={getRotationStyle('right', navMetricsRef.current.width)}
-								// style={getRotationAngle('right', navMetricsRef.current.width)}
 							>
 								{anchors.slice(2).map((entry, idx) =>
 									renderNavLink(entry, idx + 3, 'right', idx === 1, {
@@ -759,27 +758,6 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					</nav>
 				</Arch>
 			</div>
-
-			{/* 
-        <div className={s.nav}>
-          {locales
-            .filter((l) => l !== current) // only other locales (your rule)
-            .map((l) => (
-              <Link
-                key={l}
-                href={`/${l}`}
-                className={s.link}
-                hrefLang={l}
-                data-active={false}
-              >
-                {LOCALE_LABELS[l]}
-              </Link>
-            ))}
-          
-          <span className={s.link} data-active aria-current="page">
-            {LOCALE_LABELS[current]}
-          </span>
-          */}
 		</>
 	);
 }

@@ -72,13 +72,18 @@ export const bokenVars = {
 //   b:
 // };
 
+export const gradientFull = {
+	overlayA: gradients.b_spot_a,
+	overlayB: gradients.b_spot_b,
+	linear: [gradients.b_linear_a, gradients.b_linear_b, gradients.b_linear_c],
+};
+
 export const gradientA = {
 	overlayA: gradients.a_spot_a,
 	overlayB: gradients.a_spot_b,
 	linear: [gradients.a_linear_a, gradients.a_linear_b, gradients.a_linear_c],
 };
 
-// To update
 export const gradientB = {
 	overlayA: gradients.b_spot_a,
 	overlayB: gradients.b_spot_b,
@@ -305,7 +310,7 @@ export const logoVars = {
 	shadowRatio: 948.31276 / 546.93464, // from shadow width (in the SVG) / logo width
 	focus: {
 		scale: 1.2,
-		transitionMs: 260,
+		transitionMs: 400,
 		haloColor: colorVars.contrast.alpha(0.35),
 	},
 	hover: {
@@ -335,7 +340,7 @@ export const logoVars = {
 		squareSizeMultiplier: 2.4,
 		squareBlur: 18,
 		squareOpacity: 1,
-		durationMs: 1500,
+		durationMs: 1800,
 		speedMultiplier: 1,
 		outline: {
 			color: colorVars.contrast.alpha(0.6),
@@ -366,8 +371,7 @@ export const menuVars = {
 	textShadow: {
 		offsetX: m(2),
 		offsetY: m(2),
-		// blur: m(3),
-		blur: m(0),
+		blur: m(2),
 		color: colorVars.navBg,
 	},
 	hover: {
