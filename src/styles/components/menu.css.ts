@@ -3,7 +3,7 @@ import {
 	absolutePosition,
 	flexMiddle,
 	flexPosition,
-} from './helpers/positioning';
+} from '../helpers/positioning';
 import {
 	archVars,
 	colors,
@@ -13,12 +13,12 @@ import {
 	fontVars,
 	logoVars,
 	menuVars,
-} from './vars';
-import { fontWeightStyle } from './helpers/typography';
-import { paddings } from './helpers/spacing';
-import transforms from './helpers/transforms';
+} from '../vars';
+import { fontWeightStyle } from '../helpers/typography';
+import { paddings } from '../helpers/spacing';
+import transforms from '../helpers/transforms';
 
-export const menu = style({
+export const root = style({
 	position: 'fixed',
 	top: 0,
 	left: 0,

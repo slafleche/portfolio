@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { makeCardGradients } from '../helpers/card';
+import { makeGradient } from '../helpers/gradients';
 import { colorVars, gradientA, gradientB } from '../vars';
 import { Color } from 'chroma-js';
 import border from '../helpers/borders';
@@ -8,23 +8,32 @@ import { paddings } from '../helpers/spacing';
 import { absolutePosition } from '../helpers/positioning';
 import { globalBoxShadow } from '../helpers/shadow';
 
-export const cardVars = {};
+export const container = style({
+	display: 'grid',
+	gridTemplateColumns: '1fr auto 1fr',
+	gap: '24px',
+	alignItems: 'stretch',
+});
 
 export const card = style({
 	border: 'solid black 10px',
-	...paddings({ all: m(10) }),
-	minHeight: '100px',
-	maxWidth: '50vw',
-	margin: 'auto',
+	// ...paddings({ all: m(10) }),
+	// minHeight: '100px',
+	// maxWidth: '50vw',
+	// margin: 'auto',
+
+	selectors: {
+		'&[data-side="left"]': { gridColumn: '1' },
+		'&[data-side="right"]': { gridColumn: '2' },
+	},
 });
 
 export const title = style({});
 
-export const fakeBorder = style({});
-
-export const bgHelper = style({});
-
 export const image = style({
+	justifySelf: 'center',
+	alignSelf: 'center',
+	gridColumn: '2',
 	position: 'relative',
 	display: 'block',
 	maxWidth: '100%',
@@ -48,7 +57,7 @@ export const image = style({
 });
 
 export const cardGradientA = style(
-	makeCardGradients({
+	makeGradient({
 		spotA: gradientA.overlayA,
 		spotB: gradientA.overlayB,
 		linearColors: gradientA.linear as [Color, Color, Color],
@@ -56,7 +65,7 @@ export const cardGradientA = style(
 );
 
 export const cardGradientB = style(
-	makeCardGradients({
+	makeGradient({
 		spotA: gradientB.overlayA,
 		spotB: gradientB.overlayB,
 		linearColors: gradientB.linear as [Color, Color, Color],

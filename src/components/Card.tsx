@@ -20,10 +20,10 @@ export default function Card({
 }: Props) {
 	return (
 		<div className={clsx(s.card, className)}>
-			<div className={s.fakeBorder}>
+			{/* <div className={s.fakeBorder}> */}
 				<div
 					className={clsx(
-						s.bgHelper,
+						// s.bgHelper,
 						gradient === 'a' ? s.cardGradientA : s.cardGradientB,
 					)}
 				>
@@ -34,7 +34,7 @@ export default function Card({
 					)}
 					{children}
 				</div>
-			</div>
+			{/* </div> */}
 		</div>
 	);
 }

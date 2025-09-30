@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { logoVars } from '../vars';
 import { absolutePosition } from '../helpers/positioning';
 
-export const logo = style({
+export const root = style({
 	position: 'relative',
 });
 

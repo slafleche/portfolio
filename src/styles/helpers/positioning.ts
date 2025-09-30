@@ -152,30 +152,30 @@ export const flexPosition = {
 
 export function flexMiddle() {
 	return {
-		display: 'flex',
-		width: '100%',
-		height: '100%',
-		justifyContent: 'center',
-		alignItems: 'center',
+		display: 'flex' as CSS.Property.Flex,
+		width: '100%' as CSS.Property.Width,
+		height: '100%' as CSS.Property.Height,
+		justifyContent: 'center' as CSS.Property.JustifyContent,
+		alignItems: 'center' as CSS.Property.AlignItems,
 	};
 }
 
 export function fullSizeOfParent() {
 	return {
-		position: 'absolute',
-		display: 'block',
-		top: '0px',
-		left: '0px',
-		width: '100%',
-		height: '100%',
+		position: 'absolute' as CSS.Property.Position,
+		display: 'block' as CSS.Property.Display,
+		top: '0px' as CSS.Property.Top,
+		left: '0px' as CSS.Property.Left,
+		width: '100%' as CSS.Property.Width,
+		height: '100%' as CSS.Property.Height,
 	};
 }
 
-export const inheritHeight = () => {
+export function inheritHeight() {
 	return {
-		display: 'flex',
-		flexDirection: 'column',
-		flexGrow: 1,
-		position: 'relative',
+		display: 'flex' as CSS.Property.Display,
+		flexDirection: 'column' as CSS.Property.FlexDirection,
+		flexGrow: 1 as CSS.Property.FlexGrow,
+		position: 'relative' as CSS.Property.Position,
 	};
-};
+}
