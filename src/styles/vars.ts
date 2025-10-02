@@ -418,3 +418,10 @@ export const chevronVars = {
 	gradientEnd: colorVars.black.brighten(2),
 	highlight: colorVars.white,
 };
+
+export const heroVars = {
+	paddings: {
+		top: m(40),
+		bottom: m(40),
+	}
+}

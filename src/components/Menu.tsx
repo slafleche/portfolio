@@ -55,9 +55,6 @@ type DebugArch = {
 const clamp = (value: number, min: number, max: number) =>
 	Math.min(max, Math.max(min, value));
 
-const highlightTransition =
-	'opacity 180ms ease, transform 450ms cubic-bezier(0.4, 0, 0.2, 1), width 350ms ease, height 350ms ease';
-
 const metricToHighlightBox = (metric: LinkMetric): HighlightBox => ({
 	left: metric.left,
 	top: metric.top,
@@ -173,6 +170,8 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		width: 0,
 		height: 0,
 	});
+	const [miniBokehActive, setMiniBokehActive] = useState(false);
+	const miniBokehTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 	const [navMetricsKey, setNavMetricsKey] = useState('0|0');
 	const highlightRef = useRef(highlight);
 	const animationFrameRef = useRef<number | null>(null);
@@ -265,6 +264,36 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	useEffect(() => {
 		highlightRef.current = highlight;
 	}, [highlight]);
+
+	useEffect(() => {
+		if (highlight.visible) {
+			if (miniBokehTimerRef.current) {
+				clearTimeout(miniBokehTimerRef.current);
+				miniBokehTimerRef.current = null;
+			}
+			setMiniBokehActive(true);
+			return () => {
+				if (miniBokehTimerRef.current) {
+					clearTimeout(miniBokehTimerRef.current);
+					miniBokehTimerRef.current = null;
+				}
+			};
+		}
+
+		if (miniBokehTimerRef.current) {
+			clearTimeout(miniBokehTimerRef.current);
+		}
+		miniBokehTimerRef.current = setTimeout(() => {
+			setMiniBokehActive(false);
+			miniBokehTimerRef.current = null;
+		}, 120);
+		return () => {
+			if (miniBokehTimerRef.current) {
+				clearTimeout(miniBokehTimerRef.current);
+				miniBokehTimerRef.current = null;
+			}
+		};
+	}, [highlight.visible]);
 
 	useEffect(
 		() => () => {
@@ -708,9 +737,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		const innerStyle: CSSProperties = {
 			width: `${targetBox.width}px`,
 			height: `${targetBox.height}px`,
-			opacity: isActive ? 1 : 0,
-			transition:
-				transitionDisabled || !isActive ? 'none' : highlightTransition,
+			transition: transitionDisabled ? 'none' : undefined,
 			transform: transformValue ?? undefined,
 		};
 
@@ -755,7 +782,6 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		transitionDisabled,
 		debugMiniBokeh,
 		activeIndex,
-		navMetricsKey,
 		linkMetrics,
 	]);
 
@@ -948,6 +974,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 							<div
 								className={s.miniBokehContainer}
 								style={highlightStyles.containerStyle}
+								data-active={miniBokehActive ? 'true' : 'false'}
 							>
 								<div
 									className={s.miniBokeh}
