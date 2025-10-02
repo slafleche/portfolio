@@ -103,54 +103,6 @@ export const miniBokeh = style({
 const focusScale = logoVars.focus?.scale ?? 1.05;
 const focusTransition = logoVars.focus?.transitionMs ?? 260;
 
-type LogoHoverBlobConfig = {
-	color?: typeof colorVars.contrast;
-	posX?: number;
-	posY?: number;
-	radius?: number;
-	intensity?: number;
-};
-
-type LogoHoverConfig = typeof logoVars.hover & {
-	blobs?: LogoHoverBlobConfig[];
-	squareSizeMultiplier?: number;
-	squareBlur?: number;
-	squareOpacity?: number;
-	durationMs?: number;
-	speedMultiplier?: number;
-};
-
-const logoHoverConfig = (logoVars.hover ?? {}) as LogoHoverConfig;
-const logoHoverGradientsList = (logoHoverConfig.blobs ?? []).map(
-	(blob): string => {
-		const { color, posX, posY, radius, intensity } = blob;
-		const chromaColor = color ?? colorVars.contrast;
-		const solid = chromaColor.alpha(intensity ?? 0.35).css();
-		const soft = chromaColor.alpha(0).css();
-		const x = posX ?? 50;
-		const y = posY ?? 50;
-		const r = radius ?? 48;
-		return `radial-gradient(circle at ${x}% ${y}%, ${solid} 0%, ${soft} ${r}%)`;
-	},
-);
-const logoHoverGradients =
-	logoHoverGradientsList.length > 0
-		? logoHoverGradientsList.join(', ')
-		: `radial-gradient(circle at 50% 50%, ${colorVars.contrast
-				.alpha(0.35)
-				.css()} 0%, ${colorVars.contrast.alpha(0).css()} 60%)`;
-const logoHoverSizeMultiplier = logoHoverConfig.squareSizeMultiplier ?? 2.4;
-const logoHoverSizePercent = `${logoHoverSizeMultiplier * 100}%`;
-const logoHoverBlur = logoHoverConfig.squareBlur ?? 18;
-const logoHoverOpacity = logoHoverConfig.squareOpacity ?? 1;
-
-const logoHoverBaseDuration = logoHoverConfig.durationMs ?? 20000;
-const logoHoverSpeedMultiplier = logoHoverConfig.speedMultiplier ?? 1;
-const logoHoverDuration =
-	logoHoverSpeedMultiplier <= 0
-		? logoHoverBaseDuration
-		: logoHoverBaseDuration / logoHoverSpeedMultiplier;
-
 const logoHoverOutline = logoVars.hover?.outline;
 const logoHoverOutlineWidth = logoHoverOutline?.width.css() ?? '2px';
 const logoHoverOutlineOffset = logoHoverOutline?.offset.css() ?? '6px';
@@ -158,30 +110,15 @@ const logoHoverOutlineColor = (
 	logoHoverOutline?.color ?? colorVars.contrast.alpha(0.6)
 ).css();
 
-const logoOrbit = keyframes({
-	'0%': {
-		transform: transforms.value(
-			transforms.translate('-50%', '-50%'),
-			transforms.rotate(0),
-		),
-	},
-	'100%': {
-		transform: transforms.value(
-			transforms.translate('-50%', '-50%'),
-			transforms.rotate(360),
-		),
-	},
-});
-
 const logoHoverRotate = keyframes({
 	'0%': {
 		transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
 	},
 	'20%': {
-		transform: transforms.value(transforms.rotate(-16), transforms.scale(0.9)),
+		transform: transforms.value(transforms.rotate(-16), transforms.scale(1)),
 	},
 	'40%': {
-		transform: transforms.value(transforms.rotate(-16), transforms.scale(0.9)),
+		transform: transforms.value(transforms.rotate(-16), transforms.scale(1)),
 	},
 	'55%': {
 		transform: transforms.value(
@@ -221,7 +158,7 @@ const logoHoverRotateReverse = keyframes({
 	'74%': {
 		transform: transforms.value(
 			transforms.rotate(-10),
-			transforms.scale(0.985),
+			transforms.scale(1),
 		),
 	},
 	'100%': {
@@ -303,56 +240,11 @@ export const logoLink = style({
 	width: logoVars.width.css(),
 	height: logoVars.width.css(),
 	position: 'relative',
+	overflow: 'visible',
 	selectors: {
-		'&::before': {
-			content: '',
-			position: 'absolute',
-			left: '50%',
-			top: '50%',
-			borderRadius: '50%',
-			width: logoHoverSizePercent,
-			height: logoHoverSizePercent,
-			transform: transforms.value(
-				transforms.translate('-50%', '-50%'),
-				transforms.rotate(0),
-			),
-			transformOrigin: '50% 50%',
-			backgroundImage: logoHoverGradients,
-			backgroundRepeat: 'no-repeat',
-			backgroundSize: '100% 100%',
-			mixBlendMode: 'screen',
-			filter: `blur(${logoHoverBlur}px)`,
-			opacity: 0,
-			animation: `${logoOrbit} ${logoHoverDuration}ms linear infinite`,
-			animationPlayState: 'paused',
-			willChange: 'transform',
-			pointerEvents: 'none',
-			transition: `opacity ${focusTransition}ms ease`,
-			zIndex: 0,
-		},
-		'&[data-logo-anim="enter"]::before': {
-			opacity: logoHoverOpacity,
-			animationPlayState: 'running',
-		},
-		'&[data-logo-anim="exit"]::before': {
-			opacity: 0,
-			animationPlayState: 'paused',
-			animation: 'none',
-			transform: transforms.value(
-				transforms.translate('-50%', '-50%'),
-				transforms.rotate(0),
-			),
-		},
-		'&:focus-visible::before': {
-			opacity: 1,
-			backgroundImage: 'none',
-			filter: 'none',
-			mixBlendMode: 'normal',
-			border: `${logoHoverOutlineWidth} solid ${logoHoverOutlineColor}`,
-			boxSizing: 'border-box',
-			width: `calc(100% + ${logoHoverOutlineOffset} * 2)`,
-			height: `calc(100% + ${logoHoverOutlineOffset} * 2)`,
-			animation: 'none',
+		'&:focus-visible': {
+			outline: `${logoHoverOutlineWidth} solid ${logoHoverOutlineColor}`,
+			outlineOffset: logoHoverOutlineOffset,
 		},
 	},
 });
@@ -377,12 +269,8 @@ export const link = style({
 });
 
 export const logoWrap = style({
-	
-});
-
-export const logo = style({
-	width: logoVars.width.css(),
-	height: 'auto',
+	width: '100%',
+	height: '100%',
 	position: 'relative',
 	zIndex: 1,
 	transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
@@ -425,6 +313,14 @@ export const logo = style({
 			},
 		},
 	},
+});
+
+export const logo = style({
+	width: '100%',
+	height: '100%',
+	display: 'block',
+	position: 'relative',
+	zIndex: 1,
 });
 
 const menuFont = fontFamilies.baloo;

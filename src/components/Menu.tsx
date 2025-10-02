@@ -87,15 +87,15 @@ const resolveIndexFromCacheValue = (
 	return anchorIndex >= 0 ? anchorIndex + 1 : null;
 };
 
-
 /**
- * Returns a sane default highlight box centered in the nav arch.
- * Keeping this logic in one place makes it easier to avoid regressions
- * where the mini-bokeh starts from the wrong edge after refactors.
+ * Returns a sane default highlight box centered in the nav arch. Keeping this
+ * logic in one place makes it easier to avoid regressions where the mini-bokeh
+ * starts from the wrong edge after refactors.
  */
-const computeCenteredHighlight = (
-	navMetrics: { width: number; height: number },
-): HighlightBox => {
+const computeCenteredHighlight = (navMetrics: {
+	width: number;
+	height: number;
+}): HighlightBox => {
 	const navWidth = navMetrics.width;
 	const fallbackWidth = navWidth
 		? Math.min(
@@ -192,6 +192,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const lastHoverIndexRef = useRef<number | null>(null);
 	const hasResolvedHoverFromCacheRef = useRef(false);
 	const lastPersistedCacheValueRef = useRef<string | null>(null);
+	const hasActivatedRef = useRef(false);
 
 	const clearLogoAnimationTimeout = useCallback(() => {
 		if (logoAnimationTimeoutRef.current !== null) {
@@ -346,32 +347,33 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 		const navMetrics = navMetricsRef.current;
 
-	if (!highlightRef.current.visible) {
-		setTransitionDisabled(true);
-		const previous = lastMetricRef.current;
-		let startLeft = metric.left;
-		let startTop = metric.top;
-		let startWidth = metric.highlightWidth;
-		let startHeight = metric.highlightHeight;
+		if (!highlightRef.current.visible) {
+			setTransitionDisabled(true);
+			const previous = lastMetricRef.current;
+			let startLeft = metric.left;
+			let startTop = metric.top;
+			let startWidth = metric.highlightWidth;
+			let startHeight = metric.highlightHeight;
 
-		if (previous) {
-			startLeft = previous.left;
-			startTop = previous.top;
-			startWidth = previous.highlightWidth;
-			startHeight = previous.highlightHeight;
-		} else {
-			const cachedMetric =
-				lastHoverIndexRef.current != null
-					? linkMetricsRef.current[lastHoverIndexRef.current]
-					: null;
-			const origin = cachedMetric
-				? metricToHighlightBox(cachedMetric)
-				: computeCenteredHighlight(navMetrics);
-			startLeft = origin.left;
-			startTop = origin.top;
-			startWidth = origin.width;
-			startHeight = origin.height;
-		}
+			if (previous) {
+				startLeft = previous.left;
+				startTop = previous.top;
+				startWidth = previous.highlightWidth;
+				startHeight = previous.highlightHeight;
+			} else {
+				const cachedMetric =
+					lastHoverIndexRef.current != null
+						? linkMetricsRef.current[lastHoverIndexRef.current]
+						: null;
+			const origin =
+				cachedMetric && hasActivatedRef.current
+					? metricToHighlightBox(cachedMetric)
+					: computeCenteredHighlight(navMetrics);
+				startLeft = origin.left;
+				startTop = origin.top;
+				startWidth = origin.width;
+				startHeight = origin.height;
+			}
 
 			setHighlight({
 				visible: false,
@@ -429,7 +431,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		if (!width) return;
 		navMetricsRef.current = { width, height: navRect.height };
 		const nextNavMetricsKey = `${width}|${navRect.height}`;
-		setNavMetricsKey((prev) => (prev === nextNavMetricsKey ? prev : nextNavMetricsKey));
+		setNavMetricsKey((prev) =>
+			prev === nextNavMetricsKey ? prev : nextNavMetricsKey,
+		);
 
 		const metrics: Array<LinkMetric | null> = linkRefs.current.map(() => null);
 
@@ -579,6 +583,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			}
 			updateHighlightFromMetric(metric);
 			lastHoverIndexRef.current = index;
+			hasActivatedRef.current = true;
 			persistLastHover(index);
 			if (activeIndex === index) return;
 			setActiveIndex(index);
@@ -661,89 +666,98 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	);
 
 	const highlightStyles = useMemo(() => {
-	const navMetrics = navMetricsRef.current;
-	const hasMeasurements = highlight.width && highlight.height;
-	const defaultFallback = computeCenteredHighlight(navMetrics);
-	const cachedFallback = (() => {
-		const cachedIndex = lastHoverIndexRef.current;
-		if (cachedIndex != null) {
-			const metric =
-				linkMetricsRef.current[cachedIndex] ?? linkMetrics[cachedIndex];
-			if (metric) return metricToHighlightBox(metric);
+		const navMetrics = navMetricsRef.current;
+		const hasMeasurements = highlight.width && highlight.height;
+		const defaultFallback = computeCenteredHighlight(navMetrics);
+		const cachedFallback = (() => {
+			const cachedIndex = lastHoverIndexRef.current;
+			if (cachedIndex != null) {
+				const metric =
+					linkMetricsRef.current[cachedIndex] ?? linkMetrics[cachedIndex];
+				if (metric) return metricToHighlightBox(metric);
+			}
+			return null;
+		})();
+
+		const originBox =
+			hasActivatedRef.current && cachedFallback
+				? cachedFallback
+				: defaultFallback;
+		const containerBase = defaultFallback;
+		const isActive = highlight.visible && hasMeasurements;
+		const targetBox = isActive
+			? {
+					left: highlight.left,
+					top: highlight.top,
+					width: Math.max(1, highlight.width),
+					height: Math.max(1, highlight.height),
+				}
+			: originBox;
+
+		const containerStyle: CSSProperties = {
+			left: `${containerBase.left}px`,
+			top: `${containerBase.top}px`,
+		};
+
+		const deltaX = targetBox.left - containerBase.left;
+		const deltaY = targetBox.top - containerBase.top;
+		const transformValue = transforms.value(
+			transforms.translate3d(deltaX, deltaY, 0),
+		);
+
+		const innerStyle: CSSProperties = {
+			width: `${targetBox.width}px`,
+			height: `${targetBox.height}px`,
+			opacity: isActive ? 1 : 0,
+			transition:
+				transitionDisabled || !isActive ? 'none' : highlightTransition,
+			transform: transformValue ?? undefined,
+		};
+
+		const blobs = menuVars.hover.blobs;
+		const activeNavIndex =
+			highlight.visible && activeIndex != null && activeIndex > 0
+				? (activeIndex - 1) % Math.max(blobs.length, 1)
+				: null;
+		const ordered = blobs.map((blob, index) => ({
+			blob,
+			isActive: index === activeNavIndex,
+		}));
+		if (activeNavIndex != null) {
+			const activeEntry = ordered.splice(activeNavIndex, 1);
+			ordered.unshift(...activeEntry);
 		}
-		return null;
-	})();
+		innerStyle.backgroundImage = ordered
+			.map(({ blob, isActive }) => {
+				const baseColor = blob.color ?? colorVars.contrast;
+				const intensity = Math.min(
+					0.6,
+					(blob.intensity ?? 0.3) * (isActive ? 1.35 : 1),
+				);
+				const radius = (blob.radius ?? 50) * (isActive ? 1.25 : 1);
+				const solid = baseColor.alpha(intensity).css();
+				const soft = baseColor.alpha(0).css();
+				const posX = blob.posX ?? 50;
+				const posY = blob.posY ?? 50;
+				return `radial-gradient(circle at ${posX}% ${posY}%, ${solid} 0%, ${soft} ${radius}%)`;
+			})
+			.join(', ');
+		innerStyle.filter = `blur(${menuVars.hover.blur.value}px)`;
+		innerStyle.boxShadow = `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast.alpha(menuVars.hover.shadow.opacity).css()}`;
 
-	const originBox = cachedFallback ?? defaultFallback;
-	const containerBase = defaultFallback;
-	const isActive = highlight.visible && hasMeasurements;
-	const targetBox = isActive
-		? {
-			left: highlight.left,
-			top: highlight.top,
-			width: Math.max(1, highlight.width),
-			height: Math.max(1, highlight.height),
+		if (debugMiniBokeh) {
+			innerStyle.outline = '1px dashed rgba(255,255,255,0.4)';
 		}
-		: originBox;
 
-	const containerStyle: CSSProperties = {
-		left: `${containerBase.left}px`,
-		top: `${containerBase.top}px`,
-	};
-
-	const deltaX = targetBox.left - containerBase.left;
-	const deltaY = targetBox.top - containerBase.top;
-	const transformValue = transforms.value(
-		transforms.translate3d(deltaX, deltaY, 0),
-	);
-
-	const innerStyle: CSSProperties = {
-		width: `${targetBox.width}px`,
-		height: `${targetBox.height}px`,
-		opacity: isActive ? 1 : 0,
-		transition:
-			transitionDisabled || !isActive ? 'none' : highlightTransition,
-		transform: transformValue ?? undefined,
-	};
-
-	const blobs = menuVars.hover.blobs;
-	const activeNavIndex =
-	highlight.visible && activeIndex != null && activeIndex > 0
-		? (activeIndex - 1) % Math.max(blobs.length, 1)
-		: null;
-	const ordered = blobs.map((blob, index) => ({ blob, isActive: index === activeNavIndex }));
-	if (activeNavIndex != null) {
-		const activeEntry = ordered.splice(activeNavIndex, 1);
-		ordered.unshift(...activeEntry);
-	}
-	innerStyle.backgroundImage = ordered
-		.map(({ blob, isActive }) => {
-			const baseColor = blob.color ?? colorVars.contrast;
-			const intensity = Math.min(0.6, (blob.intensity ?? 0.3) * (isActive ? 1.35 : 1));
-			const radius = (blob.radius ?? 50) * (isActive ? 1.25 : 1);
-			const solid = baseColor.alpha(intensity).css();
-			const soft = baseColor.alpha(0).css();
-			const posX = blob.posX ?? 50;
-			const posY = blob.posY ?? 50;
-			return `radial-gradient(circle at ${posX}% ${posY}%, ${solid} 0%, ${soft} ${radius}%)`;
-		})
-		.join(', ');
-	innerStyle.filter = `blur(${menuVars.hover.blur.value}px)`;
-	innerStyle.boxShadow = `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast.alpha(menuVars.hover.shadow.opacity).css()}`;
-
-	if (debugMiniBokeh) {
-		innerStyle.outline = '1px dashed rgba(255,255,255,0.4)';
-	}
-
-	return { containerStyle, innerStyle };
-}, [
-	highlight,
-	transitionDisabled,
-	debugMiniBokeh,
-	activeIndex,
-	navMetricsKey,
-	linkMetrics,
-]);
+		return { containerStyle, innerStyle };
+	}, [
+		highlight,
+		transitionDisabled,
+		debugMiniBokeh,
+		activeIndex,
+		navMetricsKey,
+		linkMetrics,
+	]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,
@@ -783,9 +797,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					onBlur={handleBlur}
 					data-ui="link"
 				>
-				<span className={s.fakeShadow} aria-hidden={true}>
-					{t(entry.labelKey)}
-				</span>
+					<span className={s.fakeShadow} aria-hidden={true}>
+						{t(entry.labelKey)}
+					</span>
 					<span className={s.text}>{t(entry.labelKey)}</span>
 				</Link>
 			</li>
@@ -931,9 +945,15 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 									/>
 								</svg>
 							) : null}
-							<div className={s.miniBokehContainer} style={highlightStyles.containerStyle}>
-						<div className={s.miniBokeh} style={highlightStyles.innerStyle} />
-					</div>
+							<div
+								className={s.miniBokehContainer}
+								style={highlightStyles.containerStyle}
+							>
+								<div
+									className={s.miniBokeh}
+									style={highlightStyles.innerStyle}
+								/>
+							</div>
 						</div>
 						<div className={clsx(s.contents)}>
 							<div className={clsx(s.logoItem, s.item)}>
@@ -951,10 +971,14 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 									data-ui="link"
 									data-logo-anim={logoAnimationState}
 								>
-									<Logo
-										className={s.logo}
-										colourState={logoAnimationState === 'enter' ? 'color' : 'mono'}
-									/>
+									<div className={s.logoWrap}>
+										<Logo
+											className={s.logo}
+											colourState={
+												logoAnimationState === 'enter' ? 'color' : 'mono'
+											}
+										/>
+									</div>
 								</Link>
 							</div>
 
@@ -988,23 +1012,23 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 						</div>
 					</nav>
 					<nav className={s.localeChanger} aria-label={t('localeChange')}>
-		{AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
-			<Link
-				key={l}
-				href={`/${l}`}
-				className={clsx(s.link, s.localeLink)}
-				hrefLang={l}
-				data-ui="link"
-			>
-				<span className={s.fakeShadow} aria-hidden={true}>
-					{TRANSLATIONS[l]['abbreviated-label']}
-				</span>
-				<span className={s.text}>
-					{TRANSLATIONS[l]['abbreviated-label']}
-				</span>
-			</Link>
-		))}
-		</nav>
+						{AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
+							<Link
+								key={l}
+								href={`/${l}`}
+								className={clsx(s.link, s.localeLink)}
+								hrefLang={l}
+								data-ui="link"
+							>
+								<span className={s.fakeShadow} aria-hidden={true}>
+									{TRANSLATIONS[l]['abbreviated-label']}
+								</span>
+								<span className={s.text}>
+									{TRANSLATIONS[l]['abbreviated-label']}
+								</span>
+							</Link>
+						))}
+					</nav>
 				</Arch>
 			</div>
 		</>
