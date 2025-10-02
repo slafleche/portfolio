@@ -1,6 +1,6 @@
 import { style, globalStyle } from '@vanilla-extract/css';
 import { makeGradient } from '../helpers/gradients';
-import { gradientFull, menuVars } from '../vars';
+import { chevronVars, gradientFull, menuVars } from '../vars';
 import { paddings } from '../helpers/spacing';
 import { fullSizeOfParent } from '../helpers/positioning';
 import type { Color } from 'chroma-js';
@@ -56,3 +56,4 @@ export const heading = style({
 export const paragraph = style({
 	textAlign: 'center',
 });
+

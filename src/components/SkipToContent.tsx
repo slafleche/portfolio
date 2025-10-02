@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import * as s from '@/styles/components/skipToContent.css';
 import { useT } from '@/lib/locales/useT';
 import Link from 'next/link';
+import ChevronDown from './ChevronDown';
 
 type Props = {
 	className?: string;
@@ -18,7 +19,7 @@ export default function SkipToContent({ className, href = '#body' }: Props) {
 			className={clsx(className, s.link)}
 			data-ui="link"
 		>
-			*
+			<ChevronDown />
 		</Link>
 	);
 }

@@ -17,8 +17,8 @@ export default function Hero({ className }: Props) {
 		<section className={clsx(s.root, className)}>
 			<ImageByName
 				name="hero"
-				alt={t('image_portrait-alt')}
-				title={t('image_portrait-title')}
+				alt={t('image_hero-alt')}
+				title={t('image_hero-title')}
 				className={s.image}
 				fit="cover"
 				priority
