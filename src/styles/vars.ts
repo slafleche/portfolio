@@ -304,12 +304,12 @@ export const archVars = {
 };
 
 export const logoVars = {
-	width: m(60),
+	width: m(65),
 	offsetY: m(0),
 	offsetX: m(0),
 	shadowRatio: 948.31276 / 546.93464, // from shadow width (in the SVG) / logo width
 	focus: {
-		scale: 1.2,
+		scale: 1.15,
 		transitionMs: 400,
 		haloColor: colorVars.contrast.alpha(0.35),
 	},
