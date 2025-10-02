@@ -9,12 +9,14 @@ import type { Color } from 'chroma-js';
 const vertialPadding = 40;
 
 export const root = style({
-	display: 'block',
+	display: 'flex',
+	alignItems: 'center',
 	position: 'relative',
 	...paddings({
 		vertical: menuVars.height.add(vertialPadding),
 	}),
 	marginBottom: '40px',
+	minHeight: '100vh',
 });
 
 export const gradient = style({
@@ -24,8 +26,13 @@ export const gradient = style({
 		spotB: gradientFull.overlayB,
 		linearColors: gradientFull.linear as [Color, Color, Color],
 	}),
-	opacity: 0.5,
+	opacity: 0.8,
 });
 
-export const heading = style({});
-export const paragraph = style({});
+export const heading = style({
+	textShadow: '0 0 10px rgba(0,0,0,.72)',
+	textAlign: 'center',
+});
+export const paragraph = style({
+	textAlign: 'center',
+});

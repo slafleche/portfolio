@@ -9,8 +9,10 @@
 	"menu-right_label": "My Work",
 	"localeChange": "Select language",
 
-	"hero": "Collaborating across design and development — lifting projects higher",
-	"hero-subtitle": "Front-end developer building reusable components, responsive experiences, and brand-faithful interfaces — catching UX issues early and elevating projects beyond the design-to-development handoff",
+	"scroll-cue": "Scroll to content",
+
+	"hero": "Bridging design and development",
+	"hero-subtitle": "A developer with a designer’s eye",
 
 	"image_portrait-title": "Portrait of Stéphane L.",
 	"image_portrait-alt": "A photo of Stéphane L. working, with a blurred background.",

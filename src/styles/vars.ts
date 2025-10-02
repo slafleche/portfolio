@@ -424,3 +424,5 @@ export const dropShadowVars = {
 	blur: m(3),
 	color: colorVars.shadow,
 };
+
+// Shimmer
