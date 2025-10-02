@@ -336,7 +336,7 @@ export const menuVars = {
 	height: archVars.top,
 	yOffset: m(0),
 	rotationMax: m(2, 'deg'),
-	skew: m(2, 'deg'),
+	skew: m(4, 'deg'),
 	verticalOffset: m(1),
 	locale: {
 		offsetY: m(2),
@@ -347,7 +347,7 @@ export const menuVars = {
 		vertical: m(10),
 	},
 	rotation: {
-		k: 900, // modifies how "quickly" you meet the limit
+		k: 600, // modifies how "quickly" you meet the limit
 		max: 2, //Max rotation
 	},
 	textShadow: {
@@ -423,5 +423,5 @@ export const heroVars = {
 	paddings: {
 		top: m(40),
 		bottom: m(40),
-	}
-}
+	},
+};

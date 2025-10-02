@@ -57,6 +57,15 @@ export const contents = style({
 	position: 'relative',
 	zIndex: 1,
 });
+
+export const transitionAfterFonts = style({
+	opacity: 0,
+	transition: 'opacity 360ms ease-out',
+});
+
+globalStyle(`.${root}[data-mounted="true"] .${transitionAfterFonts}`, {
+	opacity: 1,
+});
 export const nav = style({
 	display: 'flex',
 	flexWrap: 'nowrap',
@@ -124,7 +133,10 @@ const hitboxBuffer = m(6);
 const logoHitboxDiameter = logoHitboxSize.add(hitboxBuffer);
 const logoHitboxPadding = logoHitboxDiameter.divide(2);
 const navPaddingValue = logoVars.width.value / 2 + 6;
-const logoNavPaddingMeasurement = m(navPaddingValue, logoVars.width.unit ?? 'px');
+const logoNavPaddingMeasurement = m(
+	navPaddingValue,
+	logoVars.width.unit ?? 'px',
+);
 const logoNavPadding = logoNavPaddingMeasurement.css();
 const logoHoverOutlineWidth = logoHoverOutline?.width.css() ?? '2px';
 const logoHoverOutlineOffset = logoHoverOutline?.offset.css() ?? '6px';

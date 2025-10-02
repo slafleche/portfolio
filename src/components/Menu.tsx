@@ -1012,7 +1012,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 							</div>
 
 							<ul
-								className={s.list}
+								className={clsx(s.list, s.transitionAfterFonts)}
 								aria-label={t('menu-left_label')}
 								data-side="left"
 								style={getRotationStyle('left', navMetricsRef.current.width)}
@@ -1026,7 +1026,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 							</ul>
 
 							<ul
-								className={s.list}
+								className={clsx(s.list, s.transitionAfterFonts)}
 								aria-label={t('menu-right_label')}
 								data-side="right"
 								style={getRotationStyle('right', navMetricsRef.current.width)}
@@ -1040,7 +1040,10 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 							</ul>
 						</div>
 					</nav>
-					<nav className={s.localeChanger} aria-label={t('localeChange')}>
+					<nav
+						className={clsx(s.localeChanger, s.transitionAfterFonts)}
+						aria-label={t('localeChange')}
+					>
 						{AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
 							<Link
 								key={l}
