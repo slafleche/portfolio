@@ -72,6 +72,11 @@ export const highlightLayer = style({
 	zIndex: 0,
 });
 
+export const miniBokehContainer = style({
+	position: 'absolute',
+	pointerEvents: 'none',
+});
+
 export const miniBokeh = style({
 	position: 'absolute',
 	borderRadius: '999px',
@@ -369,6 +374,10 @@ export const link = style({
 	textDecoration: 'none',
 	borderRadius: 8,
 	...paddings({ vertical: '0.25rem', horizontal: '0.5rem' }),
+});
+
+export const logoWrap = style({
+	
 });
 
 export const logo = style({

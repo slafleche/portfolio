@@ -44,6 +44,8 @@ type HighlightState = {
 	height: number;
 };
 
+type HighlightBox = Pick<HighlightState, 'left' | 'top' | 'width' | 'height'>;
+
 type DebugArch = {
 	path: string;
 	width: number;
@@ -55,6 +57,31 @@ const clamp = (value: number, min: number, max: number) =>
 
 const highlightTransition =
 	'opacity 180ms ease, transform 450ms cubic-bezier(0.4, 0, 0.2, 1), width 350ms ease, height 350ms ease';
+
+/**
+ * Returns a sane default highlight box centered in the nav arch.
+ * Keeping this logic in one place makes it easier to avoid regressions
+ * where the mini-bokeh starts from the wrong edge after refactors.
+ */
+const computeCenteredHighlight = (
+	navMetrics: { width: number; height: number },
+): HighlightBox => {
+	const navWidth = navMetrics.width;
+	const fallbackWidth = navWidth
+		? Math.min(
+				navWidth,
+				menuVars.height.value + menuVars.padding.vertical.value,
+			)
+		: menuVars.height.value + menuVars.padding.vertical.value;
+	const highlightHeight = menuVars.height.value;
+	const centerX = navWidth ? navWidth / 2 : fallbackWidth / 2;
+	const centerY = navWidth
+		? computeArchY(navWidth, centerX) + menuVars.yOffset.value
+		: highlightHeight / 2;
+	const left = centerX - fallbackWidth / 2;
+	const top = Math.max(0, centerY - highlightHeight / 2);
+	return { left, top, width: fallbackWidth, height: highlightHeight };
+};
 
 const rxFrom = (width: number, curveHeight: number, ry: number) => {
 	const c = curveHeight / ry;
@@ -246,26 +273,26 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 		const navMetrics = navMetricsRef.current;
 
-		if (!highlightRef.current.visible) {
-			setTransitionDisabled(true);
-			const previous = lastMetricRef.current;
-			let startLeft = metric.left;
-			let startTop = metric.top;
-			let startWidth = metric.highlightWidth;
-			let startHeight = metric.highlightHeight;
+	if (!highlightRef.current.visible) {
+		setTransitionDisabled(true);
+		const previous = lastMetricRef.current;
+		let startLeft = metric.left;
+		let startTop = metric.top;
+		let startWidth = metric.highlightWidth;
+		let startHeight = metric.highlightHeight;
 
-			if (previous) {
-				startLeft = previous.left;
-				startTop = previous.top;
-				startWidth = previous.highlightWidth;
-				startHeight = previous.highlightHeight;
-			} else if (navMetrics.width > 0) {
-				const centerX = navMetrics.width / 2;
-				const centerY =
-					computeArchY(navMetrics.width, centerX) + menuVars.yOffset.value;
-				startLeft = centerX - metric.highlightWidth / 2;
-				startTop = Math.max(0, centerY - metric.highlightHeight / 2);
-			}
+		if (previous) {
+			startLeft = previous.left;
+			startTop = previous.top;
+			startWidth = previous.highlightWidth;
+			startHeight = previous.highlightHeight;
+		} else {
+			const centered = computeCenteredHighlight(navMetrics);
+			startLeft = centered.left;
+			startTop = centered.top;
+			startWidth = centered.width;
+			startHeight = centered.height;
+		}
 
 			setHighlight({
 				visible: false,
@@ -308,6 +335,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			cancelAnimationFrame(animationFrameRef.current);
 			animationFrameRef.current = null;
 		}
+		lastMetricRef.current = null;
 		setActiveIndex(null);
 		setHighlight((prev) => (prev.visible ? { ...prev, visible: false } : prev));
 	}, []);
@@ -468,20 +496,21 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			if (!metric) {
 				return;
 			}
-			setActiveIndex(index);
 			updateHighlightFromMetric(metric);
-			if (index !== 0) {
+			if (activeIndex === index) return;
+			setActiveIndex(index);
+			if (index === 0) {
+				clearLogoExitDelay();
+			} else {
 				clearLogoEnterDelay();
-				if (logoAnimationStateRef.current === 'enter') {
-					triggerLogoExit();
-				}
 			}
 		},
 		[
+			activeIndex,
 			updateHighlightFromMetric,
 			linkMetrics,
 			clearLogoEnterDelay,
-			triggerLogoExit,
+			clearLogoExitDelay,
 		],
 	);
 
@@ -547,86 +576,66 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		],
 	);
 
-	const highlightStyle = useMemo<CSSProperties>(() => {
-		const { width: navWidth, height: navHeight } = navMetricsRef.current;
-		const hasMeasurements = highlight.width && highlight.height;
+	const highlightStyles = useMemo(() => {
+	const navMetrics = navMetricsRef.current;
+	const hasMeasurements = highlight.width && highlight.height;
+	const fallback = computeCenteredHighlight(navMetrics);
+	const useFallback = !highlight.visible || !hasMeasurements;
+	const targetWidth = useFallback ? fallback.width : Math.max(1, highlight.width);
+	const targetHeight = useFallback ? fallback.height : Math.max(1, highlight.height);
+	const targetLeft = useFallback ? fallback.left : highlight.left;
+	const targetTop = useFallback ? fallback.top : highlight.top;
 
-		const fallbackWidth = navWidth
-			? Math.min(
-					navWidth,
-					menuVars.height.value + menuVars.padding.vertical.value,
-				)
-			: menuVars.height.value + menuVars.padding.vertical.value;
-		const width = hasMeasurements
-			? Math.max(1, highlight.width)
-			: fallbackWidth;
-		const height = hasMeasurements
-			? Math.max(1, highlight.height)
-			: menuVars.height.value;
-		const centerX = navWidth ? navWidth / 2 : width / 2;
-		const centerY = navWidth
-			? computeArchY(navWidth, centerX) + menuVars.yOffset.value
-			: height / 2;
-		const left = hasMeasurements ? highlight.left : centerX - width / 2;
-		const top = hasMeasurements
-			? highlight.top
-			: Math.max(0, centerY - height / 2);
+	const containerStyle: CSSProperties = {
+		left: `${fallback.left}px`,
+		top: `${fallback.top}px`,
+	};
 
-		const style: CSSProperties = {
-			width: `${width}px`,
-			height: `${height}px`,
-			opacity: hasMeasurements && highlight.visible ? 1 : 0,
-			transition:
-				transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
-		};
+	const deltaX = targetLeft - fallback.left;
+	const deltaY = targetTop - fallback.top;
+	const transformValue = transforms.value(
+		transforms.translate3d(deltaX, deltaY, 0),
+	);
 
-		const transformValue = transforms.value(
-			transforms.translate3d(left, top, 0),
-		);
-		if (transformValue) {
-			style.transform = transformValue;
-		}
+	const innerStyle: CSSProperties = {
+		width: `${targetWidth}px`,
+		height: `${targetHeight}px`,
+		opacity: highlight.visible && hasMeasurements ? 1 : 0,
+		transition: transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
+		transform: transformValue ?? undefined,
+	};
 
-		const blobs = menuVars.hover.blobs;
-		const activeNavIndex =
-			highlight.visible && activeIndex != null && activeIndex > 0
-				? (activeIndex - 1) % Math.max(blobs.length, 1)
-				: null;
-		const ordered = blobs.map((blob, index) => ({
-			blob,
-			isActive: index === activeNavIndex,
-		}));
-		if (activeNavIndex != null) {
-			const activeEntry = ordered.splice(activeNavIndex, 1);
-			ordered.unshift(...activeEntry);
-		}
-		const backgroundImage = ordered
-			.map(({ blob, isActive }) => {
-				const baseColor = blob.color ?? colorVars.contrast;
-				const intensity = Math.min(
-					0.6,
-					(blob.intensity ?? 0.3) * (isActive ? 1.35 : 1),
-				);
-				const radius = (blob.radius ?? 50) * (isActive ? 1.25 : 1);
-				const solid = baseColor.alpha(intensity).css();
-				const soft = baseColor.alpha(0).css();
-				const posX = blob.posX ?? 50;
-				const posY = blob.posY ?? 50;
-				return `radial-gradient(circle at ${posX}% ${posY}%, ${solid} 0%, ${soft} ${radius}%)`;
-			})
-			.join(', ');
-		style.backgroundImage = backgroundImage;
-		style.filter = `blur(${menuVars.hover.blur.value}px)`;
-		style.boxShadow = `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast
-			.alpha(menuVars.hover.shadow.opacity)
-			.css()}`;
+	const blobs = menuVars.hover.blobs;
+	const activeNavIndex =
+	highlight.visible && activeIndex != null && activeIndex > 0
+		? (activeIndex - 1) % Math.max(blobs.length, 1)
+		: null;
+	const ordered = blobs.map((blob, index) => ({ blob, isActive: index === activeNavIndex }));
+	if (activeNavIndex != null) {
+		const activeEntry = ordered.splice(activeNavIndex, 1);
+		ordered.unshift(...activeEntry);
+	}
+	innerStyle.backgroundImage = ordered
+		.map(({ blob, isActive }) => {
+			const baseColor = blob.color ?? colorVars.contrast;
+			const intensity = Math.min(0.6, (blob.intensity ?? 0.3) * (isActive ? 1.35 : 1));
+			const radius = (blob.radius ?? 50) * (isActive ? 1.25 : 1);
+			const solid = baseColor.alpha(intensity).css();
+			const soft = baseColor.alpha(0).css();
+			const posX = blob.posX ?? 50;
+			const posY = blob.posY ?? 50;
+			return `radial-gradient(circle at ${posX}% ${posY}%, ${solid} 0%, ${soft} ${radius}%)`;
+		})
+		.join(', ');
+	innerStyle.filter = `blur(${menuVars.hover.blur.value}px)`;
+	innerStyle.boxShadow = `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast.alpha(menuVars.hover.shadow.opacity).css()}`;
 
-		if (debugMiniBokeh) {
-			style.outline = '1px dashed rgba(255,255,255,0.4)';
-		}
+	if (debugMiniBokeh) {
+		innerStyle.outline = '1px dashed rgba(255,255,255,0.4)';
+	}
 
-		return style;
-	}, [highlight, transitionDisabled, debugMiniBokeh, activeIndex]);
+	return { containerStyle, innerStyle };
+}, [highlight, transitionDisabled, debugMiniBokeh, activeIndex, navMetricsRef.current.width, navMetricsRef.current.height]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,
@@ -637,7 +646,6 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	) => {
 		const id = t(entry.hrefKey);
 		const isActive = activeSection === id;
-
 		return (
 			<li className={clsx(classes?.item, classes?.index)} key={entry.hrefKey}>
 				<Link
@@ -667,9 +675,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					onBlur={handleBlur}
 					data-ui="link"
 				>
-					<span className={s.fakeShadow} aria-hidden={true}>
-						{t(entry.labelKey)}
-					</span>
+				<span className={s.fakeShadow} aria-hidden={true}>
+					{t(entry.labelKey)}
+				</span>
 					<span className={s.text}>{t(entry.labelKey)}</span>
 				</Link>
 			</li>
@@ -815,7 +823,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 									/>
 								</svg>
 							) : null}
-							<div className={s.miniBokeh} style={highlightStyle} />
+							<div className={s.miniBokehContainer} style={highlightStyles.containerStyle}>
+						<div className={s.miniBokeh} style={highlightStyles.innerStyle} />
+					</div>
 						</div>
 						<div className={clsx(s.contents)}>
 							<div className={clsx(s.logoItem, s.item)}>
@@ -870,23 +880,23 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 						</div>
 					</nav>
 					<nav className={s.localeChanger} aria-label={t('localeChange')}>
-						{AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
-							<Link
-								key={l}
-								href={`/${l}`}
-								className={clsx(s.link, s.localeLink)}
-								hrefLang={l}
-								data-ui="link"
-							>
-								<span className={s.fakeShadow} aria-hidden={true}>
-									{TRANSLATIONS[l]['abbreviated-label']}
-								</span>
-								<span className={s.text}>
-									{TRANSLATIONS[l]['abbreviated-label']}
-								</span>
-							</Link>
-						))}
-					</nav>
+		{AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
+			<Link
+				key={l}
+				href={`/${l}`}
+				className={clsx(s.link, s.localeLink)}
+				hrefLang={l}
+				data-ui="link"
+			>
+				<span className={s.fakeShadow} aria-hidden={true}>
+					{TRANSLATIONS[l]['abbreviated-label']}
+				</span>
+				<span className={s.text}>
+					{TRANSLATIONS[l]['abbreviated-label']}
+				</span>
+			</Link>
+		))}
+		</nav>
 				</Arch>
 			</div>
 		</>

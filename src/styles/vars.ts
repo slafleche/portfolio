@@ -361,13 +361,6 @@ export const menuVars = {
 			offsetX: m(2),
 			offsetY: m(-2),
 			scale: 1.05,
-			colours: [
-				chroma('#54e3db').brighten(1.5),
-				chroma('#a966d0').brighten(3),
-				chroma('#d524a6').brighten(2.5),
-				chroma('#F7D354').brighten(2.5),
-				chroma('#3a289a').brighten(2),
-			],
 		},
 		blobs: [
 			{
@@ -415,7 +408,7 @@ export const dropShadowVars = {
 };
 
 export const chevronVars = {
-	width: m(100),
+	width: m(80),
 	height: 'auto',
 	display: 'block',
 	fill: colorVars.white,
