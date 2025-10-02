@@ -998,13 +998,15 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 									data-ui="link"
 									data-logo-anim={logoAnimationState}
 								>
-									<div className={s.logoWrap}>
-										<Logo
-											className={s.logo}
-											colourState={
-												logoAnimationState === 'enter' ? 'color' : 'mono'
-											}
-										/>
+									<div className={s.logoClip}>
+										<div className={s.logoWrap}>
+											<Logo
+												className={s.logo}
+												colourState={
+													logoAnimationState === 'enter' ? 'color' : 'mono'
+												}
+											/>
+										</div>
 									</div>
 								</Link>
 							</div>

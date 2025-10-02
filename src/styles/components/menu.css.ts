@@ -16,6 +16,7 @@ import {
 } from '../vars';
 import { fontWeightStyle } from '../helpers/typography';
 import { paddings } from '../helpers/spacing';
+import { m } from '../helpers/measurement';
 import transforms from '../helpers/transforms';
 
 export const root = style({
@@ -109,14 +110,22 @@ export const miniBokeh = style({
 
 const focusScale = logoVars.focus?.scale ?? 1.05;
 const hoverScale = focusScale * 1.05;
-const autoHitboxScale =
-	focusScale + Math.max(0, (hoverScale - focusScale) * Math.SQRT2);
+const maxLogoRotationDeg = 130;
+const maxLogoRotationRad = (maxLogoRotationDeg * Math.PI) / 180;
+const rotationScaleFactor =
+	Math.abs(Math.cos(maxLogoRotationRad)) +
+	Math.abs(Math.sin(maxLogoRotationRad));
+const autoHitboxScale = hoverScale * rotationScaleFactor;
 const focusTransition = logoVars.focus?.transitionMs ?? 260;
 
 const logoHoverOutline = logoVars.hover?.outline;
 const logoHitboxSize = logoVars.width.multiply(autoHitboxScale);
-const logoHitboxPadding = logoHitboxSize.divide(2).add(0.5);
-const logoNavPadding = logoHitboxPadding.css();
+const hitboxBuffer = m(6);
+const logoHitboxDiameter = logoHitboxSize.add(hitboxBuffer);
+const logoHitboxPadding = logoHitboxDiameter.divide(2);
+const navPaddingValue = logoVars.width.value / 2 + 6;
+const logoNavPaddingMeasurement = m(navPaddingValue, logoVars.width.unit ?? 'px');
+const logoNavPadding = logoNavPaddingMeasurement.css();
 const logoHoverOutlineWidth = logoHoverOutline?.width.css() ?? '2px';
 const logoHoverOutlineOffset = logoHoverOutline?.offset.css() ?? '6px';
 const logoHoverOutlineColor = (
@@ -252,14 +261,20 @@ export const logoLink = style({
 	width: '100%',
 	height: '100%',
 	position: 'relative',
-	overflow: 'hidden',
-	borderRadius: '50%',
 	selectors: {
 		'&:focus-visible': {
 			outline: `${logoHoverOutlineWidth} solid ${logoHoverOutlineColor}`,
 			outlineOffset: logoHoverOutlineOffset,
 		},
 	},
+});
+
+export const logoClip = style({
+	width: '100%',
+	height: '100%',
+	borderRadius: '50%',
+	overflow: 'hidden',
+	pointerEvents: 'none',
 });
 
 export const item_3 = style({
@@ -287,6 +302,7 @@ export const logoWrap = style({
 	position: 'relative',
 	zIndex: 1,
 	transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
+	clipPath: 'circle(50% at 50% 50%)',
 	transformOrigin: 'center',
 	transformBox: 'fill-box',
 	transition: `transform ${focusTransition}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
