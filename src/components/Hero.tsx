@@ -20,7 +20,7 @@ export default function Hero({ className }: Props) {
 			<GodRays
 				config={godRaysVars}
 				image={{
-					name: 'hero7',
+					name: 'hero',
 					title: t('image_portrait-title'),
 					alt: t('image_portrait-alt'),
 				}}
