@@ -75,6 +75,13 @@ export const highlightLayer = style({
 export const miniBokehContainer = style({
 	position: 'absolute',
 	pointerEvents: 'none',
+	opacity: 0,
+	transition: 'opacity 1.5s ease-out',
+	selectors: {
+		'&[data-active="true"]': {
+			opacity: 1,
+		},
+	},
 });
 
 export const miniBokeh = style({
@@ -93,10 +100,10 @@ export const miniBokeh = style({
 	})(),
 	filter: `blur(${menuVars.hover.blur.value}px)`,
 	boxShadow: `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast.alpha(menuVars.hover.shadow.opacity).css()}`,
-	opacity: 0,
+	opacity: 1,
 	transform: transforms.value(transforms.translate3d(0, 0, 0)),
 	transition:
-		'opacity 180ms ease, transform 450ms cubic-bezier(0.4, 0, 0.2, 1), width 350ms ease, height 350ms ease',
+		'transform 450ms cubic-bezier(0.4, 0, 0.2, 1), width 350ms ease, height 350ms ease',
 	mixBlendMode: 'screen',
 });
 
@@ -110,8 +117,8 @@ const logoHoverOutline = logoVars.hover?.outline;
 const logoHitboxSize = logoVars.width.multiply(autoHitboxScale);
 const logoHitboxPadding = logoHitboxSize.divide(2).add(0.5);
 const logoNavPadding = logoHitboxPadding.css();
-const logoHoverOutlineWidth = logoHoverOutline?.width.css();
-const logoHoverOutlineOffset = logoHoverOutline?.offset.css();
+const logoHoverOutlineWidth = logoHoverOutline?.width.css() ?? '2px';
+const logoHoverOutlineOffset = logoHoverOutline?.offset.css() ?? '6px';
 const logoHoverOutlineColor = (
 	logoHoverOutline?.color ?? colorVars.contrast.alpha(0.6)
 ).css();

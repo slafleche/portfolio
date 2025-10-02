@@ -13,13 +13,15 @@ type Props = {
 export default function SkipToContent({ className, href = '#body' }: Props) {
 	const t = useT();
 	return (
-		<Link
-			href={href}
-			aria-label={t('scroll-cue')}
-			className={clsx(className, s.link)}
-			data-ui="link"
-		>
-			<ChevronDown />
-		</Link>
+		<div className={s.root}>
+			<Link
+				href={href}
+				aria-label={t('scroll-cue')}
+				className={clsx(className, s.link)}
+				data-ui="link"
+			>
+				<ChevronDown />
+			</Link>
+		</div>
 	);
 }

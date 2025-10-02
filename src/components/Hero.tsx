@@ -25,12 +25,14 @@ export default function Hero({ className }: Props) {
 			/>
 			{/* <div className={s.gradient} aria-hidden /> */}
 			<div className={clsx(layoutStyles.content, s.content)}>
-				<div className={clsx(layoutStyles.panel, glassyStyles.bg)}>
+				<div className={clsx(layoutStyles.panel, glassyStyles.bg, s.panel)}>
 					<h1 className={s.heading}>{t('hero')}</h1>
 					<p className={s.paragraph}>{t('hero-subtitle')}</p>
 				</div>
-				<SkipToContent />
 			</div>
+			
+			<SkipToContent />
+			
 		</section>
 	);
 }
