@@ -7,7 +7,7 @@ import { generateArchPaths } from '../lib/arch/archHelper';
 import { archVars } from '../styles/vars';
 import * as glassyStyles from '../styles/glassy.css';
 import { useSafeId } from '../lib/dom';
-import { glossyBorderVars } from '../styles/helpers/effects';
+import { transparentBorder } from '../styles/helpers/glossy';
 import { shadowTotalY } from '../styles/helpers/shadow';
 
 type Props = { className?: string; children?: ReactNode; ready?: boolean };
@@ -94,7 +94,7 @@ function Arch({ className, children, ready = false }: Props) {
 										rimPeak, // e.g. 0.44
 										rimBaseRight, // e.g. 0.24
 										rimColor, //  chroma color
-									} = glossyBorderVars;
+									} = transparentBorder;
 
 									const pos = clamp(pos0);
 									const cov = clamp(cov0);
@@ -144,7 +144,7 @@ function Arch({ className, children, ready = false }: Props) {
 							href={`#${bottomPathId}`}
 							fill="none"
 							stroke={`url(#${rimXId})`}
-							strokeWidth={glossyBorderVars.thickness.css()}
+							strokeWidth={transparentBorder.thickness.css()}
 							strokeLinecap="round"
 							strokeLinejoin="round"
 							vectorEffect="non-scaling-stroke"

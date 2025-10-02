@@ -2,8 +2,11 @@ import { style } from '@vanilla-extract/css';
 import { globalMediaQueryStyles } from './responsive/mediaQueries';
 import { paddings } from './helpers/spacing';
 import { layoutVars } from './layoutVars.css';
+import { glossyBorder } from './helpers/glossy';
+import borders from './helpers/borders';
 
 export const content = style({
+	position: 'relative',
 	width: '100%',
 	maxWidth: layoutVars.contentWidth,
 	margin: 'auto',
@@ -22,4 +25,10 @@ export const content = style({
 			}),
 		},
 	}),
+});
+
+export const panel = style({
+	display: 'flex',
+	flexDirection: 'column',
+	...borders(glossyBorder.base),
 });
