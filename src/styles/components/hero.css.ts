@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { style, globalStyle } from '@vanilla-extract/css';
 import { makeGradient } from '../helpers/gradients';
 import { gradientFull, menuVars } from '../vars';
 import { paddings } from '../helpers/spacing';
@@ -19,14 +19,34 @@ export const root = style({
 	minHeight: '100vh',
 });
 
-export const gradient = style({
+export const image = style({
 	...fullSizeOfParent(),
-	...makeGradient({
-		spotA: gradientFull.overlayA,
-		spotB: gradientFull.overlayB,
-		linearColors: gradientFull.linear as [Color, Color, Color],
-	}),
-	opacity: 0.8,
+	zIndex: 0,
+	pointerEvents: 'none',
+});
+
+globalStyle(`.${image} img`, {
+	display: 'block',
+	width: '100%',
+	height: '100%',
+	objectFit: 'cover',
+});
+
+// export const gradient = style({
+// 	...fullSizeOfParent(),
+// 	...makeGradient({
+// 		spotA: gradientFull.overlayA,
+// 		spotB: gradientFull.overlayB,
+// 		linearColors: gradientFull.linear as [Color, Color, Color],
+// 	}),
+// 	opacity: 0.8,
+// 	zIndex: 1,
+// 	pointerEvents: 'none',
+// });
+
+export const content = style({
+	position: 'relative',
+	zIndex: 2,
 });
 
 export const heading = style({

@@ -551,13 +551,14 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		const { width: navWidth, height: navHeight } = navMetricsRef.current;
 		const hasMeasurements = highlight.width && highlight.height;
 
-		const width = hasMeasurements
-			? highlight.width
-			: Math.min(
-					navWidth,
-					menuVars.height.value + menuVars.padding.vertical.value,
-				);
-		const height = hasMeasurements ? highlight.height : menuVars.height.value;
+		const fallbackWidth = navWidth
+			? Math.min(
+							navWidth,
+							menuVars.height.value + menuVars.padding.vertical.value,
+						)
+			: menuVars.height.value + menuVars.padding.vertical.value;
+		const width = hasMeasurements ? Math.max(1, highlight.width) : fallbackWidth;
+		const height = hasMeasurements ? Math.max(1, highlight.height) : menuVars.height.value;
 		const centerX = navWidth ? navWidth / 2 : width / 2;
 		const centerY = navWidth
 			? computeArchY(navWidth, centerX) + menuVars.yOffset.value
@@ -870,10 +871,10 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 								hrefLang={l}
 								data-ui="link"
 							>
-								{TRANSLATIONS[l]['abbreviated-label']}
 								<span className={s.fakeShadow} aria-hidden={true}>
 									{TRANSLATIONS[l]['abbreviated-label']}
 								</span>
+								<span className={s.text}>{TRANSLATIONS[l]['abbreviated-label']}</span>
 							</Link>
 						))}
 					</nav>
