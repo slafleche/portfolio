@@ -91,3 +91,4 @@ pnpm-debug.log*
 # Large Images
 # -----------------------
 src/assets/images/largeImages/*
+tmp/large-images/
