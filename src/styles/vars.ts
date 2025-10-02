@@ -16,25 +16,7 @@ const backgroundColour = chroma('#251e32');
 // Target colour: #2c244b on #453564
 const shadow = backgroundColour.darken(0.8).desaturate(0.2).alpha(0.5);
 
-// <linearGradient id="c">
-//   <stop offset=".17753" stopColor="#e6a87f" stopOpacity={1} />
-//   <stop offset=".471" stopColor="#f27e8c" stopOpacity={1} />
-//   <stop offset="1" stopColor="#ff549a" stopOpacity={1} />
-// </linearGradient>
-// <linearGradient id="b">
-//   <stop offset=".0692" stopColor="#4744a0" stopOpacity={1} />
-//   <stop offset=".36528" stopColor="#64eaeb" stopOpacity={1} />
-// </linearGradient>
-// <linearGradient id="a">
-//   <stop offset=".20466" stopColor="#3e43a0" stopOpacity={1} />
-//   <stop offset="1" stopColor="#fe5998" stopOpacity={1} />
-// </linearGradient>
-
 const gradients = {
-	// a_start: chroma('#322b4d'),
-	// a_mid: chroma('#6263b5'),
-	// a_end: chroma('#5d4cb9'),
-
 	a_linear_a: chroma('#322b4d'),
 	a_linear_b: chroma('#6263b5'),
 	a_linear_c: chroma('#5d4cb9'),
@@ -379,6 +361,13 @@ export const menuVars = {
 			offsetX: m(2),
 			offsetY: m(-2),
 			scale: 1.05,
+			colours: [
+				chroma('#54e3db').brighten(1.5),
+				chroma('#a966d0').brighten(3),
+				chroma('#d524a6').brighten(2.5),
+				chroma('#F7D354').brighten(2.5),
+				chroma('#3a289a').brighten(2),
+			],
 		},
 		blobs: [
 			{
@@ -425,4 +414,14 @@ export const dropShadowVars = {
 	color: colorVars.shadow,
 };
 
-// Shimmer
+export const chevronVars = {
+	width: m(100),
+	height: 'auto',
+	display: 'block',
+	fill: colorVars.white,
+	gradientStart: colorVars.white,
+	gradientMid: colorVars.white,
+	gradientMidOffset: 0.7,
+	gradientEnd: colorVars.black.brighten(2),
+	highlight: colorVars.white,
+};
