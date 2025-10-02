@@ -96,6 +96,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const t = useT();
 	const { locale, root } = useLocale({ withLabel: true });
 	const [mounted, setMounted] = useState(false);
+	const [fontsReady, setFontsReady] = useState(false);
 	const [activeSection, setActiveSection] = useState<string | null>(null);
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const navRef = useRef<HTMLDivElement | null>(null);
@@ -267,6 +268,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	}, []);
 
 	const measure = useCallback(() => {
+		if (!fontsReady) return;
 		const navEl = navRef.current;
 		if (!navEl) return;
 
@@ -358,7 +360,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		} else {
 			setDebugArch(null);
 		}
-	}, [activeIndex, updateHighlightFromMetric, debugMiniBokeh]);
+	}, [fontsReady, activeIndex, updateHighlightFromMetric, debugMiniBokeh]);
 
 	useEffect(() => {
 		linkRefs.current.length = anchors.length + 1;
@@ -660,11 +662,48 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	}, [activeSection]);
 
 	useEffect(() => {
-		const f1 = requestAnimationFrame(() => {
-			requestAnimationFrame(() => setMounted(true));
-		});
-		return () => cancelAnimationFrame(f1);
+		if (typeof document === 'undefined') {
+			setFontsReady(true);
+			return;
+		}
+		const fonts = document.fonts;
+		if (!fonts) {
+			setFontsReady(true);
+			return undefined;
+		}
+		if (fonts.status === 'loaded') {
+			setFontsReady(true);
+			return undefined;
+		}
+		let cancelled = false;
+		fonts.ready.then(
+			() => {
+				if (!cancelled) setFontsReady(true);
+			},
+			() => {
+				if (!cancelled) setFontsReady(true);
+			},
+		);
+		return () => {
+			cancelled = true;
+		};
 	}, []);
+
+	useEffect(() => {
+		if (!fontsReady) {
+			setMounted(false);
+			return undefined;
+		}
+		let raf1 = 0;
+		let raf2 = 0;
+		raf1 = requestAnimationFrame(() => {
+			raf2 = requestAnimationFrame(() => setMounted(true));
+		});
+		return () => {
+			if (raf1) cancelAnimationFrame(raf1);
+			if (raf2) cancelAnimationFrame(raf2);
+		};
+	}, [fontsReady]);
 	return (
 		<>
 			<div className={s.root} data-mounted={mounted}>
