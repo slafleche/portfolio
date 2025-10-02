@@ -101,11 +101,17 @@ export const miniBokeh = style({
 });
 
 const focusScale = logoVars.focus?.scale ?? 1.05;
+const hoverScale = focusScale * 1.05;
+const autoHitboxScale =
+	focusScale + Math.max(0, (hoverScale - focusScale) * Math.SQRT2);
 const focusTransition = logoVars.focus?.transitionMs ?? 260;
 
 const logoHoverOutline = logoVars.hover?.outline;
-const logoHoverOutlineWidth = logoHoverOutline?.width.css() ?? '2px';
-const logoHoverOutlineOffset = logoHoverOutline?.offset.css() ?? '6px';
+const logoHitboxSize = logoVars.width.multiply(autoHitboxScale);
+const logoHitboxPadding = logoHitboxSize.divide(2).add(0.5);
+const logoNavPadding = logoHitboxPadding.css();
+const logoHoverOutlineWidth = logoHoverOutline?.width.css();
+const logoHoverOutlineOffset = logoHoverOutline?.offset.css();
 const logoHoverOutlineColor = (
 	logoHoverOutline?.color ?? colorVars.contrast.alpha(0.6)
 ).css();
@@ -156,10 +162,7 @@ const logoHoverRotateReverse = keyframes({
 		),
 	},
 	'74%': {
-		transform: transforms.value(
-			transforms.rotate(-10),
-			transforms.scale(1),
-		),
+		transform: transforms.value(transforms.rotate(-10), transforms.scale(1)),
 	},
 	'100%': {
 		transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
@@ -190,8 +193,8 @@ export const list = style({
 			justifyContent: 'flex-end',
 			order: 0,
 			...paddings({
-				right: logoVars.width.css(),
-				left: logoVars.width.css(),
+				right: logoNavPadding,
+				left: logoNavPadding,
 			}),
 			transformOrigin: 'right center',
 		},
@@ -200,8 +203,8 @@ export const list = style({
 			justifyContent: 'flex-start',
 			order: 1,
 			...paddings({
-				right: logoVars.width.css(),
-				left: logoVars.width.css(),
+				right: logoNavPadding,
+				left: logoNavPadding,
 			}),
 			transformOrigin: 'left center',
 		},
@@ -226,21 +229,24 @@ export const item_2 = style({
 // Logo in the middle
 export const logoItem = style({
 	position: 'absolute',
-	zIndex: 1,
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
 	top: archVars.top.half().add(logoVars.offsetY.value).css(),
 	left: '50%',
-	...flexMiddle(),
+	zIndex: 1,
 	transform: transforms.value(transforms.translate('-50%', '-50%')),
-	width: logoVars.width.css(),
-	height: logoVars.width.css(),
+	width: logoHitboxPadding.multiply(2).css(),
+	height: logoHitboxPadding.multiply(2).css(),
 });
 
 export const logoLink = style({
 	...flexPosition.center(),
-	width: logoVars.width.css(),
-	height: logoVars.width.css(),
+	width: '100%',
+	height: '100%',
 	position: 'relative',
-	overflow: 'visible',
+	overflow: 'hidden',
+	borderRadius: '50%',
 	selectors: {
 		'&:focus-visible': {
 			outline: `${logoHoverOutlineWidth} solid ${logoHoverOutlineColor}`,
@@ -269,8 +275,8 @@ export const link = style({
 });
 
 export const logoWrap = style({
-	width: '100%',
-	height: '100%',
+	width: logoVars.width.css(),
+	height: logoVars.width.css(),
 	position: 'relative',
 	zIndex: 1,
 	transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
