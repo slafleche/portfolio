@@ -125,6 +125,11 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const logoAnimationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
 		null,
 	);
+	const logoAnimationStateRef = useRef<'idle' | 'enter' | 'exit'>('idle');
+	const logoEnterDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const logoExitDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const LOGO_ENTER_DELAY = 0;
+	const LOGO_MOUSE_LEAVE_EXIT_DELAY = 140;
 	const LOGO_EXIT_DURATION = 560;
 
 	const clearLogoAnimationTimeout = useCallback(() => {
@@ -134,25 +139,65 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		}
 	}, []);
 
-	const triggerLogoEnter = useCallback(() => {
-		clearLogoAnimationTimeout();
-		setLogoAnimationState('enter');
-	}, [clearLogoAnimationTimeout]);
+	const clearLogoEnterDelay = useCallback(() => {
+		if (logoEnterDelayRef.current !== null) {
+			clearTimeout(logoEnterDelayRef.current);
+			logoEnterDelayRef.current = null;
+		}
+	}, []);
 
-	const triggerLogoExit = useCallback(() => {
+	const clearLogoExitDelay = useCallback(() => {
+		if (logoExitDelayRef.current !== null) {
+			clearTimeout(logoExitDelayRef.current);
+			logoExitDelayRef.current = null;
+		}
+	}, []);
+
+	const triggerLogoEnter = useCallback(() => {
+		clearLogoEnterDelay();
+		clearLogoExitDelay();
 		clearLogoAnimationTimeout();
+		if (logoAnimationStateRef.current === 'enter') return;
+		setLogoAnimationState('enter');
+		logoAnimationStateRef.current = 'enter';
+	}, [clearLogoEnterDelay, clearLogoExitDelay, clearLogoAnimationTimeout]);
+
+	const runLogoExit = useCallback(() => {
+		clearLogoEnterDelay();
+		clearLogoAnimationTimeout();
+		if (logoAnimationStateRef.current === 'idle') return;
 		setLogoAnimationState('exit');
+		logoAnimationStateRef.current = 'exit';
 		logoAnimationTimeoutRef.current = setTimeout(() => {
 			setLogoAnimationState('idle');
+			logoAnimationStateRef.current = 'idle';
 			logoAnimationTimeoutRef.current = null;
 		}, LOGO_EXIT_DURATION);
-	}, [clearLogoAnimationTimeout, LOGO_EXIT_DURATION]);
+	}, [clearLogoEnterDelay, clearLogoAnimationTimeout, LOGO_EXIT_DURATION]);
+
+	const triggerLogoExit = useCallback(
+		(delayMs = 0) => {
+			clearLogoEnterDelay();
+			clearLogoExitDelay();
+			if (delayMs <= 0) {
+				runLogoExit();
+				return;
+			}
+			logoExitDelayRef.current = setTimeout(() => {
+				logoExitDelayRef.current = null;
+				runLogoExit();
+			}, delayMs);
+		},
+		[clearLogoEnterDelay, clearLogoExitDelay, runLogoExit],
+	);
 
 	useEffect(
 		() => () => {
+			clearLogoEnterDelay();
+			clearLogoExitDelay();
 			clearLogoAnimationTimeout();
 		},
-		[clearLogoAnimationTimeout],
+		[clearLogoEnterDelay, clearLogoExitDelay, clearLogoAnimationTimeout],
 	);
 
 	useEffect(() => {
@@ -425,8 +470,19 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			}
 			setActiveIndex(index);
 			updateHighlightFromMetric(metric);
+			if (index !== 0) {
+				clearLogoEnterDelay();
+				if (logoAnimationStateRef.current === 'enter') {
+					triggerLogoExit();
+				}
+			}
 		},
-		[updateHighlightFromMetric, linkMetrics],
+		[
+			updateHighlightFromMetric,
+			linkMetrics,
+			clearLogoEnterDelay,
+			triggerLogoExit,
+		],
 	);
 
 	const handleBlur = useCallback(
@@ -449,23 +505,46 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	}, [hideHighlight, triggerLogoExit]);
 
 	const handleLogoMouseEnter = useCallback(() => {
-		triggerLogoEnter();
 		handleActivate(0);
-	}, [handleActivate, triggerLogoEnter]);
+		clearLogoExitDelay();
+		clearLogoEnterDelay();
+		if (LOGO_ENTER_DELAY <= 0) {
+			triggerLogoEnter();
+			return;
+		}
+		logoEnterDelayRef.current = setTimeout(() => {
+			logoEnterDelayRef.current = null;
+			triggerLogoEnter();
+		}, LOGO_ENTER_DELAY);
+	}, [
+		handleActivate,
+		clearLogoExitDelay,
+		clearLogoEnterDelay,
+		triggerLogoEnter,
+	]);
 
 	const handleLogoMouseLeave = useCallback(() => {
-		triggerLogoExit();
-	}, [triggerLogoExit]);
+		clearLogoEnterDelay();
+		triggerLogoExit(LOGO_MOUSE_LEAVE_EXIT_DELAY);
+	}, [clearLogoEnterDelay, triggerLogoExit]);
 
 	const handleLogoFocus = useCallback(
 		(event: FocusEvent<HTMLAnchorElement>) => {
+			clearLogoEnterDelay();
+			clearLogoExitDelay();
 			clearLogoAnimationTimeout();
 			setLogoAnimationState('idle');
+			logoAnimationStateRef.current = 'idle';
 			if (event.currentTarget.matches(':focus-visible')) {
 				handleActivate(0);
 			}
 		},
-		[clearLogoAnimationTimeout, handleActivate],
+		[
+			clearLogoEnterDelay,
+			clearLogoExitDelay,
+			clearLogoAnimationTimeout,
+			handleActivate,
+		],
 	);
 
 	const highlightStyle = useMemo<CSSProperties>(() => {
@@ -792,6 +871,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 								data-ui="link"
 							>
 								{TRANSLATIONS[l]['abbreviated-label']}
+								<span className={s.fakeShadow} aria-hidden={true}>
+									{TRANSLATIONS[l]['abbreviated-label']}
+								</span>
 							</Link>
 						))}
 					</nav>
