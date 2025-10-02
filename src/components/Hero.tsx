@@ -4,9 +4,8 @@ import * as s from '@/styles/components/hero.css';
 import { useT } from '@/lib/locales/useT';
 import * as layoutStyles from '@/styles/layout.css';
 import SkipToContent from './SkipToContent';
+import ImageByName from './ImageByName';
 import * as glassyStyles from '../styles/glassy.css';
-import { GodRays } from './GodRays';
-import { godRaysVars } from '../styles/godrays';
 
 type Props = {
 	className?: string;
@@ -16,16 +15,16 @@ export default function Hero({ className }: Props) {
 	const t = useT();
 	return (
 		<section className={clsx(s.root, className)}>
-			{/* <div className={s.gradient} /> */}
-			<GodRays
-				config={godRaysVars}
-				image={{
-					name: 'hero',
-					title: t('image_portrait-title'),
-					alt: t('image_portrait-alt'),
-				}}
+			<ImageByName
+				name="hero"
+				alt={t('image_portrait-alt')}
+				title={t('image_portrait-title')}
+				className={s.image}
+				fit="cover"
+				priority
 			/>
-			<div className={layoutStyles.content}>
+			{/* <div className={s.gradient} aria-hidden /> */}
+			<div className={clsx(layoutStyles.content, s.content)}>
 				<div className={clsx(layoutStyles.panel, glassyStyles.bg)}>
 					<h1 className={s.heading}>{t('hero')}</h1>
 					<p className={s.paragraph}>{t('hero-subtitle')}</p>
