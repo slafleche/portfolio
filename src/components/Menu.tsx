@@ -58,6 +58,36 @@ const clamp = (value: number, min: number, max: number) =>
 const highlightTransition =
 	'opacity 180ms ease, transform 450ms cubic-bezier(0.4, 0, 0.2, 1), width 350ms ease, height 350ms ease';
 
+const metricToHighlightBox = (metric: LinkMetric): HighlightBox => ({
+	left: metric.left,
+	top: metric.top,
+	width: metric.highlightWidth,
+	height: metric.highlightHeight,
+});
+
+const MINI_BOKEH_CACHE_KEY = 'portfolio/menu/last-mini-bokeh-target';
+const LOGO_CACHE_VALUE = '__logo__';
+
+const getCacheValueForIndex = (
+	index: number,
+	anchors: readonly AnchorEntry[],
+): string | null => {
+	if (index === 0) return LOGO_CACHE_VALUE;
+	const anchor = anchors[index - 1];
+	return anchor?.hrefKey ?? null;
+};
+
+const resolveIndexFromCacheValue = (
+	value: string | null,
+	anchors: readonly AnchorEntry[],
+): number | null => {
+	if (!value) return null;
+	if (value === LOGO_CACHE_VALUE) return 0;
+	const anchorIndex = anchors.findIndex((anchor) => anchor.hrefKey === value);
+	return anchorIndex >= 0 ? anchorIndex + 1 : null;
+};
+
+
 /**
  * Returns a sane default highlight box centered in the nav arch.
  * Keeping this logic in one place makes it easier to avoid regressions
@@ -143,6 +173,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		width: 0,
 		height: 0,
 	});
+	const [navMetricsKey, setNavMetricsKey] = useState('0|0');
 	const highlightRef = useRef(highlight);
 	const animationFrameRef = useRef<number | null>(null);
 	const [transitionDisabled, setTransitionDisabled] = useState(false);
@@ -158,6 +189,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const LOGO_ENTER_DELAY = 0;
 	const LOGO_MOUSE_LEAVE_EXIT_DELAY = 140;
 	const LOGO_EXIT_DURATION = 560;
+	const lastHoverIndexRef = useRef<number | null>(null);
+	const hasResolvedHoverFromCacheRef = useRef(false);
+	const lastPersistedCacheValueRef = useRef<string | null>(null);
 
 	const clearLogoAnimationTimeout = useCallback(() => {
 		if (logoAnimationTimeoutRef.current !== null) {
@@ -253,6 +287,45 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 	const anchorCount = anchors.length + 1;
 
+	if (!hasResolvedHoverFromCacheRef.current && typeof window !== 'undefined') {
+		hasResolvedHoverFromCacheRef.current = true;
+		try {
+			const cachedValue = window.localStorage.getItem(MINI_BOKEH_CACHE_KEY);
+			lastPersistedCacheValueRef.current = cachedValue;
+			const resolvedIndex = resolveIndexFromCacheValue(cachedValue, anchors);
+			if (resolvedIndex != null) {
+				lastHoverIndexRef.current = resolvedIndex;
+			}
+		} catch {
+			lastPersistedCacheValueRef.current = null;
+		}
+	}
+
+	const persistLastHover = useCallback(
+		(index: number | null) => {
+			if (typeof window === 'undefined') return;
+			try {
+				if (index == null) {
+					window.localStorage.removeItem(MINI_BOKEH_CACHE_KEY);
+					lastPersistedCacheValueRef.current = null;
+					return;
+				}
+				const cacheValue = getCacheValueForIndex(index, anchors);
+				if (!cacheValue) {
+					window.localStorage.removeItem(MINI_BOKEH_CACHE_KEY);
+					lastPersistedCacheValueRef.current = null;
+					return;
+				}
+				if (lastPersistedCacheValueRef.current === cacheValue) return;
+				window.localStorage.setItem(MINI_BOKEH_CACHE_KEY, cacheValue);
+				lastPersistedCacheValueRef.current = cacheValue;
+			} catch {
+				// Ignore storage errors (e.g. quota exceeded or disabled storage).
+			}
+		},
+		[anchors],
+	);
+
 	const sectionIds = useMemo(() => {
 		const messages = TRANSLATIONS[locale];
 		return anchors.map(({ hrefKey }) => messages[hrefKey]);
@@ -287,11 +360,17 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			startWidth = previous.highlightWidth;
 			startHeight = previous.highlightHeight;
 		} else {
-			const centered = computeCenteredHighlight(navMetrics);
-			startLeft = centered.left;
-			startTop = centered.top;
-			startWidth = centered.width;
-			startHeight = centered.height;
+			const cachedMetric =
+				lastHoverIndexRef.current != null
+					? linkMetricsRef.current[lastHoverIndexRef.current]
+					: null;
+			const origin = cachedMetric
+				? metricToHighlightBox(cachedMetric)
+				: computeCenteredHighlight(navMetrics);
+			startLeft = origin.left;
+			startTop = origin.top;
+			startWidth = origin.width;
+			startHeight = origin.height;
 		}
 
 			setHighlight({
@@ -349,6 +428,8 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		const width = navRect.width;
 		if (!width) return;
 		navMetricsRef.current = { width, height: navRect.height };
+		const nextNavMetricsKey = `${width}|${navRect.height}`;
+		setNavMetricsKey((prev) => (prev === nextNavMetricsKey ? prev : nextNavMetricsKey));
 
 		const metrics: Array<LinkMetric | null> = linkRefs.current.map(() => null);
 
@@ -497,6 +578,8 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 				return;
 			}
 			updateHighlightFromMetric(metric);
+			lastHoverIndexRef.current = index;
+			persistLastHover(index);
 			if (activeIndex === index) return;
 			setActiveIndex(index);
 			if (index === 0) {
@@ -511,6 +594,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			linkMetrics,
 			clearLogoEnterDelay,
 			clearLogoExitDelay,
+			persistLastHover,
 		],
 	);
 
@@ -579,29 +663,46 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const highlightStyles = useMemo(() => {
 	const navMetrics = navMetricsRef.current;
 	const hasMeasurements = highlight.width && highlight.height;
-	const fallback = computeCenteredHighlight(navMetrics);
-	const useFallback = !highlight.visible || !hasMeasurements;
-	const targetWidth = useFallback ? fallback.width : Math.max(1, highlight.width);
-	const targetHeight = useFallback ? fallback.height : Math.max(1, highlight.height);
-	const targetLeft = useFallback ? fallback.left : highlight.left;
-	const targetTop = useFallback ? fallback.top : highlight.top;
+	const defaultFallback = computeCenteredHighlight(navMetrics);
+	const cachedFallback = (() => {
+		const cachedIndex = lastHoverIndexRef.current;
+		if (cachedIndex != null) {
+			const metric =
+				linkMetricsRef.current[cachedIndex] ?? linkMetrics[cachedIndex];
+			if (metric) return metricToHighlightBox(metric);
+		}
+		return null;
+	})();
+
+	const originBox = cachedFallback ?? defaultFallback;
+	const containerBase = defaultFallback;
+	const isActive = highlight.visible && hasMeasurements;
+	const targetBox = isActive
+		? {
+			left: highlight.left,
+			top: highlight.top,
+			width: Math.max(1, highlight.width),
+			height: Math.max(1, highlight.height),
+		}
+		: originBox;
 
 	const containerStyle: CSSProperties = {
-		left: `${fallback.left}px`,
-		top: `${fallback.top}px`,
+		left: `${containerBase.left}px`,
+		top: `${containerBase.top}px`,
 	};
 
-	const deltaX = targetLeft - fallback.left;
-	const deltaY = targetTop - fallback.top;
+	const deltaX = targetBox.left - containerBase.left;
+	const deltaY = targetBox.top - containerBase.top;
 	const transformValue = transforms.value(
 		transforms.translate3d(deltaX, deltaY, 0),
 	);
 
 	const innerStyle: CSSProperties = {
-		width: `${targetWidth}px`,
-		height: `${targetHeight}px`,
-		opacity: highlight.visible && hasMeasurements ? 1 : 0,
-		transition: transitionDisabled || !hasMeasurements ? 'none' : highlightTransition,
+		width: `${targetBox.width}px`,
+		height: `${targetBox.height}px`,
+		opacity: isActive ? 1 : 0,
+		transition:
+			transitionDisabled || !isActive ? 'none' : highlightTransition,
 		transform: transformValue ?? undefined,
 	};
 
@@ -635,7 +736,14 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	}
 
 	return { containerStyle, innerStyle };
-}, [highlight, transitionDisabled, debugMiniBokeh, activeIndex, navMetricsRef.current.width, navMetricsRef.current.height]);
+}, [
+	highlight,
+	transitionDisabled,
+	debugMiniBokeh,
+	activeIndex,
+	navMetricsKey,
+	linkMetrics,
+]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,
