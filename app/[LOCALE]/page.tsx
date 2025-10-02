@@ -7,7 +7,7 @@ import Card from '../../src/components/Card';
 import * as card from '@/styles/components/card.css';
 import ImageByName from '../../src/components/ImageByName';
 import Hero from '../../src/components/Hero';
-import BokehOverlay from '../../src/components/Bokeh';
+// import BokehOverlay from '../../src/components/Bokeh';
 import clsx from 'clsx';
 
 export default function HomePage() {
@@ -15,7 +15,6 @@ export default function HomePage() {
 
 	return (
 		<>
-			<BokehOverlay />
 			<Hero />
 			<div id="body">
 				<section className={clsx(card.container, layoutStyles.content)}>

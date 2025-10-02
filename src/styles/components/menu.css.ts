@@ -448,12 +448,16 @@ export const localeLink = style({
 	alignSelf: 'center',
 	transition: 'opacity 0.2s ease-in',
 	opacity: menuVars.locale.opacity,
+	display: 'inline-grid',
+	gridTemplateAreas: 'stack',
+	alignItems: 'center',
 	selectors: {
+		'&:hover, &:focus-visible': {
+			opacity: 1,
+			textShadow: `${menuVars.textShadow.offsetX.css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
+		},
 		'&:visited': {
 			color: colors.navFg.css(),
-		},
-		'&:visited:hover, &:visited:focus-visible': {
-			opacity: 1,
 		},
 	},
 });
@@ -548,6 +552,24 @@ globalStyle(`.${navLink}[data-side="right"]:hover .${text}`, {
 		),
 		transforms.scale(menuVars.hover.text.scale),
 	),
+});
+
+globalStyle(
+	`.${localeLink}:hover .${text},
+	.${localeLink}:focus-visible .${text}`,
+	{
+		transform: transforms.value(
+			transforms.translate(
+				menuVars.hover.text.offsetX,
+				menuVars.hover.text.offsetY,
+			),
+			transforms.scale(menuVars.hover.text.scale),
+		),
+	},
+);
+
+globalStyle(`.${localeLink} .${fakeShadow}`, {
+	textShadow: `${menuVars.textShadow.offsetX.negation().css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
 });
 
 // For subtle rotation on links
