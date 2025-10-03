@@ -6,15 +6,13 @@ import { fullSizeOfParent } from '../helpers/positioning';
 // import type { Color } from 'chroma-js';
 // import { absolutePosition } from '../helpers/positioning';
 
-
-
 export const root = style({
 	display: 'flex',
 	alignItems: 'center',
 	position: 'relative',
 	...paddings({
 		// top: Math.max(menuVars.height, heroVars.paddings.top),
-		// bottom: menuVars.height.add(vertialPadding),
+		// bottom: chevronVars.container.height,
 	}),
 	minHeight: '100vh',
 });
