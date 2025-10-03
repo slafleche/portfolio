@@ -242,28 +242,30 @@ export type BorderMeasurementInput =
 	| null
 	| undefined;
 
-export type BorderWidthInput =
-	| BorderMeasurementInput
-	| {
-		all?: BorderMeasurementInput;
-		horizontal?: BorderMeasurementInput;
-		vertical?: BorderMeasurementInput;
-		top?: BorderMeasurementInput;
-		right?: BorderMeasurementInput;
-		bottom?: BorderMeasurementInput;
-		left?: BorderMeasurementInput;
-	};
+export interface BorderWidthConfig {
+	all?: BorderMeasurementInput;
+	horizontal?: BorderMeasurementInput;
+	vertical?: BorderMeasurementInput;
+	top?: BorderMeasurementInput;
+	right?: BorderMeasurementInput;
+	bottom?: BorderMeasurementInput;
+	left?: BorderMeasurementInput;
+}
+
+export type BorderWidthInput = BorderMeasurementInput | BorderWidthConfig;
+
+export interface BorderRadiusConfig {
+	all?: BorderMeasurementInput;
+	topLeft?: BorderMeasurementInput;
+	topRight?: BorderMeasurementInput;
+	bottomRight?: BorderMeasurementInput;
+	bottomLeft?: BorderMeasurementInput;
+}
 
 export type BorderRadiusInput =
 	| BorderMeasurementInput
 	| BorderMeasurementInput[]
-	| {
-		all?: BorderMeasurementInput;
-		topLeft?: BorderMeasurementInput;
-		topRight?: BorderMeasurementInput;
-		bottomRight?: BorderMeasurementInput;
-		bottomLeft?: BorderMeasurementInput;
-	};
+	| BorderRadiusConfig;
 
 export interface IBorder {
 	color?: CSS.Property.BorderColor | CssLike | Color;
