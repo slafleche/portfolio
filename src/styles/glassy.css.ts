@@ -18,7 +18,6 @@ const glassSurface = style({
 	position: 'relative',
 	width: '100%',
 	height: '100%',
-	boxSizing: 'border-box',
 	...glassBackground,
 });
 
@@ -34,8 +33,20 @@ export const frame = style({
 export const surface = style([
 	glassSurface,
 	{
-		borderRadius: innerRadius,
-		padding: borderThickness,
+		borderRadius: defaultRadius,
+		overflow: 'hidden',
+		background: 'transparent',
+		selectors: {
+			'&::before': {
+				content: "''",
+				position: 'absolute',
+				inset: borderThickness,
+				borderRadius: innerRadius,
+				background: glassBackground.background,
+				pointerEvents: 'none',
+				zIndex: 0,
+			},
+		},
 	},
 ]);
 
@@ -83,6 +94,7 @@ export const grain = style({
 	backgroundSize: '240px 240px',
 	mixBlendMode: 'overlay',
 	opacity: '0.03',
+	zIndex: 1,
 });
 
 export const stroke = style({
