@@ -22,6 +22,9 @@ export default function GlassyPanel({
   return (
     <div className={clsx(glassyStyles.frame, className)}>
       <div className={clsx(glassyStyles.surface, surfaceClassName)}>
+        <div className={glassyStyles.surfaceFill} aria-hidden />
+        <div className={glassyStyles.surfaceBorder} aria-hidden />
+        <div className={glassyStyles.surfaceShine} aria-hidden />
         {showRim ? <div className={glassyStyles.rim} aria-hidden /> : null}
         <div className={glassyStyles.grain} aria-hidden />
         {children}
