@@ -59,10 +59,14 @@ export const surfaceShine = style({
 	width: `calc(100% - ${doubleBorderThickness})`,
 	height: `calc(100% - ${doubleBorderThickness})`,
 	borderRadius: innerRadius,
-	background: `linear-gradient(135deg, ${glassVars.tint1.alpha(0.35).css()}, ${glassVars.tint2.alpha(0.25).css()})`,
+	background: `linear-gradient(135deg, ${glassVars.tint1
+		.alpha(glassVars.surfaceGlow.tint1Alpha)
+		.css()}, ${glassVars.tint2
+		.alpha(glassVars.surfaceGlow.tint2Alpha)
+		.css()})`,
 	mixBlendMode: 'screen',
-	filter: 'blur(12px)',
-	opacity: 0.5,
+	filter: `blur(${glassVars.surfaceGlow.blur.css()})`,
+	opacity: glassVars.surfaceGlow.opacity,
 	pointerEvents: 'none',
 	zIndex: 2,
 });
@@ -82,11 +86,17 @@ export const surfaceBorder = style({
 	WebkitMaskComposite: 'xor',
 	maskComposite: 'exclude',
 	background: [
-		`radial-gradient(circle at 0 0, ${glassVars.innerRim.alpha(0.45).css()} 0, ${glassVars.innerRim.alpha(0).css()} ${glassVars.cornerSheen.size.css()})`,
-		`conic-gradient(from -90deg at 0 0, transparent 0deg, ${glassVars.innerRim.alpha(glassVars.cornerSheen.strength).css()} 0deg, ${glassVars.innerRim.alpha(glassVars.cornerSheen.strength).css()} ${glassVars.cornerSheen.angle.css()}, transparent ${glassVars.cornerSheen.angle.css()})`,
+		`radial-gradient(circle at 0 0, ${glassVars.innerRim
+			.alpha(glassVars.innerHighlight.radialAlpha)
+			.css()} 0, ${glassVars.innerRim.alpha(0).css()} ${glassVars.cornerSheen.size.css()})`,
+		`conic-gradient(from -90deg at 0 0, transparent 0deg, ${glassVars.innerRim
+			.alpha(glassVars.innerHighlight.wedgeAlpha)
+			.css()} 0deg, ${glassVars.innerRim
+			.alpha(glassVars.innerHighlight.wedgeAlpha)
+			.css()} ${glassVars.cornerSheen.angle.css()}, transparent ${glassVars.cornerSheen.angle.css()})`,
 	].join(', '),
 	mixBlendMode: 'screen',
-	opacity: Math.min(1, glassVars.cornerSheen.strength + 0.25),
+	opacity: glassVars.innerHighlight.opacity,
 	zIndex: 1,
 });
 
