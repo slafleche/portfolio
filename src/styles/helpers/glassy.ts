@@ -31,10 +31,9 @@ export const glassVars = {
 	width: m(4),
 	outerBorderHighlight: {
 		strength: 0.35,
-		spread: m(72),
+		spread: m(120, '%'),
 		angle: m(95, 'deg'),
 		width: m(2),
-		offset: m(0),
 	},
 	innerBorderHighlight: {
 		radialStrength: 0.45,
@@ -48,15 +47,10 @@ export const glassVars = {
 		secondaryTintAlpha: 0.25,
 	},
 	overlay: {
-		/** Overlay color used for the subtle top-to-bottom wash */
 		color: colorVars.white,
-		/** Alpha at the top stop of the overlay gradient */
 		topAlpha: 0.05,
-		/** Midpoint stop for the overlay gradient */
 		midStop: '45%',
-		/** Alpha at the bottom stop of the overlay gradient */
 		bottomAlpha: 0.2,
-		/** Direction (in degrees) for the overlay gradient */
 		direction: m(45, 'deg'),
 	},
 	/** Shared noise texture for glass surfaces (uses a default id) */

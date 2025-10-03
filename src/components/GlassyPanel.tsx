@@ -17,18 +17,22 @@ export default function GlassyPanel({
 	className,
 	surfaceClassName,
 	children,
-	showRim = true,
 }: GlassyPanelProps) {
 	return (
 		<div className={clsx(glassyStyles.frame, className)}>
 			<div className={clsx(glassyStyles.surface, surfaceClassName)}>
-				<div className={glassyStyles.surfaceFill} aria-hidden />
-				<div className={glassyStyles.surfaceBorder} aria-hidden />
-				<div className={glassyStyles.surfaceShine} aria-hidden />
-				{showRim ? <div className={glassyStyles.rim} aria-hidden /> : null}
+				{/* Grain */}
 				<div className={glassyStyles.grain} aria-hidden />
+				{/* Fill, inside */}
+				<div className={glassyStyles.surfaceFill} aria-hidden />
+				{/* Shine in corner */}
+				<div className={glassyStyles.surfaceBorder} aria-hidden />
+				{/* Gradient overlay */}
+				<div className={glassyStyles.surfaceShine} aria-hidden />
 				{children}
 			</div>
 		</div>
 	);
 }
+
+// {showRim ? <div className={glassyStyles.rim} aria-hidden /> : null}
