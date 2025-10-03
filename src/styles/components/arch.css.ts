@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
-// import { colorVars } from '../vars';
 import { absolutePosition } from '../helpers/positioning';
-import { dropShadowVars } from '../vars';
+import { colorVars, dropShadowVars } from '../vars';
+import { createGlassBackground, glassVars } from '../helpers/glossy';
 
 export const root = style({
 	position: 'relative',
@@ -24,4 +24,33 @@ export const shadow = style({
 
 export const shadowPath = style({
 	fill: dropShadowVars.color.css(),
+});
+
+const baseGlass = createGlassBackground();
+const archOverlayGradient = `linear-gradient(180deg,
+	${colorVars.white.alpha(0.14).css()} 0%,
+	${colorVars.white.alpha(0.05).css()} 28%,
+	${colorVars.black.alpha(0.06).css()} 82%,
+	${colorVars.black.alpha(0.12).css()} 100%)`;
+
+export const surface = style({
+	position: 'relative',
+	width: '100%',
+	height: '100%',
+	borderRadius: 0,
+	background: [archOverlayGradient, baseGlass.background].join(', '),
+	backdropFilter: baseGlass.backdropFilter,
+	WebkitBackdropFilter: baseGlass.WebkitBackdropFilter,
+});
+
+export const grain = style({
+	...absolutePosition.fullSize(),
+	inset: 0,
+	borderRadius: 0,
+	pointerEvents: 'none',
+	backgroundImage: glassVars.noiseDataUri,
+	backgroundRepeat: 'repeat',
+	backgroundSize: '240px 240px',
+	mixBlendMode: 'overlay',
+	opacity: '0.03',
 });

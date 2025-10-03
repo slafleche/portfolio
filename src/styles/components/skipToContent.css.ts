@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { chevronVars, colorVars } from '../vars';
-import borders from '../helpers/borders';
+// import borders from '../helpers/borders';
 import { globalBoxShadow } from '../helpers/shadow';
 
 export const root = style({
@@ -11,7 +11,7 @@ export const root = style({
 	bottom: 0,
 	left: 0,
 	right: 0,
-	height: '100px',
+	height: chevronVars.container.height.css(),
 });
 
 export const link = style({

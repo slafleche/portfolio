@@ -418,6 +418,9 @@ export const chevronVars = {
 	gradientMidOffset: 0.7,
 	gradientEnd: colorVars.black.brighten(2),
 	highlight: colorVars.white,
+	container: {
+		height: m(120),
+	},
 };
 
 export const heroVars = {
