@@ -17,8 +17,8 @@ export const glassNoise = (
  *
  * SurfaceFill – base inset rectangle that carries the frosted gradient.
  * surfaceBorder – masked inner rim band (radial + conic wedge highlight).
- * surfaceShine – large blurred directional glow (screen blend).
- * Rim – outermost highlight ring hugging the frame.
+ * surfaceShine – large blurred directional glow (screen blend). Rim – outermost
+ * highlight ring hugging the frame.
  */
 export const glassVars = {
 	backgroundColor: colorVars.white.alpha(0.06),
@@ -28,6 +28,7 @@ export const glassVars = {
 	innerBorderColor: colorVars.white.alpha(0.22),
 	backdropBlur: m(15),
 	frameRadius: m(32),
+	width: m(4),
 	outerBorderHighlight: {
 		strength: 0.35,
 		spread: m(72),
@@ -64,22 +65,9 @@ export const glassVars = {
 	noiseFilterId: defaultNoiseId,
 };
 
-export const glassBorder = {
-	/** Visible stroke width used for standalone glass panels */
-	width: m(3),
-	// The panel gradient still derives from colorVars.white; keep overrides here commented for now.
-	// color: colorVars.white,
-	// hotspotPosition: 0.55,
-	// hotspotCoverage: 0.25,
-	// baseLeftAlpha: 0.12,
-	// baseMidAlpha: 0.34,
-	// peakAlpha: 0.42,
-	// baseRightAlpha: 0.18,
-};
-
 export const glossyBorder = {
 	base: {
-		radius: glassVars.frameRadius.add(glassBorder.width.value),
+		radius: glassVars.frameRadius.add(glassVars.width.value),
 		color: colorVars.transparent,
 	} satisfies IBorder,
 };
