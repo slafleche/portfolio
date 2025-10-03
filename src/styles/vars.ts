@@ -310,12 +310,12 @@ export const fontVars = {
 
 export const archVars = {
 	top: m(55),
-	curveHeight: m(20),
+	curveHeight: m(15),
 	ry: m(70),
-	bumpHeight: m(12),
-	bumpWidth: m(60),
-	bumpBaseWidth: 0.9,
-	bumpTipWidth: m(9),
+	bumpHeight: m(13),
+	bumpWidth: m(80),
+	bumpBaseWidth: 1,
+	bumpTipWidth: m(10),
 };
 
 export const logoVars = {
