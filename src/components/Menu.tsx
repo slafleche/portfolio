@@ -172,7 +172,6 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	});
 	const [miniBokehActive, setMiniBokehActive] = useState(false);
 	const miniBokehTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-	const [navMetricsKey, setNavMetricsKey] = useState('0|0');
 	const highlightRef = useRef(highlight);
 	const animationFrameRef = useRef<number | null>(null);
 	const [transitionDisabled, setTransitionDisabled] = useState(false);
@@ -394,10 +393,10 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					lastHoverIndexRef.current != null
 						? linkMetricsRef.current[lastHoverIndexRef.current]
 						: null;
-			const origin =
-				cachedMetric && hasActivatedRef.current
-					? metricToHighlightBox(cachedMetric)
-					: computeCenteredHighlight(navMetrics);
+				const origin =
+					cachedMetric && hasActivatedRef.current
+						? metricToHighlightBox(cachedMetric)
+						: computeCenteredHighlight(navMetrics);
 				startLeft = origin.left;
 				startTop = origin.top;
 				startWidth = origin.width;
@@ -459,11 +458,6 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		const width = navRect.width;
 		if (!width) return;
 		navMetricsRef.current = { width, height: navRect.height };
-		const nextNavMetricsKey = `${width}|${navRect.height}`;
-		setNavMetricsKey((prev) =>
-			prev === nextNavMetricsKey ? prev : nextNavMetricsKey,
-		);
-
 		const metrics: Array<LinkMetric | null> = linkRefs.current.map(() => null);
 
 		linkRefs.current.forEach((el, index) => {
@@ -777,23 +771,18 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		}
 
 		return { containerStyle, innerStyle };
-	}, [
-		highlight,
-		transitionDisabled,
-		debugMiniBokeh,
-		activeIndex,
-		linkMetrics,
-	]);
+	}, [highlight, transitionDisabled, debugMiniBokeh, activeIndex, linkMetrics]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,
 		index: number,
 		side: 'left' | 'right',
-		isFirst: boolean, // the outer link is slightly translated to make the curve effect
+		isOuter: boolean, // the outer link is slightly translated to make the curve effect
 		classes?: { item?: string; index?: string },
 	) => {
 		const id = t(entry.hrefKey);
 		const isActive = activeSection === id;
+		const skew = isOuter ? menuVars.skew : menuVars.skew.half();
 		return (
 			<li className={clsx(classes?.item, classes?.index)} key={entry.hrefKey}>
 				<Link
@@ -804,14 +793,15 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 					}}
 					data-side={side}
 					data-active={isActive}
+					data-outer={isOuter}
 					aria-current={isActive ? 'true' : undefined}
 					style={transforms(
-						transforms.skewX(menuVars.skew).negate(side === 'right'),
-						transforms.translateY(0).when(isFirst),
+						transforms.skewX(skew).negate(side === 'right'),
+						transforms.translateY(0).when(isOuter),
 						transforms
 							.rotate(0.5)
 							.negate(side === 'left')
-							.when(isFirst),
+							.when(isOuter),
 					)}
 					onMouseEnter={() => handleActivate(index)}
 					onMouseLeave={hideHighlight}

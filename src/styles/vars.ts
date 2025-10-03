@@ -369,7 +369,7 @@ export const menuVars = {
 	height: archVars.top,
 	yOffset: m(0),
 	rotationMax: m(2, 'deg'),
-	skew: m(4, 'deg'),
+	skew: m(-10, 'deg'),
 	verticalOffset: m(1),
 	locale: {
 		offsetY: m(2),
@@ -391,8 +391,8 @@ export const menuVars = {
 	},
 	hover: {
 		text: {
-			offsetX: m(2),
-			offsetY: m(-2),
+			offsetX: m(4),
+			offsetY: m(-4),
 			scale: 1.05,
 		},
 		blobs: [
