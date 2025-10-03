@@ -3,6 +3,8 @@ import { style, globalStyle } from '@vanilla-extract/css';
 // import { menuVars } from '../vars';
 import { paddings } from '../helpers/spacing';
 import { fullSizeOfParent } from '../helpers/positioning';
+import { measurementMax } from '../helpers/measurement';
+import { chevronVars, heroVars, menuVars } from '../vars';
 // import type { Color } from 'chroma-js';
 // import { absolutePosition } from '../helpers/positioning';
 

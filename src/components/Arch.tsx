@@ -6,7 +6,7 @@ import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
 import { archVars } from '../styles/vars';
 import { useSafeId } from '../lib/dom';
-import { transparentBorder } from '../styles/helpers/glossy';
+import { transparentBorder } from '../styles/helpers/glassy';
 import { shadowTotalY } from '../styles/helpers/shadow';
 
 type Props = { className?: string; children?: ReactNode; ready?: boolean };

@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { absolutePosition } from '../helpers/positioning';
 import { colorVars, dropShadowVars } from '../vars';
-import { createGlassBackground, glassVars } from '../helpers/glossy';
+import { createGlassBackground, glassVars } from '../helpers/glassy';
 
 export const root = style({
 	position: 'relative',
