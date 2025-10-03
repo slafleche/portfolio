@@ -34,22 +34,22 @@ const gradients = {
 	b_spot_b: chroma('#F7D354'),
 };
 
-export const bokenVars = {
-	// Default Bokeh overlay settings (consumed by components)
-	colors: [
-		gradients.b_linear_a,
-		gradients.b_linear_b,
-		gradients.b_linear_c,
-		gradients.b_spot_a,
-		gradients.a_linear_c,
-	],
-	opacity: 0.2,
-	blendMode: 'screen' as CSS.Property.MixBlendMode,
-	blur: 50,
-	blurScale: 1,
-	sizeScale: 0.7,
-	fadeMs: 300,
-};
+// export const bokenVars = {
+// 	// Default Bokeh overlay settings (consumed by components)
+// 	colors: [
+// 		gradients.b_linear_a,
+// 		gradients.b_linear_b,
+// 		gradients.b_linear_c,
+// 		gradients.b_spot_a,
+// 		gradients.a_linear_c,
+// 	],
+// 	opacity: 0.2,
+// 	blendMode: 'screen' as CSS.Property.MixBlendMode,
+// 	blur: 50,
+// 	blurScale: 1,
+// 	sizeScale: 0.7,
+// 	fadeMs: 300,
+// };
 // export const bokehColours = {
 //   a: a_linear_a,
 //   b:
@@ -400,37 +400,37 @@ export const menuVars = {
 			opacity: 0.14,
 			blur: m(2),
 		},
+		blur: m(10),
 		blobs: [
 			{
 				color: gradients.b_linear_b,
 				posX: 22,
 				posY: 48,
 				radius: 50,
-				intensity: 0.32,
+				intensity: 0.62,
 			},
 			{
 				color: gradients.b_spot_a,
 				posX: 50,
 				posY: 72,
 				radius: 50,
-				intensity: 0.3,
+				intensity: 0.6,
 			},
 			{
 				color: gradients.b_linear_c,
 				posX: 76,
 				posY: 30,
 				radius: 46,
-				intensity: 0.28,
+				intensity: 0.48,
 			},
 			{
 				color: gradients.a_spot_a,
 				posX: 34,
 				posY: 82,
 				radius: 54,
-				intensity: 0.26,
+				intensity: 0.66,
 			},
 		],
-		blur: m(14),
 	},
 };
 
@@ -441,17 +441,19 @@ export const dropShadowVars = {
 	color: colorVars.shadow,
 };
 
+const baseColor = colorVars.white.mix(colorVars.bodyBg, 0.5);
+
 export const chevronVars = {
 	width: m(40),
 	padding: m(20),
 	height: 'auto',
 	display: 'block',
-	fill: colorVars.white,
-	gradientStart: colorVars.white,
-	gradientMid: colorVars.white,
+	fill: baseColor,
+	gradientStart: baseColor,
+	gradientMid: baseColor,
 	gradientMidOffset: 0.7,
-	gradientEnd: colorVars.black.brighten(2),
-	highlight: colorVars.white,
+	gradientEnd: colorVars.black.mix(baseColor, 0.5),
+	highlight: baseColor,
 	container: {
 		height: m(120),
 	},

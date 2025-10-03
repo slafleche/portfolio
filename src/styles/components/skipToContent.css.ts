@@ -15,7 +15,7 @@ export const root = style({
 });
 
 export const link = style({
-	background: colorVars.white.alpha(0.2).css(),
+	background: colorVars.bodyBg.alpha(0.5).css(),
 	display: 'flex',
 	alignItems: 'center',
 	justifyContent: 'center',
@@ -27,7 +27,7 @@ export const link = style({
 	selectors: {
 		'&:hover': {
 			opacity: 1,
-			background: colorVars.bodyBg.css(),
+			// background: colorVars.bodyBg.css(),
 		},
 	},
 });
