@@ -10,8 +10,8 @@ import transforms from '@/styles/helpers/transforms';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { FocusEvent } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import type { FocusEvent, MouseEvent } from 'react';
 import { getRotationStyle } from '../lib/arch/archHelper';
 import { useMenuAnchors } from './menu/hooks/useMenuAnchors';
 import { useMenuHighlight } from './menu/hooks/useMenuHighlight';
@@ -32,13 +32,13 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const [mounted, setMounted] = useState(false);
 	const [fontsReady, setFontsReady] = useState(false);
 	const [activeSection, setActiveSection] = useState<string | null>(null);
+	const [isAtTop, setIsAtTop] = useState(true);
 
 	const { anchors, anchorCount, sectionIds } = useMenuAnchors(locale);
 
 	const {
 		navRef,
 		linkRefs,
-		navMetricsRef,
 		navMetrics,
 		highlightStyles,
 		highlightVisible,
@@ -75,24 +75,46 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	);
 
 	const handleLogoMouseEnter = useCallback(() => {
+		if (isAtTop) return;
 		handleActivate(0);
 		clearExitDelay();
 		scheduleEnter(LOGO_ENTER_DELAY);
-	}, [handleActivate, clearExitDelay, scheduleEnter]);
+	}, [handleActivate, clearExitDelay, scheduleEnter, isAtTop]);
 
 	const handleLogoMouseLeave = useCallback(() => {
+		if (isAtTop && logoAnimationState === 'idle') return;
 		clearEnterDelay();
 		scheduleExit(LOGO_MOUSE_LEAVE_EXIT_DELAY);
-	}, [clearEnterDelay, scheduleExit]);
+	}, [clearEnterDelay, scheduleExit, isAtTop, logoAnimationState]);
 
 	const handleLogoFocus = useCallback(
 		(event: FocusEvent<HTMLAnchorElement>) => {
 			resetToIdle();
+			if (isAtTop) return;
 			if (event.currentTarget.matches(':focus-visible')) {
 				handleActivate(0);
 			}
 		},
-		[resetToIdle, handleActivate],
+		[resetToIdle, handleActivate, isAtTop],
+	);
+
+	const handleLogoClick = useCallback(
+		(event: MouseEvent<HTMLAnchorElement>) => {
+			if (typeof window === 'undefined') return;
+			const { pathname: currentPath, search, hash } = window.location;
+			const isRootPath = currentPath === root || currentPath === `${root}/`;
+			if (!isRootPath) return;
+			event.preventDefault();
+			if (hash) {
+				window.history.replaceState(
+					window.history.state,
+					'',
+					`${currentPath}${search}`,
+				);
+			}
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		},
+		[root],
 	);
 
 	const handleBlur = useCallback(
@@ -191,6 +213,8 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			}
 
 			setActiveSection((prev) => (prev === nextId ? prev : nextId));
+			const atTop = window.scrollY <= 1;
+			setIsAtTop((prev) => (prev === atTop ? prev : atTop));
 		};
 
 		const requestUpdate = () => {
@@ -212,14 +236,31 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		};
 	}, [sectionIds]);
 
+	const firstSectionId = sectionIds[0] ?? null;
+
 	useEffect(() => {
-		if (!activeSection) return;
+		if (typeof window === 'undefined') return;
 		const { pathname, search, hash } = window.location;
 		const currentHash = hash.replace(/^#/, '');
+
+		if (
+			!activeSection ||
+			(firstSectionId && activeSection === firstSectionId)
+		) {
+			if (hash) {
+				window.history.replaceState(
+					window.history.state,
+					'',
+					`${pathname}${search}`,
+				);
+			}
+			return;
+		}
+
 		if (currentHash === activeSection) return;
 		const url = `${pathname}${search}#${activeSection}`;
 		window.history.replaceState(window.history.state, '', url);
-	}, [activeSection]);
+	}, [activeSection, firstSectionId]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,
@@ -318,11 +359,13 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 									ref={(el) => {
 										linkRefs.current[0] = el;
 									}}
+									onClick={handleLogoClick}
 									onMouseEnter={handleLogoMouseEnter}
 									onMouseLeave={handleLogoMouseLeave}
 									onFocus={handleLogoFocus}
 									onBlur={handleBlur}
 									data-ui="link"
+									data-at-top={isAtTop ? 'true' : 'false'}
 									data-logo-anim={logoAnimationState}
 								>
 									<div className={s.logoClip}>

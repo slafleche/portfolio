@@ -1,6 +1,6 @@
 import { globalStyle } from '@vanilla-extract/css';
 // import { backgroundHelper } from './helpers/background';
-import { colorVars, fontVars } from './vars';
+import { archVars, colorVars, fontVars } from './vars';
 import { ReducedMotion, reducedMotion } from './helpers/accessibility';
 
 globalStyle('body', {
@@ -23,10 +23,11 @@ globalStyle('html, body', {
 	fontFamily: fontVars.body.family,
 	fontSize: fontVars.body.size.css(),
 	fontWeight: fontVars.body.weight,
-	scrollBehavior: 'smooth',
 	fontOpticalSizing: 'auto',
 	fontStyle: 'normal',
 	overscrollBehavior: 'none',
+	scrollBehavior: 'smooth',
+	scrollMarginTop: archVars.top.add(archVars.curveHeight.value).css(),
 	lineHeight: 1.8,
 	...reducedMotion(ReducedMotion.on, {
 		scrollBehavior: 'auto',
