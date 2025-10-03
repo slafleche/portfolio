@@ -431,9 +431,11 @@ export const navLink = style({
 	textTransform: 'uppercase',
 	backgroundPosition: `left 200% bottom 0, left 200% bottom 0.3em`,
 	transformOrigin: '0 0',
+	opacity: 0.7,
 	selectors: {
 		'&:hover': {
 			// textDecoration: 'underline',
+			opacity: 1,
 		},
 		// '&[data-active="true"]': { background: 'rgba(0,0,0,0.06)' }, // state via data-attr
 		'&[data-active="true"]': {
@@ -451,6 +453,7 @@ export const navLink = style({
 		'&[data-ui]:focus-visible': {
 			outline: '2px solid currentColor',
 			outlineOffset: 2,
+			opacity: 1,
 			// color: navLinkColor,
 			// outline: '2px solid currentColor', outlineOffset: 2
 			// color: colorVars.transparent.css(),

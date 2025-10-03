@@ -408,7 +408,8 @@ export const dropShadowVars = {
 };
 
 export const chevronVars = {
-	width: m(80),
+	width: m(40),
+	padding: m(20),
 	height: 'auto',
 	display: 'block',
 	fill: colorVars.white,
