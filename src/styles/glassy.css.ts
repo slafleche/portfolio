@@ -2,15 +2,15 @@ import { style } from '@vanilla-extract/css';
 import {
 	createGlassBackground,
 	glassVars,
-	transparentBorder,
+	panelBorder,
 } from './helpers/glassy';
 import { colorVars } from './vars';
 import { globalDropShadowFilter } from './helpers/shadow';
 
 const glassBackground = createGlassBackground();
 const defaultRadius = glassVars.cornerRadius.css();
-const borderThickness = transparentBorder.thickness.css();
-const doubleBorderThickness = transparentBorder.thickness.multiply(2).css();
+const borderThickness = panelBorder.thickness.css();
+const doubleBorderThickness = panelBorder.thickness.multiply(2).css();
 const innerRadius = `calc(${defaultRadius} - ${borderThickness})`;
 const innerMostRadius = `calc(${defaultRadius} - ${doubleBorderThickness})`;
 
@@ -150,7 +150,7 @@ export const grain = style({
 });
 
 export const stroke = style({
-	transform: `translateY(${transparentBorder.thickness.multiply(-0.25).css()})`,
+	transform: `translateY(${panelBorder.thickness.multiply(-0.25).css()})`,
 });
 
 export const shadow = style({
