@@ -8,6 +8,7 @@ import { useSafeId } from '../lib/dom';
 import { archGlassVars } from '@/styles/helpers/arch';
 import { archVars } from '@/styles/vars';
 import { shadowTotalY } from '../styles/helpers/shadow';
+import { noiseStyle } from '../styles/helpers/noiseSVG';
 
 type Props = { className?: string; children?: ReactNode; ready?: boolean };
 
@@ -86,13 +87,13 @@ function Arch({ className, children, ready = false }: Props) {
 									const clamp = (v: number, a = 0, b = 1) =>
 										Math.min(b, Math.max(a, v));
 									const {
-										rimHotPosX: pos0,
-										rimHotCoverage: cov0,
-										rimBaseLeft,
-										rimBaseMid,
-										rimPeak,
-										rimBaseRight,
-										rimColor,
+										hotspotPosition: pos0,
+										hotspotCoverage: cov0,
+										baseLeftAlpha,
+										baseMidAlpha,
+										peakAlpha,
+										baseRightAlpha,
+										color,
 									} = archGlassVars.border;
 
 									const pos = clamp(pos0);
@@ -102,23 +103,23 @@ function Arch({ className, children, ready = false }: Props) {
 									const rise = clamp(s + (pos - s) * 0.6);
 									const fall = clamp(pos + (e - pos) * 0.4);
 									const pc = (x: number) => `${(x * 100).toFixed(2)}%`;
-									const col = (a: number) => rimColor.alpha(a).css(); // chroma → css rgba()
+									const col = (a: number) => color.alpha(a).css(); // chroma → css rgba()
 
 									return (
 										<>
-											<stop offset={pc(0)} stopColor={col(rimBaseLeft)} />
-											<stop offset={pc(s)} stopColor={col(rimBaseMid)} />
+											<stop offset={pc(0)} stopColor={col(baseLeftAlpha)} />
+											<stop offset={pc(s)} stopColor={col(baseMidAlpha)} />
 											<stop
 												offset={pc(rise)}
-												stopColor={col((rimBaseMid + rimPeak) / 2)}
+												stopColor={col((baseMidAlpha + peakAlpha) / 2)}
 											/>
-											<stop offset={pc(pos)} stopColor={col(rimPeak)} />
+											<stop offset={pc(pos)} stopColor={col(peakAlpha)} />
 											<stop
 												offset={pc(fall)}
-												stopColor={col((rimBaseMid + rimPeak * 0.75) / 2)}
+												stopColor={col((baseMidAlpha + peakAlpha * 0.75) / 2)}
 											/>
-											<stop offset={pc(e)} stopColor={col(rimBaseMid)} />
-											<stop offset={pc(1)} stopColor={col(rimBaseRight)} />
+											<stop offset={pc(e)} stopColor={col(baseMidAlpha)} />
+											<stop offset={pc(1)} stopColor={col(baseRightAlpha)} />
 										</>
 									);
 								})()}
@@ -134,7 +135,10 @@ function Arch({ className, children, ready = false }: Props) {
 							clipPath={`url(#${clipPathId})`}
 						>
 							<div className={s.surface}>
-								<div className={s.grain} />
+								<div
+									style={{ backgroundImage: noiseStyle(rimXId) }}
+									className={s.grain}
+								/>
 							</div>
 						</foreignObject>
 
@@ -143,7 +147,7 @@ function Arch({ className, children, ready = false }: Props) {
 							href={`#${bottomPathId}`}
 							fill="none"
 							stroke={`url(#${rimXId})`}
-							strokeWidth={archGlassVars.border.thickness.css()}
+							strokeWidth={archGlassVars.border.width.css()}
 							strokeLinecap="round"
 							strokeLinejoin="round"
 							vectorEffect="non-scaling-stroke"

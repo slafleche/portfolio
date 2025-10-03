@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { absolutePosition } from '../helpers/positioning';
 import { colorVars, dropShadowVars } from '../vars';
 import { createArchGlassBackground, archGlassVars } from '../helpers/arch';
+import { noiseBg } from '../helpers/noiseSVG';
 
 export const root = style({
 	position: 'relative',
@@ -47,10 +48,5 @@ export const grain = style({
 	...absolutePosition.fullSize(),
 	inset: 0,
 	borderRadius: 0,
-	pointerEvents: 'none',
-	backgroundImage: archGlassVars.noiseDataUri,
-	backgroundRepeat: 'repeat',
-	backgroundSize: '240px 240px',
-	mixBlendMode: 'overlay',
-	opacity: '0.03',
+	...noiseBg(),
 });
