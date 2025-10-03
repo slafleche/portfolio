@@ -31,7 +31,9 @@ export default function Hero({ className }: Props) {
 			/>
 			{/* <div className={s.gradient} aria-hidden /> */}
 			<div className={clsx(layoutStyles.content, s.content)}>
-				<GlassyPanel surfaceClassName={clsx(layoutStyles.panel, s.panel)}>
+				<GlassyPanel
+					surfaceClassName={clsx(layoutStyles.panel, s.panel)}
+				>
 					<h1 className={s.heading}>
 						<ReactMarkdown components={inlineMarkdownComponents}>
 							{t('hero')}

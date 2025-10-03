@@ -10,7 +10,7 @@ import transforms from '@/styles/helpers/transforms';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FocusEvent, MouseEvent } from 'react';
 import { getRotationStyle } from '../lib/arch/archHelper';
 import { useMenuAnchors } from './menu/hooks/useMenuAnchors';
@@ -33,6 +33,8 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const [fontsReady, setFontsReady] = useState(false);
 	const [activeSection, setActiveSection] = useState<string | null>(null);
 	const [isAtTop, setIsAtTop] = useState(true);
+	const pointerInsideLogoRef = useRef(false);
+	const prevIsAtTopRef = useRef(true);
 
 	const { anchors, anchorCount, sectionIds } = useMenuAnchors(locale);
 
@@ -74,28 +76,38 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		[activate, clearEnterDelay, clearExitDelay],
 	);
 
-	const handleLogoMouseEnter = useCallback(() => {
-		if (isAtTop) return;
+	const triggerLogoEnter = useCallback(() => {
 		handleActivate(0);
 		clearExitDelay();
 		scheduleEnter(LOGO_ENTER_DELAY);
-	}, [handleActivate, clearExitDelay, scheduleEnter, isAtTop]);
+	}, [handleActivate, clearExitDelay, scheduleEnter]);
 
-	const handleLogoMouseLeave = useCallback(() => {
-		if (isAtTop && logoAnimationState === 'idle') return;
+	const triggerLogoLeave = useCallback(() => {
 		clearEnterDelay();
 		scheduleExit(LOGO_MOUSE_LEAVE_EXIT_DELAY);
-	}, [clearEnterDelay, scheduleExit, isAtTop, logoAnimationState]);
+	}, [clearEnterDelay, scheduleExit]);
+
+	const handleLogoMouseEnter = useCallback(() => {
+		pointerInsideLogoRef.current = true;
+		if (isAtTop) return;
+		triggerLogoEnter();
+	}, [isAtTop, triggerLogoEnter]);
+
+	const handleLogoMouseLeave = useCallback(() => {
+		pointerInsideLogoRef.current = false;
+		triggerLogoLeave();
+	}, [triggerLogoLeave]);
 
 	const handleLogoFocus = useCallback(
 		(event: FocusEvent<HTMLAnchorElement>) => {
+			pointerInsideLogoRef.current = true;
 			resetToIdle();
 			if (isAtTop) return;
 			if (event.currentTarget.matches(':focus-visible')) {
-				handleActivate(0);
+				triggerLogoEnter();
 			}
 		},
-		[resetToIdle, handleActivate, isAtTop],
+		[resetToIdle, triggerLogoEnter, isAtTop],
 	);
 
 	const handleLogoClick = useCallback(
@@ -119,13 +131,13 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 	const handleBlur = useCallback(
 		(event: FocusEvent<HTMLAnchorElement>) => {
+			pointerInsideLogoRef.current = false;
 			const related = event.relatedTarget as HTMLElement | null;
 			if (related && navRef.current?.contains(related)) return;
 			hideHighlight();
-			clearEnterDelay();
-			scheduleExit();
+			triggerLogoLeave();
 		},
-		[hideHighlight, navRef, clearEnterDelay, scheduleExit],
+		[hideHighlight, navRef, triggerLogoLeave],
 	);
 
 	const handleNavMouseLeave = useCallback(() => {
@@ -261,6 +273,19 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		const url = `${pathname}${search}#${activeSection}`;
 		window.history.replaceState(window.history.state, '', url);
 	}, [activeSection, firstSectionId]);
+
+	useEffect(() => {
+		const prev = prevIsAtTopRef.current;
+		if (prev === isAtTop) return;
+		prevIsAtTopRef.current = isAtTop;
+		if (isAtTop) {
+			if (pointerInsideLogoRef.current) {
+				triggerLogoLeave();
+			}
+		} else if (pointerInsideLogoRef.current) {
+			triggerLogoEnter();
+		}
+	}, [isAtTop, triggerLogoEnter, triggerLogoLeave]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,

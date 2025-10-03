@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { absolutePosition } from '../helpers/positioning';
 import { colorVars, dropShadowVars } from '../vars';
-import { createArchGlassBackground, archGlassVars } from '../helpers/arch';
+import { createArchGlassBackground } from '../helpers/arch';
 import { noiseBg } from '../helpers/noiseSVG';
 
 export const root = style({

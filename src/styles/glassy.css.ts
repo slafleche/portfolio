@@ -70,11 +70,16 @@ export const surfaceShine = style({
 
 export const surfaceBorder = style({
 	position: 'absolute',
-	left: borderWidth,
-	top: borderWidth,
-	width: `calc(100% - ${doubleBorderWidth})`,
-	height: `calc(100% - ${doubleBorderWidth})`,
-	borderRadius: innerRadius,
+	top: 0,
+	left: 0,
+	// left: borderWidth,
+	// top: borderWidth,
+	width: '100%',
+	height: '100%',
+	// width: `calc(100% - ${doubleBorderWidth})`,
+	// height: `calc(100% - ${doubleBorderWidth})`,
+	// borderRadius: innerRadius,
+	borderRadius: defaultRadius,
 	padding: borderWidth,
 	pointerEvents: 'none',
 	WebkitMask:
