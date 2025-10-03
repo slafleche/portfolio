@@ -5,7 +5,6 @@ import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
 import { archVars } from '../styles/vars';
-import * as glassyStyles from '../styles/glassy.css';
 import { useSafeId } from '../lib/dom';
 import { transparentBorder } from '../styles/helpers/glossy';
 import { shadowTotalY } from '../styles/helpers/shadow';
@@ -134,8 +133,8 @@ function Arch({ className, children, ready = false }: Props) {
 							height="100%"
 							clipPath={`url(#${clipPathId})`}
 						>
-							<div className={clsx(glassyStyles.bg, glassyStyles.element)}>
-								<div className={glassyStyles.grain} />
+							<div className={s.surface}>
+								<div className={s.grain} />
 							</div>
 						</foreignObject>
 

@@ -26,7 +26,7 @@ globalStyle('html, body', {
 	scrollBehavior: 'smooth',
 	fontOpticalSizing: 'auto',
 	fontStyle: 'normal',
-
+	overscrollBehavior: 'none',
 	lineHeight: 1.8,
 	...reducedMotion(ReducedMotion.on, {
 		scrollBehavior: 'auto',
