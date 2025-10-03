@@ -4,7 +4,7 @@ import {
 	glassVars,
 	glassBorder,
 } from './helpers/glassy';
-import { globalDropShadowFilter } from './helpers/shadow';
+import { globalBoxShadow, globalDropShadowFilter } from './helpers/shadow';
 import { noiseBg } from './helpers/noiseSVG';
 
 const glassBackground = createGlassBackground();
@@ -28,6 +28,7 @@ export const frame = style({
 	position: 'relative',
 	borderRadius: defaultRadius,
 	overflow: 'hidden',
+	boxShadow: globalBoxShadow(),
 });
 
 export const surface = style([

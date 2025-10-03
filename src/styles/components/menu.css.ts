@@ -269,10 +269,14 @@ export const logoLink = style({
 	width: '100%',
 	height: '100%',
 	position: 'relative',
+	cursor: 'pointer',
 	selectors: {
 		'&:focus-visible': {
 			outline: `${logoHoverOutlineWidth} solid ${logoHoverOutlineColor}`,
 			outlineOffset: logoHoverOutlineOffset,
+		},
+		'&[data-at-top="true"]': {
+			cursor: 'default',
 		},
 	},
 });
