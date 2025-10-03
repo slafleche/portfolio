@@ -36,19 +36,59 @@ export const surface = style([
 		borderRadius: defaultRadius,
 		overflow: 'hidden',
 		background: 'transparent',
-		selectors: {
-			'&::before': {
-				content: "''",
-				position: 'absolute',
-				inset: borderThickness,
-				borderRadius: innerRadius,
-				background: glassBackground.background,
-				pointerEvents: 'none',
-				zIndex: 0,
-			},
-		},
+		position: 'relative',
 	},
 ]);
+
+export const surfaceFill = style({
+	position: 'absolute',
+	left: borderThickness,
+	top: borderThickness,
+	width: `calc(100% - ${doubleBorderThickness})`,
+	height: `calc(100% - ${doubleBorderThickness})`,
+	borderRadius: innerRadius,
+	background: glassBackground.background,
+	pointerEvents: 'none',
+	zIndex: 0,
+});
+
+export const surfaceShine = style({
+	position: 'absolute',
+	left: borderThickness,
+	top: borderThickness,
+	width: `calc(100% - ${doubleBorderThickness})`,
+	height: `calc(100% - ${doubleBorderThickness})`,
+	borderRadius: innerRadius,
+	background: `linear-gradient(135deg, ${glassVars.tint1.alpha(0.35).css()}, ${glassVars.tint2.alpha(0.25).css()})`,
+	mixBlendMode: 'screen',
+	filter: 'blur(12px)',
+	opacity: 0.5,
+	pointerEvents: 'none',
+	zIndex: 2,
+});
+
+export const surfaceBorder = style({
+	position: 'absolute',
+	left: borderThickness,
+	top: borderThickness,
+	width: `calc(100% - ${doubleBorderThickness})`,
+	height: `calc(100% - ${doubleBorderThickness})`,
+	borderRadius: innerRadius,
+	padding: borderThickness,
+	pointerEvents: 'none',
+	WebkitMask:
+		'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+	mask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+	WebkitMaskComposite: 'xor',
+	maskComposite: 'exclude',
+	background: [
+		`radial-gradient(circle at 0 0, ${glassVars.innerRim.alpha(0.45).css()} 0, ${glassVars.innerRim.alpha(0).css()} ${glassVars.cornerSheen.size.css()})`,
+		`conic-gradient(from -90deg at 0 0, transparent 0deg, ${glassVars.innerRim.alpha(glassVars.cornerSheen.strength).css()} 0deg, ${glassVars.innerRim.alpha(glassVars.cornerSheen.strength).css()} ${glassVars.cornerSheen.angle.css()}, transparent ${glassVars.cornerSheen.angle.css()})`,
+	].join(', '),
+	mixBlendMode: 'screen',
+	opacity: Math.min(1, glassVars.cornerSheen.strength + 0.25),
+	zIndex: 1,
+});
 
 export const rim = style({
 	position: 'absolute',
@@ -64,7 +104,7 @@ export const rim = style({
 	background: `radial-gradient(circle at 0 0, ${colorVars.white
 		.alpha(glassVars.cornerSheen.strength * 0.22)
 		.css()} 0, ${colorVars.white.alpha(0).css()} ${glassVars.cornerSheen.size.css()}),
-    conic-gradient(from -90deg at 0 0, transparent 0deg, ${colorVars.white
+   conic-gradient(from -90deg at 0 0, transparent 0deg, ${colorVars.white
 			.alpha(glassVars.cornerSheen.strength * 0.8)
 			.css()} 0deg, ${colorVars.white
 			.alpha(glassVars.cornerSheen.strength * 0.6)
@@ -72,6 +112,7 @@ export const rim = style({
 	mixBlendMode: 'screen',
 	filter: 'blur(0.35px)',
 	opacity: glassVars.cornerSheen.strength + 0.12,
+	zIndex: 5,
 });
 
 export const element = style({
@@ -79,6 +120,7 @@ export const element = style({
 	width: '100%',
 	height: '100%',
 	borderRadius: defaultRadius,
+	zIndex: 4,
 });
 
 export const grain = style({
@@ -94,7 +136,7 @@ export const grain = style({
 	backgroundSize: '240px 240px',
 	mixBlendMode: 'overlay',
 	opacity: '0.03',
-	zIndex: 1,
+	zIndex: 3,
 });
 
 export const stroke = style({
