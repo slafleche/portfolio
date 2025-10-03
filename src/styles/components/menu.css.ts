@@ -130,7 +130,7 @@ const focusTransition = logoVars.focus?.transitionMs ?? 260;
 const logoHoverOutline = logoVars.hover?.outline;
 const logoHitboxSize = logoVars.width.multiply(autoHitboxScale);
 const hitboxBuffer = m(6);
-const logoHitboxDiameter = logoHitboxSize.add(hitboxBuffer);
+const logoHitboxDiameter = logoHitboxSize.add(hitboxBuffer.value);
 const logoHitboxPadding = logoHitboxDiameter.divide(2);
 const navPaddingValue = logoVars.width.value / 2 + 6;
 const logoNavPaddingMeasurement = m(
@@ -282,8 +282,11 @@ export const logoLink = style({
 });
 
 export const logoClip = style({
+	display: 'flex',
 	width: '100%',
 	height: '100%',
+	justifyContent: 'center',
+	alignItems: 'center',
 	borderRadius: '50%',
 	overflow: 'hidden',
 	pointerEvents: 'none',
@@ -313,6 +316,10 @@ export const logoWrap = style({
 	height: logoVars.width.css(),
 	position: 'relative',
 	zIndex: 1,
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	margin: '0 auto',
 	transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
 	clipPath: 'circle(50% at 50% 50%)',
 	transformOrigin: 'center',
@@ -397,6 +404,7 @@ export const localeLink = style({
 	display: 'inline-grid',
 	gridTemplateAreas: 'stack',
 	alignItems: 'center',
+	transform: transforms.value(transforms.skewX(menuVars.rotationMax).negate()),
 	selectors: {
 		'&:hover, &:focus-visible': {
 			opacity: 1,
@@ -481,6 +489,10 @@ globalStyle(`.${navLink}[data-side="left"] .${fakeShadow}`, {
 
 globalStyle(`.${navLink}[data-side="right"] .${fakeShadow}`, {
 	textShadow: `${menuVars.textShadow.offsetX.negation().css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
+});
+
+globalStyle(`.${navLink}:hover .${fakeShadow}`, {
+	filter: `blur(${menuVars.hover.shadow.blur.css()})`,
 });
 
 globalStyle(`.${navLink}[data-side="left"]:hover .${text}`, {

@@ -385,15 +385,20 @@ export const menuVars = {
 	},
 	textShadow: {
 		offsetX: m(2),
-		offsetY: m(2),
+		offsetY: m(4),
 		blur: m(2),
-		color: colorVars.navBg,
+		color: colorVars.navBg.darken(0.5),
 	},
 	hover: {
 		text: {
 			offsetX: m(4),
 			offsetY: m(-4),
 			scale: 1.05,
+		},
+		shadow: {
+			spread: m(28),
+			opacity: 0.14,
+			blur: m(2),
 		},
 		blobs: [
 			{
@@ -426,10 +431,6 @@ export const menuVars = {
 			},
 		],
 		blur: m(14),
-		shadow: {
-			spread: m(28),
-			opacity: 0.14,
-		},
 	},
 };
 
