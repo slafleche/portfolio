@@ -449,6 +449,37 @@ export const modify = (
 	return m(newVal, oldMeasurement.unit ?? 'px');
 };
 
+
+const assertMatchingUnits = (
+	left: IMeasurement,
+	right: IMeasurement,
+) => {
+	const leftUnit = left.unit ?? 'px';
+	const rightUnit = right.unit ?? 'px';
+	if (leftUnit !== rightUnit) {
+		throw new Error(`measurement unit mismatch: ${leftUnit} vs ${rightUnit}`);
+	}
+	return leftUnit;
+};
+
+export const measurementMin = (
+	left: IMeasurement,
+	right: IMeasurement,
+): IMeasurement => {
+	const unit = assertMatchingUnits(left, right);
+	const winner = left.value <= right.value ? left : right;
+	return left === winner ? left : m(winner.value, unit).debugChain('measurementMin');
+};
+
+export const measurementMax = (
+	left: IMeasurement,
+	right: IMeasurement,
+): IMeasurement => {
+	const unit = assertMatchingUnits(left, right);
+	const winner = left.value >= right.value ? left : right;
+	return left === winner ? left : m(winner.value, unit).debugChain('measurementMax');
+};
+
 export const parseStringMeasurement = (cssValue: string): IMeasurement => {
 	let value = cssValue.trim();
 	const unit = value.replace(/^-?(0|[1-9]\d*)?([.][0-9]*)?/, '');
