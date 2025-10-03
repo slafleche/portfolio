@@ -1,16 +1,12 @@
 import { style } from '@vanilla-extract/css';
-import {
-	createGlassBackground,
-	glassVars,
-	glassBorder,
-} from './helpers/glassy';
+import { createGlassBackground, glassVars } from './helpers/glassy';
 import { globalBoxShadow, globalDropShadowFilter } from './helpers/shadow';
 import { noiseBg } from './helpers/noiseSVG';
 
 const glassBackground = createGlassBackground();
 const defaultRadius = glassVars.frameRadius.css();
-const borderWidth = glassBorder.width.css();
-const doubleBorderWidth = glassBorder.width.multiply(2).css();
+const borderWidth = glassVars.width.css();
+const doubleBorderWidth = glassVars.width.multiply(2).css();
 const innerRadius = `calc(${defaultRadius} - ${borderWidth})`;
 const innerMostRadius = `calc(${defaultRadius} - ${doubleBorderWidth})`;
 
@@ -148,7 +144,7 @@ export const grain = style({
 });
 
 export const stroke = style({
-	transform: `translateY(${glassBorder.width.multiply(-0.25).css()})`,
+	transform: `translateY(${glassVars.width.multiply(-0.25).css()})`,
 });
 
 export const shadow = style({
