@@ -4,9 +4,9 @@ import { ReactNode, memo, useEffect, useMemo, useState } from 'react'; // useEff
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
-import { archVars } from '../styles/vars';
 import { useSafeId } from '../lib/dom';
-import { transparentBorder } from '../styles/helpers/glassy';
+import { archGlassVars } from '@/styles/helpers/arch';
+import { archVars } from '@/styles/vars';
 import { shadowTotalY } from '../styles/helpers/shadow';
 
 type Props = { className?: string; children?: ReactNode; ready?: boolean };
@@ -88,12 +88,12 @@ function Arch({ className, children, ready = false }: Props) {
 									const {
 										rimHotPosX: pos0,
 										rimHotCoverage: cov0,
-										rimBaseLeft, // e.g. 0.14
-										rimBaseMid, // e.g. 0.20
-										rimPeak, // e.g. 0.44
-										rimBaseRight, // e.g. 0.24
-										rimColor, //  chroma color
-									} = transparentBorder;
+										rimBaseLeft,
+										rimBaseMid,
+										rimPeak,
+										rimBaseRight,
+										rimColor,
+									} = archGlassVars.border;
 
 									const pos = clamp(pos0);
 									const cov = clamp(cov0);
@@ -143,7 +143,7 @@ function Arch({ className, children, ready = false }: Props) {
 							href={`#${bottomPathId}`}
 							fill="none"
 							stroke={`url(#${rimXId})`}
-							strokeWidth={transparentBorder.thickness.css()}
+							strokeWidth={archGlassVars.border.thickness.css()}
 							strokeLinecap="round"
 							strokeLinejoin="round"
 							vectorEffect="non-scaling-stroke"

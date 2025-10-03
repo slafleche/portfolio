@@ -38,7 +38,7 @@ export const glassVars = {
 		/** Wedge angle in degrees (0–180) */
 		angle: m(95, 'deg'),
 		/** Ring thickness around the panel (px) */
-		ring: m(10),
+		ring: m(4),
 		/** Offset from corner so sheen respects outer radius */
 		offset: m(0),
 	},
@@ -71,7 +71,7 @@ export const glassVars = {
 		/** Alpha at the bottom stop of the overlay gradient */
 		bottomAlpha: 0.2,
 		/** Direction (in degrees) for the overlay gradient */
-		direction: 45,
+		direction: m(45, 'deg'),
 	},
 	/** Shared noise texture for glass surfaces */
 	noiseDataUri: `url("data:image/svg+xml;utf8,${encodeURIComponent(noiseSvg)}")`,
@@ -79,23 +79,23 @@ export const glassVars = {
 	noiseFilterId,
 };
 
-export const transparentBorder = {
-	/** Transparent border thickness used around panels */
-	thickness: m(2),
-	/** Base color for the transparent stroke */
+export const panelBorder = {
+	/** Visible stroke thickness used for standalone glass panels */
+	thickness: m(3),
+	/** Base color used by the panel rim */
 	rimColor: colorVars.white,
-	/** 0–1 position along the stroke where the hotspot peaks */
-	rimHotPosX: 0.51,
-	/** 0–1 length of the hotspot influence along the stroke */
-	rimHotCoverage: 0.2,
-	/** Baseline alpha at the left edge of the stroke */
-	rimBaseLeft: 0.1,
-	/** Baseline alpha within the body of the stroke */
-	rimBaseMid: 0.3,
-	/** Peak alpha at the brightest hotspot */
-	rimPeak: 0.3,
-	/** Baseline alpha at the right edge of the stroke */
-	rimBaseRight: 0.2,
+	/** Hotspot position for the inner rim gradient */
+	rimHotPosX: 0.55,
+	/** Hotspot coverage for panel rims */
+	rimHotCoverage: 0.25,
+	/** Baseline left alpha for panel rims */
+	rimBaseLeft: 0.12,
+	/** Baseline mid alpha for panel rims */
+	rimBaseMid: 0.34,
+	/** Peak alpha for panel rims */
+	rimPeak: 0.42,
+	/** Baseline right alpha for panel rims */
+	rimBaseRight: 0.18,
 };
 
 export const glossyBorder = {
@@ -112,7 +112,7 @@ export const createGlassBackground = (): {
 	WebkitBackdropFilter: CSS.Property.BackdropFilter;
 } => ({
 	background: [
-		`linear-gradient(${glassVars.overlay.direction}deg, ${glassVars.overlay.color
+		`linear-gradient(${glassVars.overlay.direction.css()}, ${glassVars.overlay.color
 			.alpha(glassVars.overlay.topAlpha)
 			.css()}, ${glassVars.overlay.color.alpha(0).css()} ${glassVars.overlay.midStop}, ${glassVars.overlay.color
 			.alpha(glassVars.overlay.bottomAlpha)

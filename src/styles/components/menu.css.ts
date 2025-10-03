@@ -1,9 +1,5 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import {
-	absolutePosition,
-	flexMiddle,
-	flexPosition,
-} from '../helpers/positioning';
+import { absolutePosition, flexPosition } from '../helpers/positioning';
 import {
 	archVars,
 	colors,
@@ -388,7 +384,7 @@ export const localeChanger = style({
 	zIndex: 1,
 	textShadow: `2px 2px 3px ${colorVars.navBg.css()}`,
 	transform: transforms.value(
-		transforms.skewX(menuVars.rotationMax).negate(),
+		transforms.skewX(menuVars.skew.multiply(-1.5)),
 		transforms.rotate(2),
 		transforms.translateY('-50%'),
 	),

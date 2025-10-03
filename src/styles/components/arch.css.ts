@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { absolutePosition } from '../helpers/positioning';
 import { colorVars, dropShadowVars } from '../vars';
-import { createGlassBackground, glassVars } from '../helpers/glassy';
+import { createArchGlassBackground, archGlassVars } from '../helpers/arch';
 
 export const root = style({
 	position: 'relative',
@@ -26,7 +26,7 @@ export const shadowPath = style({
 	fill: dropShadowVars.color.css(),
 });
 
-const baseGlass = createGlassBackground();
+const baseGlass = createArchGlassBackground();
 const archOverlayGradient = `linear-gradient(180deg,
 	${colorVars.white.alpha(0.14).css()} 0%,
 	${colorVars.white.alpha(0.05).css()} 28%,
@@ -48,7 +48,7 @@ export const grain = style({
 	inset: 0,
 	borderRadius: 0,
 	pointerEvents: 'none',
-	backgroundImage: glassVars.noiseDataUri,
+	backgroundImage: archGlassVars.noiseDataUri,
 	backgroundRepeat: 'repeat',
 	backgroundSize: '240px 240px',
 	mixBlendMode: 'overlay',
