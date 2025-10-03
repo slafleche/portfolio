@@ -1,6 +1,7 @@
 import chroma, { type Color } from 'chroma-js';
 import * as CSS from 'csstype';
-import { IMeasurement, m } from './helpers/measurement';
+import { IMeasurement, MeasurementLike, m } from './helpers/measurement';
+import type { CssLike } from './utilities.css';
 import { computeFontWeight, fontWeightStyle } from './helpers/typography';
 export type ColorKeys = keyof typeof colors;
 export type ChromaColor = Color;
@@ -234,11 +235,41 @@ export const colorVars = {
 	transparent: colors.transparent,
 };
 
+export type BorderMeasurementInput =
+	| MeasurementLike
+	| number
+	| string
+	| null
+	| undefined;
+
+export type BorderWidthInput =
+	| BorderMeasurementInput
+	| {
+		all?: BorderMeasurementInput;
+		horizontal?: BorderMeasurementInput;
+		vertical?: BorderMeasurementInput;
+		top?: BorderMeasurementInput;
+		right?: BorderMeasurementInput;
+		bottom?: BorderMeasurementInput;
+		left?: BorderMeasurementInput;
+	};
+
+export type BorderRadiusInput =
+	| BorderMeasurementInput
+	| BorderMeasurementInput[]
+	| {
+		all?: BorderMeasurementInput;
+		topLeft?: BorderMeasurementInput;
+		topRight?: BorderMeasurementInput;
+		bottomRight?: BorderMeasurementInput;
+		bottomLeft?: BorderMeasurementInput;
+	};
+
 export interface IBorder {
-	color?: CSS.Property.BorderColor;
-	width?: IMeasurement;
-	style?: 'none' | 'solid';
-	radius?: IMeasurement;
+	color?: CSS.Property.BorderColor | CssLike | Color;
+	width?: BorderWidthInput;
+	style?: CSS.Property.BorderStyle;
+	radius?: BorderRadiusInput;
 }
 
 export const borderVars = {

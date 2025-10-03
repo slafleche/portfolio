@@ -69,7 +69,7 @@ export const glossyBorder = {
 	base: {
 		radius: m(34),
 		color: colorVars.transparent,
-	} as unknown as IBorder,
+	} satisfies IBorder,
 };
 
 export const createGlassBackground = (): {
