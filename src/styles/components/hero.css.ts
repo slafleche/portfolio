@@ -10,11 +10,12 @@ export const root = style({
 	display: 'flex',
 	alignItems: 'center',
 	position: 'relative',
-	...paddings({
-		// top: Math.max(menuVars.height, heroVars.paddings.top),
-		// bottom: chevronVars.container.height,
-	}),
+	// ...paddings({
+	// top: Math.max(menuVars.height, heroVars.paddings.top),
+	// bottom: chevronVars.container.height,
+	// }),
 	minHeight: '100vh',
+	overflow: 'hidden',
 });
 
 export const image = style({
@@ -28,6 +29,15 @@ globalStyle(`.${image} img`, {
 	width: '100%',
 	height: '100%',
 	objectFit: 'cover',
+});
+
+export const video = style({
+	...fullSizeOfParent(),
+	zIndex: 0,
+	inset: 0,
+	pointerEvents: 'none',
+	objectFit: 'cover',
+	willChange: 'transform',
 });
 
 export const content = style({

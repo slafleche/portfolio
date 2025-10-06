@@ -4,10 +4,10 @@ import * as s from '@/styles/components/hero.css';
 import { useT } from '@/lib/locales/useT';
 import * as layoutStyles from '@/styles/layout.css';
 import SkipToContent from './SkipToContent';
-import ImageByName from './ImageByName';
 import GlassyPanel from './GlassyPanel';
 import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
+import VideoByName from './VideoByName';
 
 type Props = {
 	className?: string;
@@ -21,19 +21,30 @@ export default function Hero({ className }: Props) {
 	const t = useT();
 	return (
 		<section className={clsx(s.root, className)}>
-			<ImageByName
+			<VideoByName
+				name="hero-circles" // must match key in videos.manifest.json
+				posterAlt="" // accessibility text
+				title="" // optional <video> title
+				kind="hero" // auto full-screen sizing
+				className={clsx(s.video)}
+				autoPlay
+				muted
+				loop
+				playsInline
+				priority
+			/>
+			{/* <ImageByName
 				name="hero"
 				alt={t('image_hero-alt')}
 				title={t('image_hero-title')}
 				className={s.image}
 				fit="cover"
 				priority
-			/>
+			/> */}
 			{/* <div className={s.gradient} aria-hidden /> */}
+
 			<div className={clsx(layoutStyles.content, s.content)}>
-				<GlassyPanel
-					surfaceClassName={clsx(layoutStyles.panel, s.panel)}
-				>
+				<GlassyPanel surfaceClassName={clsx(layoutStyles.panel, s.panel)}>
 					<h1 className={s.heading}>
 						<ReactMarkdown components={inlineMarkdownComponents}>
 							{t('hero')}
