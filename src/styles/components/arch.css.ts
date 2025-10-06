@@ -12,6 +12,8 @@ export const root = style({
 
 export const svg = style({
 	overflow: 'visible',
+	position: 'relative',
+	zIndex: 1, // keep rim stroke above the glass layer
 });
 
 export const shadow = style({
@@ -29,17 +31,26 @@ export const shadowPath = style({
 
 const baseGlass = createArchGlassBackground();
 const archOverlayGradient = `linear-gradient(180deg,
-	${colorVars.white.alpha(0.14).css()} 0%,
-	${colorVars.white.alpha(0.05).css()} 28%,
-	${colorVars.black.alpha(0.06).css()} 82%,
-	${colorVars.black.alpha(0.12).css()} 100%)`;
+  ${colorVars.white.alpha(0.14).css()} 0%,
+  ${colorVars.white.alpha(0.05).css()} 28%,
+  ${colorVars.black.alpha(0.06).css()} 82%,
+  ${colorVars.black.alpha(0.12).css()} 100%)`;
 
+/**
+ * The glass effect now lives on an absolutely positioned HTML element that is
+ * clipped to the SVG path via style clipPath: url(#clipPathId).
+ */
 export const surface = style({
-	position: 'relative',
-	width: '100%',
-	height: '100%',
+	position: 'absolute',
+	inset: 0,
+	zIndex: 0,
 	borderRadius: 0,
+	pointerEvents: 'none', // keep clicks for the UI above
+
+	// same layering you had before (overlay + glow + base)
 	background: [archOverlayGradient, baseGlass.background].join(', '),
+
+	// blur needs a non-zero alpha base in Safari (our baseGlass.background already includes a color layer)
 	backdropFilter: baseGlass.backdropFilter,
 	WebkitBackdropFilter: baseGlass.WebkitBackdropFilter,
 });
