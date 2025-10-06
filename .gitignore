@@ -90,5 +90,7 @@ pnpm-debug.log*
 # -----------------------
 # Large Images
 # -----------------------
-src/assets/images/largeImages/*
-tmp/large-images/
+src/assets/images/imageBackup/*
+src/assets/videos/videoBackup/*
+public/videos/*
+tmp/*
