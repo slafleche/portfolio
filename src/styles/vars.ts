@@ -1,10 +1,13 @@
 import chroma, { type Color } from 'chroma-js';
 import * as CSS from 'csstype';
-import { IMeasurement, MeasurementLike, m } from './helpers/measurement';
-import type { CssLike } from './utilities.css';
+import { MeasurementLike, m } from './helpers/measurement';
 import { computeFontWeight, fontWeightStyle } from './helpers/typography';
 export type ColorKeys = keyof typeof colors;
 export type ChromaColor = Color;
+
+// Many tokens in .ts are objects (e.g., chroma colors, measurement objects)
+// that expose a `.css()` method to produce a CSS string on demand.
+export type CssLike = { css: () => string };
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are

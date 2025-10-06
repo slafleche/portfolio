@@ -1,5 +1,5 @@
 import type * as CSS from 'csstype';
-import { CssLike } from '../utilities.css';
+import { CssLike } from '../vars';
 import { MeasurementLike } from './measurement';
 
 // Guard for tokens that expose a `.css()` helper (IMeasurement, chroma color wrappers, etc.).

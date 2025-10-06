@@ -1,6 +1,5 @@
 import { globalStyle } from '@vanilla-extract/css';
-// import { backgroundHelper } from './helpers/background';
-import { archVars, colorVars, fontVars } from './vars';
+import { archVars, colorVars, fontVars, spacingVars } from './vars';
 import { ReducedMotion, reducedMotion } from './helpers/accessibility';
 
 globalStyle('body', {
@@ -27,8 +26,8 @@ globalStyle('html, body', {
 	fontStyle: 'normal',
 	overscrollBehavior: 'none',
 	scrollBehavior: 'smooth',
-	scrollMarginTop: archVars.top.add(archVars.curveHeight.value).css(),
 	lineHeight: 1.8,
+	scrollPaddingTop: `calc(${archVars.top.css()} + ${archVars.curveHeight.css()} + ${spacingVars.scrollPaddingOffset.css()})`,
 	...reducedMotion(ReducedMotion.on, {
 		scrollBehavior: 'auto',
 	}),
