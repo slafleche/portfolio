@@ -3,10 +3,6 @@ import * as CSS from 'csstype';
 import nest from '@/styles/helpers/nesting';
 // import { flexPosition } from './helpers/positioning';
 
-// Many tokens in .ts are objects (e.g., chroma colors, measurement objects)
-// that expose a `.css()` method to produce a CSS string on demand.
-export type CssLike = { css: () => string };
-
 // Utility classes
 export const utilityStyles = style({
 	selectors: {
