@@ -30,5 +30,4 @@ export const content = style({
 export const panel = style({
 	display: 'flex',
 	flexDirection: 'column',
-	...borders(glossyBorder.base),
 });
