@@ -3,7 +3,7 @@
 		"types": ["node", "next"],
 		"target": "ESNext",
 		"module": "ESNext",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"jsx": "preserve",
 		"strict": true,
 		"esModuleInterop": true,
@@ -19,6 +19,7 @@
 		"incremental": true,
 		"isolatedModules": true,
 		"allowImportingTsExtensions": true,
+		"verbatimModuleSyntax": true,
 		"plugins": [
 			{
 				"name": "next"

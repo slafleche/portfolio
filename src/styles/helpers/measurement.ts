@@ -1,5 +1,3 @@
-import { CssLike } from '../vars';
-
 const isDev =
 	typeof process !== 'undefined' && process?.env?.NODE_ENV !== 'production';
 const enableDebug = isDev;
@@ -28,12 +26,6 @@ type DebugState = {
 	autoLabel?: string;
 	measurementId: string;
 };
-
-export type MeasurementLike =
-	| { value: number; unit?: string }
-	| CssLike
-	| string
-	| undefined;
 
 export interface IMeasurement {
 	value: number;

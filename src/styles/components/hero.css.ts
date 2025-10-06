@@ -46,7 +46,7 @@ export const content = style({
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'center',
-	gap: '1.5rem',
+	gap: '20px',
 });
 
 export const heading = style({
@@ -60,8 +60,8 @@ export const paragraph = style({
 export const panel = style({
 	width: 'fit-content',
 	maxWidth: 'min(90vw, 640px)',
-	padding: '2.5rem 2.75rem',
-	gap: '1.25rem',
+	padding: '20px',
+	gap: '20px',
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'center',

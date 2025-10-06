@@ -2,6 +2,7 @@ import chroma from 'chroma-js';
 import type * as CSS from 'csstype';
 import { glassVars } from './glassy';
 import { m } from './measurement';
+import { colorVars } from '../vars';
 
 /**
  * Arch-specific glass settings derived from the shared glass variables while
@@ -15,7 +16,11 @@ export const archGlassVars = {
 	backdropBlur: glassVars.backdropBlur,
 	noiseDataUri: glassVars.noiseDataUri(),
 	overlay: {
-		...glassVars.overlay,
+		color: colorVars.white,
+		topAlpha: 0.05,
+		midStop: '45%',
+		bottomAlpha: 0.2,
+		direction: m(45, 'deg'),
 	},
 	outerBorderHighlight: {
 		...glassVars.outerBorderHighlight,

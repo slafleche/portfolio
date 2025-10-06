@@ -4,11 +4,8 @@ import { globalBoxShadow, globalDropShadowFilter } from './helpers/shadow';
 import { noiseBg } from './helpers/noiseSVG';
 
 const glassBackground = createGlassBackground();
-const defaultRadius = glassVars.frameRadius.css();
-const borderWidth = glassVars.width.css();
-const doubleBorderWidth = glassVars.width.multiply(2).css();
-const innerRadius = `calc(${defaultRadius} - ${borderWidth})`;
-const innerMostRadius = `calc(${defaultRadius} - ${doubleBorderWidth})`;
+const innerRadius = glassVars.border.radius.subtract(glassVars.border.width);
+// const innerMostRadius = `calc(${glassVars.border.width.css()} - ${glassVars.border.width.double.css()})`;
 
 const glassSurface = style({
 	position: 'relative',
@@ -22,7 +19,7 @@ export const navSurface = glassSurface;
 
 export const frame = style({
 	position: 'relative',
-	borderRadius: defaultRadius,
+	borderRadius: glassVars.border.radius.css(),
 	overflow: 'hidden',
 	boxShadow: globalBoxShadow(),
 });
@@ -30,7 +27,7 @@ export const frame = style({
 export const surface = style([
 	glassSurface,
 	{
-		borderRadius: defaultRadius,
+		borderRadius: glassVars.border.radius.css(),
 		overflow: 'hidden',
 		background: 'transparent',
 		position: 'relative',
@@ -39,11 +36,12 @@ export const surface = style([
 
 export const surfaceFill = style({
 	position: 'absolute',
-	left: borderWidth,
-	top: borderWidth,
-	width: `calc(100% - ${doubleBorderWidth})`,
-	height: `calc(100% - ${doubleBorderWidth})`,
-	borderRadius: innerRadius,
+	left: glassVars.border.width.css(),
+	top: glassVars.border.width.css(),
+	width: `calc(100% - ${glassVars.border.width.double().css()})`,
+	height: `calc(100% - ${glassVars.border.width.double().css()})`,
+	borderRadius: innerRadius.css(),
+	// borderRadius: innerRadius,
 	background: glassBackground.background,
 	pointerEvents: 'none',
 	zIndex: 0,
@@ -51,11 +49,12 @@ export const surfaceFill = style({
 
 export const surfaceShine = style({
 	position: 'absolute',
-	left: borderWidth,
-	top: borderWidth,
-	width: `calc(100% - ${doubleBorderWidth})`,
-	height: `calc(100% - ${doubleBorderWidth})`,
-	borderRadius: innerRadius,
+	left: glassVars.border.width.css(),
+	top: glassVars.border.width.css(),
+	width: '100%',
+	height: '100%',
+	borderRadius: innerRadius.css(),
+	// borderRadius: innerRadius,
 	background: `linear-gradient(135deg, ${glassVars.surfaceGlowPrimaryTint
 		.alpha(glassVars.surfaceGlow.primaryTintAlpha)
 		.css()}, ${glassVars.surfaceGlowSecondaryTint
@@ -72,15 +71,10 @@ export const surfaceBorder = style({
 	position: 'absolute',
 	top: 0,
 	left: 0,
-	// left: borderWidth,
-	// top: borderWidth,
-	width: '100%',
 	height: '100%',
-	// width: `calc(100% - ${doubleBorderWidth})`,
-	// height: `calc(100% - ${doubleBorderWidth})`,
-	// borderRadius: innerRadius,
-	borderRadius: defaultRadius,
-	padding: borderWidth,
+	width: '100%',
+	padding: glassVars.border.width.css(),
+	borderRadius: glassVars.border.radius.css(),
 	pointerEvents: 'none',
 	WebkitMask:
 		'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
@@ -105,8 +99,8 @@ export const surfaceBorder = style({
 export const rim = style({
 	position: 'absolute',
 	inset: 0,
-	padding: glassVars.outerBorderHighlight.width.css(),
-	borderRadius: defaultRadius,
+	padding: glassVars.border.width.css(),
+	borderRadius: glassVars.border.radius.css(),
 	pointerEvents: 'none',
 	WebkitMask:
 		'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
@@ -131,25 +125,26 @@ export const element = style({
 	position: 'relative',
 	width: '100%',
 	height: '100%',
-	borderRadius: defaultRadius,
+	borderRadius: glassVars.border.radius.css(),
 	zIndex: 4,
 });
 
 export const grain = style({
 	position: 'absolute',
-	left: borderWidth,
-	top: borderWidth,
-	width: `calc(100% - ${doubleBorderWidth})`,
-	height: `calc(100% - ${doubleBorderWidth})`,
+	left: glassVars.border.width.css(),
+	top: glassVars.border.width.css(),
+	width: `calc(100% - ${glassVars.border.width.double().css()})`,
+	height: `calc(100% - ${glassVars.border.width.double().css()})`,
 	pointerEvents: 'none',
-	borderRadius: innerMostRadius,
+	borderRadius: innerRadius.css(),
+	// borderRadius: innerMostRadius,
 	backgroundImage: glassVars.noiseDataUri(),
 	...noiseBg(),
 	zIndex: 3,
 });
 
 export const stroke = style({
-	transform: `translateY(${glassVars.width.multiply(-0.25).css()})`,
+	transform: `translateY(${glassVars.border.width.multiply(-0.25).css()})`,
 });
 
 export const shadow = style({

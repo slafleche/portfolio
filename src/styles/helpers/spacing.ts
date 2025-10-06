@@ -1,5 +1,5 @@
 import { toCssMeasurement } from './style';
-import { MeasurementLike } from './measurement';
+import type { MeasurementLike } from './types';
 
 type SpacingValue = MeasurementLike | number | null | undefined;
 

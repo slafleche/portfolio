@@ -17,8 +17,8 @@ export const svg = style({
 export const shadow = style({
 	...absolutePosition.topLeft(),
 	// Give extra room so the blurred, offset shadow doesn’t clip
-	width: `calc(100% + ${dropShadowVars.offsetX.add(dropShadowVars.blur.multiply(2).value).css()})`,
-	height: `calc(100% + ${dropShadowVars.offsetY.add(dropShadowVars.blur.multiply(2).value).css()})`,
+	width: `calc(100% + ${dropShadowVars.offsetX.css()} + ${dropShadowVars.blur.multiply(2).css()})`,
+	height: `calc(100% + ${dropShadowVars.offsetY.css()} + ${dropShadowVars.blur.multiply(2).css()})`,
 	pointerEvents: 'none',
 	filter: `blur(${dropShadowVars.blur.css()})`,
 });
