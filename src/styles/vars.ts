@@ -5,10 +5,6 @@ import { computeFontWeight, fontWeightStyle } from './helpers/typography';
 export type ColorKeys = keyof typeof colors;
 export type ChromaColor = Color;
 
-// Many tokens in .ts are objects (e.g., chroma colors, measurement objects)
-// that expose a `.css()` method to produce a CSS string on demand.
-export type CssLike = { css: () => string };
-
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
 // meant to be more abstract and used in different wayt. For example, you
@@ -118,7 +114,7 @@ export const gradientB = {
 // for the shadows or anything else, the goal is to write a custom .ts file
 // with the new themes's rules.
 
-export const defaults = {
+const baseColours = {
 	backgroundColour,
 	shadow,
 	gradients,
@@ -132,13 +128,13 @@ export const colors = {
 	contrast: chroma('#88dbfc'),
 	// Nav
 	// navBg: chroma('#252136'),
-	navFg: defaults.fg,
+	navFg: baseColours.fg,
 	// Body
-	bodyBg: defaults.backgroundColour,
+	bodyBg: baseColours.backgroundColour,
 
-	bodyFg: defaults.fg,
+	bodyFg: baseColours.fg,
 	// Text
-	headingFg: defaults.fg,
+	headingFg: baseColours.fg,
 	// Shadows
 	shadow,
 	// Borders
@@ -467,4 +463,8 @@ export const heroVars = {
 		top: m(40),
 		bottom: m(40),
 	},
+};
+
+export const spacingVars = {
+	scrollPaddingOffset: m(20),
 };

@@ -9,7 +9,7 @@ export const userContent = style({});
 
 // child elements
 globalStyle(`${userContent} h1`, {
-  fontSize: '2rem',
+	fontSize: m(30).css(),
 });
 
 globalStyle(`${userContent} h2`, {});

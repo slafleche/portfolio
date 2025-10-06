@@ -1,9 +1,8 @@
-import { colorVars, IBorder } from '../vars';
+import { colorVars, type IBorder } from '../vars';
 import chroma from 'chroma-js';
 import { m } from './measurement';
 import type * as CSS from 'csstype';
-import { noiseStyle } from './noiseSVG';
-import type { NoiseSvgOptions } from './noiseSVG';
+import { noiseStyle, type NoiseSvgOptions } from './noiseSVG';
 
 const defaultNoiseId = `glassy-noise-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -12,14 +11,6 @@ export const glassNoise = (
 	props?: NoiseSvgOptions,
 ) => noiseStyle(id, props);
 
-/**
- * Glass panel layering overview
- *
- * SurfaceFill – base inset rectangle that carries the frosted gradient.
- * surfaceBorder – masked inner rim band (radial + conic wedge highlight).
- * surfaceShine – large blurred directional glow (screen blend). Rim – outermost
- * highlight ring hugging the frame.
- */
 export const glassVars = {
 	backgroundColor: colorVars.white.alpha(0.06),
 	surfaceGlowPrimaryTint: chroma('hsl(210, 80%, 70%)').alpha(0.1),
@@ -27,31 +18,36 @@ export const glassVars = {
 	frameBorderColor: colorVars.white.alpha(0.25),
 	innerBorderColor: colorVars.white.alpha(0.22),
 	backdropBlur: m(15),
-	frameRadius: m(32),
-	width: m(4),
+	border: {
+		radius: m(32), // border Radius
+		width: m(8),
+	},
+	// Specular highlight in the top left corner
 	outerBorderHighlight: {
 		strength: 0.35,
-		spread: m(120, '%'),
+		spread: m(100, '%'),
 		angle: m(95, 'deg'),
-		width: m(2),
 	},
-	innerBorderHighlight: {
-		radialStrength: 0.45,
-		wedgeStrength: 0.9,
-		opacity: 0.55,
-	},
+	// Blur effect
 	surfaceGlow: {
 		blur: m(12),
-		opacity: 0.5,
+		opacity: 0.2,
 		primaryTintAlpha: 0.35,
 		secondaryTintAlpha: 0.25,
 	},
+	// Slight gradient overlay
 	overlay: {
-		color: colorVars.white,
+		color: colorVars.black,
 		topAlpha: 0.05,
 		midStop: '45%',
 		bottomAlpha: 0.2,
-		direction: m(45, 'deg'),
+		direction: m(-45, 'deg'),
+	},
+	// Kind of "background" color
+	innerBorderHighlight: {
+		radialStrength: 0.45,
+		wedgeStrength: 0.9,
+		opacity: 0.45,
 	},
 	/** Shared noise texture for glass surfaces (uses a default id) */
 	noiseDataUri: () => glassNoise(),
@@ -61,7 +57,7 @@ export const glassVars = {
 
 export const glossyBorder = {
 	base: {
-		radius: glassVars.frameRadius.add(glassVars.width.value),
+		// radius: glassVars.border.radius.add(glassVars.border.width),
 		color: colorVars.transparent,
 	} satisfies IBorder,
 };

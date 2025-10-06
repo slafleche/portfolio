@@ -1,6 +1,6 @@
 import type * as CSS from 'csstype';
-import { CssLike } from '../vars';
-import { MeasurementLike } from './measurement';
+
+import { type MeasurementLike, type CssLike } from './types';
 
 // Guard for tokens that expose a `.css()` helper (IMeasurement, chroma color wrappers, etc.).
 export const hasCss = (value: unknown): value is CssLike =>

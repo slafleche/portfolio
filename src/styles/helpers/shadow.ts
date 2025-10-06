@@ -1,6 +1,6 @@
-import { Color } from 'chroma-js';
+import type { Color } from 'chroma-js';
 import { colorVars, dropShadowVars } from '../vars';
-import { IMeasurement, m } from './measurement';
+import { m, type IMeasurement } from './measurement';
 export interface IBoxShadow {
 	x?: IMeasurement;
 	y?: IMeasurement;

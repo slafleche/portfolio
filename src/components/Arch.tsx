@@ -1,6 +1,6 @@
 'use client';
 import clsx from 'clsx';
-import { ReactNode, memo, useEffect, useMemo, useState } from 'react'; // useEffect avoids hydration warnings
+import { memo, useEffect, useMemo, useState, type ReactNode } from 'react'; // useEffect avoids hydration warnings
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';

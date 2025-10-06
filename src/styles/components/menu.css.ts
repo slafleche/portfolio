@@ -308,7 +308,7 @@ export const headerNavItem = style({
 export const link = style({
 	textDecoration: 'none',
 	borderRadius: 8,
-	...paddings({ vertical: '0.25rem', horizontal: '0.5rem' }),
+	...paddings({ vertical: '10px', horizontal: '20px' }),
 });
 
 export const logoWrap = style({
@@ -430,7 +430,7 @@ export const navLink = style({
 	...fontWeightStyle(menuFont, fontVars.menu.relativeWeight),
 	lineHeight: 1,
 	textDecoration: 'none',
-	letterSpacing: '0.05rem',
+	letterSpacing: '0.5px',
 	borderRadius: '50%',
 	color: colors.navFg.css(),
 	transition: 'all 0.45s ease',
