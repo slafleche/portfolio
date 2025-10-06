@@ -32,10 +32,10 @@ export function noiseStyle(id: string, props?: NoiseSvgOptions) {
 }
 
 export function noiseBg(props?: {
-	backgroundRepeat: CSS.Property.BackgroundRepeat;
-	backgroundSize: CSS.Property.BackgroundSize;
-	mixBlendMode: CSS.Property.MixBlendMode;
-	opacity: CSS.Property.Opacity;
+	backgroundRepeat?: CSS.Property.BackgroundRepeat;
+	backgroundSize?: CSS.Property.BackgroundSize;
+	mixBlendMode?: CSS.Property.MixBlendMode;
+	opacity?: CSS.Property.Opacity;
 }) {
 	const {
 		backgroundRepeat = 'repeat',
