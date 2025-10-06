@@ -236,10 +236,10 @@ export const list = style({
 });
 
 export const item = style({
-	// flex: '0 0 auto',
-	// whiteSpace: 'nowrap',
-	// display: 'flex',
-	// alignItems: 'center',
+	flex: '0 0 auto',
+	whiteSpace: 'nowrap',
+	display: 'flex',
+	alignItems: 'center',
 });
 
 // Intentionally reorder so the logo is the first item visually but not in DOM
