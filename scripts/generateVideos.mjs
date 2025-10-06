@@ -39,7 +39,9 @@ const exists = async (p) =>
 		.access(p)
 		.then(() => true)
 		.catch(() => false));
+
 const sha256 = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
+
 const toName = (s) =>
 	s
 		.replace(/[\\/]+/g, '-')
@@ -52,8 +54,9 @@ function normalizeDrive(urlStr) {
 		if (u.hostname === 'drive.google.com') {
 			const m =
 				u.pathname.match(/\/file\/d\/([^/]+)/) || u.search.match(/id=([^&]+)/);
-			if (m && m[1])
+			if (m && m[1]) {
 				return `https://drive.google.com/uc?export=download&id=${m[1]}`;
+			}
 		}
 		return urlStr;
 	} catch {
@@ -61,11 +64,17 @@ function normalizeDrive(urlStr) {
 	}
 }
 
+/**
+ * Force Dropbox shared links to direct-download:
+ *
+ * - Turns ...?dl=0 (or no dl param) into ?dl=1
+ * - Preserves other params
+ */
 function toDirectDropboxUrl(urlStr) {
 	try {
 		const u = new URL(urlStr);
 		if (u.hostname === 'www.dropbox.com' || u.hostname === 'dropbox.com') {
-			u.searchParams.set('dl', '1');
+			u.searchParams.set('dl', '1'); // force direct download
 			return u.toString();
 		}
 		return urlStr;
@@ -165,11 +174,23 @@ async function ffprobeJSON(inputPath) {
 	return meta;
 }
 
+/**
+ * Deband + dither + very light temporal grain, then split/scale. Order matters:
+ * gradfun (deband) → noise (grain) → split → scale.
+ */
 function buildFilterAndMaps(hasAudio) {
 	const splitN = LADDER.length;
 	const v = Array.from({ length: splitN }, (_, i) => `v${i + 1}`);
 	const out = v.map((label, i) => `${label}out`);
-	const split = `[0:v]split=${splitN}${v.map((x) => `[${x}]`).join('')};`;
+
+	const split =
+		`[0:v]format=yuv420p,` +
+		`gradfun=strength=0.9:radius=16,` + // stronger deband/dither
+		`noise=alls=4:allf=t+u,` + // subtle temporal grain
+		`split=${splitN}` +
+		v.map((x) => `[${x}]`).join('') +
+		';';
+
 	const scales = v
 		.map((x, i) => ` [${x}]scale=-2:${LADDER[i].h}:flags=lanczos[${out[i]}];`)
 		.join('');
@@ -212,8 +233,17 @@ async function buildHLS(srcPath, name) {
 		r.profile,
 		'-pix_fmt',
 		'yuv420p',
+
+		// preserve gradients
+		'-tune',
+		'grain',
+
+		// extra x264 guidance (conservative)
+		'-x264-params',
+		'aq-mode=3:aq-strength=1.1:deblock=-1,-1:psy-rd=0.6:vbv-init=0.9',
+
 		'-preset',
-		'veryfast',
+		'veryfast', // change to 'slow' for better quality (slower)
 		'-r',
 		String(FPS),
 		'-g',
@@ -222,12 +252,22 @@ async function buildHLS(srcPath, name) {
 		String(GOP),
 		'-sc_threshold',
 		'0',
+
 		`-b:v:${i}`,
 		`${r.vK}k`,
 		`-maxrate:${i}`,
 		`${Math.round(r.vK * 1.1)}k`,
 		`-bufsize:${i}`,
 		`${r.vK * 2}k`,
+
+		// Tag BT.709 to avoid player color surprises
+		'-color_primaries',
+		'bt709',
+		'-color_trc',
+		'bt709',
+		'-colorspace',
+		'bt709',
+
 		...(KEEP_AUDIO && hasAudio
 			? ['-c:a', 'aac', `-b:a:${i}`, `${r.aK}k`]
 			: ['-an']),
@@ -236,10 +276,14 @@ async function buildHLS(srcPath, name) {
 	const args = [
 		'-i',
 		srcPath,
+
+		// filter graph (deband/dither + grain + scale ladder)
 		'-filter_complex',
 		filter,
 		...maps,
+
 		...rungOpts,
+
 		'-f',
 		'hls',
 		'-hls_time',

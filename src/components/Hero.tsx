@@ -9,9 +9,7 @@ import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
 import VideoByName from './VideoByName';
 
-type Props = {
-	className?: string;
-};
+type Props = { className?: string };
 
 const inlineMarkdownComponents: Components = {
 	p: ({ children }) => <>{children}</>,
@@ -22,10 +20,10 @@ export default function Hero({ className }: Props) {
 	return (
 		<section className={clsx(s.root, className)}>
 			<VideoByName
-				name="hero-circles" // must match key in videos.manifest.json
-				posterAlt="" // accessibility text
-				title="" // optional <video> title
-				kind="hero" // auto full-screen sizing
+				name="hero-circles"
+				posterAlt=""
+				title=""
+				kind="hero"
 				className={clsx(s.video)}
 				autoPlay
 				muted
@@ -33,15 +31,14 @@ export default function Hero({ className }: Props) {
 				playsInline
 				priority
 			/>
-			{/* <ImageByName
-				name="hero"
-				alt={t('image_hero-alt')}
-				title={t('image_hero-title')}
-				className={s.image}
-				fit="cover"
-				priority
-			/> */}
-			{/* <div className={s.gradient} aria-hidden /> */}
+
+			{/* Banding-fix overlays (over video, under content) */}
+			<div className={s.overlays} aria-hidden>
+				<div className={s.grain} />
+				<div className={s.wash} />
+				<div className={s.centerSoften} />
+				<div className={s.ringBreaker} />
+			</div>
 
 			<div className={clsx(layoutStyles.content, s.content)}>
 				<GlassyPanel surfaceClassName={clsx(layoutStyles.panel, s.panel)}>
