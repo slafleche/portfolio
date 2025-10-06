@@ -1,4 +1,4 @@
-import chroma from 'chroma-js';
+import chroma, { type Color as ChromaColor } from 'chroma-js';
 import type * as CSS from 'csstype';
 import { glassVars } from './glassy';
 import { m } from './measurement';
@@ -13,7 +13,7 @@ export const archGlassVars = {
 	surfaceGlowPrimaryTint: glassVars.surfaceGlowPrimaryTint,
 	surfaceGlowSecondaryTint: glassVars.surfaceGlowSecondaryTint,
 	innerBorderColor: glassVars.innerBorderColor,
-	backdropBlur: glassVars.backdropBlur,
+	backdropBlur: glassVars.backdropBlur, // IMeasurement
 	noiseDataUri: glassVars.noiseDataUri(),
 	overlay: {
 		color: colorVars.white,
@@ -51,17 +51,25 @@ export const createArchGlassBackground = (): {
 	background: CSS.Property.Background<string>;
 	backdropFilter: CSS.Property.BackdropFilter;
 	WebkitBackdropFilter: CSS.Property.BackdropFilter;
-} => ({
-	background: [
-		`linear-gradient(${archGlassVars.overlay.direction.css()}, ${archGlassVars.overlay.color
-			.alpha(archGlassVars.overlay.topAlpha)
-			.css()}, ${archGlassVars.overlay.color.alpha(0).css()} ${archGlassVars.overlay.midStop}, ${archGlassVars.overlay.color
-			.alpha(archGlassVars.overlay.bottomAlpha)
-			.css()} 100%)`,
-		`linear-gradient(135deg, ${archGlassVars.surfaceGlowPrimaryTint.css()}, ${archGlassVars.surfaceGlowSecondaryTint.css()})`,
-		archGlassVars.backgroundColor.css(),
-	].join(', '),
-	backdropFilter: `blur(${archGlassVars.backdropBlur.css()})`,
-	WebkitBackdropFilter:
-		`blur(${archGlassVars.backdropBlur.css()})` as CSS.Property.BackdropFilter,
-});
+} => {
+	// Ensure a tiny alpha so Safari renders backdrop-filter
+	const baseAlpha = archGlassVars.backgroundColor.alpha(); // getter -> number
+	const ensuredBg: ChromaColor = archGlassVars.backgroundColor.alpha(
+		Math.max(baseAlpha || 0, 0.01),
+	); // setter -> Color
+
+	const overlay = `linear-gradient(${archGlassVars.overlay.direction.css()}, ${archGlassVars.overlay.color
+		.alpha(archGlassVars.overlay.topAlpha)
+		.css()} 0%, ${archGlassVars.overlay.color.alpha(0).css()} ${
+		archGlassVars.overlay.midStop
+	}, ${archGlassVars.overlay.color.alpha(archGlassVars.overlay.bottomAlpha).css()} 100%)`;
+
+	const glow = `linear-gradient(135deg, ${archGlassVars.surfaceGlowPrimaryTint.css()}, ${archGlassVars.surfaceGlowSecondaryTint.css()})`;
+
+	return {
+		background: [overlay, glow, ensuredBg.css()].join(', '),
+		backdropFilter: `blur(${archGlassVars.backdropBlur.css()})`,
+		WebkitBackdropFilter:
+			`blur(${archGlassVars.backdropBlur.css()})` as CSS.Property.BackdropFilter,
+	};
+};

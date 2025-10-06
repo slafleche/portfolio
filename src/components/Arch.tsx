@@ -26,6 +26,7 @@ function Arch({ className, children, ready = false }: Props) {
 	const bottomPathId = `${baseId}-archBottom`;
 	const clipPathId = `${baseId}-clip`;
 	const rimXId = `${baseId}-rimId`;
+
 	// Build both paths from safe width (will update when windowSize arrives)
 	const { archD, bottomCurveD } = useMemo(
 		() =>
@@ -33,7 +34,6 @@ function Arch({ className, children, ready = false }: Props) {
 				...archVars,
 				width: ws,
 			}),
-
 		[ws],
 	);
 
@@ -126,22 +126,6 @@ function Arch({ className, children, ready = false }: Props) {
 							</linearGradient>
 						</defs>
 
-						{/* frosted body */}
-						<foreignObject
-							x="0"
-							y="0"
-							width="100%"
-							height="100%"
-							clipPath={`url(#${clipPathId})`}
-						>
-							<div className={s.surface}>
-								<div
-									style={{ backgroundImage: noiseStyle(rimXId) }}
-									className={s.grain}
-								/>
-							</div>
-						</foreignObject>
-
 						{/* bottom-only rim: solid stroke; no sides, no top */}
 						<use
 							href={`#${bottomPathId}`}
@@ -153,9 +137,17 @@ function Arch({ className, children, ready = false }: Props) {
 							vectorEffect="non-scaling-stroke"
 							pointerEvents="none"
 						/>
-
-						{/* End of SVG */}
 					</svg>
+					<div
+						className={s.surface}
+						style={{ clipPath: `url(#${clipPathId})` }}
+						aria-hidden
+					>
+						<div
+							style={{ backgroundImage: noiseStyle(rimXId) }}
+							className={s.grain}
+						/>
+					</div>
 				</>
 			)}
 			{children}
