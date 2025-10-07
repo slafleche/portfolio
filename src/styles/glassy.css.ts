@@ -18,9 +18,9 @@ export const bg = glassSurface;
 export const navSurface = glassSurface;
 
 export const frame = style({
-	position: 'relative',
+	// position: 'relative',
 	borderRadius: glassVars.border.radius.css(),
-	overflow: 'hidden',
+	// overflow: 'hidden',
 	boxShadow: globalBoxShadow(),
 });
 
@@ -28,7 +28,7 @@ export const surface = style([
 	glassSurface,
 	{
 		borderRadius: glassVars.border.radius.css(),
-		overflow: 'hidden',
+		// overflow: 'hidden',
 		background: 'transparent',
 		position: 'relative',
 	},
@@ -149,4 +149,8 @@ export const stroke = style({
 
 export const shadow = style({
 	filter: globalDropShadowFilter(),
+});
+
+export const content = style({
+	position: 'relative',
 });

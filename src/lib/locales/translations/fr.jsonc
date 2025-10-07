@@ -11,7 +11,7 @@
 
 	"scroll-cue": "Défiler vers le contenu",
 
-	"hero": "Tisser le design et le développement",
+	"hero": "Tisser le design et  \n le développement",
 	"hero-subtitle": "Un développeur avec l’*œil* d’un designer",
 
 	"image_hero-title": "Courants néon",
@@ -43,4 +43,7 @@
 	"projects-content": "## Quelques clients avec qui j’ai collaboré.",
 
 	"error-video": "Désolé, votre navigateur ne peut pas lire cette vidéo.",
+
+	"hero-title": "Cercles violets en dégradé animés",
+	"hero-alt": "Arrière-plan abstrait de cercles concentriques superposés en violet, pourpre et magenta, avec un léger mouvement en parallaxe qui fait subtilement bouger les couches.",
 }

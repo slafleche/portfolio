@@ -5,21 +5,21 @@ import type { PropsWithChildren } from 'react';
 import * as glassyStyles from '@/styles/glassy.css';
 
 export type GlassyPanelProps = PropsWithChildren<{
-	/** Optional wrapper classes */
 	className?: string;
-	/** Optional classes applied to the frosted surface */
 	surfaceClassName?: string;
-	/** Disable the rim highlight if false */
-	showRim?: boolean;
+	contentClassName?: string;
+	type?: string;
 }>;
 
 export default function GlassyPanel({
 	className,
 	surfaceClassName,
+	contentClassName,
+	type,
 	children,
 }: GlassyPanelProps) {
 	return (
-		<div className={clsx(glassyStyles.frame, className)}>
+		<div className={clsx(glassyStyles.frame, className)} data-type={type}>
 			<div className={clsx(glassyStyles.surface, surfaceClassName)}>
 				{/* Grain */}
 				<div className={glassyStyles.grain} aria-hidden />
@@ -29,10 +29,10 @@ export default function GlassyPanel({
 				<div className={glassyStyles.surfaceBorder} aria-hidden />
 				{/* Gradient overlay */}
 				<div className={glassyStyles.surfaceShine} aria-hidden />
-				{children}
+				<div className={clsx(glassyStyles.content, contentClassName)}>
+					{children}
+				</div>
 			</div>
 		</div>
 	);
 }
-
-// {showRim ? <div className={glassyStyles.rim} aria-hidden /> : null}

@@ -15,11 +15,11 @@ export const glassVars = {
 	backgroundColor: colorVars.white.alpha(0.06),
 	surfaceGlowPrimaryTint: chroma('hsl(210, 80%, 70%)').alpha(0.1),
 	surfaceGlowSecondaryTint: chroma('hsl(280, 80%, 70%)').alpha(0.14),
-	frameBorderColor: colorVars.white.alpha(0.25),
-	innerBorderColor: colorVars.white.alpha(0.22),
+	frameBorderColor: colorVars.white.alpha(0.15),
+	innerBorderColor: colorVars.white.alpha(0.12),
 	backdropBlur: m(15),
 	border: {
-		radius: m(32), // border Radius
+		radius: m(100), // border Radius
 		width: m(8),
 	},
 	// Specular highlight in the top left corner
@@ -31,8 +31,8 @@ export const glassVars = {
 	// Blur effect
 	surfaceGlow: {
 		blur: m(12),
-		opacity: 0.2,
-		primaryTintAlpha: 0.35,
+		opacity: 0.1,
+		primaryTintAlpha: 0.25,
 		secondaryTintAlpha: 0.25,
 	},
 	// Slight gradient overlay
@@ -40,7 +40,7 @@ export const glassVars = {
 		color: colorVars.black,
 		topAlpha: 0.05,
 		midStop: '45%',
-		bottomAlpha: 0.2,
+		bottomAlpha: 0.1,
 		direction: m(-45, 'deg'),
 	},
 	// Kind of "background" color
