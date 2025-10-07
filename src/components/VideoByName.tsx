@@ -13,8 +13,8 @@ type VideoKind = 'hero' | 'inline';
 
 type Props = {
 	name: string;
-	posterAlt?: string; // (posters don't use alt; keep for parity with ImageByName)
 	title?: string;
+	label?: string;
 	kind?: VideoKind;
 	className?: string;
 	style?: React.CSSProperties;
@@ -32,8 +32,8 @@ type Props = {
 
 export default function VideoByName({
 	name,
-	posterAlt = '',
 	title,
+	label,
 	kind = 'hero',
 	className,
 	style,
@@ -137,6 +137,7 @@ export default function VideoByName({
 			className={className}
 			style={computedStyle}
 			title={title}
+			aria-label={label}
 			poster={data.posterUrl}
 			autoPlay={autoPlay}
 			muted={muted}
@@ -144,7 +145,6 @@ export default function VideoByName({
 			controls={controls}
 			playsInline={playsInline}
 			preload={priority ? 'auto' : 'metadata'}
-			aria-label={posterAlt}
 		>
 			{t('error-video')}
 		</video>

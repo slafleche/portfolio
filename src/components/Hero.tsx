@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import * as s from '@/styles/components/hero.css';
 import { useT } from '@/lib/locales/useT';
 import * as layoutStyles from '@/styles/layout.css';
-import SkipToContent from './SkipToContent';
+// import SkipToContent from './SkipToContent';
 import GlassyPanel from './GlassyPanel';
 import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
@@ -21,10 +21,10 @@ export default function Hero({ className }: Props) {
 		<section className={clsx(s.root, className)}>
 			<VideoByName
 				name="hero-circles"
-				posterAlt=""
-				title=""
+				title={t('hero-title')}
+				label={t('hero-alt')}
 				kind="hero"
-				className={clsx(s.video)}
+				className={s.video}
 				autoPlay
 				muted
 				loop
@@ -40,22 +40,35 @@ export default function Hero({ className }: Props) {
 				<div className={s.ringBreaker} />
 			</div>
 
-			<div className={clsx(layoutStyles.content, s.content)}>
-				<GlassyPanel surfaceClassName={clsx(layoutStyles.panel, s.panel)}>
-					<h1 className={s.heading}>
-						<ReactMarkdown components={inlineMarkdownComponents}>
-							{t('hero')}
-						</ReactMarkdown>
-					</h1>
-					<p className={s.paragraph}>
-						<ReactMarkdown components={inlineMarkdownComponents}>
-							{t('hero-subtitle')}
-						</ReactMarkdown>
-					</p>
-				</GlassyPanel>
+			{/* <div className={clsx(layoutStyles.content, s.content)}> */}
+			<div className={clsx(layoutStyles.panel, s.panel)}>
+				<div className={s.vennContainer}>
+					<GlassyPanel className={clsx(s.panelA)}>
+						<GlassyPanel
+							className={clsx(s.panelB)}
+							contentClassName={clsx(s.panelContents)}
+						>
+							<div className={s.vennContents}>
+								<div className={s.vennMiddle}>
+									<h1 className={s.heading}>
+										<ReactMarkdown components={inlineMarkdownComponents}>
+											{t('hero')}
+										</ReactMarkdown>
+									</h1>
+									<p className={s.paragraph}>
+										<ReactMarkdown components={inlineMarkdownComponents}>
+											{t('hero-subtitle')}
+										</ReactMarkdown>
+									</p>
+								</div>
+							</div>
+						</GlassyPanel>
+					</GlassyPanel>
+				</div>
+				{/* </div> */}
 			</div>
 
-			<SkipToContent />
+			{/* <SkipToContent /> */}
 		</section>
 	);
 }

@@ -1,7 +1,8 @@
 import chroma, { type Color } from 'chroma-js';
 import * as CSS from 'csstype';
-import { MeasurementLike, m } from './helpers/measurement';
 import { computeFontWeight, fontWeightStyle } from './helpers/typography';
+import type { CssLike, MeasurementLike } from './helpers/types';
+import { m } from './helpers/measurement';
 export type ColorKeys = keyof typeof colors;
 export type ChromaColor = Color;
 
@@ -16,43 +17,46 @@ const backgroundColour = chroma('#251e32');
 // Target colour: #2c244b on #453564
 const shadow = backgroundColour.darken(0.8).desaturate(0.2).alpha(0.5);
 
+export const themeColours = {
+	darker: chroma('#322b4d'), // Darker purple
+	contrast_a: chroma('#90faf7'), // Electric blue
+	contrast_b: chroma('#E15DAE'), // Hot Pink
+	contrast_c: chroma('#F7D354'), // Yellow
+};
+
 const gradients = {
-	a_linear_a: chroma('#322b4d'),
+	a_linear_a: themeColours.darker,
 	a_linear_b: chroma('#6263b5'),
 	a_linear_c: chroma('#5d4cb9'),
 
 	a_spot_a: chroma('#99b7fd'),
-	a_spot_b: chroma('#90faf7'),
+	a_spot_b: themeColours.contrast_a,
 
 	// Card B
 	b_linear_a: chroma('#5b419a'),
 	b_linear_b: chroma('#b98cde'),
 	b_linear_c: chroma('#e1864e'),
 
-	b_spot_a: chroma('#E15DAE'),
-	b_spot_b: chroma('#F7D354'),
+	b_spot_a: themeColours.contrast_b,
+	b_spot_b: themeColours.contrast_c,
 };
 
-// export const bokenVars = {
-// 	// Default Bokeh overlay settings (consumed by components)
-// 	colors: [
-// 		gradients.b_linear_a,
-// 		gradients.b_linear_b,
-// 		gradients.b_linear_c,
-// 		gradients.b_spot_a,
-// 		gradients.a_linear_c,
-// 	],
-// 	opacity: 0.2,
-// 	blendMode: 'screen' as CSS.Property.MixBlendMode,
-// 	blur: 50,
-// 	blurScale: 1,
-// 	sizeScale: 0.7,
-// 	fadeMs: 300,
-// };
-// export const bokehColours = {
-//   a: a_linear_a,
-//   b:
-// };
+export const bokenVars = {
+	// Default Bokeh overlay settings (consumed by components)
+	colors: [
+		gradients.b_linear_a,
+		gradients.b_linear_b,
+		gradients.b_linear_c,
+		gradients.b_spot_a,
+		gradients.a_linear_c,
+	],
+	opacity: 0.2,
+	blendMode: 'screen' as CSS.Property.MixBlendMode,
+	blur: 50,
+	blurScale: 1,
+	sizeScale: 0.7,
+	fadeMs: 300,
+};
 
 export const gradientFull = {
 	overlayA: gradients.b_spot_a,
@@ -63,7 +67,7 @@ export const gradientFull = {
 export const gradientA = {
 	overlayA: gradients.a_spot_a,
 	overlayB: gradients.a_spot_b,
-	linear: [gradients.a_linear_a, gradients.a_linear_b, gradients.a_linear_c],
+	linear: [themeColours.darker, gradients.a_linear_b, gradients.a_linear_c],
 };
 
 export const gradientB = {
@@ -177,6 +181,11 @@ export const font = {
 	heading: {
 		...fontFamilies.baloo,
 	},
+	hero: {
+		fontFamily: fontFamilies.comfortaa,
+		size: m(45),
+		...fontWeightStyle(fontFamilies.comfortaa, 100),
+	},
 	h1: {
 		size: m(45),
 		...fontWeightStyle(fontFamilies.baloo, 70),
@@ -284,6 +293,9 @@ export const fontVars = {
 	menu: {
 		size: m(16),
 		relativeWeight: 50,
+	},
+	hero: {
+		...font.hero,
 	},
 	heading: {
 		color: colorVars.headingFg,

@@ -15,7 +15,7 @@ export default async function LocaleSegmentLayout({
 	children,
 	params,
 }: SegmentLayoutProps) {
-	// ✅ Next 15: params is a Promise — await it in server component
+	
 	const { LOCALE } = await params;
 	const locale = resolveLocale(LOCALE);
 

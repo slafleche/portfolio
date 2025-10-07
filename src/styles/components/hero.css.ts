@@ -1,7 +1,10 @@
-import { style, globalStyle } from '@vanilla-extract/css';
+import { style, globalStyle, keyframes } from '@vanilla-extract/css';
 import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
-import { colorVars } from '../vars';
+import { colorVars, themeColours, fontVars } from '../vars';
+import transforms from '../helpers/transforms';
+import { m } from '../helpers/measurement';
+import { margins, paddings } from '../helpers/spacing';
 
 export const root = style({
 	display: 'flex',
@@ -48,7 +51,7 @@ export const grain = style({
 	...fullSizeOfParent(),
 	...noiseBg({
 		opacity: 0.25,
-	}), // uses your existing noiseSVG helper
+	}),
 });
 
 /** A faint multi-stop wash to even very flat backgrounds */
@@ -70,9 +73,8 @@ export const centerSoften = style({
     140% 100% at 50% 0%,
     ${colorVars.shadow.alpha(1).css()} 0%,
     ${colorVars.shadow.alpha(0.15).css()} 42%,
-	${colorVars.shadow.alpha(0).css()} 70%
-	)`,
-	mixBlendMode: 'multiply',
+    ${colorVars.shadow.alpha(0).css()} 70%
+  )`,
 });
 
 /** Break the donut/ring radius with a soft band so it stops catching the eye */
@@ -83,9 +85,8 @@ export const ringBreaker = style({
     transparent 0%,
     ${colorVars.black.alpha(0.028).css()} 52%,
     ${colorVars.black.alpha(0.05).css()} 68%,
-	${colorVars.black.alpha(0).css()}  86%
-	)`,
-	mixBlendMode: 'soft-light',
+    ${colorVars.black.alpha(0).css()} 86%
+  )`,
 });
 
 export const content = style({
@@ -94,26 +95,68 @@ export const content = style({
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'center',
-	gap: '20px',
+	// gap: '20px',
 });
 
 export const heading = style({
 	textShadow: '0 0 10px rgba(0,0,0,.72)',
 	textAlign: 'center',
+	fontFamily: fontVars.hero.fontFamily.family,
+	fontWeight: fontVars.hero.fontWeight,
+	fontSize: fontVars.hero.size.css(),
 });
 
 export const paragraph = style({
 	textAlign: 'center',
 });
 
+// Do not export
+const offset = m(50);
+
+export const vennContainer = style({
+	position: 'relative',
+	// outline: 'solid red 1px',
+	...paddings({
+		all: offset.css(),
+	}),
+	...margins({
+		all: offset.css(),
+	}),
+});
+
+export const panelA = style({
+	position: 'relative',
+	width: '100%',
+	transform: transforms.value(transforms.translate(offset, offset.negation())),
+});
+
+export const panelB = style({
+	transform: transforms.value(
+		transforms.translate(offset.negation().double(), offset.double()),
+	),
+});
+
+export const vennContents = style({
+	// outline: 'solid white 1px',
+	transform: transforms.value(transforms.translate(offset, offset.negation())),
+});
+
+export const vennMiddle = style({
+	padding: offset.double().css(),
+});
+
 export const panel = style({
+	position: 'relative',
 	width: 'fit-content',
-	maxWidth: 'min(90vw, 640px)',
-	padding: '20px',
-	gap: '20px',
+	// maxWidth: 'min(90vw, 640px)',
+	maxWidth: '100%',
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'center',
 	alignSelf: 'center',
 	margin: '0 auto',
+});
+
+export const panelContents = style({
+	padding: offset.divide(2).css(),
 });
