@@ -3,8 +3,8 @@ import type { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { resolveLocale } from '@/lib/locales/locale';
 import '@/styles/globals.css';
-import { generateGoogleFontUrls } from '../src/lib/gfonts';
-import fontData from '@/data/fonts.config.json';
+
+import { GOOGLE_FONT_URLS_BY_LOCALE } from '@/data/generated/googleFonts.gen';
 
 interface RootLayoutProps {
 	children: ReactNode;
@@ -15,12 +15,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 	const cookieLocale = cookieStore.get('locale')?.value;
 	const lang = resolveLocale(cookieLocale);
 
-	// Generate optimized font URLs
-	const fontUrls = generateGoogleFontUrls(fontData, {
-		display: 'swap',
-		subsets: ['latin'],
-		stripWhitespaceFromText: false,
-	});
+	// If resolveLocale already narrows to 'en' | 'fr', this cast isn't needed.
+	const fontUrls = GOOGLE_FONT_URLS_BY_LOCALE[lang] ?? [];
 
 	return (
 		<html lang={lang}>

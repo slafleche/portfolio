@@ -1,7 +1,5 @@
-// src/styles/helpers/fontConfig.ts
 // One-stop helpers for font weights + family defs + loading/validating fonts.config.json.
-
-import type { FontFamilyDef, IMeasurement } from './types';
+import type { FontFamilyDef } from './types';
 
 // ---- Types expected from your JSON config ----
 export type FontCfgInput = {
@@ -16,6 +14,7 @@ export type FontsConfig = Record<string, FontCfgInput>;
 // ---- Load raw JSON (Next.js/modern TS supports JSON imports) ----
 // If your toolchain requires, keep the assert; otherwise you can drop it.
 import rawJson from '../../data/fonts.config.json' assert { type: 'json' };
+import type { IMeasurement } from './measurement';
 
 // ----------------- internals -----------------
 function toArray<T>(x: T | T[]): T[] {
