@@ -81,6 +81,7 @@ export function makeFamilyDef(
 	fallbacks: string[],
 	cfgMap: FontsConfig,
 	spacing: IMeasurement,
+	offsetToFlushTop: IMeasurement, //Even with a correct line height, headings are never flush unless you adjust them
 ): FontFamilyDef {
 	const cfg = cfgMap[familyName];
 	const weights = cfg
@@ -91,6 +92,7 @@ export function makeFamilyDef(
 		family: [primary, ...fallbacks].join(', '),
 		weights,
 		spacing,
+		offsetToFlushTop,
 	};
 }
 

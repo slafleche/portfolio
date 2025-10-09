@@ -14,6 +14,7 @@ export type MeasurementLike =
 export type FontFamilyDef = {
 	family: CSS.Property.FontFamily;
 	weights: { low: number; high: number };
+	offsetToFlushTop: IMeasurement;
 	spacing?: IMeasurement;
 };
 
