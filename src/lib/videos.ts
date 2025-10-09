@@ -1,4 +1,4 @@
-import manifestJson from '@/data/videos.manifest.json';
+import manifestJson from '@/data/generated/videos.manifest.gen.json';
 
 export type VideoVariant = {
 	rung: number;

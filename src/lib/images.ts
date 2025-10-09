@@ -1,4 +1,4 @@
-import manifest from '@/data/images.manifest.json';
+import manifest from '@/data/generated/images.manifest.gen.json';
 
 export type Variant = { w: number; url: string };
 export type ImageEntry = {
