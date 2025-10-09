@@ -29,12 +29,12 @@ type MenuProps = {
 export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const t = useT();
 	const { locale, root } = useLocale({ withLabel: true });
+
 	const [mounted, setMounted] = useState(false);
 	const [fontsReady, setFontsReady] = useState(false);
 	const [activeSection, setActiveSection] = useState<string | null>(null);
-	const [isAtTop, setIsAtTop] = useState(true);
+
 	const pointerInsideLogoRef = useRef(false);
-	const prevIsAtTopRef = useRef(true);
 
 	const { anchors, anchorCount, sectionIds } = useMenuAnchors(locale);
 
@@ -89,9 +89,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 	const handleLogoMouseEnter = useCallback(() => {
 		pointerInsideLogoRef.current = true;
-		if (isAtTop) return;
+		// previously blocked when "at top" — removed
 		triggerLogoEnter();
-	}, [isAtTop, triggerLogoEnter]);
+	}, [triggerLogoEnter]);
 
 	const handleLogoMouseLeave = useCallback(() => {
 		pointerInsideLogoRef.current = false;
@@ -102,12 +102,12 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		(event: FocusEvent<HTMLAnchorElement>) => {
 			pointerInsideLogoRef.current = true;
 			resetToIdle();
-			if (isAtTop) return;
+			// previously blocked when "at top" — removed
 			if (event.currentTarget.matches(':focus-visible')) {
 				triggerLogoEnter();
 			}
 		},
-		[resetToIdle, triggerLogoEnter, isAtTop],
+		[resetToIdle, triggerLogoEnter],
 	);
 
 	const handleLogoClick = useCallback(
@@ -148,6 +148,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		scheduleExit();
 	}, [hideHighlight, navRef, clearEnterDelay, scheduleExit]);
 
+	// Wait for fonts to load, then mark as mounted (for transitions)
 	useEffect(() => {
 		if (typeof document === 'undefined') {
 			setFontsReady(true);
@@ -156,11 +157,11 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		const fonts = document.fonts;
 		if (!fonts) {
 			setFontsReady(true);
-			return undefined;
+			return;
 		}
 		if (fonts.status === 'loaded') {
 			setFontsReady(true);
-			return undefined;
+			return;
 		}
 		let cancelled = false;
 		fonts.ready.then(
@@ -179,7 +180,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	useEffect(() => {
 		if (!fontsReady) {
 			setMounted(false);
-			return undefined;
+			return;
 		}
 		let raf1 = 0;
 		let raf2 = 0;
@@ -192,6 +193,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		};
 	}, [fontsReady]);
 
+	// Track active section for hash updates & highlighting
 	useEffect(() => {
 		const sections = sectionIds
 			.map((id) => document.getElementById(id))
@@ -199,7 +201,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 		if (!sections.length) {
 			setActiveSection(null);
-			return undefined;
+			return;
 		}
 
 		let rafId = 0;
@@ -225,8 +227,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			}
 
 			setActiveSection((prev) => (prev === nextId ? prev : nextId));
-			const atTop = window.scrollY <= 1;
-			setIsAtTop((prev) => (prev === atTop ? prev : atTop));
+			// previously tracked isAtTop to disable logo — removed
 		};
 
 		const requestUpdate = () => {
@@ -250,6 +251,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 	const firstSectionId = sectionIds[0] ?? null;
 
+	// Keep URL hash synced with active section
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
 		const { pathname, search, hash } = window.location;
@@ -273,19 +275,6 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		const url = `${pathname}${search}#${activeSection}`;
 		window.history.replaceState(window.history.state, '', url);
 	}, [activeSection, firstSectionId]);
-
-	useEffect(() => {
-		const prev = prevIsAtTopRef.current;
-		if (prev === isAtTop) return;
-		prevIsAtTopRef.current = isAtTop;
-		if (isAtTop) {
-			if (pointerInsideLogoRef.current) {
-				triggerLogoLeave();
-			}
-		} else if (pointerInsideLogoRef.current) {
-			triggerLogoEnter();
-		}
-	}, [isAtTop, triggerLogoEnter, triggerLogoLeave]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,
@@ -375,6 +364,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 								/>
 							</div>
 						</div>
+
 						<div className={clsx(s.contents)}>
 							<div className={clsx(s.logoItem, s.item)}>
 								<Link
@@ -390,7 +380,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 									onFocus={handleLogoFocus}
 									onBlur={handleBlur}
 									data-ui="link"
-									data-at-top={isAtTop ? 'true' : 'false'}
+									/* removed: data-at-top */
 									data-logo-anim={logoAnimationState}
 								>
 									<div className={s.logoClip}>
@@ -435,6 +425,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 							</ul>
 						</div>
 					</nav>
+
 					<nav
 						className={clsx(s.localeChanger, s.transitionAfterFonts)}
 						aria-label={t('localeChange')}
