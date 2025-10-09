@@ -62,6 +62,10 @@ globalStyle('h2:not([data-reach-accordion-item])', {
 	// background styles intentionally commented out
 });
 
+globalStyle('strong', {
+	fontWeight: 'bolder',
+});
+
 // export const fullRotationAnimation = keyframes({
 //   '0%': { transform: 'rotate(-360deg)' },
 // });

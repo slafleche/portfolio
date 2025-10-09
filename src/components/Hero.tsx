@@ -51,15 +51,21 @@ export default function Hero({ className }: Props) {
 							<div className={s.vennContents}>
 								<div className={s.vennMiddle}>
 									<h1 className={s.heading}>
-
-											<span className={s.line} data-position="first">
-												{t('hero-title_a')}
-											</span>
-											<br className={s.title_break} />
-											<span className={s.line} data-position="last">
-												{t('hero-title_b')}
-											</span>
-										
+										<span
+											className={s.line}
+											data-position="first"
+											data-text={t('hero-title_a')}
+										>
+											{t('hero-title_a')}
+										</span>
+										<br className={s.title_break} />
+										<span
+											className={s.line}
+											data-position="last"
+											data-text={t('hero-title_b')}
+										>
+											{t('hero-title_b')}
+										</span>
 									</h1>
 									<p className={s.paragraph}>
 										<ReactMarkdown components={inlineMarkdownComponents}>
