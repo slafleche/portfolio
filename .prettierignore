@@ -1,4 +1,4 @@
-/src/data/locales.gen.ts
+/src/data/generated/*
 /src/data/images.manifest.json
 **/*.gen.ts
 /public/images/

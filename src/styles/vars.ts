@@ -1,10 +1,16 @@
 import chroma, { type Color } from 'chroma-js';
 import * as CSS from 'csstype';
-import { computeFontWeight, fontWeightStyle } from './helpers/typography';
-import type { CssLike, MeasurementLike } from './helpers/types';
+import { fontWeight } from './helpers/typography';
+import type {
+	CssLike,
+	FontFamilyDef,
+	FontStyles,
+	MeasurementLike,
+} from './helpers/types';
 import { m } from './helpers/measurement';
 export type ColorKeys = keyof typeof colors;
 export type ChromaColor = Color;
+import fontsConfig, { makeFamilyDef } from '@/styles/helpers/fontConfig';
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
@@ -158,55 +164,6 @@ export const colors = {
 	transparent: chroma('#ffffff').alpha(0),
 } as const;
 
-export const fontFamilies = {
-	baloo: {
-		family: '"Baloo 2", Poppins, Comfortaa, Helvetica, Arial, sans-serif',
-		weights: {
-			low: 400,
-			high: 800,
-		},
-		spacing: m(0.3, 'rem'),
-	},
-	comfortaa: {
-		family: 'Comfortaa, Poppins, Helvetica, Arial, sans-serif',
-		weights: {
-			low: 300,
-			high: 700,
-		},
-		spacing: m(0.3, 'rem'),
-	},
-};
-
-export const font = {
-	heading: {
-		...fontFamilies.baloo,
-	},
-	hero: {
-		fontFamily: fontFamilies.comfortaa,
-		size: m(45),
-		...fontWeightStyle(fontFamilies.comfortaa, 100),
-	},
-	h1: {
-		size: m(45),
-		...fontWeightStyle(fontFamilies.baloo, 70),
-	},
-	h2: {
-		size: m(25),
-		...fontWeightStyle(fontFamilies.baloo, 60),
-	},
-	h3: {
-		size: m(20),
-		...fontWeightStyle(fontFamilies.baloo, 50),
-	},
-	body: {
-		size: m(22),
-		...fontFamilies.comfortaa,
-		...fontWeightStyle(fontFamilies.comfortaa, 60),
-		weight: computeFontWeight(fontFamilies.comfortaa, 60),
-		semiBold: computeFontWeight(fontFamilies.comfortaa, 70),
-	},
-} as const;
-
 export const colorVars = {
 	// Main Colours
 	brand: colors.brand,
@@ -242,6 +199,68 @@ export const colorVars = {
 	white: colors.white,
 	transparent: colors.transparent,
 };
+
+// Intentionally don't export font delarations, use font instead.
+const fontFamilies = {
+	baloo: makeFamilyDef(
+		'Baloo 2',
+		['Poppins', 'Comfortaa', 'Helvetica', 'Arial', 'sans-serif'],
+		fontsConfig,
+		m(0.3, 'rem'),
+	),
+	comfortaa: makeFamilyDef(
+		'Comfortaa',
+		['Poppins', 'Helvetica', 'Arial', 'sans-serif'],
+		fontsConfig,
+		m(0.3, 'rem'),
+	),
+	titan_one: makeFamilyDef(
+		'Titan One',
+		['sans-serif'],
+		fontsConfig,
+		m(0.3, 'rem'),
+	),
+
+	// yanone_kaffeesatz: {
+	// 	family:
+	// 		'Yanone Kaffeesatz, Comfortaa, Poppins, Helvetica, Arial, sans-serif',
+	// 	weights: { low: 200, high: 700 },
+	// 	spacing: m(0.3, 'rem'),
+	// },
+} satisfies Record<string, FontFamilyDef>;
+
+export const fontVars = {
+	menu: {
+		size: m(18),
+		...fontFamilies.baloo,
+	},
+	hero: {
+		family: fontFamilies.titan_one.family,
+		size: m(45),
+		...fontWeight(fontFamilies.titan_one, 100),
+	},
+	heading: {
+		...fontFamilies.baloo,
+	},
+	h1: {
+		size: m(45),
+		...fontWeight(fontFamilies.baloo, 70),
+	},
+	h2: {
+		size: m(25),
+		...fontWeight(fontFamilies.baloo, 60),
+	},
+	h3: {
+		size: m(20),
+		...fontWeight(fontFamilies.baloo, 50),
+	},
+	body: {
+		size: m(22),
+		color: colorVars.bodyFg,
+		...fontFamilies.comfortaa,
+		...fontWeight(fontFamilies.comfortaa, 60),
+	},
+} satisfies Record<string, FontStyles>;
 
 export type BorderMeasurementInput =
 	| MeasurementLike
@@ -289,35 +308,34 @@ export const borderVars = {
 	radius: m(6),
 };
 
-export const fontVars = {
-	menu: {
-		size: m(16),
-		relativeWeight: 50,
-	},
-	hero: {
-		...font.hero,
-	},
-	heading: {
-		color: colorVars.headingFg,
-		family: font.heading.family,
-	},
-	h1: {
-		...font.h1,
-	},
-	h2: {
-		...font.h2,
-	},
-	h3: {
-		...font.h3,
-	},
-	body: {
-		family: font.body.family,
-		size: font.body.size,
-		weight: font.body.weight,
-		semiBold: font.body.semiBold,
-		color: colorVars.bodyFg,
-	},
-};
+// export const fontVars: Record<string, FontStyles> = {
+// 	menu: {
+// 		size: m(16),
+// 	},
+// 	hero: {
+// 		...fonts.hero,
+// 	},
+// 	heading: {
+// 		color: colorVars.headingFg,
+// 		family: fontVars.heading.family,
+// 	},
+// 	h1: {
+// 		...fontVars.h1,
+// 	},
+// 	h2: {
+// 		...fontVars.h2,
+// 	},
+// 	h3: {
+// 		...fontVars.h3,
+// 	},
+// 	body: {
+// 		family: fontVars.body.family,
+// 		size: fontVars.body.size,
+// 		weight: fontVars.body.weight,
+// 		semiBold: fontVars.body.semiBold,
+// 		color: colorVars.bodyFg,
+// 	},
+// };
 
 export const archVars = {
 	top: m(55),

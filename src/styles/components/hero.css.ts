@@ -5,6 +5,9 @@ import { colorVars, themeColours, fontVars } from '../vars';
 import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
+import { fontCSSFrom } from '../helpers/typography';
+
+/* ========== root layout ========== */
 
 export const root = style({
 	display: 'flex',
@@ -14,6 +17,8 @@ export const root = style({
 	overflow: 'hidden',
 	isolation: 'isolate',
 });
+
+/* ========== media layers ========== */
 
 export const image = style({
 	...fullSizeOfParent(),
@@ -49,9 +54,7 @@ export const overlays = style({
 /** Very subtle static grain to break banding */
 export const grain = style({
 	...fullSizeOfParent(),
-	...noiseBg({
-		opacity: 0.25,
-	}),
+	...noiseBg({ opacity: 0.25 }),
 });
 
 /** A faint multi-stop wash to even very flat backgrounds */
@@ -89,39 +92,29 @@ export const ringBreaker = style({
   )`,
 });
 
+/* ========== content ========== */
+
 export const content = style({
 	position: 'relative',
 	zIndex: 2,
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'center',
-	// gap: '20px',
-});
-
-export const heading = style({
-	textShadow: '0 0 10px rgba(0,0,0,.72)',
-	textAlign: 'center',
-	fontFamily: fontVars.hero.fontFamily.family,
-	fontWeight: fontVars.hero.fontWeight,
-	fontSize: fontVars.hero.size.css(),
 });
 
 export const paragraph = style({
 	textAlign: 'center',
 });
 
+/* ========== panel / venn layout ========== */
+
 // Do not export
 const offset = m(50);
 
 export const vennContainer = style({
 	position: 'relative',
-	// outline: 'solid red 1px',
-	...paddings({
-		all: offset.css(),
-	}),
-	...margins({
-		all: offset.css(),
-	}),
+	...paddings({ all: offset.css() }),
+	...margins({ all: offset.css() }),
 });
 
 export const panelA = style({
@@ -137,7 +130,6 @@ export const panelB = style({
 });
 
 export const vennContents = style({
-	// outline: 'solid white 1px',
 	transform: transforms.value(transforms.translate(offset, offset.negation())),
 });
 
@@ -148,7 +140,6 @@ export const vennMiddle = style({
 export const panel = style({
 	position: 'relative',
 	width: 'fit-content',
-	// maxWidth: 'min(90vw, 640px)',
 	maxWidth: '100%',
 	display: 'flex',
 	flexDirection: 'column',
@@ -159,4 +150,99 @@ export const panel = style({
 
 export const panelContents = style({
 	padding: offset.divide(2).css(),
+});
+
+export const title_break = style({});
+
+/* ========== animated heading (two spans with data-position) ========== */
+
+const driftLeft = keyframes({
+	'0%': { backgroundPosition: '40% 50%' },
+	'50%': { backgroundPosition: '60% 50%' },
+	'100%': { backgroundPosition: '40% 50%' },
+});
+
+const driftRight = keyframes({
+	'0%': { backgroundPosition: '60% 50%' },
+	'50%': { backgroundPosition: '40% 50%' },
+	'100%': { backgroundPosition: '60% 50%' },
+});
+
+const mergePulse = keyframes({
+	'0%': { transform: 'translate(-50%, -50%) scale(0.98)', opacity: 0.16 },
+	'50%': { transform: 'translate(-50%, -50%) scale(1.04)', opacity: 0.22 },
+	'100%': { transform: 'translate(-50%, -50%) scale(0.98)', opacity: 0.16 },
+});
+
+export const heading = style({
+	position: 'relative',
+	margin: 0,
+	textAlign: 'center',
+	...fontCSSFrom(fontVars.hero),
+	lineHeight: 1.08,
+	// Additional responsive clamp if desired
+	fontSize: 'clamp(32px, 7vw, 80px)',
+	selectors: {
+		'&::after': {
+			content: '',
+			position: 'absolute',
+			left: '50%',
+			top: '50%',
+			transform: 'translate(-50%, -50%)',
+			width: 'min(60%, 28rem)',
+			height: '52px',
+			filter: 'blur(24px)',
+			background:
+				'radial-gradient(45% 70% at 50% 50%, rgba(255,255,255,0.22), rgba(255,255,255,0) 65%)',
+			pointerEvents: 'none',
+			zIndex: 0,
+			animation: `${mergePulse} 11s ease-in-out infinite`,
+			'@media': {
+				'(prefers-reduced-motion: reduce)': {
+					animation: 'none',
+				},
+			},
+		},
+	},
+});
+
+/** Base line style; branch with data-position for variants */
+export const line = style({
+	display: 'inline-block',
+	position: 'relative',
+	zIndex: 1,
+	WebkitTextFillColor: 'transparent',
+	backgroundClip: 'text',
+	WebkitBackgroundClip: 'text',
+	backgroundRepeat: 'no-repeat',
+	backgroundSize: '200% 100%',
+	backgroundPosition: '50% 50%',
+	willChange: 'background-position',
+	textShadow: `
+    0 1px 0 rgba(0,0,0,0.25),
+    0 6px 24px rgba(0,0,0,0.24)
+  `,
+	selectors: {
+		'&[data-position="first"]': {
+			fontVariationSettings: '"wght" 720',
+			backgroundImage: `linear-gradient(to right, ${themeColours.contrast_a.css()}, ${themeColours.darker.css()} 55%)`,
+			animation: `${driftLeft} 24s ease-in-out infinite`,
+			'@media': {
+				'(prefers-reduced-motion: reduce)': {
+					animation: 'none',
+				},
+			},
+		},
+		'&[data-position="last"]': {
+			fontVariationSettings: '"wght" 660',
+			backgroundImage: `linear-gradient(to left, ${themeColours.contrast_b.css()}, ${themeColours.darker.css()} 45%)`,
+			marginTop: '-0.08em',
+			animation: `${driftRight} 24s ease-in-out infinite`,
+			'@media': {
+				'(prefers-reduced-motion: reduce)': {
+					animation: 'none',
+				},
+			},
+		},
+	},
 });

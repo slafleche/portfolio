@@ -51,6 +51,7 @@
 		"pretty-bytes": "^7.1.0",
 		"sharp": "^0.34.3",
 		"strip-json-comments": "^3.1.1",
+		"tsx": "^4.20.6",
 		"typescript": "^5.9.2",
 		"typescript-eslint": "^8.42.0",
 		"undici": "^7.16.0",
@@ -64,6 +65,9 @@
 	},
 	"scripts": {
 		"locales": "node scripts/generateLocales.mjs",
+		"fonts:chars": "node scripts/generateFontTexts.mjs",
+		"fonts:urls": "tsx scripts/generateFontUrls.ts",
+		"fonts": "yarn locales && yarn fonts:chars && yarn fonts:urls",
 		"dev:open": "yarn dev & wait-on http://localhost:3000/en && open-cli http://localhost:3000/en",
 		"predev": "yarn locales && yarn format:img && format:video",
 		"dev": "next dev",
