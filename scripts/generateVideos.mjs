@@ -14,7 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** ===================== Config ===================== * */
 const SRC_MAP_PATH = 'src/assets/videos/videoSources.json'; // { "hero": "<url>", ... }
 const OUT_ROOT = 'public/videos'; // derived assets (gitignored)
-const MANIFEST_PATH = 'src/data/videos.manifest.json';
+const MANIFEST_PATH = 'src/data/generated/videos.manifest.gen.json';
 const TEMP_ROOT = 'tmp/videos';
 
 // 100vh fullscreen hero — 24fps, 2s segments

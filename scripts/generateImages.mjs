@@ -5,7 +5,7 @@ import sharp from 'sharp';
 
 const SRC_DIR = 'src/assets/images';
 const OUT_ROOT = 'public/images'; // cleaned each run
-const MANIFEST_PATH = 'src/data/images.manifest.json';
+const MANIFEST_PATH = 'src/data/generated/images.manifest.gen.json';
 const TEMP_ROOT = 'tmp/large-images';
 const LARGE_IMAGES_DIR = path.join(SRC_DIR, 'largeImages');
 const LARGE_IMAGES_CONFIG = path.join(SRC_DIR, 'largeImages.json');
