@@ -100,10 +100,12 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 	const handleLogoFocus = useCallback(
 		(event: FocusEvent<HTMLAnchorElement>) => {
+			const focusVisible = event.currentTarget.matches(':focus-visible');
 			pointerInsideLogoRef.current = true;
-			resetToIdle();
-			// previously blocked when "at top" — removed
-			if (event.currentTarget.matches(':focus-visible')) {
+			// Only reset the animation for keyboard focus where we want a fresh run.
+			if (focusVisible) {
+				resetToIdle();
+				// previously blocked when "at top" — removed
 				triggerLogoEnter();
 			}
 		},
