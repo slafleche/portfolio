@@ -5,15 +5,15 @@ import {
 	colors,
 	colorVars,
 	dropShadowVars,
-	fontFamilies,
 	fontVars,
 	logoVars,
 	menuVars,
 } from '../vars';
-import { fontWeightStyle } from '../helpers/typography';
+
 import { paddings } from '../helpers/spacing';
 import { m } from '../helpers/measurement';
 import transforms from '../helpers/transforms';
+import { fontCSSFrom, fontWeightStyle } from '../helpers/typography';
 
 export const root = style({
 	position: 'fixed',
@@ -370,8 +370,6 @@ export const logo = style({
 	position: 'relative',
 	zIndex: 1,
 });
-
-const menuFont = fontFamilies.baloo;
 // used to calculate the position of the underline and the vertical offset to center it
 // const linkOffset =
 
@@ -380,9 +378,8 @@ export const localeChanger = style({
 	display: 'flex',
 	alignContent: 'center',
 	height: '100%',
-	fontFamily: menuFont.family,
-	fontSize: fontVars.menu.size.css(),
-	...fontWeightStyle(menuFont, fontVars.menu.relativeWeight),
+	fontFamily: fontVars.menu.family,
+	...fontWeightStyle(fontVars.menu, 100),
 	lineHeight: 1,
 	textDecoration: 'none',
 	zIndex: 1,
@@ -422,12 +419,9 @@ export const navLink = style({
 	gridTemplateAreas: 'stack',
 	alignItems: 'start',
 	verticalAlign: 'baseline',
-	...paddings(menuVars.padding),
-	// transform: 'translateY(-50%)',
-	// fontSize: fontVars.menu.size.css(),
-	fontFamily: menuFont.family,
 	fontSize: fontVars.menu.size.css(),
-	...fontWeightStyle(menuFont, fontVars.menu.relativeWeight),
+	...paddings(menuVars.padding),
+	...fontCSSFrom(fontVars.menu),
 	lineHeight: 1,
 	textDecoration: 'none',
 	letterSpacing: '0.5px',

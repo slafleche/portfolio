@@ -2,7 +2,7 @@ import {
 	AVAILABLE_LOCALES,
 	TRANSLATIONS,
 	type Locale,
-} from '@/data/locales.gen';
+} from '../../data/locales';
 
 export const DEFAULT_LOCALE: Locale = 'en';
 

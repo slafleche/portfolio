@@ -1,3 +1,5 @@
+import type { CssLike } from './types';
+
 const isDev =
 	typeof process !== 'undefined' && process?.env?.NODE_ENV !== 'production';
 const enableDebug = isDev;
@@ -228,3 +230,16 @@ export const measurementMax = (a: IMeasurement, b: IMeasurement) => {
 	const winner = a.value >= b.value ? a : b;
 	return a === winner ? a : m(winner.value, unit);
 };
+
+// ----------------------
+// Type guards
+// ----------------------
+
+export function isCssLike(x: unknown): x is CssLike {
+	return (
+		typeof x === 'object' &&
+		x !== null &&
+		'css' in x &&
+		typeof (x as { css: unknown }).css === 'function'
+	);
+}
