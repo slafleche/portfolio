@@ -374,12 +374,13 @@ export const logo = style({
 // const linkOffset =
 
 export const localeChanger = style({
-	...absolutePosition.topRight('50%', menuVars.padding.horizontal.half().css()),
+	...absolutePosition.topRight(0, menuVars.padding.horizontal.half().css()),
 	display: 'flex',
 	alignContent: 'center',
-	height: '100%',
+	height: `${archVars.top.add(archVars.curveHeight).css()}`,
 	fontFamily: fontVars.menu.family,
-	...fontWeightStyle(fontVars.menu, 100),
+	...fontWeightStyle(fontVars.menu, 50),
+	fontSize: fontVars.menu.size.css(),
 	lineHeight: 1,
 	textDecoration: 'none',
 	zIndex: 1,
@@ -387,7 +388,7 @@ export const localeChanger = style({
 	transform: transforms.value(
 		transforms.skewX(menuVars.skew.multiply(-1.5)),
 		transforms.rotate(2),
-		transforms.translateY('-50%'),
+		transforms.translateY(-2),
 	),
 });
 
