@@ -107,11 +107,16 @@ export const paragraph = style({
 	textAlign: 'center',
 	fontSize: m(26).css(),
 	...fontWeightStyle(fontVars.hero, 0),
+	lineHeight: 1,
 	textShadow: `2px 2px 5px ${colorVars.black.css()}`,
+	...margins({
+		all: 0,
+		top: m(30),
+	}),
 });
 
 // Do not export
-const offset = m(30);
+const offset = m(40);
 
 export const vennContainer = style({
 	position: 'relative',
@@ -183,8 +188,12 @@ export const heading = style({
 	margin: 0,
 	textAlign: 'center',
 	...fontCSSFrom(fontVars.hero),
-	lineHeight: 1.08,
+	lineHeight: 1,
 	fontSize: 'clamp(32px, 7vw, 80px)',
+	marginTop: fontVars.hero.offsetToFlushTop?.css(),
+	...paddings({
+		top: m(5),
+	}),
 	selectors: {
 		'&::after': {
 			content: '',

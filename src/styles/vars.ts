@@ -207,18 +207,21 @@ const fontFamilies = {
 		['Poppins', 'Comfortaa', 'Helvetica', 'Arial', 'sans-serif'],
 		fontsConfig,
 		m(0.3, 'rem'),
+		m(-0.3, 'rem'),
 	),
 	comfortaa: makeFamilyDef(
 		'Comfortaa',
 		['Poppins', 'Helvetica', 'Arial', 'sans-serif'],
 		fontsConfig,
 		m(0.3, 'rem'),
+		m(0, 'rem'),
 	),
 	titan_one: makeFamilyDef(
 		'Titan One',
 		['sans-serif'],
 		fontsConfig,
 		m(0.1, 'rem'),
+		m(0, 'rem'),
 	),
 
 	// yanone_kaffeesatz: {
