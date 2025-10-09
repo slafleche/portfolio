@@ -1,4 +1,4 @@
-import { ComplexStyleRule, StyleRule } from '@vanilla-extract/css';
+import { type ComplexStyleRule, type StyleRule } from '@vanilla-extract/css';
 
 // Reduced Motion
 export enum ReducedMotion {

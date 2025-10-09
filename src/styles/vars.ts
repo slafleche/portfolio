@@ -218,7 +218,7 @@ const fontFamilies = {
 		'Titan One',
 		['sans-serif'],
 		fontsConfig,
-		m(0.3, 'rem'),
+		m(0.1, 'rem'),
 	),
 
 	// yanone_kaffeesatz: {
@@ -235,9 +235,9 @@ export const fontVars = {
 		...fontFamilies.baloo,
 	},
 	hero: {
-		family: fontFamilies.titan_one.family,
+		...fontFamilies.titan_one,
+		...fontWeight(fontFamilies.titan_one, 0),
 		size: m(45),
-		...fontWeight(fontFamilies.titan_one, 100),
 	},
 	heading: {
 		...fontFamilies.baloo,

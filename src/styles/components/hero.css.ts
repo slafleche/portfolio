@@ -1,13 +1,16 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
+import chroma from 'chroma-js';
 import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
-import { colorVars, themeColours, fontVars } from '../vars';
+import { colorVars, fontVars } from '../vars';
 import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
-import { fontCSSFrom } from '../helpers/typography';
+import { fontCSSFrom, fontWeightStyle } from '../helpers/typography';
 
-/* ========== root layout ========== */
+/* ============================================================================
+   ROOT + MEDIA + OVERLAYS
+   ========================================================================== */
 
 export const root = style({
 	display: 'flex',
@@ -17,8 +20,6 @@ export const root = style({
 	overflow: 'hidden',
 	isolation: 'isolate',
 });
-
-/* ========== media layers ========== */
 
 export const image = style({
 	...fullSizeOfParent(),
@@ -41,8 +42,6 @@ export const video = style({
 	objectFit: 'cover',
 });
 
-/* === overlays (sit above video, below content) === */
-
 export const overlays = style({
 	...fullSizeOfParent(),
 	zIndex: 1,
@@ -51,13 +50,13 @@ export const overlays = style({
 	inset: 0,
 });
 
-/** Very subtle static grain to break banding */
+/** Subtle static grain to break banding */
 export const grain = style({
 	...fullSizeOfParent(),
 	...noiseBg({ opacity: 0.25 }),
 });
 
-/** A faint multi-stop wash to even very flat backgrounds */
+/** Faint multi-stop wash to even flat backgrounds */
 const washTop = colorVars.shadow.alpha(0.3).css();
 const washMid = colorVars.white.alpha(0.1).css();
 const washBot = colorVars.black.alpha(0.6).css();
@@ -69,7 +68,7 @@ export const wash = style({
 	opacity: 0.5,
 });
 
-/** Soften center area so the circular band doesn’t pop */
+/** Soften center area */
 export const centerSoften = style({
 	...fullSizeOfParent(),
 	backgroundImage: `radial-gradient(
@@ -80,7 +79,7 @@ export const centerSoften = style({
   )`,
 });
 
-/** Break the donut/ring radius with a soft band so it stops catching the eye */
+/** Break ring radius with soft band */
 export const ringBreaker = style({
 	...fullSizeOfParent(),
 	backgroundImage: `radial-gradient(
@@ -92,7 +91,9 @@ export const ringBreaker = style({
   )`,
 });
 
-/* ========== content ========== */
+/* ============================================================================
+   CONTENT / PANELS
+   ========================================================================== */
 
 export const content = style({
 	position: 'relative',
@@ -104,12 +105,11 @@ export const content = style({
 
 export const paragraph = style({
 	textAlign: 'center',
+	...fontWeightStyle(fontVars.hero, 50),
 });
 
-/* ========== panel / venn layout ========== */
-
 // Do not export
-const offset = m(50);
+const offset = m(30);
 
 export const vennContainer = style({
 	position: 'relative',
@@ -154,18 +154,20 @@ export const panelContents = style({
 
 export const title_break = style({});
 
-/* ========== animated heading (two spans with data-position) ========== */
+/* ============================================================================
+   TITLE — PIXEL-ACCURATE TO ORIGINAL HTML
+   ========================================================================== */
 
-const driftLeft = keyframes({
-	'0%': { backgroundPosition: '40% 50%' },
-	'50%': { backgroundPosition: '60% 50%' },
-	'100%': { backgroundPosition: '40% 50%' },
-});
+/** Exact colour math from original HTML */
+const TITLE_LEFT = chroma('#88dbfc').saturate(0.2).hex(); // contrast_a
+const TITLE_RIGHT = chroma('#f4a5ff').saturate(0.2).hex(); // contrast_b
+const TITLE_MERGE = chroma('#5b4199').darken(0.2).hex(); // darker
 
-const driftRight = keyframes({
-	'0%': { backgroundPosition: '60% 50%' },
-	'50%': { backgroundPosition: '40% 50%' },
-	'100%': { backgroundPosition: '60% 50%' },
+/** Identical sweep timing (R→L then idle) — single-layer (::after) */
+const shimmerSweep = keyframes({
+	'0%': { backgroundPosition: '120% 50%' },
+	'70%': { backgroundPosition: '-120% 50%' },
+	'100%': { backgroundPosition: '-120% 50%' },
 });
 
 const mergePulse = keyframes({
@@ -180,7 +182,6 @@ export const heading = style({
 	textAlign: 'center',
 	...fontCSSFrom(fontVars.hero),
 	lineHeight: 1.08,
-	// Additional responsive clamp if desired
 	fontSize: 'clamp(32px, 7vw, 80px)',
 	selectors: {
 		'&::after': {
@@ -192,57 +193,82 @@ export const heading = style({
 			width: 'min(60%, 28rem)',
 			height: '52px',
 			filter: 'blur(24px)',
-			background:
-				'radial-gradient(45% 70% at 50% 50%, rgba(255,255,255,0.22), rgba(255,255,255,0) 65%)',
+			background: `radial-gradient(
+        45% 70% at 50% 50%,
+        ${colorVars.white.alpha(0.22).css()},
+        ${colorVars.white.alpha(0).css()} 65%
+      )`,
 			pointerEvents: 'none',
 			zIndex: 0,
 			animation: `${mergePulse} 11s ease-in-out infinite`,
-			'@media': {
-				'(prefers-reduced-motion: reduce)': {
-					animation: 'none',
-				},
-			},
+			'@media': { '(prefers-reduced-motion: reduce)': { animation: 'none' } },
 		},
 	},
 });
 
-/** Base line style; branch with data-position for variants */
+/**
+ * Text lines — base gradient on the element (static), sheen on ::after
+ * (animated). Uses only colorVars.white/black for highlights/shadows. For the
+ * sheen to show, set the same text content on a data attribute
+ * (data-text="...") so ::after can render it.
+ */
 export const line = style({
 	display: 'inline-block',
 	position: 'relative',
 	zIndex: 1,
+
+	// Safari-safe masking on the base text
+	color: 'transparent',
 	WebkitTextFillColor: 'transparent',
 	backgroundClip: 'text',
 	WebkitBackgroundClip: 'text',
+
+	// base gradient (static), like the HTML <span class="text">
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: '200% 100%',
 	backgroundPosition: '50% 50%',
-	willChange: 'background-position',
-	textShadow: `
-    0 1px 0 rgba(0,0,0,0.25),
-    0 6px 24px rgba(0,0,0,0.24)
-  `,
+
+	// use your black var for shadows (no rgba)
+	textShadow: [
+		`0 1px 0 ${colorVars.black.alpha(0.12).css()}`,
+		`0 6px 24px ${colorVars.black.alpha(0.1).css()}`,
+	].join(', '),
+
 	selectors: {
 		'&[data-position="first"]': {
-			fontVariationSettings: '"wght" 720',
-			backgroundImage: `linear-gradient(to right, ${themeColours.contrast_a.css()}, ${themeColours.darker.css()} 55%)`,
-			animation: `${driftLeft} 24s ease-in-out infinite`,
-			'@media': {
-				'(prefers-reduced-motion: reduce)': {
-					animation: 'none',
-				},
-			},
+			backgroundImage: `linear-gradient(to right, ${TITLE_LEFT} 30%, ${TITLE_MERGE} 70%)`,
 		},
 		'&[data-position="last"]': {
-			fontVariationSettings: '"wght" 660',
-			backgroundImage: `linear-gradient(to left, ${themeColours.contrast_b.css()}, ${themeColours.darker.css()} 45%)`,
 			marginTop: '-0.08em',
-			animation: `${driftRight} 24s ease-in-out infinite`,
-			'@media': {
-				'(prefers-reduced-motion: reduce)': {
-					animation: 'none',
-				},
-			},
+			backgroundImage: `linear-gradient(to left, ${TITLE_RIGHT} 0%, ${TITLE_MERGE} 70%)`,
+		},
+
+		// sheen layer — matches the HTML ".line::after" approach
+		'&::after': {
+			content: 'attr(data-text)', // requires the same text on data-text
+			position: 'absolute',
+			inset: 0,
+
+			// mask the pseudo to the text as well
+			color: 'transparent',
+			WebkitTextFillColor: 'transparent',
+			backgroundClip: 'text',
+			WebkitBackgroundClip: 'text',
+
+			// moving highlight only (uses colorVars.white)
+			backgroundImage: `linear-gradient(75deg,
+        ${colorVars.white.alpha(0).css()} 42%,
+        ${colorVars.white.alpha(0.85).css()} 50%,
+        ${colorVars.white.alpha(0).css()} 58%
+      )`,
+			backgroundRepeat: 'no-repeat',
+			backgroundSize: '200% 100%',
+			backgroundPosition: '120% 50%',
+
+			mixBlendMode: 'screen',
+			pointerEvents: 'none',
+			animation: `${shimmerSweep} 6.5s linear infinite`,
+			'@media': { '(prefers-reduced-motion: reduce)': { animation: 'none' } },
 		},
 	},
 });
