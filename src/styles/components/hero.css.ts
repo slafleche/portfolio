@@ -104,6 +104,7 @@ export const content = style({
 });
 
 export const paragraph = style({
+	position: 'relative',
 	textAlign: 'center',
 	fontSize: m(26).css(),
 	...fontWeightStyle(fontVars.hero, 0),
@@ -113,6 +114,37 @@ export const paragraph = style({
 		all: 0,
 		top: m(30),
 	}),
+});
+
+// Optional: use your palette tones if you prefer
+const warmA = chroma('#ffffffff');
+const warmB = chroma('#b98cde');
+
+// Gentle pulsing glow
+const gentleGlow = keyframes({
+	'0%, 100%': {
+		textShadow: `
+			0 0 1px ${warmA.alpha(0.4).css()},
+			0 0 3px ${warmA.alpha(0.15).css()}
+		`,
+		filter: 'brightness(1)',
+	},
+	'50%': {
+		textShadow: `
+			0 0 2px ${warmA.alpha(0.8).css()},
+			0 0 5px ${warmA.alpha(0.35).css()}
+		`,
+		filter: 'brightness(1.1)',
+	},
+});
+
+globalStyle(`.${paragraph} strong`, {
+	display: 'inline-block',
+	background: `linear-gradient(90deg, ${warmA.css()}, ${warmB.css()})`,
+	backgroundClip: 'text',
+	WebkitBackgroundClip: 'text',
+	color: 'transparent',
+	animation: `${gentleGlow} 5s ease-in-out infinite`,
 });
 
 // Do not export
