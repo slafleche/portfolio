@@ -105,7 +105,7 @@ export const content = style({
 
 export const paragraph = style({
 	textAlign: 'center',
-	...fontWeightStyle(fontVars.hero, 50),
+	...fontWeightStyle(fontVars.hero, 0),
 });
 
 // Do not export
