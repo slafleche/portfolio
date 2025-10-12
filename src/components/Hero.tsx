@@ -20,7 +20,7 @@ export default function Hero({ className }: Props) {
 	return (
 		<section className={clsx(s.root, className)}>
 			<VideoByName
-				name="hero-circles"
+				name="hero"
 				title={t('hero-title')}
 				label={t('hero-alt')}
 				kind="hero"
