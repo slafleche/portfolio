@@ -27,6 +27,7 @@ type Props = {
 
 	priority?: boolean;
 	pauseWhenOffscreen?: boolean;
+	playbackRate?: number;
 	onReady?: (video: HTMLVideoElement, meta: VideoEntry) => void;
 };
 
@@ -44,6 +45,7 @@ export default function VideoByName({
 	playsInline = true,
 	priority = false,
 	pauseWhenOffscreen = true,
+	playbackRate = 1,
 	onReady,
 }: Props) {
 	const data = getVideo(name);
@@ -65,6 +67,8 @@ export default function VideoByName({
 
 		let hls: HlsInstance | null = null;
 		let cancelled = false;
+		video.defaultPlaybackRate = playbackRate;
+		video.playbackRate = playbackRate;
 
 		(async () => {
 			try {
@@ -89,6 +93,7 @@ export default function VideoByName({
 				if (autoPlay || priority) {
 					void video.play(); // intentionally ignore promise for ESLint
 				}
+				video.playbackRate = playbackRate;
 				onReady?.(video, data);
 			} catch {
 				// swallow autoplay/HLS setup errors
@@ -127,7 +132,22 @@ export default function VideoByName({
 				}
 			}
 		};
-	}, [name, data, autoPlay, pauseWhenOffscreen, onReady, priority]);
+	}, [
+		name,
+		data,
+		autoPlay,
+		pauseWhenOffscreen,
+		onReady,
+		priority,
+		playbackRate,
+	]);
+
+	React.useEffect(() => {
+		const video = ref.current;
+		if (!video) return;
+		video.defaultPlaybackRate = playbackRate;
+		video.playbackRate = playbackRate;
+	}, [playbackRate]);
 
 	if (!data) return null;
 
