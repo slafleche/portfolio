@@ -44,7 +44,7 @@ export default function Hero({ className }: Props) {
 			{/* <div className={clsx(layoutStyles.content, s.content)}> */}
 			<div className={clsx(layoutStyles.panel, s.panel)}>
 				<div className={s.vennContainer}>
-					<GlassyPanel className={clsx(s.panelA)}>
+					<GlassyPanel className={clsx(s.panelFrameOuter, s.panelA)}>
 						<GlassyPanel
 							className={clsx(s.panelB)}
 							contentClassName={clsx(s.panelContents)}
