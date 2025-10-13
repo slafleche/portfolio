@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { createGlassBackground, glassVars } from './helpers/glassy';
 import { globalBoxShadow, globalDropShadowFilter } from './helpers/shadow';
 import { noiseBg } from './helpers/noiseSVG';
+import { colorVars } from './vars';
 
 const glassBackground = createGlassBackground();
 const innerRadius = glassVars.border.radius.subtract(glassVars.border.width);
@@ -28,8 +29,6 @@ export const surface = style([
 	glassSurface,
 	{
 		borderRadius: glassVars.border.radius.css(),
-		// overflow: 'hidden',
-		background: 'transparent',
 		position: 'relative',
 	},
 ]);
@@ -41,7 +40,6 @@ export const surfaceFill = style({
 	width: `calc(100% - ${glassVars.border.width.double().css()})`,
 	height: `calc(100% - ${glassVars.border.width.double().css()})`,
 	borderRadius: innerRadius.css(),
-	// borderRadius: innerRadius,
 	background: glassBackground.background,
 	pointerEvents: 'none',
 	zIndex: 0,
@@ -54,7 +52,6 @@ export const surfaceShine = style({
 	width: '100%',
 	height: '100%',
 	borderRadius: innerRadius.css(),
-	// borderRadius: innerRadius,
 	background: `linear-gradient(135deg, ${glassVars.surfaceGlowPrimaryTint
 		.alpha(glassVars.surfaceGlow.primaryTintAlpha)
 		.css()}, ${glassVars.surfaceGlowSecondaryTint
@@ -84,12 +81,8 @@ export const surfaceBorder = style({
 	background: [
 		`radial-gradient(circle at 0 0, ${glassVars.innerBorderColor
 			.alpha(glassVars.innerBorderHighlight.radialStrength)
-			.css()} 0, ${glassVars.innerBorderColor.alpha(0).css()} ${glassVars.outerBorderHighlight.spread.css()})`,
-		`conic-gradient(from -90deg at 0 0, transparent 0deg, ${glassVars.innerBorderColor
-			.alpha(glassVars.innerBorderHighlight.wedgeStrength)
-			.css()} 0deg, ${glassVars.innerBorderColor
-			.alpha(glassVars.innerBorderHighlight.wedgeStrength)
-			.css()} ${glassVars.outerBorderHighlight.angle.css()}, transparent ${glassVars.outerBorderHighlight.angle.css()})`,
+			.css()} 0, ${colorVars.transparent.css()} ${glassVars.outerBorderHighlight.spread.css()})`,
+		`conic-gradient(from -90deg at 0 0, transparent 0deg, ${glassVars.innerBorderColor.css()} 0deg, ${glassVars.innerBorderColor.css()} ${glassVars.outerBorderHighlight.angle.css()}, transparent ${glassVars.outerBorderHighlight.angle.css()})`,
 	].join(', '),
 	mixBlendMode: 'screen',
 	opacity: glassVars.innerBorderHighlight.opacity,

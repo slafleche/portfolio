@@ -15,17 +15,16 @@ export const glassVars = {
 	backgroundColor: colorVars.white.alpha(0.06),
 	surfaceGlowPrimaryTint: color('#0f0c18').alpha(0.5),
 	surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),
-	innerBorderColor: colorVars.white.alpha(0.12),
-	backdropBlur: m(3),
+	innerBorderColor: colorVars.white,
+	backdropBlur: m(5),
 	border: {
 		radius: m(80), // border Radius
 		width: m(8),
 	},
 	// Kind of "background" color
 	innerBorderHighlight: {
-		radialStrength: 0.8,
-		wedgeStrength: 0.9,
-		opacity: 0.1,
+		radialStrength: 0.5,
+		opacity: 1,
 	},
 	// Specular highlight in the top left corner
 	outerBorderHighlight: {
@@ -64,19 +63,22 @@ export const glossyBorder = {
 
 export const createGlassBackground = (): {
 	background: CSS.Property.Background<string>;
+	backgroundColor: CSS.Property.BackgroundColor;
 	backdropFilter: CSS.Property.BackdropFilter;
 	WebkitBackdropFilter: CSS.Property.BackdropFilter;
-} => ({
-	background: [
-		`linear-gradient(${glassVars.overlay.direction.css()}, ${glassVars.overlay.color
-			.alpha(glassVars.overlay.topAlpha)
-			.css()}, ${glassVars.overlay.color.alpha(0).css()} ${glassVars.overlay.midStop}, ${glassVars.overlay.color
-			.alpha(glassVars.overlay.bottomAlpha)
-			.css()} 100%)`,
-		`linear-gradient(135deg, ${glassVars.surfaceGlowPrimaryTint.css()}, ${glassVars.surfaceGlowSecondaryTint.css()})`,
-		glassVars.backgroundColor.css(),
-	].join(', '),
-	backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
-	WebkitBackdropFilter:
-		`blur(${glassVars.backdropBlur.css()})` as CSS.Property.BackdropFilter,
-});
+} => {
+	const overlayGradient = `linear-gradient(${glassVars.overlay.direction.css()}, ${glassVars.overlay.color
+		.alpha(glassVars.overlay.topAlpha)
+		.css()}, ${glassVars.overlay.color.alpha(0).css()} ${glassVars.overlay.midStop}, ${glassVars.overlay.color
+		.alpha(glassVars.overlay.bottomAlpha)
+		.css()} 100%)`;
+	const glowGradient = `linear-gradient(135deg, ${glassVars.surfaceGlowPrimaryTint.css()}, ${glassVars.surfaceGlowSecondaryTint.css()})`;
+	const baseColor = glassVars.backgroundColor.css();
+	return {
+		background: [overlayGradient, glowGradient].join(', '),
+		backgroundColor: baseColor,
+		backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
+		WebkitBackdropFilter:
+			`blur(${glassVars.backdropBlur.css()})` as CSS.Property.BackdropFilter,
+	};
+};

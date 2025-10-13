@@ -127,12 +127,16 @@ export const vennContainer = style({
 export const panelA = style({
 	position: 'relative',
 	width: '100%',
-	transform: transforms.value(transforms.translate(offset, offset.negation())),
+	transform: transforms.value(
+		transforms.translate(offset, offset.negation()),
+		transforms.rotate(m(4, 'deg')),
+	),
 });
 
 export const panelB = style({
 	transform: transforms.value(
 		transforms.translate(offset.negation().double(), offset.double()),
+		transforms.rotate(m(-5.5, 'deg')),
 	),
 });
 
