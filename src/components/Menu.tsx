@@ -11,7 +11,7 @@ import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { FocusEvent, MouseEvent } from 'react';
+import type { FocusEvent, MouseEvent, PointerEvent } from 'react';
 import { getRotationStyle } from '../lib/arch/archHelper';
 import { useMenuAnchors } from './menu/hooks/useMenuAnchors';
 import { useMenuHighlight } from './menu/hooks/useMenuHighlight';
@@ -26,6 +26,10 @@ type MenuProps = {
 	debugMiniBokeh?: boolean;
 };
 
+const LOGO_GLOW_TOP_THRESHOLD = 4;
+const LOGO_GLOW_DURATION = 900;
+const LOGO_GLOW_HOLD_DELAY = 160;
+
 export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const t = useT();
 	const { locale, root } = useLocale({ withLabel: true });
@@ -33,8 +37,16 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const [mounted, setMounted] = useState(false);
 	const [fontsReady, setFontsReady] = useState(false);
 	const [activeSection, setActiveSection] = useState<string | null>(null);
-
+	const [logoGlowState, setLogoGlowState] = useState<'idle' | 'pulse' | 'hold'>(
+		'idle',
+	);
 	const pointerInsideLogoRef = useRef(false);
+	const logoGlowTimeoutRef = useRef<number | null>(null);
+	const logoGlowRafRef = useRef<number | null>(null);
+	const logoGlowHoldIntentRef = useRef(false);
+	const logoGlowHoldActiveRef = useRef(false);
+	const logoGlowHoldTimerRef = useRef<number | null>(null);
+	// no pending animation once we leave the top; we only fire when already there
 
 	const { anchors, anchorCount, sectionIds } = useMenuAnchors(locale);
 
@@ -63,6 +75,139 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		clearExitDelay,
 		resetToIdle,
 	} = useLogoAnimation();
+
+	const clearLogoGlowTimeout = useCallback(() => {
+		if (logoGlowTimeoutRef.current) {
+			clearTimeout(logoGlowTimeoutRef.current);
+			logoGlowTimeoutRef.current = null;
+		}
+	}, []);
+
+	const clearLogoGlowRaf = useCallback(() => {
+		if (logoGlowRafRef.current !== null) {
+			cancelAnimationFrame(logoGlowRafRef.current);
+			logoGlowRafRef.current = null;
+		}
+	}, []);
+
+	const clearLogoGlowHoldTimer = useCallback(() => {
+		if (logoGlowHoldTimerRef.current !== null) {
+			clearTimeout(logoGlowHoldTimerRef.current);
+			logoGlowHoldTimerRef.current = null;
+		}
+	}, []);
+
+	const startLogoGlowPulse = useCallback(() => {
+		if (typeof window === 'undefined') return;
+		logoGlowHoldActiveRef.current = false;
+		clearLogoGlowHoldTimer();
+		clearLogoGlowTimeout();
+		clearLogoGlowRaf();
+		setLogoGlowState('idle');
+		logoGlowRafRef.current = window.requestAnimationFrame(() => {
+			logoGlowRafRef.current = null;
+			setLogoGlowState('pulse');
+			logoGlowTimeoutRef.current = window.setTimeout(() => {
+				logoGlowTimeoutRef.current = null;
+				if (!logoGlowHoldActiveRef.current) {
+					setLogoGlowState('idle');
+				}
+			}, LOGO_GLOW_DURATION);
+		});
+	}, [
+		clearLogoGlowHoldTimer,
+		clearLogoGlowRaf,
+		clearLogoGlowTimeout,
+	]);
+
+	const beginLogoGlowHold = useCallback(() => {
+		if (typeof window === 'undefined') return;
+		clearLogoGlowTimeout();
+		clearLogoGlowRaf();
+		logoGlowHoldActiveRef.current = true;
+		setLogoGlowState((prev) => (prev === 'hold' ? prev : 'hold'));
+	}, [clearLogoGlowRaf, clearLogoGlowTimeout]);
+
+	const queueLogoGlow = useCallback(
+		(mode: 'pulse' | 'hold') => {
+			if (typeof window === 'undefined') return false;
+			if (window.scrollY > LOGO_GLOW_TOP_THRESHOLD) return false;
+			if (mode === 'hold') {
+				beginLogoGlowHold();
+			} else {
+				startLogoGlowPulse();
+			}
+			return true;
+		},
+		[beginLogoGlowHold, startLogoGlowPulse],
+	);
+
+	const handleLogoPointerDown = useCallback(
+		(event: PointerEvent<HTMLAnchorElement>) => {
+			if (typeof window === 'undefined') return;
+			if (event.pointerType === 'mouse' && event.button !== 0) return;
+			const { pathname } = window.location;
+			const isRootPath = pathname === root || pathname === `${root}/`;
+			if (!isRootPath) return;
+			logoGlowHoldIntentRef.current = true;
+			logoGlowHoldActiveRef.current = false;
+			if (event.currentTarget.setPointerCapture) {
+				try {
+					event.currentTarget.setPointerCapture(event.pointerId);
+				} catch {
+					// ignore capture errors
+				}
+			}
+			clearLogoGlowHoldTimer();
+			logoGlowHoldTimerRef.current = window.setTimeout(() => {
+				if (!logoGlowHoldIntentRef.current) return;
+				logoGlowHoldTimerRef.current = null;
+				queueLogoGlow('hold');
+			}, LOGO_GLOW_HOLD_DELAY);
+		},
+		[clearLogoGlowHoldTimer, queueLogoGlow, root],
+	);
+
+	const handleLogoPointerUp = useCallback(
+		(event: PointerEvent<HTMLAnchorElement>) => {
+			if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+				event.currentTarget.releasePointerCapture(event.pointerId);
+			}
+			const wasHolding = logoGlowHoldActiveRef.current;
+			logoGlowHoldIntentRef.current = false;
+			logoGlowHoldActiveRef.current = false;
+			clearLogoGlowHoldTimer();
+			if (wasHolding) {
+				startLogoGlowPulse();
+			} else {
+				queueLogoGlow('pulse');
+			}
+		},
+		[clearLogoGlowHoldTimer, queueLogoGlow, startLogoGlowPulse],
+	);
+
+	const handleLogoPointerCancel = useCallback(
+		(event: PointerEvent<HTMLAnchorElement>) => {
+			if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+				event.currentTarget.releasePointerCapture(event.pointerId);
+			}
+			const wasHolding = logoGlowHoldActiveRef.current;
+			logoGlowHoldIntentRef.current = false;
+			logoGlowHoldActiveRef.current = false;
+			clearLogoGlowHoldTimer();
+			if (wasHolding && logoGlowState === 'hold') {
+				setLogoGlowState('idle');
+			}
+			clearLogoGlowTimeout();
+			clearLogoGlowRaf();
+		},
+		[
+			clearLogoGlowHoldTimer,
+			clearLogoGlowRaf,
+			clearLogoGlowTimeout,
+			logoGlowState,
+		],
+	);
 
 	const handleActivate = useCallback(
 		(index: number) => {
@@ -102,7 +247,6 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		(event: FocusEvent<HTMLAnchorElement>) => {
 			const focusVisible = event.currentTarget.matches(':focus-visible');
 			pointerInsideLogoRef.current = true;
-			// Only reset the animation for keyboard focus where we want a fresh run.
 			if (focusVisible) {
 				resetToIdle();
 				// previously blocked when "at top" — removed
@@ -127,8 +271,11 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 				);
 			}
 			window.scrollTo({ top: 0, behavior: 'smooth' });
+			if (event.detail === 0) {
+				queueLogoGlow('pulse');
+			}
 		},
-		[root],
+		[root, queueLogoGlow],
 	);
 
 	const handleBlur = useCallback(
@@ -194,6 +341,17 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			if (raf2) cancelAnimationFrame(raf2);
 		};
 	}, [fontsReady]);
+
+	useEffect(
+		() => () => {
+			clearLogoGlowHoldTimer();
+			clearLogoGlowTimeout();
+			clearLogoGlowRaf();
+			logoGlowHoldIntentRef.current = false;
+			logoGlowHoldActiveRef.current = false;
+		},
+		[clearLogoGlowHoldTimer, clearLogoGlowTimeout, clearLogoGlowRaf],
+	);
 
 	// Track active section for hash updates & highlighting
 	useEffect(() => {
@@ -329,8 +487,11 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 	return (
 		<>
-			<div className={s.root} data-mounted={mounted}>
-				<Arch ready={mounted}>
+				<div className={s.root} data-mounted={mounted}>
+					<Arch
+						ready={mounted}
+						glow={logoGlowState === 'idle' ? null : logoGlowState}
+					>
 					<nav
 						className={clsx(s.nav)}
 						ref={navRef}
@@ -377,6 +538,9 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 										linkRefs.current[0] = el;
 									}}
 									onClick={handleLogoClick}
+									onPointerDown={handleLogoPointerDown}
+									onPointerUp={handleLogoPointerUp}
+									onPointerCancel={handleLogoPointerCancel}
 									onMouseEnter={handleLogoMouseEnter}
 									onMouseLeave={handleLogoMouseLeave}
 									onFocus={handleLogoFocus}

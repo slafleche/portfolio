@@ -10,9 +10,14 @@ import { archVars } from '@/styles/vars';
 import { shadowTotalY } from '../styles/helpers/shadow';
 import { noiseStyle } from '../styles/helpers/noiseSVG';
 
-type Props = { className?: string; children?: ReactNode; ready?: boolean };
+type Props = {
+	className?: string;
+	children?: ReactNode;
+	ready?: boolean;
+	glow?: 'pulse' | 'hold' | null;
+};
 
-function Arch({ className, children, ready = false }: Props) {
+function Arch({ className, children, ready = false, glow = null }: Props) {
 	const windowSize = useWindowSize().width;
 	const baseId = useSafeId();
 	const [mounted, setMounted] = useState(false);
@@ -38,7 +43,10 @@ function Arch({ className, children, ready = false }: Props) {
 	);
 
 	return (
-		<div className={clsx(className, s.root)}>
+		<div
+			className={clsx(className, s.root)}
+			data-logo-glow={glow ?? undefined}
+		>
 			{mounted && ready && (
 				<>
 					{/* Shadow layer SVG rendered underneath, with padded viewBox to avoid clipping */}
