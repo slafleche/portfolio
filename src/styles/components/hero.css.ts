@@ -6,7 +6,7 @@ import { colorVars, fontVars } from '../vars';
 import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
-import { fontCSSFrom, fontWeightStyle } from '../helpers/typography';
+import { fontStyles, fontWeightStyle } from '../helpers/typography';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -219,8 +219,7 @@ export const heading = style({
 	position: 'relative',
 	margin: 0,
 	textAlign: 'center',
-	...fontCSSFrom(fontVars.hero),
-	lineHeight: 1,
+	...fontStyles(fontVars.hero),
 	fontSize: 'clamp(32px, 7vw, 80px)',
 	marginTop: fontVars.hero.offsetToFlushTop?.css(),
 	...paddings({

@@ -1,4 +1,8 @@
-import { color, type Color, type ColorWrapper } from '@/styles/helpers/colorWrap';
+import {
+	color,
+	type Color,
+	type ColorWrapper,
+} from '@/styles/helpers/colorWrap';
 import * as CSS from 'csstype';
 import { fontWeight } from './helpers/typography';
 import type {
@@ -76,11 +80,11 @@ export const gradientFull = {
 export const gradientA = {
 	overlayA: gradients.a_spot_a,
 	overlayB: gradients.a_spot_b,
-	linear: [
-		themeColours.darker,
-		gradients.a_linear_b,
-		gradients.a_linear_c,
-	] as [ColorWrapper, ColorWrapper, ColorWrapper],
+	linear: [themeColours.darker, gradients.a_linear_b, gradients.a_linear_c] as [
+		ColorWrapper,
+		ColorWrapper,
+		ColorWrapper,
+	],
 };
 
 export const gradientB = {
@@ -251,6 +255,7 @@ export const fontVars = {
 	hero: {
 		...fontFamilies.titan_one,
 		...fontWeight(fontFamilies.titan_one, 0),
+		lineHeight: 1.1,
 		size: m(45),
 	},
 	heading: {
@@ -322,34 +327,6 @@ export const borderVars = {
 	radius: m(6),
 };
 
-// export const fontVars: Record<string, FontStyles> = {
-// 	menu: {
-// 		size: m(16),
-// 	},
-// 	hero: {
-// 		...fonts.hero,
-// 	},
-// 	heading: {
-// 		color: colorVars.headingFg,
-// 		family: fontVars.heading.family,
-// 	},
-// 	h1: {
-// 		...fontVars.h1,
-// 	},
-// 	h2: {
-// 		...fontVars.h2,
-// 	},
-// 	h3: {
-// 		...fontVars.h3,
-// 	},
-// 	body: {
-// 		family: fontVars.body.family,
-// 		size: fontVars.body.size,
-// 		weight: fontVars.body.weight,
-// 		semiBold: fontVars.body.semiBold,
-// 		color: colorVars.bodyFg,
-// 	},
-// };
 
 export const archVars = {
 	top: m(55),
@@ -484,7 +461,7 @@ export const dropShadowVars = {
 	color: colorVars.shadow,
 };
 
-const baseColor = colorVars.white.mix(colorVars.bodyBg, 0.5);
+const baseColor = colorVars.white.mix(colorVars.bodyBg, 50);
 
 export const chevronVars = {
 	width: m(40),
@@ -495,7 +472,7 @@ export const chevronVars = {
 	gradientStart: baseColor,
 	gradientMid: baseColor,
 	gradientMidOffset: 0.7,
-	gradientEnd: colorVars.black.mix(baseColor, 0.5),
+	gradientEnd: colorVars.black.mix(baseColor, 50),
 	highlight: baseColor,
 	container: {
 		height: m(120),

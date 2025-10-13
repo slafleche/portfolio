@@ -15,9 +15,16 @@ type Props = {
 	children?: ReactNode;
 	ready?: boolean;
 	glow?: 'pulse' | 'hold' | null;
+	debugGlow?: boolean;
 };
 
-function Arch({ className, children, ready = false, glow = null }: Props) {
+function Arch({
+	className,
+	children,
+	ready = false,
+	glow = null,
+	debugGlow = false,
+}: Props) {
 	const windowSize = useWindowSize().width;
 	const baseId = useSafeId();
 	const [mounted, setMounted] = useState(false);
@@ -46,6 +53,7 @@ function Arch({ className, children, ready = false, glow = null }: Props) {
 		<div
 			className={clsx(className, s.root)}
 			data-logo-glow={glow ?? undefined}
+			data-glow-debug={debugGlow ? 'true' : undefined}
 		>
 			{mounted && ready && (
 				<>

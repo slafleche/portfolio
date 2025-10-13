@@ -25,6 +25,7 @@ export type FontStyles = {
 	fontWeight?: CSS.Property.FontWeight;
 	weight?: CSS.Property.FontWeight;
 	semiBold?: CSS.Property.FontWeight;
+	lineHeight?: CSS.Property.LineHeight;
 	spacing?: CssLike | string | { value: number; unit?: string } | undefined;
 	color?: CssLike | Color | CSS.Property.Color;
 };

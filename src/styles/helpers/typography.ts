@@ -8,10 +8,11 @@ export type FontCSS = Partial<{
 	fontSize: CSS.Property.FontSize;
 	fontWeight: CSS.Property.FontWeight;
 	letterSpacing: CSS.Property.LetterSpacing;
+	lineHeight: CSS.Property.LineHeight;
 }>;
 
 /** Normalize your FontStyles tokens into CSS-ready properties only */
-export function fontCSSFrom(vars: FontStyles): FontCSS {
+export function fontStyles(vars: FontStyles): FontCSS {
 	const out: FontCSS = {};
 
 	// family / fontFamily -> fontFamily
@@ -19,10 +20,14 @@ export function fontCSSFrom(vars: FontStyles): FontCSS {
 	if (vars.fontFamily) out.fontFamily = vars.fontFamily;
 
 	// tokens with .css()
-	if (isCssLike(vars.size))
-		out.fontSize = vars.size.css() as CSS.Property.FontSize;
+	if (isCssLike(vars.size)) out.fontSize = vars.size.css();
 	if (isCssLike(vars.spacing)) {
-		out.letterSpacing = vars.spacing.css() as CSS.Property.LetterSpacing;
+		out.letterSpacing = vars.spacing.css();
+	}
+	if (vars.lineHeight !== undefined) {
+		out.lineHeight = isCssLike(vars.lineHeight)
+			? vars.lineHeight.css()
+			: vars.lineHeight;
 	}
 
 	// weight (either field may exist)
