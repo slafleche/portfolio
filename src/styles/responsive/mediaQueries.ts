@@ -1,5 +1,5 @@
 import { calc } from '@vanilla-extract/css-utils';
-import { ComplexStyleRule, StyleRule } from '@vanilla-extract/css';
+import type { ComplexStyleRule, StyleRule } from '@vanilla-extract/css';
 import * as CSS from 'csstype';
 import { m, parseStringMeasurement } from '../helpers/measurement';
 import { layoutVars } from '../layoutVars.css';

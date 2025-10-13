@@ -6,7 +6,8 @@ import {
 	useMemo,
 	type PropsWithChildren,
 } from 'react';
-import { IMode, useMedia } from '../../styles/responsive';
+import { useMedia } from '../../styles/responsive';
+import type { IMode } from '../../styles/responsive';
 
 export type ResponsiveState = {
 	fullSize?: boolean;

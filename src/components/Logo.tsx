@@ -1,7 +1,7 @@
 'use client';
 import clsx from 'clsx';
 import * as s from '@/styles/components/logo.css';
-import chroma, { type Color } from 'chroma-js';
+import { color, type ColorWrapper } from '@/styles/helpers/colorWrap';
 import { useSafeId } from '../lib/dom';
 
 const LogoMode = {
@@ -17,7 +17,7 @@ type Props = {
 	mode?: LogoMode;
 	shadow?: boolean;
 	title?: string;
-	bgColour?: Color;
+	bgColour?: ColorWrapper;
 	colourState?: 'color' | 'mono';
 };
 
@@ -26,7 +26,7 @@ export default function Logo({
 	mode = LogoMode.light,
 	shadow = false,
 	title = "Stéphane's Logo",
-	bgColour = chroma('#251a38'),
+	bgColour = color('#251a38'),
 	colourState = 'color',
 }: Props) {
 	const isMono = mode === LogoMode.mono || colourState === 'mono';

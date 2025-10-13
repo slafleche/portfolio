@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { makeGradient } from '../helpers/gradients';
 import { colorVars, gradientA, gradientB } from '../vars';
-import { Color } from 'chroma-js';
 import border from '../helpers/borders';
 import { m } from '../helpers/measurement';
 import { paddings } from '../helpers/spacing';

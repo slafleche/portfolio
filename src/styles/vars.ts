@@ -1,4 +1,4 @@
-import chroma, { type Color } from 'chroma-js';
+import { color, type Color, type ColorWrapper } from '@/styles/helpers/colorWrap';
 import * as CSS from 'csstype';
 import { fontWeight } from './helpers/typography';
 import type {
@@ -9,7 +9,6 @@ import type {
 } from './helpers/types';
 import { m } from './helpers/measurement';
 export type ColorKeys = keyof typeof colors;
-export type ChromaColor = Color;
 import fontsConfig, { makeFamilyDef } from '@/styles/helpers/fontConfig';
 
 // Chroma color objects for use in non-CSS contexts or helpers
@@ -18,30 +17,30 @@ import fontsConfig, { makeFamilyDef } from '@/styles/helpers/fontConfig';
 // could flip the fg and bg colours if you want a dark/light mode or you
 // could do math on a value.
 
-// const backgroundColour = chroma('#453564');
-const backgroundColour = chroma('#251e32');
+// const backgroundColour = color('#453564');
+const backgroundColour = color('#251e32');
 // Target colour: #2c244b on #453564
 const shadow = backgroundColour.darken(0.8).desaturate(0.2).alpha(0.5);
 
 export const themeColours = {
-	darker: chroma('#322b4d'), // Darker purple
-	contrast_a: chroma('#90faf7'), // Electric blue
-	contrast_b: chroma('#E15DAE'), // Hot Pink
-	contrast_c: chroma('#F7D354'), // Yellow
+	darker: color('#322b4d'), // Darker purple
+	contrast_a: color('#90faf7'), // Electric blue
+	contrast_b: color('#E15DAE'), // Hot Pink
+	contrast_c: color('#F7D354'), // Yellow
 };
 
 const gradients = {
 	a_linear_a: themeColours.darker,
-	a_linear_b: chroma('#6263b5'),
-	a_linear_c: chroma('#5d4cb9'),
+	a_linear_b: color('#6263b5'),
+	a_linear_c: color('#5d4cb9'),
 
-	a_spot_a: chroma('#99b7fd'),
+	a_spot_a: color('#99b7fd'),
 	a_spot_b: themeColours.contrast_a,
 
 	// Card B
-	b_linear_a: chroma('#5b419a'),
-	b_linear_b: chroma('#b98cde'),
-	b_linear_c: chroma('#e1864e'),
+	b_linear_a: color('#5b419a'),
+	b_linear_b: color('#b98cde'),
+	b_linear_c: color('#e1864e'),
 
 	b_spot_a: themeColours.contrast_b,
 	b_spot_b: themeColours.contrast_c,
@@ -67,19 +66,31 @@ export const bokenVars = {
 export const gradientFull = {
 	overlayA: gradients.b_spot_a,
 	overlayB: gradients.b_spot_b,
-	linear: [gradients.b_linear_a, gradients.b_linear_b, gradients.b_linear_c],
+	linear: [
+		gradients.b_linear_a,
+		gradients.b_linear_b,
+		gradients.b_linear_c,
+	] as [ColorWrapper, ColorWrapper, ColorWrapper],
 };
 
 export const gradientA = {
 	overlayA: gradients.a_spot_a,
 	overlayB: gradients.a_spot_b,
-	linear: [themeColours.darker, gradients.a_linear_b, gradients.a_linear_c],
+	linear: [
+		themeColours.darker,
+		gradients.a_linear_b,
+		gradients.a_linear_c,
+	] as [ColorWrapper, ColorWrapper, ColorWrapper],
 };
 
 export const gradientB = {
 	overlayA: gradients.b_spot_a,
 	overlayB: gradients.b_spot_b,
-	linear: [gradients.b_linear_a, gradients.b_linear_b, gradients.b_linear_c],
+	linear: [
+		gradients.b_linear_a,
+		gradients.b_linear_b,
+		gradients.b_linear_c,
+	] as [ColorWrapper, ColorWrapper, ColorWrapper],
 };
 
 // var gradientBlues = {
@@ -128,16 +139,16 @@ const baseColours = {
 	backgroundColour,
 	shadow,
 	gradients,
-	fg: chroma('#ffffff'),
-	bg: chroma('#000000'),
+	fg: color('#ffffff'),
+	bg: color('#000000'),
 };
 
 export const colors = {
 	// Main Colours
-	brand: chroma('#5b4199'),
-	contrast: chroma('#88dbfc'),
+	brand: color('#5b4199'),
+	contrast: color('#88dbfc'),
 	// Nav
-	// navBg: chroma('#252136'),
+	// navBg: color('#252136'),
 	navFg: baseColours.fg,
 	// Body
 	bodyBg: baseColours.backgroundColour,
@@ -148,20 +159,20 @@ export const colors = {
 	// Shadows
 	shadow,
 	// Borders
-	border: chroma('#1d1d1f'),
+	border: color('#1d1d1f'),
 
 	// Gradient A
-	gradientA_main_start: chroma('#573f97'),
-	gradientA_main_end: chroma('#9d4e9c'),
+	gradientA_main_start: color('#573f97'),
+	gradientA_main_end: color('#9d4e9c'),
 
-	gradientA_secondary_start: chroma('#f6debc'),
-	gradientA_secondary_middle: chroma('#e6a87f'),
-	gradientA_secondary_end: chroma('#ed79a8'),
+	gradientA_secondary_start: color('#f6debc'),
+	gradientA_secondary_middle: color('#e6a87f'),
+	gradientA_secondary_end: color('#ed79a8'),
 
 	// Utility colours for mixing
-	black: chroma('#000000'),
-	white: chroma('#ffffff'),
-	transparent: chroma('#ffffff').alpha(0),
+	black: color('#000000'),
+	white: color('#ffffff'),
+	transparent: color('#ffffff').alpha(0),
 } as const;
 
 export const colorVars = {
@@ -467,8 +478,8 @@ export const menuVars = {
 };
 
 export const dropShadowVars = {
-	offsetX: m(12),
-	offsetY: m(12),
+	offsetY: m(10),
+	offsetX: m(10),
 	blur: m(3),
 	color: colorVars.shadow,
 };

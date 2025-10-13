@@ -1,4 +1,4 @@
-import chroma, { type Color as ChromaColor } from 'chroma-js';
+import { color } from '@/styles/helpers/colorWrap';
 import type * as CSS from 'csstype';
 import { glassVars } from './glassy';
 import { m } from './measurement';
@@ -37,7 +37,7 @@ export const archGlassVars = {
 	},
 	border: {
 		width: m(3),
-		color: chroma('white'),
+		color: color('#ffffff'),
 		hotspotPosition: 0.51,
 		hotspotCoverage: 0.2,
 		baseLeftAlpha: 0.1,
@@ -53,10 +53,10 @@ export const createArchGlassBackground = (): {
 	WebkitBackdropFilter: CSS.Property.BackdropFilter;
 } => {
 	// Ensure a tiny alpha so Safari renders backdrop-filter
-	const baseAlpha = archGlassVars.backgroundColor.alpha(); // getter -> number
-	const ensuredBg: ChromaColor = archGlassVars.backgroundColor.alpha(
+	const baseAlpha = archGlassVars.backgroundColor.value().alpha(); // getter -> number
+	const ensuredBg = archGlassVars.backgroundColor.alpha(
 		Math.max(baseAlpha || 0, 0.01),
-	); // setter -> Color
+	);
 
 	const overlay = `linear-gradient(${archGlassVars.overlay.direction.css()}, ${archGlassVars.overlay.color
 		.alpha(archGlassVars.overlay.topAlpha)

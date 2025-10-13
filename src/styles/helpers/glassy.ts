@@ -1,5 +1,5 @@
 import { colorVars, type IBorder } from '../vars';
-import chroma from 'chroma-js';
+import { color } from '@/styles/helpers/colorWrap';
 import { m } from './measurement';
 import type * as CSS from 'csstype';
 import { noiseStyle, type NoiseSvgOptions } from './noiseSVG';
@@ -15,8 +15,8 @@ export const glassVars = {
 	backgroundColor: colorVars.white.alpha(0.06),
 	// surfaceGlowPrimaryTint: chroma('hsl(210, 80%, 70%)').alpha(0.1),
 	// surfaceGlowSecondaryTint: chroma('hsl(280, 80%, 70%)').alpha(0.14),
-	surfaceGlowPrimaryTint: chroma('#0f0c18').alpha(0.5),
-	surfaceGlowSecondaryTint: chroma('#0f0c18').alpha(0.9),
+	surfaceGlowPrimaryTint: color('#0f0c18').alpha(0.5),
+	surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),
 	frameBorderColor: colorVars.white.alpha(0.15),
 	innerBorderColor: colorVars.white.alpha(0.12),
 	backdropBlur: m(15),

@@ -5,7 +5,7 @@ import * as s from '@/styles/components/bokeh.css';
 import { useSafeId } from '../lib/dom';
 import clsx from 'clsx';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
-import type { Color } from 'chroma-js';
+import type { ColorWrapper } from '@/styles/helpers/colorWrap';
 import { bokenVars } from '../styles/vars';
 
 // A simple, deterministic layout for ~10 circles.
@@ -27,7 +27,7 @@ const BLOBS: Blob[] = [
 
 export type BokehOverlayProps = {
 	/** One chroma color per blob; if fewer provided, they cycle */
-	colors?: Color[];
+	colors?: ColorWrapper[];
 	/** Overall opacity of the overlay [0..1] */
 	opacity?: number;
 	/** CSS blend mode (e.g. 'screen' | 'overlay' | 'soft-light' | 'plus-lighter') */
