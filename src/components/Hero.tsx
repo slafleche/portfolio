@@ -47,6 +47,7 @@ export default function Hero({ className }: Props) {
 					<GlassyPanel className={clsx(s.glassFrameLifted, s.panelA)}>
 						<GlassyPanel
 							className={clsx(s.panelB)}
+							surfaceClassName={s.heroSurface}
 							contentClassName={clsx(s.panelContents)}
 						>
 							<div className={s.vennContents}>
