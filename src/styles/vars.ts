@@ -504,3 +504,9 @@ export const heroVars = {
 export const spacingVars = {
 	scrollPaddingOffset: m(20),
 };
+
+export const consoleVars = {
+	borders: {
+		radius: m(18),
+	},
+};
