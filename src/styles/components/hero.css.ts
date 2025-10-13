@@ -7,7 +7,6 @@ import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
 import { fontStyles, fontWeightStyle } from '../helpers/typography';
-import { frame as glassFrame } from '../helpers/glassFrame.css';
 import { globalBoxShadow } from '../helpers/shadow';
 
 /* ============================================================================
@@ -121,28 +120,27 @@ export const paragraph = style({
 // Shared offsets for hero overlap framing.
 const offset = m(40);
 
-const panelALiftTransforms = [
-	transforms.translate(offset, offset.negation()),
-	transforms.rotate(m(4, 'deg')),
-];
-
 export const vennContainer = style({
 	position: 'relative',
 	...paddings({ all: offset.css() }),
 	...margins({ all: offset.css() }),
 });
 
-export const glassFrameLifted = style([
-	glassFrame,
-	{
-		boxShadow: globalBoxShadow(),
-	},
-]);
+const panelALiftTransforms = [
+	transforms.translate(offset, offset.negation()),
+	transforms.rotate(m(4, 'deg')),
+];
 
-export const panelA = style({
+export const consolePanel = style({
 	position: 'relative',
 	width: '100%',
 	transform: transforms.value(...panelALiftTransforms),
+	// boxShadow: globalBoxShadow({
+	// 	x: m(0),
+	// 	y: offset.multiply(0.75),
+	// 	blur: offset,
+	// }),
+	zIndex: 0,
 });
 
 export const panelB = style({
@@ -150,6 +148,11 @@ export const panelB = style({
 		transforms.translate(offset.negation().double(), offset.double()),
 		transforms.rotate(m(-5.5, 'deg')),
 	),
+	zIndex: 1,
+});
+
+export const code = style({
+	width: '100%',
 });
 
 export const vennContents = style({
