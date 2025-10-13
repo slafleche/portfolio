@@ -35,9 +35,26 @@ const VALID_EXT = new Set([
 	'.avif',
 ]);
 
-function normalizeLargeImageUrl(rawUrl) {
+function ensureDirectDropboxUrl(rawUrl) {
 	try {
 		const url = new URL(rawUrl);
+		if (url.hostname === 'www.dropbox.com' || url.hostname === 'dropbox.com') {
+			url.hostname = 'dl.dropboxusercontent.com';
+			if (url.searchParams.get('dl') === '0') {
+				url.searchParams.set('dl', '1');
+			}
+			return url.toString();
+		}
+		return url.toString();
+	} catch {
+		return rawUrl;
+	}
+}
+
+function normalizeLargeImageUrl(rawUrl) {
+	try {
+		const dropboxNormalized = ensureDirectDropboxUrl(rawUrl);
+		const url = new URL(dropboxNormalized);
 		if (url.hostname === 'drive.google.com') {
 			const match = url.pathname.match(/\/file\/d\/([^/]+)/);
 			if (match) {
@@ -138,6 +155,9 @@ async function processImage(filePath, nameOverride, manifest) {
 	const srcW = meta.width ?? 0;
 	const srcH = meta.height ?? 0;
 	if (!srcW || !srcH) return;
+	console.log(
+		`   • Generating variants for "${name}" from ${filePath} (${srcW}x${srcH})`,
+	);
 
 	const lqipW = Math.min(24, srcW);
 	const lqip = await img
@@ -182,25 +202,75 @@ async function processImage(filePath, nameOverride, manifest) {
 		console.warn(`⚠️ Duplicate image name "${name}" encountered. Overwriting previous entry.`);
 	}
 	manifest[name] = item;
+	console.log(
+		`   • Completed "${name}" (${targetWidths.length} responsive widths, plus original).`,
+	);
 }
 
+console.log(`→ Cleaning output directory "${OUT_ROOT}"`);
 await cleanOutRoot();
-await fs.mkdir(path.dirname(MANIFEST_PATH), { recursive: true });
+console.log(`   ✓ Cleared "${OUT_ROOT}"`);
+
+const manifestDir = path.dirname(MANIFEST_PATH);
+console.log(`→ Ensuring manifest directory "${manifestDir}" exists`);
+await fs.mkdir(manifestDir, { recursive: true });
+
+console.log(`→ Clearing temporary download directory "${TEMP_ROOT}"`);
 try {
 	await fs.rm(TEMP_ROOT, { recursive: true, force: true });
-} catch {}
+	console.log('   ✓ Temp directory emptied');
+} catch {
+	console.log('   • Temp directory not present, skipping removal');
+}
 
 const manifest = {}; // { [name]: {...} }
 
+console.log(`→ Walking source images in "${SRC_DIR}"`);
+let localCount = 0;
 for await (const file of walk(SRC_DIR)) {
 	await processImage(file, undefined, manifest);
+	localCount += 1;
+}
+console.log(`   ✓ Processed ${localCount} local image${localCount === 1 ? '' : 's'}.`);
+
+console.log(`→ Loading large image manifest "${LARGE_IMAGES_CONFIG}"`);
+let largeImagesMap = await loadLargeImagesConfig();
+const dropboxUpdates = [];
+let manifestChanged = false;
+for (const [name, rawUrl] of Object.entries(largeImagesMap)) {
+	if (typeof rawUrl !== 'string') continue;
+	const trimmed = rawUrl.trim();
+	const normalized = ensureDirectDropboxUrl(trimmed);
+	if (normalized !== trimmed) {
+		dropboxUpdates.push(name);
+		largeImagesMap[name] = normalized;
+		manifestChanged = true;
+	} else if (trimmed !== rawUrl) {
+		largeImagesMap[name] = trimmed;
+		manifestChanged = true;
+	}
+}
+if (manifestChanged) {
+	await fs.writeFile(
+		LARGE_IMAGES_CONFIG,
+		`${JSON.stringify(largeImagesMap, null, 2)}\n`,
+	);
+	console.log('   ✓ Wrote normalized large image manifest.');
+	if (dropboxUpdates.length) {
+		console.log(
+			`     - Applied direct Dropbox links for: ${dropboxUpdates.join(', ')}`,
+		);
+	}
+} else {
+	console.log('   • No Dropbox URL updates needed.');
 }
 
-const largeImagesMap = await loadLargeImagesConfig();
 const largeEntries = Object.entries(largeImagesMap);
 
 if (largeEntries.length) {
 	await fs.mkdir(TEMP_ROOT, { recursive: true });
+	console.log(`→ Downloading and processing ${largeEntries.length} remote image${largeEntries.length === 1 ? '' : 's'}`);
+	let remoteCount = 0;
 	for (const [name, rawUrl] of largeEntries) {
 		const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
 		if (!url) {
@@ -208,15 +278,26 @@ if (largeEntries.length) {
 			continue;
 		}
 		try {
+			console.log(`   • Downloading "${name}" from ${url}`);
 			const filePath = await downloadLargeImage(name, url);
+			console.log(`     - Saved to ${filePath}`);
 			await processImage(filePath, name, manifest);
+			remoteCount += 1;
 		} catch (error) {
 			console.error(`✗ Failed to process large image "${name}": ${error.message}`);
 		}
 	}
 	try {
 		await fs.rm(TEMP_ROOT, { recursive: true, force: true });
-	} catch {}
+		console.log('   ✓ Cleaned temporary download directory.');
+	} catch {
+		console.warn('⚠️ Could not clean temporary download directory.');
+	}
+	console.log(
+		`   ✓ Processed ${remoteCount} remote image${remoteCount === 1 ? '' : 's'}.`,
+	);
+} else {
+	console.log('→ No remote large images configured.');
 }
 
 await fs.writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2));
