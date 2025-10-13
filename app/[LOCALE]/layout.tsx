@@ -15,7 +15,6 @@ export default async function LocaleSegmentLayout({
 	children,
 	params,
 }: SegmentLayoutProps) {
-	
 	const { LOCALE } = await params;
 	const locale = resolveLocale(LOCALE);
 
@@ -23,7 +22,6 @@ export default async function LocaleSegmentLayout({
 		<LocaleProvider locale={locale}>
 			<WindowSizeProvider>
 				<ResponsiveProvider>
-					{/* <Menu debugMiniBokeh={true} /> */}
 					<Menu />
 					{children}
 				</ResponsiveProvider>

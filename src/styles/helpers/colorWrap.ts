@@ -20,18 +20,23 @@ type MixArgs = Parameters<Color['mix']>;
 export type ColorWrapper = {
 	unsafeColor: Color;
 	css: () => string;
-	alpha: (value: number) => ColorWrapper;
+	alpha: {
+		(): number;
+		(value: number): ColorWrapper;
+	};
 	darken: (value?: number) => ColorWrapper;
 	brighten: (value?: number) => ColorWrapper;
 	saturate: (value?: number) => ColorWrapper;
 	desaturate: (value?: number) => ColorWrapper;
-	mix: (
+	mix: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) => ColorWrapper;
+	mixSolid: (
 		target: ColorInput,
-		ratio?: MixArgs[1],
+		ratio?: number,
 		mode?: MixArgs[2],
 	) => ColorWrapper;
 	clone: () => ColorWrapper;
 	value: () => Color;
+	solid: () => ColorWrapper;
 };
 
 type ColorInput = Color | ColorWrapper | string;
@@ -64,10 +69,19 @@ const createScale = (stops: ColorInput[]): ChromaScale =>
 
 export function wrap(input: ColorInput): ColorWrapper {
 	const base = toColor(input);
+	const normalizeRatio = (ratio?: number) =>
+		ratio === undefined ? undefined : Math.max(0, Math.min(1, ratio / 100));
+	const alpha = ((value?: number) => {
+		if (value === undefined) {
+			return base.alpha();
+		}
+		return derive(base, (draft) => draft.alpha(value));
+	}) as ColorWrapper['alpha'];
+
 	return {
 		unsafeColor: base,
 		css: () => base.css(),
-		alpha: (value: number) => derive(base, (draft) => draft.alpha(value)),
+		alpha,
 		darken: (value?: number) => derive(base, (draft) => draft.darken(value)),
 		brighten: (value?: number) =>
 			derive(base, (draft) => draft.brighten(value)),
@@ -75,10 +89,19 @@ export function wrap(input: ColorInput): ColorWrapper {
 			derive(base, (draft) => draft.saturate(value)),
 		desaturate: (value?: number) =>
 			derive(base, (draft) => draft.desaturate(value)),
-		mix: (target: ColorInput, ratio?: MixArgs[1], mode?: MixArgs[2]) =>
-			derive(base, (draft) => draft.mix(toColor(target), ratio, mode)),
+		mix: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
+			derive(base, (draft) =>
+				draft.mix(toColor(target), normalizeRatio(ratio), mode),
+			),
+		mixSolid: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
+			derive(base, (draft) =>
+				draft
+					.alpha(1)
+					.mix(toColor(target), normalizeRatio(ratio), mode),
+			),
 		clone: () => wrap(cloneColor(base)),
 		value: () => cloneColor(base),
+		solid: () => derive(base, (draft) => draft.alpha(1)),
 	};
 }
 

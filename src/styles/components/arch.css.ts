@@ -25,8 +25,13 @@ export const shadow = style({
 	filter: `blur(${dropShadowVars.blur.css()})`,
 });
 
-const glowBaseColor = dropShadowVars.color.mix(colorVars.contrast, 10);
-const glowFillColor = dropShadowVars.color.mix(colorVars.contrast, 80);
+const shadowAlpha = dropShadowVars.color.alpha();
+const glowBaseColor = dropShadowVars.color
+	.mixSolid(colorVars.contrast, 45)
+	.alpha(shadowAlpha);
+const glowFillColor = dropShadowVars.color
+	.mixSolid(colorVars.contrast, 70)
+	.alpha(shadowAlpha);
 const gentleGlowFilter = `drop-shadow(0 0 14px ${glowBaseColor.css()}) drop-shadow(0 0 32px ${glowFillColor.css()})`;
 
 const logoGlow = keyframes({
@@ -40,7 +45,7 @@ const logoGlow = keyframes({
 	},
 	'20%': {
 		filter: `drop-shadow(0 0 10px ${glowBaseColor.css()}) drop-shadow(0 0 22px ${glowFillColor.css()})`,
-		fill: dropShadowVars.color.mix(colorVars.contrast, 40).css(),
+		fill: dropShadowVars.color.mixSolid(colorVars.contrast, 55).css(),
 	},
 	'100%': {
 		filter: `drop-shadow(0 0 0 ${dropShadowVars.color.css()})`,
@@ -56,6 +61,11 @@ export const shadowPath = style({
 			animation: `${logoGlow} 800ms ease-out`,
 		},
 		'[data-logo-glow="hold"] &': {
+			animation: 'none',
+			filter: gentleGlowFilter,
+			fill: glowFillColor.css(),
+		},
+		'[data-glow-debug="true"] &': {
 			animation: 'none',
 			filter: gentleGlowFilter,
 			fill: glowFillColor.css(),

@@ -24,13 +24,17 @@ import type { AnchorEntry } from './menu/menuUtils';
 
 type MenuProps = {
 	debugMiniBokeh?: boolean;
+	debugGlow?: boolean;
 };
 
 const LOGO_GLOW_TOP_THRESHOLD = 4;
 const LOGO_GLOW_DURATION = 900;
 const LOGO_GLOW_HOLD_DELAY = 160;
 
-export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
+export default function Menu({
+	debugMiniBokeh = false,
+	debugGlow = false,
+}: MenuProps = {}) {
 	const t = useT();
 	const { locale, root } = useLocale({ withLabel: true });
 
@@ -46,6 +50,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const logoGlowHoldIntentRef = useRef(false);
 	const logoGlowHoldActiveRef = useRef(false);
 	const logoGlowHoldTimerRef = useRef<number | null>(null);
+	const logoGlowClickSuppressRef = useRef(false);
 	// no pending animation once we leave the top; we only fire when already there
 
 	const { anchors, anchorCount, sectionIds } = useMenuAnchors(locale);
@@ -103,7 +108,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 		clearLogoGlowHoldTimer();
 		clearLogoGlowTimeout();
 		clearLogoGlowRaf();
-		setLogoGlowState('idle');
+		setLogoGlowState((prev) => (prev === 'pulse' ? 'idle' : prev));
 		logoGlowRafRef.current = window.requestAnimationFrame(() => {
 			logoGlowRafRef.current = null;
 			setLogoGlowState('pulse');
@@ -114,11 +119,7 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 				}
 			}, LOGO_GLOW_DURATION);
 		});
-	}, [
-		clearLogoGlowHoldTimer,
-		clearLogoGlowRaf,
-		clearLogoGlowTimeout,
-	]);
+	}, [clearLogoGlowHoldTimer, clearLogoGlowRaf, clearLogoGlowTimeout]);
 
 	const beginLogoGlowHold = useCallback(() => {
 		if (typeof window === 'undefined') return;
@@ -178,6 +179,10 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 			logoGlowHoldActiveRef.current = false;
 			clearLogoGlowHoldTimer();
 			if (wasHolding) {
+				logoGlowClickSuppressRef.current = true;
+				window.setTimeout(() => {
+					logoGlowClickSuppressRef.current = false;
+				}, LOGO_GLOW_DURATION);
 				startLogoGlowPulse();
 			} else {
 				queueLogoGlow('pulse');
@@ -259,6 +264,10 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 	const handleLogoClick = useCallback(
 		(event: MouseEvent<HTMLAnchorElement>) => {
 			if (typeof window === 'undefined') return;
+			if (logoGlowClickSuppressRef.current) {
+				logoGlowClickSuppressRef.current = false;
+				return;
+			}
 			const { pathname: currentPath, search, hash } = window.location;
 			const isRootPath = currentPath === root || currentPath === `${root}/`;
 			if (!isRootPath) return;
@@ -487,11 +496,12 @@ export default function Menu({ debugMiniBokeh = false }: MenuProps = {}) {
 
 	return (
 		<>
-				<div className={s.root} data-mounted={mounted}>
-					<Arch
-						ready={mounted}
-						glow={logoGlowState === 'idle' ? null : logoGlowState}
-					>
+			<div className={s.root} data-mounted={mounted}>
+		<Arch
+			ready={mounted}
+			glow={logoGlowState === 'idle' ? null : logoGlowState}
+			debugGlow={debugGlow}
+		>
 					<nav
 						className={clsx(s.nav)}
 						ref={navRef}

@@ -13,7 +13,7 @@ import {
 import { paddings } from '../helpers/spacing';
 import { m } from '../helpers/measurement';
 import transforms from '../helpers/transforms';
-import { fontCSSFrom, fontWeightStyle } from '../helpers/typography';
+import { fontStyles, fontWeightStyle } from '../helpers/typography';
 
 export const root = style({
 	position: 'fixed',
@@ -422,7 +422,7 @@ export const navLink = style({
 	verticalAlign: 'baseline',
 	fontSize: fontVars.menu.size.css(),
 	...paddings(menuVars.padding),
-	...fontCSSFrom(fontVars.menu),
+	...fontStyles(fontVars.menu),
 	lineHeight: 1,
 	textDecoration: 'none',
 	letterSpacing: '0.5px',
