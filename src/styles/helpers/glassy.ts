@@ -13,8 +13,6 @@ export const glassNoise = (
 
 export const glassVars = {
 	backgroundColor: colorVars.white.alpha(0.06),
-	// surfaceGlowPrimaryTint: chroma('hsl(210, 80%, 70%)').alpha(0.1),
-	// surfaceGlowSecondaryTint: chroma('hsl(280, 80%, 70%)').alpha(0.14),
 	surfaceGlowPrimaryTint: color('#0f0c18').alpha(0.5),
 	surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),
 	frameBorderColor: colorVars.white.alpha(0.15),
