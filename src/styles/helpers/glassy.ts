@@ -15,25 +15,30 @@ export const glassVars = {
 	backgroundColor: colorVars.white.alpha(0.06),
 	surfaceGlowPrimaryTint: color('#0f0c18').alpha(0.5),
 	surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),
-	frameBorderColor: colorVars.white.alpha(0.15),
 	innerBorderColor: colorVars.white.alpha(0.12),
-	backdropBlur: m(15),
+	backdropBlur: m(3),
 	border: {
-		radius: m(100), // border Radius
+		radius: m(80), // border Radius
 		width: m(8),
+	},
+	// Kind of "background" color
+	innerBorderHighlight: {
+		radialStrength: 0.8,
+		wedgeStrength: 0.9,
+		opacity: 0.1,
 	},
 	// Specular highlight in the top left corner
 	outerBorderHighlight: {
 		strength: 0.35,
-		spread: m(100, '%'),
-		angle: m(95, 'deg'),
+		spread: m(90, '%'),
+		angle: m(130, 'deg'),
 	},
 	// Blur effect
 	surfaceGlow: {
 		blur: m(12),
-		opacity: 0.1,
-		primaryTintAlpha: 0.25,
-		secondaryTintAlpha: 0.25,
+		opacity: 0.5,
+		primaryTintAlpha: 0.1,
+		secondaryTintAlpha: 0.6,
 	},
 	// Slight gradient overlay
 	overlay: {
@@ -43,12 +48,7 @@ export const glassVars = {
 		bottomAlpha: 0.1,
 		direction: m(-45, 'deg'),
 	},
-	// Kind of "background" color
-	innerBorderHighlight: {
-		radialStrength: 0.45,
-		wedgeStrength: 0.9,
-		opacity: 0.45,
-	},
+
 	/** Shared noise texture for glass surfaces (uses a default id) */
 	noiseDataUri: () => glassNoise(),
 	/** Unique filter id embedded in the default noise texture */
