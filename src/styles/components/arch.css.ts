@@ -36,14 +36,14 @@ const gentleGlowFilter = `drop-shadow(0 0 14px ${glowBaseColor.css()}) drop-shad
 
 const logoGlow = keyframes({
 	'0%': {
-		filter: `drop-shadow(0 0 0 ${glowBaseColor.css()})`,
-		fill: dropShadowVars.color.css(),
+		filter: gentleGlowFilter,
+		fill: glowFillColor.css(),
 	},
-	'15%': {
+	'30%': {
 		filter: `drop-shadow(0 0 14px ${glowBaseColor.css()}) drop-shadow(0 0 32px ${glowFillColor.css()})`,
 		fill: glowFillColor.css(),
 	},
-	'20%': {
+	'50%': {
 		filter: `drop-shadow(0 0 10px ${glowBaseColor.css()}) drop-shadow(0 0 22px ${glowFillColor.css()})`,
 		fill: dropShadowVars.color.mixSolid(colorVars.contrast, 55).css(),
 	},
