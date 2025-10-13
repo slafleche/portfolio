@@ -30,6 +30,7 @@ export default function Hero({ className }: Props) {
 				loop
 				playsInline
 				priority
+				playbackRate={2}
 			/>
 
 			{/* Banding-fix overlays (over video, under content) */}
