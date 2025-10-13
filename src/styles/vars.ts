@@ -461,6 +461,18 @@ export const dropShadowVars = {
 	color: colorVars.shadow,
 };
 
+export const glowVars = {
+	mix: {
+		base: 45,
+		fill: 70,
+		sustain: 55,
+	},
+	blur: {
+		primary: 14,
+		secondary: 32,
+	},
+};
+
 const baseColor = colorVars.white.mix(colorVars.bodyBg, 50);
 
 export const chevronVars = {
