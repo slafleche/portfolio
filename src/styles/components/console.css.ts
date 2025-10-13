@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { colorVars, consoleVars } from '../vars';
 import { m } from '../helpers/measurement';
 import { paddings } from '../helpers/spacing';
+import { globalBoxShadow } from '../helpers/shadow';
 
 const consoleFontStack = `"JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", monospace`;
 
@@ -12,7 +13,8 @@ export const root = style({
 	borderRadius: consoleVars.borders.radius.css(),
 	border: `1px solid ${colorVars.white.alpha(0.12).css()}`,
 	background: `linear-gradient(160deg, ${colorVars.black.alpha(0.85).css()} 0%, ${colorVars.contrast.alpha(0.22).css()} 100%)`,
-	boxShadow: `0 ${m(10).css()} ${m(30).css()} ${colorVars.black.alpha(0.45).css()}`,
+	// boxShadow: `0 ${m(10).css()} ${m(30).css()} ${colorVars.black.alpha(0.45).css()}`,
+	boxShadow: globalBoxShadow(),
 	overflow: 'hidden',
 	color: colorVars.white.alpha(0.86).css(),
 });
