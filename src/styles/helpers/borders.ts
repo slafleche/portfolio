@@ -1,7 +1,6 @@
 import * as CSS from 'csstype';
-import {
-	borderVars,
-	colorVars,
+import { borderVars, colorVars } from '../vars';
+import type {
 	IBorder,
 	BorderMeasurementInput,
 	BorderRadiusConfig,

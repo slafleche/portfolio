@@ -1,5 +1,3 @@
-import { ComplexStyleRule, StyleRule } from '@vanilla-extract/css';
-
 const nextTabbable = (
 	startingElement: Element | null = document.activeElement,
 	tabbables: HTMLElement[],

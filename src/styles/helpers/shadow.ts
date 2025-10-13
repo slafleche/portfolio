@@ -1,4 +1,4 @@
-import type { Color } from 'chroma-js';
+import type { Color, ColorWrapper } from '@/styles/helpers/colorWrap';
 import { colorVars, dropShadowVars } from '../vars';
 import { m, type IMeasurement } from './measurement';
 export interface IBoxShadow {
@@ -7,7 +7,7 @@ export interface IBoxShadow {
 	blur?: IMeasurement;
 	spread?: IMeasurement;
 	inset?: boolean;
-	color?: Color;
+	color?: ColorWrapper;
 }
 
 // Will default to global set of default value

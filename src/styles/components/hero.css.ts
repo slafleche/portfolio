@@ -1,5 +1,5 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
-import chroma from 'chroma-js';
+import { color } from '@/styles/helpers/colorWrap';
 import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
 import { colorVars, fontVars } from '../vars';
@@ -117,8 +117,8 @@ export const paragraph = style({
 });
 
 // Optional: use your palette tones if you prefer
-const warmA = chroma('#ffffffff');
-const warmB = chroma('#b98cde');
+const warmA = color('#ffffffff');
+const warmB = color('#b98cde');
 
 // Gentle pulsing glow
 const gentleGlow = keyframes({
@@ -198,9 +198,9 @@ export const title_break = style({});
    ========================================================================== */
 
 /** Exact colour math from original HTML */
-const TITLE_LEFT = chroma('#88dbfc').saturate(0.2).hex(); // contrast_a
-const TITLE_RIGHT = chroma('#f4a5ff').saturate(0.2).hex(); // contrast_b
-const TITLE_MERGE = chroma('#5b4199').darken(0.2).hex(); // darker
+const TITLE_LEFT = color('#88dbfc').saturate(0.2).css(); // contrast_a
+const TITLE_RIGHT = color('#f4a5ff').saturate(0.2).css(); // contrast_b
+const TITLE_MERGE = color('#5b4199').darken(0.2).css(); // darker
 
 /** Identical sweep timing (R→L then idle) — single-layer (::after) */
 const shimmerSweep = keyframes({

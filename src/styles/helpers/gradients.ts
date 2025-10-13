@@ -1,9 +1,9 @@
-import chroma, { type Color } from 'chroma-js';
+import { color, type ColorWrapper } from '@/styles/helpers/colorWrap';
 
 type Spec = {
-	spotA: Color;
-	spotB: Color;
-	linearColors: [Color, Color, Color];
+	spotA: ColorWrapper;
+	spotB: ColorWrapper;
+	linearColors: [ColorWrapper, ColorWrapper, ColorWrapper];
 	extrasPerSpan?: number;
 	softenL?: number;
 };
@@ -13,15 +13,15 @@ const interiorPercents = (p1: number, p2: number, n: number) =>
 	Array.from({ length: n }, (_, i) => pctLerp(p1, p2, (i + 1) / (n + 1)));
 
 function radialStopsAlphaFade(
-	base: Color,
+	base: ColorWrapper,
 	anchorPercents: number[],
 	anchorAlphas: number[],
 	extrasPerSpan = 1,
 	softenL = 0,
 ): string[] {
-	const [L, C, H] = base.lch();
+	const [L, C, H] = base.value().lch();
 	const make = (a: number) =>
-		chroma
+		color
 			.lch(L + softenL, C, H)
 			.alpha(a)
 			.css();
@@ -37,8 +37,8 @@ function radialStopsAlphaFade(
 			B = anchors[i + 1];
 		out.push(`${A.c} ${A.p}%`);
 		const mids = interiorPercents(A.p, B.p, extrasPerSpan);
-		const aA = chroma(A.c).alpha();
-		const aB = chroma(B.c).alpha();
+		const aA = color(A.c).value().alpha();
+		const aB = color(B.c).value().alpha();
 		for (let j = 0; j < mids.length; j++) {
 			const t = (j + 1) / (extrasPerSpan + 1);
 			const a = aA + t * (aB - aA);
@@ -51,9 +51,9 @@ function radialStopsAlphaFade(
 }
 
 function linearStopsLab(
-	top: Color,
-	mid: Color,
-	bottom: Color,
+	top: ColorWrapper,
+	mid: ColorWrapper,
+	bottom: ColorWrapper,
 	extrasPerSpan = 1,
 ): string[] {
 	const spans = [
@@ -65,7 +65,7 @@ function linearStopsLab(
 	for (const { a, b } of spans) {
 		out.push(`${a.c.css()} ${a.p}%`);
 		const mids = interiorPercents(a.p, b.p, extrasPerSpan);
-		const scale = chroma.scale([a.c, b.c]).mode('lab');
+		const scale = color.scale([a.c.value(), b.c.value()]).mode('lab');
 		for (let i = 0; i < mids.length; i++) {
 			const t = (i + 1) / (extrasPerSpan + 1);
 			out.push(`${scale(t).css()} ${mids[i]}%`);
