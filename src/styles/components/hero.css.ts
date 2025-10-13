@@ -117,8 +117,13 @@ export const paragraph = style({
 	}),
 });
 
-// Do not export
+// Shared offsets for hero overlap framing.
 const offset = m(40);
+
+const panelALiftTransforms = [
+	transforms.translate(offset, offset.negation()),
+	transforms.rotate(m(4, 'deg')),
+];
 
 export const vennContainer = style({
 	position: 'relative',
@@ -126,24 +131,17 @@ export const vennContainer = style({
 	...margins({ all: offset.css() }),
 });
 
-export const panelFrameOuter = style([
+export const glassFrameLifted = style([
 	glassFrame,
 	{
-		boxShadow: globalBoxShadow({
-			x: m(0),
-			y: offset.multiply(0.75),
-			blur: offset,
-		}),
+		boxShadow: globalBoxShadow(),
 	},
 ]);
 
 export const panelA = style({
 	position: 'relative',
 	width: '100%',
-	transform: transforms.value(
-		transforms.translate(offset, offset.negation()),
-		transforms.rotate(m(4, 'deg')),
-	),
+	transform: transforms.value(...panelALiftTransforms),
 });
 
 export const panelB = style({
