@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import {
+	clearMeasurementDebugEntries,
 	computeMeasurementDebugGroups,
 	getMeasurementDebugEntries,
+} from '@/styles/helpers/measurement';
+import type {
 	MeasurementDebugEntry,
+	MeasurementDebugGroups,
 } from '@/styles/helpers/measurement';
 
 declare global {
@@ -14,7 +18,12 @@ declare global {
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request) {
+type MeasurementDebugPayload = {
+	entries: MeasurementDebugEntry[];
+	groups?: MeasurementDebugGroups;
+};
+
+export function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const clear = searchParams.get('clear') === '1';
 	const dedupeParam = searchParams.get('dedupe');
@@ -22,14 +31,15 @@ export async function GET(request: Request) {
 	const dedupe = dedupeParam === null ? true : dedupeParam === '1';
 	const group = groupParam === null ? true : groupParam === '1';
 	const rawEntries = getMeasurementDebugEntries();
-	const entries = dedupe ? rawEntries : [...rawEntries];
-	const payload: Record<string, unknown> = { entries };
+	const entries: MeasurementDebugEntry[] = dedupe
+		? rawEntries
+		: [...rawEntries];
+	const payload: MeasurementDebugPayload = { entries };
 	if (group) {
 		payload.groups = computeMeasurementDebugGroups(entries);
 	}
 	if (clear) {
-		(globalThis as any).__MEASUREMENT_DEBUG__ = [];
-		(globalThis as any).__MEASUREMENT_DEBUG_INDEX__?.clear();
+		clearMeasurementDebugEntries();
 	}
 	return NextResponse.json(payload);
 }
