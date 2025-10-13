@@ -1,8 +1,7 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
-import { color } from '@/styles/helpers/colorWrap';
 import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
-import { colorVars, fontVars } from '../vars';
+import { colorVars, fontVars, themeColours } from '../vars';
 import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
@@ -116,37 +115,6 @@ export const paragraph = style({
 	}),
 });
 
-// Optional: use your palette tones if you prefer
-const warmA = color('#ffffffff');
-const warmB = color('#b98cde');
-
-// Gentle pulsing glow
-const gentleGlow = keyframes({
-	'0%, 100%': {
-		textShadow: `
-			0 0 1px ${warmA.alpha(0.4).css()},
-			0 0 3px ${warmA.alpha(0.15).css()}
-		`,
-		filter: 'brightness(1)',
-	},
-	'50%': {
-		textShadow: `
-			0 0 2px ${warmA.alpha(0.8).css()},
-			0 0 5px ${warmA.alpha(0.35).css()}
-		`,
-		filter: 'brightness(1.1)',
-	},
-});
-
-globalStyle(`.${paragraph} strong`, {
-	display: 'inline-block',
-	background: `linear-gradient(90deg, ${warmA.css()}, ${warmB.css()})`,
-	backgroundClip: 'text',
-	WebkitBackgroundClip: 'text',
-	color: 'transparent',
-	animation: `${gentleGlow} 5s ease-in-out infinite`,
-});
-
 // Do not export
 const offset = m(40);
 
@@ -173,7 +141,7 @@ export const vennContents = style({
 });
 
 export const vennMiddle = style({
-	padding: offset.double().css(),
+	padding: offset.multiply(2).css(),
 });
 
 export const panel = style({
@@ -188,7 +156,7 @@ export const panel = style({
 });
 
 export const panelContents = style({
-	padding: offset.divide(2).css(),
+	padding: offset.half().css(),
 });
 
 export const title_break = style({});
@@ -198,9 +166,9 @@ export const title_break = style({});
    ========================================================================== */
 
 /** Exact colour math from original HTML */
-const TITLE_LEFT = color('#88dbfc').saturate(0.2).css(); // contrast_a
-const TITLE_RIGHT = color('#f4a5ff').saturate(0.2).css(); // contrast_b
-const TITLE_MERGE = color('#a283ebff').darken(0.2).css(); // darker
+const TITLE_LEFT = themeColours.lights.a.saturate(0); // Electric blue
+const TITLE_RIGHT = themeColours.lights.b.saturate(0.2); // Pink
+const TITLE_MERGE = themeColours.lights.d.darken(0.2); // Light Purple
 
 /** Identical sweep timing (R→L then idle) — single-layer (::after) */
 const shimmerSweep = keyframes({
@@ -278,11 +246,11 @@ export const line = style({
 
 	selectors: {
 		'&[data-position="first"]': {
-			backgroundImage: `linear-gradient(to right, ${TITLE_LEFT} 30%, ${TITLE_MERGE} 70%)`,
+			backgroundImage: `linear-gradient(to right, ${TITLE_LEFT.css()} 30%, ${TITLE_MERGE.css()} 60%)`,
 		},
 		'&[data-position="last"]': {
 			marginTop: '-0.08em',
-			backgroundImage: `linear-gradient(to left, ${TITLE_RIGHT} 0%, ${TITLE_MERGE} 70%)`,
+			backgroundImage: `linear-gradient(to right, ${TITLE_MERGE.css()} 20%, ${TITLE_RIGHT.css()} 80%)`,
 		},
 
 		// sheen layer — matches the HTML ".line::after" approach

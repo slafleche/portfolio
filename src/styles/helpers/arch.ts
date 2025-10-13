@@ -1,20 +1,20 @@
 import { color } from '@/styles/helpers/colorWrap';
 import type * as CSS from 'csstype';
-import { glassVars } from './glassy';
 import { m } from './measurement';
 import { colorVars } from '../vars';
+import { glassNoise } from './glassy';
 
 /**
  * Arch-specific glass settings derived from the shared glass variables while
  * keeping the nav look separate from generic panels.
  */
 export const archGlassVars = {
-	backgroundColor: glassVars.backgroundColor,
-	surfaceGlowPrimaryTint: glassVars.surfaceGlowPrimaryTint,
-	surfaceGlowSecondaryTint: glassVars.surfaceGlowSecondaryTint,
-	innerBorderColor: glassVars.innerBorderColor,
-	backdropBlur: glassVars.backdropBlur, // IMeasurement
-	noiseDataUri: glassVars.noiseDataUri(),
+	backgroundColor: colorVars.white.alpha(0.06),
+	surfaceGlowPrimaryTint: color('#0f0c18').alpha(0.5),
+	surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),
+	innerBorderColor: colorVars.white.alpha(0.12),
+	backdropBlur: m(15),
+	noiseDataUri: glassNoise(),
 	overlay: {
 		color: colorVars.white,
 		topAlpha: 0.05,
@@ -23,17 +23,21 @@ export const archGlassVars = {
 		direction: m(180, 'deg'),
 	},
 	outerBorderHighlight: {
-		...glassVars.outerBorderHighlight,
+		spread: m(100, '%'),
+		angle: m(95, 'deg'),
 		width: m(3),
-		strength: Math.min(1, glassVars.outerBorderHighlight.strength + 0.1),
+		strength: 0.45,
 	},
 	innerBorderHighlight: {
-		...glassVars.innerBorderHighlight,
-		opacity: Math.min(1, glassVars.innerBorderHighlight.opacity + 0.1),
+		radialStrength: 0.45,
+		wedgeStrength: 0.9,
+		opacity: 0.55,
 	},
 	surfaceGlow: {
-		...glassVars.surfaceGlow,
-		opacity: Math.min(1, glassVars.surfaceGlow.opacity + 0.1),
+		blur: m(12),
+		primaryTintAlpha: 0.25,
+		secondaryTintAlpha: 0.25,
+		opacity: 0.2,
 	},
 	border: {
 		width: m(3),

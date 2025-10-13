@@ -21,33 +21,37 @@ import fontsConfig, { makeFamilyDef } from '@/styles/helpers/fontConfig';
 // could flip the fg and bg colours if you want a dark/light mode or you
 // could do math on a value.
 
-// const backgroundColour = color('#453564');
-const backgroundColour = color('#251e32');
+const backgroundColour = color('#453564');
 // Target colour: #2c244b on #453564
 const shadow = backgroundColour.darken(0.8).desaturate(0.2).alpha(0.5);
 
 export const themeColours = {
-	darker: color('#322b4d'), // Darker purple
-	contrast_a: color('#90faf7'), // Electric blue
-	contrast_b: color('#E15DAE'), // Hot Pink
-	contrast_c: color('#F7D354'), // Yellow
+	lights: {
+		a: color('#88dbfc'), // Electric blue
+		b: color('#f4a5ff'), // Hot Pink
+		c: color('#F7D354'), // Yellow
+		d: color('#a283eb'), // Light Violet
+	},
+	darks: {
+		a: backgroundColour,
+	},
 };
 
 const gradients = {
-	a_linear_a: themeColours.darker,
+	a_linear_a: shadow,
 	a_linear_b: color('#6263b5'),
 	a_linear_c: color('#5d4cb9'),
 
 	a_spot_a: color('#99b7fd'),
-	a_spot_b: themeColours.contrast_a,
+	a_spot_b: themeColours.lights.a,
 
 	// Card B
 	b_linear_a: color('#5b419a'),
 	b_linear_b: color('#b98cde'),
 	b_linear_c: color('#e1864e'),
 
-	b_spot_a: themeColours.contrast_b,
-	b_spot_b: themeColours.contrast_c,
+	b_spot_a: themeColours.lights.b,
+	b_spot_b: themeColours.lights.c,
 };
 
 export const bokenVars = {
@@ -80,11 +84,11 @@ export const gradientFull = {
 export const gradientA = {
 	overlayA: gradients.a_spot_a,
 	overlayB: gradients.a_spot_b,
-	linear: [themeColours.darker, gradients.a_linear_b, gradients.a_linear_c] as [
-		ColorWrapper,
-		ColorWrapper,
-		ColorWrapper,
-	],
+	linear: [
+		themeColours.darks.a,
+		gradients.a_linear_b,
+		gradients.a_linear_c,
+	] as [ColorWrapper, ColorWrapper, ColorWrapper],
 };
 
 export const gradientB = {
@@ -327,7 +331,6 @@ export const borderVars = {
 	radius: m(6),
 };
 
-
 export const archVars = {
 	top: m(55),
 	curveHeight: m(15),
@@ -463,9 +466,9 @@ export const dropShadowVars = {
 
 export const glowVars = {
 	mix: {
-		base: 45,
-		fill: 70,
-		sustain: 55,
+		base: 0.45,
+		fill: 0.7,
+		sustain: 0.55,
 	},
 	blur: {
 		primary: 14,
@@ -473,7 +476,7 @@ export const glowVars = {
 	},
 };
 
-const baseColor = colorVars.white.mix(colorVars.bodyBg, 50);
+const baseColor = colorVars.white.mix(colorVars.bodyBg, 0.5);
 
 export const chevronVars = {
 	width: m(40),
@@ -484,7 +487,7 @@ export const chevronVars = {
 	gradientStart: baseColor,
 	gradientMid: baseColor,
 	gradientMidOffset: 0.7,
-	gradientEnd: colorVars.black.mix(baseColor, 50),
+	gradientEnd: colorVars.black.mix(baseColor, 0.5),
 	highlight: baseColor,
 	container: {
 		height: m(120),
