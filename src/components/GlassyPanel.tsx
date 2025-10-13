@@ -2,7 +2,8 @@
 
 import clsx from 'clsx';
 import type { PropsWithChildren } from 'react';
-import * as glassyStyles from '@/styles/glassy.css';
+import * as glassSurfaceStyles from '@/styles/glassy.css';
+import * as glassFrameStyles from '@/styles/helpers/glassFrame.css';
 
 export type GlassyPanelProps = PropsWithChildren<{
 	className?: string;
@@ -19,17 +20,20 @@ export default function GlassyPanel({
 	children,
 }: GlassyPanelProps) {
 	return (
-		<div className={clsx(glassyStyles.frame, className)} data-type={type}>
-			<div className={clsx(glassyStyles.surface, surfaceClassName)}>
+		<div className={clsx(glassFrameStyles.frame, className)} data-type={type}>
+			<div className={clsx(glassSurfaceStyles.surface, surfaceClassName)}>
 				{/* Grain */}
-				<div className={glassyStyles.grain} aria-hidden />
+				<div className={glassSurfaceStyles.grain} aria-hidden />
 				{/* Fill, inside */}
-				<div className={glassyStyles.surfaceFill} aria-hidden />
+				<div className={glassSurfaceStyles.surfaceFill} aria-hidden />
 				{/* Shine in corner */}
-				<div className={glassyStyles.surfaceBorder} aria-hidden />
+				<div className={glassFrameStyles.surfaceBorder} aria-hidden />
 				{/* Gradient overlay */}
-				<div className={glassyStyles.surfaceShine} aria-hidden />
-				<div className={clsx(glassyStyles.content, contentClassName)}>
+				<div className={glassSurfaceStyles.surfaceShine} aria-hidden />
+				<div className={clsx(
+					glassSurfaceStyles.content,
+					contentClassName,
+				)}>
 					{children}
 				</div>
 			</div>
