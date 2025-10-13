@@ -1,7 +1,7 @@
 'use client';
 import * as s from '@/styles/components/card.css.ts';
 import type { ReactNode } from 'react';
-import Heading, { IHeadingDepth } from './Heading';
+import Heading, { type IHeadingDepth } from './Heading';
 import clsx from 'clsx';
 
 type Props = IHeadingDepth & {
@@ -19,14 +19,11 @@ export default function Card({
 	children,
 }: Props) {
 	return (
-		<div className={clsx(s.card, className)}>
-			{/* <div className={s.fakeBorder}> */}
-				<div
-					className={clsx(
-						// s.bgHelper,
-						gradient === 'a' ? s.cardGradientA : s.cardGradientB,
-					)}
-				>
+		<div className={clsx(s.root, className)}>
+			<div
+				className={clsx(s.gradient, gradient === 'a' ? s.cardGradientA : s.cardGradientB)}
+			>
+				<div style={{ opacity: 0 }}>
 					{title && (
 						<Heading className={s.title} depth={depth}>
 							{title}
@@ -34,7 +31,7 @@ export default function Card({
 					)}
 					{children}
 				</div>
-			{/* </div> */}
+			</div>
 		</div>
 	);
 }
