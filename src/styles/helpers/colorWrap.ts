@@ -53,6 +53,9 @@ const toColor = (input: ColorInput): Color => {
 
 const cloneColor = (source: Color): Color => chroma(source.css());
 
+const normalizeRatio = (ratio?: number) =>
+	ratio === undefined ? undefined : Math.max(0, Math.min(1, ratio / 100));
+
 const derive = (
 	source: Color,
 	modifier: (draft: Color) => Color,
@@ -69,8 +72,6 @@ const createScale = (stops: ColorInput[]): ChromaScale =>
 
 export function wrap(input: ColorInput): ColorWrapper {
 	const base = toColor(input);
-	const normalizeRatio = (ratio?: number) =>
-		ratio === undefined ? undefined : Math.max(0, Math.min(1, ratio / 100));
 	const alpha = ((value?: number) => {
 		if (value === undefined) {
 			return base.alpha();
@@ -114,3 +115,13 @@ export const color = Object.assign((input: ColorInput) => wrap(input), {
 	lch: (l: number, c: number, h: number) => wrap(chroma.lch(l, c, h)),
 	fromCss: (value: string) => wrap(value),
 });
+
+export const mixWithAlpha = (
+	base: ColorWrapper,
+	target: ColorInput,
+	percent: number,
+	alpha?: number,
+): ColorWrapper => {
+	const desiredAlpha = alpha ?? base.alpha();
+	return base.mixSolid(target, percent).alpha(desiredAlpha);
+};
