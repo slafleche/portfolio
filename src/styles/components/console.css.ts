@@ -1,0 +1,85 @@
+import { style } from '@vanilla-extract/css';
+import { colorVars, consoleVars } from '../vars';
+import { m } from '../helpers/measurement';
+import { paddings } from '../helpers/spacing';
+
+const consoleFontStack = `"JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", monospace`;
+
+export const root = style({
+	display: 'flex',
+	flexDirection: 'column',
+	width: '100%',
+	borderRadius: consoleVars.borders.radius.css(),
+	border: `1px solid ${colorVars.white.alpha(0.12).css()}`,
+	background: `linear-gradient(160deg, ${colorVars.black.alpha(0.85).css()} 0%, ${colorVars.contrast.alpha(0.22).css()} 100%)`,
+	boxShadow: `0 ${m(10).css()} ${m(30).css()} ${colorVars.black.alpha(0.45).css()}`,
+	overflow: 'hidden',
+	color: colorVars.white.alpha(0.86).css(),
+});
+
+export const header = style({
+	display: 'flex',
+	alignItems: 'center',
+	gap: m(6).css(),
+	...paddings({ vertical: m(10).css(), horizontal: m(16).css() }),
+	background: colorVars.black.alpha(0.6).css(),
+	borderBottom: `1px solid ${colorVars.white.alpha(0.06).css()}`,
+});
+
+export const windowDot = style({
+	width: m(10).css(),
+	height: m(10).css(),
+	borderRadius: '50%',
+	backgroundColor: '#ff5f56',
+	selectors: {
+		'&[data-variant="warn"]': {
+			backgroundColor: '#ffbd2e',
+		},
+		'&[data-variant="success"]': {
+			backgroundColor: '#27c93f',
+		},
+	},
+});
+
+export const title = style({
+	marginLeft: 'auto',
+	fontSize: m(14).css(),
+	fontFamily: consoleFontStack,
+	color: colorVars.white.alpha(0.5).css(),
+});
+
+export const body = style({
+	display: 'grid',
+	gap: m(6).css(),
+	fontFamily: consoleFontStack,
+	fontSize: m(16).css(),
+	lineHeight: 1.6,
+	...paddings({ all: m(18).css() }),
+	background: `linear-gradient(120deg, ${colorVars.black.alpha(0.75).css()} 0%, ${colorVars.black.alpha(0.55).css()} 100%)`,
+});
+
+export const line = style({
+	display: 'grid',
+	gridTemplateColumns: 'auto 1fr',
+	gap: m(12).css(),
+	alignItems: 'baseline',
+	color: colorVars.white.alpha(0.82).css(),
+});
+
+export const lineNumber = style({
+	color: colorVars.white.alpha(0.35).css(),
+	textAlign: 'right',
+});
+
+export const code = style({
+	whiteSpace: 'pre',
+});
+
+export const accent = style({
+	color: colorVars.contrast.alpha(0.85).css(),
+});
+
+export const comment = style({
+	color: colorVars.white.alpha(0.45).css(),
+	fontStyle: 'italic',
+});
