@@ -35,9 +35,8 @@ export const image = style({
 	gridColumn: '2',
 	position: 'relative',
 	display: 'block',
-	maxWidth: '100%',
-
 	width: '200px',
+	height: '200px',
 	overflow: 'hidden',
 	borderRadius: '50%',
 	boxShadow: globalBoxShadow(),

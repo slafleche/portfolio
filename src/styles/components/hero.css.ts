@@ -200,7 +200,7 @@ export const title_break = style({});
 /** Exact colour math from original HTML */
 const TITLE_LEFT = color('#88dbfc').saturate(0.2).css(); // contrast_a
 const TITLE_RIGHT = color('#f4a5ff').saturate(0.2).css(); // contrast_b
-const TITLE_MERGE = color('#5b4199').darken(0.2).css(); // darker
+const TITLE_MERGE = color('#a283ebff').darken(0.2).css(); // darker
 
 /** Identical sweep timing (R→L then idle) — single-layer (::after) */
 const shimmerSweep = keyframes({
