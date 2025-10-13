@@ -2,6 +2,7 @@ import { style, globalStyle, keyframes } from '@vanilla-extract/css';
 import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
 import { colorVars, fontVars, themeColours } from '../vars';
+import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
 import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
@@ -172,6 +173,11 @@ export const panel = style({
 
 export const panelContents = style({
 	padding: offset.half().css(),
+});
+
+export const heroSurface = style({
+	background: [surfaceLayers.overlay, surfaceLayers.glow].join(', '),
+	backgroundColor: surfaceBaseColor,
 });
 
 export const title_break = style({});
