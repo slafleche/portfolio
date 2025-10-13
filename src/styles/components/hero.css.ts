@@ -6,6 +6,8 @@ import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
 import { fontStyles, fontWeightStyle } from '../helpers/typography';
+import { frame as glassFrame } from '../helpers/glassFrame.css';
+import { globalBoxShadow } from '../helpers/shadow';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -123,6 +125,17 @@ export const vennContainer = style({
 	...paddings({ all: offset.css() }),
 	...margins({ all: offset.css() }),
 });
+
+export const panelFrameOuter = style([
+	glassFrame,
+	{
+		boxShadow: globalBoxShadow({
+			x: m(0),
+			y: offset.multiply(0.75),
+			blur: offset,
+		}),
+	},
+]);
 
 export const panelA = style({
 	position: 'relative',

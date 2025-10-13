@@ -2,7 +2,6 @@ import { style } from '@vanilla-extract/css';
 import { createGlassBackground, glassVars } from './helpers/glassy';
 import { globalDropShadowFilter } from './helpers/shadow';
 import { noiseBg } from './helpers/noiseSVG';
-import { frame, rim, surfaceBorder } from './helpers/glassFrame.css';
 
 const glassBackground = createGlassBackground();
 const innerRadius = glassVars.border.radius.subtract(glassVars.border.width);
@@ -90,5 +89,3 @@ export const shadow = style({
 export const content = style({
 	position: 'relative',
 });
-
-export { frame, surfaceBorder, rim };
