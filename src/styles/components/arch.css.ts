@@ -1,5 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 import { absolutePosition } from '../helpers/positioning';
+import { mixWithAlpha } from '@/styles/helpers/colorWrap';
 import { colorVars, dropShadowVars, glowVars } from '../vars';
 import { createArchGlassBackground } from '../helpers/arch';
 import { noiseBg } from '../helpers/noiseSVG';
@@ -26,12 +27,18 @@ export const shadow = style({
 });
 
 const shadowAlpha = dropShadowVars.color.alpha();
-const glowBaseColor = dropShadowVars.color
-	.mixSolid(colorVars.contrast, glowVars.mix.base)
-	.alpha(shadowAlpha);
-const glowFillColor = dropShadowVars.color
-	.mixSolid(colorVars.contrast, glowVars.mix.fill)
-	.alpha(shadowAlpha);
+const glowBaseColor = mixWithAlpha(
+	dropShadowVars.color,
+	colorVars.contrast,
+	glowVars.mix.base,
+	shadowAlpha,
+);
+const glowFillColor = mixWithAlpha(
+	dropShadowVars.color,
+	colorVars.contrast,
+	glowVars.mix.fill,
+	shadowAlpha,
+);
 const gentleGlowFilter = `drop-shadow(0 0 ${glowVars.blur.primary}px ${glowBaseColor.css()}) drop-shadow(0 0 ${glowVars.blur.secondary}px ${glowFillColor.css()})`;
 
 const logoGlow = keyframes({
@@ -45,7 +52,12 @@ const logoGlow = keyframes({
 	},
 	'50%': {
 		filter: `drop-shadow(0 0 10px ${glowBaseColor.css()}) drop-shadow(0 0 22px ${glowFillColor.css()})`,
-		fill: dropShadowVars.color.mixSolid(colorVars.contrast, glowVars.mix.sustain).css(),
+		fill: mixWithAlpha(
+			dropShadowVars.color,
+			colorVars.contrast,
+			glowVars.mix.sustain,
+			shadowAlpha,
+		).css(),
 	},
 	'100%': {
 		filter: `drop-shadow(0 0 0 ${dropShadowVars.color.css()})`,
