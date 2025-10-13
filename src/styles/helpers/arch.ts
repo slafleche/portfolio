@@ -20,7 +20,7 @@ export const archGlassVars = {
 		topAlpha: 0.05,
 		midStop: '45%',
 		bottomAlpha: 0.2,
-		direction: m(45, 'deg'),
+		direction: m(180, 'deg'),
 	},
 	outerBorderHighlight: {
 		...glassVars.outerBorderHighlight,
@@ -64,7 +64,7 @@ export const createArchGlassBackground = (): {
 		archGlassVars.overlay.midStop
 	}, ${archGlassVars.overlay.color.alpha(archGlassVars.overlay.bottomAlpha).css()} 100%)`;
 
-	const glow = `linear-gradient(135deg, ${archGlassVars.surfaceGlowPrimaryTint.css()}, ${archGlassVars.surfaceGlowSecondaryTint.css()})`;
+	const glow = `linear-gradient(180deg, ${archGlassVars.surfaceGlowPrimaryTint.css()}, ${archGlassVars.surfaceGlowSecondaryTint.css()})`;
 
 	return {
 		background: [overlay, glow, ensuredBg.css()].join(', '),
