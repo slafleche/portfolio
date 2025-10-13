@@ -53,8 +53,8 @@ const toColor = (input: ColorInput): Color => {
 
 const cloneColor = (source: Color): Color => chroma(source.css());
 
-const normalizeRatio = (ratio?: number) =>
-	ratio === undefined ? undefined : Math.max(0, Math.min(1, ratio / 100));
+const clampRatio = (ratio?: number) =>
+	ratio === undefined ? undefined : Math.max(0, Math.min(1, ratio));
 
 const derive = (
 	source: Color,
@@ -92,13 +92,13 @@ export function wrap(input: ColorInput): ColorWrapper {
 			derive(base, (draft) => draft.desaturate(value)),
 		mix: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
 			derive(base, (draft) =>
-				draft.mix(toColor(target), normalizeRatio(ratio), mode),
+				draft.mix(toColor(target), clampRatio(ratio), mode),
 			),
 		mixSolid: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
 			derive(base, (draft) =>
 				draft
 					.alpha(1)
-					.mix(toColor(target), normalizeRatio(ratio), mode),
+					.mix(toColor(target), clampRatio(ratio), mode),
 			),
 		clone: () => wrap(cloneColor(base)),
 		value: () => cloneColor(base),
@@ -119,9 +119,9 @@ export const color = Object.assign((input: ColorInput) => wrap(input), {
 export const mixWithAlpha = (
 	base: ColorWrapper,
 	target: ColorInput,
-	percent: number,
+	ratio: number,
 	alpha?: number,
 ): ColorWrapper => {
 	const desiredAlpha = alpha ?? base.alpha();
-	return base.mixSolid(target, percent).alpha(desiredAlpha);
+	return base.mixSolid(target, ratio).alpha(desiredAlpha);
 };
