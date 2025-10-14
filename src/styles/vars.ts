@@ -41,44 +41,90 @@ export const themeColours = {
 export const gradients = [
 	{
 		linear: [
-			color.create.rgb(91, 67, 155),
-			color.create.rgb(103, 52, 153),
+			{
+				color: color.create.rgb(103, 52, 153),
+				at: 0,
+			},
+			{
+				color: color.create.rgb(110, 77, 204),
+				at: 50,
+				blend: 0.3,
+			},
+			{
+				color: color.create.rgb(91, 102, 214),
+				at: 100,
+			},
 		],
 		spots: [
-			color.create.rgb(219, 88, 181),
-			color('#b98cde'),
-			color('#e1864e'),
+			{
+				color: color.create.rgb(219, 88, 181),
+				x: 70,
+				y: 30,
+				softenL: 30,
+			},
+			{
+				color: color('#b98cde'),
+				x: 35,
+				y: 65,
+			},
+			{
+				color: color('#e1864e'),
+				x: 50,
+				y: 80,
+			},
 		],
 	},
 	{
 		linear: [
-			color.create.rgb(229, 90, 179),
-			color.create.oklch('0.56 0.17 274.53'),
+			{
+				color: color.create.rgb(229, 90, 179),
+				at: 0,
+			},
+			{
+				color: color.create.oklch('0.56 0.17 274.53'),
+				at: 100,
+			},
+			{
+				color: color.create.oklch('0.56 0.17 274.53'),
+				at: 100,
+			},
 		],
 		spots: [
-			color('#5b419a'),
-			color('#b98cde'),
-			color('#e1864e'),
+			{
+				color: color('#5b419a'),
+				x: 40,
+				y: 40,
+			},
+			{
+				color: color('#b98cde'),
+				x: 60,
+				y: 55,
+			},
+			{
+				color: color('#e1864e'),
+				x: 80,
+				y: 70,
+			},
 		],
 	},
 ];
 
-// export const bokenVars = {
-// 	// Default Bokeh overlay settings (consumed by components)
-// 	colors: [
-// 		gradients.b_linear_a,
-// 		gradients.b_linear_b,
-// 		gradients.b_linear_c,
-// 		gradients.b_spot_a,
-// 		gradients.a_linear_c,
-// 	],
-// 	opacity: 0.2,
-// 	blendMode: 'screen' as CSS.Property.MixBlendMode,
-// 	blur: 50,
-// 	blurScale: 1,
-// 	sizeScale: 0.7,
-// 	fadeMs: 300,
-// };
+export const bokehVars = {
+	// Default Bokeh overlay settings (consumed by components)
+	colors: [
+		gradients[1].linear[0].color,
+		gradients[1].linear[1].color,
+		gradients[1].linear[2].color,
+		gradients[1].spots[0].color,
+		gradients[0].spots[2].color,
+	],
+	opacity: 0.2,
+	blendMode: 'screen' as CSS.Property.MixBlendMode,
+	blur: 50,
+	blurScale: 1,
+	sizeScale: 0.7,
+	fadeMs: 300,
+};
 
 // export const gradientFull = {
 // 	overlayA: gradients.b_spot_a,
@@ -114,34 +160,6 @@ export const gradients = [
 //   #63E3F0 90%,  /* aqua highlight */
 //   #7C73A0 100%  /* muted violet tail */
 // }
-
-// background-image:
-//   radial-gradient(chroma
-//     circle at 100% 49%,
-//     rgba(225,93,174,1.0) 0%,
-//     rgba(225,93,174,0.85) 25%,
-//     rgba(225,93,174,0.65) 40%,
-//     rgba(225,93,174,0.35) 60%,
-//     rgba(225,93,174,0.0) 80%
-//   ),
-//   radial-gradient(
-//     circle at 97% 98%,
-//     rgba(247,211,84,0.6) 0%,
-//     rgba(247,211,84,0.0) 30%
-//   ),
-//   linear-gradient(
-//     to bottom,
-//     #5b419a 20%,
-//     #b98cde 55%,
-//     #e1864e 90%
-//   );
-// background-blend-mode: overlay, screen, normal;
-
-// background-image:
-//   radial-gradient(circle at 100% 49%, rgba(225,93,174,1.00) 0%, rgba(225,93,174,0.90) 18%, rgba(225,93,174,0.55) 30%, rgba(225,93,174,0.20) 42%, rgba(225,93,174,0.00) 62%),
-//   radial-gradient(circle at 97% 98%, rgba(247,211,84,0.63) 0%, rgba(247,211,84,0.00) 26%),
-//   linear-gradient(to bottom, #5b419a 19%, #b98cde 55%, #e1864e 93%);
-// background-blend-mode: overlay, screen, normal;
 
 // Meant to easily overwrite the defaults with theming
 // Note the goal isn't for the new theme to use exactly the same calculations
@@ -374,7 +392,7 @@ export const logoVars = {
 	hover: {
 		blobs: [
 			{
-				color: gradients[1].linear[1],
+				color: gradients[1].linear[1].color,
 				// color: gradients.b_linear_b,
 				posX: 24,
 				posY: 38,
@@ -382,14 +400,14 @@ export const logoVars = {
 				intensity: 0.32,
 			},
 			{
-				color: gradients[1].linear[0],
+				color: gradients[1].linear[0].color,
 				posX: 62,
 				posY: 58,
 				radius: 48,
 				intensity: 0.28,
 			},
 			{
-				color: gradients[1].linear[2],
+				color: gradients[1].linear[2].color,
 				posX: 42,
 				posY: 72,
 				radius: 44,
@@ -448,14 +466,14 @@ export const menuVars = {
 		blobs: [
 			{
 				// color: gradients.b_linear_b,
-				color: gradients[1].linear[1],
+				color: gradients[1].linear[1].color,
 				posX: 22,
 				posY: 48,
 				radius: 50,
 				intensity: 0.62,
 			},
 			{
-				color: gradients[1].linear[0],
+				color: gradients[1].linear[0].color,
 				// color: gradients.b_spot_a,
 				posX: 50,
 				posY: 72,
@@ -463,7 +481,7 @@ export const menuVars = {
 				intensity: 0.6,
 			},
 			{
-				color: gradients[1].linear[2],
+				color: gradients[1].linear[2].color,
 				// color: gradients.b_linear_c,
 				posX: 76,
 				posY: 30,
@@ -471,7 +489,7 @@ export const menuVars = {
 				intensity: 0.48,
 			},
 			{
-				color: gradients[0].linear[0],
+				color: gradients[0].linear[0].color,
 				// color: gradients.a_spot_a,
 				posX: 34,
 				posY: 82,

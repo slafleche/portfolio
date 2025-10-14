@@ -6,9 +6,34 @@ import {
 	type Stop,
 } from './gradients';
 
+type LinearGradientStop = {
+	color: ColorWrapper;
+	/** Stop position as a percentage (0–100). */
+	at: number;
+	/**
+	 * Optional neighbor blend factor (0–1). Increasing this value pulls
+	 * interpolated midpoint colors closer to this stop's color, producing a
+	 * softer transition around the stop.
+	 */
+	blend?: number;
+};
+
+/**
+ * Radial accent configuration.
+ *
+ * `x`/`y` coordinates are expressed as percentages (0–100) of the target box.
+ */
+type GradientSpot = {
+	color: ColorWrapper;
+	x: number;
+	y: number;
+	/** Optional lightness offset for this spot, overrides the global softenL. */
+	softenL?: number;
+};
+
 type CardGradientPack = {
-	linear: ColorWrapper[];
-	spots: ColorWrapper[];
+	linear: LinearGradientStop[];
+	spots: GradientSpot[];
 };
 
 const pctLerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -16,6 +41,12 @@ const interiorPercents = (p1: number, p2: number, n: number) =>
 	Array.from({ length: n }, (_, i) =>
 		pctLerp(p1, p2, (i + 1) / (n + 1)),
 	);
+const clampPercent = (value: number) =>
+	Math.max(0, Math.min(100, value));
+const clamp01 = (value: number) =>
+	Math.max(0, Math.min(1, value));
+const formatSpotPosition = ({ x, y }: GradientSpot) =>
+	`${clampPercent(x)}% ${clampPercent(y)}%`;
 
 function radialStopsAlphaFade(
 	base: ColorWrapper,
@@ -65,68 +96,70 @@ function radialStopsAlphaFade(
 }
 
 function linearStopsLab(
-	slices: ColorWrapper[],
+	slices: LinearGradientStop[],
 	extrasPerSpan = 1,
 ): Stop[] {
 	if (slices.length < 2) {
-		return slices.map((color, index) => ({
+		return slices.map(({ color, at }) => ({
 			color,
-			at: index === 0 ? 0 : 100,
+			at,
 		}));
 	}
 
-	const spanPercentages =
-		slices.length === 3
-			? [
-					[
-						20,
-						55,
-					],
-					[
-						55,
-						90,
-					],
-				]
-			: slices.slice(1).map((_, i) => {
-					const start = (i / slices.length) * 100;
-					const end = ((i + 1) / slices.length) * 100;
-					return [
-						start,
-						end,
-					] as [number, number];
-				});
+	const ordered = slices.slice().sort((a, b) => a.at - b.at);
 
 	const out: Stop[] = [];
-	for (let i = 0; i < spanPercentages.length; i++) {
-		const [
-			start,
-			end,
-		] = spanPercentages[i];
-		const aColor = slices[i];
-		const bColor = slices[i + 1];
+	for (let i = 0; i < ordered.length - 1; i++) {
+		const current = ordered[i];
+		const next = ordered[i + 1];
+		const start = current.at;
+		const end = next.at;
 		out.push({
-			color: aColor,
+			color: current.color,
 			at: start,
 		});
 		const mids = interiorPercents(start, end, extrasPerSpan);
 		const scale = color
 			.scale([
-				aColor,
-				bColor,
+				current.color,
+				next.color,
 			])
-			.mode('lab');
+			.mode('oklab');
+		const blendCurrent = clamp01(current.blend ?? 0);
+		const blendNext = clamp01(next.blend ?? 0);
 		for (let j = 0; j < mids.length; j++) {
 			const t = (j + 1) / (extrasPerSpan + 1);
+			let mid = color.wrap(scale(t));
+			if (blendCurrent > 0) {
+				const weightCurrent = clamp01(blendCurrent * (1 - t));
+				if (weightCurrent > 0) {
+					mid = mid.mix(
+						current.color,
+						weightCurrent,
+						'oklab',
+					);
+				}
+			}
+			if (blendNext > 0) {
+				const weightNext = clamp01(blendNext * t);
+				if (weightNext > 0) {
+					mid = mid.mix(
+						next.color,
+						weightNext,
+						'oklab',
+					);
+				}
+			}
 			out.push({
-				color: color.wrap(scale(t)),
+				color: mid,
 				at: mids[j],
 			});
 		}
 	}
 
 	out.push({
-		color: slices.at(-1)!,
-		at: spanPercentages.at(-1)?.[1] ?? 100,
+		color: ordered.at(-1)!.color,
+		at: ordered.at(-1)!.at,
 	});
 	return out;
 }
@@ -134,9 +167,24 @@ function linearStopsLab(
 export function makeCardGradient(
 	gradient: CardGradientPack,
 	options: {
+		/**
+		 * Number of interior samples inserted between each pair of stops.
+		 * Accepts integers ≥ 0.
+		 */
 		extrasPerSpan?: number;
+		/**
+		 * Default lightness offset applied to radial spot colors (OKLCH) before alpha
+		 * fading. Expressed as OKLCH L units (roughly 0–100). Individual spots can
+		 * override via `spot.softenL`.
+		 */
 		softenL?: number;
+		/**
+		 * CSS direction string for the layered linear gradient (e.g. `"to left"`).
+		 */
 		linearDirection?: string;
+		/**
+		 * Fallback CSS direction when blend modes are unavailable.
+		 */
 		linearFallbackDirection?: string;
 	} = {},
 ) {
@@ -150,16 +198,17 @@ export function makeCardGradient(
 	const linearStops = linearStopsLab(gradient.linear, extrasPerSpan);
 	const layers: Layer[] = [
 		// {
+		// {
 		//   kind: 'radial',
 		//   options: {
 		//     shape: 'circle',
-		//     at: '100% 49%',
+		//     at: formatSpotPosition(gradient.spots[0]),
 		//     stops: radialStopsAlphaFade(
-		//       gradient.spots[0],
+		//       gradient.spots[0].color,
 		//       [0, 25, 40, 60, 80],
 		//       [1.0, 0.85, 0.65, 0.35, 0.0],
 		//       extrasPerSpan,
-		//       softenL,
+		//       gradient.spots[0].softenL ?? softenL,
 		//     ),
 		//   },
 		// },
@@ -167,13 +216,13 @@ export function makeCardGradient(
 		//   kind: 'radial',
 		//   options: {
 		//     shape: 'circle',
-		//     at: '97% 98%',
+		//     at: formatSpotPosition(gradient.spots[1] ?? gradient.spots[0]),
 		//     stops: radialStopsAlphaFade(
-		//       gradient.spots[1] ?? gradient.spots[0],
+		//       (gradient.spots[1] ?? gradient.spots[0]).color,
 		//       [0, 30],
 		//       [0.6, 0.0],
 		//       0,
-		//       softenL,
+		//       (gradient.spots[1] ?? gradient.spots[0]).softenL ?? softenL,
 		//     ),
 		//   },
 		// },
