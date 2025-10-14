@@ -2,7 +2,10 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1"
+		/>
 		<title>Parametric Nav Arch — rounded tip (single file v3)</title>
 		<style>
 			:root {
@@ -102,10 +105,12 @@
 	<body>
 		<header>
 			<h1>
-				Parametric Nav Arch — ellipse base + rounded bulge (single file v3)
+				Parametric Nav Arch — ellipse base + rounded bulge (single
+				file v3)
 			</h1>
 			<span class="muted"
-				>Corrected tip flow (no loop) • No imports • Single &lt;path&gt;</span
+				>Corrected tip flow (no loop) • No imports • Single
+				&lt;path&gt;</span
 			>
 		</header>
 
@@ -124,7 +129,13 @@
 				/></label>
 				<label
 					>top / min space (px)
-					<input id="top" type="number" value="40" min="0" max="3000" step="1"
+					<input
+						id="top"
+						type="number"
+						value="40"
+						min="0"
+						max="3000"
+						step="1"
 				/></label>
 				<label
 					>curve height (px)
@@ -138,33 +149,65 @@
 				/></label>
 				<label
 					>base ry (px)
-					<input id="ry" type="number" value="70" min="10" max="5000" step="1"
+					<input
+						id="ry"
+						type="number"
+						value="70"
+						min="10"
+						max="5000"
+						step="1"
 				/></label>
 			</div>
 			<div class="row">
 				<label
 					>bulge height (px)
-					<input id="bd" type="number" value="12" min="0" max="2000" step="1"
+					<input
+						id="bd"
+						type="number"
+						value="12"
+						min="0"
+						max="2000"
+						step="1"
 				/></label>
 				<label
 					>bulge width (px)
-					<input id="bw" type="number" value="50" min="0" max="4000" step="1"
+					<input
+						id="bw"
+						type="number"
+						value="50"
+						min="0"
+						max="4000"
+						step="1"
 				/></label>
 				<label
 					>roundness (0..1)
-					<input id="sm" type="number" value="0.84" min="0" max="1" step="0.01"
+					<input
+						id="sm"
+						type="number"
+						value="0.84"
+						min="0"
+						max="1"
+						step="0.01"
 				/></label>
 				<label
 					>tip span (px)
-					<input id="ts" type="number" value="7" min="0" max="2000" step="1"
+					<input
+						id="ts"
+						type="number"
+						value="7"
+						min="0"
+						max="2000"
+						step="1"
 				/></label>
 				<label
-					><input id="guide" type="checkbox" checked /> show guide at y=top
-					(preview only)</label
+					><input id="guide" type="checkbox" checked /> show guide at
+					y=top (preview only)</label
 				>
 			</div>
 			<div class="row">
-				<a id="download" class="btn" download="nav-arch.svg">Download SVG</a>
+				<a id="download" class="btn" download="nav-arch.svg"
+					>Download SVG</a
+				>
 				<span id="metrics" class="muted">—</span>
 			</div>
 			<textarea id="code" readonly></textarea>
@@ -193,7 +236,10 @@
 					let tx = -rx * sinT,
 						ty = -ry * cosT;
 					const L = Math.hypot(tx, ty) || 1;
-					return { tx: tx / L, ty: ty / L };
+					return {
+						tx: tx / L,
+						ty: ty / L,
+					};
 				}
 
 				function archPath(o = {}) {
@@ -242,7 +288,10 @@
 					const chordR = Math.hypot(vRx, vRy),
 						chordL = Math.hypot(vLx, vLy);
 					const chord = 0.5 * (chordR + chordL);
-					const joinToTip = Math.max(6, Math.hypot(cx - xR, tipY - yR));
+					const joinToTip = Math.max(
+						6,
+						Math.hypot(cx - xR, tipY - yR),
+					);
 					const rnd = clamp(+o.roundness ?? 0.6, 0, 1);
 
 					let Ls = Math.max(
@@ -261,7 +310,9 @@
 									8,
 									Math.min(
 										half * 0.25,
-										(0.35 + 0.5 * rnd) * Math.sqrt(Math.max(1, depth)) * 1.25,
+										(0.35 + 0.5 * rnd) *
+											Math.sqrt(Math.max(1, depth)) *
+											1.25,
 									),
 								);
 					tspan = Math.min(tspan, half - 6);
@@ -277,7 +328,10 @@
 					const c3x = cx - tspan,
 						c3y = tipY;
 
-					const nR = Math.max(48, Math.round((containerHeight - xR) / 12));
+					const nR = Math.max(
+						48,
+						Math.round((containerHeight - xR) / 12),
+					);
 					const nL = Math.max(48, Math.round(xL / 12));
 
 					let d = `M 0 0 H ${f(containerHeight)} V ${f(H)}`;
@@ -299,7 +353,11 @@
 					}
 					d += ` L 0 ${f(H)} Z`;
 
-					return { d, width: containerHeight, height: H };
+					return {
+						d,
+						width: containerHeight,
+						height: H,
+					};
 				}
 
 				window.NavArch = { archPath };
@@ -326,7 +384,8 @@
 						360,
 						host.clientcontainerHeightidth || window.innerWidth,
 					);
-					document.getElementById('w').value = containerHeight.toFixed(0);
+					document.getElementById('w').value =
+						containerHeight.toFixed(0);
 
 					const top = val('top');
 					const curve = val('curve');
@@ -361,17 +420,32 @@
 					code.value = svg;
 					metrics.textContent = `W=${width} H=${height} top=${top} curve=${curve} ry=${ry} bulgeHeight=${bd} bulgeWidth=${bw} roundness=${sm} tipSpan=${ts}`;
 
-					const blob = new Blob([svg], { type: 'image/svg+xml' });
+					const blob = new Blob(
+						[
+							svg,
+						],
+						{
+							type: 'image/svg+xml',
+						},
+					);
 					download.href = URL.createObjectURL(blob);
 				}
 
-				['w', 'top', 'curve', 'ry', 'bd', 'bw', 'sm', 'ts', 'guide'].forEach(
-					(id) => {
-						const el = document.getElementById(id);
-						el.addEventListener('input', render);
-						el.addEventListener('change', render);
-					},
-				);
+				[
+					'w',
+					'top',
+					'curve',
+					'ry',
+					'bd',
+					'bw',
+					'sm',
+					'ts',
+					'guide',
+				].forEach((id) => {
+					const el = document.getElementById(id);
+					el.addEventListener('input', render);
+					el.addEventListener('change', render);
+				});
 
 				window.addEventListener('resize', render, { passive: true });
 				render();

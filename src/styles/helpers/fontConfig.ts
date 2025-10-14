@@ -18,10 +18,17 @@ import type { IMeasurement } from './measurement';
 
 // ----------------- internals -----------------
 function toArray<T>(x: T | T[]): T[] {
-	return Array.isArray(x) ? x : [x];
+	return Array.isArray(x)
+		? x
+		: [
+				x,
+			];
 }
 
-function parseRangeToken(token: string): { low: number; high: number } {
+function parseRangeToken(token: string): {
+	low: number;
+	high: number;
+} {
 	const t = String(token).trim();
 	const range = t.split('..').map((s) => s.trim());
 	if (range.length === 1) {
@@ -30,18 +37,25 @@ function parseRangeToken(token: string): { low: number; high: number } {
 	}
 	const a = Number(range[0]);
 	const b = Number(range[1]);
-	return { low: Math.min(a, b), high: Math.max(a, b) };
+	return {
+		low: Math.min(a, b),
+		high: Math.max(a, b),
+	};
 }
 
 // ----------------- public helpers -----------------
 
 /**
- * Merge one or more weight tokens into a single {low, high} range.
+ * Merge one or more weight tokens into
+ * a single {low, high} range.
  *
  * - "400..800" -> { low: 400, high: 800 }
- * - ["300..700"] -> { low: 300, high: 700 }
- * - ["400","700"] -> { low: 400, high: 700 }
- * - ["300..500","600..800"] -> { low: 300, high: 800 }
+ * - ["300..700"] -> { low: 300, high: 700
+ *   }
+ * - ["400","700"] -> { low: 400, high:
+ *   700 }
+ * - ["300..500","600..800"] -> { low:
+ *   300, high: 800 }
  */
 export function weightRangeFromConfig(weights: string | string[]): {
 	low: number;
@@ -67,14 +81,18 @@ export function weightRangeFromConfig(weights: string | string[]): {
 }
 
 /**
- * Build a FontFamilyDef using fonts.config.json so you don’t hand-copy weight
- * ranges.
+ * Build a FontFamilyDef using
+ * fonts.config.json so you don’t
+ * hand-copy weight ranges.
  *
  * @param familyName E.g. "Titan One"
- * @param fallbacks E.g. ['Poppins','Helvetica','Arial','sans-serif']
- * @param cfgMap Parsed + validated FontsConfig (use the default export
+ * @param fallbacks E.g.
+ *   ['Poppins','Helvetica','Arial','sans-serif']
+ * @param cfgMap Parsed + validated
+ *   FontsConfig (use the default export
  *   `fontsConfig`)
- * @param spacing IMeasurement only (e.g., m(0.3, 'rem'))
+ * @param spacing IMeasurement only
+ *   (e.g., m(0.3, 'rem'))
  */
 export function makeFamilyDef(
 	familyName: string,
@@ -87,9 +105,14 @@ export function makeFamilyDef(
 	const weights = cfg
 		? weightRangeFromConfig(cfg.weights)
 		: { low: 400, high: 700 };
-	const primary = familyName.includes(' ') ? `"${familyName}"` : familyName;
+	const primary = familyName.includes(' ')
+		? `"${familyName}"`
+		: familyName;
 	return {
-		family: [primary, ...fallbacks].join(', '),
+		family: [
+			primary,
+			...fallbacks,
+		].join(', '),
 		weights,
 		spacing,
 		offsetToFlushTop,
@@ -99,8 +122,10 @@ export function makeFamilyDef(
 // ----------------- loader/validator -----------------
 
 /**
- * Convert an unknown JSON blob into a typed FontsConfig with basic
- * validation/coercion. Throws helpful errors if the structure is off.
+ * Convert an unknown JSON blob into a
+ * typed FontsConfig with basic
+ * validation/coercion. Throws helpful
+ * errors if the structure is off.
  */
 export function asFontsConfig(input: unknown): FontsConfig {
 	if (!input || typeof input !== 'object') {
@@ -109,7 +134,10 @@ export function asFontsConfig(input: unknown): FontsConfig {
 	const src = input as Record<string, unknown>;
 	const out: FontsConfig = {};
 
-	for (const [family, v] of Object.entries(src)) {
+	for (const [
+		family,
+		v,
+	] of Object.entries(src)) {
 		if (!v || typeof v !== 'object') {
 			throw new Error(
 				`fonts.config.json: entry for "${family}" must be an object`,
@@ -118,10 +146,14 @@ export function asFontsConfig(input: unknown): FontsConfig {
 		const cfg = v as Record<string, unknown>;
 
 		// texts?: string[]
-		const texts = Array.isArray(cfg.texts) ? cfg.texts.map(String) : undefined;
+		const texts = Array.isArray(cfg.texts)
+			? cfg.texts.map(String)
+			: undefined;
 
 		// keys?: string[]
-		const keys = Array.isArray(cfg.keys) ? cfg.keys.map(String) : undefined;
+		const keys = Array.isArray(cfg.keys)
+			? cfg.keys.map(String)
+			: undefined;
 
 		// weights: string | string[]
 		let weights: string | string[] | undefined = undefined;
@@ -144,7 +176,13 @@ export function asFontsConfig(input: unknown): FontsConfig {
 			? cfg.subsets.map(String)
 			: undefined;
 
-		out[family] = { texts, keys, weights, ital, subsets };
+		out[family] = {
+			texts,
+			keys,
+			weights,
+			ital,
+			subsets,
+		};
 	}
 
 	return out;

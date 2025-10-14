@@ -11,7 +11,13 @@ export default {
 				},
 			},
 		},
-		{ name: 'cleanupIds', params: { remove: true, minify: true } },
+		{
+			name: 'cleanupIds',
+			params: {
+				remove: true,
+				minify: true,
+			},
+		},
 		{ name: 'collapseGroups' },
 		{ name: 'removeEmptyContainers' },
 
@@ -22,10 +28,17 @@ export default {
 		{ name: 'convertPathData' },
 		{ name: 'removeUselessDefs' },
 		{ name: 'removeHiddenElems' },
-		{ name: 'removeUnknownsAndDefaults' },
-		{ name: 'removeUselessStrokeAndFill' },
+		{
+			name: 'removeUnknownsAndDefaults',
+		},
+		{
+			name: 'removeUselessStrokeAndFill',
+		},
 		{ name: 'removeEmptyAttrs' },
 		{ name: 'removeEmptyText' },
-		{ name: 'cleanupNumericValues', params: { floatPrecision: 2 } },
+		{
+			name: 'cleanupNumericValues',
+			params: { floatPrecision: 2 },
+		},
 	],
 };

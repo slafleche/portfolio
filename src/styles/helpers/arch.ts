@@ -5,8 +5,10 @@ import { colorVars } from '../vars';
 import { glassNoise } from './glassy';
 
 /**
- * Arch-specific glass settings derived from the shared glass variables while
- * keeping the nav look separate from generic panels.
+ * Arch-specific glass settings derived
+ * from the shared glass variables while
+ * keeping the nav look separate from
+ * generic panels.
  */
 export const archGlassVars = {
 	backgroundColor: colorVars.white.alpha(0.06),
@@ -71,7 +73,11 @@ export const createArchGlassBackground = (): {
 	const glow = `linear-gradient(180deg, ${archGlassVars.surfaceGlowPrimaryTint.css()}, ${archGlassVars.surfaceGlowSecondaryTint.css()})`;
 
 	return {
-		background: [overlay, glow, ensuredBg.css()].join(', '),
+		background: [
+			overlay,
+			glow,
+			ensuredBg.css(),
+		].join(', '),
 		backdropFilter: `blur(${archGlassVars.backdropBlur.css()})`,
 		WebkitBackdropFilter:
 			`blur(${archGlassVars.backdropBlur.css()})` as CSS.Property.BackdropFilter,

@@ -2,7 +2,10 @@
 import { useEffect, useState } from 'react';
 
 export function useMediaQuerySafe(query: string) {
-	const [matches, setMatches] = useState<boolean | undefined>(undefined);
+	const [
+		matches,
+		setMatches,
+	] = useState<boolean | undefined>(undefined);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -11,7 +14,9 @@ export function useMediaQuerySafe(query: string) {
 		setMatches(mql.matches);
 		mql.addEventListener?.('change', onChange);
 		return () => mql.removeEventListener?.('change', onChange);
-	}, [query]);
+	}, [
+		query,
+	]);
 
 	return matches; // undefined on server, boolean on client
 }

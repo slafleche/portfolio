@@ -23,7 +23,10 @@ export const header = style({
 	display: 'flex',
 	alignItems: 'center',
 	gap: m(6).css(),
-	...paddings({ vertical: m(10).css(), horizontal: m(16).css() }),
+	...paddings({
+		vertical: m(10).css(),
+		horizontal: m(16).css(),
+	}),
 	background: colorVars.black.alpha(0.6).css(),
 	borderBottom: `1px solid ${colorVars.white.alpha(0.06).css()}`,
 });

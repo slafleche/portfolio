@@ -20,8 +20,12 @@ export const link = style({
 	alignItems: 'center',
 	justifyContent: 'center',
 	borderRadius: '50%',
-	width: chevronVars.width.add(chevronVars.padding.double().value).css(),
-	height: chevronVars.width.add(chevronVars.padding.double().value).css(),
+	width: chevronVars.width
+		.add(chevronVars.padding.double().value)
+		.css(),
+	height: chevronVars.width
+		.add(chevronVars.padding.double().value)
+		.css(),
 	transition: 'background 0.3s ease-in',
 	boxShadow: globalBoxShadow(),
 	selectors: {

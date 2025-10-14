@@ -1,5 +1,8 @@
 import { calc } from '@vanilla-extract/css-utils';
-import type { ComplexStyleRule, StyleRule } from '@vanilla-extract/css';
+import type {
+	ComplexStyleRule,
+	StyleRule,
+} from '@vanilla-extract/css';
 import * as CSS from 'csstype';
 import { m, parseStringMeasurement } from '../helpers/measurement';
 import { layoutVars } from '../layoutVars.css';
@@ -23,7 +26,9 @@ export const substractOnePixel = (length: string) => {
 	try {
 		const props = parseStringMeasurement(length);
 		if (props && props.unit !== 'px') {
-			throw Error(`Error in substractOnePixel: "${length}" is not in pixels`);
+			throw Error(
+				`Error in substractOnePixel: "${length}" is not in pixels`,
+			);
 		}
 		const finalValue = m(props.value - 1, props.unit);
 		return finalValue.css() as CSS.Property.Width;
@@ -36,7 +41,9 @@ export const addOnePixel = (length: string) => {
 	try {
 		const props = parseStringMeasurement(length);
 		if (props && props.unit !== 'px') {
-			throw Error(`Error in addOnePixel: "${length}" is not in pixels`);
+			throw Error(
+				`Error in addOnePixel: "${length}" is not in pixels`,
+			);
 		}
 		const finalValue = m(props.value + 1, props.unit);
 		return finalValue.css() as CSS.Property.Width;
@@ -80,16 +87,22 @@ export const mediaQueryStyle = (
 	debug = false,
 ) => {
 	if (!Array.isArray(queryAndStyles)) {
-		queryAndStyles = [queryAndStyles];
+		queryAndStyles = [
+			queryAndStyles,
+		];
 	}
 	const result: Record<string, StyleRule> = {};
 	queryAndStyles.forEach((mq) => {
 		const { props, styles } = mq;
 		const minWidth =
-			'minWidth' in props ? ` and (min-width: ${props.minWidth})` : ``;
+			'minWidth' in props
+				? ` and (min-width: ${props.minWidth})`
+				: ``;
 
 		const maxWidth =
-			'maxWidth' in props ? ` and (max-width: ${props.maxWidth})` : ``;
+			'maxWidth' in props
+				? ` and (max-width: ${props.maxWidth})`
+				: ``;
 
 		const rule = `${props.type ?? 'screen'}${minWidth}${maxWidth}`;
 		result[rule] = styles;

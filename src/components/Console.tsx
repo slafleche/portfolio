@@ -19,7 +19,8 @@ const defaultLines: ConsoleLine[] = [
 	{
 		content: (
 			<>
-				<span className={s.accent}>const</span> designer = createHybridMaker(
+				<span className={s.accent}>const</span> designer =
+				createHybridMaker(
 				{'{'}
 			</>
 		),
@@ -27,16 +28,22 @@ const defaultLines: ConsoleLine[] = [
 	{
 		content: (
 			<>
-				&nbsp;&nbsp;experience: <span className={s.accent}>'product & ui'</span>
-				,
+				&nbsp;&nbsp;experience:{' '}
+				<span className={s.accent}>'product & ui'</span>,
 			</>
 		),
 	},
 	{
-		content: <>&nbsp;&nbsp;toolkit: ['React', 'VS Code', 'Vanilla Extract'],</>,
+		content: (
+			<>
+				&nbsp;&nbsp;toolkit: ['React', 'VS Code', 'Vanilla Extract'],
+			</>
+		),
 	},
 	{
-		content: <>&nbsp;&nbsp;ship: () =&gt; craftDelightfulInterfaces(),</>,
+		content: (
+			<>&nbsp;&nbsp;ship: () =&gt; craftDelightfulInterfaces(),</>
+		),
 	},
 	{
 		content: <>{'})'};</>,
@@ -46,13 +53,16 @@ const defaultLines: ConsoleLine[] = [
 		content: <>// no npm install for this skillset</>,
 	},
 	{
-		content: <>if (me.project.expectations &gt;= you.expectations) {'{'}</>,
+		content: (
+			<>if (me.project.expectations &gt;= you.expectations) {'{'}</>
+		),
 	},
 	{
 		content: (
 			<>
 				&nbsp;&nbsp;console.log(
-				<span className={s.accent}>"Running hireMe.mjs..."</span>);
+				<span className={s.accent}>"Running hireMe.mjs..."</span>
+				);
 			</>
 		),
 	},
@@ -73,8 +83,16 @@ export default function Console({
 		<div className={clsx(s.root, className)}>
 			<div className={s.header}>
 				<span className={s.windowDot} aria-hidden />
-				<span className={s.windowDot} data-variant="warn" aria-hidden />
-				<span className={s.windowDot} data-variant="success" aria-hidden />
+				<span
+					className={s.windowDot}
+					data-variant="warn"
+					aria-hidden
+				/>
+				<span
+					className={s.windowDot}
+					data-variant="success"
+					aria-hidden
+				/>
 				<span className={s.title}>{title}</span>
 			</div>
 			<div className={s.body}>
@@ -82,7 +100,10 @@ export default function Console({
 					<div key={idx} className={s.line}>
 						<span className={s.lineNumber}>{idx + 1}</span>
 						<span
-							className={clsx(s.code, line.variant === 'comment' && s.comment)}
+							className={clsx(
+								s.code,
+								line.variant === 'comment' && s.comment,
+							)}
 						>
 							{line.content}
 						</span>

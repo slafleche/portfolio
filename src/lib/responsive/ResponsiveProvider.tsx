@@ -23,7 +23,8 @@ const defaultState: ResponsiveState = {
 	mode: undefined,
 };
 
-const ResponsiveContext = createContext<ResponsiveState>(defaultState);
+const ResponsiveContext =
+	createContext<ResponsiveState>(defaultState);
 
 export function ResponsiveProvider({ children }: PropsWithChildren) {
 	const { fullSize, compact, compressed } = useMedia();
@@ -41,8 +42,18 @@ export function ResponsiveProvider({ children }: PropsWithChildren) {
 	}
 
 	const value = useMemo(
-		() => ({ fullSize, compact, compressed, mode }),
-		[fullSize, compact, compressed, mode],
+		() => ({
+			fullSize,
+			compact,
+			compressed,
+			mode,
+		}),
+		[
+			fullSize,
+			compact,
+			compressed,
+			mode,
+		],
 	);
 
 	return (

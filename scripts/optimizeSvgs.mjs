@@ -24,7 +24,11 @@ if (args.length === 0) {
 
 const globs = [];
 const flags = new Set();
-const opts = { precision: undefined, shortenIds: false, write: false };
+const opts = {
+	precision: undefined,
+	shortenIds: false,
+	write: false,
+};
 
 for (const a of args) {
 	if (a.startsWith('--precision=')) {
@@ -60,7 +64,8 @@ const configPath = path.resolve('svgo.config.mjs');
 let baseConfig = {};
 try {
 	// Dynamically import user's svgo config if present
-	baseConfig = (await import(pathToFileURL(configPath))).default ?? {};
+	baseConfig =
+		(await import(pathToFileURL(configPath))).default ?? {};
 } catch {
 	// fall back to minimal config if not found
 	baseConfig = {
@@ -68,10 +73,18 @@ try {
 		plugins: [
 			[
 				'preset-default',
-				{ overrides: { removeViewBox: false, cleanupIds: false } },
+				{
+					overrides: {
+						removeViewBox: false,
+						cleanupIds: false,
+					},
+				},
 			],
 			'convertTransform',
-			['convertPathData', { forceAbsolutePath: true }],
+			[
+				'convertPathData',
+				{ forceAbsolutePath: true },
+			],
 		],
 	};
 }
@@ -91,7 +104,10 @@ if (opts.precision != null) {
 if (opts.shortenIds) {
 	// Enable ID shortening on top of user's config
 	baseConfig.plugins ??= [];
-	baseConfig.plugins.push(['cleanupIds', { remove: true, minify: true }]);
+	baseConfig.plugins.push([
+		'cleanupIds',
+		{ remove: true, minify: true },
+	]);
 }
 
 let totalSaved = 0;
@@ -101,7 +117,10 @@ for (const file of files) {
 	const input = await fs.readFile(file, 'utf8');
 	const before = Buffer.byteLength(input, 'utf8');
 
-	const result = optimize(input, { path: file, ...baseConfig });
+	const result = optimize(input, {
+		path: file,
+		...baseConfig,
+	});
 
 	if (result.error) {
 		console.error(pc.red(`✗ ${file}`), result.error);
@@ -136,6 +155,8 @@ if (opts.write) {
 	);
 } else {
 	console.log(
-		pc.dim(`(dry run — add ${pc.bold('--write')} to overwrite files)`),
+		pc.dim(
+			`(dry run — add ${pc.bold('--write')} to overwrite files)`,
+		),
 	);
 }

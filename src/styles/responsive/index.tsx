@@ -13,7 +13,8 @@ export const mqStrings = queriesToStrings(mediaQueries);
 // 2) Hooks (SSR-safe: undefined on server)
 export const useIsFullwidth = () => useMediaQuery(mqStrings.fullSize);
 export const useIsCompact = () => useMediaQuery(mqStrings.compact);
-export const useIsCompressed = () => useMediaQuery(mqStrings.compressed);
+export const useIsCompressed = () =>
+	useMediaQuery(mqStrings.compressed);
 
 export type IMode = 'fullSize' | 'compact' | 'compressed' | undefined;
 
@@ -37,7 +38,9 @@ export const {
 });
 
 // 5) “Only” components (top-level so ESLint is happy)
-export const FullwidthOnly: FC<PropsWithChildren> = ({ children }) => {
+export const FullwidthOnly: FC<PropsWithChildren> = ({
+	children,
+}) => {
 	const match = useIsFullwidth();
 	if (match !== true) return null;
 	return <>{children}</>;
@@ -49,7 +52,9 @@ export const CompactOnly: FC<PropsWithChildren> = ({ children }) => {
 	return <>{children}</>;
 };
 
-export const CompressedOnly: FC<PropsWithChildren> = ({ children }) => {
+export const CompressedOnly: FC<PropsWithChildren> = ({
+	children,
+}) => {
 	const match = useIsCompressed();
 	if (match !== true) return null;
 	return <>{children}</>;

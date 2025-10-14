@@ -36,7 +36,9 @@ export const globalDropShadowFilter = (props: IBoxShadow = {}) => {
 
 // Fudged CSS drop-shadow that avoids a flush-side gap by layering
 // an unshifted blur under the shifted shadow. No extra path or SVG merge.
-export const globalDropShadowFilterFlush = (props: IBoxShadow = {}) => {
+export const globalDropShadowFilterFlush = (
+	props: IBoxShadow = {},
+) => {
 	const {
 		x = dropShadowVars.offsetX,
 		y = dropShadowVars.offsetY,
@@ -50,7 +52,9 @@ export const globalDropShadowFilterFlush = (props: IBoxShadow = {}) => {
 
 // Convenience: total vertical span needed for the shadow (offsetY + 2 * blur)
 // Useful for padding viewBox/filter regions to avoid clipping
-export const shadowTotalY = (props: IBoxShadow = {}): IMeasurement => {
+export const shadowTotalY = (
+	props: IBoxShadow = {},
+): IMeasurement => {
 	const y = props.y ?? dropShadowVars.offsetY;
 	const blur = props.blur ?? dropShadowVars.blur;
 	const unit = y.unit ?? 'px';
@@ -58,7 +62,9 @@ export const shadowTotalY = (props: IBoxShadow = {}): IMeasurement => {
 };
 
 // Convenience: total horizontal span needed for the shadow (offsetX + 2 * blur)
-export const shadowTotalX = (props: IBoxShadow = {}): IMeasurement => {
+export const shadowTotalX = (
+	props: IBoxShadow = {},
+): IMeasurement => {
 	const x = props.x ?? dropShadowVars.offsetX;
 	const blur = props.blur ?? dropShadowVars.blur;
 	const unit = x.unit ?? 'px';

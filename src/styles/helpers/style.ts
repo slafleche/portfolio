@@ -16,7 +16,8 @@ export const toCssMeasurement = (
 ): string | undefined => {
 	if (value === undefined || value === null) return undefined;
 	if (typeof value === 'string') return value;
-	if (typeof value === 'number' && Number.isFinite(value)) return `${value}px`;
+	if (typeof value === 'number' && Number.isFinite(value))
+		return `${value}px`;
 	if (hasCss(value)) return value.css();
 	if (typeof value === 'object' && 'value' in value) {
 		const numeric = (value as { value: number }).value;

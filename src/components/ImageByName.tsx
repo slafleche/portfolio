@@ -34,7 +34,8 @@ type Props = {
 	/**
 	 * Semantic size:
 	 *
-	 * - "auto" (default): inferred from manifest width
+	 * - "auto" (default): inferred from
+	 *   manifest width
 	 * - "sm" | "md" | "lg": override
 	 */
 	kind?: ImageKind;
@@ -66,7 +67,8 @@ export default function ImageByName({
 			.map((v) => `${v.url} ${v.w}w`)
 			.join(', ');
 
-	const resolvedKind = kind === 'auto' ? inferKindByWidth(data.width) : kind;
+	const resolvedKind =
+		kind === 'auto' ? inferKindByWidth(data.width) : kind;
 	const sizes = sizesFor(resolvedKind, data.width);
 
 	const w = width ?? data.width;
@@ -93,7 +95,9 @@ export default function ImageByName({
 				title={title}
 				src={data.original.url}
 				srcSet={
-					data.variants.jpg?.length ? toSrcSet(data.variants.jpg) : undefined
+					data.variants.jpg?.length
+						? toSrcSet(data.variants.jpg)
+						: undefined
 				}
 				sizes={data.variants.jpg?.length ? sizes : undefined}
 				width={w}
@@ -104,7 +108,8 @@ export default function ImageByName({
 					width: '100%',
 					height: '100%',
 					objectFit: fit,
-					aspectRatio: !width && !height ? `${data.aspect}` : undefined,
+					aspectRatio:
+						!width && !height ? `${data.aspect}` : undefined,
 				}}
 				loading={priority ? 'eager' : 'lazy'}
 				decoding="async"

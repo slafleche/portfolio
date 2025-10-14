@@ -55,15 +55,26 @@ export default function VideoByName({
 
 	const computedStyle: React.CSSProperties =
 		kind === 'hero'
-			? { width: '100%', height: '100vh', objectFit: 'cover', ...(style ?? {}) }
-			: { width: '100%', height: 'auto', objectFit: 'cover', ...(style ?? {}) };
+			? {
+					width: '100%',
+					height: '100vh',
+					objectFit: 'cover',
+					...(style ?? {}),
+				}
+			: {
+					width: '100%',
+					height: 'auto',
+					objectFit: 'cover',
+					...(style ?? {}),
+				};
 
 	React.useEffect(() => {
 		const video = ref.current;
 		if (!video || !data) return;
 
 		const src = data.masterUrl;
-		const canNative = video.canPlayType('application/vnd.apple.mpegurl') !== '';
+		const canNative =
+			video.canPlayType('application/vnd.apple.mpegurl') !== '';
 
 		let hls: HlsInstance | null = null;
 		let cancelled = false;
@@ -81,7 +92,9 @@ export default function VideoByName({
 
 					const HlsCtor: HlsClass = mod.default;
 					if (HlsCtor.isSupported()) {
-						hls = new HlsCtor({ enableWorker: true });
+						hls = new HlsCtor({
+							enableWorker: true,
+						});
 						hls.loadSource(src);
 						hls.attachMedia(video);
 					} else {
@@ -105,7 +118,9 @@ export default function VideoByName({
 		if (pauseWhenOffscreen) {
 			ioRef.current?.disconnect();
 			const io = new IntersectionObserver(
-				([entry]: IntersectionObserverEntry[]) => {
+				([
+					entry,
+				]: IntersectionObserverEntry[]) => {
 					const el = ref.current;
 					if (!el) return;
 					if (entry.isIntersecting) {
@@ -147,7 +162,9 @@ export default function VideoByName({
 		if (!video) return;
 		video.defaultPlaybackRate = playbackRate;
 		video.playbackRate = playbackRate;
-	}, [playbackRate]);
+	}, [
+		playbackRate,
+	]);
 
 	if (!data) return null;
 

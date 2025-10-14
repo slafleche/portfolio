@@ -1,6 +1,12 @@
 'use client';
 import clsx from 'clsx';
-import { memo, useEffect, useMemo, useState, type ReactNode } from 'react'; // useEffect avoids hydration warnings
+import {
+	memo,
+	useEffect,
+	useMemo,
+	useState,
+	type ReactNode,
+} from 'react'; // useEffect avoids hydration warnings
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
@@ -27,7 +33,10 @@ function Arch({
 }: Props) {
 	const windowSize = useWindowSize().width;
 	const baseId = useSafeId();
-	const [mounted, setMounted] = useState(false);
+	const [
+		mounted,
+		setMounted,
+	] = useState(false);
 	useEffect(() => setMounted(true), []);
 
 	// Safe numbers even before windowSize is known
@@ -46,7 +55,9 @@ function Arch({
 				...archVars,
 				width: ws,
 			}),
-		[ws],
+		[
+			ws,
+		],
 	);
 
 	return (
@@ -67,7 +78,9 @@ function Arch({
 						preserveAspectRatio="none"
 						overflow="visible"
 						aria-hidden
-						style={{ pointerEvents: 'none' }}
+						style={{
+							pointerEvents: 'none',
+						}}
 					>
 						<path d={archD} className={s.shadowPath} />
 					</svg>
@@ -86,7 +99,10 @@ function Arch({
 							<path id={archPathId} d={archD} />
 							<path id={bottomPathId} d={bottomCurveD} />
 
-							<clipPath id={clipPathId} clipPathUnits="userSpaceOnUse">
+							<clipPath
+								id={clipPathId}
+								clipPathUnits="userSpaceOnUse"
+							>
 								<use href={`#${archPathId}`} />
 							</clipPath>
 
@@ -118,24 +134,44 @@ function Arch({
 									const e = clamp(pos + cov / 2);
 									const rise = clamp(s + (pos - s) * 0.6);
 									const fall = clamp(pos + (e - pos) * 0.4);
-									const pc = (x: number) => `${(x * 100).toFixed(2)}%`;
+									const pc = (x: number) =>
+										`${(x * 100).toFixed(2)}%`;
 									const col = (a: number) => color.alpha(a).css(); // chroma → css rgba()
 
 									return (
 										<>
-											<stop offset={pc(0)} stopColor={col(baseLeftAlpha)} />
-											<stop offset={pc(s)} stopColor={col(baseMidAlpha)} />
+											<stop
+												offset={pc(0)}
+												stopColor={col(baseLeftAlpha)}
+											/>
+											<stop
+												offset={pc(s)}
+												stopColor={col(baseMidAlpha)}
+											/>
 											<stop
 												offset={pc(rise)}
-												stopColor={col((baseMidAlpha + peakAlpha) / 2)}
+												stopColor={col(
+													(baseMidAlpha + peakAlpha) / 2,
+												)}
 											/>
-											<stop offset={pc(pos)} stopColor={col(peakAlpha)} />
+											<stop
+												offset={pc(pos)}
+												stopColor={col(peakAlpha)}
+											/>
 											<stop
 												offset={pc(fall)}
-												stopColor={col((baseMidAlpha + peakAlpha * 0.75) / 2)}
+												stopColor={col(
+													(baseMidAlpha + peakAlpha * 0.75) / 2,
+												)}
 											/>
-											<stop offset={pc(e)} stopColor={col(baseMidAlpha)} />
-											<stop offset={pc(1)} stopColor={col(baseRightAlpha)} />
+											<stop
+												offset={pc(e)}
+												stopColor={col(baseMidAlpha)}
+											/>
+											<stop
+												offset={pc(1)}
+												stopColor={col(baseRightAlpha)}
+											/>
 										</>
 									);
 								})()}
@@ -156,11 +192,15 @@ function Arch({
 					</svg>
 					<div
 						className={s.surface}
-						style={{ clipPath: `url(#${clipPathId})` }}
+						style={{
+							clipPath: `url(#${clipPathId})`,
+						}}
 						aria-hidden
 					>
 						<div
-							style={{ backgroundImage: noiseStyle(rimXId) }}
+							style={{
+								backgroundImage: noiseStyle(rimXId),
+							}}
 							className={s.grain}
 						/>
 					</div>

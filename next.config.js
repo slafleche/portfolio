@@ -13,7 +13,8 @@ const isDev = process.env.NODE_ENV !== 'production';
 const nextConfig = {
 	env: {
 		NEXT_PUBLIC_MEASUREMENT_DEBUG:
-			process.env.NEXT_PUBLIC_MEASUREMENT_DEBUG ?? (isDev ? '1' : '0'),
+			process.env.NEXT_PUBLIC_MEASUREMENT_DEBUG ??
+			(isDev ? '1' : '0'),
 	},
 	webpack(config) {
 		// keep your alias
@@ -23,7 +24,11 @@ const nextConfig = {
 		config.module.rules.push({
 			test: /\.svg$/i,
 			issuer: /\.[jt]sx?$/,
-			resourceQuery: { not: [/url/] }, // exclude *.svg?url
+			resourceQuery: {
+				not: [
+					/url/,
+				],
+			}, // exclude *.svg?url
 			use: [
 				{
 					loader: '@svgr/webpack',

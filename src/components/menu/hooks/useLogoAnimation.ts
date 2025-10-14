@@ -7,11 +7,20 @@ export const LOGO_EXIT_DURATION = 560;
 type LogoState = 'idle' | 'enter' | 'exit';
 
 export function useLogoAnimation() {
-	const [state, setState] = useState<LogoState>('idle');
+	const [
+		state,
+		setState,
+	] = useState<LogoState>('idle');
 	const stateRef = useRef<LogoState>('idle');
-	const enterDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-	const exitDelayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-	const exitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const enterDelayRef = useRef<ReturnType<typeof setTimeout> | null>(
+		null,
+	);
+	const exitDelayRef = useRef<ReturnType<typeof setTimeout> | null>(
+		null,
+	);
+	const exitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+		null,
+	);
 
 	const clearEnterDelay = useCallback(() => {
 		if (enterDelayRef.current) {
@@ -41,7 +50,11 @@ export function useLogoAnimation() {
 		if (stateRef.current === 'enter') return;
 		stateRef.current = 'enter';
 		setState('enter');
-	}, [clearEnterDelay, clearExitDelay, clearExitTimeout]);
+	}, [
+		clearEnterDelay,
+		clearExitDelay,
+		clearExitTimeout,
+	]);
 
 	const runExit = useCallback(() => {
 		clearEnterDelay();
@@ -55,7 +68,11 @@ export function useLogoAnimation() {
 			setState('idle');
 			exitTimeoutRef.current = null;
 		}, LOGO_EXIT_DURATION);
-	}, [clearEnterDelay, clearExitDelay, clearExitTimeout]);
+	}, [
+		clearEnterDelay,
+		clearExitDelay,
+		clearExitTimeout,
+	]);
 
 	const scheduleEnter = useCallback(
 		(delay = LOGO_ENTER_DELAY) => {
@@ -69,7 +86,10 @@ export function useLogoAnimation() {
 				runEnter();
 			}, delay);
 		},
-		[runEnter, clearEnterDelay],
+		[
+			runEnter,
+			clearEnterDelay,
+		],
 	);
 
 	const scheduleExit = useCallback(
@@ -84,7 +104,10 @@ export function useLogoAnimation() {
 				runExit();
 			}, delay);
 		},
-		[runExit, clearExitDelay],
+		[
+			runExit,
+			clearExitDelay,
+		],
 	);
 
 	const resetToIdle = useCallback(() => {
@@ -93,7 +116,11 @@ export function useLogoAnimation() {
 		clearExitTimeout();
 		stateRef.current = 'idle';
 		setState('idle');
-	}, [clearEnterDelay, clearExitDelay, clearExitTimeout]);
+	}, [
+		clearEnterDelay,
+		clearExitDelay,
+		clearExitTimeout,
+	]);
 
 	useEffect(
 		() => () => {
@@ -101,7 +128,11 @@ export function useLogoAnimation() {
 			clearExitDelay();
 			clearExitTimeout();
 		},
-		[clearEnterDelay, clearExitDelay, clearExitTimeout],
+		[
+			clearEnterDelay,
+			clearExitDelay,
+			clearExitTimeout,
+		],
 	);
 
 	return {

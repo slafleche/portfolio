@@ -11,21 +11,56 @@ import ffprobeStatic from 'ffprobe-static';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-/** ===================== Config ===================== * */
+/* Config -------------------------------------------------------------- */
 const SRC_MAP_PATH = 'src/assets/videos/videoSources.json'; // { "hero": "<url>", ... }
 const OUT_ROOT = 'public/videos'; // derived assets (gitignored)
 const MANIFEST_PATH = 'src/data/generated/videos.manifest.gen.json';
 const TEMP_ROOT = 'tmp/videos';
 
-// 100vh fullscreen hero — 24fps, 2s segments
+// 100vh fullscreen hero ladder — 24fps, 2s segments
 const LADDER = [
-	{ h: 1440, vK: 5200, aK: 96, profile: 'high' },
-	{ h: 1080, vK: 3800, aK: 96, profile: 'high' },
-	{ h: 900, vK: 2800, aK: 96, profile: 'main' },
-	{ h: 720, vK: 1900, aK: 96, profile: 'main' },
-	{ h: 540, vK: 1200, aK: 64, profile: 'main' },
-	{ h: 360, vK: 700, aK: 48, profile: 'baseline' },
-	{ h: 240, vK: 400, aK: 32, profile: 'baseline' },
+	{
+		h: 1440,
+		vK: 5200,
+		aK: 96,
+		profile: 'high',
+	},
+	{
+		h: 1080,
+		vK: 3800,
+		aK: 96,
+		profile: 'high',
+	},
+	{
+		h: 900,
+		vK: 2800,
+		aK: 96,
+		profile: 'main',
+	},
+	{
+		h: 720,
+		vK: 1900,
+		aK: 96,
+		profile: 'main',
+	},
+	{
+		h: 540,
+		vK: 1200,
+		aK: 64,
+		profile: 'main',
+	},
+	{
+		h: 360,
+		vK: 700,
+		aK: 48,
+		profile: 'baseline',
+	},
+	{
+		h: 240,
+		vK: 400,
+		aK: 32,
+		profile: 'baseline',
+	},
 ];
 
 const FPS = 24;
@@ -33,14 +68,15 @@ const SEG = 2;
 const GOP = FPS * 2;
 const KEEP_AUDIO = true;
 
-/** ===================== Utils ===================== * */
+/* Utility helpers ---------------------------------------------------- */
 const exists = async (p) =>
 	!!(await fs
 		.access(p)
 		.then(() => true)
 		.catch(() => false));
 
-const sha256 = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
+const sha256 = (buf) =>
+	crypto.createHash('sha256').update(buf).digest('hex');
 
 const toName = (s) =>
 	s
@@ -53,7 +89,8 @@ function normalizeDrive(urlStr) {
 		const u = new URL(urlStr);
 		if (u.hostname === 'drive.google.com') {
 			const m =
-				u.pathname.match(/\/file\/d\/([^/]+)/) || u.search.match(/id=([^&]+)/);
+				u.pathname.match(/\/file\/d\/([^/]+)/) ||
+				u.search.match(/id=([^&]+)/);
 			if (m && m[1]) {
 				return `https://drive.google.com/uc?export=download&id=${m[1]}`;
 			}
@@ -64,16 +101,14 @@ function normalizeDrive(urlStr) {
 	}
 }
 
-/**
- * Force Dropbox shared links to direct-download:
- *
- * - Turns ...?dl=0 (or no dl param) into ?dl=1
- * - Preserves other params
- */
+// Force Dropbox shared links to ?dl=1 (direct download) while preserving other query params.
 function toDirectDropboxUrl(urlStr) {
 	try {
 		const u = new URL(urlStr);
-		if (u.hostname === 'www.dropbox.com' || u.hostname === 'dropbox.com') {
+		if (
+			u.hostname === 'www.dropbox.com' ||
+			u.hostname === 'dropbox.com'
+		) {
 			u.searchParams.set('dl', '1'); // force direct download
 			return u.toString();
 		}
@@ -93,16 +128,30 @@ function extFromUrlSafe(rawUrl) {
 }
 
 async function cleanOutRoot() {
-	await fs.rm(OUT_ROOT, { recursive: true, force: true }).catch(() => {});
-	await fs.mkdir(OUT_ROOT, { recursive: true });
+	await fs
+		.rm(OUT_ROOT, {
+			recursive: true,
+			force: true,
+		})
+		.catch(() => {});
+	await fs.mkdir(OUT_ROOT, {
+		recursive: true,
+	});
 }
 
 async function cleanTempRoot() {
-	await fs.rm(TEMP_ROOT, { recursive: true, force: true }).catch(() => {});
-	await fs.mkdir(TEMP_ROOT, { recursive: true });
+	await fs
+		.rm(TEMP_ROOT, {
+			recursive: true,
+			force: true,
+		})
+		.catch(() => {});
+	await fs.mkdir(TEMP_ROOT, {
+		recursive: true,
+	});
 }
 
-/** ===================== Networking ===================== * */
+/* Networking --------------------------------------------------------- */
 async function downloadToTemp(name, rawUrl) {
 	let urlStr = (rawUrl || '').trim();
 	if (!urlStr) throw new Error(`Empty URL for "${name}"`);
@@ -110,11 +159,17 @@ async function downloadToTemp(name, rawUrl) {
 	urlStr = normalizeDrive(urlStr);
 	urlStr = toDirectDropboxUrl(urlStr);
 
-	const res = await fetch(urlStr, { redirect: 'follow' });
+	const res = await fetch(urlStr, {
+		redirect: 'follow',
+	});
 	if (!res.ok) throw new Error(`HTTP ${res.status} for ${urlStr}`);
 
 	const ct =
-		res.headers.get('content-type')?.split(';')[0]?.trim().toLowerCase() || '';
+		res.headers
+			.get('content-type')
+			?.split(';')[0]
+			?.trim()
+			.toLowerCase() || '';
 	const buf = Buffer.from(await res.arrayBuffer());
 
 	const looksHtml = buf
@@ -148,13 +203,19 @@ async function downloadToTemp(name, rawUrl) {
 	const ext = extFromCT || extFromUrlSafe(urlStr) || '.mp4';
 
 	const hash = sha256(buf);
-	await fs.mkdir(TEMP_ROOT, { recursive: true });
+	await fs.mkdir(TEMP_ROOT, {
+		recursive: true,
+	});
 	const file = path.join(TEMP_ROOT, `${name}-${hash}${ext}`);
 	await fs.writeFile(file, buf);
-	return { file, hash, bytes: buf.length };
+	return {
+		file,
+		hash,
+		bytes: buf.length,
+	};
 }
 
-/** ===================== FFprobe/FFmpeg ===================== * */
+/* FFprobe / FFmpeg --------------------------------------------------- */
 async function ffprobeJSON(inputPath) {
 	const { stdout } = await execa(ffprobeStatic.path, [
 		'-v',
@@ -174,10 +235,7 @@ async function ffprobeJSON(inputPath) {
 	return meta;
 }
 
-/**
- * Deband + dither + very light temporal grain, then split/scale. Order matters:
- * gradfun (deband) → noise (grain) → split → scale.
- */
+// Deband, add subtle grain, then split/scale ladder outputs (order matters).
 function buildFilterAndMaps(hasAudio) {
 	const splitN = LADDER.length;
 	const v = Array.from({ length: splitN }, (_, i) => `v${i + 1}`);
@@ -192,7 +250,10 @@ function buildFilterAndMaps(hasAudio) {
 		';';
 
 	const scales = v
-		.map((x, i) => ` [${x}]scale=-2:${LADDER[i].h}:flags=lanczos[${out[i]}];`)
+		.map(
+			(x, i) =>
+				` [${x}]scale=-2:${LADDER[i].h}:flags=lanczos[${out[i]}];`,
+		)
 		.join('');
 
 	const maps = [];
@@ -205,12 +266,18 @@ function buildFilterAndMaps(hasAudio) {
 		hasAudio && KEEP_AUDIO ? `v:${i},a:${i}` : `v:${i}`,
 	).join(' ');
 
-	return { filter: split + scales, maps, varMap };
+	return {
+		filter: split + scales,
+		maps,
+		varMap,
+	};
 }
 
 async function buildHLS(srcPath, name) {
 	const outDir = path.join(OUT_ROOT, name);
-	await fs.mkdir(outDir, { recursive: true });
+	await fs.mkdir(outDir, {
+		recursive: true,
+	});
 
 	const meta = await ffprobeJSON(srcPath);
 	const v = meta.streams.find((s) => s.codec_type === 'video');
@@ -223,7 +290,9 @@ async function buildHLS(srcPath, name) {
 	const { filter, maps, varMap } = buildFilterAndMaps(hasAudio);
 
 	for (let i = 0; i < LADDER.length; i++) {
-		await fs.mkdir(path.join(outDir, `out_${i}`), { recursive: true });
+		await fs.mkdir(path.join(outDir, `out_${i}`), {
+			recursive: true,
+		});
 	}
 
 	const rungOpts = LADDER.flatMap((r, i) => [
@@ -269,8 +338,15 @@ async function buildHLS(srcPath, name) {
 		'bt709',
 
 		...(KEEP_AUDIO && hasAudio
-			? ['-c:a', 'aac', `-b:a:${i}`, `${r.aK}k`]
-			: ['-an']),
+			? [
+					'-c:a',
+					'aac',
+					`-b:a:${i}`,
+					`${r.aK}k`,
+				]
+			: [
+					'-an',
+				]),
 	]);
 
 	const args = [
@@ -302,7 +378,9 @@ async function buildHLS(srcPath, name) {
 	];
 
 	console.log(`↻ ffmpeg → ${name}`);
-	await execa(ffmpegStatic, args, { stdio: 'inherit' });
+	await execa(ffmpegStatic, args, {
+		stdio: 'inherit',
+	});
 
 	const poster = path.join(outDir, 'poster.jpg');
 	await execa(ffmpegStatic, [
@@ -337,7 +415,7 @@ async function buildHLS(srcPath, name) {
 	};
 }
 
-/** ===================== CLI & Main ===================== * */
+/* CLI entry ---------------------------------------------------------- */
 function parseTargets(argv) {
 	const names = argv.filter((a) => !a.startsWith('-')).map(toName);
 	return new Set(names);
@@ -350,17 +428,25 @@ function parseTargets(argv) {
 	let manifest = {};
 	if (await exists(MANIFEST_PATH)) {
 		try {
-			manifest = JSON.parse(await fs.readFile(MANIFEST_PATH, 'utf8')) || {};
+			manifest =
+				JSON.parse(await fs.readFile(MANIFEST_PATH, 'utf8')) || {};
 		} catch {}
 	}
 
 	const urlMap = JSON.parse(await fs.readFile(SRC_MAP_PATH, 'utf8'));
-	const entries = Object.entries(urlMap).filter(([key]) =>
-		partialBuild ? targets.has(toName(key)) : true,
+	const entries = Object.entries(urlMap).filter(
+		([
+			key,
+		]) => (partialBuild ? targets.has(toName(key)) : true),
 	);
 
 	if (partialBuild && entries.length === 0) {
-		console.warn('⚠️ No matching video keys for:', [...targets].join(', '));
+		console.warn(
+			'⚠️ No matching video keys for:',
+			[
+				...targets,
+			].join(', '),
+		);
 		process.exit(0);
 	}
 
@@ -370,26 +456,43 @@ function parseTargets(argv) {
 	if (!partialBuild) {
 		await cleanOutRoot();
 	} else {
-		await fs.mkdir(OUT_ROOT, { recursive: true });
+		await fs.mkdir(OUT_ROOT, {
+			recursive: true,
+		});
 	}
 
-	for (const [rawName, rawUrl] of entries) {
+	for (const [
+		rawName,
+		rawUrl,
+	] of entries) {
 		const name = toName(rawName);
 		console.log(`\n▶ ${name}`);
 		try {
-			const { file, hash, bytes } = await downloadToTemp(name, rawUrl);
+			const { file, hash, bytes } = await downloadToTemp(
+				name,
+				rawUrl,
+			);
 			const prev = manifest[name];
 
 			if (partialBuild && prev?.sourceHash === hash) {
-				console.log(`• Unchanged (${prettyBytes(bytes)}). Skipping transcode.`);
+				console.log(
+					`• Unchanged (${prettyBytes(bytes)}). Skipping transcode.`,
+				);
 				continue;
 			}
 			await fs
-				.rm(path.join(OUT_ROOT, name), { recursive: true, force: true })
+				.rm(path.join(OUT_ROOT, name), {
+					recursive: true,
+					force: true,
+				})
 				.catch(() => {});
 
 			const info = await buildHLS(file, name);
-			manifest[name] = { ...info, sourceHash: hash, sourceSize: bytes };
+			manifest[name] = {
+				...info,
+				sourceHash: hash,
+				sourceSize: bytes,
+			};
 			console.log(
 				`✓ Built ${name}  ${info.width}x${info.height}  ${Math.round(info.duration)}s`,
 			);
@@ -398,9 +501,17 @@ function parseTargets(argv) {
 		}
 	}
 
-	await fs.writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2));
+	await fs.writeFile(
+		MANIFEST_PATH,
+		JSON.stringify(manifest, null, 2),
+	);
 	console.log(`\n✓ Wrote manifest → ${MANIFEST_PATH}`);
 	console.log(`✓ Outputs under → ${OUT_ROOT}`);
 
-	await fs.rm(TEMP_ROOT, { recursive: true, force: true }).catch(() => {});
+	await fs
+		.rm(TEMP_ROOT, {
+			recursive: true,
+			force: true,
+		})
+		.catch(() => {});
 })();

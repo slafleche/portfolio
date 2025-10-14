@@ -1,6 +1,9 @@
 import { globalStyle } from '@vanilla-extract/css';
 import { archVars, colorVars, fontVars, spacingVars } from './vars';
-import { ReducedMotion, reducedMotion } from './helpers/accessibility';
+import {
+	ReducedMotion,
+	reducedMotion,
+} from './helpers/accessibility';
 import { isCssLike } from './helpers/measurement';
 import { fontWeightStyle } from './helpers/typography';
 

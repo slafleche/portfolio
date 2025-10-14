@@ -12,9 +12,14 @@ type Props = {
 	href?: string;
 };
 
-export default function SkipToContent({ className, href = '#body' }: Props) {
+export default function SkipToContent({
+	className,
+	href = '#body',
+}: Props) {
 	const t = useT();
-	const handleClick = useCallback<MouseEventHandler<HTMLAnchorElement>>(
+	const handleClick = useCallback<
+		MouseEventHandler<HTMLAnchorElement>
+	>(
 		(event) => {
 			if (typeof window === 'undefined') return;
 			if (!href.startsWith('#')) return;
@@ -23,7 +28,10 @@ export default function SkipToContent({ className, href = '#body' }: Props) {
 			const target = document.getElementById(targetId) as HTMLElement;
 			if (!target) return;
 			event.preventDefault();
-			target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			target.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start',
+			});
 			if (typeof target.focus === 'function') {
 				const previousTabIndex = target.getAttribute('tabindex');
 				if (previousTabIndex == null) {
@@ -36,10 +44,14 @@ export default function SkipToContent({ className, href = '#body' }: Props) {
 						{ once: true },
 					);
 				}
-				target.focus({ preventScroll: true });
+				target.focus({
+					preventScroll: true,
+				});
 			}
 		},
-		[href],
+		[
+			href,
+		],
 	);
 
 	return (

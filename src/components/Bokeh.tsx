@@ -1,6 +1,12 @@
 'use client';
 
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+	memo,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 import * as s from '@/styles/components/bokeh.css';
 import { useSafeId } from '../lib/dom';
 import clsx from 'clsx';
@@ -10,7 +16,12 @@ import { bokenVars } from '../styles/vars';
 
 // A simple, deterministic layout for ~10 circles.
 // You can tweak cx, cy, r as you like.
-type Blob = { cx: number; cy: number; r: number; group: 0 | 1 };
+type Blob = {
+	cx: number;
+	cy: number;
+	r: number;
+	group: 0 | 1;
+};
 
 const BLOBS: Blob[] = [
 	{ cx: 18, cy: 20, r: 22, group: 0 },
@@ -26,17 +37,37 @@ const BLOBS: Blob[] = [
 ];
 
 export type BokehOverlayProps = {
-	/** One chroma color per blob; if fewer provided, they cycle */
+	/**
+	 * One chroma color per blob; if fewer
+	 * provided, they cycle
+	 */
 	colors?: ColorWrapper[];
-	/** Overall opacity of the overlay [0..1] */
+	/**
+	 * Overall opacity of the overlay
+	 * [0..1]
+	 */
 	opacity?: number;
-	/** CSS blend mode (e.g. 'screen' | 'overlay' | 'soft-light' | 'plus-lighter') */
+	/**
+	 * CSS blend mode (e.g. 'screen' |
+	 * 'overlay' | 'soft-light' |
+	 * 'plus-lighter')
+	 */
 	blendMode?: React.CSSProperties['mixBlendMode'];
-	/** Blur radius in CSS/SVG px (stdDeviation ~= blur/2) */
+	/**
+	 * Blur radius in CSS/SVG px
+	 * (stdDeviation ~= blur/2)
+	 */
 	blur?: number;
-	/** Multiplier applied to blur for finer control (e.g., 0.5 for smaller blur) */
+	/**
+	 * Multiplier applied to blur for
+	 * finer control (e.g., 0.5 for
+	 * smaller blur)
+	 */
 	blurScale?: number;
-	/** Multiplier applied to all circle radii (1 = as defined) */
+	/**
+	 * Multiplier applied to all circle
+	 * radii (1 = as defined)
+	 */
 	sizeScale?: number;
 	className?: string;
 };
@@ -54,10 +85,16 @@ function BokehOverlay({
 }: BokehOverlayProps) {
 	const id = useSafeId();
 	const { width, height } = useWindowSize();
-	const [mounted, setMounted] = useState(() => mountedOnce);
+	const [
+		mounted,
+		setMounted,
+	] = useState(() => mountedOnce);
 	const raf1 = useRef<number | null>(null);
 	const raf2 = useRef<number | null>(null);
-	const lastSize = useRef<{ width: number; height: number } | null>(null);
+	const lastSize = useRef<{
+		width: number;
+		height: number;
+	} | null>(null);
 
 	// Fade-in on mount to avoid jarring first paint
 	useEffect(() => {
@@ -76,18 +113,32 @@ function BokehOverlay({
 	}, []);
 
 	if (width != null && height != null) {
-		lastSize.current = { width, height };
+		lastSize.current = {
+			width,
+			height,
+		};
 	}
 
 	const renderWidth = width ?? lastSize.current?.width ?? null;
 	const renderHeight = height ?? lastSize.current?.height ?? null;
 
 	// Precompute color strings
-	const colorStrs = useMemo(() => colors.map((c) => c.css()), [colors]);
+	const colorStrs = useMemo(
+		() => colors.map((c) => c.css()),
+		[
+			colors,
+		],
+	);
 
 	// Split blobs per group once (and keep hooks at top level)
-	const blobs0 = useMemo(() => BLOBS.filter((b) => b.group === 0), []);
-	const blobs1 = useMemo(() => BLOBS.filter((b) => b.group === 1), []);
+	const blobs0 = useMemo(
+		() => BLOBS.filter((b) => b.group === 0),
+		[],
+	);
+	const blobs1 = useMemo(
+		() => BLOBS.filter((b) => b.group === 1),
+		[],
+	);
 
 	// Convert blur (CSS px) to viewBox units (0..100) and memoize
 	const { stdDev, pad } = useMemo(() => {
@@ -95,7 +146,9 @@ function BokehOverlay({
 			1,
 			Math.min(renderWidth ?? 0, renderHeight ?? 0),
 		);
-		const baseUnits = minSidePx ? (blur / minSidePx) * 100 : blur / 10;
+		const baseUnits = minSidePx
+			? (blur / minSidePx) * 100
+			: blur / 10;
 		const units = Math.max(0, baseUnits * blurScale);
 		const stdDeviation = Math.max(0.5, units / 2);
 		const padUnits = Math.max(8, stdDeviation * 8);
@@ -103,7 +156,12 @@ function BokehOverlay({
 			stdDev: stdDeviation,
 			pad: padUnits,
 		};
-	}, [renderWidth, renderHeight, blur, blurScale]);
+	}, [
+		renderWidth,
+		renderHeight,
+		blur,
+		blurScale,
+	]);
 
 	return (
 		<div
@@ -190,7 +248,9 @@ function BokehOverlay({
 
 					<g
 						className={s.rotatingSlow}
-						style={{ animationDirection: 'reverse' }}
+						style={{
+							animationDirection: 'reverse',
+						}}
 						filter={`url(#${id})`}
 					>
 						{blobs1.map((b, i) => (

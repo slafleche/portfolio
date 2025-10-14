@@ -9,21 +9,63 @@ const MANIFEST_PATH = 'src/data/generated/images.manifest.gen.json';
 const TEMP_ROOT = 'tmp/large-images';
 const LARGE_IMAGES_DIR = path.join(SRC_DIR, 'largeImages');
 const LARGE_IMAGES_CONFIG = path.join(SRC_DIR, 'largeImages.json');
-const IGNORE_DIRS = new Set([LARGE_IMAGES_DIR]);
+const IGNORE_DIRS = new Set([
+	LARGE_IMAGES_DIR,
+]);
 const MIME_EXTENSIONS = new Map([
-	['image/jpeg', '.jpg'],
-	['image/png', '.png'],
-	['image/webp', '.webp'],
-	['image/avif', '.avif'],
-	['image/tiff', '.tif'],
-	['image/x-tiff', '.tif'],
+	[
+		'image/jpeg',
+		'.jpg',
+	],
+	[
+		'image/png',
+		'.png',
+	],
+	[
+		'image/webp',
+		'.webp',
+	],
+	[
+		'image/avif',
+		'.avif',
+	],
+	[
+		'image/tiff',
+		'.tif',
+	],
+	[
+		'image/x-tiff',
+		'.tif',
+	],
 ]);
 
-const WIDTHS = [320, 480, 640, 750, 828, 1080, 1200, 1920];
+const WIDTHS = [
+	320,
+	480,
+	640,
+	750,
+	828,
+	1080,
+	1200,
+	1920,
+];
 const FORMATS = [
-	{ ext: 'avif', to: (img) => img.avif({ quality: 50 }) },
-	{ ext: 'webp', to: (img) => img.webp({ quality: 70 }) },
-	{ ext: 'jpg', to: (img) => img.jpeg({ quality: 82, progressive: true }) },
+	{
+		ext: 'avif',
+		to: (img) => img.avif({ quality: 50 }),
+	},
+	{
+		ext: 'webp',
+		to: (img) => img.webp({ quality: 70 }),
+	},
+	{
+		ext: 'jpg',
+		to: (img) =>
+			img.jpeg({
+				quality: 82,
+				progressive: true,
+			}),
+	},
 ];
 const VALID_EXT = new Set([
 	'.jpg',
@@ -38,7 +80,10 @@ const VALID_EXT = new Set([
 function ensureDirectDropboxUrl(rawUrl) {
 	try {
 		const url = new URL(rawUrl);
-		if (url.hostname === 'www.dropbox.com' || url.hostname === 'dropbox.com') {
+		if (
+			url.hostname === 'www.dropbox.com' ||
+			url.hostname === 'dropbox.com'
+		) {
 			url.hostname = 'dl.dropboxusercontent.com';
 			if (url.searchParams.get('dl') === '0') {
 				url.searchParams.set('dl', '1');
@@ -95,7 +140,9 @@ async function loadLargeImagesConfig() {
 
 async function downloadLargeImage(name, rawUrl) {
 	if (typeof fetch !== 'function') {
-		throw new Error('fetch is not available in this Node.js runtime.');
+		throw new Error(
+			'fetch is not available in this Node.js runtime.',
+		);
 	}
 	const normalizedUrl = normalizeLargeImageUrl(rawUrl);
 	const response = await fetch(normalizedUrl);
@@ -103,9 +150,12 @@ async function downloadLargeImage(name, rawUrl) {
 		throw new Error(`HTTP ${response.status} ${response.statusText}`);
 	}
 	const arrayBuffer = await response.arrayBuffer();
-	let ext = extensionFromUrl(normalizedUrl) || extensionFromUrl(rawUrl);
+	let ext =
+		extensionFromUrl(normalizedUrl) || extensionFromUrl(rawUrl);
 	if (!VALID_EXT.has(ext)) {
-		ext = extensionFromMime(response.headers.get('content-type')) || '.jpg';
+		ext =
+			extensionFromMime(response.headers.get('content-type')) ||
+			'.jpg';
 	}
 	if (!VALID_EXT.has(ext)) ext = '.jpg';
 	const filePath = path.join(TEMP_ROOT, `${name}${ext}`);
@@ -114,7 +164,9 @@ async function downloadLargeImage(name, rawUrl) {
 }
 
 async function* walk(dir) {
-	for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+	for (const entry of await fs.readdir(dir, {
+		withFileTypes: true,
+	})) {
 		const p = path.join(dir, entry.name);
 		if (entry.isDirectory()) {
 			if (IGNORE_DIRS.has(p)) continue;
@@ -137,9 +189,14 @@ function toName(filePath) {
 
 async function cleanOutRoot() {
 	try {
-		await fs.rm(OUT_ROOT, { recursive: true, force: true });
+		await fs.rm(OUT_ROOT, {
+			recursive: true,
+			force: true,
+		});
 	} catch {}
-	await fs.mkdir(OUT_ROOT, { recursive: true });
+	await fs.mkdir(OUT_ROOT, {
+		recursive: true,
+	});
 }
 
 async function processImage(filePath, nameOverride, manifest) {
@@ -148,7 +205,9 @@ async function processImage(filePath, nameOverride, manifest) {
 
 	const name = nameOverride ?? toName(filePath);
 	const outDir = path.join(OUT_ROOT, name);
-	await fs.mkdir(outDir, { recursive: true });
+	await fs.mkdir(outDir, {
+		recursive: true,
+	});
 
 	const img = sharp(filePath).rotate(); // auto-orient EXIF
 	const meta = await img.metadata();
@@ -185,7 +244,10 @@ async function processImage(filePath, nameOverride, manifest) {
 			const fileName = `${w}.${outExt}`;
 			const outPath = path.join(outDir, fileName);
 			await to(img.clone().resize({ width: w })).toFile(outPath);
-			list.push({ w, url: `/images/${name}/${fileName}` });
+			list.push({
+				w,
+				url: `/images/${name}/${fileName}`,
+			});
 		}
 		item.variants[outExt] = list;
 	}
@@ -215,11 +277,16 @@ console.log(`   ✓ Cleared "${OUT_ROOT}"`);
 
 const manifestDir = path.dirname(MANIFEST_PATH);
 console.log(`→ Ensuring manifest directory "${manifestDir}" exists`);
-await fs.mkdir(manifestDir, { recursive: true });
+await fs.mkdir(manifestDir, {
+	recursive: true,
+});
 
 console.log(`→ Clearing temporary download directory "${TEMP_ROOT}"`);
 try {
-	await fs.rm(TEMP_ROOT, { recursive: true, force: true });
+	await fs.rm(TEMP_ROOT, {
+		recursive: true,
+		force: true,
+	});
 	console.log('   ✓ Temp directory emptied');
 } catch {
 	console.log('   • Temp directory not present, skipping removal');
@@ -237,11 +304,16 @@ console.log(
 	`   ✓ Processed ${localCount} local image${localCount === 1 ? '' : 's'}.`,
 );
 
-console.log(`→ Loading large image manifest "${LARGE_IMAGES_CONFIG}"`);
+console.log(
+	`→ Loading large image manifest "${LARGE_IMAGES_CONFIG}"`,
+);
 let largeImagesMap = await loadLargeImagesConfig();
 const dropboxUpdates = [];
 let manifestChanged = false;
-for (const [name, rawUrl] of Object.entries(largeImagesMap)) {
+for (const [
+	name,
+	rawUrl,
+] of Object.entries(largeImagesMap)) {
 	if (typeof rawUrl !== 'string') continue;
 	const trimmed = rawUrl.trim();
 	const normalized = ensureDirectDropboxUrl(trimmed);
@@ -272,15 +344,22 @@ if (manifestChanged) {
 const largeEntries = Object.entries(largeImagesMap);
 
 if (largeEntries.length) {
-	await fs.mkdir(TEMP_ROOT, { recursive: true });
+	await fs.mkdir(TEMP_ROOT, {
+		recursive: true,
+	});
 	console.log(
 		`→ Downloading and processing ${largeEntries.length} remote image${largeEntries.length === 1 ? '' : 's'}`,
 	);
 	let remoteCount = 0;
-	for (const [name, rawUrl] of largeEntries) {
+	for (const [
+		name,
+		rawUrl,
+	] of largeEntries) {
 		const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
 		if (!url) {
-			console.warn(`⚠️ Skipping large image "${name}" because URL is empty.`);
+			console.warn(
+				`⚠️ Skipping large image "${name}" because URL is empty.`,
+			);
 			continue;
 		}
 		try {
@@ -296,7 +375,10 @@ if (largeEntries.length) {
 		}
 	}
 	try {
-		await fs.rm(TEMP_ROOT, { recursive: true, force: true });
+		await fs.rm(TEMP_ROOT, {
+			recursive: true,
+			force: true,
+		});
 		console.log('   ✓ Cleaned temporary download directory.');
 	} catch {
 		console.warn('⚠️ Could not clean temporary download directory.');

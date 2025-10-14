@@ -2,7 +2,10 @@ import { archVars, menuVars } from '@/styles/vars';
 import type { Messages } from '@/data/locales';
 
 export type AnchorKey = Extract<keyof Messages, `${string}-href`>;
-export type AnchorEntry = { hrefKey: AnchorKey; labelKey: keyof Messages };
+export type AnchorEntry = {
+	hrefKey: AnchorKey;
+	labelKey: keyof Messages;
+};
 
 export type LinkMetric = {
 	centerX: number;
@@ -35,20 +38,35 @@ export type DebugArch = {
 	height: number;
 };
 
-export const MINI_BOKEH_CACHE_KEY = 'portfolio/menu/last-mini-bokeh-target';
+export const MINI_BOKEH_CACHE_KEY =
+	'portfolio/menu/last-mini-bokeh-target';
 export const LOGO_CACHE_VALUE = '__logo__';
 
 export const BASE_ANCHORS: readonly AnchorEntry[] = [
-	{ hrefKey: 'about-href', labelKey: 'about' },
-	{ hrefKey: 'approach-href', labelKey: 'approach' },
-	{ hrefKey: 'case_study-href', labelKey: 'case_study' },
-	{ hrefKey: 'projects-href', labelKey: 'projects' },
+	{
+		hrefKey: 'about-href',
+		labelKey: 'about',
+	},
+	{
+		hrefKey: 'approach-href',
+		labelKey: 'approach',
+	},
+	{
+		hrefKey: 'case_study-href',
+		labelKey: 'case_study',
+	},
+	{
+		hrefKey: 'projects-href',
+		labelKey: 'projects',
+	},
 ];
 
 export const clamp = (value: number, min: number, max: number) =>
 	Math.min(max, Math.max(min, value));
 
-export const metricToHighlightBox = (metric: LinkMetric): HighlightBox => ({
+export const metricToHighlightBox = (
+	metric: LinkMetric,
+): HighlightBox => ({
 	left: metric.left,
 	top: metric.top,
 	width: metric.highlightWidth,
@@ -61,7 +79,11 @@ const rxFrom = (width: number, curveHeight: number, ry: number) => {
 	return width / 2 / Math.sqrt(denom);
 };
 
-export const computeArchY = (width: number, x: number, includeBump = false) => {
+export const computeArchY = (
+	width: number,
+	x: number,
+	includeBump = false,
+) => {
 	const top = archVars.top.value;
 	const curveHeight = archVars.curveHeight.value;
 	const ry = archVars.ry.value;
@@ -71,7 +93,9 @@ export const computeArchY = (width: number, x: number, includeBump = false) => {
 	const cy = top + ry;
 	const rx = rxFrom(width, curveHeight, ry);
 	const normalized = clamp((x - cx) / rx, -1, 1);
-	const ellipseComponent = Math.sqrt(Math.max(0, 1 - normalized * normalized));
+	const ellipseComponent = Math.sqrt(
+		Math.max(0, 1 - normalized * normalized),
+	);
 	let y = cy - ry * ellipseComponent;
 
 	const halfBump = bumpWidth / 2;
@@ -105,7 +129,12 @@ export const computeCenteredHighlight = (navMetrics: {
 		: highlightHeight / 2;
 	const left = centerX - fallbackWidth / 2;
 	const top = Math.max(0, centerY - highlightHeight / 2);
-	return { left, top, width: fallbackWidth, height: highlightHeight };
+	return {
+		left,
+		top,
+		width: fallbackWidth,
+		height: highlightHeight,
+	};
 };
 
 export const getCacheValueForIndex = (
@@ -123,6 +152,8 @@ export const resolveIndexFromCacheValue = (
 ): number | null => {
 	if (!value) return null;
 	if (value === LOGO_CACHE_VALUE) return 0;
-	const anchorIndex = anchors.findIndex((anchor) => anchor.hrefKey === value);
+	const anchorIndex = anchors.findIndex(
+		(anchor) => anchor.hrefKey === value,
+	);
 	return anchorIndex >= 0 ? anchorIndex + 1 : null;
 };

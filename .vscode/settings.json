@@ -43,7 +43,9 @@
 	],
 	"json.schemas": [
 		{
-			"fileMatch": ["settings.json"],
+			"fileMatch": [
+				"settings.json"
+			],
 			"url": "https://raw.githubusercontent.com/microsoft/vscode/main/extensions/configuration-editing/schemas/settings.schema.json"
 		}
 	]

@@ -6,13 +6,22 @@ import { LOCALE_LABELS } from '@/data/locales';
 type Ctx = { locale: Locale };
 
 // default context value is "en"
-const Ctx = createContext<Ctx>({ locale: 'en' });
+const Ctx = createContext<Ctx>({
+	locale: 'en',
+});
 
 export function LocaleProvider({
 	locale,
 	children,
-}: React.PropsWithChildren<{ locale: Locale }>) {
-	const value = useMemo(() => ({ locale }), [locale]);
+}: React.PropsWithChildren<{
+	locale: Locale;
+}>) {
+	const value = useMemo(
+		() => ({ locale }),
+		[
+			locale,
+		],
+	);
 	return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
@@ -34,7 +43,11 @@ export function useLocale(options?: {
 	const locale = useContext(Ctx).locale;
 	const root = `/${locale}`;
 	if (options?.withLabel) {
-		return { locale, label: LOCALE_LABELS[locale], root } as const;
+		return {
+			locale,
+			label: LOCALE_LABELS[locale],
+			root,
+		} as const;
 	}
 	if (options?.withRoot) {
 		return { locale, root } as const;

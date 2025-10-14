@@ -63,7 +63,11 @@ export default function Logo({
 					<defs>
 						<linearGradient id={shadowGradientA}>
 							<stop offset="0" stopColor="#251a38" stopOpacity={1} />
-							<stop offset=".18656" stopColor="#251a38" stopOpacity={1} />
+							<stop
+								offset=".18656"
+								stopColor="#251a38"
+								stopOpacity={1}
+							/>
 							<stop
 								offset=".513"
 								stopColor="#251a38"
@@ -108,17 +112,33 @@ export default function Logo({
 				<title>{title}</title>
 				<defs>
 					<linearGradient id={gradientA}>
-						<stop offset=".20466" stopColor="#3e43a0" stopOpacity={1} />
+						<stop
+							offset=".20466"
+							stopColor="#3e43a0"
+							stopOpacity={1}
+						/>
 						<stop offset="1" stopColor="#fe5998" stopOpacity={1} />
 					</linearGradient>
 
 					<linearGradient id={gradientB}>
-						<stop offset=".0692" stopColor="#4744a0" stopOpacity={1} />
-						<stop offset=".36528" stopColor="#64eaeb" stopOpacity={1} />
+						<stop
+							offset=".0692"
+							stopColor="#4744a0"
+							stopOpacity={1}
+						/>
+						<stop
+							offset=".36528"
+							stopColor="#64eaeb"
+							stopOpacity={1}
+						/>
 					</linearGradient>
 
 					<linearGradient id={gradientC}>
-						<stop offset=".17753" stopColor="#e6a87f" stopOpacity={1} />
+						<stop
+							offset=".17753"
+							stopColor="#e6a87f"
+							stopOpacity={1}
+						/>
 						<stop offset=".471" stopColor="#f27e8c" stopOpacity={1} />
 						<stop offset="1" stopColor="#ff549a" stopOpacity={1} />
 					</linearGradient>

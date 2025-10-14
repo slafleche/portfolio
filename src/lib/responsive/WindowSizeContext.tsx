@@ -13,13 +13,16 @@ interface WindowSizeContextType {
 	height: number | null;
 }
 
-const WindowSizeContext = createContext<WindowSizeContextType | undefined>(
-	undefined,
-);
+const WindowSizeContext = createContext<
+	WindowSizeContextType | undefined
+>(undefined);
 
 const getViewportSize = (): WindowSizeContextType => {
 	if (typeof window === 'undefined') {
-		return { width: null, height: null };
+		return {
+			width: null,
+			height: null,
+		};
 	}
 	return {
 		width: document.documentElement.clientWidth,
@@ -27,8 +30,15 @@ const getViewportSize = (): WindowSizeContextType => {
 	};
 };
 
-export function WindowSizeProvider({ children }: { children: ReactNode }) {
-	const [size, setSize] = useState<WindowSizeContextType>(getViewportSize);
+export function WindowSizeProvider({
+	children,
+}: {
+	children: ReactNode;
+}) {
+	const [
+		size,
+		setSize,
+	] = useState<WindowSizeContextType>(getViewportSize);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -51,7 +61,9 @@ export function WindowSizeProvider({ children }: { children: ReactNode }) {
 export function useWindowSize() {
 	const ctx = useContext(WindowSizeContext);
 	if (ctx === undefined) {
-		throw new Error('useWindowSize must be used within a WindowSizeProvider');
+		throw new Error(
+			'useWindowSize must be used within a WindowSizeProvider',
+		);
 	}
 	return ctx;
 }

@@ -11,7 +11,10 @@ export type FontCSS = Partial<{
 	lineHeight: CSS.Property.LineHeight;
 }>;
 
-/** Normalize your FontStyles tokens into CSS-ready properties only */
+/**
+ * Normalize your FontStyles tokens into
+ * CSS-ready properties only
+ */
 export function fontStyles(vars: FontStyles): FontCSS {
 	const out: FontCSS = {};
 
@@ -47,11 +50,15 @@ const normalizeWeight = (weightPercentage: number) => {
 export function fontWeight(
 	family: FontFamilyDef,
 	percent: number,
-): { fontWeight: CSS.Property.FontWeight } {
+): {
+	fontWeight: CSS.Property.FontWeight;
+} {
 	const { high, low } = family.weights;
 	const normalized = normalizeWeight(percent);
 	const value = low + (high - low) * normalized;
-	return { fontWeight: value as CSS.Property.FontWeight };
+	return {
+		fontWeight: value as CSS.Property.FontWeight,
+	};
 }
 
 export function computeFontWeight(
@@ -67,6 +74,10 @@ export function computeFontWeight(
 export function fontWeightStyle(
 	family: FontFamilyDef,
 	percent: number,
-): { fontWeight: CSS.Property.FontWeight } {
-	return { fontWeight: computeFontWeight(family, percent) };
+): {
+	fontWeight: CSS.Property.FontWeight;
+} {
+	return {
+		fontWeight: computeFontWeight(family, percent),
+	};
 }
