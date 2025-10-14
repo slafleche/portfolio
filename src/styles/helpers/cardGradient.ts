@@ -29,6 +29,12 @@ type GradientSpot = {
 	y: number;
 	/** Optional lightness offset for this spot, overrides the global softenL. */
 	softenL?: number;
+	/** Diameter scaling percentage (100 = base size). */
+	scale?: number;
+	/** Optional anchor positions (percentages, 0–100) for radial falloff. */
+	radiusFalloff?: number[];
+	/** Optional alpha values (0–1) for each falloff anchor. */
+	alphaCurve?: number[];
 };
 
 type CardGradientPack = {
@@ -47,6 +53,44 @@ const clamp01 = (value: number) =>
 	Math.max(0, Math.min(1, value));
 const formatSpotPosition = ({ x, y }: GradientSpot) =>
 	`${clampPercent(x)}% ${clampPercent(y)}%`;
+const normalizeScalePercentPair = (scale?: number) => {
+	const pct = Math.max(0, scale ?? 100);
+	return `${pct}% ${pct}%`;
+};
+const formatSpotSize = (spot: GradientSpot) =>
+	normalizeScalePercentPair(spot.scale);
+const defaultRadiusFalloff = [
+	0,
+	25,
+	45,
+	65,
+	90,
+];
+const defaultAlphaCurve = [
+	1.0,
+	0.82,
+	0.55,
+	0.28,
+	0.0,
+];
+const buildSpotAnchors = ({
+	radiusFalloff,
+	alphaCurve,
+}: GradientSpot) => {
+	const percents = radiusFalloff ?? defaultRadiusFalloff;
+	const alphas = alphaCurve ?? defaultAlphaCurve;
+	const length = Math.min(percents.length, alphas.length);
+	if (length < 2) {
+		return {
+			percents: defaultRadiusFalloff,
+			alphas: defaultAlphaCurve,
+		};
+	}
+	return {
+		percents: percents.slice(0, length),
+		alphas: alphas.slice(0, length),
+	};
+};
 
 function radialStopsAlphaFade(
 	base: ColorWrapper,
@@ -196,26 +240,45 @@ export function makeCardGradient(
 	} = options;
 
 	const linearStops = linearStopsLab(gradient.linear, extrasPerSpan);
-	const layers: Layer[] = [
-		// {
+	const layers: Layer[] = [];
+
+	for (const spot of gradient.spots) {
+		const anchors = buildSpotAnchors(spot);
+		layers.push({
+			kind: 'radial',
+			options: {
+				shape: 'ellipse', // use equal radii to model a circle while keeping browser-compatible syntax
+				size: formatSpotSize(spot),
+				at: formatSpotPosition(spot),
+				stops: radialStopsAlphaFade(
+					spot.color,
+					anchors.percents,
+					anchors.alphas,
+					extrasPerSpan,
+					spot.softenL ?? softenL,
+				),
+			},
+		});
+	}
+
+	layers.push(
+		{
+			kind: 'linear',
+			options: {
+				to: linearDirection,
+				stops: linearStops,
+			},
+		},
+	);
+
+	/* Example additional spot layers
+	const secondSpot = gradient.spots[1] ?? gradient.spots[0];
+	if (secondSpot) {
 		// {
 		//   kind: 'radial',
 		//   options: {
-		//     shape: 'circle',
-		//     at: formatSpotPosition(gradient.spots[0]),
-		//     stops: radialStopsAlphaFade(
-		//       gradient.spots[0].color,
-		//       [0, 25, 40, 60, 80],
-		//       [1.0, 0.85, 0.65, 0.35, 0.0],
-		//       extrasPerSpan,
-		//       gradient.spots[0].softenL ?? softenL,
-		//     ),
-		//   },
-		// },
-		// {
-		//   kind: 'radial',
-		//   options: {
-		//     shape: 'circle',
+		//     shape: 'ellipse',
+		//     size: formatSpotSize(gradient.spots[1] ?? gradient.spots[0]),
 		//     at: formatSpotPosition(gradient.spots[1] ?? gradient.spots[0]),
 		//     stops: radialStopsAlphaFade(
 		//       (gradient.spots[1] ?? gradient.spots[0]).color,
@@ -226,14 +289,8 @@ export function makeCardGradient(
 		//     ),
 		//   },
 		// },
-		{
-			kind: 'linear',
-			options: {
-				to: linearDirection,
-				stops: linearStops,
-			},
-		},
-	];
+	}
+	*/
 
 	const gradientStack = stackBackground(layers);
 	const linearFallback = buildLinear({

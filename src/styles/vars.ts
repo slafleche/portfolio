@@ -57,21 +57,23 @@ export const gradients = [
 		],
 		spots: [
 			{
-				color: color.create.rgb(219, 88, 181),
-				x: 70,
-				y: 30,
-				softenL: 30,
+				color: color.create.rgb(155, 232, 251),
+				x: 45,
+				y: 100,
+
+				softenL: 50,
+				scale: 120,
 			},
-			{
-				color: color('#b98cde'),
-				x: 35,
-				y: 65,
-			},
-			{
-				color: color('#e1864e'),
-				x: 50,
-				y: 80,
-			},
+			// {
+			// 	color: color('#b98cde'),
+			// 	x: 35,
+			// 	y: 65,
+			// },
+			// {
+			// 	color: color('#e1864e'),
+			// 	x: 50,
+			// 	y: 80,
+			// },
 		],
 	},
 	{
@@ -82,7 +84,7 @@ export const gradients = [
 			},
 			{
 				color: color.create.oklch('0.56 0.17 274.53'),
-				at: 100,
+				at: 50,
 			},
 			{
 				color: color.create.oklch('0.56 0.17 274.53'),
@@ -116,7 +118,8 @@ export const bokehVars = {
 		gradients[1].linear[1].color,
 		gradients[1].linear[2].color,
 		gradients[1].spots[0].color,
-		gradients[0].spots[2].color,
+		gradients[0].spots[0].color,
+		// gradients[0].spots[2].color,
 	],
 	opacity: 0.2,
 	blendMode: 'screen' as CSS.Property.MixBlendMode,
