@@ -24,7 +24,11 @@ function radialStopsAlphaFade(
 	extrasPerSpan = 1,
 	softenL = 0,
 ): Stop[] {
-	const [L, C, H] = base.value().lch();
+	const [
+		L,
+		C,
+		H,
+	] = base.value().lch();
 	const make = (alpha: number) =>
 		color.lch(L + softenL, C, H).alpha(alpha);
 
@@ -74,18 +78,30 @@ function linearStopsLab(
 	const spanPercentages =
 		slices.length === 3
 			? [
-					[20, 55],
-					[55, 90],
+					[
+						20,
+						55,
+					],
+					[
+						55,
+						90,
+					],
 				]
 			: slices.slice(1).map((_, i) => {
 					const start = (i / slices.length) * 100;
 					const end = ((i + 1) / slices.length) * 100;
-					return [start, end] as [number, number];
+					return [
+						start,
+						end,
+					] as [number, number];
 				});
 
 	const out: Stop[] = [];
 	for (let i = 0; i < spanPercentages.length; i++) {
-		const [start, end] = spanPercentages[i];
+		const [
+			start,
+			end,
+		] = spanPercentages[i];
 		const aColor = slices[i];
 		const bColor = slices[i + 1];
 		out.push({
@@ -93,7 +109,12 @@ function linearStopsLab(
 			at: start,
 		});
 		const mids = interiorPercents(start, end, extrasPerSpan);
-		const scale = color.scale([aColor, bColor]).mode('lab');
+		const scale = color
+			.scale([
+				aColor,
+				bColor,
+			])
+			.mode('lab');
 		for (let j = 0; j < mids.length; j++) {
 			const t = (j + 1) / (extrasPerSpan + 1);
 			out.push({

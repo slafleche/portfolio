@@ -12,7 +12,10 @@ export function useMenuAnchors(locale: Locale) {
 	const sectionIds = useMemo(() => {
 		const messages = TRANSLATIONS[locale];
 		return anchors.map(({ hrefKey }) => messages[hrefKey]);
-	}, [anchors, locale]);
+	}, [
+		anchors,
+		locale,
+	]);
 
 	return {
 		anchors,

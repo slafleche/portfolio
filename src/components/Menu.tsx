@@ -40,14 +40,22 @@ export default function Menu({
 		withLabel: true,
 	});
 
-	const [mounted, setMounted] = useState(false);
-	const [fontsReady, setFontsReady] = useState(false);
-	const [activeSection, setActiveSection] = useState<string | null>(
-		null,
-	);
-	const [logoGlowState, setLogoGlowState] = useState<
-		'idle' | 'pulse' | 'hold'
-	>('idle');
+	const [
+		mounted,
+		setMounted,
+	] = useState(false);
+	const [
+		fontsReady,
+		setFontsReady,
+	] = useState(false);
+	const [
+		activeSection,
+		setActiveSection,
+	] = useState<string | null>(null);
+	const [
+		logoGlowState,
+		setLogoGlowState,
+	] = useState<'idle' | 'pulse' | 'hold'>('idle');
 	const pointerInsideLogoRef = useRef(false);
 	const logoGlowTimeoutRef = useRef<number | null>(null);
 	const logoGlowRafRef = useRef<number | null>(null);
@@ -135,7 +143,10 @@ export default function Menu({
 		clearLogoGlowRaf();
 		logoGlowHoldActiveRef.current = true;
 		setLogoGlowState((prev) => (prev === 'hold' ? prev : 'hold'));
-	}, [clearLogoGlowRaf, clearLogoGlowTimeout]);
+	}, [
+		clearLogoGlowRaf,
+		clearLogoGlowTimeout,
+	]);
 
 	const queueLogoGlow = useCallback(
 		(mode: 'pulse' | 'hold') => {
@@ -148,7 +159,10 @@ export default function Menu({
 			}
 			return true;
 		},
-		[beginLogoGlowHold, startLogoGlowPulse],
+		[
+			beginLogoGlowHold,
+			startLogoGlowPulse,
+		],
 	);
 
 	const handleLogoPointerDown = useCallback(
@@ -174,7 +188,11 @@ export default function Menu({
 				queueLogoGlow('hold');
 			}, LOGO_GLOW_HOLD_DELAY);
 		},
-		[clearLogoGlowHoldTimer, queueLogoGlow, root],
+		[
+			clearLogoGlowHoldTimer,
+			queueLogoGlow,
+			root,
+		],
 	);
 
 	const handleLogoPointerUp = useCallback(
@@ -196,7 +214,11 @@ export default function Menu({
 				queueLogoGlow('pulse');
 			}
 		},
-		[clearLogoGlowHoldTimer, queueLogoGlow, startLogoGlowPulse],
+		[
+			clearLogoGlowHoldTimer,
+			queueLogoGlow,
+			startLogoGlowPulse,
+		],
 	);
 
 	const handleLogoPointerCancel = useCallback(
@@ -231,30 +253,45 @@ export default function Menu({
 				clearEnterDelay();
 			}
 		},
-		[activate, clearEnterDelay, clearExitDelay],
+		[
+			activate,
+			clearEnterDelay,
+			clearExitDelay,
+		],
 	);
 
 	const triggerLogoEnter = useCallback(() => {
 		handleActivate(0);
 		clearExitDelay();
 		scheduleEnter(LOGO_ENTER_DELAY);
-	}, [handleActivate, clearExitDelay, scheduleEnter]);
+	}, [
+		handleActivate,
+		clearExitDelay,
+		scheduleEnter,
+	]);
 
 	const triggerLogoLeave = useCallback(() => {
 		clearEnterDelay();
 		scheduleExit(LOGO_MOUSE_LEAVE_EXIT_DELAY);
-	}, [clearEnterDelay, scheduleExit]);
+	}, [
+		clearEnterDelay,
+		scheduleExit,
+	]);
 
 	const handleLogoMouseEnter = useCallback(() => {
 		pointerInsideLogoRef.current = true;
 		// previously blocked when "at top" — removed
 		triggerLogoEnter();
-	}, [triggerLogoEnter]);
+	}, [
+		triggerLogoEnter,
+	]);
 
 	const handleLogoMouseLeave = useCallback(() => {
 		pointerInsideLogoRef.current = false;
 		triggerLogoLeave();
-	}, [triggerLogoLeave]);
+	}, [
+		triggerLogoLeave,
+	]);
 
 	const handleLogoFocus = useCallback(
 		(event: FocusEvent<HTMLAnchorElement>) => {
@@ -267,7 +304,10 @@ export default function Menu({
 				triggerLogoEnter();
 			}
 		},
-		[resetToIdle, triggerLogoEnter],
+		[
+			resetToIdle,
+			triggerLogoEnter,
+		],
 	);
 
 	const handleLogoClick = useCallback(
@@ -297,7 +337,10 @@ export default function Menu({
 				queueLogoGlow('pulse');
 			}
 		},
-		[root, queueLogoGlow],
+		[
+			root,
+			queueLogoGlow,
+		],
 	);
 
 	const handleBlur = useCallback(
@@ -308,7 +351,11 @@ export default function Menu({
 			hideHighlight();
 			triggerLogoLeave();
 		},
-		[hideHighlight, navRef, triggerLogoLeave],
+		[
+			hideHighlight,
+			navRef,
+			triggerLogoLeave,
+		],
 	);
 
 	const handleNavMouseLeave = useCallback(() => {
@@ -319,7 +366,12 @@ export default function Menu({
 		hideHighlight();
 		clearEnterDelay();
 		scheduleExit();
-	}, [hideHighlight, navRef, clearEnterDelay, scheduleExit]);
+	}, [
+		hideHighlight,
+		navRef,
+		clearEnterDelay,
+		scheduleExit,
+	]);
 
 	// Wait for fonts to load, then mark as mounted (for transitions)
 	useEffect(() => {
@@ -364,7 +416,9 @@ export default function Menu({
 			if (raf1) cancelAnimationFrame(raf1);
 			if (raf2) cancelAnimationFrame(raf2);
 		};
-	}, [fontsReady]);
+	}, [
+		fontsReady,
+	]);
 
 	useEffect(
 		() => () => {
@@ -374,7 +428,11 @@ export default function Menu({
 			logoGlowHoldIntentRef.current = false;
 			logoGlowHoldActiveRef.current = false;
 		},
-		[clearLogoGlowHoldTimer, clearLogoGlowTimeout, clearLogoGlowRaf],
+		[
+			clearLogoGlowHoldTimer,
+			clearLogoGlowTimeout,
+			clearLogoGlowRaf,
+		],
 	);
 
 	// Track active section for hash updates & highlighting
@@ -434,7 +492,9 @@ export default function Menu({
 			window.removeEventListener('scroll', requestUpdate);
 			window.removeEventListener('resize', requestUpdate);
 		};
-	}, [sectionIds]);
+	}, [
+		sectionIds,
+	]);
 
 	const firstSectionId = sectionIds[0] ?? null;
 
@@ -461,7 +521,10 @@ export default function Menu({
 		if (currentHash === activeSection) return;
 		const url = `${pathname}${search}#${activeSection}`;
 		window.history.replaceState(window.history.state, '', url);
-	}, [activeSection, firstSectionId]);
+	}, [
+		activeSection,
+		firstSectionId,
+	]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,

@@ -48,7 +48,12 @@ export function ResponsiveProvider({ children }: PropsWithChildren) {
 			compressed,
 			mode,
 		}),
-		[fullSize, compact, compressed, mode],
+		[
+			fullSize,
+			compact,
+			compressed,
+			mode,
+		],
 	);
 
 	return (

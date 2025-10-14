@@ -1,8 +1,4 @@
-import * as multilineArrays from 'prettier-plugin-multiline-arrays';
-import prettierPluginXml from 'prettier-plugin-xml';
-import * as prettierPluginJsdoc from 'prettier-plugin-jsdoc';
-
-export default {
+module.exports = {
 	singleQuote: true,
 	trailingComma: 'all',
 	printWidth: 70,
@@ -11,7 +7,11 @@ export default {
 	useTabs: true,
 	// Keep arrays and long constructs from collapsing too easily by using a tighter print width.
 	// Enable JSDoc reflow and force multi-line style even for short comments.
-	plugins: [multilineArrays, prettierPluginXml, prettierPluginJsdoc],
+	plugins: [
+		'prettier-plugin-multiline-arrays',
+		'prettier-plugin-xml',
+		'prettier-plugin-jsdoc',
+	],
 	// Deprecated but still recognized by the plugin; keeps short JSDoc comments multi-line
 	jsdocSingleLineComment: false,
 	multilineArraysWrapThreshold: 0,
@@ -25,7 +25,10 @@ export default {
 			},
 		},
 		{
-			files: ['*.md', '*.mdx'],
+			files: [
+				'*.md',
+				'*.mdx',
+			],
 			options: {
 				printWidth: 80,
 			},

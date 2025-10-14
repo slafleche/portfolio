@@ -83,7 +83,10 @@ export const createGlassBackground = (): {
 			overlay: overlayGradient,
 			glow: glowGradient,
 		},
-		background: [overlayGradient, glowGradient].join(', '),
+		background: [
+			overlayGradient,
+			glowGradient,
+		].join(', '),
 		backgroundColor: baseColor,
 		backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
 		WebkitBackdropFilter:

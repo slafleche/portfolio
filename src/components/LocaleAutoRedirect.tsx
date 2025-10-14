@@ -18,7 +18,10 @@ export default function LocaleAutoRedirect({
 		const ui = getBrowserLocale(); // Current browser UI on root only
 		const target: Locale = ui ?? fallback ?? DEFAULT_LOCALE;
 		router.replace(`/${target}`);
-	}, [router, fallback]);
+	}, [
+		router,
+		fallback,
+	]);
 
 	return null;
 }

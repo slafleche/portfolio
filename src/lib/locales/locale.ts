@@ -20,9 +20,11 @@ export function resolveLocale(candidate?: string): Locale {
 /** Prefer the current browser UI (client-only). */
 export function getBrowserLocale(): Locale | null {
 	if (typeof navigator === 'undefined') return null;
-	const langs = (navigator.languages ?? [navigator.language]).filter(
-		Boolean,
-	);
+	const langs = (
+		navigator.languages ?? [
+			navigator.language,
+		]
+	).filter(Boolean);
 	for (const tag of langs) {
 		const base = tag.slice(0, 2);
 		if ((AVAILABLE_LOCALES as readonly string[]).includes(base)) {

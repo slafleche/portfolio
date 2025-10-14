@@ -16,7 +16,12 @@ export function LocaleProvider({
 }: React.PropsWithChildren<{
 	locale: Locale;
 }>) {
-	const value = useMemo(() => ({ locale }), [locale]);
+	const value = useMemo(
+		() => ({ locale }),
+		[
+			locale,
+		],
+	);
 	return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

@@ -81,7 +81,10 @@ try {
 				},
 			],
 			'convertTransform',
-			['convertPathData', { forceAbsolutePath: true }],
+			[
+				'convertPathData',
+				{ forceAbsolutePath: true },
+			],
 		],
 	};
 }

@@ -420,9 +420,14 @@
 					code.value = svg;
 					metrics.textContent = `W=${width} H=${height} top=${top} curve=${curve} ry=${ry} bulgeHeight=${bd} bulgeWidth=${bw} roundness=${sm} tipSpan=${ts}`;
 
-					const blob = new Blob([svg], {
-						type: 'image/svg+xml',
-					});
+					const blob = new Blob(
+						[
+							svg,
+						],
+						{
+							type: 'image/svg+xml',
+						},
+					);
 					download.href = URL.createObjectURL(blob);
 				}
 

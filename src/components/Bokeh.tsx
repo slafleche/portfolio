@@ -12,7 +12,7 @@ import { useSafeId } from '../lib/dom';
 import clsx from 'clsx';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import type { ColorWrapper } from '@/styles/helpers/colorWrap';
-import { bokenVars } from '../styles/vars';
+import { bokehVars } from '../styles/vars';
 
 // A simple, deterministic layout for ~10 circles.
 // You can tweak cx, cy, r as you like.
@@ -61,17 +61,20 @@ export type BokehOverlayProps = {
 let mountedOnce = false;
 
 function BokehOverlay({
-	colors = bokenVars.colors,
-	opacity = bokenVars.opacity,
-	blendMode = bokenVars.blendMode,
-	blur = bokenVars.blur,
-	blurScale = bokenVars.blurScale,
-	sizeScale = bokenVars.sizeScale,
+	colors = bokehVars.colors,
+	opacity = bokehVars.opacity,
+	blendMode = bokehVars.blendMode,
+	blur = bokehVars.blur,
+	blurScale = bokehVars.blurScale,
+	sizeScale = bokehVars.sizeScale,
 	className,
 }: BokehOverlayProps) {
 	const id = useSafeId();
 	const { width, height } = useWindowSize();
-	const [mounted, setMounted] = useState(() => mountedOnce);
+	const [
+		mounted,
+		setMounted,
+	] = useState(() => mountedOnce);
 	const raf1 = useRef<number | null>(null);
 	const raf2 = useRef<number | null>(null);
 	const lastSize = useRef<{
@@ -108,7 +111,9 @@ function BokehOverlay({
 	// Precompute color strings
 	const colorStrs = useMemo(
 		() => colors.map((c) => c.css()),
-		[colors],
+		[
+			colors,
+		],
 	);
 
 	// Split blobs per group once (and keep hooks at top level)
@@ -137,7 +142,12 @@ function BokehOverlay({
 			stdDev: stdDeviation,
 			pad: padUnits,
 		};
-	}, [renderWidth, renderHeight, blur, blurScale]);
+	}, [
+		renderWidth,
+		renderHeight,
+		blur,
+		blurScale,
+	]);
 
 	return (
 		<div

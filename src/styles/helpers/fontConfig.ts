@@ -18,7 +18,11 @@ import type { IMeasurement } from './measurement';
 
 // ----------------- internals -----------------
 function toArray<T>(x: T | T[]): T[] {
-	return Array.isArray(x) ? x : [x];
+	return Array.isArray(x)
+		? x
+		: [
+				x,
+			];
 }
 
 function parseRangeToken(token: string): {
@@ -97,7 +101,10 @@ export function makeFamilyDef(
 		? `"${familyName}"`
 		: familyName;
 	return {
-		family: [primary, ...fallbacks].join(', '),
+		family: [
+			primary,
+			...fallbacks,
+		].join(', '),
 		weights,
 		spacing,
 		offsetToFlushTop,
@@ -118,7 +125,10 @@ export function asFontsConfig(input: unknown): FontsConfig {
 	const src = input as Record<string, unknown>;
 	const out: FontsConfig = {};
 
-	for (const [family, v] of Object.entries(src)) {
+	for (const [
+		family,
+		v,
+	] of Object.entries(src)) {
 		if (!v || typeof v !== 'object') {
 			throw new Error(
 				`fonts.config.json: entry for "${family}" must be an object`,
