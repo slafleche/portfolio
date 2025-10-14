@@ -21,7 +21,10 @@ export default function Card({
 	return (
 		<div className={clsx(s.root, className)}>
 			<div
-				className={clsx(s.gradient, gradient === 'a' ? s.cardGradientA : s.cardGradientB)}
+				className={clsx(
+					s.gradient,
+					gradient === 'a' ? s.cardGradientA : s.cardGradientB,
+				)}
 			>
 				<div style={{ opacity: 0 }}>
 					{title && (

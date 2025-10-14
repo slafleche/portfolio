@@ -18,7 +18,7 @@
  * color spaces when needed while keeping sRGB fallbacks.
  */
 import chroma, { type Color } from 'chroma-js';
-import { converter, formatCss, parse, type Oklch } from 'culori';
+import { converter, parse, type Oklch } from 'culori';
 export type { Color } from 'chroma-js';
 
 type MixArgs = Parameters<Color['mix']>;
@@ -98,18 +98,23 @@ const colorToCuloriOklch = (input: ColorInput): CuloriOKLCH | undefined => {
 
 const culoriOklchToWrapper = (value: CuloriOKLCH): ColorWrapper => {
 	const converted = fromCuloriOKLCH(value);
-	if (!converted) {
+	if (!converted || converted.mode !== 'rgb') {
 		throw new Error('Unable to convert OKLCH color to sRGB');
 	}
-	const css = formatCss(converted);
-	if (!css) {
-		throw new Error('Failed to format converted sRGB color');
-	}
-	return wrap(css);
+	const toChannel = (channel: number) =>
+		Math.max(0, Math.min(255, channel * 255));
+	const base = chroma
+		.rgb(toChannel(converted.r), toChannel(converted.g), toChannel(converted.b))
+		.alpha(converted.alpha ?? 1);
+	return wrap(base);
 };
 
 const culoriOklchFromCss = (value: string): ColorWrapper => {
-	const parsed = parse(value);
+	const trimmed = value.trim();
+	const normalized = trimmed.startsWith('oklch')
+		? trimmed
+		: `oklch(${trimmed})`;
+	const parsed = parse(normalized);
 	if (!parsed || parsed.mode !== 'oklch') {
 		throw new Error(`Expected OKLCH color string, received "${value}"`);
 	}
@@ -117,7 +122,8 @@ const culoriOklchFromCss = (value: string): ColorWrapper => {
 };
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
-const normalizeFraction = (value: number) => clamp01(value > 1 ? value / 100 : value);
+const normalizeFraction = (value: number) =>
+	clamp01(value > 1 ? value / 100 : value);
 const normalizeHue = (value: number) => ((value % 360) + 360) % 360;
 const normalizePercent = (value: number) => {
 	const percent = value <= 1 ? value * 100 : value;
@@ -177,7 +183,9 @@ const create: ColorCreators = {
 			return culoriOklchFromCss(first);
 		}
 		if (c === undefined || h === undefined) {
-			throw new Error('color.create.oklch requires l, c, and h values when not using a CSS string');
+			throw new Error(
+				'color.create.oklch requires l, c, and h values when not using a CSS string',
+			);
 		}
 		const normalized: CuloriOKLCH = {
 			mode: 'oklch',
@@ -216,9 +224,7 @@ export function wrap(input: ColorInput): ColorWrapper {
 			),
 		mixSolid: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
 			derive(base, (draft) =>
-				draft
-					.alpha(1)
-					.mix(toColor(target), clampRatio(ratio), mode),
+				draft.alpha(1).mix(toColor(target), clampRatio(ratio), mode),
 			),
 		clone: () => wrap(cloneColor(base)),
 		value: () => cloneColor(base),

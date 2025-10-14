@@ -30,25 +30,25 @@ type DebugState = {
 };
 
 type MeasurementDebugStore = {
-    store: MeasurementDebugEntry[];
-    index: Map<string, number>;
+	store: MeasurementDebugEntry[];
+	index: Map<string, number>;
 };
 
 const getGlobalDebugStore = (): MeasurementDebugStore => {
-    const root = globalThis as {
-        __MEASUREMENT_DEBUG__?: MeasurementDebugEntry[];
-        __MEASUREMENT_DEBUG_INDEX__?: Map<string, number>;
-    };
-    if (!root.__MEASUREMENT_DEBUG__) {
-        root.__MEASUREMENT_DEBUG__ = [];
-    }
-    if (!root.__MEASUREMENT_DEBUG_INDEX__) {
-        root.__MEASUREMENT_DEBUG_INDEX__ = new Map();
-    }
-    return {
-        store: root.__MEASUREMENT_DEBUG__,
-        index: root.__MEASUREMENT_DEBUG_INDEX__!,
-    };
+	const root = globalThis as {
+		__MEASUREMENT_DEBUG__?: MeasurementDebugEntry[];
+		__MEASUREMENT_DEBUG_INDEX__?: Map<string, number>;
+	};
+	if (!root.__MEASUREMENT_DEBUG__) {
+		root.__MEASUREMENT_DEBUG__ = [];
+	}
+	if (!root.__MEASUREMENT_DEBUG_INDEX__) {
+		root.__MEASUREMENT_DEBUG_INDEX__ = new Map();
+	}
+	return {
+		store: root.__MEASUREMENT_DEBUG__,
+		index: root.__MEASUREMENT_DEBUG_INDEX__!,
+	};
 };
 
 const recordDebugEntry = (entry: MeasurementDebugEntry) => {
@@ -283,31 +283,31 @@ export const getMeasurementDebugEntries = (): MeasurementDebugEntry[] => [
 ];
 
 export const computeMeasurementDebugGroups = (
-    entries: MeasurementDebugEntry[],
+	entries: MeasurementDebugEntry[],
 ): MeasurementDebugGroups =>
-    entries.reduce<MeasurementDebugGroups>((acc, entry) => {
-        const group = acc[entry.measurementId] ?? [];
-        const snapshot = group.find((item) => item.op === entry.op);
-        if (snapshot) {
-            snapshot.value = entry.value;
-            snapshot.unit = entry.unit;
-            snapshot.count = (snapshot.count ?? 1) + 1;
-        } else {
-            group.push({
-                op: entry.op,
-                value: entry.value,
-                unit: entry.unit,
-                count: entry.count ?? 1,
-            });
-        }
-        acc[entry.measurementId] = group;
-        return acc;
-    }, {});
+	entries.reduce<MeasurementDebugGroups>((acc, entry) => {
+		const group = acc[entry.measurementId] ?? [];
+		const snapshot = group.find((item) => item.op === entry.op);
+		if (snapshot) {
+			snapshot.value = entry.value;
+			snapshot.unit = entry.unit;
+			snapshot.count = (snapshot.count ?? 1) + 1;
+		} else {
+			group.push({
+				op: entry.op,
+				value: entry.value,
+				unit: entry.unit,
+				count: entry.count ?? 1,
+			});
+		}
+		acc[entry.measurementId] = group;
+		return acc;
+	}, {});
 
 export const clearMeasurementDebugEntries = (): void => {
-    const { store, index } = getGlobalDebugStore();
-    store.length = 0;
-    index.clear();
+	const { store, index } = getGlobalDebugStore();
+	store.length = 0;
+	index.clear();
 };
 
 // ----------------------

@@ -24,7 +24,10 @@ export type HighlightState = {
 	height: number;
 };
 
-export type HighlightBox = Pick<HighlightState, 'left' | 'top' | 'width' | 'height'>;
+export type HighlightBox = Pick<
+	HighlightState,
+	'left' | 'top' | 'width' | 'height'
+>;
 
 export type DebugArch = {
 	path: string;
@@ -58,11 +61,7 @@ const rxFrom = (width: number, curveHeight: number, ry: number) => {
 	return width / 2 / Math.sqrt(denom);
 };
 
-export const computeArchY = (
-	width: number,
-	x: number,
-	includeBump = false,
-) => {
+export const computeArchY = (width: number, x: number, includeBump = false) => {
 	const top = archVars.top.value;
 	const curveHeight = archVars.curveHeight.value;
 	const ry = archVars.ry.value;
