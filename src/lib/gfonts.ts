@@ -1,23 +1,16 @@
 /**
- * Helper for generating optimized
- * Google Fonts CSS API URLs.
+ * Helper for generating optimized Google Fonts CSS API URLs.
  *
  * Supports:
  *
- * - Per-font texts -> &text=...
- *   (omit/empty => no text param, just
+ * - Per-font texts -> &text=... (omit/empty => no text param, just
  *   subset(s))
- * - Per-font weights -> "400" |
- *   ["400","700"] | ["100..900"]
- * - Italics -> builds
- *   :ital,wght@0,400;0,700;1,400;1,700
- *   (sorted tuples)
- * - Per-font subsets (override global
- *   default of ["latin"])
- * - Global options (display, subsets,
- *   stripWhitespaceFromText)
- * - RawAxis escape hatch to pass a full
- *   axis string verbatim
+ * - Per-font weights -> "400" | ["400","700"] | ["100..900"]
+ * - Italics -> builds :ital,wght@0,400;0,700;1,400;1,700 (sorted
+ *   tuples)
+ * - Per-font subsets (override global default of ["latin"])
+ * - Global options (display, subsets, stripWhitespaceFromText)
+ * - RawAxis escape hatch to pass a full axis string verbatim
  */
 
 export type FontConfig = {
@@ -39,28 +32,16 @@ export type GoogleFontGlobalOptions = {
 /* ---------- internals ---------- */
 
 function toArray<T>(x: T | T[] | undefined): T[] {
-	return Array.isArray(x)
-		? x
-		: x !== undefined
-			? [
-					x,
-				]
-			: [];
+	return Array.isArray(x) ? x : x !== undefined ? [x] : [];
 }
 
-/**
- * Numeric sort key for a weight token
- * ("400" or "100..900")
- */
+/** Numeric sort key for a weight token ("400" or "100..900") */
 function sortKey(token: string): number {
 	const m = String(token).match(/^(\d+)(?:\.\.(\d+))?$/);
 	return m ? parseInt(m[1], 10) : Number.MAX_SAFE_INTEGER;
 }
 
-/**
- * De-dupe and sort weight tokens in
- * ascending order
- */
+/** De-dupe and sort weight tokens in ascending order */
 function normalizeAndSortWeights(weights: string[]): string[] {
 	const uniq = Array.from(new Set(weights.filter(Boolean)));
 	return uniq.sort((a, b) => sortKey(a) - sortKey(b));
@@ -85,10 +66,7 @@ function buildAxisParam(cfg: FontConfig): string {
 		// Tuples MUST be sorted: all 0,* first (roman), then all 1,* (italic), each by weight asc
 		const roman = weights.map((w) => `0,${w}`);
 		const italic = weights.map((w) => `1,${w}`);
-		return `:ital,wght@${[
-			...roman,
-			...italic,
-		].join(';')}`;
+		return `:ital,wght@${[...roman, ...italic].join(';')}`;
 	}
 
 	return `:wght@${weights.join(';')}`;
@@ -111,28 +89,20 @@ function buildTextParam(
 
 /* ---------- public ---------- */
 
-/**
- * Main generator: one URL per font
- * family
- */
+/** Main generator: one URL per font family */
 export function generateGoogleFontUrls(
 	fonts: FontConfigMap,
 	globalOptions: GoogleFontGlobalOptions = {},
 ): string[] {
 	const {
 		display = 'swap',
-		subsets = [
-			'latin',
-		],
+		subsets = ['latin'],
 		stripWhitespaceFromText = false,
 	} = globalOptions;
 
 	const urls: string[] = [];
 
-	for (const [
-		family,
-		cfg,
-	] of Object.entries(fonts)) {
+	for (const [family, cfg] of Object.entries(fonts)) {
 		const fam = family?.trim();
 		if (!fam) continue;
 
@@ -145,9 +115,7 @@ export function generateGoogleFontUrls(
 				? cfg.subsets
 				: subsets.length > 0
 					? subsets
-					: [
-							'latin',
-						];
+					: ['latin'];
 		const subsetParam = `&subset=${chosenSubsets.join(',')}`;
 
 		const displayParam = `&display=${display}`;
@@ -163,10 +131,7 @@ export function generateGoogleFontUrls(
 	return urls;
 }
 
-/**
- * Convenience for SSR templates (string
- * of <link> tags)
- */
+/** Convenience for SSR templates (string of <link> tags) */
 export function asLinkTags(urls: string[]): string {
 	return urls
 		.map((href) => `<link rel="stylesheet" href="${href}">`)
@@ -174,8 +139,7 @@ export function asLinkTags(urls: string[]): string {
 }
 
 /**
- * Utility you can reuse in generators:
- * collapse strings → unique-char
+ * Utility you can reuse in generators: collapse strings → unique-char
  * string
  */
 export function uniqueCharsFromStrings(

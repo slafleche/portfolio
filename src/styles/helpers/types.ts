@@ -46,18 +46,13 @@ export type FontStyles = {
 /**
  * Font family -> config object:
  *
- * - Texts: optional literal strings to
- *   include (useful for hard-coded
+ * - Texts: optional literal strings to include (useful for hard-coded
  *   bits)
- * - Keys: translation keys to resolve
- *   from locales (scanned across ALL
+ * - Keys: translation keys to resolve from locales (scanned across ALL
  *   locales)
- * - Weights: string | string[] (e.g.,
- *   "400", ["400","700"], "100..900")
- * - Ital: request italics set in addition
- *   to roman
- * - Subsets: override default ["latin"]
- *   if needed (e.g., ["latin-ext"])
+ * - Weights: string | string[] (e.g., "400", ["400","700"], "100..900")
+ * - Ital: request italics set in addition to roman
+ * - Subsets: override default ["latin"] if needed (e.g., ["latin-ext"])
  */
 export type FontConfig = {
 	texts?: string[];

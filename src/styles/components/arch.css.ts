@@ -109,10 +109,9 @@ const archOverlayGradient = `linear-gradient(180deg,
   ${colorVars.black.alpha(0.12).css()} 100%)`;
 
 /**
- * The glass effect now lives on an
- * absolutely positioned HTML element
- * that is clipped to the SVG path via
- * style clipPath: url(#clipPathId).
+ * The glass effect now lives on an absolutely positioned HTML element
+ * that is clipped to the SVG path via style clipPath:
+ * url(#clipPathId).
  */
 export const surface = style({
 	position: 'absolute',
@@ -122,10 +121,7 @@ export const surface = style({
 	pointerEvents: 'none', // keep clicks for the UI above
 
 	// same layering you had before (overlay + glow + base)
-	background: [
-		archOverlayGradient,
-		baseGlass.background,
-	].join(', '),
+	background: [archOverlayGradient, baseGlass.background].join(', '),
 
 	// blur needs a non-zero alpha base in Safari (our baseGlass.background already includes a color layer)
 	backdropFilter: baseGlass.backdropFilter,

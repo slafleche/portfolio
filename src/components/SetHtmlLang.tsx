@@ -11,8 +11,6 @@ export default function SetHtmlLang() {
 				document.documentElement.setAttribute('lang', locale);
 			}
 		}
-	}, [
-		locale,
-	]);
+	}, [locale]);
 	return null;
 }

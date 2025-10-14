@@ -34,8 +34,7 @@ type Props = {
 	/**
 	 * Semantic size:
 	 *
-	 * - "auto" (default): inferred from
-	 *   manifest width
+	 * - "auto" (default): inferred from manifest width
 	 * - "sm" | "md" | "lg": override
 	 */
 	kind?: ImageKind;

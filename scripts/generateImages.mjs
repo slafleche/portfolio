@@ -9,46 +9,17 @@ const MANIFEST_PATH = 'src/data/generated/images.manifest.gen.json';
 const TEMP_ROOT = 'tmp/large-images';
 const LARGE_IMAGES_DIR = path.join(SRC_DIR, 'largeImages');
 const LARGE_IMAGES_CONFIG = path.join(SRC_DIR, 'largeImages.json');
-const IGNORE_DIRS = new Set([
-	LARGE_IMAGES_DIR,
-]);
+const IGNORE_DIRS = new Set([LARGE_IMAGES_DIR]);
 const MIME_EXTENSIONS = new Map([
-	[
-		'image/jpeg',
-		'.jpg',
-	],
-	[
-		'image/png',
-		'.png',
-	],
-	[
-		'image/webp',
-		'.webp',
-	],
-	[
-		'image/avif',
-		'.avif',
-	],
-	[
-		'image/tiff',
-		'.tif',
-	],
-	[
-		'image/x-tiff',
-		'.tif',
-	],
+	['image/jpeg', '.jpg'],
+	['image/png', '.png'],
+	['image/webp', '.webp'],
+	['image/avif', '.avif'],
+	['image/tiff', '.tif'],
+	['image/x-tiff', '.tif'],
 ]);
 
-const WIDTHS = [
-	320,
-	480,
-	640,
-	750,
-	828,
-	1080,
-	1200,
-	1920,
-];
+const WIDTHS = [320, 480, 640, 750, 828, 1080, 1200, 1920];
 const FORMATS = [
 	{
 		ext: 'avif',
@@ -310,10 +281,7 @@ console.log(
 let largeImagesMap = await loadLargeImagesConfig();
 const dropboxUpdates = [];
 let manifestChanged = false;
-for (const [
-	name,
-	rawUrl,
-] of Object.entries(largeImagesMap)) {
+for (const [name, rawUrl] of Object.entries(largeImagesMap)) {
 	if (typeof rawUrl !== 'string') continue;
 	const trimmed = rawUrl.trim();
 	const normalized = ensureDirectDropboxUrl(trimmed);
@@ -351,10 +319,7 @@ if (largeEntries.length) {
 		`→ Downloading and processing ${largeEntries.length} remote image${largeEntries.length === 1 ? '' : 's'}`,
 	);
 	let remoteCount = 0;
-	for (const [
-		name,
-		rawUrl,
-	] of largeEntries) {
+	for (const [name, rawUrl] of largeEntries) {
 		const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
 		if (!url) {
 			console.warn(

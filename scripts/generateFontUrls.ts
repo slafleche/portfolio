@@ -83,18 +83,11 @@ function main() {
 			}
 		> = {};
 
-		for (const [
-			family,
-			cfg,
-		] of Object.entries(fontsConfig)) {
+		for (const [family, cfg] of Object.entries(fontsConfig)) {
 			const charset = perFontChars[family] || '';
 			resolvedMap[family] = {
 				// If charset is non-empty, pass it as a single-item texts array so we get &text=...
-				texts: charset
-					? [
-							charset,
-						]
-					: undefined,
+				texts: charset ? [charset] : undefined,
 				weights: cfg.weights,
 				ital: cfg.ital,
 				subsets: cfg.subsets,
@@ -103,9 +96,7 @@ function main() {
 
 		urlsByLocale[locale] = generateGoogleFontUrls(resolvedMap, {
 			display: 'swap',
-			subsets: [
-				'latin',
-			], // per-font can override via cfg.subsets
+			subsets: ['latin'], // per-font can override via cfg.subsets
 			stripWhitespaceFromText: false, // already collapsed; keep as-is
 		});
 	}

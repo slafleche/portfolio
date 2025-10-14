@@ -40,12 +40,7 @@ function pickNearestAtMost(
 	const under = list
 		.filter((v) => v.w <= target)
 		.sort((a, b) => b.w - a.w);
-	return (
-		under[0] ??
-		[
-			...list,
-		].sort((a, b) => a.w - b.w)[0]
-	)?.url;
+	return (under[0] ?? [...list].sort((a, b) => a.w - b.w)[0])?.url;
 }
 
 function buildImageSet(name: string, targetWidth: number) {

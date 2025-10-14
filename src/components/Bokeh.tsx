@@ -37,37 +37,23 @@ const BLOBS: Blob[] = [
 ];
 
 export type BokehOverlayProps = {
-	/**
-	 * One chroma color per blob; if fewer
-	 * provided, they cycle
-	 */
+	/** One chroma color per blob; if fewer provided, they cycle */
 	colors?: ColorWrapper[];
-	/**
-	 * Overall opacity of the overlay
-	 * [0..1]
-	 */
+	/** Overall opacity of the overlay [0..1] */
 	opacity?: number;
 	/**
-	 * CSS blend mode (e.g. 'screen' |
-	 * 'overlay' | 'soft-light' |
+	 * CSS blend mode (e.g. 'screen' | 'overlay' | 'soft-light' |
 	 * 'plus-lighter')
 	 */
 	blendMode?: React.CSSProperties['mixBlendMode'];
-	/**
-	 * Blur radius in CSS/SVG px
-	 * (stdDeviation ~= blur/2)
-	 */
+	/** Blur radius in CSS/SVG px (stdDeviation ~= blur/2) */
 	blur?: number;
 	/**
-	 * Multiplier applied to blur for
-	 * finer control (e.g., 0.5 for
+	 * Multiplier applied to blur for finer control (e.g., 0.5 for
 	 * smaller blur)
 	 */
 	blurScale?: number;
-	/**
-	 * Multiplier applied to all circle
-	 * radii (1 = as defined)
-	 */
+	/** Multiplier applied to all circle radii (1 = as defined) */
 	sizeScale?: number;
 	className?: string;
 };
@@ -85,10 +71,7 @@ function BokehOverlay({
 }: BokehOverlayProps) {
 	const id = useSafeId();
 	const { width, height } = useWindowSize();
-	const [
-		mounted,
-		setMounted,
-	] = useState(() => mountedOnce);
+	const [mounted, setMounted] = useState(() => mountedOnce);
 	const raf1 = useRef<number | null>(null);
 	const raf2 = useRef<number | null>(null);
 	const lastSize = useRef<{
@@ -125,9 +108,7 @@ function BokehOverlay({
 	// Precompute color strings
 	const colorStrs = useMemo(
 		() => colors.map((c) => c.css()),
-		[
-			colors,
-		],
+		[colors],
 	);
 
 	// Split blobs per group once (and keep hooks at top level)
@@ -156,12 +137,7 @@ function BokehOverlay({
 			stdDev: stdDeviation,
 			pad: padUnits,
 		};
-	}, [
-		renderWidth,
-		renderHeight,
-		blur,
-		blurScale,
-	]);
+	}, [renderWidth, renderHeight, blur, blurScale]);
 
 	return (
 		<div

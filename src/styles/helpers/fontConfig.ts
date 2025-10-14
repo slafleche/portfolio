@@ -18,11 +18,7 @@ import type { IMeasurement } from './measurement';
 
 // ----------------- internals -----------------
 function toArray<T>(x: T | T[]): T[] {
-	return Array.isArray(x)
-		? x
-		: [
-				x,
-			];
+	return Array.isArray(x) ? x : [x];
 }
 
 function parseRangeToken(token: string): {
@@ -46,16 +42,12 @@ function parseRangeToken(token: string): {
 // ----------------- public helpers -----------------
 
 /**
- * Merge one or more weight tokens into
- * a single {low, high} range.
+ * Merge one or more weight tokens into a single {low, high} range.
  *
  * - "400..800" -> { low: 400, high: 800 }
- * - ["300..700"] -> { low: 300, high: 700
- *   }
- * - ["400","700"] -> { low: 400, high:
- *   700 }
- * - ["300..500","600..800"] -> { low:
- *   300, high: 800 }
+ * - ["300..700"] -> { low: 300, high: 700 }
+ * - ["400","700"] -> { low: 400, high: 700 }
+ * - ["300..500","600..800"] -> { low: 300, high: 800 }
  */
 export function weightRangeFromConfig(weights: string | string[]): {
 	low: number;
@@ -81,18 +73,14 @@ export function weightRangeFromConfig(weights: string | string[]): {
 }
 
 /**
- * Build a FontFamilyDef using
- * fonts.config.json so you don’t
+ * Build a FontFamilyDef using fonts.config.json so you don’t
  * hand-copy weight ranges.
  *
  * @param familyName E.g. "Titan One"
- * @param fallbacks E.g.
- *   ['Poppins','Helvetica','Arial','sans-serif']
- * @param cfgMap Parsed + validated
- *   FontsConfig (use the default export
- *   `fontsConfig`)
- * @param spacing IMeasurement only
- *   (e.g., m(0.3, 'rem'))
+ * @param fallbacks E.g. ['Poppins','Helvetica','Arial','sans-serif']
+ * @param cfgMap Parsed + validated FontsConfig (use the default
+ *   export `fontsConfig`)
+ * @param spacing IMeasurement only (e.g., m(0.3, 'rem'))
  */
 export function makeFamilyDef(
 	familyName: string,
@@ -109,10 +97,7 @@ export function makeFamilyDef(
 		? `"${familyName}"`
 		: familyName;
 	return {
-		family: [
-			primary,
-			...fallbacks,
-		].join(', '),
+		family: [primary, ...fallbacks].join(', '),
 		weights,
 		spacing,
 		offsetToFlushTop,
@@ -122,10 +107,9 @@ export function makeFamilyDef(
 // ----------------- loader/validator -----------------
 
 /**
- * Convert an unknown JSON blob into a
- * typed FontsConfig with basic
- * validation/coercion. Throws helpful
- * errors if the structure is off.
+ * Convert an unknown JSON blob into a typed FontsConfig with basic
+ * validation/coercion. Throws helpful errors if the structure is
+ * off.
  */
 export function asFontsConfig(input: unknown): FontsConfig {
 	if (!input || typeof input !== 'object') {
@@ -134,10 +118,7 @@ export function asFontsConfig(input: unknown): FontsConfig {
 	const src = input as Record<string, unknown>;
 	const out: FontsConfig = {};
 
-	for (const [
-		family,
-		v,
-	] of Object.entries(src)) {
+	for (const [family, v] of Object.entries(src)) {
 		if (!v || typeof v !== 'object') {
 			throw new Error(
 				`fonts.config.json: entry for "${family}" must be an object`,

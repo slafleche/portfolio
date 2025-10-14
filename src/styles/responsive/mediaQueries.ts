@@ -87,9 +87,7 @@ export const mediaQueryStyle = (
 	debug = false,
 ) => {
 	if (!Array.isArray(queryAndStyles)) {
-		queryAndStyles = [
-			queryAndStyles,
-		];
+		queryAndStyles = [queryAndStyles];
 	}
 	const result: Record<string, StyleRule> = {};
 	queryAndStyles.forEach((mq) => {
