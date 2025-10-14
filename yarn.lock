@@ -2380,6 +2380,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/culori@npm:^4":
+  version: 4.0.1
+  resolution: "@types/culori@npm:4.0.1"
+  checksum: 10c0/f25fcf01fe709d2fce569892eae71a268b19cf85a7c8f6bf6b041f02f232e5a7d1218e8213349d6b2a458be9f61158ed1e1893e7b81e2ee4a7cebc2a172b7ebb
+  languageName: node
+  linkType: hard
+
 "@types/debug@npm:^4.0.0":
   version: 4.1.12
   resolution: "@types/debug@npm:4.1.12"
@@ -3573,6 +3580,13 @@ __metadata:
   version: 3.1.3
   resolution: "csstype@npm:3.1.3"
   checksum: 10c0/80c089d6f7e0c5b2bd83cf0539ab41474198579584fa10d86d0cafe0642202343cbc119e076a0b1aece191989477081415d66c9fefbf3c957fc2fc4b7009f248
+  languageName: node
+  linkType: hard
+
+"culori@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "culori@npm:4.0.2"
+  checksum: 10c0/5d3c952b947ac5915409bab513e1d2e8bd813caa491af8ded0c769fdc1186a5ff61fb3c59fc8edf5393237d92074dbc54a492e6e99cb039dd6535d5d96106bfe
   languageName: node
   linkType: hard
 
@@ -7151,6 +7165,7 @@ __metadata:
     "@eslint/js": "npm:^9.35.0"
     "@svgr/webpack": "npm:^8.1.0"
     "@types/chroma-js": "npm:^3.1.1"
+    "@types/culori": "npm:^4"
     "@types/react": "npm:^18.2.7"
     "@types/react-dom": "npm:^18.2.4"
     "@typescript-eslint/eslint-plugin": "npm:^8.42.0"
@@ -7164,6 +7179,7 @@ __metadata:
     chokidar: "npm:^3.5.1"
     chroma-js: "npm:^3.1.2"
     clsx: "npm:^2.1.1"
+    culori: "npm:^4.0.2"
     esbuild: "npm:^0.25.9"
     eslint: "npm:^9.35.0"
     eslint-config-prettier: "npm:^10.1.8"
