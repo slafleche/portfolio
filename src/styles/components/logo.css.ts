@@ -39,16 +39,28 @@ const colourOut = keyframes({
 });
 
 const strokeIn = keyframes({
-	'0%': { strokeOpacity: 0, strokeWidth: 0 },
+	'0%': {
+		strokeOpacity: 0,
+		strokeWidth: 0,
+	},
 	'20%': { strokeOpacity: 0.2 },
 	'55%': { strokeOpacity: 1 },
-	'100%': { strokeOpacity: 1, strokeWidth: 5.853 },
+	'100%': {
+		strokeOpacity: 1,
+		strokeWidth: 5.853,
+	},
 });
 
 const strokeOut = keyframes({
-	'0%': { strokeOpacity: 1, strokeWidth: 5.853 },
+	'0%': {
+		strokeOpacity: 1,
+		strokeWidth: 5.853,
+	},
 	'74%': { strokeOpacity: 0.2 },
-	'100%': { strokeOpacity: 0, strokeWidth: 0 },
+	'100%': {
+		strokeOpacity: 0,
+		strokeWidth: 0,
+	},
 });
 
 export const colourLayer = style({
@@ -73,9 +85,12 @@ globalStyle(`.${svgStates}[data-color="mono"] .${stroke}`, {
 	animation: `${strokeOut} 560ms cubic-bezier(0.45, 0, 0.2, 1) forwards`,
 });
 
-globalStyle(`.${svgStates}:not([data-color="mono"]) .${colourLayer}`, {
-	animation: `${colourIn} 780ms cubic-bezier(0.5, 1.55, 0.35, 1) forwards`,
-});
+globalStyle(
+	`.${svgStates}:not([data-color="mono"]) .${colourLayer}`,
+	{
+		animation: `${colourIn} 780ms cubic-bezier(0.5, 1.55, 0.35, 1) forwards`,
+	},
+);
 
 globalStyle(`.${svgStates}:not([data-color="mono"]) .${monoLayer}`, {
 	animation: `${colourOut} 780ms cubic-bezier(0.5, 1.55, 0.35, 1) forwards`,

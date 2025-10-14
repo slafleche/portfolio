@@ -14,20 +14,27 @@ import stripJsonComments from 'strip-json-comments';
  * - AVAILABLE_LOCALES
  * - LOCALE_LABELS
  * - TRANSLATIONS
- * - FONT_MIN_SETS.perLocale[locale][family] = "<unique chars for that
+ * - FONT_MIN_SETS.perLocale[locale][family]
+ *   = "<unique chars for that
  *   locale/font>"
  *
  * Reads:
  *
- * - Src/lib/locales/translations/*.jsonc (your raw locale inputs)
- * - Src/data/fonts.config.json (font keys/texts/weights/ital/subsets)
+ * - Src/lib/locales/translations/*.jsonc
+ *   (your raw locale inputs)
+ * - Src/data/fonts.config.json (font
+ *   keys/texts/weights/ital/subsets)
  *
  * Notes:
  *
- * - Only per-locale minimal sets are generated here (no union).
- * - All values in translation files must be strings (enforced).
- * - Keys across locales must match the reference locale (enforced).
- * - NEW: validates that every key listed in fonts.config.json exists in the
+ * - Only per-locale minimal sets are
+ *   generated here (no union).
+ * - All values in translation files must
+ *   be strings (enforced).
+ * - Keys across locales must match the
+ *   reference locale (enforced).
+ * - NEW: validates that every key listed
+ *   in fonts.config.json exists in the
  *   translations, else throws.
  */
 
@@ -36,7 +43,11 @@ const SRC_DIR = path.resolve('src', 'lib', 'locales', 'translations'); // your J
 const OUT_DIR = path.resolve('src', 'data', 'generated'); // generated outputs
 const OUT_JSON = path.join(OUT_DIR, 'locales.gen.json'); // generated JSON
 const OUT_TS = path.join(OUT_DIR, 'locales.gen.ts'); // generated TS
-const FONT_CONFIG_JSON = path.resolve('src', 'data', 'fonts.config.json'); // font config (JSON)
+const FONT_CONFIG_JSON = path.resolve(
+	'src',
+	'data',
+	'fonts.config.json',
+); // font config (JSON)
 const MINIFY = process.env.MINIFY === '1'; // MINIFY=1 yarn locales
 const REF_LOCALE = 'en'; // reference locale to compare keys against
 
@@ -73,7 +84,10 @@ function removeTrailingCommas(input) {
 			// look ahead for next non-whitespace char
 			let j = i + 1;
 			while (j < input.length && /\s/.test(input[j])) j++;
-			if (j < input.length && (input[j] === '}' || input[j] === ']')) {
+			if (
+				j < input.length &&
+				(input[j] === '}' || input[j] === ']')
+			) {
 				// skip writing this trailing comma
 				continue;
 			}
@@ -96,7 +110,10 @@ function readJsonc(p) {
 }
 
 // Collapse an array of strings to one unique-char string
-function collapseToUniqueChars(strings, { stripWhitespace = false } = {}) {
+function collapseToUniqueChars(
+	strings,
+	{ stripWhitespace = false } = {},
+) {
 	const joined = strings.join('');
 	const raw = stripWhitespace ? joined.replace(/\s+/g, '') : joined;
 	const nfc = raw.normalize('NFC');
@@ -114,8 +131,11 @@ function collectStringsForKeys(keys, translationsMap) {
 }
 
 // -------------------- 1) LOAD LOCALES --------------------
-if (!fs.existsSync(SRC_DIR)) throw new Error(`Locales dir missing: ${SRC_DIR}`);
-const files = fs.readdirSync(SRC_DIR).filter((f) => f.endsWith('.jsonc'));
+if (!fs.existsSync(SRC_DIR))
+	throw new Error(`Locales dir missing: ${SRC_DIR}`);
+const files = fs
+	.readdirSync(SRC_DIR)
+	.filter((f) => f.endsWith('.jsonc'));
 if (files.length === 0)
 	throw new Error(`No *.jsonc locales found in ${SRC_DIR}`);
 
@@ -127,61 +147,122 @@ const entries = files.map((file) => {
 
 	// require a non-empty "label"
 	if (typeof json.label !== 'string' || !json.label.trim()) {
-		throw new Error(`Locale "${locale}" is missing a non-empty "label" string`);
+		throw new Error(
+			`Locale "${locale}" is missing a non-empty "label" string`,
+		);
 	}
 
 	// require all values to be strings (including label)
-	for (const [k, v] of Object.entries(json)) {
+	for (const [
+		k,
+		v,
+	] of Object.entries(json)) {
 		if (typeof v !== 'string') {
-			throw new Error(`Locale "${locale}" has non-string value at key "${k}"`);
+			throw new Error(
+				`Locale "${locale}" has non-string value at key "${k}"`,
+			);
 		}
 	}
 
-	return [locale, json];
+	return [
+		locale,
+		json,
+	];
 });
 
 // stable order
-entries.sort(([a], [b]) => a.localeCompare(b));
+entries.sort(
+	(
+		[
+			a,
+		],
+		[
+			b,
+		],
+	) => a.localeCompare(b),
+);
 
 // -------------------- 2) KEY EQUALITY CHECK --------------------
-const refEntry = entries.find(([l]) => l === REF_LOCALE) ?? entries[0];
-const [refLocale, refJson] = refEntry;
+const refEntry =
+	entries.find(
+		([
+			l,
+		]) => l === REF_LOCALE,
+	) ?? entries[0];
+const [
+	refLocale,
+	refJson,
+] = refEntry;
 const refKeys = Object.keys(refJson).sort();
 
 let hasIssues = false;
-for (const [loc, json] of entries) {
+for (const [
+	loc,
+	json,
+] of entries) {
 	const keys = Object.keys(json).sort();
 	const missing = refKeys.filter((k) => !keys.includes(k));
 	const extra = keys.filter((k) => !refKeys.includes(k));
 
 	if (missing.length || extra.length) {
 		hasIssues = true;
-		console.error(`\n❌ Inconsistencies in "${loc}" vs "${refLocale}":`);
-		if (missing.length) console.error('  Missing keys:', missing.join(', '));
-		if (extra.length) console.error('  Extra keys:  ', extra.join(', '));
+		console.error(
+			`\n❌ Inconsistencies in "${loc}" vs "${refLocale}":`,
+		);
+		if (missing.length)
+			console.error('  Missing keys:', missing.join(', '));
+		if (extra.length)
+			console.error('  Extra keys:  ', extra.join(', '));
 	}
 }
 if (hasIssues) process.exit(1); // hard fail before dev/build
 
 // -------------------- 3) BUILD BASE PAYLOADS --------------------
-const AVAILABLE_LOCALES = entries.map(([l]) => l);
-const LOCALE_LABELS = Object.fromEntries(
-	entries.map(([l, json]) => [l, json.label]),
+const AVAILABLE_LOCALES = entries.map(
+	([
+		l,
+	]) => l,
 );
-const TRANSLATIONS = Object.fromEntries(entries.map(([l, json]) => [l, json]));
+const LOCALE_LABELS = Object.fromEntries(
+	entries.map(
+		([
+			l,
+			json,
+		]) => [
+			l,
+			json.label,
+		],
+	),
+);
+const TRANSLATIONS = Object.fromEntries(
+	entries.map(
+		([
+			l,
+			json,
+		]) => [
+			l,
+			json,
+		],
+	),
+);
 
 // -------------------- 4) LOAD FONT CONFIG --------------------
 if (!fs.existsSync(FONT_CONFIG_JSON)) {
 	throw new Error(`Font config JSON missing: ${FONT_CONFIG_JSON}`);
 }
-const fontsConfig = JSON.parse(fs.readFileSync(FONT_CONFIG_JSON, 'utf8'));
+const fontsConfig = JSON.parse(
+	fs.readFileSync(FONT_CONFIG_JSON, 'utf8'),
+);
 // Expected shape per family:
 //   { keys?: string[], texts?: string[], weights: string|string[], ital?: boolean, subsets?: string[] }
 
 // NEW: Validate that every key listed in fonts.config.json exists in translations
 const refKeySet = new Set(refKeys);
 const unknownMap = {};
-for (const [family, cfg] of Object.entries(fontsConfig)) {
+for (const [
+	family,
+	cfg,
+] of Object.entries(fontsConfig)) {
 	const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
 	const unknown = keys.filter((k) => !refKeySet.has(k));
 	if (unknown.length) {
@@ -190,7 +271,12 @@ for (const [family, cfg] of Object.entries(fontsConfig)) {
 }
 if (Object.keys(unknownMap).length) {
 	const lines = Object.entries(unknownMap)
-		.map(([fam, list]) => `  - ${fam}: ${list.join(', ')}`)
+		.map(
+			([
+				fam,
+				list,
+			]) => `  - ${fam}: ${list.join(', ')}`,
+		)
 		.join('\n');
 	const hint = `Known keys sample (${Math.min(10, refKeys.length)} of ${refKeys.length}): ${refKeys.slice(0, 10).join(', ')}${refKeys.length > 10 ? ' …' : ''}`;
 	throw new Error(
@@ -201,20 +287,33 @@ if (Object.keys(unknownMap).length) {
 
 // -------------------- 5) COMPUTE PER-LOCALE MINIMAL CHAR SETS --------------------
 /**
- * FONT_MIN_SETS.perLocale = { [locale]: { [family]: "<unique chars>" | "" //
- * empty string means: no &text= param recommended } }
+ * FONT_MIN_SETS.perLocale = { [locale]:
+ * { [family]: "<unique chars>" | "" //
+ * empty string means: no &text= param
+ * recommended } }
  */
 const FONT_MIN_SETS = { perLocale: {} };
 
-for (const [locale, json] of entries) {
+for (const [
+	locale,
+	json,
+] of entries) {
 	const perFont = {};
-	for (const [family, cfg] of Object.entries(fontsConfig)) {
+	for (const [
+		family,
+		cfg,
+	] of Object.entries(fontsConfig)) {
 		const literalTexts = Array.isArray(cfg.texts) ? cfg.texts : [];
 		const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
 
 		// Only collect values from THIS locale
-		const fromKeys = keys.length ? collectStringsForKeys(keys, json) : [];
-		const allStrings = [...literalTexts, ...fromKeys];
+		const fromKeys = keys.length
+			? collectStringsForKeys(keys, json)
+			: [];
+		const allStrings = [
+			...literalTexts,
+			...fromKeys,
+		];
 
 		// If none provided, store empty string (means: subset-only; no &text=)
 		const collapsed = allStrings.length
@@ -227,7 +326,9 @@ for (const [locale, json] of entries) {
 }
 
 // -------------------- 6) WRITE GENERATED FILES --------------------
-fs.mkdirSync(OUT_DIR, { recursive: true });
+fs.mkdirSync(OUT_DIR, {
+	recursive: true,
+});
 
 // JSON (source of truth for later steps)
 const jsonPayload = {

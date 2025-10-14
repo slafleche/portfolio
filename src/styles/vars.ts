@@ -1,8 +1,4 @@
-import {
-	color,
-	type Color,
-	type ColorWrapper,
-} from '@/styles/helpers/colorWrap';
+import { color, type Color } from '@/styles/helpers/colorWrap';
 import * as CSS from 'csstype';
 import { fontWeight } from './helpers/typography';
 import type {
@@ -13,7 +9,9 @@ import type {
 } from './helpers/types';
 import { m } from './helpers/measurement';
 export type ColorKeys = keyof typeof colors;
-import fontsConfig, { makeFamilyDef } from '@/styles/helpers/fontConfig';
+import fontsConfig, {
+	makeFamilyDef,
+} from '@/styles/helpers/fontConfig';
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
@@ -23,7 +21,10 @@ import fontsConfig, { makeFamilyDef } from '@/styles/helpers/fontConfig';
 
 const backgroundColour = color('#453564');
 // Target colour: #2c244b on #453564
-const shadow = backgroundColour.darken(0.8).desaturate(0.2).alpha(0.5);
+const shadow = backgroundColour
+	.darken(0.8)
+	.desaturate(0.2)
+	.alpha(0.5);
 
 export const themeColours = {
 	lights: {
@@ -37,69 +38,73 @@ export const themeColours = {
 	},
 };
 
-const gradients = {
-	a_linear_a: shadow,
-	a_linear_b: color('#6263b5'),
-	a_linear_c: color('#5d4cb9'),
+export const gradients = [
+	{
+		linear: [
+			color.create.rgb(91, 67, 155),
+			color.create.rgb(103, 52, 153),
+		],
+		spots: [
+			color.create.rgb(219, 88, 181),
+			color('#b98cde'),
+			color('#e1864e'),
+		],
+	},
+	{
+		linear: [
+			color.create.rgb(229, 90, 179),
+			color.create.oklch('0.56 0.17 274.53'),
+		],
+		spots: [
+			color('#5b419a'),
+			color('#b98cde'),
+			color('#e1864e'),
+		],
+	},
+];
 
-	a_spot_a: color('#99b7fd'),
-	a_spot_b: themeColours.lights.a,
+// export const bokenVars = {
+// 	// Default Bokeh overlay settings (consumed by components)
+// 	colors: [
+// 		gradients.b_linear_a,
+// 		gradients.b_linear_b,
+// 		gradients.b_linear_c,
+// 		gradients.b_spot_a,
+// 		gradients.a_linear_c,
+// 	],
+// 	opacity: 0.2,
+// 	blendMode: 'screen' as CSS.Property.MixBlendMode,
+// 	blur: 50,
+// 	blurScale: 1,
+// 	sizeScale: 0.7,
+// 	fadeMs: 300,
+// };
 
-	// Card B
-	b_linear_a: color('#5b419a'),
-	b_linear_b: color('#b98cde'),
-	b_linear_c: color('#e1864e'),
+// export const gradientFull = {
+// 	overlayA: gradients.b_spot_a,
+// 	overlayB: gradients.b_spot_b,
+// 	linear: [
+// 		gradients.b_linear_a,
+// 		gradients.b_linear_b,
+// 		gradients.b_linear_c,
+// 	] as [ColorWrapper, ColorWrapper, ColorWrapper],
+// };
 
-	b_spot_a: themeColours.lights.b,
-	b_spot_b: themeColours.lights.c,
-};
+// export const gradientA = {
+// 	overlayA: gradients.gradients,
+// 	overlayB: gradients.base_b,
+// 	linear: as[(ColorWrapper, ColorWrapper)],
+// };
 
-export const bokenVars = {
-	// Default Bokeh overlay settings (consumed by components)
-	colors: [
-		gradients.b_linear_a,
-		gradients.b_linear_b,
-		gradients.b_linear_c,
-		gradients.b_spot_a,
-		gradients.a_linear_c,
-	],
-	opacity: 0.2,
-	blendMode: 'screen' as CSS.Property.MixBlendMode,
-	blur: 50,
-	blurScale: 1,
-	sizeScale: 0.7,
-	fadeMs: 300,
-};
-
-export const gradientFull = {
-	overlayA: gradients.b_spot_a,
-	overlayB: gradients.b_spot_b,
-	linear: [
-		gradients.b_linear_a,
-		gradients.b_linear_b,
-		gradients.b_linear_c,
-	] as [ColorWrapper, ColorWrapper, ColorWrapper],
-};
-
-export const gradientA = {
-	overlayA: gradients.a_spot_a,
-	overlayB: gradients.a_spot_b,
-	linear: [
-		themeColours.darks.a,
-		gradients.a_linear_b,
-		gradients.a_linear_c,
-	] as [ColorWrapper, ColorWrapper, ColorWrapper],
-};
-
-export const gradientB = {
-	overlayA: gradients.b_spot_a,
-	overlayB: gradients.b_spot_b,
-	linear: [
-		gradients.b_linear_a,
-		gradients.b_linear_b,
-		gradients.b_linear_c,
-	] as [ColorWrapper, ColorWrapper, ColorWrapper],
-};
+// export const gradientB = {
+// 	overlayA: gradients.b_spot_a,
+// 	overlayB: gradients.b_spot_b,
+// 	linear: [
+// 		gradients.b_linear_a,
+// 		gradients.b_linear_b,
+// 		gradients.b_linear_c,
+// 	] as [ColorWrapper, ColorWrapper, ColorWrapper],
+// };
 
 // var gradientBlues = {
 
@@ -223,21 +228,34 @@ export const colorVars = {
 const fontFamilies = {
 	baloo: makeFamilyDef(
 		'Baloo 2',
-		['Poppins', 'Comfortaa', 'Helvetica', 'Arial', 'sans-serif'],
+		[
+			'Poppins',
+			'Comfortaa',
+			'Helvetica',
+			'Arial',
+			'sans-serif',
+		],
 		fontsConfig,
 		m(0.3, 'rem'),
 		m(-0.3, 'rem'),
 	),
 	comfortaa: makeFamilyDef(
 		'Comfortaa',
-		['Poppins', 'Helvetica', 'Arial', 'sans-serif'],
+		[
+			'Poppins',
+			'Helvetica',
+			'Arial',
+			'sans-serif',
+		],
 		fontsConfig,
 		m(0.3, 'rem'),
 		m(0, 'rem'),
 	),
 	titan_one: makeFamilyDef(
 		'Titan One',
-		['sans-serif'],
+		[
+			'sans-serif',
+		],
 		fontsConfig,
 		m(0.1, 'rem'),
 		m(0, 'rem'),
@@ -302,7 +320,9 @@ export interface BorderWidthConfig {
 	left?: BorderMeasurementInput;
 }
 
-export type BorderWidthInput = BorderMeasurementInput | BorderWidthConfig;
+export type BorderWidthInput =
+	| BorderMeasurementInput
+	| BorderWidthConfig;
 
 export interface BorderRadiusConfig {
 	all?: BorderMeasurementInput;
@@ -354,21 +374,22 @@ export const logoVars = {
 	hover: {
 		blobs: [
 			{
-				color: gradients.b_linear_b,
+				color: gradients[1].linear[1],
+				// color: gradients.b_linear_b,
 				posX: 24,
 				posY: 38,
 				radius: 46,
 				intensity: 0.32,
 			},
 			{
-				color: gradients.b_spot_a,
+				color: gradients[1].linear[0],
 				posX: 62,
 				posY: 58,
 				radius: 48,
 				intensity: 0.28,
 			},
 			{
-				color: gradients.b_linear_c,
+				color: gradients[1].linear[2],
 				posX: 42,
 				posY: 72,
 				radius: 44,
@@ -426,28 +447,32 @@ export const menuVars = {
 		blur: m(10),
 		blobs: [
 			{
-				color: gradients.b_linear_b,
+				// color: gradients.b_linear_b,
+				color: gradients[1].linear[1],
 				posX: 22,
 				posY: 48,
 				radius: 50,
 				intensity: 0.62,
 			},
 			{
-				color: gradients.b_spot_a,
+				color: gradients[1].linear[0],
+				// color: gradients.b_spot_a,
 				posX: 50,
 				posY: 72,
 				radius: 50,
 				intensity: 0.6,
 			},
 			{
-				color: gradients.b_linear_c,
+				color: gradients[1].linear[2],
+				// color: gradients.b_linear_c,
 				posX: 76,
 				posY: 30,
 				radius: 46,
 				intensity: 0.48,
 			},
 			{
-				color: gradients.a_spot_a,
+				color: gradients[0].linear[0],
+				// color: gradients.a_spot_a,
 				posX: 34,
 				posY: 82,
 				radius: 54,

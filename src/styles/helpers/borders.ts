@@ -22,8 +22,10 @@ interface IFinalBorder {
 
 // Accept object tokens (IMeasurement, chroma Color, etc.) but return only
 // plain CSS strings so the result can be safely spread into `style()`.
-const fallbackMeasurement = (value: BorderMeasurementInput, fallback: string) =>
-	toCssMeasurement(value) ?? fallback;
+const fallbackMeasurement = (
+	value: BorderMeasurementInput,
+	fallback: string,
+) => toCssMeasurement(value) ?? fallback;
 
 const compressSides = (
 	top: string,
@@ -31,7 +33,8 @@ const compressSides = (
 	bottom: string,
 	left: string,
 ) => {
-	const allEqual = top === right && right === bottom && bottom === left;
+	const allEqual =
+		top === right && right === bottom && bottom === left;
 	if (allEqual) return top;
 
 	const verticalMatch = top === bottom;
@@ -48,7 +51,9 @@ const compressSides = (
 	return `${top} ${right} ${bottom} ${left}`;
 };
 
-const hasNumericValue = (value: unknown): value is { value: number } =>
+const hasNumericValue = (
+	value: unknown,
+): value is { value: number } =>
 	typeof value === 'object' &&
 	value !== null &&
 	'value' in (value as Record<string, unknown>) &&
@@ -68,7 +73,9 @@ const isWidthConfig = (value: unknown): value is BorderWidthConfig =>
 		'bottom' in (value as BorderWidthConfig) ||
 		'left' in (value as BorderWidthConfig));
 
-const isRadiusConfig = (value: unknown): value is BorderRadiusConfig =>
+const isRadiusConfig = (
+	value: unknown,
+): value is BorderRadiusConfig =>
 	typeof value === 'object' &&
 	value !== null &&
 	!Array.isArray(value) &&
@@ -80,7 +87,9 @@ const isRadiusConfig = (value: unknown): value is BorderRadiusConfig =>
 		'bottomRight' in (value as BorderRadiusConfig) ||
 		'bottomLeft' in (value as BorderRadiusConfig));
 
-const resolveWidth = (width?: BorderWidthInput): string | undefined => {
+const resolveWidth = (
+	width?: BorderWidthInput,
+): string | undefined => {
 	const defaultWidth = toCssMeasurement(borderVars.width) ?? '0';
 	if (width === undefined) return defaultWidth;
 
@@ -101,7 +110,9 @@ const resolveWidth = (width?: BorderWidthInput): string | undefined => {
 	return direct ?? defaultWidth;
 };
 
-const resolveRadius = (radius?: BorderRadiusInput): string | undefined => {
+const resolveRadius = (
+	radius?: BorderRadiusInput,
+): string | undefined => {
 	const defaultRadius = toCssMeasurement(borderVars.radius) ?? '0';
 	if (radius === undefined || radius === null) return undefined;
 
@@ -135,7 +146,9 @@ const borders = (props: IBorder = {}) => {
 	} = props;
 
 	// If border-style: "none"; bypass the rest
-	const finalBorder: IFinalBorder = { borderStyle: style };
+	const finalBorder: IFinalBorder = {
+		borderStyle: style,
+	};
 
 	if (style !== 'none') {
 		const widthVal = resolveWidth(width);

@@ -17,7 +17,12 @@ const LOCALES_JSON = path.resolve(
 	'locales.gen.json',
 );
 const FONTS_CONFIG = path.resolve('src', 'data', 'fonts.config.json');
-const OUT_FILE = path.resolve('src', 'data', 'generated', 'googleFonts.gen.ts');
+const OUT_FILE = path.resolve(
+	'src',
+	'data',
+	'generated',
+	'googleFonts.gen.ts',
+);
 
 // ---- Types (lightweight runtime shapes) ----
 type FontCfgInput = {
@@ -36,9 +41,13 @@ type PerLocaleMinSets = {
 function main() {
 	// --- Load generated locales JSON (must exist from `yarn locales`) ---
 	if (!fs.existsSync(LOCALES_JSON)) {
-		throw new Error(`Missing ${LOCALES_JSON}. Run "yarn locales" first.`);
+		throw new Error(
+			`Missing ${LOCALES_JSON}. Run "yarn locales" first.`,
+		);
 	}
-	const localesPayload = JSON.parse(fs.readFileSync(LOCALES_JSON, 'utf8')) as {
+	const localesPayload = JSON.parse(
+		fs.readFileSync(LOCALES_JSON, 'utf8'),
+	) as {
 		AVAILABLE_LOCALES: string[];
 		FONT_MIN_SETS: PerLocaleMinSets;
 	};
@@ -51,7 +60,9 @@ function main() {
 
 	// --- Load fonts config (weights/ital/subsets) ---
 	if (!fs.existsSync(FONTS_CONFIG)) {
-		throw new Error(`Missing ${FONTS_CONFIG}. Add your font families there.`);
+		throw new Error(
+			`Missing ${FONTS_CONFIG}. Add your font families there.`,
+		);
 	}
 	const fontsConfig = JSON.parse(
 		fs.readFileSync(FONTS_CONFIG, 'utf8'),
@@ -72,11 +83,18 @@ function main() {
 			}
 		> = {};
 
-		for (const [family, cfg] of Object.entries(fontsConfig)) {
+		for (const [
+			family,
+			cfg,
+		] of Object.entries(fontsConfig)) {
 			const charset = perFontChars[family] || '';
 			resolvedMap[family] = {
 				// If charset is non-empty, pass it as a single-item texts array so we get &text=...
-				texts: charset ? [charset] : undefined,
+				texts: charset
+					? [
+							charset,
+						]
+					: undefined,
 				weights: cfg.weights,
 				ital: cfg.ital,
 				subsets: cfg.subsets,
@@ -85,7 +103,9 @@ function main() {
 
 		urlsByLocale[locale] = generateGoogleFontUrls(resolvedMap, {
 			display: 'swap',
-			subsets: ['latin'], // per-font can override via cfg.subsets
+			subsets: [
+				'latin',
+			], // per-font can override via cfg.subsets
 			stripWhitespaceFromText: false, // already collapsed; keep as-is
 		});
 	}
@@ -95,7 +115,9 @@ function main() {
 export const GOOGLE_FONT_URLS_BY_LOCALE = ${JSON.stringify(urlsByLocale, null, 2)} as const;
 `;
 
-	fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
+	fs.mkdirSync(path.dirname(OUT_FILE), {
+		recursive: true,
+	});
 	fs.writeFileSync(OUT_FILE, banner, 'utf8');
 	console.log(
 		`✅ Wrote ${OUT_FILE} for locales: ${AVAILABLE_LOCALES.join(', ')}`,

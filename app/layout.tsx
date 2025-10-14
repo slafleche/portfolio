@@ -10,7 +10,9 @@ interface RootLayoutProps {
 	children: ReactNode;
 }
 
-export default async function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({
+	children,
+}: RootLayoutProps) {
 	const cookieStore = await cookies();
 	const cookieLocale = cookieStore.get('locale')?.value;
 	const lang = resolveLocale(cookieLocale);

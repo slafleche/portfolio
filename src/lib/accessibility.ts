@@ -11,11 +11,16 @@ const nextTabbable = (
 	const currentTabIndex = tabbables.indexOf(startingElement);
 
 	if (currentTabIndex < 0) {
-		console.log('Current Element not in tabbable elements: ', tabbables);
+		console.log(
+			'Current Element not in tabbable elements: ',
+			tabbables,
+		);
 		return null;
 	}
 
-	let nextIndex = !forward ? currentTabIndex - 1 : currentTabIndex + 1;
+	let nextIndex = !forward
+		? currentTabIndex - 1
+		: currentTabIndex + 1;
 
 	if (loop) {
 		// Loop over the beginning and ends
@@ -39,7 +44,9 @@ const allTabbable = (
 	return tabbableElements;
 };
 
-const firstTabbable = (tabbableElements: HTMLElement[]): HTMLElement | null => {
+const firstTabbable = (
+	tabbableElements: HTMLElement[],
+): HTMLElement | null => {
 	if (tabbableElements.length > 0) {
 		return tabbableElements[0];
 	} else {
@@ -47,7 +54,9 @@ const firstTabbable = (tabbableElements: HTMLElement[]): HTMLElement | null => {
 	}
 };
 
-const lastTabbable = (tabbableElements: HTMLElement[]): HTMLElement | null => {
+const lastTabbable = (
+	tabbableElements: HTMLElement[],
+): HTMLElement | null => {
 	if (tabbableElements.length > 0) {
 		return tabbableElements[tabbableElements.length - 1];
 	} else {
@@ -63,7 +72,12 @@ const keyboardEvents = (tabbableElements: HTMLElement[] = []) => {
 		switch (e.key) {
 			case 'ArrowRight': {
 				e.stopPropagation();
-				const nextEl = nextTabbable(currentEl, tabbableElements, true, true);
+				const nextEl = nextTabbable(
+					currentEl,
+					tabbableElements,
+					true,
+					true,
+				);
 				if (nextEl) {
 					nextEl.focus();
 				}
@@ -71,7 +85,12 @@ const keyboardEvents = (tabbableElements: HTMLElement[] = []) => {
 			}
 			case 'ArrowLeft': {
 				e.stopPropagation();
-				const prevEl = nextTabbable(currentEl, tabbableElements, false, true);
+				const prevEl = nextTabbable(
+					currentEl,
+					tabbableElements,
+					false,
+					true,
+				);
 				if (prevEl) {
 					prevEl.focus();
 				}

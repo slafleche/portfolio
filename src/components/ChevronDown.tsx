@@ -35,7 +35,10 @@ export default function ChevronDown({ className }: Props = {}) {
 						offset={chevronVars.gradientMidOffset}
 						stopColor={chevronVars.gradientMid.css()}
 					/>
-					<stop offset="1" stopColor={chevronVars.gradientEnd.css()} />
+					<stop
+						offset="1"
+						stopColor={chevronVars.gradientEnd.css()}
+					/>
 				</linearGradient>
 			</defs>
 			<path

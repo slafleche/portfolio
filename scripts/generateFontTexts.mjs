@@ -9,13 +9,25 @@ const MAX_UNIQUE_CHARS = process.env.MAX_FONT_TEXT_CHARS
 	: 60; // cutoff
 
 const INCLUDE_BOTH_CASES =
-	String(process.env.FONT_TEXT_INCLUDE_BOTH_CASES || '').toLowerCase() ===
-		'true' ||
-	String(process.env.FONT_TEXT_INCLUDE_BOTH_CASES || '').toLowerCase() === '1';
+	String(
+		process.env.FONT_TEXT_INCLUDE_BOTH_CASES || '',
+	).toLowerCase() === 'true' ||
+	String(
+		process.env.FONT_TEXT_INCLUDE_BOTH_CASES || '',
+	).toLowerCase() === '1';
 
 // --- Paths ---
-const LOCALES_DIR = path.resolve('src', 'lib', 'locales', 'translations'); // JSONC inputs
-const FONT_CONFIG_JSON = path.resolve('src', 'data', 'fonts.config.json'); // JSON config (keys/texts/weights/ital/subsets)
+const LOCALES_DIR = path.resolve(
+	'src',
+	'lib',
+	'locales',
+	'translations',
+); // JSONC inputs
+const FONT_CONFIG_JSON = path.resolve(
+	'src',
+	'data',
+	'fonts.config.json',
+); // JSON config (keys/texts/weights/ital/subsets)
 const OUT_TS = path.resolve(
 	'src',
 	'data',
@@ -52,7 +64,8 @@ function removeTrailingCommas(input) {
 		if (ch === ',') {
 			let j = i + 1;
 			while (j < input.length && /\s/.test(input[j])) j++;
-			if (j < input.length && (input[j] === '}' || input[j] === ']')) continue; // skip trailing comma
+			if (j < input.length && (input[j] === '}' || input[j] === ']'))
+				continue; // skip trailing comma
 		}
 		out += ch;
 	}
@@ -60,13 +73,18 @@ function removeTrailingCommas(input) {
 }
 
 function readJsonc(filePath) {
-	const raw = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '');
+	const raw = fs
+		.readFileSync(filePath, 'utf8')
+		.replace(/^\uFEFF/, '');
 	const noComments = stripJsonComments(raw);
 	const normalized = removeTrailingCommas(noComments);
 	return JSON.parse(normalized);
 }
 
-function uniqueCharsFromStrings(strings, { stripWhitespace = false } = {}) {
+function uniqueCharsFromStrings(
+	strings,
+	{ stripWhitespace = false } = {},
+) {
 	const joined = strings.join('');
 	const raw = stripWhitespace ? joined.replace(/\s+/g, '') : joined;
 	const nfc = raw.normalize('NFC');
@@ -74,8 +92,10 @@ function uniqueCharsFromStrings(strings, { stripWhitespace = false } = {}) {
 }
 
 /**
- * If enabled, ensure both uppercase and lowercase variants exist for each
- * alphabetic codepoint. Works for Latin (incl. accented letters) via JS
+ * If enabled, ensure both uppercase and
+ * lowercase variants exist for each
+ * alphabetic codepoint. Works for Latin
+ * (incl. accented letters) via JS
  * casing.
  */
 function addBothCasesIfNeeded(s, enabled) {
@@ -113,13 +133,17 @@ const localeFiles = fs
 if (localeFiles.length === 0) {
 	throw new Error(`No *.jsonc locales found in ${LOCALES_DIR}`);
 }
-const locales = localeFiles.map((f) => readJsonc(path.join(LOCALES_DIR, f)));
+const locales = localeFiles.map((f) =>
+	readJsonc(path.join(LOCALES_DIR, f)),
+);
 
 // --- Load font config (plain JSON, no TS) ---
 if (!fs.existsSync(FONT_CONFIG_JSON)) {
 	throw new Error(`Font config JSON missing: ${FONT_CONFIG_JSON}`);
 }
-const fontConfig = JSON.parse(fs.readFileSync(FONT_CONFIG_JSON, 'utf8')); // { [family]: { keys?, texts?, weights, ital?, subsets? } }
+const fontConfig = JSON.parse(
+	fs.readFileSync(FONT_CONFIG_JSON, 'utf8'),
+); // { [family]: { keys?, texts?, weights, ital?, subsets? } }
 
 // --- Resolve keys across ALL locales + merge literal texts, then collapse to unique chars ---
 function valuesForKeysAcrossLocales(keys, localeObjs) {
@@ -138,21 +162,29 @@ const errors = [];
 const summary = []; // for printing final glyph counts
 let totalGlyphsIncluded = 0;
 
-for (const [family, cfg] of Object.entries(fontConfig)) {
+for (const [
+	family,
+	cfg,
+] of Object.entries(fontConfig)) {
 	const literalTexts = Array.isArray(cfg.texts) ? cfg.texts : [];
 	const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
 
 	const fromLocales = keys.length
 		? valuesForKeysAcrossLocales(keys, locales)
 		: [];
-	const all = [...literalTexts, ...fromLocales];
+	const all = [
+		...literalTexts,
+		...fromLocales,
+	];
 
 	// If none provided, omit texts => subset-only later
 	let collapsed;
 	let glyphCount = 0;
 
 	if (all.length) {
-		let unique = uniqueCharsFromStrings(all, { stripWhitespace: false });
+		let unique = uniqueCharsFromStrings(all, {
+			stripWhitespace: false,
+		});
 
 		// NEW: expand to include both case variants, if enabled
 		unique = addBothCasesIfNeeded(unique, INCLUDE_BOTH_CASES);
@@ -177,7 +209,9 @@ for (const [family, cfg] of Object.entries(fontConfig)) {
 				note: 'exceeded cutoff; omitted',
 			});
 		} else {
-			collapsed = [unique]; // single collapsed unique-char string
+			collapsed = [
+				unique,
+			]; // single collapsed unique-char string
 			glyphCount = unique.length;
 			totalGlyphsIncluded += glyphCount;
 			summary.push({
@@ -229,7 +263,9 @@ const footer = `;
 export default minimalFontText;
 `;
 
-fs.mkdirSync(path.dirname(OUT_TS), { recursive: true });
+fs.mkdirSync(path.dirname(OUT_TS), {
+	recursive: true,
+});
 fs.writeFileSync(OUT_TS, header + body + footer, 'utf8');
 
 // --- Print per-family glyph counts + summary line ---

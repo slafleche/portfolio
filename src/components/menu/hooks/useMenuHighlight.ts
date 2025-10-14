@@ -44,10 +44,16 @@ export function useMenuHighlight({
 }: UseMenuHighlightOptions) {
 	const navRef = useRef<HTMLDivElement | null>(null);
 	const linkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
-	const [linkMetrics, setLinkMetrics] = useState<Array<LinkMetric | null>>([]);
+	const [
+		linkMetrics,
+		setLinkMetrics,
+	] = useState<Array<LinkMetric | null>>([]);
 	const linkMetricsRef = useRef<Array<LinkMetric | null>>([]);
 	const lastMetricRef = useRef<LinkMetric | null>(null);
-	const [highlight, setHighlight] = useState<HighlightState>({
+	const [
+		highlight,
+		setHighlight,
+	] = useState<HighlightState>({
 		visible: false,
 		left: 0,
 		top: 0,
@@ -55,17 +61,37 @@ export function useMenuHighlight({
 		height: 0,
 	});
 	const highlightRef = useRef(highlight);
-	const [transitionDisabled, setTransitionDisabled] = useState(false);
-	const navMetricsRef = useRef<{ width: number; height: number }>({
+	const [
+		transitionDisabled,
+		setTransitionDisabled,
+	] = useState(false);
+	const navMetricsRef = useRef<{
+		width: number;
+		height: number;
+	}>({
 		width: 0,
 		height: 0,
 	});
-	const [navMetrics, setNavMetrics] = useState({ width: 0, height: 0 });
-	const [debugArch, setDebugArch] = useState<DebugArch | null>(null);
-	const [miniBokehActive, setMiniBokehActive] = useState(false);
-	const miniBokehTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const [
+		navMetrics,
+		setNavMetrics,
+	] = useState({ width: 0, height: 0 });
+	const [
+		debugArch,
+		setDebugArch,
+	] = useState<DebugArch | null>(null);
+	const [
+		miniBokehActive,
+		setMiniBokehActive,
+	] = useState(false);
+	const miniBokehTimerRef = useRef<ReturnType<
+		typeof setTimeout
+	> | null>(null);
 	const animationFrameRef = useRef<number | null>(null);
-	const [activeIndex, setActiveIndex] = useState<number | null>(null);
+	const [
+		activeIndex,
+		setActiveIndex,
+	] = useState<number | null>(null);
 	const lastHoverIndexRef = useRef<number | null>(null);
 	const hasResolvedHoverFromCacheRef = useRef(false);
 	const lastPersistedCacheValueRef = useRef<string | null>(null);
@@ -73,7 +99,9 @@ export function useMenuHighlight({
 
 	useEffect(() => {
 		highlightRef.current = highlight;
-	}, [highlight]);
+	}, [
+		highlight,
+	]);
 
 	useEffect(() => {
 		if (miniBokehTimerRef.current) {
@@ -99,7 +127,9 @@ export function useMenuHighlight({
 				miniBokehTimerRef.current = null;
 			}
 		};
-	}, [highlight.visible]);
+	}, [
+		highlight.visible,
+	]);
 
 	useEffect(
 		() => () => {
@@ -116,26 +146,37 @@ export function useMenuHighlight({
 		if (typeof window === 'undefined') return;
 		hasResolvedHoverFromCacheRef.current = true;
 		try {
-			const cachedValue = window.localStorage.getItem(MINI_BOKEH_CACHE_KEY);
+			const cachedValue = window.localStorage.getItem(
+				MINI_BOKEH_CACHE_KEY,
+			);
 			lastPersistedCacheValueRef.current = cachedValue;
-			const resolvedIndex = resolveIndexFromCacheValue(cachedValue, anchors);
+			const resolvedIndex = resolveIndexFromCacheValue(
+				cachedValue,
+				anchors,
+			);
 			if (resolvedIndex != null) {
 				lastHoverIndexRef.current = resolvedIndex;
 			}
 		} catch {
 			lastPersistedCacheValueRef.current = null;
 		}
-	}, [anchors]);
+	}, [
+		anchors,
+	]);
 
 	useEffect(() => {
-		linkRefs.current = new Array<HTMLAnchorElement | null>(anchorCount).fill(
-			null,
-		);
-		const emptyMetrics = new Array<LinkMetric | null>(anchorCount).fill(null);
+		linkRefs.current = new Array<HTMLAnchorElement | null>(
+			anchorCount,
+		).fill(null);
+		const emptyMetrics = new Array<LinkMetric | null>(
+			anchorCount,
+		).fill(null);
 		linkMetricsRef.current = emptyMetrics;
 		setLinkMetrics(emptyMetrics);
 		lastMetricRef.current = null;
-	}, [anchorCount]);
+	}, [
+		anchorCount,
+	]);
 
 	const persistLastHover = useCallback(
 		(index: number | null) => {
@@ -159,76 +200,81 @@ export function useMenuHighlight({
 				// Ignore storage errors (quota exceeded, private mode, etc.).
 			}
 		},
-		[anchors],
+		[
+			anchors,
+		],
 	);
 
-	const updateHighlightFromMetric = useCallback((metric?: LinkMetric) => {
-		if (!metric) return;
-		const navMetrics = navMetricsRef.current;
+	const updateHighlightFromMetric = useCallback(
+		(metric?: LinkMetric) => {
+			if (!metric) return;
+			const navMetrics = navMetricsRef.current;
 
-		if (!highlightRef.current.visible) {
-			setTransitionDisabled(true);
-			const previous = lastMetricRef.current;
-			let startLeft = metric.left;
-			let startTop = metric.top;
-			let startWidth = metric.highlightWidth;
-			let startHeight = metric.highlightHeight;
+			if (!highlightRef.current.visible) {
+				setTransitionDisabled(true);
+				const previous = lastMetricRef.current;
+				let startLeft = metric.left;
+				let startTop = metric.top;
+				let startWidth = metric.highlightWidth;
+				let startHeight = metric.highlightHeight;
 
-			if (previous) {
-				startLeft = previous.left;
-				startTop = previous.top;
-				startWidth = previous.highlightWidth;
-				startHeight = previous.highlightHeight;
-			} else {
-				const cachedMetric =
-					lastHoverIndexRef.current != null
-						? linkMetricsRef.current[lastHoverIndexRef.current]
-						: null;
-				const origin =
-					cachedMetric && hasActivatedRef.current
-						? metricToHighlightBox(cachedMetric)
-						: computeCenteredHighlight(navMetrics);
-				startLeft = origin.left;
-				startTop = origin.top;
-				startWidth = origin.width;
-				startHeight = origin.height;
+				if (previous) {
+					startLeft = previous.left;
+					startTop = previous.top;
+					startWidth = previous.highlightWidth;
+					startHeight = previous.highlightHeight;
+				} else {
+					const cachedMetric =
+						lastHoverIndexRef.current != null
+							? linkMetricsRef.current[lastHoverIndexRef.current]
+							: null;
+					const origin =
+						cachedMetric && hasActivatedRef.current
+							? metricToHighlightBox(cachedMetric)
+							: computeCenteredHighlight(navMetrics);
+					startLeft = origin.left;
+					startTop = origin.top;
+					startWidth = origin.width;
+					startHeight = origin.height;
+				}
+
+				setHighlight({
+					visible: false,
+					left: startLeft,
+					top: startTop,
+					width: startWidth,
+					height: startHeight,
+				});
+
+				if (animationFrameRef.current) {
+					cancelAnimationFrame(animationFrameRef.current);
+				}
+				animationFrameRef.current = requestAnimationFrame(() => {
+					animationFrameRef.current = null;
+					setTransitionDisabled(false);
+					setHighlight({
+						visible: true,
+						left: metric.left,
+						top: metric.top,
+						width: metric.highlightWidth,
+						height: metric.highlightHeight,
+					});
+					lastMetricRef.current = metric;
+				});
+				return;
 			}
 
 			setHighlight({
-				visible: false,
-				left: startLeft,
-				top: startTop,
-				width: startWidth,
-				height: startHeight,
+				visible: true,
+				left: metric.left,
+				top: metric.top,
+				width: metric.highlightWidth,
+				height: metric.highlightHeight,
 			});
-
-			if (animationFrameRef.current) {
-				cancelAnimationFrame(animationFrameRef.current);
-			}
-			animationFrameRef.current = requestAnimationFrame(() => {
-				animationFrameRef.current = null;
-				setTransitionDisabled(false);
-				setHighlight({
-					visible: true,
-					left: metric.left,
-					top: metric.top,
-					width: metric.highlightWidth,
-					height: metric.highlightHeight,
-				});
-				lastMetricRef.current = metric;
-			});
-			return;
-		}
-
-		setHighlight({
-			visible: true,
-			left: metric.left,
-			top: metric.top,
-			width: metric.highlightWidth,
-			height: metric.highlightHeight,
-		});
-		lastMetricRef.current = metric;
-	}, []);
+			lastMetricRef.current = metric;
+		},
+		[],
+	);
 
 	const hideHighlight = useCallback(() => {
 		if (animationFrameRef.current) {
@@ -237,9 +283,13 @@ export function useMenuHighlight({
 		}
 		lastMetricRef.current = null;
 		setActiveIndex(null);
-		setHighlight((prev) => (prev.visible ? { ...prev, visible: false } : prev));
+		setHighlight((prev) =>
+			prev.visible ? { ...prev, visible: false } : prev,
+		);
 		persistLastHover(null);
-	}, [persistLastHover]);
+	}, [
+		persistLastHover,
+	]);
 
 	const measure = useCallback(() => {
 		if (!fontsReady) return;
@@ -249,20 +299,29 @@ export function useMenuHighlight({
 		const navRect = navEl.getBoundingClientRect();
 		const width = navRect.width;
 		if (!width) return;
-		navMetricsRef.current = { width, height: navRect.height };
+		navMetricsRef.current = {
+			width,
+			height: navRect.height,
+		};
 		setNavMetrics((prev) =>
 			prev.width === width && prev.height === navRect.height
 				? prev
-				: { width, height: navRect.height },
+				: {
+						width,
+						height: navRect.height,
+					},
 		);
-		const metrics: Array<LinkMetric | null> = linkRefs.current.map(() => null);
+		const metrics: Array<LinkMetric | null> = linkRefs.current.map(
+			() => null,
+		);
 
 		linkRefs.current.forEach((el, index) => {
 			if (!el) return;
 			const rect = el.getBoundingClientRect();
 			const centerX = rect.left + rect.width / 2 - navRect.left;
 			const centerY = rect.top + rect.height / 2 - navRect.top;
-			const archBase = computeArchY(width, centerX) + menuVars.yOffset.value;
+			const archBase =
+				computeArchY(width, centerX) + menuVars.yOffset.value;
 			metrics[index] = {
 				centerX,
 				centerY,
@@ -276,8 +335,8 @@ export function useMenuHighlight({
 			};
 		});
 
-		const definedMetrics = metrics.filter((metric): metric is LinkMetric =>
-			Boolean(metric),
+		const definedMetrics = metrics.filter(
+			(metric): metric is LinkMetric => Boolean(metric),
 		);
 
 		if (!definedMetrics.length) {
@@ -338,15 +397,26 @@ export function useMenuHighlight({
 		} else {
 			setDebugArch(null);
 		}
-	}, [activeIndex, debugMiniBokeh, fontsReady, updateHighlightFromMetric]);
+	}, [
+		activeIndex,
+		debugMiniBokeh,
+		fontsReady,
+		updateHighlightFromMetric,
+	]);
 
 	useEffect(() => {
 		measure();
-	}, [measure, anchorCount, fontsReady]);
+	}, [
+		measure,
+		anchorCount,
+		fontsReady,
+	]);
 
 	useLayoutEffect(() => {
 		measure();
-	}, [measure]);
+	}, [
+		measure,
+	]);
 
 	useEffect(() => {
 		const navEl = navRef.current;
@@ -354,11 +424,14 @@ export function useMenuHighlight({
 		const observer = new ResizeObserver(() => measure());
 		observer.observe(navEl);
 		return () => observer.disconnect();
-	}, [measure]);
+	}, [
+		measure,
+	]);
 
 	const activate = useCallback(
 		(index: number) => {
-			let metric = linkMetricsRef.current[index] ?? linkMetrics[index];
+			let metric =
+				linkMetricsRef.current[index] ?? linkMetrics[index];
 			if (!metric) {
 				const navEl = navRef.current;
 				const linkEl = linkRefs.current[index];
@@ -391,7 +464,9 @@ export function useMenuHighlight({
 						),
 						top: Math.max(0, archBase - highlightHeight / 2),
 					};
-					const nextMetrics = [...linkMetricsRef.current];
+					const nextMetrics = [
+						...linkMetricsRef.current,
+					];
 					nextMetrics[index] = metric;
 					linkMetricsRef.current = nextMetrics;
 					setLinkMetrics(nextMetrics);
@@ -406,7 +481,12 @@ export function useMenuHighlight({
 				setActiveIndex(index);
 			}
 		},
-		[activeIndex, linkMetrics, persistLastHover, updateHighlightFromMetric],
+		[
+			activeIndex,
+			linkMetrics,
+			persistLastHover,
+			updateHighlightFromMetric,
+		],
 	);
 
 	const highlightStyles = useMemo<HighlightStyles>(() => {
@@ -417,7 +497,8 @@ export function useMenuHighlight({
 			const cachedIndex = lastHoverIndexRef.current;
 			if (cachedIndex != null) {
 				const metric =
-					linkMetricsRef.current[cachedIndex] ?? linkMetrics[cachedIndex];
+					linkMetricsRef.current[cachedIndex] ??
+					linkMetrics[cachedIndex];
 				if (metric) return metricToHighlightBox(metric);
 			}
 			return null;
@@ -491,8 +572,17 @@ export function useMenuHighlight({
 			innerStyle.outline = '1px dashed rgba(255,255,255,0.4)';
 		}
 
-		return { containerStyle, innerStyle };
-	}, [highlight, transitionDisabled, debugMiniBokeh, activeIndex, linkMetrics]);
+		return {
+			containerStyle,
+			innerStyle,
+		};
+	}, [
+		highlight,
+		transitionDisabled,
+		debugMiniBokeh,
+		activeIndex,
+		linkMetrics,
+	]);
 
 	return {
 		navRef,

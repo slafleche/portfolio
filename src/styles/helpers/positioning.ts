@@ -2,14 +2,20 @@ import * as CSS from 'csstype';
 import { margins } from './spacing';
 
 export const absolutePosition = {
-	topRight: (top: string | number = '0', right: CSS.Property.Right = '0px') => {
+	topRight: (
+		top: string | number = '0',
+		right: CSS.Property.Right = '0px',
+	) => {
 		return {
 			position: 'absolute' as CSS.Property.Position,
 			top,
 			right,
 		};
 	},
-	topLeft: (top: string | number = '0px', left: CSS.Property.Left = '0px') => {
+	topLeft: (
+		top: string | number = '0px',
+		left: CSS.Property.Left = '0px',
+	) => {
 		return {
 			position: 'absolute' as CSS.Property.Position,
 			top,
@@ -70,7 +76,10 @@ export const absolutePosition = {
 			bottom: 0,
 			maxHeight: '100%',
 			maxWidth: '100%',
-			...margins({ top: 'auto', bottom: 'auto' }),
+			...margins({
+				top: 'auto',
+				bottom: 'auto',
+			}),
 		};
 	},
 	middleRight: (right: CSS.Property.Right = '0px') => {
@@ -82,7 +91,10 @@ export const absolutePosition = {
 			bottom: 0,
 			maxHeight: '100%',
 			maxWidth: '100%',
-			...margins({ top: 'auto', bottom: 'auto' }),
+			...margins({
+				top: 'auto',
+				bottom: 'auto',
+			}),
 		};
 	},
 	middleBottom: (bottom: CSS.Property.Bottom = '0px') => {
@@ -94,7 +106,10 @@ export const absolutePosition = {
 			right: 0,
 			maxHeight: '100%',
 			maxWidth: '100%',
-			...margins({ horizontal: 'auto', vertical: 0 }),
+			...margins({
+				horizontal: 'auto',
+				vertical: 0,
+			}),
 		};
 	},
 	middleTop: (top: CSS.Property.Top = '0px') => {
@@ -106,7 +121,10 @@ export const absolutePosition = {
 			right: 0,
 			maxHeight: '100%',
 			maxWidth: '100%',
-			...margins({ horizontal: 'auto', vertical: 0 }),
+			...margins({
+				horizontal: 'auto',
+				vertical: 0,
+			}),
 		};
 	},
 	fullSize: () => {

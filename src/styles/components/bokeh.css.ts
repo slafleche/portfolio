@@ -1,6 +1,9 @@
 // styles/bokeh.css.ts
 import { style, keyframes } from '@vanilla-extract/css';
-import { ReducedMotion, reducedMotion } from '../helpers/accessibility';
+import {
+	ReducedMotion,
+	reducedMotion,
+} from '../helpers/accessibility';
 
 export const overlay = style({
 	position: 'fixed',
@@ -21,7 +24,9 @@ export const svg = style({
 
 const spin = keyframes({
 	'0%': { transform: 'rotate(0turn)' },
-	'100%': { transform: 'rotate(1turn)' },
+	'100%': {
+		transform: 'rotate(1turn)',
+	},
 });
 
 export const rotating = style({

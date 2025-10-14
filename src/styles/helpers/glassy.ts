@@ -48,9 +48,15 @@ export const glassVars = {
 		direction: m(-45, 'deg'),
 	},
 
-	/** Shared noise texture for glass surfaces (uses a default id) */
+	/**
+	 * Shared noise texture for glass
+	 * surfaces (uses a default id)
+	 */
 	noiseDataUri: () => glassNoise(),
-	/** Unique filter id embedded in the default noise texture */
+	/**
+	 * Unique filter id embedded in the
+	 * default noise texture
+	 */
 	noiseFilterId: defaultNoiseId,
 };
 
@@ -83,7 +89,10 @@ export const createGlassBackground = (): {
 			overlay: overlayGradient,
 			glow: glowGradient,
 		},
-		background: [overlayGradient, glowGradient].join(', '),
+		background: [
+			overlayGradient,
+			glowGradient,
+		].join(', '),
 		backgroundColor: baseColor,
 		backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
 		WebkitBackdropFilter:

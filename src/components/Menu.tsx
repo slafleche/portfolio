@@ -36,14 +36,26 @@ export default function Menu({
 	debugGlow = false,
 }: MenuProps = {}) {
 	const t = useT();
-	const { locale, root } = useLocale({ withLabel: true });
+	const { locale, root } = useLocale({
+		withLabel: true,
+	});
 
-	const [mounted, setMounted] = useState(false);
-	const [fontsReady, setFontsReady] = useState(false);
-	const [activeSection, setActiveSection] = useState<string | null>(null);
-	const [logoGlowState, setLogoGlowState] = useState<'idle' | 'pulse' | 'hold'>(
-		'idle',
-	);
+	const [
+		mounted,
+		setMounted,
+	] = useState(false);
+	const [
+		fontsReady,
+		setFontsReady,
+	] = useState(false);
+	const [
+		activeSection,
+		setActiveSection,
+	] = useState<string | null>(null);
+	const [
+		logoGlowState,
+		setLogoGlowState,
+	] = useState<'idle' | 'pulse' | 'hold'>('idle');
 	const pointerInsideLogoRef = useRef(false);
 	const logoGlowTimeoutRef = useRef<number | null>(null);
 	const logoGlowRafRef = useRef<number | null>(null);
@@ -119,7 +131,11 @@ export default function Menu({
 				}
 			}, LOGO_GLOW_DURATION);
 		});
-	}, [clearLogoGlowHoldTimer, clearLogoGlowRaf, clearLogoGlowTimeout]);
+	}, [
+		clearLogoGlowHoldTimer,
+		clearLogoGlowRaf,
+		clearLogoGlowTimeout,
+	]);
 
 	const beginLogoGlowHold = useCallback(() => {
 		if (typeof window === 'undefined') return;
@@ -127,7 +143,10 @@ export default function Menu({
 		clearLogoGlowRaf();
 		logoGlowHoldActiveRef.current = true;
 		setLogoGlowState((prev) => (prev === 'hold' ? prev : 'hold'));
-	}, [clearLogoGlowRaf, clearLogoGlowTimeout]);
+	}, [
+		clearLogoGlowRaf,
+		clearLogoGlowTimeout,
+	]);
 
 	const queueLogoGlow = useCallback(
 		(mode: 'pulse' | 'hold') => {
@@ -140,7 +159,10 @@ export default function Menu({
 			}
 			return true;
 		},
-		[beginLogoGlowHold, startLogoGlowPulse],
+		[
+			beginLogoGlowHold,
+			startLogoGlowPulse,
+		],
 	);
 
 	const handleLogoPointerDown = useCallback(
@@ -166,7 +188,11 @@ export default function Menu({
 				queueLogoGlow('hold');
 			}, LOGO_GLOW_HOLD_DELAY);
 		},
-		[clearLogoGlowHoldTimer, queueLogoGlow, root],
+		[
+			clearLogoGlowHoldTimer,
+			queueLogoGlow,
+			root,
+		],
 	);
 
 	const handleLogoPointerUp = useCallback(
@@ -188,7 +214,11 @@ export default function Menu({
 				queueLogoGlow('pulse');
 			}
 		},
-		[clearLogoGlowHoldTimer, queueLogoGlow, startLogoGlowPulse],
+		[
+			clearLogoGlowHoldTimer,
+			queueLogoGlow,
+			startLogoGlowPulse,
+		],
 	);
 
 	const handleLogoPointerCancel = useCallback(
@@ -223,34 +253,50 @@ export default function Menu({
 				clearEnterDelay();
 			}
 		},
-		[activate, clearEnterDelay, clearExitDelay],
+		[
+			activate,
+			clearEnterDelay,
+			clearExitDelay,
+		],
 	);
 
 	const triggerLogoEnter = useCallback(() => {
 		handleActivate(0);
 		clearExitDelay();
 		scheduleEnter(LOGO_ENTER_DELAY);
-	}, [handleActivate, clearExitDelay, scheduleEnter]);
+	}, [
+		handleActivate,
+		clearExitDelay,
+		scheduleEnter,
+	]);
 
 	const triggerLogoLeave = useCallback(() => {
 		clearEnterDelay();
 		scheduleExit(LOGO_MOUSE_LEAVE_EXIT_DELAY);
-	}, [clearEnterDelay, scheduleExit]);
+	}, [
+		clearEnterDelay,
+		scheduleExit,
+	]);
 
 	const handleLogoMouseEnter = useCallback(() => {
 		pointerInsideLogoRef.current = true;
 		// previously blocked when "at top" — removed
 		triggerLogoEnter();
-	}, [triggerLogoEnter]);
+	}, [
+		triggerLogoEnter,
+	]);
 
 	const handleLogoMouseLeave = useCallback(() => {
 		pointerInsideLogoRef.current = false;
 		triggerLogoLeave();
-	}, [triggerLogoLeave]);
+	}, [
+		triggerLogoLeave,
+	]);
 
 	const handleLogoFocus = useCallback(
 		(event: FocusEvent<HTMLAnchorElement>) => {
-			const focusVisible = event.currentTarget.matches(':focus-visible');
+			const focusVisible =
+				event.currentTarget.matches(':focus-visible');
 			pointerInsideLogoRef.current = true;
 			if (focusVisible) {
 				resetToIdle();
@@ -258,7 +304,10 @@ export default function Menu({
 				triggerLogoEnter();
 			}
 		},
-		[resetToIdle, triggerLogoEnter],
+		[
+			resetToIdle,
+			triggerLogoEnter,
+		],
 	);
 
 	const handleLogoClick = useCallback(
@@ -269,7 +318,8 @@ export default function Menu({
 				return;
 			}
 			const { pathname: currentPath, search, hash } = window.location;
-			const isRootPath = currentPath === root || currentPath === `${root}/`;
+			const isRootPath =
+				currentPath === root || currentPath === `${root}/`;
 			if (!isRootPath) return;
 			event.preventDefault();
 			if (hash) {
@@ -279,12 +329,18 @@ export default function Menu({
 					`${currentPath}${search}`,
 				);
 			}
-			window.scrollTo({ top: 0, behavior: 'smooth' });
+			window.scrollTo({
+				top: 0,
+				behavior: 'smooth',
+			});
 			if (event.detail === 0) {
 				queueLogoGlow('pulse');
 			}
 		},
-		[root, queueLogoGlow],
+		[
+			root,
+			queueLogoGlow,
+		],
 	);
 
 	const handleBlur = useCallback(
@@ -295,16 +351,27 @@ export default function Menu({
 			hideHighlight();
 			triggerLogoLeave();
 		},
-		[hideHighlight, navRef, triggerLogoLeave],
+		[
+			hideHighlight,
+			navRef,
+			triggerLogoLeave,
+		],
 	);
 
 	const handleNavMouseLeave = useCallback(() => {
-		const activeElement = document.activeElement as HTMLElement | null;
-		if (activeElement && navRef.current?.contains(activeElement)) return;
+		const activeElement =
+			document.activeElement as HTMLElement | null;
+		if (activeElement && navRef.current?.contains(activeElement))
+			return;
 		hideHighlight();
 		clearEnterDelay();
 		scheduleExit();
-	}, [hideHighlight, navRef, clearEnterDelay, scheduleExit]);
+	}, [
+		hideHighlight,
+		navRef,
+		clearEnterDelay,
+		scheduleExit,
+	]);
 
 	// Wait for fonts to load, then mark as mounted (for transitions)
 	useEffect(() => {
@@ -349,7 +416,9 @@ export default function Menu({
 			if (raf1) cancelAnimationFrame(raf1);
 			if (raf2) cancelAnimationFrame(raf2);
 		};
-	}, [fontsReady]);
+	}, [
+		fontsReady,
+	]);
 
 	useEffect(
 		() => () => {
@@ -359,7 +428,11 @@ export default function Menu({
 			logoGlowHoldIntentRef.current = false;
 			logoGlowHoldActiveRef.current = false;
 		},
-		[clearLogoGlowHoldTimer, clearLogoGlowTimeout, clearLogoGlowRaf],
+		[
+			clearLogoGlowHoldTimer,
+			clearLogoGlowTimeout,
+			clearLogoGlowRaf,
+		],
 	);
 
 	// Track active section for hash updates & highlighting
@@ -390,7 +463,8 @@ export default function Menu({
 			}
 
 			const nearBottom =
-				window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+				window.innerHeight + window.scrollY >=
+				document.body.scrollHeight - 2;
 			if (nearBottom && sections.length) {
 				nextId = sections[sections.length - 1].id;
 			}
@@ -408,7 +482,9 @@ export default function Menu({
 		};
 
 		updateActiveSection();
-		window.addEventListener('scroll', requestUpdate, { passive: true });
+		window.addEventListener('scroll', requestUpdate, {
+			passive: true,
+		});
 		window.addEventListener('resize', requestUpdate);
 
 		return () => {
@@ -416,7 +492,9 @@ export default function Menu({
 			window.removeEventListener('scroll', requestUpdate);
 			window.removeEventListener('resize', requestUpdate);
 		};
-	}, [sectionIds]);
+	}, [
+		sectionIds,
+	]);
 
 	const firstSectionId = sectionIds[0] ?? null;
 
@@ -443,20 +521,29 @@ export default function Menu({
 		if (currentHash === activeSection) return;
 		const url = `${pathname}${search}#${activeSection}`;
 		window.history.replaceState(window.history.state, '', url);
-	}, [activeSection, firstSectionId]);
+	}, [
+		activeSection,
+		firstSectionId,
+	]);
 
 	const renderNavLink = (
 		entry: AnchorEntry,
 		index: number,
 		side: 'left' | 'right',
 		isOuter: boolean,
-		classes?: { item?: string; index?: string },
+		classes?: {
+			item?: string;
+			index?: string;
+		},
 	) => {
 		const id = t(entry.hrefKey);
 		const isActive = activeSection === id;
 		const skew = isOuter ? menuVars.skew : menuVars.skew.half();
 		return (
-			<li className={clsx(classes?.item, classes?.index)} key={entry.hrefKey}>
+			<li
+				className={clsx(classes?.item, classes?.index)}
+				key={entry.hrefKey}
+			>
 				<Link
 					href={`#${id}`}
 					className={s.navLink}
@@ -564,7 +651,9 @@ export default function Menu({
 											<Logo
 												className={s.logo}
 												colourState={
-													logoAnimationState === 'enter' ? 'color' : 'mono'
+													logoAnimationState === 'enter'
+														? 'color'
+														: 'mono'
 												}
 											/>
 										</div>
@@ -606,22 +695,24 @@ export default function Menu({
 						className={clsx(s.localeChanger, s.transitionAfterFonts)}
 						aria-label={t('localeChange')}
 					>
-						{AVAILABLE_LOCALES.filter((l) => l !== locale).map((l) => (
-							<Link
-								key={l}
-								href={`/${l}`}
-								className={clsx(s.link, s.localeLink)}
-								hrefLang={l}
-								data-ui="link"
-							>
-								<span className={s.fakeShadow} aria-hidden={true}>
-									{TRANSLATIONS[l]['abbreviated-label']}
-								</span>
-								<span className={s.text}>
-									{TRANSLATIONS[l]['abbreviated-label']}
-								</span>
-							</Link>
-						))}
+						{AVAILABLE_LOCALES.filter((l) => l !== locale).map(
+							(l) => (
+								<Link
+									key={l}
+									href={`/${l}`}
+									className={clsx(s.link, s.localeLink)}
+									hrefLang={l}
+									data-ui="link"
+								>
+									<span className={s.fakeShadow} aria-hidden={true}>
+										{TRANSLATIONS[l]['abbreviated-label']}
+									</span>
+									<span className={s.text}>
+										{TRANSLATIONS[l]['abbreviated-label']}
+									</span>
+								</Link>
+							),
+						)}
 					</nav>
 				</Arch>
 			</div>

@@ -1,7 +1,8 @@
 import type { CssLike } from './types';
 
 const isDev =
-	typeof process !== 'undefined' && process?.env?.NODE_ENV !== 'production';
+	typeof process !== 'undefined' &&
+	process?.env?.NODE_ENV !== 'production';
 const enableDebug = isDev;
 
 type DebugEntry = {
@@ -20,7 +21,10 @@ export type DebugOperationSnapshot = {
 	unit: string;
 	count: number;
 };
-export type MeasurementDebugGroups = Record<string, DebugOperationSnapshot[]>;
+export type MeasurementDebugGroups = Record<
+	string,
+	DebugOperationSnapshot[]
+>;
 
 type DebugState = {
 	enabled: boolean;
@@ -66,7 +70,10 @@ const recordDebugEntry = (entry: MeasurementDebugEntry) => {
 		return;
 	}
 	index.set(key, store.length);
-	store.push({ ...entry, count: entry.count ?? 1 });
+	store.push({
+		...entry,
+		count: entry.count ?? 1,
+	});
 };
 
 export interface IMeasurement {
@@ -75,10 +82,24 @@ export interface IMeasurement {
 	css: () => string;
 
 	add: (
-		delta: number | IMeasurement | string | { value: number; unit?: string },
+		delta:
+			| number
+			| IMeasurement
+			| string
+			| {
+					value: number;
+					unit?: string;
+			  },
 	) => IMeasurement;
 	subtract: (
-		delta: number | IMeasurement | string | { value: number; unit?: string },
+		delta:
+			| number
+			| IMeasurement
+			| string
+			| {
+					value: number;
+					unit?: string;
+			  },
 	) => IMeasurement;
 
 	multiply: (factor: number) => IMeasurement;
@@ -107,7 +128,9 @@ const logDebug = (
 	if (!enableDebug || !state?.enabled) return;
 	// You can extend this to push to a collector or console.log if needed
 	if (typeof console !== 'undefined') {
-		console.debug(`[m:${state.measurementId}] ${operation} → ${value}${unit}`);
+		console.debug(
+			`[m:${state.measurementId}] ${operation} → ${value}${unit}`,
+		);
 	}
 	recordDebugEntry({
 		id: `${state.measurementId}:${operation}`,
@@ -122,16 +145,23 @@ const logDebug = (
 // Unit & coercion helpers
 // ----------------------
 
-const assertMatchingUnits = (left: IMeasurement, right: IMeasurement) => {
+const assertMatchingUnits = (
+	left: IMeasurement,
+	right: IMeasurement,
+) => {
 	const leftUnit = left.unit ?? 'px';
 	const rightUnit = right.unit ?? 'px';
 	if (leftUnit !== rightUnit) {
-		throw new Error(`measurement unit mismatch: ${leftUnit} vs ${rightUnit}`);
+		throw new Error(
+			`measurement unit mismatch: ${leftUnit} vs ${rightUnit}`,
+		);
 	}
 	return leftUnit;
 };
 
-export const parseStringMeasurement = (cssValue: string): IMeasurement => {
+export const parseStringMeasurement = (
+	cssValue: string,
+): IMeasurement => {
 	let value = cssValue.trim();
 	const unit = value.replace(/^-?(0|[1-9]\d*)?([.][0-9]*)?/, '');
 	value = value.substring(0, value.length - unit.length);
@@ -143,29 +173,46 @@ export const parseStringMeasurement = (cssValue: string): IMeasurement => {
 
 const coerceDelta = (
 	base: IMeasurement,
-	delta: number | IMeasurement | string | { value: number; unit?: string },
+	delta:
+		| number
+		| IMeasurement
+		| string
+		| { value: number; unit?: string },
 ): { amount: number; unit: string } => {
 	const baseUnit = base.unit ?? 'px';
 
-	if (typeof delta === 'number') return { amount: delta, unit: baseUnit };
+	if (typeof delta === 'number')
+		return {
+			amount: delta,
+			unit: baseUnit,
+		};
 
 	if (typeof (delta as IMeasurement)?.css === 'function') {
 		const other = delta as IMeasurement;
 		const unit = assertMatchingUnits(base, other);
-		return { amount: other.value, unit };
+		return {
+			amount: other.value,
+			unit,
+		};
 	}
 
 	if (typeof delta === 'string') {
 		const parsed = parseStringMeasurement(delta);
 		const unit = assertMatchingUnits(base, parsed);
-		return { amount: parsed.value, unit };
+		return {
+			amount: parsed.value,
+			unit,
+		};
 	}
 
 	if (delta && typeof delta === 'object' && 'value' in delta) {
 		const unit = delta.unit ?? baseUnit;
 		const temp = m(delta.value, unit);
 		assertMatchingUnits(base, temp);
-		return { amount: delta.value, unit };
+		return {
+			amount: delta.value,
+			unit,
+		};
 	}
 
 	throw new Error('Unsupported delta type for measurement operation');
@@ -175,11 +222,22 @@ const coerceDelta = (
 // Factory
 // ----------------------
 
-export const m = (value: number, unit: string = 'px'): IMeasurement => {
+export const m = (
+	value: number,
+	unit: string = 'px',
+): IMeasurement => {
 	const measurementId = `m-${measurementIdCounter++}`;
 
-	const create = (nextValue: number, debug?: DebugState): IMeasurement => {
-		const state = debug ?? ({ enabled: false, measurementId } as DebugState);
+	const create = (
+		nextValue: number,
+		debug?: DebugState,
+	): IMeasurement => {
+		const state =
+			debug ??
+			({
+				enabled: false,
+				measurementId,
+			} as DebugState);
 
 		const measurement: IMeasurement = {
 			value: nextValue,
@@ -241,7 +299,11 @@ export const m = (value: number, unit: string = 'px'): IMeasurement => {
 
 			debugChain: (label: string) => {
 				// could extend with chained debug logs if needed
-				return create(nextValue, { ...state, enabled: true, label });
+				return create(nextValue, {
+					...state,
+					enabled: true,
+					label,
+				});
 			},
 
 			debug: (label: string) => {
@@ -261,7 +323,8 @@ export const m = (value: number, unit: string = 'px'): IMeasurement => {
 // Utility wrappers
 // ----------------------
 
-export const double = (measurement: IMeasurement) => measurement.double();
+export const double = (measurement: IMeasurement) =>
+	measurement.double();
 export const half = (measurement: IMeasurement) => measurement.half();
 export const negation = (m: IMeasurement, shouldNegate = true) =>
 	m.negation(shouldNegate);
@@ -278,9 +341,10 @@ export const measurementMax = (a: IMeasurement, b: IMeasurement) => {
 	return a === winner ? a : m(winner.value, unit);
 };
 
-export const getMeasurementDebugEntries = (): MeasurementDebugEntry[] => [
-	...getGlobalDebugStore().store,
-];
+export const getMeasurementDebugEntries =
+	(): MeasurementDebugEntry[] => [
+		...getGlobalDebugStore().store,
+	];
 
 export const computeMeasurementDebugGroups = (
 	entries: MeasurementDebugEntry[],

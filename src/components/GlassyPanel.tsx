@@ -20,8 +20,13 @@ export default function GlassyPanel({
 	children,
 }: GlassyPanelProps) {
 	return (
-		<div className={clsx(glassFrameStyles.frame, className)} data-type={type}>
-			<div className={clsx(glassSurfaceStyles.surface, surfaceClassName)}>
+		<div
+			className={clsx(glassFrameStyles.frame, className)}
+			data-type={type}
+		>
+			<div
+				className={clsx(glassSurfaceStyles.surface, surfaceClassName)}
+			>
 				{/* Grain */}
 				<div className={glassSurfaceStyles.grain} aria-hidden />
 				{/* Fill, inside */}
@@ -29,8 +34,16 @@ export default function GlassyPanel({
 				{/* Shine in corner */}
 				<div className={glassFrameStyles.surfaceBorder} aria-hidden />
 				{/* Gradient overlay */}
-				<div className={glassSurfaceStyles.surfaceShine} aria-hidden />
-				<div className={clsx(glassSurfaceStyles.content, contentClassName)}>
+				<div
+					className={glassSurfaceStyles.surfaceShine}
+					aria-hidden
+				/>
+				<div
+					className={clsx(
+						glassSurfaceStyles.content,
+						contentClassName,
+					)}
+				>
 					{children}
 				</div>
 			</div>

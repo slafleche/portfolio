@@ -69,7 +69,10 @@ export function generateArchPaths(p: IProps) {
 
 	// --- Bump geometry
 	const bumpWidthValue = p.bumpWidth.value;
-	const half = Math.max(12, Math.min(bumpWidthValue / 2, rx - 6, W / 2 - 6));
+	const half = Math.max(
+		12,
+		Math.min(bumpWidthValue / 2, rx - 6, W / 2 - 6),
+	);
 	const xL = cx - half;
 	const xR = cx + half;
 
@@ -185,7 +188,12 @@ export function generateArchPaths(p: IProps) {
 		bump + // the two cubic segments across the tip to (xL,yL)
 		leftEdgeForRim; // along ellipse to bottom-left corner
 
-	return { archD, bottomCurveD, width: W, height: H };
+	return {
+		archD,
+		bottomCurveD,
+		width: W,
+		height: H,
+	};
 }
 
 export function generateArchPath(p: IProps) {
@@ -195,7 +203,11 @@ export function generateArchPath(p: IProps) {
 export function getRotationStyle(
 	direction: 'left' | 'right',
 	width: number,
-	opts: { max?: number; min?: number; k?: number } = {},
+	opts: {
+		max?: number;
+		min?: number;
+		k?: number;
+	} = {},
 ): React.CSSProperties {
 	const {
 		max = menuVars.rotation.max,

@@ -13,7 +13,10 @@ export interface IBackground {
 	opacity?: CSS.Property.Opacity;
 }
 
-type Variant = { w: number; url: string };
+type Variant = {
+	w: number;
+	url: string;
+};
 
 /* ------------------------- manifest-driven widths ------------------------- */
 
@@ -21,17 +24,28 @@ function getAvailableWidths(name: string): number[] {
 	const data = getImage(name);
 	if (!data) return [];
 	const widths = new Set<number>();
-	const push = (arr?: Variant[]) => arr?.forEach((v) => widths.add(v.w));
+	const push = (arr?: Variant[]) =>
+		arr?.forEach((v) => widths.add(v.w));
 	push(data.variants.avif);
 	push(data.variants.webp);
 	push(data.variants.jpg);
 	return Array.from(widths).sort((a, b) => a - b);
 }
 
-function pickNearestAtMost(list: Variant[] | undefined, target: number) {
+function pickNearestAtMost(
+	list: Variant[] | undefined,
+	target: number,
+) {
 	if (!list || list.length === 0) return undefined;
-	const under = list.filter((v) => v.w <= target).sort((a, b) => b.w - a.w);
-	return (under[0] ?? [...list].sort((a, b) => a.w - b.w)[0])?.url;
+	const under = list
+		.filter((v) => v.w <= target)
+		.sort((a, b) => b.w - a.w);
+	return (
+		under[0] ??
+		[
+			...list,
+		].sort((a, b) => a.w - b.w)[0]
+	)?.url;
 }
 
 function buildImageSet(name: string, targetWidth: number) {
@@ -55,14 +69,18 @@ function buildImageSet(name: string, targetWidth: number) {
 	if (fallback) parts.push(`url("${fallback}")`);
 
 	return {
-		imageSet: parts.length ? `image-set(${parts.join(', ')})` : undefined,
+		imageSet: parts.length
+			? `image-set(${parts.join(', ')})`
+			: undefined,
 		fallback,
 	};
 }
 
 /* ------------------------------ public helpers --------------------------- */
 /* Base background: no MQs, just a safe fallback from the smallest asset. */
-export function backgroundFromManifest(name: string): GlobalStyleRule {
+export function backgroundFromManifest(
+	name: string,
+): GlobalStyleRule {
 	const widths = getAvailableWidths(name);
 	const fallbackWidth = widths[0] ?? Number.POSITIVE_INFINITY;
 	const { fallback } = buildImageSet(name, fallbackWidth);
@@ -71,7 +89,11 @@ export function backgroundFromManifest(name: string): GlobalStyleRule {
 		backgroundRepeat: 'no-repeat',
 		backgroundSize: 'cover',
 		backgroundPosition: 'center',
-		...(fallback ? { backgroundImage: `url("${fallback}")` } : {}),
+		...(fallback
+			? {
+					backgroundImage: `url("${fallback}")`,
+				}
+			: {}),
 	} satisfies GlobalStyleRule;
 }
 
@@ -98,24 +120,31 @@ export function backgroundImageForStep(
 
 /* ----------------------------- misc utilities ---------------------------- */
 
-export const getBackgroundImage = (image?: CSS.Property.BackgroundImage) => {
+export const getBackgroundImage = (
+	image?: CSS.Property.BackgroundImage,
+) => {
 	if (!image) return undefined;
 	if (image.startsWith('linear-gradient(')) return image;
 	return `url(${image})`;
 };
 
 /* Typed helper you can safely spread into globalStyle(...) */
-export const backgroundHelper = (props: IBackground): GlobalStyleRule => {
+export const backgroundHelper = (
+	props: IBackground,
+): GlobalStyleRule => {
 	const styles: GlobalStyleRule = {
 		backgroundPosition: props.position ?? '50% 50%',
 		backgroundRepeat: props.repeat ?? 'no-repeat',
 		...(props.image
-			? { backgroundImage: getBackgroundImage(props.image) }
+			? {
+					backgroundImage: getBackgroundImage(props.image),
+				}
 			: {}),
 	};
 	if (props.size) styles.backgroundSize = props.size;
 	if (props.color) styles.backgroundColor = props.color;
-	if (props.attachment) styles.backgroundAttachment = props.attachment;
+	if (props.attachment)
+		styles.backgroundAttachment = props.attachment;
 	if (props.opacity !== undefined) styles.opacity = props.opacity;
 	return styles;
 };

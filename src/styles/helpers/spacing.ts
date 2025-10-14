@@ -19,9 +19,13 @@ const resolve = (value: SpacingValue, fallback: string): string =>
 const spacing = (props?: SpacingProps): string => {
 	const base = resolve(props?.all, '0');
 	const verticalBase =
-		props?.vertical !== undefined ? resolve(props.vertical, base) : base;
+		props?.vertical !== undefined
+			? resolve(props.vertical, base)
+			: base;
 	const horizontalBase =
-		props?.horizontal !== undefined ? resolve(props.horizontal, base) : base;
+		props?.horizontal !== undefined
+			? resolve(props.horizontal, base)
+			: base;
 
 	const topSpacing = resolve(props?.top, verticalBase);
 	const rightSpacing = resolve(props?.right, horizontalBase);

@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { makeGradient } from '../helpers/cardGradient';
-import { colorVars, gradientA, gradientB } from '../vars';
+import { colorVars, gradients } from '../vars';
 import border from '../helpers/borders';
 import { m } from '../helpers/measurement';
 import { paddings } from '../helpers/spacing';
@@ -15,8 +15,12 @@ export const root = style({
 	// margin: 'auto',
 
 	selectors: {
-		'&[data-side="left"]': { gridColumn: '1' },
-		'&[data-side="right"]': { gridColumn: '2' },
+		'&[data-side="left"]': {
+			gridColumn: '1',
+		},
+		'&[data-side="right"]': {
+			gridColumn: '2',
+		},
 	},
 });
 
@@ -52,7 +56,9 @@ export const image = style({
 			content: '',
 			...absolutePosition.fullSize(),
 			borderRadius: '50%',
-			boxShadow: globalBoxShadow({ inset: true }),
+			boxShadow: globalBoxShadow({
+				inset: true,
+			}),
 		},
 	},
 });
@@ -66,6 +72,7 @@ export const cardGradientA = style(
 		spotA: gradientA.overlayA,
 		spotB: gradientA.overlayB,
 		linearColors: gradientA.linear,
+		extrasPerSpan: 2,
 	}),
 );
 

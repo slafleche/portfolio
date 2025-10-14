@@ -56,7 +56,10 @@ export const grain = style({
 	...noiseBg({ opacity: 0.25 }),
 });
 
-/** Faint multi-stop wash to even flat backgrounds */
+/**
+ * Faint multi-stop wash to even flat
+ * backgrounds
+ */
 const washTop = colorVars.shadow.alpha(0.3).css();
 const washMid = colorVars.white.alpha(0.1).css();
 const washBot = colorVars.black.alpha(0.6).css();
@@ -192,7 +195,9 @@ export const designPanel = style({
 });
 
 export const vennContents = style({
-	transform: transforms.value(transforms.rotate(designRotation.negation())),
+	transform: transforms.value(
+		transforms.rotate(designRotation.negation()),
+	),
 });
 
 // export const vennMiddle = style({
@@ -218,7 +223,10 @@ export const panelContents = style({
 });
 
 export const heroSurface = style({
-	background: [surfaceLayers.overlay, surfaceLayers.glow].join(', '),
+	background: [
+		surfaceLayers.overlay,
+		surfaceLayers.glow,
+	].join(', '),
 	backgroundColor: surfaceBaseColor,
 });
 
@@ -233,17 +241,35 @@ const TITLE_LEFT = themeColours.lights.a.saturate(0); // Electric blue
 const TITLE_RIGHT = themeColours.lights.b.saturate(0.2); // Pink
 const TITLE_MERGE = themeColours.lights.d.darken(0.2); // Light Purple
 
-/** Identical sweep timing (R→L then idle) — single-layer (::after) */
+/**
+ * Identical sweep timing (R→L then
+ * idle) — single-layer (::after)
+ */
 const shimmerSweep = keyframes({
-	'0%': { backgroundPosition: '120% 50%' },
-	'70%': { backgroundPosition: '-120% 50%' },
-	'100%': { backgroundPosition: '-120% 50%' },
+	'0%': {
+		backgroundPosition: '120% 50%',
+	},
+	'70%': {
+		backgroundPosition: '-120% 50%',
+	},
+	'100%': {
+		backgroundPosition: '-120% 50%',
+	},
 });
 
 const mergePulse = keyframes({
-	'0%': { transform: 'translate(-50%, -50%) scale(0.98)', opacity: 0.16 },
-	'50%': { transform: 'translate(-50%, -50%) scale(1.04)', opacity: 0.22 },
-	'100%': { transform: 'translate(-50%, -50%) scale(0.98)', opacity: 0.16 },
+	'0%': {
+		transform: 'translate(-50%, -50%) scale(0.98)',
+		opacity: 0.16,
+	},
+	'50%': {
+		transform: 'translate(-50%, -50%) scale(1.04)',
+		opacity: 0.22,
+	},
+	'100%': {
+		transform: 'translate(-50%, -50%) scale(0.98)',
+		opacity: 0.16,
+	},
 });
 
 export const heading = style({
@@ -277,10 +303,14 @@ export const heading = style({
 });
 
 /**
- * Text lines — base gradient on the element (static), sheen on ::after
- * (animated). Uses only colorVars.white/black for highlights/shadows. For the
- * sheen to show, set the same text content on a data attribute
- * (data-text="...") so ::after can render it.
+ * Text lines — base gradient on the
+ * element (static), sheen on ::after
+ * (animated). Uses only
+ * colorVars.white/black for
+ * highlights/shadows. For the sheen to
+ * show, set the same text content on a
+ * data attribute (data-text="...") so
+ * ::after can render it.
  */
 export const line = style({
 	display: 'inline-block',
@@ -338,7 +368,9 @@ export const line = style({
 			mixBlendMode: 'screen',
 			pointerEvents: 'none',
 			animation: `${shimmerSweep} 6.5s linear infinite`,
-			'@media': { '(prefers-reduced-motion: reduce)': { animation: 'none' } },
+			'@media': {
+				'(prefers-reduced-motion: reduce)': { animation: 'none' },
+			},
 		},
 	},
 });

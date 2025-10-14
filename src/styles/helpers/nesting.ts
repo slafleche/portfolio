@@ -95,9 +95,16 @@ export function nest(
 	}
 
 	// Nested case
-	const items = Array.isArray(second) ? second : [second];
+	const items = Array.isArray(second)
+		? second
+		: [
+				second,
+			];
 	for (const entry of items) {
-		for (const [key, val] of Object.entries(entry)) {
+		for (const [
+			key,
+			val,
+		] of Object.entries(entry)) {
 			const nestedParts = splitSelectorList(key)
 				.map((s) => s.trim())
 				.filter(Boolean);

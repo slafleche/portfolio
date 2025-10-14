@@ -32,7 +32,10 @@ const logGrouped = (groups: DebugGroups, includeCount: boolean) => {
 		console.info('[measurement-debug] no entries');
 		return;
 	}
-	const totalOps = labels.reduce((sum, label) => sum + groups[label].length, 0);
+	const totalOps = labels.reduce(
+		(sum, label) => sum + groups[label].length,
+		0,
+	);
 	const header = `[measurement-debug] ${totalOps} op${
 		totalOps === 1 ? '' : 's'
 	} across ${labels.length} label${labels.length === 1 ? '' : 's'}`;
@@ -70,7 +73,11 @@ const logGrouped = (groups: DebugGroups, includeCount: boolean) => {
 						'#': index,
 						op: operation.op,
 						value: `${operation.value}${operation.unit}`,
-						...(includeCount ? { count: operation.count } : {}),
+						...(includeCount
+							? {
+									count: operation.count,
+								}
+							: {}),
 					})),
 				);
 			}
@@ -103,7 +110,9 @@ const logEntries = (entries: DebugEntry[], includeCount: boolean) => {
 	console.groupEnd();
 };
 
-const groupEntriesClientSide = (entries: DebugEntry[]): DebugGroups => {
+const groupEntriesClientSide = (
+	entries: DebugEntry[],
+): DebugGroups => {
 	const grouped: DebugGroups = {};
 	const measurementToLabel = new Map<string, string>();
 	entries.forEach((entry) => {
@@ -144,9 +153,13 @@ export async function measurementDebug({
 		if (group) params.set('group', '1');
 		const query = params.toString();
 		const url = `/api/measurement-debug${query ? `?${query}` : ''}`;
-		const response = await fetch(url, { method: 'GET' });
+		const response = await fetch(url, {
+			method: 'GET',
+		});
 		if (!response.ok) {
-			throw new Error(`Request failed with status ${response.status}`);
+			throw new Error(
+				`Request failed with status ${response.status}`,
+			);
 		}
 		const payload = await response.json();
 		const entries: DebugEntry[] = Array.isArray(payload.entries)
@@ -172,5 +185,7 @@ export async function measurementDebug({
 }
 
 export function measurementDebugClear() {
-	return measurementDebug({ clear: true });
+	return measurementDebug({
+		clear: true,
+	});
 }

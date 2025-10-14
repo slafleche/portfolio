@@ -1,5 +1,8 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import { absolutePosition, flexPosition } from '../helpers/positioning';
+import {
+	absolutePosition,
+	flexPosition,
+} from '../helpers/positioning';
 import {
 	archVars,
 	colors,
@@ -59,9 +62,12 @@ export const transitionAfterFonts = style({
 	transition: 'opacity 360ms ease-out',
 });
 
-globalStyle(`.${root}[data-mounted="true"] .${transitionAfterFonts}`, {
-	opacity: 1,
-});
+globalStyle(
+	`.${root}[data-mounted="true"] .${transitionAfterFonts}`,
+	{
+		opacity: 1,
+	},
+);
 export const nav = style({
 	display: 'flex',
 	flexWrap: 'nowrap',
@@ -135,20 +141,30 @@ const logoNavPaddingMeasurement = m(
 );
 const logoNavPadding = logoNavPaddingMeasurement.css();
 const logoHoverOutlineWidth = logoHoverOutline?.width.css() ?? '2px';
-const logoHoverOutlineOffset = logoHoverOutline?.offset.css() ?? '6px';
+const logoHoverOutlineOffset =
+	logoHoverOutline?.offset.css() ?? '6px';
 const logoHoverOutlineColor = (
 	logoHoverOutline?.color ?? colorVars.contrast.alpha(0.6)
 ).css();
 
 const logoHoverRotate = keyframes({
 	'0%': {
-		transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
+		transform: transforms.value(
+			transforms.rotate(0),
+			transforms.scale(1),
+		),
 	},
 	'20%': {
-		transform: transforms.value(transforms.rotate(-16), transforms.scale(1)),
+		transform: transforms.value(
+			transforms.rotate(-16),
+			transforms.scale(1),
+		),
 	},
 	'40%': {
-		transform: transforms.value(transforms.rotate(-16), transforms.scale(1)),
+		transform: transforms.value(
+			transforms.rotate(-16),
+			transforms.scale(1),
+		),
 	},
 	'55%': {
 		transform: transforms.value(
@@ -186,10 +202,16 @@ const logoHoverRotateReverse = keyframes({
 		),
 	},
 	'74%': {
-		transform: transforms.value(transforms.rotate(-10), transforms.scale(1)),
+		transform: transforms.value(
+			transforms.rotate(-10),
+			transforms.scale(1),
+		),
 	},
 	'100%': {
-		transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
+		transform: transforms.value(
+			transforms.rotate(0),
+			transforms.scale(1),
+		),
 	},
 });
 
@@ -308,7 +330,10 @@ export const headerNavItem = style({
 export const link = style({
 	textDecoration: 'none',
 	borderRadius: 8,
-	...paddings({ vertical: '10px', horizontal: '20px' }),
+	...paddings({
+		vertical: '10px',
+		horizontal: '20px',
+	}),
 });
 
 export const logoWrap = style({
@@ -320,7 +345,10 @@ export const logoWrap = style({
 	alignItems: 'center',
 	justifyContent: 'center',
 	margin: '0 auto',
-	transform: transforms.value(transforms.rotate(0), transforms.scale(1)),
+	transform: transforms.value(
+		transforms.rotate(0),
+		transforms.scale(1),
+	),
 	clipPath: 'circle(50% at 50% 50%)',
 	transformOrigin: 'center',
 	transformBox: 'fill-box',
@@ -374,7 +402,10 @@ export const logo = style({
 // const linkOffset =
 
 export const localeChanger = style({
-	...absolutePosition.topRight(0, menuVars.padding.horizontal.half().css()),
+	...absolutePosition.topRight(
+		0,
+		menuVars.padding.horizontal.half().css(),
+	),
 	display: 'flex',
 	alignContent: 'center',
 	height: `${archVars.top.add(archVars.curveHeight).css()}`,
@@ -402,7 +433,9 @@ export const localeLink = style({
 	display: 'inline-grid',
 	gridTemplateAreas: 'stack',
 	alignItems: 'center',
-	transform: transforms.value(transforms.skewX(menuVars.rotationMax).negate()),
+	transform: transforms.value(
+		transforms.skewX(menuVars.rotationMax).negate(),
+	),
 	selectors: {
 		'&:hover, &:focus-visible': {
 			opacity: 1,
