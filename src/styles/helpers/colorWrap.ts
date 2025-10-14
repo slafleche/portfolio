@@ -18,7 +18,7 @@
  * color spaces when needed while keeping sRGB fallbacks.
  */
 import chroma, { type Color } from 'chroma-js';
-import { converter, formatCss, type Oklch } from 'culori';
+import { converter, formatCss, parse, type Oklch } from 'culori';
 export type { Color } from 'chroma-js';
 
 type MixArgs = Parameters<Color['mix']>;
@@ -108,6 +108,88 @@ const culoriOklchToWrapper = (value: CuloriOKLCH): ColorWrapper => {
 	return wrap(css);
 };
 
+const culoriOklchFromCss = (value: string): ColorWrapper => {
+	const parsed = parse(value);
+	if (!parsed || parsed.mode !== 'oklch') {
+		throw new Error(`Expected OKLCH color string, received "${value}"`);
+	}
+	return culoriOklchToWrapper(parsed);
+};
+
+const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
+const normalizeFraction = (value: number) => clamp01(value > 1 ? value / 100 : value);
+const normalizeHue = (value: number) => ((value % 360) + 360) % 360;
+const normalizePercent = (value: number) => {
+	const percent = value <= 1 ? value * 100 : value;
+	return Math.max(0, Math.min(100, percent));
+};
+const normalizeRgbChannel = (value: number) => {
+	const absolute = value <= 1 ? value * 255 : value;
+	return Math.max(0, Math.min(255, Math.round(absolute)));
+};
+const normalizeAlpha = (value?: number) =>
+	value === undefined ? undefined : normalizeFraction(value);
+
+const formatHex = (value: string) => {
+	const trimmed = value.trim();
+	const bare = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
+	return `#${bare}`;
+};
+
+type OklchCreator = {
+	(value: string): ColorWrapper;
+	(l: number, c: number, h: number, alpha?: number): ColorWrapper;
+};
+
+type ColorCreators = {
+	css: (value: string) => ColorWrapper;
+	hex: (value: string) => ColorWrapper;
+	rgb: (r: number, g: number, b: number, alpha?: number) => ColorWrapper;
+	hsl: (h: number, s: number, l: number, alpha?: number) => ColorWrapper;
+	oklch: OklchCreator;
+};
+
+const create: ColorCreators = {
+	css: (value) => wrap(value),
+	hex: (value) => wrap(formatHex(value)),
+	rgb: (r, g, b, alpha) => {
+		const R = normalizeRgbChannel(r);
+		const G = normalizeRgbChannel(g);
+		const B = normalizeRgbChannel(b);
+		const A = normalizeAlpha(alpha);
+		if (A === undefined) {
+			return wrap(`rgb(${R}, ${G}, ${B})`);
+		}
+		return wrap(`rgba(${R}, ${G}, ${B}, ${Number(A.toFixed(3))})`);
+	},
+	hsl: (h, s, l, alpha) => {
+		const H = normalizeHue(h);
+		const S = normalizePercent(s);
+		const L = normalizePercent(l);
+		const A = normalizeAlpha(alpha);
+		if (A === undefined) {
+			return wrap(`hsl(${H}, ${S}%, ${L}%)`);
+		}
+		return wrap(`hsla(${H}, ${S}%, ${L}%, ${Number(A.toFixed(3))})`);
+	},
+	oklch: ((first: number | string, c?: number, h?: number, alpha?: number) => {
+		if (typeof first === 'string') {
+			return culoriOklchFromCss(first);
+		}
+		if (c === undefined || h === undefined) {
+			throw new Error('color.create.oklch requires l, c, and h values when not using a CSS string');
+		}
+		const normalized: CuloriOKLCH = {
+			mode: 'oklch',
+			l: normalizeFraction(first),
+			c,
+			h,
+			alpha: normalizeAlpha(alpha) ?? 1,
+		};
+		return culoriOklchToWrapper(normalized);
+	}) as OklchCreator,
+};
+
 export function wrap(input: ColorInput): ColorWrapper {
 	const base = toColor(input);
 	const alpha = ((value?: number) => {
@@ -152,6 +234,7 @@ export const color = Object.assign((input: ColorInput) => wrap(input), {
 	toOKLCH: (input: ColorInput) => colorToCuloriOklch(input),
 	fromOKLCH: (value: CuloriOKLCH) => culoriOklchToWrapper(value),
 	oklch: (value: CuloriOKLCH) => culoriOklchToWrapper(value),
+	create,
 	scale: (stops: ColorInput[]): ChromaScale => createScale(stops),
 	lch: (l: number, c: number, h: number) => wrap(chroma.lch(l, c, h)),
 	fromCss: (value: string) => wrap(value),
