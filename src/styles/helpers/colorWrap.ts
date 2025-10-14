@@ -87,17 +87,17 @@ const colorToCuloriOklch = (input: ColorInput): CuloriOKLCH | undefined => {
 	if (!converted) {
 		return undefined;
 	}
-		return {
-			mode: 'oklch',
-			l: converted.l,
-			c: converted.c,
-			h: converted.h,
-			alpha: converted.alpha,
-		};
+	return {
+		mode: 'oklch',
+		l: converted.l,
+		c: converted.c,
+		h: converted.h,
+		alpha: converted.alpha,
+	};
 };
 
 const culoriOklchToWrapper = (value: CuloriOKLCH): ColorWrapper => {
-		const converted = fromCuloriOKLCH(value);
+	const converted = fromCuloriOKLCH(value);
 	if (!converted) {
 		throw new Error('Unable to convert OKLCH color to sRGB');
 	}
