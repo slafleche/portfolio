@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { makeGradient } from '../helpers/cardGradient';
+import { makeCardGradient } from '../helpers/cardGradient';
 import { colorVars, gradients } from '../vars';
 import border from '../helpers/borders';
 import { m } from '../helpers/measurement';
@@ -9,6 +9,7 @@ import { globalBoxShadow } from '../helpers/shadow';
 
 export const root = style({
 	border: 'solid black 10px',
+	margin: '20px',
 	// ...paddings({ all: m(10) }),
 	// minHeight: '100px',
 	// maxWidth: '50vw',
@@ -68,18 +69,9 @@ export const gradient = style({
 });
 
 export const cardGradientA = style(
-	makeGradient({
-		spotA: gradientA.overlayA,
-		spotB: gradientA.overlayB,
-		linearColors: gradientA.linear,
-		extrasPerSpan: 2,
+	makeCardGradient(gradients[0], {
+		// extrasPerSpan: 100,
 	}),
 );
 
-export const cardGradientB = style(
-	makeGradient({
-		spotA: gradientB.overlayA,
-		spotB: gradientB.overlayB,
-		linearColors: gradientB.linear,
-	}),
-);
+export const cardGradientB = style(makeCardGradient(gradients[1]));
