@@ -16,29 +16,22 @@ export function queriesToStrings<
 	T extends Record<string, IMediaQueryProps | string>,
 >(queries: T): { [K in keyof T]: string } {
 	return Object.fromEntries(
-		Object.entries(queries).map(
-			([
-				k,
-				v,
-			]) => [
-				k,
-				typeof v === 'string' ? v : toQueryString(v),
-			],
-		),
+		Object.entries(queries).map(([k, v]) => [
+			k,
+			typeof v === 'string' ? v : toQueryString(v),
+		]),
 	) as { [K in keyof T]: string };
 }
 
 // ---------- Core hooks ----------
 /**
- * SSR-safe: undefined on server,
- * boolean on client; subscribes to
+ * SSR-safe: undefined on server, boolean on client; subscribes to
  * changes.
  */
 export function useMediaQuery(queryString: string) {
-	const [
-		matches,
-		setMatches,
-	] = useState<boolean | undefined>(undefined);
+	const [matches, setMatches] = useState<boolean | undefined>(
+		undefined,
+	);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -47,9 +40,7 @@ export function useMediaQuery(queryString: string) {
 		setMatches(mql.matches); // initial snapshot
 		mql.addEventListener?.('change', onChange);
 		return () => mql.removeEventListener?.('change', onChange);
-	}, [
-		queryString,
-	]);
+	}, [queryString]);
 
 	return matches;
 }
@@ -76,42 +67,22 @@ export function useMediaFromMap<T extends Record<string, string>>(
 		const e = Object.entries(strings) as [K, string][];
 		e.sort((a, b) => a[0].localeCompare(b[0]));
 		return e;
-	}, [
-		strings,
-	]);
+	}, [strings]);
 
-	const [
-		matches,
-		setMatches,
-	] = useState<Record<K, boolean | undefined>>(
-		() => Object.create(null) as Record<K, boolean | undefined>,
-	);
+	const [matches, setMatches] = useState<
+		Record<K, boolean | undefined>
+	>(() => Object.create(null) as Record<K, boolean | undefined>);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
 
 		const mqls = entries.map(
-			([
-				k,
-				qs,
-			]) =>
-				[
-					k,
-					window.matchMedia(qs),
-				] as const,
+			([k, qs]) => [k, window.matchMedia(qs)] as const,
 		);
 
 		// Initial snapshot — only set if changed
 		const initial = Object.fromEntries(
-			mqls.map(
-				([
-					k,
-					mql,
-				]) => [
-					k,
-					mql.matches,
-				],
-			),
+			mqls.map(([k, mql]) => [k, mql.matches]),
 		) as Record<K, boolean | undefined>;
 
 		setMatches((prev) =>
@@ -119,38 +90,25 @@ export function useMediaFromMap<T extends Record<string, string>>(
 		);
 
 		// Subscribe with guarded setState
-		const handlers = mqls.map(
-			([
-				k,
-				mql,
-			]) => {
-				const onChange = () =>
-					setMatches((prev) => {
-						const next = {
-							...prev,
-							[k]: mql.matches,
-						} as Record<K, boolean | undefined>;
-						return shallowEqual(prev, next) ? prev : next;
-					});
-				mql.addEventListener?.('change', onChange);
-				return [
-					mql,
-					onChange,
-				] as const;
-			},
-		);
+		const handlers = mqls.map(([k, mql]) => {
+			const onChange = () =>
+				setMatches((prev) => {
+					const next = {
+						...prev,
+						[k]: mql.matches,
+					} as Record<K, boolean | undefined>;
+					return shallowEqual(prev, next) ? prev : next;
+				});
+			mql.addEventListener?.('change', onChange);
+			return [mql, onChange] as const;
+		});
 
 		return () => {
-			for (const [
-				mql,
-				onChange,
-			] of handlers) {
+			for (const [mql, onChange] of handlers) {
 				mql.removeEventListener?.('change', onChange);
 			}
 		};
-	}, [
-		entries,
-	]);
+	}, [entries]);
 
 	return matches as {
 		[P in keyof T]: boolean | undefined;
@@ -158,10 +116,7 @@ export function useMediaFromMap<T extends Record<string, string>>(
 }
 
 // ---------- Client-only predicates ----------
-/**
- * For event handlers/effects only;
- * don't call in SSR render paths.
- */
+/** For event handlers/effects only; don't call in SSR render paths. */
 export function makeClientFns<T extends Record<string, string>>(
 	strings: T,
 ) {

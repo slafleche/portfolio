@@ -92,11 +92,9 @@ function uniqueCharsFromStrings(
 }
 
 /**
- * If enabled, ensure both uppercase and
- * lowercase variants exist for each
- * alphabetic codepoint. Works for Latin
- * (incl. accented letters) via JS
- * casing.
+ * If enabled, ensure both uppercase and lowercase variants exist for
+ * each alphabetic codepoint. Works for Latin (incl. accented letters)
+ * via JS casing.
  */
 function addBothCasesIfNeeded(s, enabled) {
 	if (!enabled || !s) return s;
@@ -162,20 +160,14 @@ const errors = [];
 const summary = []; // for printing final glyph counts
 let totalGlyphsIncluded = 0;
 
-for (const [
-	family,
-	cfg,
-] of Object.entries(fontConfig)) {
+for (const [family, cfg] of Object.entries(fontConfig)) {
 	const literalTexts = Array.isArray(cfg.texts) ? cfg.texts : [];
 	const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
 
 	const fromLocales = keys.length
 		? valuesForKeysAcrossLocales(keys, locales)
 		: [];
-	const all = [
-		...literalTexts,
-		...fromLocales,
-	];
+	const all = [...literalTexts, ...fromLocales];
 
 	// If none provided, omit texts => subset-only later
 	let collapsed;
@@ -209,9 +201,7 @@ for (const [
 				note: 'exceeded cutoff; omitted',
 			});
 		} else {
-			collapsed = [
-				unique,
-			]; // single collapsed unique-char string
+			collapsed = [unique]; // single collapsed unique-char string
 			glyphCount = unique.length;
 			totalGlyphsIncluded += glyphCount;
 			summary.push({

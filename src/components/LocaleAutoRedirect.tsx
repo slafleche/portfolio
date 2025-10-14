@@ -7,10 +7,7 @@ import {
 } from '@/lib/locales/locale';
 import type { Locale } from '@/data/locales';
 
-/**
- * Runs only on `/`. Uses browser UI
- * first, then server fallback.
- */
+/** Runs only on `/`. Uses browser UI first, then server fallback. */
 export default function LocaleAutoRedirect({
 	fallback,
 }: {
@@ -21,10 +18,7 @@ export default function LocaleAutoRedirect({
 		const ui = getBrowserLocale(); // Current browser UI on root only
 		const target: Locale = ui ?? fallback ?? DEFAULT_LOCALE;
 		router.replace(`/${target}`);
-	}, [
-		router,
-		fallback,
-	]);
+	}, [router, fallback]);
 
 	return null;
 }

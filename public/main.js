@@ -3766,15 +3766,9 @@
 										control &&
 										'string' === typeof sample.stack
 									)
-										return [
-											sample.stack,
-											control.stack,
-										];
+										return [sample.stack, control.stack];
 								}
-								return [
-									null,
-									null,
-								];
+								return [null, null];
 							},
 						};
 						RunInRootFrame.DetermineComponentFrameRoot.displayName =
@@ -5071,12 +5065,7 @@
 						(fiber === ancestor && (distanceFromLeaf = 0),
 							(node = {
 								fiber,
-								children:
-									null !== node
-										? [
-												node,
-											]
-										: [],
+								children: null !== node ? [node] : [],
 								serverProps:
 									fiber === child
 										? props
@@ -5541,9 +5530,7 @@
 									(!prevStyles || prevStyles[_key] !== styles[_key])
 								)
 									for (
-										key = shorthandToLonghand[_key] || [
-											_key,
-										],
+										key = shorthandToLonghand[_key] || [_key],
 											longhands = 0;
 										longhands < key.length;
 										longhands++
@@ -6385,9 +6372,7 @@
 					restoreTarget
 						? restoreQueue
 							? restoreQueue.push(target)
-							: (restoreQueue = [
-									target,
-								])
+							: (restoreQueue = [target])
 						: (restoreTarget = target);
 					inst = accumulateTwoPhaseListeners(inst, 'onChange');
 					0 < inst.length &&
@@ -6670,9 +6655,7 @@
 				}
 				function registerSimpleEvent(domEventName, reactName) {
 					topLevelEventsToReactNames.set(domEventName, reactName);
-					registerTwoPhaseEvent(reactName, [
-						domEventName,
-					]);
+					registerTwoPhaseEvent(reactName, [domEventName]);
 				}
 				function createCapturedValueAtFiber(value, source) {
 					if ('object' === typeof value && null !== value) {
@@ -6776,9 +6759,7 @@
 								(sourceFiber = parent.hiddenUpdates),
 								(alternate = sourceFiber[isHidden]),
 								null === alternate
-									? (sourceFiber[isHidden] = [
-											update,
-										])
+									? (sourceFiber[isHidden] = [update])
 									: alternate.push(update),
 								(update.lane = lane | 536870912)),
 							parent)
@@ -7637,9 +7618,7 @@
 				}
 				function queueHydrationError(error) {
 					null === hydrationErrors
-						? (hydrationErrors = [
-								error,
-							])
+						? (hydrationErrors = [error])
 						: hydrationErrors.push(error);
 				}
 				function emitPendingHydrationWarnings() {
@@ -7810,9 +7789,7 @@
 								) ||
 									(null !== current2
 										? current2.push(context)
-										: (current2 = [
-												context,
-											]));
+										: (current2 = [context]));
 							}
 						} else if (
 							parent === hostTransitionProviderCursor.current
@@ -7826,9 +7803,7 @@
 								parent.memoizedState.memoizedState &&
 								(null !== current2
 									? current2.push(HostTransitionContext)
-									: (current2 = [
-											HostTransitionContext,
-										]));
+									: (current2 = [HostTransitionContext]));
 						}
 						parent = parent.return;
 					}
@@ -8438,9 +8413,7 @@
 									isHiddenUpdate && (workInProgress2.flags |= 8192),
 									(isHiddenUpdate = queue.callbacks),
 									null === isHiddenUpdate
-										? (queue.callbacks = [
-												updateLane,
-											])
+										? (queue.callbacks = [updateLane])
 										: isHiddenUpdate.push(updateLane));
 							} else
 								((isHiddenUpdate = {
@@ -8542,9 +8515,7 @@
 				function mountHookTypesDev() {
 					var hookName = currentHookNameInDev;
 					null === hookTypesDev
-						? (hookTypesDev = [
-								hookName,
-							])
+						? (hookTypesDev = [hookName])
 						: hookTypesDev.push(hookName);
 				}
 				function updateHookTypesDev() {
@@ -9043,10 +9014,7 @@
 						currentlyRenderingFiber,
 						reducer,
 					);
-					return [
-						hook.memoizedState,
-						reducer,
-					];
+					return [hook.memoizedState, reducer];
 				}
 				function updateReducer(reducer) {
 					var hook = updateWorkInProgressHook();
@@ -9168,10 +9136,7 @@
 						queue.lastRenderedState = pendingQueue;
 					}
 					null === baseQueue && (queue.lanes = 0);
-					return [
-						hook.memoizedState,
-						queue.dispatch,
-					];
+					return [hook.memoizedState, queue.dispatch];
 				}
 				function rerenderReducer(reducer) {
 					var hook = updateWorkInProgressHook(),
@@ -9198,10 +9163,7 @@
 						null === hook.baseQueue && (hook.baseState = newState);
 						queue.lastRenderedState = newState;
 					}
-					return [
-						newState,
-						dispatch,
-					];
+					return [newState, dispatch];
 				}
 				function mountSyncExternalStore(
 					subscribe,
@@ -9255,9 +9217,7 @@
 							getServerSnapshot,
 							subscribe,
 						),
-						[
-							subscribe,
-						],
+						[subscribe],
 					);
 					fiber.flags |= 2048;
 					pushSimpleEffect(
@@ -9314,9 +9274,7 @@
 						hook,
 						subscribe,
 					);
-					updateEffectImpl(2048, Passive, create, [
-						subscribe,
-					]);
+					updateEffectImpl(2048, Passive, create, [subscribe]);
 					if (
 						hook.getSnapshot !== getSnapshot ||
 						cachedSnapshot ||
@@ -9364,14 +9322,10 @@
 					null === getSnapshot
 						? ((getSnapshot = createFunctionComponentUpdateQueue()),
 							(currentlyRenderingFiber.updateQueue = getSnapshot),
-							(getSnapshot.stores = [
-								fiber,
-							]))
+							(getSnapshot.stores = [fiber]))
 						: ((renderedSnapshot = getSnapshot.stores),
 							null === renderedSnapshot
-								? (getSnapshot.stores = [
-										fiber,
-									])
+								? (getSnapshot.stores = [fiber])
 								: renderedSnapshot.push(fiber));
 				}
 				function updateStoreInstance(
@@ -9436,10 +9390,7 @@
 							queue,
 						);
 					queue.dispatch = dispatch;
-					return [
-						initialState.memoizedState,
-						dispatch,
-					];
+					return [initialState.memoizedState, dispatch];
 				}
 				function mountOptimistic(passthrough) {
 					var hook = mountWorkInProgressHook();
@@ -9459,10 +9410,7 @@
 						queue,
 					);
 					queue.dispatch = hook;
-					return [
-						passthrough,
-						hook,
-					];
+					return [passthrough, hook];
 				}
 				function updateOptimistic(passthrough, reducer) {
 					var hook = updateWorkInProgressHook();
@@ -9498,10 +9446,7 @@
 							reducer,
 						);
 					hook.baseState = passthrough;
-					return [
-						passthrough,
-						hook.queue.dispatch,
-					];
+					return [passthrough, hook.queue.dispatch];
 				}
 				function dispatchActionState(
 					fiber,
@@ -9738,11 +9683,7 @@
 					);
 					markerInstance.dispatch = ssrFormState;
 					isMatching.memoizedState = action;
-					return [
-						initialStateProp,
-						ssrFormState,
-						false,
-					];
+					return [initialStateProp, ssrFormState, false];
 				}
 				function updateActionState(action) {
 					var stateHook = updateWorkInProgressHook();
@@ -9787,11 +9728,7 @@
 							actionStateActionEffect.bind(null, actionQueue, action),
 							null,
 						));
-					return [
-						state,
-						dispatch,
-						stateHook,
-					];
+					return [state, dispatch, stateHook];
 				}
 				function actionStateActionEffect(actionQueue, action) {
 					actionQueue.action = action;
@@ -9810,11 +9747,7 @@
 					currentStateHook = updateWorkInProgressHook();
 					var dispatch = currentStateHook.queue.dispatch;
 					currentStateHook.memoizedState = action;
-					return [
-						stateHook,
-						dispatch,
-						false,
-					];
+					return [stateHook, dispatch, false];
 				}
 				function pushSimpleEffect(tag, inst, create, createDeps) {
 					tag = {
@@ -9941,9 +9874,7 @@
 						);
 					deps =
 						null !== deps && void 0 !== deps
-							? deps.concat([
-									ref,
-								])
+							? deps.concat([ref])
 							: null;
 					var fiberFlags = 4194308;
 					(currentlyRenderingFiber.mode & StrictEffectsMode) !==
@@ -9963,9 +9894,7 @@
 						);
 					deps =
 						null !== deps && void 0 !== deps
-							? deps.concat([
-									ref,
-								])
+							? deps.concat([ref])
 							: null;
 					updateEffectImpl(
 						4,
@@ -9987,10 +9916,7 @@
 					var prevState = hook.memoizedState;
 					if (null !== deps && areHookInputsEqual(deps, prevState[1]))
 						return prevState[0];
-					hook.memoizedState = [
-						callback,
-						deps,
-					];
+					hook.memoizedState = [callback, deps];
 					return callback;
 				}
 				function mountMemo(nextCreate, deps) {
@@ -10005,10 +9931,7 @@
 							setIsStrictModeForDevtools(false);
 						}
 					}
-					hook.memoizedState = [
-						nextValue,
-						deps,
-					];
+					hook.memoizedState = [nextValue, deps];
 					return nextValue;
 				}
 				function updateMemo(nextCreate, deps) {
@@ -10026,10 +9949,7 @@
 							setIsStrictModeForDevtools(false);
 						}
 					}
-					hook.memoizedState = [
-						prevState,
-						deps,
-					];
+					hook.memoizedState = [prevState, deps];
 					return prevState;
 				}
 				function mountDeferredValue(value, initialValue) {
@@ -10254,10 +10174,7 @@
 						false,
 					);
 					mountWorkInProgressHook().memoizedState = stateHook;
-					return [
-						false,
-						stateHook,
-					];
+					return [false, stateHook];
 				}
 				function updateTransition() {
 					var booleanOrThenable = updateReducer(basicStateReducer)[0],
@@ -10615,9 +10532,7 @@
 						if (shouldTrackSideEffects) {
 							var deletions = returnFiber.deletions;
 							null === deletions
-								? ((returnFiber.deletions = [
-										childToDelete,
-									]),
+								? ((returnFiber.deletions = [childToDelete]),
 									(returnFiber.flags |= 16))
 								: deletions.push(childToDelete);
 						}
@@ -12162,9 +12077,7 @@
 							'function' !== typeof getDerivedStateFromError &&
 								(null === legacyErrorBoundariesThatAlreadyFailed
 									? (legacyErrorBoundariesThatAlreadyFailed =
-											/* @__PURE__ */ new Set([
-												this,
-											]))
+											/* @__PURE__ */ new Set([this]))
 									: legacyErrorBoundariesThatAlreadyFailed.add(this));
 							callComponentDidCatchInDEV(this, errorInfo);
 							'function' === typeof getDerivedStateFromError ||
@@ -12219,9 +12132,7 @@
 											: ((returnFiber = sourceFiber.updateQueue),
 												null === returnFiber
 													? (sourceFiber.updateQueue =
-															/* @__PURE__ */ new Set([
-																value,
-															]))
+															/* @__PURE__ */ new Set([value]))
 													: returnFiber.add(value),
 												attachPingListener(
 													root2,
@@ -12248,9 +12159,7 @@
 													: ((sourceFiber = returnFiber.retryQueue),
 														null === sourceFiber
 															? (returnFiber.retryQueue =
-																	/* @__PURE__ */ new Set([
-																		value,
-																	]))
+																	/* @__PURE__ */ new Set([value]))
 															: sourceFiber.add(value)),
 												attachPingListener(
 													root2,
@@ -12330,9 +12239,7 @@
 						sourceFiber,
 					);
 					null === workInProgressRootConcurrentErrors
-						? (workInProgressRootConcurrentErrors = [
-								error,
-							])
+						? (workInProgressRootConcurrentErrors = [error])
 						: workInProgressRootConcurrentErrors.push(error);
 					workInProgressRootExitStatus !== RootSuspendedWithDelay &&
 						(workInProgressRootExitStatus = RootErrored);
@@ -14018,9 +13925,7 @@
 						((JSCompiler_object_inline_digest_2451 =
 							workInProgress2.deletions),
 						null === JSCompiler_object_inline_digest_2451
-							? ((workInProgress2.deletions = [
-									current2,
-								]),
+							? ((workInProgress2.deletions = [current2]),
 								(workInProgress2.flags |= 16))
 							: JSCompiler_object_inline_digest_2451.push(current2));
 					workInProgress2.child = renderLanes2;
@@ -14579,9 +14484,7 @@
 						}
 						workInProgress2 = returnFiber.deletions;
 						null === workInProgress2
-							? ((returnFiber.deletions = [
-									current2,
-								]),
+							? ((returnFiber.deletions = [current2]),
 								(returnFiber.flags |= 16))
 							: workInProgress2.push(current2);
 						renderLanes2.flags |= 2;
@@ -14766,9 +14669,7 @@
 								returnFiber !== prevState.cache &&
 									propagateContextChanges(
 										workInProgress2,
-										[
-											CacheContext,
-										],
+										[CacheContext],
 										renderLanes2,
 										true,
 									);
@@ -15297,9 +15198,7 @@
 												returnFiber !== prevSibling.cache &&
 													propagateContextChanges(
 														workInProgress2,
-														[
-															CacheContext,
-														],
+														[CacheContext],
 														renderLanes2,
 														true,
 													))),
@@ -21110,9 +21009,7 @@
 								didWarnStateUpdateForNotYetMountedComponent.add(tag);
 							} else
 								didWarnStateUpdateForNotYetMountedComponent =
-									/* @__PURE__ */ new Set([
-										tag,
-									]);
+									/* @__PURE__ */ new Set([tag]);
 							runWithFiberInDEV(fiber, function () {
 								console.error(
 									"Can't perform a React state update on a component that hasn't mounted yet. This indicates that you have a side-effect in your render function that asynchronously later calls tries to update the component. Move this work to useEffect instead.",
@@ -25918,9 +25815,7 @@
 							var existing = cache.get(nodeKey);
 							existing
 								? existing.push(node)
-								: cache.set(nodeKey, [
-										node,
-									]);
+								: cache.set(nodeKey, [node]);
 						}
 					}
 					return cache;
@@ -26732,9 +26627,7 @@
 								domEventName,
 								eventSystemFlags,
 								nativeEvent,
-								targetContainers: [
-									targetContainer,
-								],
+								targetContainers: [targetContainer],
 							}),
 							null !== blockedOn &&
 								((blockedOn = getInstanceFromNode(blockedOn)),
@@ -27236,10 +27129,7 @@
 					didWarnInvalidChild = false,
 					didWarnInvalidInnerHTML = false;
 				var didWarnValueDefaultValue = false;
-				var valuePropNames = [
-						'value',
-						'defaultValue',
-					],
+				var valuePropNames = ['value', 'defaultValue'],
 					didWarnValDefaultVal = false,
 					needsEscaping = /["'&<>\n\t]|^\s|\s$/,
 					specialTags =
@@ -27250,9 +27140,7 @@
 						'applet caption html table td th marquee object template foreignObject desc title'.split(
 							' ',
 						),
-					buttonScopeTags = inScopeTags.concat([
-						'button',
-					]),
+					buttonScopeTags = inScopeTags.concat(['button']),
 					impliedEndTags = 'dd dt li option optgroup p rp rt'.split(
 						' ',
 					),
@@ -27362,19 +27250,9 @@
 							'columnRuleStyle',
 							'columnRuleWidth',
 						],
-						columns: [
-							'columnCount',
-							'columnWidth',
-						],
-						flex: [
-							'flexBasis',
-							'flexGrow',
-							'flexShrink',
-						],
-						flexFlow: [
-							'flexDirection',
-							'flexWrap',
-						],
+						columns: ['columnCount', 'columnWidth'],
+						flex: ['flexBasis', 'flexGrow', 'flexShrink'],
+						flexFlow: ['flexDirection', 'flexWrap'],
 						font: 'fontFamily fontFeatureSettings fontKerning fontLanguageOverride fontSize fontSizeAdjust fontStretch fontStyle fontVariant fontVariantAlternates fontVariantCaps fontVariantEastAsian fontVariantLigatures fontVariantNumeric fontVariantPosition fontWeight lineHeight'.split(
 							' ',
 						),
@@ -27382,10 +27260,7 @@
 							'fontVariantAlternates fontVariantCaps fontVariantEastAsian fontVariantLigatures fontVariantNumeric fontVariantPosition'.split(
 								' ',
 							),
-						gap: [
-							'columnGap',
-							'rowGap',
-						],
+						gap: ['columnGap', 'rowGap'],
 						grid: 'gridAutoColumns gridAutoFlow gridAutoRows gridTemplateAreas gridTemplateColumns gridTemplateRows'.split(
 							' ',
 						),
@@ -27395,24 +27270,11 @@
 							'gridRowEnd',
 							'gridRowStart',
 						],
-						gridColumn: [
-							'gridColumnEnd',
-							'gridColumnStart',
-						],
-						gridColumnGap: [
-							'columnGap',
-						],
-						gridGap: [
-							'columnGap',
-							'rowGap',
-						],
-						gridRow: [
-							'gridRowEnd',
-							'gridRowStart',
-						],
-						gridRowGap: [
-							'rowGap',
-						],
+						gridColumn: ['gridColumnEnd', 'gridColumnStart'],
+						gridColumnGap: ['columnGap'],
+						gridGap: ['columnGap', 'rowGap'],
+						gridRow: ['gridRowEnd', 'gridRowStart'],
+						gridRowGap: ['rowGap'],
 						gridTemplate: [
 							'gridTemplateAreas',
 							'gridTemplateColumns',
@@ -27429,63 +27291,35 @@
 							'marginRight',
 							'marginTop',
 						],
-						marker: [
-							'markerEnd',
-							'markerMid',
-							'markerStart',
-						],
+						marker: ['markerEnd', 'markerMid', 'markerStart'],
 						mask: 'maskClip maskComposite maskImage maskMode maskOrigin maskPositionX maskPositionY maskRepeat maskSize'.split(
 							' ',
 						),
-						maskPosition: [
-							'maskPositionX',
-							'maskPositionY',
-						],
-						outline: [
-							'outlineColor',
-							'outlineStyle',
-							'outlineWidth',
-						],
-						overflow: [
-							'overflowX',
-							'overflowY',
-						],
+						maskPosition: ['maskPositionX', 'maskPositionY'],
+						outline: ['outlineColor', 'outlineStyle', 'outlineWidth'],
+						overflow: ['overflowX', 'overflowY'],
 						padding: [
 							'paddingBottom',
 							'paddingLeft',
 							'paddingRight',
 							'paddingTop',
 						],
-						placeContent: [
-							'alignContent',
-							'justifyContent',
-						],
-						placeItems: [
-							'alignItems',
-							'justifyItems',
-						],
-						placeSelf: [
-							'alignSelf',
-							'justifySelf',
-						],
+						placeContent: ['alignContent', 'justifyContent'],
+						placeItems: ['alignItems', 'justifyItems'],
+						placeSelf: ['alignSelf', 'justifySelf'],
 						textDecoration: [
 							'textDecorationColor',
 							'textDecorationLine',
 							'textDecorationStyle',
 						],
-						textEmphasis: [
-							'textEmphasisColor',
-							'textEmphasisStyle',
-						],
+						textEmphasis: ['textEmphasisColor', 'textEmphasisStyle'],
 						transition: [
 							'transitionDelay',
 							'transitionDuration',
 							'transitionProperty',
 							'transitionTimingFunction',
 						],
-						wordWrap: [
-							'overflowWrap',
-						],
+						wordWrap: ['overflowWrap'],
 					},
 					uppercasePattern = /([A-Z])/g,
 					msPattern$1 = /^ms-/,
@@ -27505,122 +27339,38 @@
 					MATH_NAMESPACE = 'http://www.w3.org/1998/Math/MathML',
 					SVG_NAMESPACE = 'http://www.w3.org/2000/svg',
 					aliases = /* @__PURE__ */ new Map([
-						[
-							'acceptCharset',
-							'accept-charset',
-						],
-						[
-							'htmlFor',
-							'for',
-						],
-						[
-							'httpEquiv',
-							'http-equiv',
-						],
-						[
-							'crossOrigin',
-							'crossorigin',
-						],
-						[
-							'accentHeight',
-							'accent-height',
-						],
-						[
-							'alignmentBaseline',
-							'alignment-baseline',
-						],
-						[
-							'arabicForm',
-							'arabic-form',
-						],
-						[
-							'baselineShift',
-							'baseline-shift',
-						],
-						[
-							'capHeight',
-							'cap-height',
-						],
-						[
-							'clipPath',
-							'clip-path',
-						],
-						[
-							'clipRule',
-							'clip-rule',
-						],
-						[
-							'colorInterpolation',
-							'color-interpolation',
-						],
+						['acceptCharset', 'accept-charset'],
+						['htmlFor', 'for'],
+						['httpEquiv', 'http-equiv'],
+						['crossOrigin', 'crossorigin'],
+						['accentHeight', 'accent-height'],
+						['alignmentBaseline', 'alignment-baseline'],
+						['arabicForm', 'arabic-form'],
+						['baselineShift', 'baseline-shift'],
+						['capHeight', 'cap-height'],
+						['clipPath', 'clip-path'],
+						['clipRule', 'clip-rule'],
+						['colorInterpolation', 'color-interpolation'],
 						[
 							'colorInterpolationFilters',
 							'color-interpolation-filters',
 						],
-						[
-							'colorProfile',
-							'color-profile',
-						],
-						[
-							'colorRendering',
-							'color-rendering',
-						],
-						[
-							'dominantBaseline',
-							'dominant-baseline',
-						],
-						[
-							'enableBackground',
-							'enable-background',
-						],
-						[
-							'fillOpacity',
-							'fill-opacity',
-						],
-						[
-							'fillRule',
-							'fill-rule',
-						],
-						[
-							'floodColor',
-							'flood-color',
-						],
-						[
-							'floodOpacity',
-							'flood-opacity',
-						],
-						[
-							'fontFamily',
-							'font-family',
-						],
-						[
-							'fontSize',
-							'font-size',
-						],
-						[
-							'fontSizeAdjust',
-							'font-size-adjust',
-						],
-						[
-							'fontStretch',
-							'font-stretch',
-						],
-						[
-							'fontStyle',
-							'font-style',
-						],
-						[
-							'fontVariant',
-							'font-variant',
-						],
-						[
-							'fontWeight',
-							'font-weight',
-						],
-						[
-							'glyphName',
-							'glyph-name',
-						],
+						['colorProfile', 'color-profile'],
+						['colorRendering', 'color-rendering'],
+						['dominantBaseline', 'dominant-baseline'],
+						['enableBackground', 'enable-background'],
+						['fillOpacity', 'fill-opacity'],
+						['fillRule', 'fill-rule'],
+						['floodColor', 'flood-color'],
+						['floodOpacity', 'flood-opacity'],
+						['fontFamily', 'font-family'],
+						['fontSize', 'font-size'],
+						['fontSizeAdjust', 'font-size-adjust'],
+						['fontStretch', 'font-stretch'],
+						['fontStyle', 'font-style'],
+						['fontVariant', 'font-variant'],
+						['fontWeight', 'font-weight'],
+						['glyphName', 'glyph-name'],
 						[
 							'glyphOrientationHorizontal',
 							'glyph-orientation-horizontal',
@@ -27629,194 +27379,53 @@
 							'glyphOrientationVertical',
 							'glyph-orientation-vertical',
 						],
-						[
-							'horizAdvX',
-							'horiz-adv-x',
-						],
-						[
-							'horizOriginX',
-							'horiz-origin-x',
-						],
-						[
-							'imageRendering',
-							'image-rendering',
-						],
-						[
-							'letterSpacing',
-							'letter-spacing',
-						],
-						[
-							'lightingColor',
-							'lighting-color',
-						],
-						[
-							'markerEnd',
-							'marker-end',
-						],
-						[
-							'markerMid',
-							'marker-mid',
-						],
-						[
-							'markerStart',
-							'marker-start',
-						],
-						[
-							'overlinePosition',
-							'overline-position',
-						],
-						[
-							'overlineThickness',
-							'overline-thickness',
-						],
-						[
-							'paintOrder',
-							'paint-order',
-						],
-						[
-							'panose-1',
-							'panose-1',
-						],
-						[
-							'pointerEvents',
-							'pointer-events',
-						],
-						[
-							'renderingIntent',
-							'rendering-intent',
-						],
-						[
-							'shapeRendering',
-							'shape-rendering',
-						],
-						[
-							'stopColor',
-							'stop-color',
-						],
-						[
-							'stopOpacity',
-							'stop-opacity',
-						],
-						[
-							'strikethroughPosition',
-							'strikethrough-position',
-						],
-						[
-							'strikethroughThickness',
-							'strikethrough-thickness',
-						],
-						[
-							'strokeDasharray',
-							'stroke-dasharray',
-						],
-						[
-							'strokeDashoffset',
-							'stroke-dashoffset',
-						],
-						[
-							'strokeLinecap',
-							'stroke-linecap',
-						],
-						[
-							'strokeLinejoin',
-							'stroke-linejoin',
-						],
-						[
-							'strokeMiterlimit',
-							'stroke-miterlimit',
-						],
-						[
-							'strokeOpacity',
-							'stroke-opacity',
-						],
-						[
-							'strokeWidth',
-							'stroke-width',
-						],
-						[
-							'textAnchor',
-							'text-anchor',
-						],
-						[
-							'textDecoration',
-							'text-decoration',
-						],
-						[
-							'textRendering',
-							'text-rendering',
-						],
-						[
-							'transformOrigin',
-							'transform-origin',
-						],
-						[
-							'underlinePosition',
-							'underline-position',
-						],
-						[
-							'underlineThickness',
-							'underline-thickness',
-						],
-						[
-							'unicodeBidi',
-							'unicode-bidi',
-						],
-						[
-							'unicodeRange',
-							'unicode-range',
-						],
-						[
-							'unitsPerEm',
-							'units-per-em',
-						],
-						[
-							'vAlphabetic',
-							'v-alphabetic',
-						],
-						[
-							'vHanging',
-							'v-hanging',
-						],
-						[
-							'vIdeographic',
-							'v-ideographic',
-						],
-						[
-							'vMathematical',
-							'v-mathematical',
-						],
-						[
-							'vectorEffect',
-							'vector-effect',
-						],
-						[
-							'vertAdvY',
-							'vert-adv-y',
-						],
-						[
-							'vertOriginX',
-							'vert-origin-x',
-						],
-						[
-							'vertOriginY',
-							'vert-origin-y',
-						],
-						[
-							'wordSpacing',
-							'word-spacing',
-						],
-						[
-							'writingMode',
-							'writing-mode',
-						],
-						[
-							'xmlnsXlink',
-							'xmlns:xlink',
-						],
-						[
-							'xHeight',
-							'x-height',
-						],
+						['horizAdvX', 'horiz-adv-x'],
+						['horizOriginX', 'horiz-origin-x'],
+						['imageRendering', 'image-rendering'],
+						['letterSpacing', 'letter-spacing'],
+						['lightingColor', 'lighting-color'],
+						['markerEnd', 'marker-end'],
+						['markerMid', 'marker-mid'],
+						['markerStart', 'marker-start'],
+						['overlinePosition', 'overline-position'],
+						['overlineThickness', 'overline-thickness'],
+						['paintOrder', 'paint-order'],
+						['panose-1', 'panose-1'],
+						['pointerEvents', 'pointer-events'],
+						['renderingIntent', 'rendering-intent'],
+						['shapeRendering', 'shape-rendering'],
+						['stopColor', 'stop-color'],
+						['stopOpacity', 'stop-opacity'],
+						['strikethroughPosition', 'strikethrough-position'],
+						['strikethroughThickness', 'strikethrough-thickness'],
+						['strokeDasharray', 'stroke-dasharray'],
+						['strokeDashoffset', 'stroke-dashoffset'],
+						['strokeLinecap', 'stroke-linecap'],
+						['strokeLinejoin', 'stroke-linejoin'],
+						['strokeMiterlimit', 'stroke-miterlimit'],
+						['strokeOpacity', 'stroke-opacity'],
+						['strokeWidth', 'stroke-width'],
+						['textAnchor', 'text-anchor'],
+						['textDecoration', 'text-decoration'],
+						['textRendering', 'text-rendering'],
+						['transformOrigin', 'transform-origin'],
+						['underlinePosition', 'underline-position'],
+						['underlineThickness', 'underline-thickness'],
+						['unicodeBidi', 'unicode-bidi'],
+						['unicodeRange', 'unicode-range'],
+						['unitsPerEm', 'units-per-em'],
+						['vAlphabetic', 'v-alphabetic'],
+						['vHanging', 'v-hanging'],
+						['vIdeographic', 'v-ideographic'],
+						['vMathematical', 'v-mathematical'],
+						['vectorEffect', 'vector-effect'],
+						['vertAdvY', 'vert-adv-y'],
+						['vertOriginX', 'vert-origin-x'],
+						['vertOriginY', 'vert-origin-y'],
+						['wordSpacing', 'word-spacing'],
+						['writingMode', 'writing-mode'],
+						['xmlnsXlink', 'xmlns:xlink'],
+						['xHeight', 'x-height'],
 					]),
 					possibleStandardNames = {
 						accept: 'accept',
@@ -28690,12 +28299,7 @@
 					SyntheticToggleEvent = createSyntheticEvent(
 						ToggleEventInterface,
 					),
-					END_KEYCODES = [
-						9,
-						13,
-						27,
-						32,
-					],
+					END_KEYCODES = [9, 13, 27, 32],
 					START_KEYCODE = 229,
 					canUseCompositionEvent =
 						canUseDOM && 'CompositionEvent' in window,
@@ -28827,15 +28431,8 @@
 				var hasBadMapPolyfill = false;
 				try {
 					var nonExtensibleObject = Object.preventExtensions({});
-					/* @__PURE__ */ new Map([
-						[
-							nonExtensibleObject,
-							null,
-						],
-					]);
-					/* @__PURE__ */ new Set([
-						nonExtensibleObject,
-					]);
+					/* @__PURE__ */ new Map([[nonExtensibleObject, null]]);
+					/* @__PURE__ */ new Set([nonExtensibleObject]);
 				} catch (e$3) {
 					hasBadMapPolyfill = true;
 				}

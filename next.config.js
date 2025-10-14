@@ -25,9 +25,7 @@ const nextConfig = {
 			test: /\.svg$/i,
 			issuer: /\.[jt]sx?$/,
 			resourceQuery: {
-				not: [
-					/url/,
-				],
+				not: [/url/],
 			}, // exclude *.svg?url
 			use: [
 				{

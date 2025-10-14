@@ -118,9 +118,7 @@ export default function VideoByName({
 		if (pauseWhenOffscreen) {
 			ioRef.current?.disconnect();
 			const io = new IntersectionObserver(
-				([
-					entry,
-				]: IntersectionObserverEntry[]) => {
+				([entry]: IntersectionObserverEntry[]) => {
 					const el = ref.current;
 					if (!el) return;
 					if (entry.isIntersecting) {
@@ -162,9 +160,7 @@ export default function VideoByName({
 		if (!video) return;
 		video.defaultPlaybackRate = playbackRate;
 		video.playbackRate = playbackRate;
-	}, [
-		playbackRate,
-	]);
+	}, [playbackRate]);
 
 	if (!data) return null;
 

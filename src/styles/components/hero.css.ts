@@ -56,10 +56,7 @@ export const grain = style({
 	...noiseBg({ opacity: 0.25 }),
 });
 
-/**
- * Faint multi-stop wash to even flat
- * backgrounds
- */
+/** Faint multi-stop wash to even flat backgrounds */
 const washTop = colorVars.shadow.alpha(0.3).css();
 const washMid = colorVars.white.alpha(0.1).css();
 const washBot = colorVars.black.alpha(0.6).css();
@@ -223,10 +220,7 @@ export const panelContents = style({
 });
 
 export const heroSurface = style({
-	background: [
-		surfaceLayers.overlay,
-		surfaceLayers.glow,
-	].join(', '),
+	background: [surfaceLayers.overlay, surfaceLayers.glow].join(', '),
 	backgroundColor: surfaceBaseColor,
 });
 
@@ -241,10 +235,7 @@ const TITLE_LEFT = themeColours.lights.a.saturate(0); // Electric blue
 const TITLE_RIGHT = themeColours.lights.b.saturate(0.2); // Pink
 const TITLE_MERGE = themeColours.lights.d.darken(0.2); // Light Purple
 
-/**
- * Identical sweep timing (R→L then
- * idle) — single-layer (::after)
- */
+/** Identical sweep timing (R→L then idle) — single-layer (::after) */
 const shimmerSweep = keyframes({
 	'0%': {
 		backgroundPosition: '120% 50%',
@@ -303,14 +294,11 @@ export const heading = style({
 });
 
 /**
- * Text lines — base gradient on the
- * element (static), sheen on ::after
- * (animated). Uses only
- * colorVars.white/black for
- * highlights/shadows. For the sheen to
- * show, set the same text content on a
- * data attribute (data-text="...") so
- * ::after can render it.
+ * Text lines — base gradient on the element (static), sheen on
+ * ::after (animated). Uses only colorVars.white/black for
+ * highlights/shadows. For the sheen to show, set the same text
+ * content on a data attribute (data-text="...") so ::after can render
+ * it.
  */
 export const line = style({
 	display: 'inline-block',

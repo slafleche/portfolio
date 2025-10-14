@@ -10,11 +10,9 @@ const innerRadius = glassVars.border.radius.subtract(
 // const innerMostRadius = `calc(${glassVars.border.width.css()} - ${glassVars.border.width.double.css()})`;
 
 /**
- * Named layers for the default glass
- * surface. Panels can reuse or replace
- * these strings to swap in alternative
- * themes without reverse-engineering
- * gradients.
+ * Named layers for the default glass surface. Panels can reuse or
+ * replace these strings to swap in alternative themes without
+ * reverse-engineering gradients.
  */
 export const surfaceLayers = glassBackground.backgroundLayers;
 export const surfaceBaseColor = glassBackground.backgroundColor;

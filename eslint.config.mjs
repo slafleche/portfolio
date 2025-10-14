@@ -18,9 +18,7 @@ export default [
 	},
 
 	{
-		files: [
-			'*.config.{js,cjs,mjs}',
-		],
+		files: ['*.config.{js,cjs,mjs}'],
 		languageOptions: {
 			parserOptions: {
 				project: false,
@@ -31,12 +29,8 @@ export default [
 	// Your main TypeScript / JS config (example; keep what you already had)
 	...tseslint.configs.recommendedTypeChecked, // if you're already using this
 	{
-		files: [
-			'**/*.{ts,tsx,js,jsx}',
-		],
-		ignores: [
-			'**/*.config.{js,cjs,mjs}',
-		],
+		files: ['**/*.{ts,tsx,js,jsx}'],
+		ignores: ['**/*.config.{js,cjs,mjs}'],
 		languageOptions: {
 			parserOptions: {
 				project: true,

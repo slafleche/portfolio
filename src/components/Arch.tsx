@@ -33,10 +33,7 @@ function Arch({
 }: Props) {
 	const windowSize = useWindowSize().width;
 	const baseId = useSafeId();
-	const [
-		mounted,
-		setMounted,
-	] = useState(false);
+	const [mounted, setMounted] = useState(false);
 	useEffect(() => setMounted(true), []);
 
 	// Safe numbers even before windowSize is known
@@ -55,9 +52,7 @@ function Arch({
 				...archVars,
 				width: ws,
 			}),
-		[
-			ws,
-		],
+		[ws],
 	);
 
 	return (

@@ -14,28 +14,21 @@ import stripJsonComments from 'strip-json-comments';
  * - AVAILABLE_LOCALES
  * - LOCALE_LABELS
  * - TRANSLATIONS
- * - FONT_MIN_SETS.perLocale[locale][family]
- *   = "<unique chars for that
+ * - FONT_MIN_SETS.perLocale[locale][family] = "<unique chars for that
  *   locale/font>"
  *
  * Reads:
  *
- * - Src/lib/locales/translations/*.jsonc
- *   (your raw locale inputs)
- * - Src/data/fonts.config.json (font
- *   keys/texts/weights/ital/subsets)
+ * - Src/lib/locales/translations/*.jsonc (your raw locale inputs)
+ * - Src/data/fonts.config.json (font keys/texts/weights/ital/subsets)
  *
  * Notes:
  *
- * - Only per-locale minimal sets are
- *   generated here (no union).
- * - All values in translation files must
- *   be strings (enforced).
- * - Keys across locales must match the
- *   reference locale (enforced).
- * - NEW: validates that every key listed
- *   in fonts.config.json exists in the
- *   translations, else throws.
+ * - Only per-locale minimal sets are generated here (no union).
+ * - All values in translation files must be strings (enforced).
+ * - Keys across locales must match the reference locale (enforced).
+ * - NEW: validates that every key listed in fonts.config.json exists in
+ *   the translations, else throws.
  */
 
 // -------------------- CONFIG --------------------
@@ -153,10 +146,7 @@ const entries = files.map((file) => {
 	}
 
 	// require all values to be strings (including label)
-	for (const [
-		k,
-		v,
-	] of Object.entries(json)) {
+	for (const [k, v] of Object.entries(json)) {
 		if (typeof v !== 'string') {
 			throw new Error(
 				`Locale "${locale}" has non-string value at key "${k}"`,
@@ -164,42 +154,20 @@ const entries = files.map((file) => {
 		}
 	}
 
-	return [
-		locale,
-		json,
-	];
+	return [locale, json];
 });
 
 // stable order
-entries.sort(
-	(
-		[
-			a,
-		],
-		[
-			b,
-		],
-	) => a.localeCompare(b),
-);
+entries.sort(([a], [b]) => a.localeCompare(b));
 
 // -------------------- 2) KEY EQUALITY CHECK --------------------
 const refEntry =
-	entries.find(
-		([
-			l,
-		]) => l === REF_LOCALE,
-	) ?? entries[0];
-const [
-	refLocale,
-	refJson,
-] = refEntry;
+	entries.find(([l]) => l === REF_LOCALE) ?? entries[0];
+const [refLocale, refJson] = refEntry;
 const refKeys = Object.keys(refJson).sort();
 
 let hasIssues = false;
-for (const [
-	loc,
-	json,
-] of entries) {
+for (const [loc, json] of entries) {
 	const keys = Object.keys(json).sort();
 	const missing = refKeys.filter((k) => !keys.includes(k));
 	const extra = keys.filter((k) => !refKeys.includes(k));
@@ -218,32 +186,12 @@ for (const [
 if (hasIssues) process.exit(1); // hard fail before dev/build
 
 // -------------------- 3) BUILD BASE PAYLOADS --------------------
-const AVAILABLE_LOCALES = entries.map(
-	([
-		l,
-	]) => l,
-);
+const AVAILABLE_LOCALES = entries.map(([l]) => l);
 const LOCALE_LABELS = Object.fromEntries(
-	entries.map(
-		([
-			l,
-			json,
-		]) => [
-			l,
-			json.label,
-		],
-	),
+	entries.map(([l, json]) => [l, json.label]),
 );
 const TRANSLATIONS = Object.fromEntries(
-	entries.map(
-		([
-			l,
-			json,
-		]) => [
-			l,
-			json,
-		],
-	),
+	entries.map(([l, json]) => [l, json]),
 );
 
 // -------------------- 4) LOAD FONT CONFIG --------------------
@@ -259,10 +207,7 @@ const fontsConfig = JSON.parse(
 // NEW: Validate that every key listed in fonts.config.json exists in translations
 const refKeySet = new Set(refKeys);
 const unknownMap = {};
-for (const [
-	family,
-	cfg,
-] of Object.entries(fontsConfig)) {
+for (const [family, cfg] of Object.entries(fontsConfig)) {
 	const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
 	const unknown = keys.filter((k) => !refKeySet.has(k));
 	if (unknown.length) {
@@ -271,12 +216,7 @@ for (const [
 }
 if (Object.keys(unknownMap).length) {
 	const lines = Object.entries(unknownMap)
-		.map(
-			([
-				fam,
-				list,
-			]) => `  - ${fam}: ${list.join(', ')}`,
-		)
+		.map(([fam, list]) => `  - ${fam}: ${list.join(', ')}`)
 		.join('\n');
 	const hint = `Known keys sample (${Math.min(10, refKeys.length)} of ${refKeys.length}): ${refKeys.slice(0, 10).join(', ')}${refKeys.length > 10 ? ' …' : ''}`;
 	throw new Error(
@@ -287,22 +227,15 @@ if (Object.keys(unknownMap).length) {
 
 // -------------------- 5) COMPUTE PER-LOCALE MINIMAL CHAR SETS --------------------
 /**
- * FONT_MIN_SETS.perLocale = { [locale]:
- * { [family]: "<unique chars>" | "" //
- * empty string means: no &text= param
- * recommended } }
+ * FONT_MIN_SETS.perLocale = { [locale]: { [family]: "<unique chars>"
+ *
+ * | "" // empty string means: no &text= param recommended } }
  */
 const FONT_MIN_SETS = { perLocale: {} };
 
-for (const [
-	locale,
-	json,
-] of entries) {
+for (const [locale, json] of entries) {
 	const perFont = {};
-	for (const [
-		family,
-		cfg,
-	] of Object.entries(fontsConfig)) {
+	for (const [family, cfg] of Object.entries(fontsConfig)) {
 		const literalTexts = Array.isArray(cfg.texts) ? cfg.texts : [];
 		const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
 
@@ -310,10 +243,7 @@ for (const [
 		const fromKeys = keys.length
 			? collectStringsForKeys(keys, json)
 			: [];
-		const allStrings = [
-			...literalTexts,
-			...fromKeys,
-		];
+		const allStrings = [...literalTexts, ...fromKeys];
 
 		// If none provided, store empty string (means: subset-only; no &text=)
 		const collapsed = allStrings.length

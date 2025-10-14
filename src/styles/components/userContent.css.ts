@@ -2,8 +2,7 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { m } from '../helpers/measurement';
 
 /**
- * For user content, we wrap arbitrary
- * HTML with this class and style
+ * For user content, we wrap arbitrary HTML with this class and style
  * descendants via nested selectors.
  */
 export const userContent = style({});

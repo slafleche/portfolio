@@ -1,37 +1,25 @@
 /**
- * Wrapper helpers for chroma.js colors
- * with OKLCH conversion utilities.
+ * Wrapper helpers for chroma.js colors with OKLCH conversion
+ * utilities.
  *
- * Chroma Color instances are mutable:
- * calling mutator methods such as
- * `.alpha`, `.darken`, `.saturate`,
- * etc. modifies the same object in
- * place. When a single color value
- * (e.g. `colorVars.contrast`) is shared
- * across the codebase, those in-place
- * mutations lead to surprising side
- * effects—for example, another part of
- * the app suddenly receives a
- * transparent version of the "contrast"
- * color.
+ * Chroma Color instances are mutable: calling mutator methods such as
+ * `.alpha`, `.darken`, `.saturate`, etc. modifies the same object in
+ * place. When a single color value (e.g. `colorVars.contrast`) is
+ * shared across the codebase, those in-place mutations lead to
+ * surprising side effects—for example, another part of the app
+ * suddenly receives a transparent version of the "contrast" color.
  *
- * This module provides an immutable
- * façade (`ColorWrapper`) that clones
- * the underlying color before applying
- * any modification, so every chained
- * modifier works on an isolated copy.
- * The original chroma color remains
- * unchanged until a caller explicitly
- * invokes `.css()` or `.value()`.
+ * This module provides an immutable façade (`ColorWrapper`) that
+ * clones the underlying color before applying any modification, so
+ * every chained modifier works on an isolated copy. The original
+ * chroma color remains unchanged until a caller explicitly invokes
+ * `.css()` or `.value()`.
  *
- * We also piggyback on Culori to
- * convert to/from OKLCH without giving
- * up the familiar chroma manipulation
- * APIs. The `color` helper exposes
- * `toOKLCH`/`fromOKLCH` so gradients
- * and other utilities can opt into
- * modern color spaces when needed while
- * keeping sRGB fallbacks.
+ * We also piggyback on Culori to convert to/from OKLCH without giving
+ * up the familiar chroma manipulation APIs. The `color` helper
+ * exposes `toOKLCH`/`fromOKLCH` so gradients and other utilities can
+ * opt into modern color spaces when needed while keeping sRGB
+ * fallbacks.
  */
 import chroma, { type Color } from 'chroma-js';
 import { converter, parse, type Oklch } from 'culori';

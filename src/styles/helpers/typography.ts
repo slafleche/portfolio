@@ -11,10 +11,7 @@ export type FontCSS = Partial<{
 	lineHeight: CSS.Property.LineHeight;
 }>;
 
-/**
- * Normalize your FontStyles tokens into
- * CSS-ready properties only
- */
+/** Normalize your FontStyles tokens into CSS-ready properties only */
 export function fontStyles(vars: FontStyles): FontCSS {
 	const out: FontCSS = {};
 

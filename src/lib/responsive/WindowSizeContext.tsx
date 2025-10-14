@@ -35,10 +35,8 @@ export function WindowSizeProvider({
 }: {
 	children: ReactNode;
 }) {
-	const [
-		size,
-		setSize,
-	] = useState<WindowSizeContextType>(getViewportSize);
+	const [size, setSize] =
+		useState<WindowSizeContextType>(getViewportSize);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
