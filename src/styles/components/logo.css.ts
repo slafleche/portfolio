@@ -9,8 +9,6 @@ export const root = style({
 export const svg = style({
 	width: logoVars.width.css(),
 	height: 'auto',
-	selectors: {
-	},
 });
 
 export const shadow = style({

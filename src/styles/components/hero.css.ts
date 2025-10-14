@@ -1,5 +1,5 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
-import { fullSizeOfParent } from '../helpers/positioning';
+import { absolutePosition, fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
 import { colorVars, fontVars, themeColours } from '../vars';
 import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
@@ -7,7 +7,6 @@ import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
 import { fontStyles, fontWeightStyle } from '../helpers/typography';
-import { globalBoxShadow } from '../helpers/shadow';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -118,50 +117,87 @@ export const paragraph = style({
 });
 
 // Shared offsets for hero overlap framing.
-const offset = m(40);
+const offset = m(20);
+const designRotation = m(5, 'deg');
+const consoleRotation = m(-2, 'deg');
 
 export const vennContainer = style({
 	position: 'relative',
-	...paddings({ all: offset.css() }),
-	...margins({ all: offset.css() }),
+	isolation: 'isolate',
+	...paddings({
+		horizontal: offset.multiply(4).css(),
+		vertical: offset.multiply(4).css(),
+	}),
 });
 
-const panelALiftTransforms = [
-	transforms.translate(offset, offset.negation()),
-	transforms.rotate(m(4, 'deg')),
+const consoleTransforms = [
+	transforms.translate(
+		offset.multiply(2).negation(),
+		offset.double().negation(),
+	),
+	transforms.rotate(consoleRotation),
+];
+
+const designTransforms = [
+	transforms.translate(offset.double(), offset.double()),
+	transforms.rotate(designRotation),
 ];
 
 export const consolePanel = style({
 	position: 'relative',
-	width: '100%',
-	transform: transforms.value(...panelALiftTransforms),
-	// boxShadow: globalBoxShadow({
-	// 	x: m(0),
-	// 	y: offset.multiply(0.75),
-	// 	blur: offset,
-	// }),
+});
+
+export const console = style({
+	position: 'absolute',
+	top: 0,
+	left: 0,
+	transform: transforms.value(...consoleTransforms),
+	transformOrigin: '50% 50%',
+	display: 'flex',
+	flexDirection: 'column',
+	overflow: 'hidden',
+	pointerEvents: 'auto',
 	zIndex: 0,
+	minHeight: '60vh',
+	selectors: {
+		// '&:after': {
+		// 	content: '""',
+		// 	position: 'absolute',
+		// 	inset: 0,
+		// 	background:
+		// 		'radial-gradient(34% 28% at 60% 62%, rgba(92,204,229,0.18), transparent 72%)',
+		// 	mixBlendMode: 'screen',
+		// 	filter: 'blur(10px)',
+		// 	pointerEvents: 'none',
+		// },
+	},
 });
 
-export const panelB = style({
-	transform: transforms.value(
-		transforms.translate(offset.negation().double(), offset.double()),
-		transforms.rotate(m(-5.5, 'deg')),
-	),
+export const designPanel = style({
+	transform: transforms.value(...designTransforms),
+	position: 'relative',
 	zIndex: 1,
-});
-
-export const code = style({
-	width: '100%',
+	selectors: {
+		// '&:after': {
+		// 	content: '""',
+		// 	position: 'absolute',
+		// 	inset: 0,
+		// 	background:
+		// 		'radial-gradient(30% 24% at 64% 60%, rgba(255,255,255,0.32), transparent 70%)',
+		// 	mixBlendMode: 'screen',
+		// 	filter: 'blur(12px)',
+		// 	pointerEvents: 'none',
+		// },
+	},
 });
 
 export const vennContents = style({
-	transform: transforms.value(transforms.translate(offset, offset.negation())),
+	transform: transforms.value(transforms.rotate(designRotation.negation())),
 });
 
-export const vennMiddle = style({
-	padding: offset.multiply(2).css(),
-});
+// export const vennMiddle = style({
+// 	padding: offset.multiply(2).css(),
+// });
 
 export const panel = style({
 	position: 'relative',
@@ -175,7 +211,10 @@ export const panel = style({
 });
 
 export const panelContents = style({
-	padding: offset.half().css(),
+	...paddings({
+		vertical: m(80),
+		horizontal: m(80),
+	}),
 });
 
 export const heroSurface = style({
@@ -214,30 +253,27 @@ export const heading = style({
 	...fontStyles(fontVars.hero),
 	fontSize: 'clamp(32px, 7vw, 80px)',
 	marginTop: fontVars.hero.offsetToFlushTop?.css(),
-	...paddings({
-		top: m(5),
-	}),
-	selectors: {
-		'&::after': {
-			content: '',
-			position: 'absolute',
-			left: '50%',
-			top: '50%',
-			transform: 'translate(-50%, -50%)',
-			width: 'min(60%, 28rem)',
-			height: '52px',
-			filter: 'blur(24px)',
-			background: `radial-gradient(
-        45% 70% at 50% 50%,
-        ${colorVars.white.alpha(0.22).css()},
-        ${colorVars.white.alpha(0).css()} 65%
-      )`,
-			pointerEvents: 'none',
-			zIndex: 0,
-			animation: `${mergePulse} 11s ease-in-out infinite`,
-			'@media': { '(prefers-reduced-motion: reduce)': { animation: 'none' } },
-		},
-	},
+	// selectors: {
+	// 	'&::after': {
+	// 		content: '',
+	// 		position: 'absolute',
+	// 		left: '50%',
+	// 		top: '50%',
+	// 		transform: 'translate(-50%, -50%)',
+	// 		width: 'min(60%, 28rem)',
+	// 		height: '52px',
+	// 		filter: 'blur(24px)',
+	// 		background: `radial-gradient(
+	//     45% 70% at 50% 50%,
+	//     ${colorVars.white.alpha(0.22).css()},
+	//     ${colorVars.white.alpha(0).css()} 65%
+	//   )`,
+	// 		pointerEvents: 'none',
+	// 		zIndex: 0,
+	// 		animation: `${mergePulse} 11s ease-in-out infinite`,
+	// 		'@media': { '(prefers-reduced-motion: reduce)': { animation: 'none' } },
+	// 	},
+	// },
 });
 
 /**

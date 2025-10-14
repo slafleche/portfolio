@@ -46,15 +46,15 @@ export default function Hero({ className }: Props) {
 			<div className={clsx(layoutStyles.panel, s.panel)}>
 				<div className={s.vennContainer}>
 					<div className={s.consolePanel}>
-						<Console className={s.code} />
+						<Console className={s.console} />
 					</div>
 					<GlassyPanel
-						className={clsx(s.panelB)}
+						className={clsx(s.designPanel)}
 						surfaceClassName={s.heroSurface}
 						contentClassName={clsx(s.panelContents)}
 					>
 						<div className={s.vennContents}>
-							<div className={s.vennMiddle}>
+							
 								<h1 className={s.heading}>
 									<span
 										className={s.line}
@@ -76,8 +76,7 @@ export default function Hero({ className }: Props) {
 									<ReactMarkdown components={inlineMarkdownComponents}>
 										{t('hero-subtitle')}
 									</ReactMarkdown>
-								</p>
-							</div>
+								</p>	
 						</div>
 					</GlassyPanel>
 				</div>
