@@ -49,7 +49,9 @@ export default function SkipToContent({
 				});
 			}
 		},
-		[href],
+		[
+			href,
+		],
 	);
 
 	return (

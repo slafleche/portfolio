@@ -342,7 +342,9 @@ export const measurementMax = (a: IMeasurement, b: IMeasurement) => {
 };
 
 export const getMeasurementDebugEntries =
-	(): MeasurementDebugEntry[] => [...getGlobalDebugStore().store];
+	(): MeasurementDebugEntry[] => [
+		...getGlobalDebugStore().store,
+	];
 
 export const computeMeasurementDebugGroups = (
 	entries: MeasurementDebugEntry[],

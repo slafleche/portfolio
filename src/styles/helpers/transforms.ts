@@ -92,7 +92,12 @@ const toggleNumericString = (value: string): string => {
 	if (!match) {
 		return trimmed.startsWith('-') ? trimmed.slice(1) : `-${trimmed}`;
 	}
-	const [, sign, magnitude, unit] = match;
+	const [
+		,
+		sign,
+		magnitude,
+		unit,
+	] = match;
 	if (sign === '-') return `${magnitude}${unit}`;
 	if (sign === '+') return `-${magnitude}${unit}`;
 	return `-${magnitude}${unit}`;

@@ -32,7 +32,13 @@ export type GoogleFontGlobalOptions = {
 /* ---------- internals ---------- */
 
 function toArray<T>(x: T | T[] | undefined): T[] {
-	return Array.isArray(x) ? x : x !== undefined ? [x] : [];
+	return Array.isArray(x)
+		? x
+		: x !== undefined
+			? [
+					x,
+				]
+			: [];
 }
 
 /** Numeric sort key for a weight token ("400" or "100..900") */
@@ -66,7 +72,10 @@ function buildAxisParam(cfg: FontConfig): string {
 		// Tuples MUST be sorted: all 0,* first (roman), then all 1,* (italic), each by weight asc
 		const roman = weights.map((w) => `0,${w}`);
 		const italic = weights.map((w) => `1,${w}`);
-		return `:ital,wght@${[...roman, ...italic].join(';')}`;
+		return `:ital,wght@${[
+			...roman,
+			...italic,
+		].join(';')}`;
 	}
 
 	return `:wght@${weights.join(';')}`;
@@ -96,13 +105,18 @@ export function generateGoogleFontUrls(
 ): string[] {
 	const {
 		display = 'swap',
-		subsets = ['latin'],
+		subsets = [
+			'latin',
+		],
 		stripWhitespaceFromText = false,
 	} = globalOptions;
 
 	const urls: string[] = [];
 
-	for (const [family, cfg] of Object.entries(fonts)) {
+	for (const [
+		family,
+		cfg,
+	] of Object.entries(fonts)) {
 		const fam = family?.trim();
 		if (!fam) continue;
 
@@ -115,7 +129,9 @@ export function generateGoogleFontUrls(
 				? cfg.subsets
 				: subsets.length > 0
 					? subsets
-					: ['latin'];
+					: [
+							'latin',
+						];
 		const subsetParam = `&subset=${chosenSubsets.join(',')}`;
 
 		const displayParam = `&display=${display}`;

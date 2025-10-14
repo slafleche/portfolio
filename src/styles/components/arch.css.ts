@@ -121,7 +121,10 @@ export const surface = style({
 	pointerEvents: 'none', // keep clicks for the UI above
 
 	// same layering you had before (overlay + glow + base)
-	background: [archOverlayGradient, baseGlass.background].join(', '),
+	background: [
+		archOverlayGradient,
+		baseGlass.background,
+	].join(', '),
 
 	// blur needs a non-zero alpha base in Safari (our baseGlass.background already includes a color layer)
 	backdropFilter: baseGlass.backdropFilter,

@@ -1,7 +1,16 @@
-import { color, type ColorWrapper, type CuloriOKLCH } from './colorWrap';
+import {
+	color,
+	type ColorWrapper,
+	type CuloriOKLCH,
+} from './colorWrap';
 
 /** OKLCH tuple (percents for L, chroma as 0..~0.4, hue in degrees) */
-export type OKLCH = { l: number; c: number; h: number; a?: number };
+export type OKLCH = {
+	l: number;
+	c: number;
+	h: number;
+	a?: number;
+};
 export type ColorInput = OKLCH | string | ColorWrapper; // supports wrapped theme colors
 
 export type Stop = {
@@ -27,12 +36,22 @@ export type RadialOpts = {
 };
 
 export type Layer =
-	| { kind: 'linear'; options: LinearOpts }
-	| { kind: 'radial'; options: RadialOpts };
+	| {
+			kind: 'linear';
+			options: LinearOpts;
+	  }
+	| {
+			kind: 'radial';
+			options: RadialOpts;
+	  };
 
-export type Built = { fallback: string; modern: string };
+export type Built = {
+	fallback: string;
+	modern: string;
+};
 
-const pct = (p: number | string) => (typeof p === 'number' ? `${p}%` : p);
+const pct = (p: number | string) =>
+	typeof p === 'number' ? `${p}%` : p;
 
 function isColorWrapper(value: unknown): value is ColorWrapper {
 	return (
@@ -52,8 +71,8 @@ function fmtOKLCH({ l, c, h, a }: OKLCH): string {
 }
 
 /**
- * Approximate OKLCH -> sRGB using LCH as a stand-in (close enough for UI
- * gradients).
+ * Approximate OKLCH -> sRGB using LCH as a stand-in (close enough for
+ * UI gradients).
  */
 function oklchToRgbString({ l, c, h, a }: OKLCH): string {
 	const normalized: CuloriOKLCH = {
@@ -67,7 +86,13 @@ function oklchToRgbString({ l, c, h, a }: OKLCH): string {
 }
 
 function isOKLCH(x: ColorInput): x is OKLCH {
-	return typeof x === 'object' && x != null && 'l' in x && 'c' in x && 'h' in x;
+	return (
+		typeof x === 'object' &&
+		x != null &&
+		'l' in x &&
+		'c' in x &&
+		'h' in x
+	);
 }
 
 function toModernOKLCH(input: ColorInput): OKLCH | undefined {
@@ -100,7 +125,10 @@ function colorModern(c: ColorInput): string {
 	return colorFallback(c);
 }
 
-export function buildLinear({ to = 'to bottom', stops }: LinearOpts): Built {
+export function buildLinear({
+	to = 'to bottom',
+	stops,
+}: LinearOpts): Built {
 	const fStops = stops
 		.map((s) => `${colorFallback(s.color)} ${pct(s.at)}`)
 		.join(', ');
@@ -135,7 +163,9 @@ export function buildRadial({
 /** Stack multiple layers (top→bottom) into background strings */
 export function stackBackground(layers: Layer[]): Built {
 	const parts = layers.map((l) =>
-		l.kind === 'linear' ? buildLinear(l.options) : buildRadial(l.options),
+		l.kind === 'linear'
+			? buildLinear(l.options)
+			: buildRadial(l.options),
 	);
 	return {
 		fallback: parts.map((p) => p.fallback).join(', '),
@@ -143,7 +173,10 @@ export function stackBackground(layers: Layer[]): Built {
 	};
 }
 
-/** Optional convenience: set fallback first, then upgrade if OKLCH supported */
+/**
+ * Optional convenience: set fallback first, then upgrade if OKLCH
+ * supported
+ */
 export function applyBackground(
 	el: HTMLElement,
 	layers: Layer[],
@@ -151,21 +184,31 @@ export function applyBackground(
 ): void {
 	const built = stackBackground(layers);
 	el.style.background = built.fallback;
-	if (blendModes?.length) el.style.backgroundBlendMode = blendModes.join(', ');
+	if (blendModes?.length)
+		el.style.backgroundBlendMode = blendModes.join(', ');
 	if (CSS.supports('color', 'oklch(50% 0 0)')) {
 		el.style.background = built.modern;
 	}
 }
 
 /** Utility: build evenly-spaced stops from a list of colors */
-export function stopsFromColors(colors: ColorInput[], alpha?: number): Stop[] {
+export function stopsFromColors(
+	colors: ColorInput[],
+	alpha?: number,
+): Stop[] {
 	const n = Math.max(1, colors.length - 1);
 	return colors.map((c, i) => {
 		const pos = (i / n) * 100;
 		if (isOKLCH(c) && alpha != null)
-			return { color: { ...c, a: alpha }, at: pos };
+			return {
+				color: { ...c, a: alpha },
+				at: pos,
+			};
 		if (isColorWrapper(c) && alpha != null)
-			return { color: c.alpha(alpha), at: pos };
+			return {
+				color: c.alpha(alpha),
+				at: pos,
+			};
 		return { color: c, at: pos };
 	});
 }

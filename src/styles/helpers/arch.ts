@@ -71,7 +71,11 @@ export const createArchGlassBackground = (): {
 	const glow = `linear-gradient(180deg, ${archGlassVars.surfaceGlowPrimaryTint.css()}, ${archGlassVars.surfaceGlowSecondaryTint.css()})`;
 
 	return {
-		background: [overlay, glow, ensuredBg.css()].join(', '),
+		background: [
+			overlay,
+			glow,
+			ensuredBg.css(),
+		].join(', '),
 		backdropFilter: `blur(${archGlassVars.backdropBlur.css()})`,
 		WebkitBackdropFilter:
 			`blur(${archGlassVars.backdropBlur.css()})` as CSS.Property.BackdropFilter,

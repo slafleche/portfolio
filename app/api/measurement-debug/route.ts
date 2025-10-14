@@ -33,7 +33,9 @@ export function GET(request: Request) {
 	const rawEntries = getMeasurementDebugEntries();
 	const entries: MeasurementDebugEntry[] = dedupe
 		? rawEntries
-		: [...rawEntries];
+		: [
+				...rawEntries,
+			];
 	const payload: MeasurementDebugPayload = { entries };
 	if (group) {
 		payload.groups = computeMeasurementDebugGroups(entries);

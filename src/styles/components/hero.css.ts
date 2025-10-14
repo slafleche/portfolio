@@ -220,7 +220,10 @@ export const panelContents = style({
 });
 
 export const heroSurface = style({
-	background: [surfaceLayers.overlay, surfaceLayers.glow].join(', '),
+	background: [
+		surfaceLayers.overlay,
+		surfaceLayers.glow,
+	].join(', '),
 	backgroundColor: surfaceBaseColor,
 });
 

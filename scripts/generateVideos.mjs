@@ -338,8 +338,15 @@ async function buildHLS(srcPath, name) {
 		'bt709',
 
 		...(KEEP_AUDIO && hasAudio
-			? ['-c:a', 'aac', `-b:a:${i}`, `${r.aK}k`]
-			: ['-an']),
+			? [
+					'-c:a',
+					'aac',
+					`-b:a:${i}`,
+					`${r.aK}k`,
+				]
+			: [
+					'-an',
+				]),
 	]);
 
 	const args = [
@@ -427,14 +434,18 @@ function parseTargets(argv) {
 	}
 
 	const urlMap = JSON.parse(await fs.readFile(SRC_MAP_PATH, 'utf8'));
-	const entries = Object.entries(urlMap).filter(([key]) =>
-		partialBuild ? targets.has(toName(key)) : true,
+	const entries = Object.entries(urlMap).filter(
+		([
+			key,
+		]) => (partialBuild ? targets.has(toName(key)) : true),
 	);
 
 	if (partialBuild && entries.length === 0) {
 		console.warn(
 			'⚠️ No matching video keys for:',
-			[...targets].join(', '),
+			[
+				...targets,
+			].join(', '),
 		);
 		process.exit(0);
 	}
@@ -450,7 +461,10 @@ function parseTargets(argv) {
 		});
 	}
 
-	for (const [rawName, rawUrl] of entries) {
+	for (const [
+		rawName,
+		rawUrl,
+	] of entries) {
 		const name = toName(rawName);
 		console.log(`\n▶ ${name}`);
 		try {
