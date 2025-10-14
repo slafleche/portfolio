@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { makeGradient } from '../helpers/gradients';
+import { makeGradient } from '../helpers/cardGradient';
 import { colorVars, gradientA, gradientB } from '../vars';
 import border from '../helpers/borders';
 import { m } from '../helpers/measurement';
