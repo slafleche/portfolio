@@ -1,4 +1,4 @@
-import { color, type ColorWrapper } from "./colorWrap";
+import { color, type ColorWrapper, type CuloriOKLCH } from "./colorWrap";
 
 type Spec = {
   spotA: ColorWrapper;
@@ -187,18 +187,36 @@ function fmtOKLCH({ l, c, h, a }: OKLCH): string {
 
 /** Approximate OKLCH -> sRGB using LCH as a stand-in (close enough for UI gradients). */
 function oklchToRgbString({ l, c, h, a }: OKLCH): string {
-  // Scale OKLCH L (0..100) & C (~0..0.4) to Lab-LCH-ish space for chroma-js
-  // This is an approximation; if you have a pipeline, prefer a true OKLCH->sRGB converter.
-  const L_lab = clamp(l, 0, 100);
-  const C_lab = clamp(c * 100 * 0.8, 0, 100); // mild expansion
-  const rgbWrapper = color.lch(L_lab, C_lab, h);
-  const [r, g, b] = rgbWrapper.value().rgb();
-  const alpha = a == null ? 1 : a;
-  return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha})`;
+  const normalized: CuloriOKLCH = {
+    mode: "oklch",
+    l: clamp(l, 0, 100) / 100,
+    c: clamp(c, 0, 0.4),
+    h: ((h % 360) + 360) % 360,
+    alpha: a ?? 1,
+  };
+  return color.fromOKLCH(normalized).css();
 }
 
 function isOKLCH(x: ColorInput): x is OKLCH {
   return typeof x === "object" && x != null && "l" in x && "c" in x && "h" in x;
+}
+
+function toModernOKLCH(input: ColorInput): OKLCH | undefined {
+  if (isOKLCH(input)) return input;
+  const source = isColorWrapper(input)
+    ? input
+    : typeof input === "string"
+    ? input
+    : undefined;
+  if (!source) return undefined;
+  const culori = color.toOKLCH(source);
+  if (!culori) return undefined;
+  return {
+    l: culori.l * 100,
+    c: culori.c,
+    h: culori.h ?? 0,
+    a: culori.alpha,
+  };
 }
 
 function colorFallback(c: ColorInput): string {
@@ -208,10 +226,9 @@ function colorFallback(c: ColorInput): string {
 }
 
 function colorModern(c: ColorInput): string {
-  if (isColorWrapper(c)) return c.css();
-  if (isOKLCH(c)) return fmtOKLCH(c);
-  // pass-through any rgb/hex/named you provided
-  return c;
+  const oklch = toModernOKLCH(c);
+  if (oklch) return fmtOKLCH(oklch);
+  return colorFallback(c);
 }
 
 function buildLinear({ to = "to bottom", stops }: LinearOpts): Built {
