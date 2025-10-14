@@ -1,5 +1,5 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
-import { absolutePosition, fullSizeOfParent } from '../helpers/positioning';
+import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
 import { colorVars, fontVars, themeColours } from '../vars';
 import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
@@ -158,7 +158,7 @@ export const console = style({
 	overflow: 'hidden',
 	pointerEvents: 'auto',
 	zIndex: 0,
-	minHeight: '60vh',
+	minHeight: '50vh',
 	selectors: {
 		// '&:after': {
 		// 	content: '""',
