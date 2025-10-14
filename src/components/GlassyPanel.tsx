@@ -30,10 +30,7 @@ export default function GlassyPanel({
 				<div className={glassFrameStyles.surfaceBorder} aria-hidden />
 				{/* Gradient overlay */}
 				<div className={glassSurfaceStyles.surfaceShine} aria-hidden />
-				<div className={clsx(
-					glassSurfaceStyles.content,
-					contentClassName,
-				)}>
+				<div className={clsx(glassSurfaceStyles.content, contentClassName)}>
 					{children}
 				</div>
 			</div>

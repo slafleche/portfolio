@@ -199,7 +199,9 @@ async function processImage(filePath, nameOverride, manifest) {
 	};
 
 	if (manifest[name]) {
-		console.warn(`⚠️ Duplicate image name "${name}" encountered. Overwriting previous entry.`);
+		console.warn(
+			`⚠️ Duplicate image name "${name}" encountered. Overwriting previous entry.`,
+		);
 	}
 	manifest[name] = item;
 	console.log(
@@ -231,7 +233,9 @@ for await (const file of walk(SRC_DIR)) {
 	await processImage(file, undefined, manifest);
 	localCount += 1;
 }
-console.log(`   ✓ Processed ${localCount} local image${localCount === 1 ? '' : 's'}.`);
+console.log(
+	`   ✓ Processed ${localCount} local image${localCount === 1 ? '' : 's'}.`,
+);
 
 console.log(`→ Loading large image manifest "${LARGE_IMAGES_CONFIG}"`);
 let largeImagesMap = await loadLargeImagesConfig();
@@ -269,7 +273,9 @@ const largeEntries = Object.entries(largeImagesMap);
 
 if (largeEntries.length) {
 	await fs.mkdir(TEMP_ROOT, { recursive: true });
-	console.log(`→ Downloading and processing ${largeEntries.length} remote image${largeEntries.length === 1 ? '' : 's'}`);
+	console.log(
+		`→ Downloading and processing ${largeEntries.length} remote image${largeEntries.length === 1 ? '' : 's'}`,
+	);
 	let remoteCount = 0;
 	for (const [name, rawUrl] of largeEntries) {
 		const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
@@ -284,7 +290,9 @@ if (largeEntries.length) {
 			await processImage(filePath, name, manifest);
 			remoteCount += 1;
 		} catch (error) {
-			console.error(`✗ Failed to process large image "${name}": ${error.message}`);
+			console.error(
+				`✗ Failed to process large image "${name}": ${error.message}`,
+			);
 		}
 	}
 	try {

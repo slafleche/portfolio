@@ -54,29 +54,28 @@ export default function Hero({ className }: Props) {
 						contentClassName={clsx(s.panelContents)}
 					>
 						<div className={s.vennContents}>
-							
-								<h1 className={s.heading}>
-									<span
-										className={s.line}
-										data-position="first"
-										data-text={t('hero-title_a')}
-									>
-										{t('hero-title_a')}
-									</span>
-									<br className={s.title_break} />
-									<span
-										className={s.line}
-										data-position="last"
-										data-text={t('hero-title_b')}
-									>
-										{t('hero-title_b')}
-									</span>
-								</h1>
-								<p className={s.paragraph}>
-									<ReactMarkdown components={inlineMarkdownComponents}>
-										{t('hero-subtitle')}
-									</ReactMarkdown>
-								</p>	
+							<h1 className={s.heading}>
+								<span
+									className={s.line}
+									data-position="first"
+									data-text={t('hero-title_a')}
+								>
+									{t('hero-title_a')}
+								</span>
+								<br className={s.title_break} />
+								<span
+									className={s.line}
+									data-position="last"
+									data-text={t('hero-title_b')}
+								>
+									{t('hero-title_b')}
+								</span>
+							</h1>
+							<p className={s.paragraph}>
+								<ReactMarkdown components={inlineMarkdownComponents}>
+									{t('hero-subtitle')}
+								</ReactMarkdown>
+							</p>
 						</div>
 					</GlassyPanel>
 				</div>

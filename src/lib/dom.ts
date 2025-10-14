@@ -5,6 +5,6 @@ import { useId } from 'react';
  * Optionally prefixes the ID with a string.
  */
 export function useSafeId(prefix?: string): string {
-  const id = useId().replace(/:/g, '');
-  return prefix ? `${prefix}-${id}` : id;
+	const id = useId().replace(/:/g, '');
+	return prefix ? `${prefix}-${id}` : id;
 }

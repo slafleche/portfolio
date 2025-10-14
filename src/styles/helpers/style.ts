@@ -32,4 +32,3 @@ export const toCssColor = (value: unknown): CSS.Property.Color => {
 	if (hasCss(value)) return value.css();
 	return String(value);
 };
-

@@ -101,12 +101,15 @@ export function useMenuHighlight({
 		};
 	}, [highlight.visible]);
 
-	useEffect(() => () => {
-		if (animationFrameRef.current) {
-			cancelAnimationFrame(animationFrameRef.current);
-			animationFrameRef.current = null;
-		}
-	}, []);
+	useEffect(
+		() => () => {
+			if (animationFrameRef.current) {
+				cancelAnimationFrame(animationFrameRef.current);
+				animationFrameRef.current = null;
+			}
+		},
+		[],
+	);
 
 	useEffect(() => {
 		if (hasResolvedHoverFromCacheRef.current) return;
@@ -403,12 +406,7 @@ export function useMenuHighlight({
 				setActiveIndex(index);
 			}
 		},
-		[
-			activeIndex,
-			linkMetrics,
-			persistLastHover,
-			updateHighlightFromMetric,
-		],
+		[activeIndex, linkMetrics, persistLastHover, updateHighlightFromMetric],
 	);
 
 	const highlightStyles = useMemo<HighlightStyles>(() => {
@@ -433,11 +431,11 @@ export function useMenuHighlight({
 		const isActive = highlight.visible && hasMeasurements;
 		const targetBox = isActive
 			? {
-				left: highlight.left,
-				top: highlight.top,
-				width: Math.max(1, highlight.width),
-				height: Math.max(1, highlight.height),
-			}
+					left: highlight.left,
+					top: highlight.top,
+					width: Math.max(1, highlight.width),
+					height: Math.max(1, highlight.height),
+				}
 			: originBox;
 
 		const containerStyle: CSSProperties = {
@@ -494,13 +492,7 @@ export function useMenuHighlight({
 		}
 
 		return { containerStyle, innerStyle };
-	}, [
-		highlight,
-		transitionDisabled,
-		debugMiniBokeh,
-		activeIndex,
-		linkMetrics,
-	]);
+	}, [highlight, transitionDisabled, debugMiniBokeh, activeIndex, linkMetrics]);
 
 	return {
 		navRef,

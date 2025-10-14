@@ -16,7 +16,12 @@ const INCLUDE_BOTH_CASES =
 // --- Paths ---
 const LOCALES_DIR = path.resolve('src', 'lib', 'locales', 'translations'); // JSONC inputs
 const FONT_CONFIG_JSON = path.resolve('src', 'data', 'fonts.config.json'); // JSON config (keys/texts/weights/ital/subsets)
-const OUT_TS = path.resolve('src', 'data', 'generated', 'minimalFontText.gen.ts'); // TS output consumed by app
+const OUT_TS = path.resolve(
+	'src',
+	'data',
+	'generated',
+	'minimalFontText.gen.ts',
+); // TS output consumed by app
 
 // --- Utils (match your locales script behavior) ---
 function removeTrailingCommas(input) {

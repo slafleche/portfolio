@@ -22,10 +22,8 @@ interface IFinalBorder {
 
 // Accept object tokens (IMeasurement, chroma Color, etc.) but return only
 // plain CSS strings so the result can be safely spread into `style()`.
-const fallbackMeasurement = (
-	value: BorderMeasurementInput,
-	fallback: string,
-) => toCssMeasurement(value) ?? fallback;
+const fallbackMeasurement = (value: BorderMeasurementInput, fallback: string) =>
+	toCssMeasurement(value) ?? fallback;
 
 const compressSides = (
 	top: string,

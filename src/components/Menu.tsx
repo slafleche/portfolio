@@ -497,11 +497,11 @@ export default function Menu({
 	return (
 		<>
 			<div className={s.root} data-mounted={mounted}>
-		<Arch
-			ready={mounted}
-			glow={logoGlowState === 'idle' ? null : logoGlowState}
-			debugGlow={debugGlow}
-		>
+				<Arch
+					ready={mounted}
+					glow={logoGlowState === 'idle' ? null : logoGlowState}
+					debugGlow={debugGlow}
+				>
 					<nav
 						className={clsx(s.nav)}
 						ref={navRef}

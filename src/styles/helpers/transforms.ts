@@ -1,8 +1,18 @@
 import type * as CSS from 'csstype';
 import { hasCss, toCssMeasurement } from './style';
 
-type AngleInput = number | string | { css(): string } | { negation?: (shouldNegate?: boolean) => unknown } | null | undefined;
-type LengthInput = Parameters<typeof toCssMeasurement>[0] | string | null | undefined;
+type AngleInput =
+	| number
+	| string
+	| { css(): string }
+	| { negation?: (shouldNegate?: boolean) => unknown }
+	| null
+	| undefined;
+type LengthInput =
+	| Parameters<typeof toCssMeasurement>[0]
+	| string
+	| null
+	| undefined;
 type ScaleInput = number | string | null | undefined;
 
 type TokenState = { negate: boolean };
@@ -15,7 +25,13 @@ export interface TransformToken {
 	toString(): string;
 }
 
-type TransformFragment = string | number | TransformToken | undefined | null | false;
+type TransformFragment =
+	| string
+	| number
+	| TransformToken
+	| undefined
+	| null
+	| false;
 type TransformPiece = TransformFragment | TransformFragment[];
 
 type TransformStyle = Pick<CSS.Properties<string | number>, 'transform'>;
@@ -57,7 +73,9 @@ const normalizeFragments = (pieces: TransformPiece[]): string[] => {
 		.filter((fragment) => fragment.length > 0);
 };
 
-const buildTransformValue = (...pieces: TransformPiece[]): string | undefined => {
+const buildTransformValue = (
+	...pieces: TransformPiece[]
+): string | undefined => {
 	const parts = normalizeFragments(pieces);
 	return parts.length ? parts.join(' ') : undefined;
 };
@@ -88,9 +106,12 @@ const isNegatableObject = (
 	'negation' in (value as Record<string, unknown>) &&
 	typeof (value as Record<string, unknown>).negation === 'function';
 
-const negateAngleInput = (value: AngleInput, shouldNegate: boolean): AngleInput => {
+const negateAngleInput = (
+	value: AngleInput,
+	shouldNegate: boolean,
+): AngleInput => {
 	if (!shouldNegate || value === null || value === undefined) return value;
-	if (typeof value === 'number') return (-value) as AngleInput;
+	if (typeof value === 'number') return -value as AngleInput;
 	if (typeof value === 'string') return negateString(value, true) as AngleInput;
 	if (isNegatableObject(value)) return value.negation() as AngleInput;
 	if (hasCss(value)) {
@@ -100,10 +121,14 @@ const negateAngleInput = (value: AngleInput, shouldNegate: boolean): AngleInput 
 	return value;
 };
 
-const negateLengthInput = (value: LengthInput, shouldNegate: boolean): LengthInput => {
+const negateLengthInput = (
+	value: LengthInput,
+	shouldNegate: boolean,
+): LengthInput => {
 	if (!shouldNegate || value === null || value === undefined) return value;
-	if (typeof value === 'number') return (-value) as LengthInput;
-	if (typeof value === 'string') return negateString(value, true) as LengthInput;
+	if (typeof value === 'number') return -value as LengthInput;
+	if (typeof value === 'string')
+		return negateString(value, true) as LengthInput;
 	if (isNegatableObject(value)) return value.negation() as LengthInput;
 	if (hasCss(value)) {
 		const cssValue = value.css();
@@ -112,10 +137,14 @@ const negateLengthInput = (value: LengthInput, shouldNegate: boolean): LengthInp
 	return value;
 };
 
-const negateScaleInput = (value: ScaleInput, shouldNegate: boolean): ScaleInput => {
+const negateScaleInput = (
+	value: ScaleInput,
+	shouldNegate: boolean,
+): ScaleInput => {
 	if (!shouldNegate || value === null || value === undefined) return value;
-	if (typeof value === 'number') return (-value) as ScaleInput;
-	if (typeof value === 'string') return negateString(value, false) as ScaleInput;
+	if (typeof value === 'number') return -value as ScaleInput;
+	if (typeof value === 'string')
+		return negateString(value, false) as ScaleInput;
 	return value;
 };
 
@@ -131,7 +160,7 @@ const createToken = <Input>(
 		if (!active) return undefined;
 		const base = resolver(input, { negate: negateFlag });
 		if (!base) return undefined;
-		return mapper ? mapper(base) ?? undefined : base;
+		return mapper ? (mapper(base) ?? undefined) : base;
 	};
 
 	const token: TransformToken = {
@@ -156,23 +185,29 @@ const createToken = <Input>(
 	return token;
 };
 
-const makeAngleToken = (fn: string) => (value: AngleInput): TransformToken =>
-	createToken(value, (input, state) => {
-		const normalized = toCssAngle(negateAngleInput(input, state.negate));
-		return normalized ? `${fn}(${normalized})` : undefined;
-	});
+const makeAngleToken =
+	(fn: string) =>
+	(value: AngleInput): TransformToken =>
+		createToken(value, (input, state) => {
+			const normalized = toCssAngle(negateAngleInput(input, state.negate));
+			return normalized ? `${fn}(${normalized})` : undefined;
+		});
 
-const makeLengthToken = (fn: string) => (value: LengthInput): TransformToken =>
-	createToken(value, (input, state) => {
-		const length = toCssLength(negateLengthInput(input, state.negate));
-		return length ? `${fn}(${length})` : undefined;
-	});
+const makeLengthToken =
+	(fn: string) =>
+	(value: LengthInput): TransformToken =>
+		createToken(value, (input, state) => {
+			const length = toCssLength(negateLengthInput(input, state.negate));
+			return length ? `${fn}(${length})` : undefined;
+		});
 
-const makeScaleToken = (fn: string) => (value: ScaleInput): TransformToken =>
-	createToken(value, (input, state) => {
-		const scale = toCssScale(negateScaleInput(input, state.negate));
-		return scale ? `${fn}(${scale})` : undefined;
-	});
+const makeScaleToken =
+	(fn: string) =>
+	(value: ScaleInput): TransformToken =>
+		createToken(value, (input, state) => {
+			const scale = toCssScale(negateScaleInput(input, state.negate));
+			return scale ? `${fn}(${scale})` : undefined;
+		});
 
 const toCssAngle = (value: AngleInput): string | undefined => {
 	if (value === null || value === undefined) return undefined;
@@ -189,7 +224,8 @@ const toCssLength = (value: LengthInput): string | undefined => {
 
 const toCssScale = (value: ScaleInput): string | undefined => {
 	if (value === null || value === undefined) return undefined;
-	if (typeof value === 'number' && Number.isFinite(value)) return value.toString();
+	if (typeof value === 'number' && Number.isFinite(value))
+		return value.toString();
 	if (typeof value === 'string') return value;
 	return undefined;
 };
@@ -206,10 +242,7 @@ interface TransformBuilder {
 	translateX: (value: LengthInput) => TransformToken;
 	translateY: (value: LengthInput) => TransformToken;
 	translateZ: (value: LengthInput) => TransformToken;
-	translate: (
-		x: LengthInput,
-		y?: LengthInput,
-	) => TransformToken;
+	translate: (x: LengthInput, y?: LengthInput) => TransformToken;
 	translate3d: (
 		x: LengthInput,
 		y: LengthInput,
@@ -219,11 +252,7 @@ interface TransformBuilder {
 	scaleX: (value: ScaleInput) => TransformToken;
 	scaleY: (value: ScaleInput) => TransformToken;
 	scaleZ: (value: ScaleInput) => TransformToken;
-	scale3d: (
-		x: ScaleInput,
-		y: ScaleInput,
-		z: ScaleInput,
-	) => TransformToken;
+	scale3d: (x: ScaleInput, y: ScaleInput, z: ScaleInput) => TransformToken;
 	perspective: (value: LengthInput) => TransformToken;
 	style: (...pieces: TransformPiece[]) => TransformStyle;
 }
