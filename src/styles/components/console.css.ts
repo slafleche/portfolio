@@ -51,13 +51,17 @@ export const title = style({
 });
 
 export const body = style({
-	display: 'grid',
+	display: 'flex',
+	flexDirection: 'column',
 	gap: m(6).css(),
 	fontFamily: consoleFontStack,
 	fontSize: m(16).css(),
 	lineHeight: 1.6,
+	flexGrow: 1,
 	...paddings({ all: m(18).css() }),
 	background: `linear-gradient(120deg, ${colorVars.black.alpha(0.75).css()} 0%, ${colorVars.black.alpha(0.55).css()} 100%)`,
+	justifyContent: 'flex-end',
+	overflowY: 'auto',
 });
 
 export const line = style({

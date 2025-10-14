@@ -16,51 +16,52 @@ type Props = {
 };
 
 const defaultLines: ConsoleLine[] = [
-		{
-			content: (
-				<>
-					<span className={s.accent}>const</span> designer = createHybridMaker(
-					{'{'}
-				</>
-			),
-		},
-		{
-			content: (
-				<>
-					&nbsp;&nbsp;experience: <span className={s.accent}>'product & ui'</span>,
-				</>
-			),
-		},
-		{
-			content: <>&nbsp;&nbsp;toolkit: ['Sketch', 'React', 'Vanilla Extract'],</>,
-		},
-		{
-			content: <>&nbsp;&nbsp;ship: () =&gt; craftDelightfulInterfaces(),</>,
-		},
-		{
-			content: <>{'})'};</>,
-		},
-		{
-			variant: 'comment',
-			content: <>// Sketch-first, but always pairing tight with engineering.</>,
-		},
-		{
-			content: <>if (me.project.expectations &gt;= you.expectations) {'{'}</>,
-		},
-		{
-			content: (
-				<>
-					&nbsp;&nbsp;console.log(
-					<span className={s.accent}>"Running hireMe.mjs..."</span>);
-				</>
-			),
-		},
-		{
-			content: <> &nbsp;&nbsp;yarn run hireMe.mjs;</>,
-		},
-		{
-			content: <>{'}'}</>,
-		},
+	{
+		content: (
+			<>
+				<span className={s.accent}>const</span> designer = createHybridMaker(
+				{'{'}
+			</>
+		),
+	},
+	{
+		content: (
+			<>
+				&nbsp;&nbsp;experience: <span className={s.accent}>'product & ui'</span>
+				,
+			</>
+		),
+	},
+	{
+		content: <>&nbsp;&nbsp;toolkit: ['React', 'VS Code', 'Vanilla Extract'],</>,
+	},
+	{
+		content: <>&nbsp;&nbsp;ship: () =&gt; craftDelightfulInterfaces(),</>,
+	},
+	{
+		content: <>{'})'};</>,
+	},
+	{
+		variant: 'comment',
+		content: <>// no npm install for this skillset</>,
+	},
+	{
+		content: <>if (me.project.expectations &gt;= you.expectations) {'{'}</>,
+	},
+	{
+		content: (
+			<>
+				&nbsp;&nbsp;console.log(
+				<span className={s.accent}>"Running hireMe.mjs..."</span>);
+			</>
+		),
+	},
+	{
+		content: <> &nbsp;&nbsp;yarn run hireMe.mjs;</>,
+	},
+	{
+		content: <>{'}'}</>,
+	},
 ];
 
 export default function Console({
