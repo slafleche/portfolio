@@ -43,6 +43,7 @@ type Props = {
 	height?: number;
 	fit?: React.CSSProperties['objectFit'];
 	priority?: boolean;
+	style?: React.CSSProperties;
 };
 
 export default function ImageByName({
@@ -51,6 +52,7 @@ export default function ImageByName({
 	title,
 	kind = 'auto',
 	className,
+	style,
 	width,
 	height,
 	fit = 'cover',
@@ -74,7 +76,7 @@ export default function ImageByName({
 	const h = height ?? data.height;
 
 	return (
-		<picture className={className}>
+		<picture className={className} style={style}>
 			{!!data.variants.avif?.length && (
 				<source
 					type="image/avif"

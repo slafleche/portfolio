@@ -2,7 +2,10 @@
 
 import * as React from 'react';
 import { getVideo, type VideoEntry } from '@/lib/videos';
+import { getImage } from '@/lib/images';
+import ImageByName from './ImageByName';
 import { useT } from '../lib/locales/useT';
+import clsx from 'clsx';
 
 // Strong types for the dynamic import
 type HlsModule = typeof import('hls.js');
@@ -18,6 +21,8 @@ type Props = React.VideoHTMLAttributes<HTMLVideoElement> & {
 	priority?: boolean;
 	pauseWhenOffscreen?: boolean;
 	playbackRate?: number;
+	className?: string;
+	contentClassName?: string;
 	onReady?: (video: HTMLVideoElement, meta: VideoEntry) => void;
 };
 
@@ -26,13 +31,14 @@ export default function VideoByName({
 	title,
 	label,
 	kind = 'hero',
-	className,
 	style: incomingStyle,
 	autoPlay = true,
 	muted = true,
 	loop = true,
 	controls = false,
 	playsInline = true,
+	className,
+	contentClassName,
 	priority = false,
 	pauseWhenOffscreen = true,
 	playbackRate = 1,
@@ -40,27 +46,32 @@ export default function VideoByName({
 	...videoProps
 }: Props) {
 	const data = getVideo(name);
+	const posterImage = data ? getImage(`video-${data.name}`) : null;
 	const ref = React.useRef<HTMLVideoElement | null>(null);
 	const ioRef = React.useRef<IntersectionObserver | null>(null);
 	const t = useT();
-	const [shouldLoadVideo, setShouldLoadVideo] = React.useState<boolean>(
-		() => priority ?? false,
-	);
+	const [
+		shouldLoadVideo,
+		setShouldLoadVideo,
+	] = React.useState<boolean>(() => priority ?? false);
+	const [isPosterVisible, setPosterVisible] = React.useState(true);
+	const [isVideoReady, setVideoReady] = React.useState(false);
 
-	const computedStyle: React.CSSProperties =
-		kind === 'hero'
-			? {
-					width: '100%',
-					height: '100vh',
-					objectFit: 'cover',
-					...(incomingStyle ?? {}),
-				}
-			: {
-					width: '100%',
-					height: 'auto',
-					objectFit: 'cover',
-					...(incomingStyle ?? {}),
-				};
+	React.useEffect(() => {
+		setPosterVisible(true);
+		setVideoReady(false);
+	}, [
+		name,
+	]);
+
+	React.useEffect(() => {
+		if (!shouldLoadVideo) {
+			setPosterVisible(true);
+			setVideoReady(false);
+		}
+	}, [
+		shouldLoadVideo,
+	]);
 
 	React.useEffect(() => {
 		if (priority) return;
@@ -75,7 +86,9 @@ export default function VideoByName({
 
 		window.addEventListener('load', enable, { once: true });
 		return () => window.removeEventListener('load', enable);
-	}, [priority]);
+	}, [
+		priority,
+	]);
 
 	React.useEffect(() => {
 		if (!shouldLoadVideo) return;
@@ -174,14 +187,36 @@ export default function VideoByName({
 		if (!video) return;
 		video.defaultPlaybackRate = playbackRate;
 		video.playbackRate = playbackRate;
-	}, [playbackRate, shouldLoadVideo]);
+	}, [
+		playbackRate,
+		shouldLoadVideo,
+	]);
 
 	if (!data) return null;
+	const posterSrc = posterImage?.original.url ?? data.posterUrl;
+const posterSrcSet = posterImage?.variants.jpg?.length
+		? posterImage.variants.jpg
+				.slice()
+				.sort((a, b) => a.w - b.w)
+				.map((v) => `${v.url} ${v.w}w`)
+				.join(', ')
+		: undefined;
+	const posterSizes =
+		posterSrcSet !== undefined
+			? kind === 'hero'
+				? '(max-width: 768px) 100vw, 100vw'
+				: '(max-width: 768px) 100vw, 50vw'
+			: undefined;
 
-	const { children: _ignoredChildren, ...restVideoProps } = videoProps;
+	const {
+		children: _ignoredChildren,
+		onLoadedData: userOnLoadedData,
+		onPlay: userOnPlay,
+		...restVideoProps
+	} = videoProps;
+	const rawAttrs = restVideoProps as Record<string, unknown>;
 	const ariaHiddenRaw =
-		(restVideoProps as { [key: string]: unknown })['aria-hidden'] ??
-		(restVideoProps as { [key: string]: unknown })['ariaHidden'];
+		rawAttrs['aria-hidden'] ?? rawAttrs['ariaHidden'];
 	const ariaHiddenValue =
 		ariaHiddenRaw === 'true'
 			? true
@@ -189,41 +224,119 @@ export default function VideoByName({
 				? false
 				: (ariaHiddenRaw as boolean | undefined);
 	const placeholderAlt =
-		ariaHiddenValue === true
-			? ''
-			: label ?? title ?? t('hero-alt');
+		ariaHiddenValue === true ? '' : (label ?? title ?? t('hero-alt'));
+	const placeholderPassthrough = Object.fromEntries(
+		Object.entries(rawAttrs).filter(
+			([
+				key,
+			]) =>
+				key.startsWith('data-') ||
+				key.startsWith('aria-') ||
+				key === 'id' ||
+				key === 'role',
+		),
+	);
 
-	if (!shouldLoadVideo) {
-		return (
-			<img
-				className={className}
-				style={computedStyle}
-				src={data.posterUrl}
-				alt={placeholderAlt}
-				decoding="async"
-				loading={priority ? 'eager' : 'lazy'}
-				{...restVideoProps}
-			/>
-		);
-	}
+	const containerStyle: React.CSSProperties =
+		kind === 'hero'
+			? {
+					overflow: 'hidden',
+					...(incomingStyle ?? {}),
+				}
+			: {
+					position: 'relative',
+					width: '100%',
+					overflow: 'hidden',
+					...(incomingStyle ?? {}),
+				};
+
+	const fillStyle: React.CSSProperties = {
+		position: 'absolute',
+		inset: 0,
+		width: '100%',
+		height: '100%',
+	};
+
+	const posterStyle: React.CSSProperties = {
+		...fillStyle,
+		pointerEvents: 'none',
+		opacity: isPosterVisible ? 1 : 0,
+		transition: 'opacity 240ms ease',
+	};
+
+	const fallbackPosterStyle: React.CSSProperties = {
+		...posterStyle,
+		objectFit: 'cover',
+	};
+
+	const videoStyle: React.CSSProperties = {
+		...fillStyle,
+		objectFit: 'cover',
+		opacity: shouldLoadVideo && isVideoReady ? 1 : 0,
+		transition: 'opacity 240ms ease',
+		visibility: shouldLoadVideo ? 'visible' : 'hidden',
+	};
 
 	return (
-		<video
-			ref={ref}
-			className={className}
-			style={computedStyle}
-			title={title}
-			aria-label={label}
-			poster={data.posterUrl}
-			autoPlay={autoPlay}
-			muted={muted}
-			loop={loop}
-			controls={controls}
-			playsInline={playsInline}
-			preload={priority ? 'auto' : 'metadata'}
-			{...restVideoProps}
+		<div
+			className={clsx(className)}
+			style={containerStyle}
+			{...placeholderPassthrough}
 		>
-			{t('error-video')}
-		</video>
+			{posterImage ? (
+				<ImageByName
+					style={posterStyle}
+					name={`video-${data.name}`}
+					className={contentClassName}
+					alt={placeholderAlt}
+					title={title}
+					kind={kind === 'hero' ? 'lg' : 'md'}
+					priority={priority}
+					fit="cover"
+				/>
+			) : (
+				<img
+					className={contentClassName}
+					style={fallbackPosterStyle}
+					src={posterSrc}
+					srcSet={posterSrcSet}
+					sizes={posterSizes}
+					alt={placeholderAlt}
+					decoding="async"
+					loading={priority ? 'eager' : 'lazy'}
+				/>
+			)}
+			<video
+				ref={ref}
+				className={contentClassName}
+				style={videoStyle}
+				title={title}
+				aria-label={label}
+				poster={posterSrc}
+				autoPlay={autoPlay}
+				muted={muted}
+				loop={loop}
+				controls={controls}
+				playsInline={playsInline}
+				preload={priority ? 'auto' : 'metadata'}
+				onLoadedData={(event) => {
+					setVideoReady(true);
+					requestAnimationFrame(() => {
+						setPosterVisible(false);
+					});
+					userOnLoadedData?.(event);
+				}}
+				onPlay={(event) => {
+					setVideoReady(true);
+					requestAnimationFrame(() => {
+						setPosterVisible(false);
+					});
+					userOnPlay?.(event);
+				}}
+				{...restVideoProps}
+			>
+				{t('error-video')}
+			</video>
+		</div>
 	);
 }

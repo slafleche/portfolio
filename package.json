@@ -82,6 +82,7 @@
 		"format:svg": "prettier --no-config --parser html \"src/assets/**/*.{svg,SVG}\" --write",
 		"format:img": "node scripts/generateImages.mjs",
 		"format:video": "node scripts/generateVideos.mjs",
+		"format:visual": "yarn format:video && yarn format:img",
 		"svg:clean": "yarn svgo && yarn format:svg && yarn format:img",
 		"svgo": "node scripts/optimizeSvgs.mjs --write"
 	},

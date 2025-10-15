@@ -6,6 +6,7 @@ import sharp from 'sharp';
 const SRC_DIR = 'src/assets/images';
 const OUT_ROOT = 'public/images'; // cleaned each run
 const MANIFEST_PATH = 'src/data/generated/images.manifest.gen.json';
+const VIDEO_MANIFEST_PATH = 'src/data/generated/videos.manifest.gen.json';
 const TEMP_ROOT = 'tmp/large-images';
 const LARGE_IMAGES_DIR = path.join(SRC_DIR, 'largeImages');
 const LARGE_IMAGES_CONFIG = path.join(SRC_DIR, 'largeImages.json');
@@ -135,6 +136,37 @@ async function loadLargeImagesConfig() {
 	} catch (error) {
 		if (error.code === 'ENOENT') return {};
 		throw error;
+	}
+}
+
+async function loadVideoManifest() {
+	try {
+		const raw = await fs.readFile(VIDEO_MANIFEST_PATH, 'utf8');
+		const parsed = JSON.parse(raw);
+		return parsed && typeof parsed === 'object' ? parsed : null;
+	} catch (error) {
+		if (error.code === 'ENOENT') {
+			console.warn(
+				`⚠️ Video manifest not found at "${VIDEO_MANIFEST_PATH}". Run the video pipeline first to enable video previews.`,
+			);
+			return null;
+		}
+		throw error;
+	}
+}
+
+function toPublicPathFromUrl(rawUrl) {
+	if (!rawUrl || typeof rawUrl !== 'string') return '';
+	const trimmed = rawUrl.trim();
+	if (!trimmed) return '';
+	try {
+		const url = new URL(trimmed, 'http://localhost');
+		const pathname = url.pathname.replace(/^\/+/, '');
+		return pathname ? path.join('public', pathname) : '';
+	} catch {
+		const withoutQuery = trimmed.split('?')[0] ?? '';
+		const pathname = withoutQuery.replace(/^\/+/, '');
+		return pathname ? path.join('public', pathname) : '';
 	}
 }
 
@@ -388,6 +420,98 @@ if (largeEntries.length) {
 	);
 } else {
 	console.log('→ No remote large images configured.');
+}
+
+console.log(
+	`→ Checking for video posters via "${VIDEO_MANIFEST_PATH}"`,
+);
+const videoManifest = await loadVideoManifest();
+if (videoManifest) {
+	const entries = Object.entries(videoManifest);
+	if (entries.length === 0) {
+		console.warn(
+			'⚠️ Video manifest is empty. No video previews will be generated.',
+		);
+	} else {
+		let processed = 0;
+		const manifestMissingPosterUrl = [];
+		const unresolvedPosterPaths = [];
+		const missingPosterFiles = [];
+		for (const [
+			name,
+			data,
+		] of entries) {
+			const posterUrl =
+				typeof data === 'object' && data !== null
+					? data.posterUrl
+					: '';
+			if (typeof posterUrl !== 'string' || !posterUrl.trim()) {
+				manifestMissingPosterUrl.push(name);
+				continue;
+			}
+			const posterPath = toPublicPathFromUrl(posterUrl);
+			if (!posterPath) {
+				unresolvedPosterPaths.push([name, posterUrl]);
+				continue;
+			}
+			try {
+				await fs.access(posterPath);
+			} catch {
+				missingPosterFiles.push([name, posterPath]);
+				continue;
+			}
+			const baseName =
+				typeof data === 'object' &&
+				data !== null &&
+				typeof data.name === 'string' &&
+				data.name.trim()
+					? data.name.trim().toLowerCase()
+					: `${name}`.trim().toLowerCase();
+			const videoImageName = `video-${baseName.replace(
+				/[^\dA-Za-z_-]/g,
+				'-',
+			)}`;
+			await processImage(posterPath, videoImageName, manifest);
+			processed += 1;
+		}
+		if (manifestMissingPosterUrl.length) {
+			console.warn(
+				`⚠️ Video manifest entries missing posterUrl: ${manifestMissingPosterUrl.join(', ')}.`,
+			);
+		}
+		if (unresolvedPosterPaths.length) {
+			console.warn(
+				'⚠️ Could not resolve local poster path for videos:\n' +
+					unresolvedPosterPaths
+						.map(
+							([n, url]) =>
+								`   • ${n} → ${url}`,
+						)
+						.join('\n'),
+			);
+		}
+		if (missingPosterFiles.length) {
+			console.warn(
+				'⚠️ Poster image missing for videos:\n' +
+					missingPosterFiles
+						.map(
+							([n, p]) =>
+								`   • ${n} → ${p}`,
+						)
+						.join('\n') +
+					'\n   Did you run "generateVideos" first?',
+			);
+		}
+		if (processed > 0) {
+			console.log(
+				`   ✓ Processed ${processed} video poster image${processed === 1 ? '' : 's'}.`,
+			);
+		} else {
+			console.warn(
+				'⚠️ No video poster images were processed. Check warnings above.',
+			);
+		}
+	}
 }
 
 await fs.writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2));

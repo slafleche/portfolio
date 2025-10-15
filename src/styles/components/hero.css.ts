@@ -1,7 +1,7 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
 import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
-import { colorVars, fontVars, themeColours } from '../vars';
+import { colorVars, fontVars, heroVars, themeColours } from '../vars';
 import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
 import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
@@ -19,6 +19,7 @@ export const root = style({
 	minHeight: '100vh',
 	overflow: 'hidden',
 	isolation: 'isolate',
+	// backgroundColor: heroVars.background.color.css(),
 });
 
 export const image = style({
@@ -40,6 +41,15 @@ export const video = style({
 	inset: 0,
 	pointerEvents: 'none',
 	objectFit: 'cover',
+	// background: heroVars.background.color.css(),
+	// buildLinear(),
+	mixBlendMode: 'screen',
+});
+
+export const videoContent = style({
+	...fullSizeOfParent(),
+	position: 'relative',
+	opacity: heroVars.background.videoOpacity,
 });
 
 export const overlays = style({

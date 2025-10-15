@@ -26,11 +26,11 @@ export default function Hero({ className }: Props) {
 				label={t('hero-alt')}
 				kind="hero"
 				className={s.video}
+				contentClassName={s.videoContent}
 				autoPlay
 				muted
 				loop
 				playsInline
-				playbackRate={2}
 				aria-hidden
 				role="presentation"
 			/>
