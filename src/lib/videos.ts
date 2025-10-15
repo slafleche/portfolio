@@ -17,6 +17,7 @@ export type VideoEntry = {
 	masterUrl: string;
 	posterUrl: string;
 	variants: VideoVariant[];
+	speed?: number;
 	sourceHash?: string;
 	sourceSize?: number;
 };
