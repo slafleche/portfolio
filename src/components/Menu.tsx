@@ -63,7 +63,7 @@ export default function Menu({
 
 	const { anchors, anchorCount, sectionIds } = useMenuAnchors(locale);
 
-	const fontsReady = true;
+	const fontsReady = false;
 
 	const {
 		navRef,
