@@ -94,7 +94,7 @@ export default function ImageByName({
 			<img
 				alt={alt}
 				title={title}
-				src={data.original.url}
+				src={data.blurDataURL}
 				srcSet={
 					data.variants.jpg?.length
 						? toSrcSet(data.variants.jpg)
