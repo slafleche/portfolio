@@ -3,6 +3,7 @@ import * as s from '@/styles/components/card.css.ts';
 import type { ReactNode } from 'react';
 import Heading, { type IHeadingDepth } from './Heading';
 import clsx from 'clsx';
+import * as glassFrameStyles from '@/styles/helpers/glassFrame.css';
 
 type Props = IHeadingDepth & {
 	title?: ReactNode;
@@ -18,21 +19,29 @@ export default function Card({
 	gradient = 'a',
 	children,
 }: Props) {
+	const gradientClass =
+		gradient === 'a' ? s.cardGradientA : s.cardGradientB;
+
 	return (
 		<div className={clsx(s.root, className)}>
-			<div
-				className={clsx(
-					s.gradient,
-					gradient === 'a' ? s.cardGradientA : s.cardGradientB,
-				)}
-			></div>
-			<div className={s.content} style={{ opacity: 0 }}>
-				{title && (
-					<Heading className={s.title} depth={depth}>
-						{title}
-					</Heading>
-				)}
-				{children}
+			<div className={clsx(glassFrameStyles.frame, s.frame)}>
+				<div
+					className={clsx(s.gradient, gradientClass)}
+					aria-hidden
+				/>
+				<div
+					className={glassFrameStyles.surfaceBorder}
+					aria-hidden
+				/>
+				<div className={glassFrameStyles.rim} aria-hidden />
+				<div className={s.content}>
+					{title && (
+						<Heading className={s.title} depth={depth}>
+							{title}
+						</Heading>
+					)}
+					{children}
+				</div>
 			</div>
 		</div>
 	);

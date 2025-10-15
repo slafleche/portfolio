@@ -45,10 +45,6 @@ export default function Menu({
 		setMounted,
 	] = useState(false);
 	const [
-		fontsReady,
-		setFontsReady,
-	] = useState(false);
-	const [
 		activeSection,
 		setActiveSection,
 	] = useState<string | null>(null);
@@ -66,6 +62,8 @@ export default function Menu({
 	// no pending animation once we leave the top; we only fire when already there
 
 	const { anchors, anchorCount, sectionIds } = useMenuAnchors(locale);
+
+	const fontsReady = true;
 
 	const {
 		navRef,
@@ -375,38 +373,6 @@ export default function Menu({
 
 	// Wait for fonts to load, then mark as mounted (for transitions)
 	useEffect(() => {
-		if (typeof document === 'undefined') {
-			setFontsReady(true);
-			return;
-		}
-		const fonts = document.fonts;
-		if (!fonts) {
-			setFontsReady(true);
-			return;
-		}
-		if (fonts.status === 'loaded') {
-			setFontsReady(true);
-			return;
-		}
-		let cancelled = false;
-		fonts.ready.then(
-			() => {
-				if (!cancelled) setFontsReady(true);
-			},
-			() => {
-				if (!cancelled) setFontsReady(true);
-			},
-		);
-		return () => {
-			cancelled = true;
-		};
-	}, []);
-
-	useEffect(() => {
-		if (!fontsReady) {
-			setMounted(false);
-			return;
-		}
 		let raf1 = 0;
 		let raf2 = 0;
 		raf1 = requestAnimationFrame(() => {
@@ -416,9 +382,7 @@ export default function Menu({
 			if (raf1) cancelAnimationFrame(raf1);
 			if (raf2) cancelAnimationFrame(raf2);
 		};
-	}, [
-		fontsReady,
-	]);
+	}, []);
 
 	useEffect(
 		() => () => {

@@ -18,8 +18,8 @@ export const glassVars = {
 	innerBorderColor: colorVars.white,
 	backdropBlur: m(5),
 	border: {
-		radius: m(80), // border Radius
-		width: m(8),
+		radius: m(40), // border Radius
+		width: m(2),
 	},
 	// Kind of "background" color
 	innerBorderHighlight: {
