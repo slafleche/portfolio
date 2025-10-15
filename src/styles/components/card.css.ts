@@ -8,6 +8,7 @@ import { absolutePosition } from '../helpers/positioning';
 import { globalBoxShadow } from '../helpers/shadow';
 
 export const root = style({
+	position: 'relative',
 	border: 'solid black 10px',
 	margin: '20px',
 	// ...paddings({ all: m(10) }),
@@ -30,6 +31,10 @@ export const container = style({
 	gridTemplateColumns: '1fr auto 1fr',
 	gap: '24px',
 	alignItems: 'stretch',
+});
+
+export const content = style({
+	position: 'relative',
 });
 
 export const title = style({});
@@ -65,13 +70,16 @@ export const image = style({
 });
 
 export const gradient = style({
-	height: '100%',
+	...absolutePosition.fullSize(),
+	filter: 'blur(1px)',
 });
 
 export const cardGradientA = style(
 	makeCardGradient(gradients[0], {
 		// extrasPerSpan: 100,
-		linearDirection: m(40, 'deg'),
+		linearDirection: m(92, 'deg'),
+		// includeLinear: false,
+		// includeSpots: false,
 	}),
 );
 
