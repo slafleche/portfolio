@@ -1,4 +1,4 @@
-import type { Color, ColorWrapper } from '@/styles/helpers/colorWrap';
+import type { ColorWrapper } from '@/styles/helpers/colorWrap';
 import { colorVars, dropShadowVars } from '../vars';
 import { m, type IMeasurement } from './measurement';
 export interface IBoxShadow {

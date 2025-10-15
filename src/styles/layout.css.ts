@@ -2,8 +2,6 @@ import { style } from '@vanilla-extract/css';
 import { globalMediaQueryStyles } from './responsive/mediaQueries';
 import { paddings } from './helpers/spacing';
 import { layoutVars } from './layoutVars.css';
-import { glossyBorder } from './helpers/glassy';
-import borders from './helpers/borders';
 
 export const content = style({
 	position: 'relative',
