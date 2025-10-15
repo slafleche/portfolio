@@ -66,7 +66,7 @@ const LADDER = [
 const FPS = 24;
 const SEG = 2;
 const GOP = FPS * 2;
-const KEEP_AUDIO = true;
+const KEEP_AUDIO = false;
 
 const BASE_VIDEO_FILTER = [
 	'format=yuv420p',
@@ -277,13 +277,18 @@ async function ffprobeJSON(inputPath) {
 }
 
 // Deband, add subtle grain, then split/scale ladder outputs (order matters).
-function buildFilterAndMaps(hasAudio) {
+function buildFilterAndMaps(speed = 1) {
 	const splitN = LADDER.length;
 	const v = Array.from({ length: splitN }, (_, i) => `v${i + 1}`);
 	const out = v.map((label, i) => `${label}out`);
 
+	const speedFilter =
+		typeof speed === 'number' && speed !== 1
+			? `setpts=${(1 / speed).toFixed(6)}*PTS,`
+			: '';
+
 	const split =
-		`[0:v]${BASE_VIDEO_FILTER},` +
+		`[0:v]${speedFilter}${BASE_VIDEO_FILTER},` +
 		`split=${splitN}` +
 		v.map((x) => `[${x}]`).join('') +
 		';';
@@ -293,17 +298,14 @@ function buildFilterAndMaps(hasAudio) {
 			(x, i) =>
 				` [${x}]scale=-2:${LADDER[i].h}:flags=lanczos[${out[i]}];`,
 		)
-		.join('');
+			.join('');
 
 	const maps = [];
 	for (let i = 0; i < out.length; i++) {
 		maps.push('-map', `[${out[i]}]`);
-		if (hasAudio && KEEP_AUDIO) maps.push('-map', 'a:0?');
 	}
 
-	const varMap = LADDER.map((_, i) =>
-		hasAudio && KEEP_AUDIO ? `v:${i},a:${i}` : `v:${i}`,
-	).join(' ');
+	const varMap = LADDER.map((_, i) => `v:${i}`).join(' ');
 
 	return {
 		filter: split + scales,
@@ -312,7 +314,7 @@ function buildFilterAndMaps(hasAudio) {
 	};
 }
 
-async function buildHLS(srcPath, name) {
+async function buildHLS(srcPath, name, speed = 1) {
 	const outDir = path.join(OUT_ROOT, name);
 	await fs.mkdir(outDir, {
 		recursive: true,
@@ -320,13 +322,13 @@ async function buildHLS(srcPath, name) {
 
 	const meta = await ffprobeJSON(srcPath);
 	const v = meta.streams.find((s) => s.codec_type === 'video');
-	const a = meta.streams.find((s) => s.codec_type === 'audio');
 	const width = v?.width ?? 0;
 	const height = v?.height ?? 0;
-	const duration = Number(meta.format?.duration ?? 0);
-	const hasAudio = !!a;
+	const originalDuration = Number(meta.format?.duration ?? 0);
+	const duration =
+		speed && speed !== 0 ? originalDuration / speed : originalDuration;
 
-	const { filter, maps, varMap } = buildFilterAndMaps(hasAudio);
+	const { filter, maps, varMap } = buildFilterAndMaps(speed);
 
 	for (let i = 0; i < LADDER.length; i++) {
 		await fs.mkdir(path.join(outDir, `out_${i}`), {
@@ -375,17 +377,6 @@ async function buildHLS(srcPath, name) {
 		'bt709',
 		'-colorspace',
 		'bt709',
-
-		...(KEEP_AUDIO && hasAudio
-			? [
-					'-c:a',
-					'aac',
-					`-b:a:${i}`,
-					`${r.aK}k`,
-				]
-			: [
-					'-an',
-				]),
 	]);
 
 	const args = [
@@ -398,6 +389,7 @@ async function buildHLS(srcPath, name) {
 		...maps,
 
 		...rungOpts,
+		'-an',
 
 		'-f',
 		'hls',
@@ -421,24 +413,37 @@ async function buildHLS(srcPath, name) {
 		stdio: 'inherit',
 	});
 
-	const poster = path.join(outDir, 'poster.jpg');
+	const primarySegment = path.join(outDir, 'out_0', 'seg_000.ts');
+	const fallbackSegment = path.join(outDir, 'out_0', 'seg_001.ts');
+	let posterSource = primarySegment;
+	if (!(await exists(posterSource))) {
+		if (await exists(fallbackSegment)) {
+			posterSource = fallbackSegment;
+		} else {
+			posterSource = srcPath;
+		}
+	}
+
+	const poster = path.join(outDir, 'poster.png');
+	await fs
+		.rm(path.join(outDir, 'poster.jpg'), {
+			force: true,
+		})
+		.catch(() => {});
 	await execa(ffmpegStatic, [
-		'-ss',
-		'1',
 		'-i',
-		srcPath,
+		posterSource,
 		'-frames:v',
 		'1',
 		'-vf',
-		`${BASE_VIDEO_FILTER},scale=-2:720:flags=lanczos`,
+		'scale=-2:720:flags=lanczos',
 		'-color_primaries',
 		'bt709',
 		'-color_trc',
 		'bt709',
 		'-colorspace',
 		'bt709',
-		'-q:v',
-		'3',
+		'-y',
 		poster,
 	]);
 
@@ -448,13 +453,14 @@ async function buildHLS(srcPath, name) {
 		height,
 		aspect: height ? width / height : 0,
 		duration,
-		hasAudio: KEEP_AUDIO && hasAudio,
+		hasAudio: false,
+		speed,
 		masterUrl: `/videos/${name}/master.m3u8`,
-		posterUrl: `/videos/${name}/poster.jpg`,
+		posterUrl: `/videos/${name}/poster.png`,
 		variants: LADDER.map((r, i) => ({
 			rung: i,
 			height: r.h,
-			bandwidthKbps: r.vK + (KEEP_AUDIO && hasAudio ? r.aK : 0),
+			bandwidthKbps: r.vK,
 			playlistUrl: `/videos/${name}/out_${i}/index.m3u8`,
 		})),
 	};
@@ -546,7 +552,11 @@ function parseTargets(argv) {
 			);
 			const prev = manifest[name];
 
-			if (partialBuild && prev?.sourceHash === hash) {
+			if (
+				partialBuild &&
+				prev?.sourceHash === hash &&
+				(prev?.speed ?? 1) === speed
+			) {
 				console.log(
 					`• Unchanged (${prettyBytes(bytes)}). Skipping transcode.`,
 				);
@@ -559,7 +569,7 @@ function parseTargets(argv) {
 				})
 				.catch(() => {});
 
-			const info = await buildHLS(file, name);
+			const info = await buildHLS(file, name, speed);
 			manifest[name] = {
 				...info,
 				sourceHash: hash,
