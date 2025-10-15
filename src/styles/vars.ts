@@ -603,6 +603,20 @@ export const chevronVars = {
 };
 
 export const heroVars = {
+	background: {
+		// color: color('#ffd500'),
+		linear: [
+			{
+				color: color.create.rgba(255, 95, 109),
+				at: 0,
+			},
+			{
+				color: color.create.rgba(255, 195, 113),
+				at: 100,
+			},
+		],
+		videoOpacity: 0.7,
+	},
 	paddings: {
 		top: m(40),
 		bottom: m(40),

@@ -68,6 +68,12 @@ const SEG = 2;
 const GOP = FPS * 2;
 const KEEP_AUDIO = true;
 
+const BASE_VIDEO_FILTER = [
+	'format=yuv420p',
+	'gradfun=strength=0.9:radius=16',
+	'noise=alls=4:allf=t+u',
+].join(','); // shared pre-processing so posters match HLS output
+
 /* Utility helpers ---------------------------------------------------- */
 const exists = async (p) =>
 	!!(await fs
@@ -242,9 +248,7 @@ function buildFilterAndMaps(hasAudio) {
 	const out = v.map((label, i) => `${label}out`);
 
 	const split =
-		`[0:v]format=yuv420p,` +
-		`gradfun=strength=0.9:radius=16,` + // stronger deband/dither
-		`noise=alls=4:allf=t+u,` + // subtle temporal grain
+		`[0:v]${BASE_VIDEO_FILTER},` +
 		`split=${splitN}` +
 		v.map((x) => `[${x}]`).join('') +
 		';';
@@ -391,7 +395,13 @@ async function buildHLS(srcPath, name) {
 		'-frames:v',
 		'1',
 		'-vf',
-		'scale=-2:720:flags=lanczos',
+		`${BASE_VIDEO_FILTER},scale=-2:720:flags=lanczos`,
+		'-color_primaries',
+		'bt709',
+		'-color_trc',
+		'bt709',
+		'-colorspace',
+		'bt709',
 		'-q:v',
 		'3',
 		poster,
@@ -434,6 +444,16 @@ function parseTargets(argv) {
 	}
 
 	const urlMap = JSON.parse(await fs.readFile(SRC_MAP_PATH, 'utf8'));
+	const allowedNames = new Set(
+		Object.keys(urlMap).map((key) => toName(key)),
+	);
+	if (!partialBuild) {
+		manifest = {};
+	} else {
+		for (const key of Object.keys(manifest)) {
+			if (!allowedNames.has(key)) delete manifest[key];
+		}
+	}
 	const entries = Object.entries(urlMap).filter(
 		([
 			key,
@@ -503,7 +523,15 @@ function parseTargets(argv) {
 
 	await fs.writeFile(
 		MANIFEST_PATH,
-		JSON.stringify(manifest, null, 2),
+		JSON.stringify(
+			Object.fromEntries(
+				Object.entries(manifest).filter(([key]) =>
+					allowedNames.has(key),
+				),
+			),
+			null,
+			2,
+		),
 	);
 	console.log(`\n✓ Wrote manifest → ${MANIFEST_PATH}`);
 	console.log(`✓ Outputs under → ${OUT_ROOT}`);
