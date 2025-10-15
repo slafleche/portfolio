@@ -27,9 +27,13 @@ export type { Color } from 'chroma-js';
 
 type MixArgs = Parameters<Color['mix']>;
 
+type CssOptions = {
+	forceAlpha?: boolean;
+};
+
 export type ColorWrapper = {
 	unsafeColor: Color;
-	css: () => string;
+	css: (options?: CssOptions) => string;
 	alpha: {
 		(): number;
 		(value: number): ColorWrapper;
@@ -168,7 +172,7 @@ type OklchCreator = {
 type ColorCreators = {
 	css: (value: string) => ColorWrapper;
 	hex: (value: string) => ColorWrapper;
-	rgb: (
+	rgba: (
 		r: number,
 		g: number,
 		b: number,
@@ -186,7 +190,7 @@ type ColorCreators = {
 const create: ColorCreators = {
 	css: (value) => wrap(value),
 	hex: (value) => wrap(formatHex(value)),
-	rgb: (r, g, b, alpha) => {
+	rgba: (r, g, b, alpha) => {
 		const R = normalizeRgbChannel(r);
 		const G = normalizeRgbChannel(g);
 		const B = normalizeRgbChannel(b);
@@ -231,6 +235,23 @@ const create: ColorCreators = {
 	}) as OklchCreator,
 };
 
+const toRgbChannel = (channel: number) =>
+	Math.round(Math.max(0, Math.min(255, channel)));
+
+const formatRgba = (value: Color): string => {
+	const [
+		r,
+		g,
+		b,
+	] = value.rgb(false);
+	const alpha = value.alpha();
+	const formattedAlpha =
+		alpha === 1 ? '1' : Number(alpha.toFixed(3)).toString();
+	return `rgba(${toRgbChannel(r)}, ${toRgbChannel(g)}, ${toRgbChannel(
+		b,
+	)}, ${formattedAlpha})`;
+};
+
 export function wrap(input: ColorInput): ColorWrapper {
 	const base = toColor(input);
 	const alpha = ((value?: number) => {
@@ -242,7 +263,8 @@ export function wrap(input: ColorInput): ColorWrapper {
 
 	return {
 		unsafeColor: base,
-		css: () => base.css(),
+		css: (options?: CssOptions) =>
+			options?.forceAlpha ? formatRgba(base) : base.css(),
 		alpha,
 		darken: (value?: number) =>
 			derive(base, (draft) => draft.darken(value)),
