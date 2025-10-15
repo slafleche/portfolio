@@ -90,6 +90,41 @@ const toName = (s) =>
 		.replace(/\s+/g, '-')
 		.toLowerCase();
 
+function normalizeSourceEntry(rawValue, key) {
+	if (typeof rawValue === 'string') {
+		return {
+			src: rawValue,
+			speed: 1,
+		};
+	}
+	if (rawValue && typeof rawValue === 'object') {
+		const src = typeof rawValue.src === 'string' ? rawValue.src : '';
+		if (!src) {
+			throw new Error(
+				`Source entry "${key}" is missing a valid "src" string.`,
+			);
+		}
+		let speed = 1;
+		if (rawValue.speed != null) {
+			const parsed = Number(rawValue.speed);
+			if (Number.isFinite(parsed) && parsed > 0) {
+				speed = parsed;
+			} else {
+				console.warn(
+					`⚠️ Ignoring invalid speed "${rawValue.speed}" for "${key}". Expected a positive number.`,
+				);
+			}
+		}
+		return {
+			src,
+			speed,
+		};
+	}
+	throw new Error(
+		`Unsupported source definition for "${key}". Expected string or object with "src".`,
+	);
+}
+
 function normalizeDrive(urlStr) {
 	try {
 		const u = new URL(urlStr);
@@ -454,10 +489,26 @@ function parseTargets(argv) {
 			if (!allowedNames.has(key)) delete manifest[key];
 		}
 	}
-	const entries = Object.entries(urlMap).filter(
-		([
-			key,
-		]) => (partialBuild ? targets.has(toName(key)) : true),
+	const normalizedEntries = Object.entries(urlMap)
+		.map(([rawName, rawValue]) => {
+			try {
+				const normalized = normalizeSourceEntry(rawValue, rawName);
+				return {
+					rawName,
+					name: toName(rawName),
+					...normalized,
+				};
+			} catch (error) {
+				console.error(
+					`✗ Skipping "${rawName}": ${error.message || error}`,
+				);
+				return null;
+			}
+		})
+		.filter(Boolean);
+
+	const entries = normalizedEntries.filter((entry) =>
+		partialBuild ? targets.has(entry.name) : true,
 	);
 
 	if (partialBuild && entries.length === 0) {
@@ -481,16 +532,17 @@ function parseTargets(argv) {
 		});
 	}
 
-	for (const [
+	for (const {
 		rawName,
-		rawUrl,
-	] of entries) {
-		const name = toName(rawName);
-		console.log(`\n▶ ${name}`);
+		name,
+		src,
+		speed,
+	} of entries) {
+		console.log(`\n▶ ${name}${speed !== 1 ? `  (speed ×${speed.toFixed(2)})` : ''}`);
 		try {
 			const { file, hash, bytes } = await downloadToTemp(
 				name,
-				rawUrl,
+				src,
 			);
 			const prev = manifest[name];
 
