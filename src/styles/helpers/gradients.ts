@@ -21,8 +21,10 @@ export type Stop = {
 	at: number | string;
 };
 
+export type AngleInput = number | IMeasurement;
+
 export type LinearOpts = {
-	to?: string; // e.g. "to bottom right" | "45deg"; default: "to bottom"
+	angle: AngleInput;
 	stops: Stop[];
 };
 
@@ -55,9 +57,6 @@ export type Built = {
 const pct = (p: number | string) =>
 	typeof p === 'number' ? `${p}%` : p;
 
-const clampPercent = (value: number) =>
-	Math.max(0, Math.min(100, value));
-
 type MeasurementValue = number | IMeasurement;
 
 export type DirectionPoint = {
@@ -66,33 +65,58 @@ export type DirectionPoint = {
 };
 
 export type LinearDirectionInput =
-	| string
-	| IMeasurement
+	| AngleInput
 	| {
 			from: DirectionPoint;
 			to: DirectionPoint;
 	  };
 
-const formatCoordinate = (value: MeasurementValue) =>
-	typeof value === 'number' ? `${clampPercent(value)}%` : value.css();
+const measurementValue = (value: MeasurementValue): number | undefined =>
+	typeof value === 'number' ? value : value.value;
 
-const formatPoint = ({ x, y }: DirectionPoint) =>
-	`${formatCoordinate(x)} ${formatCoordinate(y)}`;
+const resolveCoordinateAngle = (
+	input: Extract<
+		LinearDirectionInput,
+		{
+			from: DirectionPoint;
+			to: DirectionPoint;
+		}
+	>,
+): number | undefined => {
+	const ax = measurementValue(input.from.x);
+	const ay = measurementValue(input.from.y);
+	const bx = measurementValue(input.to.x);
+	const by = measurementValue(input.to.y);
+	if (
+		ax == null ||
+		ay == null ||
+		bx == null ||
+		by == null
+	) {
+		return undefined;
+	}
 
-export function formatLinearDirection(
+	const dx = bx - ax;
+	const dy = by - ay;
+	const angle = (Math.atan2(dx, -dy) * 180) / Math.PI;
+	return (angle % 360 + 360) % 360;
+};
+
+export function resolveLinearAngle(
 	input?: LinearDirectionInput,
-): string {
-	if (typeof input === 'string') {
+): AngleInput | undefined {
+	if (input == null) return 270; // default "to left"
+	if (typeof input === 'number') return input;
+	if (isCssLike(input)) {
 		return input;
 	}
-	if (input && isCssLike(input)) {
-		return input.css();
+	if ('from' in input && 'to' in input) {
+		return resolveCoordinateAngle(input as {
+			from: DirectionPoint;
+			to: DirectionPoint;
+		});
 	}
-	if (input) {
-		return `${formatPoint(input.from)}, ${formatPoint(input.to)}`;
-	}
-	// default equivalent of "to left"
-	return '100% 50%, 0% 50%';
+	return undefined;
 }
 
 function isColorWrapper(value: unknown): value is ColorWrapper {
@@ -167,10 +191,11 @@ function colorModern(c: ColorInput): string {
 	return colorFallback(c);
 }
 
-export function buildLinear({
-	to = 'to bottom',
-	stops,
-}: LinearOpts): Built {
+const angleToCss = (angle: AngleInput): string =>
+	typeof angle === 'number' ? `${angle}deg` : angle.css();
+
+export function buildLinear({ angle, stops }: LinearOpts): Built {
+	const direction = angleToCss(angle);
 	const fStops = stops
 		.map((s) => `${colorFallback(s.color)} ${pct(s.at)}`)
 		.join(', ');
@@ -178,8 +203,8 @@ export function buildLinear({
 		.map((s) => `${colorModern(s.color)} ${pct(s.at)}`)
 		.join(', ');
 	return {
-		fallback: `linear-gradient(${to}, ${fStops})`,
-		modern: `linear-gradient(${to}, ${mStops})`,
+		fallback: `linear-gradient(${direction}, ${fStops})`,
+		modern: `linear-gradient(${direction}, ${mStops})`,
 	};
 }
 
