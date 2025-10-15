@@ -1,3 +1,6 @@
 {
-	"hero": "https://dl.dropboxusercontent.com/scl/fi/yoavaexfojosugu9rkn0g/videohive-BMvwaxDk-shiva-blue-perrywinkle-dragonlord-purple-and-grim-purple-inclined-lines-gradient-background-loop.mp4?rlkey=mx10as9pofnjzoy1tr136zmj8"
+	"hero": {
+		"src": "https://dl.dropboxusercontent.com/scl/fi/yoavaexfojosugu9rkn0g/videohive-BMvwaxDk-shiva-blue-perrywinkle-dragonlord-purple-and-grim-purple-inclined-lines-gradient-background-loop.mp4?rlkey=mx10as9pofnjzoy1tr136zmj8",
+		"speed": 2
+	}
 }
