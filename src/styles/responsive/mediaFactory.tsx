@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import type { IMediaQueryProps } from './mediaQueries';
 
 // ---------- Query shaping ----------
@@ -59,16 +59,19 @@ export function useMediaFromMap<T extends Record<string, string>>(
 ) {
 	type K = keyof T & string;
 
-	const shallowEqual = (
-		a: Record<K, boolean | undefined>,
-		b: Record<K, boolean | undefined>,
-	) => {
-		const ak = Object.keys(a) as K[];
-		const bk = Object.keys(b) as K[];
-		if (ak.length !== bk.length) return false;
-		for (const k of ak) if (a[k] !== b[k]) return false;
-		return true;
-	};
+	const shallowEqual = useCallback(
+		(
+			a: Record<K, boolean | undefined>,
+			b: Record<K, boolean | undefined>,
+		) => {
+			const ak = Object.keys(a) as K[];
+			const bk = Object.keys(b) as K[];
+			if (ak.length !== bk.length) return false;
+			for (const k of ak) if (a[k] !== b[k]) return false;
+			return true;
+		},
+		[],
+	);
 
 	// Stable, sorted list of [key, queryString]
 	const entries = useMemo(() => {
@@ -149,6 +152,7 @@ export function useMediaFromMap<T extends Record<string, string>>(
 		};
 	}, [
 		entries,
+		shallowEqual,
 	]);
 
 	return matches as {
