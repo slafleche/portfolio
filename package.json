@@ -76,6 +76,7 @@
 		"dev": "next dev",
 		"prebuild": "MINIFY=1 yarn locales && yarn format:video && yarn format:img",
 		"build": "next build",
+		"start": "next start",
 		"lint": "eslint .",
 		"lint:fix": "eslint --fix .",
 		"format:code": "prettier --write .",

@@ -54,8 +54,14 @@ export default function VideoByName({
 		shouldLoadVideo,
 		setShouldLoadVideo,
 	] = React.useState<boolean>(() => priority ?? false);
-	const [isPosterVisible, setPosterVisible] = React.useState(true);
-	const [isVideoReady, setVideoReady] = React.useState(false);
+	const [
+		isPosterVisible,
+		setPosterVisible,
+	] = React.useState(true);
+	const [
+		isVideoReady,
+		setVideoReady,
+	] = React.useState(false);
 
 	React.useEffect(() => {
 		setPosterVisible(true);
@@ -194,7 +200,7 @@ export default function VideoByName({
 
 	if (!data) return null;
 	const posterSrc = posterImage?.original.url ?? data.posterUrl;
-const posterSrcSet = posterImage?.variants.jpg?.length
+	const posterSrcSet = posterImage?.variants.jpg?.length
 		? posterImage.variants.jpg
 				.slice()
 				.sort((a, b) => a.w - b.w)
@@ -214,6 +220,9 @@ const posterSrcSet = posterImage?.variants.jpg?.length
 		onPlay: userOnPlay,
 		...restVideoProps
 	} = videoProps;
+	// mark as used so it doesn't trigger no-unused-vars while still stripping from rest
+	void _ignoredChildren;
+
 	const rawAttrs = restVideoProps as Record<string, unknown>;
 	const ariaHiddenRaw =
 		rawAttrs['aria-hidden'] ?? rawAttrs['ariaHidden'];
