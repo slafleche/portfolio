@@ -1,15 +1,14 @@
 import { style } from '@vanilla-extract/css';
 import { makeCardGradient } from '../helpers/cardGradient';
 import { colorVars, gradients } from '../vars';
-import border from '../helpers/borders';
 import { m } from '../helpers/measurement';
 import { paddings } from '../helpers/spacing';
 import { absolutePosition } from '../helpers/positioning';
 import { globalBoxShadow } from '../helpers/shadow';
+import { glassVars } from '../helpers/glassy';
 
 export const root = style({
 	position: 'relative',
-	border: 'solid black 10px',
 	margin: '20px',
 	// ...paddings({ all: m(10) }),
 	// minHeight: '100px',
@@ -33,8 +32,20 @@ export const container = style({
 	alignItems: 'stretch',
 });
 
+export const frame = style({
+	position: 'relative',
+	borderRadius: glassVars.border.radius.css(),
+	overflow: 'hidden',
+	backgroundColor: colorVars.transparent.css(),
+});
+
 export const content = style({
 	position: 'relative',
+	zIndex: 2,
+	...paddings({
+		all: m(4),
+	}),
+	borderRadius: glassVars.border.radius.css(),
 });
 
 export const title = style({});
@@ -50,10 +61,7 @@ export const image = style({
 	overflow: 'hidden',
 	borderRadius: '50%',
 	boxShadow: globalBoxShadow(),
-	...border({
-		color: colorVars.bodyFg.css(),
-		width: m(6),
-	}),
+	border: `${m(6).css()} solid ${colorVars.bodyFg.css()}`,
 	...paddings({
 		top: '100%',
 	}),
@@ -72,6 +80,9 @@ export const image = style({
 export const gradient = style({
 	...absolutePosition.fullSize(),
 	filter: 'blur(1px)',
+	pointerEvents: 'none',
+	borderRadius: 'inherit',
+	zIndex: 0,
 });
 
 export const cardGradientA = style(
