@@ -1,11 +1,12 @@
 import { color, type ColorWrapper } from './colorWrap';
 import type { Property } from 'csstype';
 import type { IMeasurement } from './measurement';
-import { isCssLike } from './measurement';
 import {
 	buildLinear,
+	formatLinearDirection,
 	stackBackground,
 	type Layer,
+	type LinearDirectionInput,
 	type Stop,
 } from './gradients';
 
@@ -64,20 +65,6 @@ type SpotStop = {
 blend?: number;
 }; 
 
-type MeasurementValue = number | IMeasurement;
-type DirectionPoint = {
-	x: MeasurementValue;
-	y: MeasurementValue;
-};
-
-type LinearDirectionInput =
-	| string
-	| IMeasurement
-	| {
-			from: DirectionPoint;
-			to: DirectionPoint;
-	  };
-
 const pctLerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const interiorPercents = (p1: number, p2: number, n: number) =>
 	Array.from({ length: n }, (_, i) =>
@@ -94,28 +81,9 @@ const normalizeScalePercentPair = (scale?: number) => {
 };
 const formatSpotSize = (spot: GradientSpot) =>
 	normalizeScalePercentPair(spot.scale);
-const formatCoordinate = (value: MeasurementValue) =>
-	typeof value === 'number' ? `${clampPercent(value)}%` : value.css();
-const formatPoint = ({ x, y }: DirectionPoint) =>
-	`${formatCoordinate(x)} ${formatCoordinate(y)}`;
 const ensureAlpha = (value: ColorWrapper) =>
 	color.wrap(value.css({ forceAlpha: true }));
 type EasingFn = (t: number) => number;
-const formatLinearDirection = (
-	input?: LinearDirectionInput,
-): string => {
-	if (typeof input === 'string') {
-		return input;
-	}
-	if (input && isCssLike(input)) {
-		return input.css();
-	}
-	if (input) {
-		return `${formatPoint(input.from)}, ${formatPoint(input.to)}`;
-	}
-	// default equivalent of "to left"
-	return '100% 50%, 0% 50%';
-};
 const defaultSpotStops: SpotStop[] = [
 	{
 		at: 0,

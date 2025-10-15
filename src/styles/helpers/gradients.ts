@@ -3,6 +3,8 @@ import {
 	type ColorWrapper,
 	type CuloriOKLCH,
 } from './colorWrap';
+import type { IMeasurement } from './measurement';
+import { isCssLike } from './measurement';
 
 /** OKLCH tuple (percents for L, chroma as 0..~0.4, hue in degrees) */
 export type OKLCH = {
@@ -52,6 +54,46 @@ export type Built = {
 
 const pct = (p: number | string) =>
 	typeof p === 'number' ? `${p}%` : p;
+
+const clampPercent = (value: number) =>
+	Math.max(0, Math.min(100, value));
+
+type MeasurementValue = number | IMeasurement;
+
+export type DirectionPoint = {
+	x: MeasurementValue;
+	y: MeasurementValue;
+};
+
+export type LinearDirectionInput =
+	| string
+	| IMeasurement
+	| {
+			from: DirectionPoint;
+			to: DirectionPoint;
+	  };
+
+const formatCoordinate = (value: MeasurementValue) =>
+	typeof value === 'number' ? `${clampPercent(value)}%` : value.css();
+
+const formatPoint = ({ x, y }: DirectionPoint) =>
+	`${formatCoordinate(x)} ${formatCoordinate(y)}`;
+
+export function formatLinearDirection(
+	input?: LinearDirectionInput,
+): string {
+	if (typeof input === 'string') {
+		return input;
+	}
+	if (input && isCssLike(input)) {
+		return input.css();
+	}
+	if (input) {
+		return `${formatPoint(input.from)}, ${formatPoint(input.to)}`;
+	}
+	// default equivalent of "to left"
+	return '100% 50%, 0% 50%';
+}
 
 function isColorWrapper(value: unknown): value is ColorWrapper {
 	return (
