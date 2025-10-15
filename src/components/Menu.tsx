@@ -27,9 +27,9 @@ type MenuProps = {
 	debugGlow?: boolean;
 };
 
-const LOGO_GLOW_TOP_THRESHOLD = 4;
-const LOGO_GLOW_DURATION = 900;
-const LOGO_GLOW_HOLD_DELAY = 160;
+const LOGO_GLOW_TOP_THRESHOLD = 3;
+const LOGO_GLOW_DURATION = 500;
+const LOGO_GLOW_HOLD_DELAY = 100;
 
 export default function Menu({
 	debugMiniBokeh = false,
