@@ -1,9 +1,8 @@
 import { color, type ColorWrapper } from './colorWrap';
 import type { Property } from 'csstype';
-import type { IMeasurement } from './measurement';
 import {
 	buildLinear,
-	formatLinearDirection,
+	resolveLinearAngle,
 	stackBackground,
 	type Layer,
 	type LinearDirectionInput,
@@ -38,8 +37,8 @@ type GradientSpot = {
 	 */
 	softenL?: number;
 	/**
-	 * Number of interior samples inserted between each pair of spot stops.
-	 * Accepts integers ≥ 0.
+	 * Number of interior samples inserted between each pair of spot
+	 * stops. Accepts integers ≥ 0.
 	 */
 	extrasPerSpan?: number;
 	/** Diameter scaling percentage (100 = base size). */
@@ -58,12 +57,13 @@ type CardGradientPack = {
 type SpotStop = {
 	at: number;
 	alpha: number;
-/**
- * Optional blend factor (0–1) controlling how strongly this stop pulls the
- * interpolated color toward itself. Similar to the linear stop `blend`.
- */
-blend?: number;
-}; 
+	/**
+	 * Optional blend factor (0–1) controlling how strongly this stop
+	 * pulls the interpolated color toward itself. Similar to the linear
+	 * stop `blend`.
+	 */
+	blend?: number;
+};
 
 const pctLerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const interiorPercents = (p1: number, p2: number, n: number) =>
@@ -73,8 +73,7 @@ const interiorPercents = (p1: number, p2: number, n: number) =>
 const clampPercent = (value: number) =>
 	Math.max(0, Math.min(100, value));
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
-const formatSpotPosition = ({ x, y }: GradientSpot) =>
-	`${x}% ${y}%`;
+const formatSpotPosition = ({ x, y }: GradientSpot) => `${x}% ${y}%`;
 const normalizeScalePercentPair = (scale?: number) => {
 	const pct = Math.max(0, scale ?? 100);
 	return `${pct}% ${pct}%`;
@@ -111,12 +110,12 @@ const sanitizeSpotStops = (stops?: SpotStop[]): SpotStop[] => {
 };
 
 const getSpotAnchors = (spot: GradientSpot) => {
-const stops = sanitizeSpotStops(spot.stops);
-return {
-  percents: stops.map((stop) => stop.at),
-  alphas: stops.map((stop) => stop.alpha),
-  blends: stops.map((stop) => clamp01(stop.blend ?? 0)),
-};
+	const stops = sanitizeSpotStops(spot.stops);
+	return {
+		percents: stops.map((stop) => stop.at),
+		alphas: stops.map((stop) => stop.alpha),
+		blends: stops.map((stop) => clamp01(stop.blend ?? 0)),
+	};
 };
 
 function radialStopsAlphaFade(
@@ -128,7 +127,9 @@ function radialStopsAlphaFade(
 	softenL = 0,
 ): Stop[] {
 	const normalizedBase = ensureAlpha(base);
-	const baseAlpha = clamp01(base.alpha?.() ?? normalizedBase.alpha?.() ?? 1);
+	const baseAlpha = clamp01(
+		base.alpha?.() ?? normalizedBase.alpha?.() ?? 1,
+	);
 	const [
 		L,
 		C,
@@ -272,15 +273,15 @@ export function makeCardGradient(
 		 */
 		softenL?: number;
 		/**
-		 * Linear gradient direction. Accepts either a CSS direction
-		 * string (`"to left"`, `"45deg"`) or start/end percentage
-		 * coordinates. When omitted defaults to the percentage equivalent
-		 * of `"to left"`.
+		 * Linear gradient direction. Accepts an angle (number or
+		 * measurement), a CSS angle string like `"45deg"`, or start/end
+		 * percentage coordinates. When omitted defaults to 90 (equivalent
+		 * to `"to right"` in CSS).
 		 */
 		linearDirection?: LinearDirectionInput;
 		/**
-		 * Fallback direction when blend modes are unavailable. Defaults
-		 * to the same value as `linearDirection` if unspecified.
+		 * Fallback angle when blend modes are unavailable. Defaults to
+		 * the same value as `linearDirection` if unspecified.
 		 */
 		linearFallbackDirection?: LinearDirectionInput;
 		/**
@@ -304,11 +305,10 @@ export function makeCardGradient(
 		includeSpots = true,
 	} = options;
 
-	const formattedLinearDirection =
-		formatLinearDirection(linearDirection);
-	const formattedFallbackDirection = formatLinearDirection(
-		linearFallbackDirection ?? linearDirection,
-	);
+	const linearAngle = resolveLinearAngle(linearDirection) ?? 90;
+	const fallbackAngle =
+		resolveLinearAngle(linearFallbackDirection ?? linearDirection) ??
+		90;
 
 	const linearSlices = Array.isArray(gradient.linear)
 		? gradient.linear
@@ -320,7 +320,7 @@ export function makeCardGradient(
 	const layers: Layer[] = [];
 	const blendModes: Property.MixBlendMode[] = [];
 
-	const spots = includeSpots ? gradient.spots ?? [] : [];
+	const spots = includeSpots ? (gradient.spots ?? []) : [];
 
 	if (includeSpots) {
 		for (const spot of spots) {
@@ -346,12 +346,13 @@ export function makeCardGradient(
 	}
 
 	if (hasLinear) {
+		const linearOptions = {
+			stops: linearStops,
+			angle: linearAngle,
+		};
 		layers.push({
 			kind: 'linear',
-			options: {
-				to: formattedLinearDirection,
-				stops: linearStops,
-			},
+			options: linearOptions,
 		});
 		blendModes.push('normal');
 	}
@@ -380,8 +381,8 @@ export function makeCardGradient(
 	const gradientStack = stackBackground(layers);
 	const linearFallback = hasLinear
 		? buildLinear({
-				to: formattedFallbackDirection,
 				stops: linearStops,
+				angle: fallbackAngle,
 			})
 		: undefined;
 
