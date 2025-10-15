@@ -36,6 +36,11 @@ type GradientSpot = {
 	 * softenL.
 	 */
 	softenL?: number;
+	/**
+	 * Number of interior samples inserted between each pair of spot stops.
+	 * Accepts integers ≥ 0.
+	 */
+	extrasPerSpan?: number;
 	/** Diameter scaling percentage (100 = base size). */
 	scale?: number;
 	/** Optional blend mode for this spot layer (default: "screen"). */
@@ -52,7 +57,12 @@ type CardGradientPack = {
 type SpotStop = {
 	at: number;
 	alpha: number;
-};
+/**
+ * Optional blend factor (0–1) controlling how strongly this stop pulls the
+ * interpolated color toward itself. Similar to the linear stop `blend`.
+ */
+blend?: number;
+}; 
 
 type MeasurementValue = number | IMeasurement;
 type DirectionPoint = {
@@ -77,7 +87,7 @@ const clampPercent = (value: number) =>
 	Math.max(0, Math.min(100, value));
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 const formatSpotPosition = ({ x, y }: GradientSpot) =>
-	`${clampPercent(x)}% ${clampPercent(y)}%`;
+	`${x}% ${y}%`;
 const normalizeScalePercentPair = (scale?: number) => {
 	const pct = Math.max(0, scale ?? 100);
 	return `${pct}% ${pct}%`;
@@ -88,6 +98,9 @@ const formatCoordinate = (value: MeasurementValue) =>
 	typeof value === 'number' ? `${clampPercent(value)}%` : value.css();
 const formatPoint = ({ x, y }: DirectionPoint) =>
 	`${formatCoordinate(x)} ${formatCoordinate(y)}`;
+const ensureAlpha = (value: ColorWrapper) =>
+	color.wrap(value.css({ forceAlpha: true }));
+type EasingFn = (t: number) => number;
 const formatLinearDirection = (
 	input?: LinearDirectionInput,
 ): string => {
@@ -109,25 +122,15 @@ const defaultSpotStops: SpotStop[] = [
 		alpha: 1,
 	},
 	{
-		at: 25,
-		alpha: 0.82,
-	},
-	{
-		at: 45,
-		alpha: 0.55,
-	},
-	{
-		at: 65,
-		alpha: 0.28,
-	},
-	{
-		at: 90,
+		at: 100,
 		alpha: 0,
 	},
 ];
 
 const sanitizeSpotStops = (stops?: SpotStop[]): SpotStop[] => {
-	if (!stops?.length) return defaultSpotStops;
+	if (!stops?.length) {
+		return defaultSpotStops;
+	}
 
 	const sanitized = stops
 		.map(({ at, alpha }) => ({
@@ -136,41 +139,48 @@ const sanitizeSpotStops = (stops?: SpotStop[]): SpotStop[] => {
 		}))
 		.sort((a, b) => a.at - b.at);
 
-	if (sanitized.length < 2) {
-		return defaultSpotStops;
-	}
-
-	return sanitized;
+	return sanitized.length < 2 ? defaultSpotStops : sanitized;
 };
 
 const getSpotAnchors = (spot: GradientSpot) => {
-	const stops = sanitizeSpotStops(spot.stops);
-	return {
-		percents: stops.map((stop) => stop.at),
-		alphas: stops.map((stop) => stop.alpha),
-	};
+const stops = sanitizeSpotStops(spot.stops);
+return {
+  percents: stops.map((stop) => stop.at),
+  alphas: stops.map((stop) => stop.alpha),
+  blends: stops.map((stop) => clamp01(stop.blend ?? 0)),
+};
 };
 
 function radialStopsAlphaFade(
 	base: ColorWrapper,
 	anchorPercents: number[],
 	anchorAlphas: number[],
+	anchorBlends: number[],
 	extrasPerSpan = 1,
 	softenL = 0,
 ): Stop[] {
+	const normalizedBase = ensureAlpha(base);
+	const baseAlpha = clamp01(base.alpha?.() ?? normalizedBase.alpha?.() ?? 1);
 	const [
 		L,
 		C,
 		H,
-	] = base.value().lch();
+	] = normalizedBase.value().lch();
 	const make = (alpha: number) =>
 		color.lch(L + softenL, C, H).alpha(alpha);
 
-	const anchors = anchorPercents.map((p, i) => ({
-		p,
-		alpha: anchorAlphas[i],
-		color: make(anchorAlphas[i]),
-	}));
+	const anchors = anchorPercents.map((p, i) => {
+		const relativeAlpha = clamp01(anchorAlphas[i]);
+		const absoluteAlpha = clamp01(baseAlpha * relativeAlpha);
+		return {
+			p,
+			relativeAlpha,
+			alpha: absoluteAlpha,
+			blend: clamp01(anchorBlends[i] ?? 0),
+			color: ensureAlpha(make(absoluteAlpha)),
+		};
+	});
+
 	const out: Stop[] = [];
 
 	for (let i = 0; i < anchors.length - 1; i++) {
@@ -184,12 +194,27 @@ function radialStopsAlphaFade(
 		for (let j = 0; j < mids.length; j++) {
 			const t = (j + 1) / (extrasPerSpan + 1);
 			const alpha = A.alpha + t * (B.alpha - A.alpha);
+			let midColor = make(alpha);
+			const blendPrev = clamp01(A.blend * (1 - t));
+			const blendNext = clamp01(B.blend * t);
+			midColor = ensureAlpha(midColor);
+			if (blendPrev > 0) {
+				midColor = ensureAlpha(
+					midColor.mix(A.color, blendPrev, 'oklab'),
+				);
+			}
+			if (blendNext > 0) {
+				midColor = ensureAlpha(
+					midColor.mix(B.color, blendNext, 'oklab'),
+				);
+			}
 			out.push({
-				color: make(alpha),
+				color: midColor,
 				at: mids[j],
 			});
 		}
 	}
+
 	const last = anchors.at(-1)!;
 	out.push({
 		color: last.color,
@@ -204,12 +229,17 @@ function linearStopsLab(
 ): Stop[] {
 	if (slices.length < 2) {
 		return slices.map(({ color, at }) => ({
-			color,
+			color: ensureAlpha(color),
 			at,
 		}));
 	}
 
-	const ordered = slices.slice().sort((a, b) => a.at - b.at);
+	const ordered = slices
+		.map(({ color, ...rest }) => ({
+			...rest,
+			color: ensureAlpha(color),
+		}))
+		.sort((a, b) => a.at - b.at);
 
 	const out: Stop[] = [];
 	for (let i = 0; i < ordered.length - 1; i++) {
@@ -246,14 +276,14 @@ function linearStopsLab(
 				}
 			}
 			out.push({
-				color: mid,
+				color: ensureAlpha(mid),
 				at: mids[j],
 			});
 		}
 	}
 
 	out.push({
-		color: ordered.at(-1)!.color,
+		color: ensureAlpha(ordered.at(-1)!.color),
 		at: ordered.at(-1)!.at,
 	});
 	return out;
@@ -290,6 +320,11 @@ export function makeCardGradient(
 		 * debugging spot layers without the base wash.
 		 */
 		includeLinear?: boolean;
+		/**
+		 * Whether to render spot overlays. Disable to focus on the linear
+		 * gradient when debugging.
+		 */
+		includeSpots?: boolean;
 	} = {},
 ) {
 	const {
@@ -298,6 +333,7 @@ export function makeCardGradient(
 		linearDirection,
 		linearFallbackDirection,
 		includeLinear = true,
+		includeSpots = true,
 	} = options;
 
 	const formattedLinearDirection =
@@ -316,26 +352,29 @@ export function makeCardGradient(
 	const layers: Layer[] = [];
 	const blendModes: Property.MixBlendMode[] = [];
 
-	const spots = gradient.spots ?? [];
+	const spots = includeSpots ? gradient.spots ?? [] : [];
 
-	for (const spot of spots) {
-		const anchors = getSpotAnchors(spot);
-		layers.push({
-			kind: 'radial',
-			options: {
-				shape: 'ellipse', // use equal radii to model a circle while keeping browser-compatible syntax
-				size: formatSpotSize(spot),
-				at: formatSpotPosition(spot),
-				stops: radialStopsAlphaFade(
-					spot.color,
-					anchors.percents,
-					anchors.alphas,
-					extrasPerSpan,
-					spot.softenL ?? softenL,
-				),
-			},
-		});
-		blendModes.push(spot.blendMode ?? 'screen');
+	if (includeSpots) {
+		for (const spot of spots) {
+			const anchors = getSpotAnchors(spot);
+			layers.push({
+				kind: 'radial',
+				options: {
+					shape: 'ellipse', // use equal radii to model a circle while keeping browser-compatible syntax
+					size: formatSpotSize(spot),
+					at: formatSpotPosition(spot),
+					stops: radialStopsAlphaFade(
+						spot.color,
+						anchors.percents,
+						anchors.alphas,
+						anchors.blends,
+						spot.extrasPerSpan ?? extrasPerSpan,
+						spot.softenL ?? softenL,
+					),
+				},
+			});
+			blendModes.push(spot.blendMode ?? 'screen');
+		}
 	}
 
 	if (hasLinear) {

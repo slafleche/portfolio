@@ -25,15 +25,14 @@ export default function Card({
 					s.gradient,
 					gradient === 'a' ? s.cardGradientA : s.cardGradientB,
 				)}
-			>
-				<div style={{ opacity: 0 }}>
-					{title && (
-						<Heading className={s.title} depth={depth}>
-							{title}
-						</Heading>
-					)}
-					{children}
-				</div>
+			></div>
+			<div className={s.content} style={{ opacity: 0 }}>
+				{title && (
+					<Heading className={s.title} depth={depth}>
+						{title}
+					</Heading>
+				)}
+				{children}
 			</div>
 		</div>
 	);
