@@ -8,10 +8,10 @@ const OUT_ROOT = 'public/images'; // cleaned each run
 const MANIFEST_PATH = 'src/data/generated/images.manifest.gen.json';
 const VIDEO_MANIFEST_PATH = 'src/data/generated/videos.manifest.gen.json';
 const TEMP_ROOT = 'tmp/large-images';
-const LARGE_IMAGES_DIR = path.join(SRC_DIR, 'largeImages');
-const LARGE_IMAGES_CONFIG = path.join(SRC_DIR, 'largeImages.json');
+const IMAGE_SOURCES_DIR = path.join(SRC_DIR, 'largeImages');
+const IMAGE_SOURCES_CONFIG = path.join(SRC_DIR, 'imageSources.json');
 const IGNORE_DIRS = new Set([
-	LARGE_IMAGES_DIR,
+	IMAGE_SOURCES_DIR,
 ]);
 const MIME_EXTENSIONS = new Map([
 	[
@@ -97,7 +97,7 @@ function ensureDirectDropboxUrl(rawUrl) {
 	}
 }
 
-function normalizeLargeImageUrl(rawUrl) {
+function normalizeRemoteImageUrl(rawUrl) {
 	try {
 		const dropboxNormalized = ensureDirectDropboxUrl(rawUrl);
 		const url = new URL(dropboxNormalized);
@@ -128,9 +128,9 @@ function extensionFromUrl(rawUrl) {
 	}
 }
 
-async function loadLargeImagesConfig() {
+async function loadImageSourcesConfig() {
 	try {
-		const raw = await fs.readFile(LARGE_IMAGES_CONFIG, 'utf8');
+		const raw = await fs.readFile(IMAGE_SOURCES_CONFIG, 'utf8');
 		const parsed = JSON.parse(raw);
 		return parsed && typeof parsed === 'object' ? parsed : {};
 	} catch (error) {
@@ -170,13 +170,13 @@ function toPublicPathFromUrl(rawUrl) {
 	}
 }
 
-async function downloadLargeImage(name, rawUrl) {
+async function downloadRemoteImage(name, rawUrl) {
 	if (typeof fetch !== 'function') {
 		throw new Error(
 			'fetch is not available in this Node.js runtime.',
 		);
 	}
-	const normalizedUrl = normalizeLargeImageUrl(rawUrl);
+	const normalizedUrl = normalizeRemoteImageUrl(rawUrl);
 	const response = await fetch(normalizedUrl);
 	if (!response.ok) {
 		throw new Error(`HTTP ${response.status} ${response.statusText}`);
@@ -337,33 +337,33 @@ console.log(
 );
 
 console.log(
-	`→ Loading large image manifest "${LARGE_IMAGES_CONFIG}"`,
+	`→ Loading remote image source manifest "${IMAGE_SOURCES_CONFIG}"`,
 );
-let largeImagesMap = await loadLargeImagesConfig();
+let imageSourcesMap = await loadImageSourcesConfig();
 const dropboxUpdates = [];
 let manifestChanged = false;
 for (const [
 	name,
 	rawUrl,
-] of Object.entries(largeImagesMap)) {
+] of Object.entries(imageSourcesMap)) {
 	if (typeof rawUrl !== 'string') continue;
 	const trimmed = rawUrl.trim();
 	const normalized = ensureDirectDropboxUrl(trimmed);
 	if (normalized !== trimmed) {
 		dropboxUpdates.push(name);
-		largeImagesMap[name] = normalized;
+		imageSourcesMap[name] = normalized;
 		manifestChanged = true;
 	} else if (trimmed !== rawUrl) {
-		largeImagesMap[name] = trimmed;
+		imageSourcesMap[name] = trimmed;
 		manifestChanged = true;
 	}
 }
 if (manifestChanged) {
 	await fs.writeFile(
-		LARGE_IMAGES_CONFIG,
-		`${JSON.stringify(largeImagesMap, null, 2)}\n`,
+		IMAGE_SOURCES_CONFIG,
+		`${JSON.stringify(imageSourcesMap, null, 2)}\n`,
 	);
-	console.log('   ✓ Wrote normalized large image manifest.');
+	console.log('   ✓ Wrote normalized remote image source manifest.');
 	if (dropboxUpdates.length) {
 		console.log(
 			`     - Applied direct Dropbox links for: ${dropboxUpdates.join(', ')}`,
@@ -373,36 +373,36 @@ if (manifestChanged) {
 	console.log('   • No Dropbox URL updates needed.');
 }
 
-const largeEntries = Object.entries(largeImagesMap);
+const remoteImageEntries = Object.entries(imageSourcesMap);
 
-if (largeEntries.length) {
+if (remoteImageEntries.length) {
 	await fs.mkdir(TEMP_ROOT, {
 		recursive: true,
 	});
 	console.log(
-		`→ Downloading and processing ${largeEntries.length} remote image${largeEntries.length === 1 ? '' : 's'}`,
+		`→ Downloading and processing ${remoteImageEntries.length} remote image${remoteImageEntries.length === 1 ? '' : 's'}`,
 	);
 	let remoteCount = 0;
 	for (const [
 		name,
 		rawUrl,
-	] of largeEntries) {
+	] of remoteImageEntries) {
 		const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
 		if (!url) {
 			console.warn(
-				`⚠️ Skipping large image "${name}" because URL is empty.`,
+				`⚠️ Skipping remote image "${name}" because URL is empty.`,
 			);
 			continue;
 		}
 		try {
 			console.log(`   • Downloading "${name}" from ${url}`);
-			const filePath = await downloadLargeImage(name, url);
+			const filePath = await downloadRemoteImage(name, url);
 			console.log(`     - Saved to ${filePath}`);
 			await processImage(filePath, name, manifest);
 			remoteCount += 1;
 		} catch (error) {
 			console.error(
-				`✗ Failed to process large image "${name}": ${error.message}`,
+				`✗ Failed to process remote image "${name}": ${error.message}`,
 			);
 		}
 	}
@@ -419,7 +419,7 @@ if (largeEntries.length) {
 		`   ✓ Processed ${remoteCount} remote image${remoteCount === 1 ? '' : 's'}.`,
 	);
 } else {
-	console.log('→ No remote large images configured.');
+	console.log('→ No remote image sources configured.');
 }
 
 console.log(
