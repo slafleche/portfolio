@@ -76,7 +76,7 @@ const defaultLines: ConsoleLine[] = [
 
 export default function Console({
 	className,
-	title = 'portfolio.tsx',
+	title = 'stéphane_portfolio.tsx',
 	lines = defaultLines,
 }: Props) {
 	return (
