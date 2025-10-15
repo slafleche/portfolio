@@ -287,53 +287,76 @@ export const colorVars = {
 
 // Intentionally don't export font delarations, use font instead.
 const fontFamilies = {
-	baloo: makeFamilyDef(
-		'Baloo 2',
-		[
-			'Poppins',
-			'Comfortaa',
+	system: makeFamilyDef({
+		fallbacks: [
+			'Arial Rounded MT Bold',
+			'Helvetica Rounded',
+			'Segoe UI Rounded',
+			'SF Pro Rounded',
+			'Trebuchet MS',
+			'Verdana',
+			'Segoe UI',
 			'Helvetica',
 			'Arial',
 			'sans-serif',
 		],
-		fontsConfig,
-		m(0.3, 'rem'),
-		m(-0.3, 'rem'),
-	),
-	comfortaa: makeFamilyDef(
-		'Comfortaa',
-		[
-			'Poppins',
-			'Helvetica',
-			'Arial',
-			'sans-serif',
-		],
-		fontsConfig,
-		m(0.3, 'rem'),
-		m(0, 'rem'),
-	),
-	titan_one: makeFamilyDef(
-		'Titan One',
-		[
-			'sans-serif',
-		],
-		fontsConfig,
-		m(0.1, 'rem'),
-		m(0, 'rem'),
-	),
-
-	// yanone_kaffeesatz: {
-	// 	family:
-	// 		'Yanone Kaffeesatz, Comfortaa, Poppins, Helvetica, Arial, sans-serif',
-	// 	weights: { low: 200, high: 700 },
+		cfgMap: fontsConfig,
+		spacing: m(0.3, 'rem'),
+		offsetToFlushTop: m(-0.3, 'rem'),
+	}),
+	// baloo: makeFamilyDef({
+	// 	familyName: 'Baloo 2',
+	// 	fallbacks: [
+	// 		'Poppins',
+	// 		'Comfortaa',
+	// 		'Helvetica',
+	// 		'Arial',
+	// 		'sans-serif',
+	// 	],
+	// 	cfgMap: fontsConfig,
 	// 	spacing: m(0.3, 'rem'),
-	// },
+	// 	offsetToFlushTop: m(-0.3, 'rem'),
+	// }),
+	comfortaa: makeFamilyDef({
+		familyName: 'Comfortaa',
+		fallbacks: [
+			'Arial Rounded MT Bold',
+			'Helvetica Rounded',
+			'Segoe UI Rounded',
+			'SF Pro Rounded',
+			'Trebuchet MS',
+			'Verdana',
+			'Segoe UI',
+			'Helvetica',
+			'Arial',
+			'sans-serif',
+		],
+		cfgMap: fontsConfig,
+		spacing: m(0, 'rem'),
+		offsetToFlushTop: m(0, 'rem'),
+	}),
+	titan_one: makeFamilyDef({
+		familyName: 'Titan One',
+		fallbacks: [
+			'Impact',
+			'Arial Black',
+			'Segoe UI Black',
+			'Helvetica Black',
+			'SF Pro Display Heavy',
+			'Verdana Bold',
+			'Tahoma Bold',
+			'sans-serif',
+		],
+		cfgMap: fontsConfig,
+		spacing: m(0.1, 'rem'),
+		offsetToFlushTop: m(0, 'rem'),
+	}),
 } satisfies Record<string, FontFamilyDef>;
 
 export const fontVars = {
 	menu: {
 		size: m(18),
-		...fontFamilies.baloo,
+		...fontFamilies.system,
 	},
 	hero: {
 		...fontFamilies.titan_one,
@@ -342,19 +365,19 @@ export const fontVars = {
 		size: m(45),
 	},
 	heading: {
-		...fontFamilies.baloo,
+		...fontFamilies.comfortaa,
 	},
 	h1: {
 		size: m(45),
-		...fontWeight(fontFamilies.baloo, 70),
+		...fontWeight(fontFamilies.comfortaa, 100),
 	},
 	h2: {
 		size: m(25),
-		...fontWeight(fontFamilies.baloo, 60),
+		...fontWeight(fontFamilies.comfortaa, 100),
 	},
 	h3: {
 		size: m(20),
-		...fontWeight(fontFamilies.baloo, 50),
+		...fontWeight(fontFamilies.comfortaa, 100),
 	},
 	body: {
 		size: m(22),

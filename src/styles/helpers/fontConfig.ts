@@ -86,26 +86,48 @@ export function weightRangeFromConfig(weights: string | string[]): {
  *   export `fontsConfig`)
  * @param spacing IMeasurement only (e.g., m(0.3, 'rem'))
  */
-export function makeFamilyDef(
-	familyName: string,
-	fallbacks: string[],
-	cfgMap: FontsConfig,
-	spacing: IMeasurement,
-	offsetToFlushTop: IMeasurement, //Even with a correct line height, headings are never flush unless you adjust them
-): FontFamilyDef {
-	const cfg = cfgMap[familyName];
-	const weights = cfg
-		? weightRangeFromConfig(cfg.weights)
-		: { low: 400, high: 700 };
-	const primary = familyName.includes(' ')
-		? `"${familyName}"`
-		: familyName;
+type MakeFamilyDefArgs = {
+	familyName?: string;
+	fallbacks: string[];
+	cfgMap?: FontsConfig;
+	spacing: IMeasurement;
+	offsetToFlushTop: IMeasurement;
+	weights?: {
+		low: number;
+		high: number;
+	};
+};
+
+export function makeFamilyDef({
+	familyName,
+	fallbacks,
+	cfgMap,
+	spacing,
+	offsetToFlushTop,
+	weights: explicitWeights,
+}: MakeFamilyDefArgs): FontFamilyDef {
+	const effectiveWeights =
+		explicitWeights ??
+		(familyName && cfgMap && cfgMap[familyName]
+			? weightRangeFromConfig(cfgMap[familyName].weights)
+			: { low: 400, high: 700 });
+
+	const familyParts = familyName
+		? [
+				familyName.includes(' ') ? `"${familyName}"` : familyName,
+				...fallbacks,
+			]
+		: fallbacks;
+
+	if (familyParts.length === 0) {
+		throw new Error(
+			'makeFamilyDef requires at least one fallback font family',
+		);
+	}
+
 	return {
-		family: [
-			primary,
-			...fallbacks,
-		].join(', '),
-		weights,
+		family: familyParts.join(', '),
+		weights: effectiveWeights,
 		spacing,
 		offsetToFlushTop,
 	};
