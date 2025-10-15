@@ -199,7 +199,7 @@ export default function VideoByName({
 	]);
 
 	if (!data) return null;
-	const posterSrc = posterImage?.original.url ?? data.posterUrl;
+	const posterSrc = posterImage?.blurDataURL ?? data.posterUrl;
 	const posterSrcSet = posterImage?.variants.jpg?.length
 		? posterImage.variants.jpg
 				.slice()
