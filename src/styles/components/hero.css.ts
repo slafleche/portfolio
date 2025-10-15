@@ -262,21 +262,6 @@ const shimmerSweep = keyframes({
 	},
 });
 
-const mergePulse = keyframes({
-	'0%': {
-		transform: 'translate(-50%, -50%) scale(0.98)',
-		opacity: 0.16,
-	},
-	'50%': {
-		transform: 'translate(-50%, -50%) scale(1.04)',
-		opacity: 0.22,
-	},
-	'100%': {
-		transform: 'translate(-50%, -50%) scale(0.98)',
-		opacity: 0.16,
-	},
-});
-
 export const heading = style({
 	position: 'relative',
 	margin: 0,

@@ -4,7 +4,6 @@ import {
 	ReducedMotion,
 	reducedMotion,
 } from './helpers/accessibility';
-import { isCssLike } from './helpers/measurement';
 import { fontWeightStyle } from './helpers/typography';
 
 globalStyle('body', {

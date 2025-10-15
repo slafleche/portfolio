@@ -82,7 +82,6 @@ const formatSpotSize = (spot: GradientSpot) =>
 	normalizeScalePercentPair(spot.scale);
 const ensureAlpha = (value: ColorWrapper) =>
 	color.wrap(value.css({ forceAlpha: true }));
-type EasingFn = (t: number) => number;
 const defaultSpotStops: SpotStop[] = [
 	{
 		at: 0,
