@@ -30,8 +30,9 @@ export default function Hero({ className }: Props) {
 				muted
 				loop
 				playsInline
-				priority
 				playbackRate={2}
+				aria-hidden
+				role="presentation"
 			/>
 
 			{/* Banding-fix overlays (over video, under content) */}

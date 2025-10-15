@@ -289,19 +289,18 @@ export const colorVars = {
 const fontFamilies = {
 	system: makeFamilyDef({
 		fallbacks: [
-			'Arial Rounded MT Bold',
-			'Helvetica Rounded',
-			'Segoe UI Rounded',
-			'SF Pro Rounded',
-			'Trebuchet MS',
-			'Verdana',
 			'Segoe UI',
+			'SF Pro Text',
+			'Helvetica Neue',
+			'Avenir Next',
+			'Tahoma',
+			'Verdana',
 			'Helvetica',
 			'Arial',
 			'sans-serif',
 		],
 		cfgMap: fontsConfig,
-		spacing: m(0.3, 'rem'),
+		spacing: m(0.5, 'rem'),
 		offsetToFlushTop: m(-0.3, 'rem'),
 	}),
 	// baloo: makeFamilyDef({
@@ -355,7 +354,7 @@ const fontFamilies = {
 
 export const fontVars = {
 	menu: {
-		size: m(18),
+		size: m(16),
 		...fontFamilies.system,
 	},
 	hero: {
