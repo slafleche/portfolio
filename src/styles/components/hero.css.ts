@@ -151,6 +151,7 @@ export const console = style({
 	position: 'absolute',
 	top: 0,
 	left: 0,
+	width: `calc(100% + ${offset.double().css()})`,
 	transform: transforms.value(...consoleTransforms),
 	transformOrigin: '50% 50%',
 	display: 'flex',
@@ -158,7 +159,7 @@ export const console = style({
 	overflow: 'hidden',
 	pointerEvents: 'auto',
 	zIndex: 0,
-	minHeight: '50vh',
+	minHeight: '55vh',
 	selectors: {
 		// '&:after': {
 		// 	content: '""',
