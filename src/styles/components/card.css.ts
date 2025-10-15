@@ -71,6 +71,7 @@ export const gradient = style({
 export const cardGradientA = style(
 	makeCardGradient(gradients[0], {
 		// extrasPerSpan: 100,
+		linearDirection: m(40, 'deg'),
 	}),
 );
 

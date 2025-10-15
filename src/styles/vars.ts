@@ -42,27 +42,40 @@ export const gradients = [
 	{
 		linear: [
 			{
-				color: color.create.rgb(103, 52, 153),
+				color: color.create.rgba(103, 52, 153),
 				at: 0,
 			},
 			{
-				color: color.create.rgb(110, 77, 204),
+				color: color.create.rgba(110, 77, 204),
 				at: 50,
 				blend: 0.3,
 			},
 			{
-				color: color.create.rgb(91, 102, 214),
+				color: color.create.rgba(91, 102, 214),
 				at: 100,
 			},
 		],
 		spots: [
 			{
-				color: color.create.rgb(155, 232, 251),
-				x: 45,
-				y: 100,
-
-				softenL: 50,
-				scale: 120,
+				color: color.create.rgba(155, 232, 251),
+				x: 40,
+				y: 90,
+				softenL: 10,
+				scale: 80,
+				// stops: [
+				// 	{
+				// 		at: 0,
+				// 		alpha: 1,
+				// 	},
+				// 	{
+				// 		at: 80,
+				// 		alpha: 0.9,
+				// 	},
+				// 	{
+				// 		at: 100,
+				// 		alpha: 0,
+				// 	},
+				// ],
 			},
 			// {
 			// 	color: color('#b98cde'),
@@ -79,12 +92,12 @@ export const gradients = [
 	{
 		linear: [
 			{
-				color: color.create.rgb(229, 90, 179),
+				color: color.create.rgba(229, 90, 179),
 				at: 0,
 			},
 			{
 				color: color.create.oklch('0.56 0.17 274.53'),
-				at: 50,
+				at: 100,
 			},
 			{
 				color: color.create.oklch('0.56 0.17 274.53'),

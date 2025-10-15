@@ -1,4 +1,7 @@
 import { color, type ColorWrapper } from './colorWrap';
+import type { Property } from 'csstype';
+import type { IMeasurement } from './measurement';
+import { isCssLike } from './measurement';
 import {
 	buildLinear,
 	stackBackground,
@@ -12,8 +15,8 @@ type LinearGradientStop = {
 	at: number;
 	/**
 	 * Optional neighbor blend factor (0–1). Increasing this value pulls
-	 * interpolated midpoint colors closer to this stop's color, producing a
-	 * softer transition around the stop.
+	 * interpolated midpoint colors closer to this stop's color,
+	 * producing a softer transition around the stop.
 	 */
 	blend?: number;
 };
@@ -21,26 +24,49 @@ type LinearGradientStop = {
 /**
  * Radial accent configuration.
  *
- * `x`/`y` coordinates are expressed as percentages (0–100) of the target box.
+ * `x`/`y` coordinates are expressed as percentages (0–100) of the
+ * target box.
  */
 type GradientSpot = {
 	color: ColorWrapper;
 	x: number;
 	y: number;
-	/** Optional lightness offset for this spot, overrides the global softenL. */
+	/**
+	 * Optional lightness offset for this spot, overrides the global
+	 * softenL.
+	 */
 	softenL?: number;
 	/** Diameter scaling percentage (100 = base size). */
 	scale?: number;
-	/** Optional anchor positions (percentages, 0–100) for radial falloff. */
-	radiusFalloff?: number[];
-	/** Optional alpha values (0–1) for each falloff anchor. */
-	alphaCurve?: number[];
+	/** Optional blend mode for this spot layer (default: "screen"). */
+	blendMode?: Property.MixBlendMode;
+	/** Optional custom stop definitions for the radial fade. */
+	stops?: SpotStop[];
 };
 
 type CardGradientPack = {
-	linear: LinearGradientStop[];
-	spots: GradientSpot[];
+	linear?: LinearGradientStop[] | null;
+	spots?: GradientSpot[];
 };
+
+type SpotStop = {
+	at: number;
+	alpha: number;
+};
+
+type MeasurementValue = number | IMeasurement;
+type DirectionPoint = {
+	x: MeasurementValue;
+	y: MeasurementValue;
+};
+
+type LinearDirectionInput =
+	| string
+	| IMeasurement
+	| {
+			from: DirectionPoint;
+			to: DirectionPoint;
+	  };
 
 const pctLerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const interiorPercents = (p1: number, p2: number, n: number) =>
@@ -49,8 +75,7 @@ const interiorPercents = (p1: number, p2: number, n: number) =>
 	);
 const clampPercent = (value: number) =>
 	Math.max(0, Math.min(100, value));
-const clamp01 = (value: number) =>
-	Math.max(0, Math.min(1, value));
+const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 const formatSpotPosition = ({ x, y }: GradientSpot) =>
 	`${clampPercent(x)}% ${clampPercent(y)}%`;
 const normalizeScalePercentPair = (scale?: number) => {
@@ -59,36 +84,70 @@ const normalizeScalePercentPair = (scale?: number) => {
 };
 const formatSpotSize = (spot: GradientSpot) =>
 	normalizeScalePercentPair(spot.scale);
-const defaultRadiusFalloff = [
-	0,
-	25,
-	45,
-	65,
-	90,
-];
-const defaultAlphaCurve = [
-	1.0,
-	0.82,
-	0.55,
-	0.28,
-	0.0,
-];
-const buildSpotAnchors = ({
-	radiusFalloff,
-	alphaCurve,
-}: GradientSpot) => {
-	const percents = radiusFalloff ?? defaultRadiusFalloff;
-	const alphas = alphaCurve ?? defaultAlphaCurve;
-	const length = Math.min(percents.length, alphas.length);
-	if (length < 2) {
-		return {
-			percents: defaultRadiusFalloff,
-			alphas: defaultAlphaCurve,
-		};
+const formatCoordinate = (value: MeasurementValue) =>
+	typeof value === 'number' ? `${clampPercent(value)}%` : value.css();
+const formatPoint = ({ x, y }: DirectionPoint) =>
+	`${formatCoordinate(x)} ${formatCoordinate(y)}`;
+const formatLinearDirection = (
+	input?: LinearDirectionInput,
+): string => {
+	if (typeof input === 'string') {
+		return input;
 	}
+	if (input && isCssLike(input)) {
+		return input.css();
+	}
+	if (input) {
+		return `${formatPoint(input.from)}, ${formatPoint(input.to)}`;
+	}
+	// default equivalent of "to left"
+	return '100% 50%, 0% 50%';
+};
+const defaultSpotStops: SpotStop[] = [
+	{
+		at: 0,
+		alpha: 1,
+	},
+	{
+		at: 25,
+		alpha: 0.82,
+	},
+	{
+		at: 45,
+		alpha: 0.55,
+	},
+	{
+		at: 65,
+		alpha: 0.28,
+	},
+	{
+		at: 90,
+		alpha: 0,
+	},
+];
+
+const sanitizeSpotStops = (stops?: SpotStop[]): SpotStop[] => {
+	if (!stops?.length) return defaultSpotStops;
+
+	const sanitized = stops
+		.map(({ at, alpha }) => ({
+			at: clampPercent(at),
+			alpha: clamp01(alpha),
+		}))
+		.sort((a, b) => a.at - b.at);
+
+	if (sanitized.length < 2) {
+		return defaultSpotStops;
+	}
+
+	return sanitized;
+};
+
+const getSpotAnchors = (spot: GradientSpot) => {
+	const stops = sanitizeSpotStops(spot.stops);
 	return {
-		percents: percents.slice(0, length),
-		alphas: alphas.slice(0, length),
+		percents: stops.map((stop) => stop.at),
+		alphas: stops.map((stop) => stop.alpha),
 	};
 };
 
@@ -177,21 +236,13 @@ function linearStopsLab(
 			if (blendCurrent > 0) {
 				const weightCurrent = clamp01(blendCurrent * (1 - t));
 				if (weightCurrent > 0) {
-					mid = mid.mix(
-						current.color,
-						weightCurrent,
-						'oklab',
-					);
+					mid = mid.mix(current.color, weightCurrent, 'oklab');
 				}
 			}
 			if (blendNext > 0) {
 				const weightNext = clamp01(blendNext * t);
 				if (weightNext > 0) {
-					mid = mid.mix(
-						next.color,
-						weightNext,
-						'oklab',
-					);
+					mid = mid.mix(next.color, weightNext, 'oklab');
 				}
 			}
 			out.push({
@@ -217,33 +268,58 @@ export function makeCardGradient(
 		 */
 		extrasPerSpan?: number;
 		/**
-		 * Default lightness offset applied to radial spot colors (OKLCH) before alpha
-		 * fading. Expressed as OKLCH L units (roughly 0–100). Individual spots can
-		 * override via `spot.softenL`.
+		 * Default lightness offset applied to radial spot colors (OKLCH)
+		 * before alpha fading. Expressed as OKLCH L units (roughly
+		 * 0–100). Individual spots can override via `spot.softenL`.
 		 */
 		softenL?: number;
 		/**
-		 * CSS direction string for the layered linear gradient (e.g. `"to left"`).
+		 * Linear gradient direction. Accepts either a CSS direction
+		 * string (`"to left"`, `"45deg"`) or start/end percentage
+		 * coordinates. When omitted defaults to the percentage equivalent
+		 * of `"to left"`.
 		 */
-		linearDirection?: string;
+		linearDirection?: LinearDirectionInput;
 		/**
-		 * Fallback CSS direction when blend modes are unavailable.
+		 * Fallback direction when blend modes are unavailable. Defaults
+		 * to the same value as `linearDirection` if unspecified.
 		 */
-		linearFallbackDirection?: string;
+		linearFallbackDirection?: LinearDirectionInput;
+		/**
+		 * Whether to include the linear gradient layer. Useful for
+		 * debugging spot layers without the base wash.
+		 */
+		includeLinear?: boolean;
 	} = {},
 ) {
 	const {
 		extrasPerSpan = 1,
 		softenL = 0,
-		linearDirection = 'to left',
-		linearFallbackDirection = 'to bottom',
+		linearDirection,
+		linearFallbackDirection,
+		includeLinear = true,
 	} = options;
 
-	const linearStops = linearStopsLab(gradient.linear, extrasPerSpan);
-	const layers: Layer[] = [];
+	const formattedLinearDirection =
+		formatLinearDirection(linearDirection);
+	const formattedFallbackDirection = formatLinearDirection(
+		linearFallbackDirection ?? linearDirection,
+	);
 
-	for (const spot of gradient.spots) {
-		const anchors = buildSpotAnchors(spot);
+	const linearSlices = Array.isArray(gradient.linear)
+		? gradient.linear
+		: [];
+	const hasLinear = includeLinear && linearSlices.length > 0;
+	const linearStops = hasLinear
+		? linearStopsLab(linearSlices, extrasPerSpan)
+		: [];
+	const layers: Layer[] = [];
+	const blendModes: Property.MixBlendMode[] = [];
+
+	const spots = gradient.spots ?? [];
+
+	for (const spot of spots) {
+		const anchors = getSpotAnchors(spot);
 		layers.push({
 			kind: 'radial',
 			options: {
@@ -259,17 +335,19 @@ export function makeCardGradient(
 				),
 			},
 		});
+		blendModes.push(spot.blendMode ?? 'screen');
 	}
 
-	layers.push(
-		{
+	if (hasLinear) {
+		layers.push({
 			kind: 'linear',
 			options: {
-				to: linearDirection,
+				to: formattedLinearDirection,
 				stops: linearStops,
 			},
-		},
-	);
+		});
+		blendModes.push('normal');
+	}
 
 	/* Example additional spot layers
 	const secondSpot = gradient.spots[1] ?? gradient.spots[0];
@@ -293,22 +371,44 @@ export function makeCardGradient(
 	*/
 
 	const gradientStack = stackBackground(layers);
-	const linearFallback = buildLinear({
-		to: linearFallbackDirection,
-		stops: linearStops,
-	});
+	const linearFallback = hasLinear
+		? buildLinear({
+				to: formattedFallbackDirection,
+				stops: linearStops,
+			})
+		: undefined;
+
+	const blendModeValue =
+		blendModes.length > 0 ? blendModes.join(', ') : undefined;
+
+	const baseResult: Record<string, unknown> = {
+		backgroundImage: gradientStack.fallback,
+	};
+	if (blendModeValue) {
+		baseResult.backgroundBlendMode = blendModeValue;
+	}
+
+	const supportsColor: Record<string, unknown> = {
+		backgroundImage: gradientStack.modern,
+	};
+	if (blendModeValue) {
+		supportsColor.backgroundBlendMode = blendModeValue;
+	}
+
+	const supportsNoBlend = hasLinear
+		? {
+				backgroundImage: linearFallback!.fallback,
+				backgroundBlendMode: 'normal',
+			}
+		: {
+				backgroundImage: gradientStack.fallback,
+			};
 
 	return {
-		backgroundImage: gradientStack.fallback,
-		backgroundBlendMode: 'overlay, screen, normal',
+		...baseResult,
 		'@supports': {
-			'(color: oklch(50% 0 0))': {
-				backgroundImage: gradientStack.modern,
-			},
-			'not (background-blend-mode: overlay)': {
-				backgroundImage: linearFallback.fallback,
-				backgroundBlendMode: 'normal',
-			},
+			'(color: oklch(50% 0 0))': supportsColor,
+			'not (background-blend-mode: overlay)': supportsNoBlend,
 		},
 	};
 }
