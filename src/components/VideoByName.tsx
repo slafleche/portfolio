@@ -11,20 +11,10 @@ type HlsInstance = InstanceType<HlsClass>;
 
 type VideoKind = 'hero' | 'inline';
 
-type Props = {
+type Props = React.VideoHTMLAttributes<HTMLVideoElement> & {
 	name: string;
-	title?: string;
 	label?: string;
 	kind?: VideoKind;
-	className?: string;
-	style?: React.CSSProperties;
-
-	autoPlay?: boolean;
-	muted?: boolean;
-	loop?: boolean;
-	controls?: boolean;
-	playsInline?: boolean;
-
 	priority?: boolean;
 	pauseWhenOffscreen?: boolean;
 	playbackRate?: number;
@@ -37,7 +27,7 @@ export default function VideoByName({
 	label,
 	kind = 'hero',
 	className,
-	style,
+	style: incomingStyle,
 	autoPlay = true,
 	muted = true,
 	loop = true,
@@ -47,11 +37,15 @@ export default function VideoByName({
 	pauseWhenOffscreen = true,
 	playbackRate = 1,
 	onReady,
+	...videoProps
 }: Props) {
 	const data = getVideo(name);
 	const ref = React.useRef<HTMLVideoElement | null>(null);
 	const ioRef = React.useRef<IntersectionObserver | null>(null);
 	const t = useT();
+	const [shouldLoadVideo, setShouldLoadVideo] = React.useState<boolean>(
+		() => priority ?? false,
+	);
 
 	const computedStyle: React.CSSProperties =
 		kind === 'hero'
@@ -59,16 +53,32 @@ export default function VideoByName({
 					width: '100%',
 					height: '100vh',
 					objectFit: 'cover',
-					...(style ?? {}),
+					...(incomingStyle ?? {}),
 				}
 			: {
 					width: '100%',
 					height: 'auto',
 					objectFit: 'cover',
-					...(style ?? {}),
+					...(incomingStyle ?? {}),
 				};
 
 	React.useEffect(() => {
+		if (priority) return;
+		if (typeof window === 'undefined') return;
+
+		const enable = () => setShouldLoadVideo(true);
+
+		if (document.readyState === 'complete') {
+			enable();
+			return;
+		}
+
+		window.addEventListener('load', enable, { once: true });
+		return () => window.removeEventListener('load', enable);
+	}, [priority]);
+
+	React.useEffect(() => {
+		if (!shouldLoadVideo) return;
 		const video = ref.current;
 		if (!video || !data) return;
 
@@ -155,18 +165,47 @@ export default function VideoByName({
 		onReady,
 		priority,
 		playbackRate,
+		shouldLoadVideo,
 	]);
 
 	React.useEffect(() => {
+		if (!shouldLoadVideo) return;
 		const video = ref.current;
 		if (!video) return;
 		video.defaultPlaybackRate = playbackRate;
 		video.playbackRate = playbackRate;
-	}, [
-		playbackRate,
-	]);
+	}, [playbackRate, shouldLoadVideo]);
 
 	if (!data) return null;
+
+	const { children: _ignoredChildren, ...restVideoProps } = videoProps;
+	const ariaHiddenRaw =
+		(restVideoProps as { [key: string]: unknown })['aria-hidden'] ??
+		(restVideoProps as { [key: string]: unknown })['ariaHidden'];
+	const ariaHiddenValue =
+		ariaHiddenRaw === 'true'
+			? true
+			: ariaHiddenRaw === 'false'
+				? false
+				: (ariaHiddenRaw as boolean | undefined);
+	const placeholderAlt =
+		ariaHiddenValue === true
+			? ''
+			: label ?? title ?? t('hero-alt');
+
+	if (!shouldLoadVideo) {
+		return (
+			<img
+				className={className}
+				style={computedStyle}
+				src={data.posterUrl}
+				alt={placeholderAlt}
+				decoding="async"
+				loading={priority ? 'eager' : 'lazy'}
+				{...restVideoProps}
+			/>
+		);
+	}
 
 	return (
 		<video
@@ -182,6 +221,7 @@ export default function VideoByName({
 			controls={controls}
 			playsInline={playsInline}
 			preload={priority ? 'auto' : 'metadata'}
+			{...restVideoProps}
 		>
 			{t('error-video')}
 		</video>
