@@ -43,22 +43,22 @@ export const gradients = [
 	{
 		linear: [
 			{
-				color: color.create.rgba(103, 52, 153),
+				color: color('#673499'),
 				at: 0,
 			},
 			{
-				color: color.create.rgba(110, 77, 204),
+				color: color('#6E4DCC'),
 				at: 60,
 				blend: 0.3,
 			},
 			{
-				color: color.create.rgba(91, 102, 214),
+				color: color('#5B66D6'),
 				at: 100,
 			},
 		],
 		spots: [
 			{
-				color: color.create.rgba(155, 232, 251).alpha(0.4),
+				color: color('#9BE8FB').alpha(0.4),
 				x: 40,
 				y: 110,
 				// extrasPerSpan: 2,
@@ -120,15 +120,11 @@ export const gradients = [
 	{
 		linear: [
 			{
-				color: color('#E55AB3'),
+				color: color('#5c439d'),
 				at: 0,
 			},
 			{
-				color: themeColours.lights.a,
-				at: 100,
-			},
-			{
-				color: themeColours.lights.c,
+				color: color('#7139a5'),
 				at: 100,
 			},
 		],
@@ -155,11 +151,11 @@ export const gradients = [
 export const bokehVars = {
 	// Default Bokeh overlay settings (consumed by components)
 	colors: [
-		gradients[1].linear[0].color,
-		gradients[1].linear[1].color,
-		gradients[1].linear[2].color,
-		gradients[1].spots[0].color,
-		gradients[0].spots[0].color,
+		gradients[0].linear[0].color,
+		// gradients[0].linear[1].color,
+		// gradients[1].linear[2].color,
+		// gradients[1].spots[0].color,
+		// gradients[0].spots[0].color,
 		// gradients[0].spots[2].color,
 	],
 	opacity: 0.2,
@@ -458,21 +454,21 @@ export const logoVars = {
 	hover: {
 		blobs: [
 			{
-				color: gradients[1].linear[1].color,
+				color: themeColours.lights.a,
 				posX: 24,
 				posY: 38,
 				radius: 46,
 				intensity: 0.32,
 			},
 			{
-				color: gradients[1].linear[0].color,
+				color: themeColours.lights.b,
 				posX: 62,
 				posY: 58,
 				radius: 48,
 				intensity: 0.28,
 			},
 			{
-				color: gradients[1].linear[2].color,
+				color: themeColours.lights.d,
 				posX: 42,
 				posY: 72,
 				radius: 44,
@@ -530,24 +526,21 @@ export const menuVars = {
 		blur: m(10),
 		blobs: [
 			{
-				// color: gradients.b_linear_b,
-				color: gradients[1].linear[1].color,
+				color: themeColours.lights.a,
 				posX: 22,
 				posY: 48,
 				radius: 50,
 				intensity: 0.62,
 			},
 			{
-				color: gradients[1].linear[0].color,
-				// color: gradients.b_spot_a,
+				color: themeColours.lights.b,
 				posX: 50,
 				posY: 72,
 				radius: 50,
 				intensity: 0.6,
 			},
 			{
-				color: gradients[1].linear[2].color,
-				// color: gradients.b_linear_c,
+				color: themeColours.lights.c,
 				posX: 76,
 				posY: 30,
 				radius: 46,
