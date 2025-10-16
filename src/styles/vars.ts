@@ -547,8 +547,7 @@ export const menuVars = {
 				intensity: 0.48,
 			},
 			{
-				color: gradients[0].linear[0].color,
-				// color: gradients.a_spot_a,
+				color: themeColours.lights.d,
 				posX: 34,
 				posY: 82,
 				radius: 54,
