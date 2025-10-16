@@ -14,7 +14,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FocusEvent, MouseEvent, PointerEvent } from 'react';
 import { getRotationStyle } from '../lib/arch/archHelper';
 import { useMenuAnchors } from './menu/hooks/useMenuAnchors';
-import { useMenuHighlight } from './menu/hooks/useMenuHighlight';
+import {
+	useMenuHighlight,
+	type MiniBokehDebugOptions,
+} from './menu/hooks/useMenuHighlight';
 import {
 	LOGO_ENTER_DELAY,
 	LOGO_MOUSE_LEAVE_EXIT_DELAY,
@@ -23,7 +26,7 @@ import {
 import type { AnchorEntry } from './menu/menuUtils';
 
 type MenuProps = {
-	debugMiniBokeh?: boolean;
+	bokehDebug?: MiniBokehDebugOptions;
 	debugGlow?: boolean;
 };
 
@@ -32,7 +35,7 @@ const LOGO_GLOW_DURATION = 500;
 const LOGO_GLOW_HOLD_DELAY = 100;
 
 export default function Menu({
-	debugMiniBokeh = false,
+	bokehDebug,
 	debugGlow = false,
 }: MenuProps = {}) {
 	const t = useT();
@@ -63,7 +66,14 @@ export default function Menu({
 
 	const { anchors, anchorCount, sectionIds } = useMenuAnchors(locale);
 
-	const fontsReady = false;
+	const debugActive = Boolean(bokehDebug);
+	const baseFontsReady = false;
+	const fontsReady = debugActive ? true : baseFontsReady;
+	const debugOptions: MiniBokehDebugOptions | undefined = bokehDebug;
+const lockTarget = debugOptions?.lockTo;
+const raiseLayer =
+	debugOptions?.raiseLayer ?? (lockTarget !== undefined);
+	const showArchPath = debugOptions?.showArchPath ?? false;
 
 	const {
 		navRef,
@@ -78,7 +88,7 @@ export default function Menu({
 	} = useMenuHighlight({
 		anchors,
 		anchorCount,
-		debugMiniBokeh,
+		bokehDebug,
 		fontsReady,
 	});
 
@@ -558,8 +568,12 @@ export default function Menu({
 						ref={navRef}
 						onMouseLeave={handleNavMouseLeave}
 					>
-						<div className={s.highlightLayer} aria-hidden>
-							{debugMiniBokeh && debugArch ? (
+					<div
+						className={s.highlightLayer}
+						aria-hidden
+						style={raiseLayer ? { zIndex: 5 } : undefined}
+					>
+						{showArchPath && debugArch ? (
 								<svg
 									className={s.debugArch}
 									viewBox={`0 0 ${debugArch.width} ${debugArch.height}`}

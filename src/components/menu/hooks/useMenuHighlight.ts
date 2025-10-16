@@ -29,19 +29,60 @@ type HighlightStyles = {
 	innerStyle: CSSProperties;
 };
 
+/**
+ * Developer-only knobs to inspect the menu highlight ("mini bokeh").
+ *
+ * - showArchPath:      draw the sampled arch as a dashed SVG path.
+ * - lockTo:            keep the highlight locked on the logo (`'logo'`) or a
+ *                      specific menu index (0-based, logo is 0, first item is 1).
+ * - disableTimeout:    prevent the blob from fading out when idle.
+ * - raiseLayer:        bump the highlight layer above other content (useful
+ *                      when hero/video would otherwise cover it). Defaults to
+ *                      true when `lockTo` is provided.
+ */
+export type MiniBokehDebugOptions = {
+    showArchPath?: boolean;
+    lockTo?: 'logo' | number;
+    disableTimeout?: boolean;
+    raiseLayer?: boolean;
+};
+
 type UseMenuHighlightOptions = {
 	anchors?: readonly AnchorEntry[];
 	anchorCount: number;
-	debugMiniBokeh: boolean;
+	bokehDebug?: MiniBokehDebugOptions;
 	fontsReady: boolean;
 };
 
 export function useMenuHighlight({
 	anchors = BASE_ANCHORS,
 	anchorCount,
-	debugMiniBokeh,
+	bokehDebug,
 	fontsReady,
 }: UseMenuHighlightOptions) {
+const debugOptions = bokehDebug ?? {};
+const {
+	showArchPath = false,
+	lockTo,
+	disableTimeout = false,
+	raiseLayer = false,
+} = debugOptions;
+const debugActive =
+	showArchPath || disableTimeout || raiseLayer || lockTo !== undefined;
+const maxAnchorIndex = Math.max(0, anchorCount - 1);
+const requestedLockIndex = (() => {
+	if (lockTo === undefined) return null;
+	if (lockTo === 'logo') return 0;
+	if (Number.isFinite(lockTo)) {
+		const rounded = Math.round(lockTo as number);
+		return rounded;
+	}
+	return null;
+})();
+const lockTargetIndex = requestedLockIndex == null
+	? null
+	: Math.min(Math.max(0, requestedLockIndex), maxAnchorIndex);
+const isLocked = lockTargetIndex !== null;
 	const navRef = useRef<HTMLDivElement | null>(null);
 	const linkRefs = useRef<Array<HTMLAnchorElement | null>>([]);
 	const [
@@ -83,10 +124,10 @@ export function useMenuHighlight({
 		debugArch,
 		setDebugArch,
 	] = useState<DebugArch | null>(null);
-	const [
-		miniBokehActive,
-		setMiniBokehActive,
-	] = useState(false);
+const [
+	miniBokehActive,
+	setMiniBokehActive,
+] = useState(false);
 	const miniBokehTimerRef = useRef<ReturnType<
 		typeof setTimeout
 	> | null>(null);
@@ -106,33 +147,43 @@ export function useMenuHighlight({
 		highlight,
 	]);
 
-	useEffect(() => {
-		if (miniBokehTimerRef.current) {
-			clearTimeout(miniBokehTimerRef.current);
-			miniBokehTimerRef.current = null;
-		}
-		if (highlight.visible) {
-			setMiniBokehActive(true);
-			return () => {
-				if (miniBokehTimerRef.current) {
-					clearTimeout(miniBokehTimerRef.current);
-					miniBokehTimerRef.current = null;
-				}
-			};
-		}
-		miniBokehTimerRef.current = setTimeout(() => {
-			setMiniBokehActive(false);
-			miniBokehTimerRef.current = null;
-		}, 120);
+useEffect(() => {
+	if (miniBokehTimerRef.current) {
+		clearTimeout(miniBokehTimerRef.current);
+		miniBokehTimerRef.current = null;
+	}
+	if (isLocked) {
+		setMiniBokehActive(true);
+		return undefined;
+	}
+	if (disableTimeout) {
+		setMiniBokehActive(highlight.visible);
+		return undefined;
+	}
+	if (highlight.visible) {
+		setMiniBokehActive(true);
 		return () => {
 			if (miniBokehTimerRef.current) {
 				clearTimeout(miniBokehTimerRef.current);
 				miniBokehTimerRef.current = null;
 			}
 		};
-	}, [
-		highlight.visible,
-	]);
+	}
+	miniBokehTimerRef.current = setTimeout(() => {
+		setMiniBokehActive(false);
+		miniBokehTimerRef.current = null;
+	}, 120);
+	return () => {
+		if (miniBokehTimerRef.current) {
+			clearTimeout(miniBokehTimerRef.current);
+			miniBokehTimerRef.current = null;
+		}
+	};
+}, [
+	highlight.visible,
+	lockTargetIndex,
+	disableTimeout,
+]);
 
 	useEffect(
 		() => () => {
@@ -145,6 +196,7 @@ export function useMenuHighlight({
 	);
 
 	useEffect(() => {
+	if (isLocked) return;
 		if (hasResolvedHoverFromCacheRef.current) return;
 		if (typeof window === 'undefined') return;
 		hasResolvedHoverFromCacheRef.current = true;
@@ -165,6 +217,7 @@ export function useMenuHighlight({
 		}
 	}, [
 		anchors,
+		isLocked,
 	]);
 
 	useEffect(() => {
@@ -183,6 +236,7 @@ export function useMenuHighlight({
 
 	const persistLastHover = useCallback(
 		(index: number | null) => {
+	if (isLocked) return;
 			if (typeof window === 'undefined') return;
 			try {
 				if (index == null) {
@@ -204,7 +258,8 @@ export function useMenuHighlight({
 			}
 		},
 		[
-			anchors,
+		anchors,
+		isLocked,
 		],
 	);
 
@@ -280,6 +335,7 @@ export function useMenuHighlight({
 	);
 
 	const hideHighlight = useCallback(() => {
+		if (isLocked) return;
 		if (animationFrameRef.current) {
 			cancelAnimationFrame(animationFrameRef.current);
 			animationFrameRef.current = null;
@@ -292,10 +348,11 @@ export function useMenuHighlight({
 		persistLastHover(null);
 	}, [
 		persistLastHover,
+		isLocked,
 	]);
 
-	const measure = useCallback(() => {
-		if (!fontsReady) return;
+const measure = useCallback(() => {
+	if (!fontsReady && !debugActive) return;
 		const navEl = navRef.current;
 		if (!navEl) return;
 
@@ -384,36 +441,40 @@ export function useMenuHighlight({
 			updateHighlightFromMetric(metrics[activeIndex] ?? undefined);
 		}
 
-		if (debugMiniBokeh) {
-			const sampleCount = Math.max(24, Math.round(width / 20));
-			let path = '';
-			for (let i = 0; i < sampleCount; i += 1) {
-				const x = (width * i) / (sampleCount - 1);
-				const y = computeArchY(width, x) + menuVars.yOffset.value;
-				path += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
-			}
-			setDebugArch({
-				path: path.trim(),
-				width,
-				height: archVars.top.value + archVars.curveHeight.value,
-			});
-		} else {
-			setDebugArch(null);
+	if (showArchPath) {
+		const sampleCount = Math.max(24, Math.round(width / 20));
+		let path = '';
+		for (let i = 0; i < sampleCount; i += 1) {
+			const x = (width * i) / (sampleCount - 1);
+			const y = computeArchY(width, x) + menuVars.yOffset.value;
+			path += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
 		}
+		setDebugArch({
+			path: path.trim(),
+			width,
+			height: archVars.top.value + archVars.curveHeight.value,
+		});
+	} else {
+		setDebugArch(null);
+	}
 	}, [
 		activeIndex,
-		debugMiniBokeh,
+		showArchPath,
 		fontsReady,
+		lockTargetIndex,
+		debugActive,
 		updateHighlightFromMetric,
 	]);
 
-	useEffect(() => {
-		measure();
-	}, [
-		measure,
-		anchorCount,
-		fontsReady,
-	]);
+useEffect(() => {
+	measure();
+}, [
+	measure,
+	anchorCount,
+	fontsReady,
+	lockTargetIndex,
+	debugActive,
+]);
 
 	useLayoutEffect(() => {
 		measure();
@@ -435,46 +496,50 @@ export function useMenuHighlight({
 		(index: number) => {
 			let metric =
 				linkMetricsRef.current[index] ?? linkMetrics[index];
-			if (!metric) {
-				const navEl = navRef.current;
-				const linkEl = linkRefs.current[index];
-				if (navEl && linkEl) {
-					const navRect = navEl.getBoundingClientRect();
-					const width = navRect.width;
-					const rect = linkEl.getBoundingClientRect();
-					const centerX = rect.left + rect.width / 2 - navRect.left;
-					const centerY = rect.top + rect.height / 2 - navRect.top;
-					const archBase =
-						computeArchY(width, centerX) + menuVars.yOffset.value;
-					const highlightWidth = clamp(
-						rect.width + menuVars.padding.horizontal.value,
-						rect.width,
-						width,
-					);
-					const highlightHeight = menuVars.height.value;
-					metric = {
-						centerX,
-						centerY,
-						width: rect.width,
-						height: rect.height,
-						archY: archBase,
-						highlightWidth,
-						highlightHeight,
-						left: clamp(
-							centerX - highlightWidth / 2,
-							0,
-							Math.max(0, width - highlightWidth),
-						),
-						top: Math.max(0, archBase - highlightHeight / 2),
-					};
-					const nextMetrics = [
-						...linkMetricsRef.current,
-					];
-					nextMetrics[index] = metric;
-					linkMetricsRef.current = nextMetrics;
-					setLinkMetrics(nextMetrics);
-				}
+		if (!metric) {
+			const navEl = navRef.current;
+			const linkEl = linkRefs.current[index];
+			if (navEl && linkEl) {
+				const navRect = navEl.getBoundingClientRect();
+				const width = navRect.width;
+				const rect = linkEl.getBoundingClientRect();
+				const centerX = rect.left + rect.width / 2 - navRect.left;
+				const centerY = rect.top + rect.height / 2 - navRect.top;
+				const computedArch =
+					computeArchY(width, centerX) + menuVars.yOffset.value;
+				const adjustment = centerY - computedArch;
+				const archY = computedArch + adjustment;
+				const highlightWidth = clamp(
+					rect.width + menuVars.padding.horizontal.value,
+					rect.width,
+					width,
+				);
+				const highlightHeight = menuVars.height.value;
+				const left = clamp(
+					centerX - highlightWidth / 2,
+					0,
+					Math.max(0, width - highlightWidth),
+				);
+				const top = Math.max(0, archY - highlightHeight / 2);
+				metric = {
+					centerX,
+					centerY,
+					width: rect.width,
+					height: rect.height,
+					archY,
+					highlightWidth,
+					highlightHeight,
+					left,
+					top,
+				};
+				const nextMetrics = [
+					...linkMetricsRef.current,
+				];
+				nextMetrics[index] = metric;
+				linkMetricsRef.current = nextMetrics;
+				setLinkMetrics(nextMetrics);
 			}
+		}
 			if (!metric) return;
 			updateHighlightFromMetric(metric);
 			lastHoverIndexRef.current = index;
@@ -571,7 +636,7 @@ export function useMenuHighlight({
 		innerStyle.filter = `blur(${menuVars.hover.blur.value}px)`;
 		innerStyle.boxShadow = `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast.alpha(menuVars.hover.shadow.opacity).css()}`;
 
-		if (debugMiniBokeh) {
+		if (debugActive) {
 			innerStyle.outline = '1px dashed rgba(255,255,255,0.4)';
 		}
 
@@ -582,10 +647,27 @@ export function useMenuHighlight({
 	}, [
 		highlight,
 		transitionDisabled,
-		debugMiniBokeh,
+		debugActive,
 		activeIndex,
 		linkMetrics,
 	]);
+
+useEffect(() => {
+	if (lockTargetIndex === null) return;
+	const metric =
+		linkMetricsRef.current[lockTargetIndex] ??
+		linkMetrics[lockTargetIndex];
+	if (!metric) return;
+	hasActivatedRef.current = true;
+	lastHoverIndexRef.current = lockTargetIndex;
+	setActiveIndex(lockTargetIndex);
+	updateHighlightFromMetric(metric);
+	setMiniBokehActive(true);
+}, [
+	lockTargetIndex,
+	linkMetrics,
+	updateHighlightFromMetric,
+]);
 
 	return {
 		navRef,
