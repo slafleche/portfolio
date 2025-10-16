@@ -252,10 +252,15 @@ export function backgroundImageDecl(
 	const bm = Array.isArray(blendMode)
 		? blendMode.join(', ')
 		: blendMode;
-	const base: Record<string, unknown> = {
+	const base: {
+		backgroundImage: string;
+		backgroundBlendMode?: string;
+	} = {
 		backgroundImage: built.fallback,
 	};
-	if (bm) (base as any).backgroundBlendMode = bm;
+	if (bm) {
+		base.backgroundBlendMode = bm;
+	}
 
 	return {
 		...base,

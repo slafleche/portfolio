@@ -5,7 +5,6 @@ import { getVideo, type VideoEntry } from '@/lib/videos';
 import { getImage } from '@/lib/images';
 import ImageByName from './ImageByName';
 import { useT } from '../lib/locales/useT';
-import clsx from 'clsx';
 
 // Strong types for the dynamic import
 type HlsModule = typeof import('hls.js');
@@ -212,12 +211,10 @@ export default function VideoByName({
 			: undefined;
 
 	const {
-		children: _ignoredChildren,
 		onLoadedData: userOnLoadedData,
 		onPlay: userOnPlay,
 		...restVideoProps
 	} = videoProps;
-	void _ignoredChildren;
 
 	const rawAttrs = restVideoProps as Record<string, unknown>;
 	const ariaHiddenRaw =
@@ -312,9 +309,6 @@ export default function VideoByName({
 						kind={kind === 'hero' ? 'lg' : 'md'}
 						priority={priority}
 						fit="cover"
-						// If ImageByName exposes onLoad/onLoadingComplete, use it to flip the flag.
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						// @ts-expect-error: ImageByName may not declare onLoad in its props
 						onLoad={() => setPosterLoaded(true)}
 					/>
 				) : (
