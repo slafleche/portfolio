@@ -10,6 +10,7 @@ export const root = style({
 	display: 'flex',
 	flexDirection: 'column',
 	minWidth: '100%',
+	minHeight: '475px',
 	borderRadius: consoleVars.borders.radius.css(),
 	border: `1px solid ${colorVars.white.alpha(0.12).css()}`,
 	background: `linear-gradient(160deg, ${colorVars.black.alpha(0.85).css()} 0%, ${colorVars.contrast.alpha(0.22).css()} 100%)`,

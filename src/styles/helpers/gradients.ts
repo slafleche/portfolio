@@ -24,7 +24,7 @@ export type Stop = {
 export type AngleInput = number | IMeasurement;
 
 export type LinearOpts = {
-	angle: AngleInput;
+	angle?: AngleInput;
 	stops: Stop[];
 };
 
@@ -40,14 +40,8 @@ export type RadialOpts = {
 };
 
 export type Layer =
-	| {
-			kind: 'linear';
-			options: LinearOpts;
-	  }
-	| {
-			kind: 'radial';
-			options: RadialOpts;
-	  };
+	| { kind: 'linear'; options: LinearOpts }
+	| { kind: 'radial'; options: RadialOpts };
 
 export type Built = {
 	fallback: string;
@@ -71,7 +65,9 @@ export type LinearDirectionInput =
 			to: DirectionPoint;
 	  };
 
-const measurementValue = (value: MeasurementValue): number | undefined =>
+const measurementValue = (
+	value: MeasurementValue,
+): number | undefined =>
 	typeof value === 'number' ? value : value.value;
 
 const resolveCoordinateAngle = (
@@ -87,36 +83,27 @@ const resolveCoordinateAngle = (
 	const ay = measurementValue(input.from.y);
 	const bx = measurementValue(input.to.x);
 	const by = measurementValue(input.to.y);
-	if (
-		ax == null ||
-		ay == null ||
-		bx == null ||
-		by == null
-	) {
+	if (ax == null || ay == null || bx == null || by == null)
 		return undefined;
-	}
 
 	const dx = bx - ax;
 	const dy = by - ay;
 	const angle = (Math.atan2(dx, -dy) * 180) / Math.PI;
-	return (angle % 360 + 360) % 360;
+	return ((angle % 360) + 360) % 360;
 };
 
 export function resolveLinearAngle(
 	input?: LinearDirectionInput,
-): AngleInput | undefined {
-	if (input == null) return 270; // default "to left"
+): AngleInput {
+	if (input == null) return 90; // default
 	if (typeof input === 'number') return input;
-	if (isCssLike(input)) {
-		return input;
-	}
+	if (isCssLike(input)) return input;
 	if ('from' in input && 'to' in input) {
-		return resolveCoordinateAngle(input as {
-			from: DirectionPoint;
-			to: DirectionPoint;
-		});
+		const result = resolveCoordinateAngle(input);
+		if (result == null) throw new Error('Invalid coordinate angle');
+		return result;
 	}
-	return undefined;
+	throw new Error('Invalid linear angle input');
 }
 
 function isColorWrapper(value: unknown): value is ColorWrapper {
@@ -148,7 +135,7 @@ function oklchToRgbString({ l, c, h, a }: OKLCH): string {
 		h: ((h % 360) + 360) % 360,
 		alpha: a ?? 1,
 	};
-	return color.fromOKLCH(normalized).css();
+	return color.fromOKLCH(normalized).css(); // rely on your wrapper's output
 }
 
 function isOKLCH(x: ColorInput): x is OKLCH {
@@ -194,8 +181,15 @@ function colorModern(c: ColorInput): string {
 const angleToCss = (angle: AngleInput): string =>
 	typeof angle === 'number' ? `${angle}deg` : angle.css();
 
-export function buildLinear({ angle, stops }: LinearOpts): Built {
-	const direction = angleToCss(angle);
+// accept number | IMeasurement | { from, to }
+export function buildLinear({
+	angle,
+	stops,
+}: {
+	angle?: LinearDirectionInput;
+	stops: Stop[];
+}): Built {
+	const direction = angleToCss(resolveLinearAngle(angle)); // always returns something (90° default)
 	const fStops = stops
 		.map((s) => `${colorFallback(s.color)} ${pct(s.at)}`)
 		.join(', ');
@@ -240,22 +234,58 @@ export function stackBackground(layers: Layer[]): Built {
 	};
 }
 
+/* ========================================================================== */
+/*                          VANILLA-EXTRACT HELPERS                           */
+/* ========================================================================== */
+
+export const OKLCH_SUPPORTS = '(color: oklch(50% 0 0))';
+
 /**
- * Optional convenience: set fallback first, then upgrade if OKLCH
- * supported
+ * Turn a Built into a background-image declaration with OKLCH upgrade
+ * via @supports. (No `as const` to avoid TS1355 when values are
+ * computed.)
  */
-export function applyBackground(
-	el: HTMLElement,
-	layers: Layer[],
-	blendModes?: string[], // e.g. ["screen","multiply","normal"]
-): void {
-	const built = stackBackground(layers);
-	el.style.background = built.fallback;
-	if (blendModes?.length)
-		el.style.backgroundBlendMode = blendModes.join(', ');
-	if (CSS.supports('color', 'oklch(50% 0 0)')) {
-		el.style.background = built.modern;
-	}
+export function backgroundImageDecl(
+	built: Built,
+	blendMode?: string | string[],
+) {
+	const bm = Array.isArray(blendMode)
+		? blendMode.join(', ')
+		: blendMode;
+	const base: Record<string, unknown> = {
+		backgroundImage: built.fallback,
+	};
+	if (bm) (base as any).backgroundBlendMode = bm;
+
+	return {
+		...base,
+		'@supports': {
+			[OKLCH_SUPPORTS]: {
+				backgroundImage: built.modern,
+				...(bm ? { backgroundBlendMode: bm } : {}),
+			},
+		},
+	};
+}
+
+/**
+ * Compose color + image in one go (keeps @supports only for the
+ * image).
+ */
+export function backgroundDecl(opts: {
+	color?: string; // plain color string
+	image?: Built; // from buildLinear/buildRadial/stackBackground
+	blendMode?: string | string[];
+}) {
+	const { color: bgColor, image, blendMode } = opts;
+	const base: Record<string, unknown> = {};
+	if (bgColor) base.backgroundColor = bgColor;
+	if (!image) return base;
+
+	return {
+		...base,
+		...backgroundImageDecl(image, blendMode),
+	};
 }
 
 /** Utility: build evenly-spaced stops from a list of colors */
@@ -267,15 +297,9 @@ export function stopsFromColors(
 	return colors.map((c, i) => {
 		const pos = (i / n) * 100;
 		if (isOKLCH(c) && alpha != null)
-			return {
-				color: { ...c, a: alpha },
-				at: pos,
-			};
+			return { color: { ...c, a: alpha }, at: pos };
 		if (isColorWrapper(c) && alpha != null)
-			return {
-				color: c.alpha(alpha),
-				at: pos,
-			};
+			return { color: c.alpha(alpha), at: pos };
 		return { color: c, at: pos };
 	});
 }

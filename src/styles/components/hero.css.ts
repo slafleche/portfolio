@@ -7,10 +7,18 @@ import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
 import { fontStyles, fontWeightStyle } from '../helpers/typography';
+import {
+	backgroundImageDecl,
+	buildLinear,
+} from '../helpers/gradients';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
    ========================================================================== */
+
+const bgGradients = buildLinear({
+	stops: heroVars.background.linear,
+});
 
 export const root = style({
 	display: 'flex',
@@ -19,7 +27,6 @@ export const root = style({
 	minHeight: '100vh',
 	overflow: 'hidden',
 	isolation: 'isolate',
-	// backgroundColor: heroVars.background.color.css(),
 });
 
 export const image = style({
@@ -41,12 +48,20 @@ export const video = style({
 	inset: 0,
 	pointerEvents: 'none',
 	objectFit: 'cover',
-	// background: heroVars.background.color.css(),
-	// buildLinear(),
 	mixBlendMode: 'screen',
 });
 
-export const videoContent = style({
+export const contentWrap = style({
+	...fullSizeOfParent(),
+	...backgroundImageDecl(bgGradients),
+});
+
+export const videoBg = style({
+	...fullSizeOfParent(),
+	...backgroundImageDecl(bgGradients),
+});
+
+export const visualContent = style({
 	...fullSizeOfParent(),
 	position: 'relative',
 	opacity: heroVars.background.videoOpacity,
@@ -161,7 +176,7 @@ export const console = style({
 	position: 'absolute',
 	top: 0,
 	left: 0,
-	width: `calc(100% + ${offset.double().css()})`,
+	width: `calc(100% + ${offset.multiply(1.5).css()})`,
 	transform: transforms.value(...consoleTransforms),
 	transformOrigin: '50% 50%',
 	display: 'flex',
@@ -239,10 +254,6 @@ export const heroSurface = style({
 });
 
 export const title_break = style({});
-
-/* ============================================================================
-   TITLE — PIXEL-ACCURATE TO ORIGINAL HTML
-   ========================================================================== */
 
 /** Exact colour math from original HTML */
 const TITLE_LEFT = themeColours.lights.a.saturate(0); // Electric blue

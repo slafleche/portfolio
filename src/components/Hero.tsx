@@ -26,7 +26,9 @@ export default function Hero({ className }: Props) {
 				label={t('hero-alt')}
 				kind="hero"
 				className={s.video}
-				contentClassName={s.videoContent}
+				contentWrapClassName={s.contentWrap}
+				visualItemClassName={s.visualContent}
+				backgroundClassName={s.videoBg}
 				autoPlay
 				muted
 				loop

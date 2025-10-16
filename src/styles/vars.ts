@@ -12,6 +12,7 @@ export type ColorKeys = keyof typeof colors;
 import fontsConfig, {
 	makeFamilyDef,
 } from '@/styles/helpers/fontConfig';
+import type { Stop } from './helpers/gradients';
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
@@ -614,8 +615,8 @@ export const heroVars = {
 				color: color.create.rgba(255, 195, 113),
 				at: 100,
 			},
-		],
-		videoOpacity: 0.7,
+		] as Stop[],
+		videoOpacity: 0.8,
 	},
 	paddings: {
 		top: m(40),
@@ -629,6 +630,6 @@ export const spacingVars = {
 
 export const consoleVars = {
 	borders: {
-		radius: m(18),
+		radius: m(10),
 	},
 };
