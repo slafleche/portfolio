@@ -616,7 +616,7 @@ export const heroVars = {
 				at: 100,
 			},
 		] as Stop[],
-		videoOpacity: 0.8,
+		videoOpacity: 0.75,
 	},
 	paddings: {
 		top: m(40),
