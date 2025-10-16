@@ -63,7 +63,7 @@ export const body = style({
 	lineHeight: 1.6,
 	flexGrow: 1,
 	...paddings({ all: m(18).css() }),
-	background: `linear-gradient(120deg, ${colorVars.black.alpha(0.75).css()} 0%, ${colorVars.black.alpha(0.55).css()} 100%)`,
+	backgroundColor: colorVars.black.mix(colorVars.white, 0.005).css(),
 	justifyContent: 'flex-end',
 	overflowY: 'auto',
 });
@@ -73,7 +73,7 @@ export const line = style({
 	gridTemplateColumns: 'auto 1fr',
 	gap: m(12).css(),
 	alignItems: 'baseline',
-	color: colorVars.white.alpha(0.82).css(),
+	color: colorVars.white.alpha(0.4).css(),
 });
 
 export const lineNumber = style({
@@ -86,10 +86,10 @@ export const code = style({
 });
 
 export const accent = style({
-	color: colorVars.contrast.alpha(0.85).css(),
+	color: colorVars.contrast.alpha(0.45).css(),
 });
 
 export const comment = style({
-	color: colorVars.white.alpha(0.45).css(),
+	color: colorVars.white.alpha(0.3).css(),
 	fontStyle: 'italic',
 });
