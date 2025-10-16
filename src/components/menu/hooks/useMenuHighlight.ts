@@ -74,7 +74,7 @@ const requestedLockIndex = (() => {
 	if (lockTo === undefined) return null;
 	if (lockTo === 'logo') return 0;
 	if (Number.isFinite(lockTo)) {
-		const rounded = Math.round(lockTo as number);
+		const rounded = Math.round(lockTo);
 		return rounded;
 	}
 	return null;
@@ -183,6 +183,7 @@ useEffect(() => {
 	highlight.visible,
 	lockTargetIndex,
 	disableTimeout,
+	isLocked,
 ]);
 
 	useEffect(
@@ -458,13 +459,12 @@ const measure = useCallback(() => {
 		setDebugArch(null);
 	}
 	}, [
-		activeIndex,
-		showArchPath,
-		fontsReady,
-		lockTargetIndex,
-		debugActive,
-		updateHighlightFromMetric,
-	]);
+	activeIndex,
+	showArchPath,
+	fontsReady,
+	debugActive,
+	updateHighlightFromMetric,
+]);
 
 useEffect(() => {
 	measure();
@@ -472,7 +472,6 @@ useEffect(() => {
 	measure,
 	anchorCount,
 	fontsReady,
-	lockTargetIndex,
 	debugActive,
 ]);
 
