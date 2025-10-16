@@ -58,33 +58,10 @@ export const gradients = [
 		],
 		spots: [
 			{
-				color: color('#9BE8FB').alpha(0.4),
+				color: color('#9BE8FB').alpha(0.3),
 				x: 40,
 				y: 110,
-				// extrasPerSpan: 2,
 				softenL: 50,
-				stops: [
-					{
-						at: 0,
-						alpha: 1,
-					},
-					{
-						at: 45,
-						alpha: 0.35,
-					},
-					{
-						at: 60,
-						alpha: 0.18,
-					},
-					{
-						at: 80,
-						alpha: 0.05,
-					},
-					{
-						at: 100,
-						alpha: 0,
-					},
-				],
 			},
 			{
 				color: color('#643a9c').alpha(0.4),
@@ -92,28 +69,12 @@ export const gradients = [
 				y: 53,
 				scale: 100,
 				softenL: 10,
-				stops: [
-					{
-						at: 0,
-						alpha: 0.5,
-					},
-					{
-						at: 45,
-						alpha: 0.35,
-					},
-					{
-						at: 60,
-						alpha: 0.08,
-					},
-					{
-						at: 80,
-						alpha: 0.05,
-					},
-					{
-						at: 100,
-						alpha: 0,
-					},
-				],
+			},
+			{
+				color: color('#9BE8FB').alpha(0.3),
+				x: 0,
+				y: 61,
+				scale: 60,
 			},
 		],
 	},
@@ -129,20 +90,37 @@ export const gradients = [
 			},
 		],
 		spots: [
+			// {
+			// 	color: color('#ffae00'),
+			// 	x: 80,
+			// 	y: 100,
+			// 	scale: 90,
+			// },
 			{
-				color: color('#5b419a'),
-				x: 40,
-				y: 40,
+				color: color('#ff00f2'),
+				x: 85,
+				y: 48,
+				scale: 50,
 			},
 			{
-				color: color('#b98cde'),
-				x: 60,
-				y: 55,
+				color: color('#F7D354'),
+				x: 20,
+				y: 100,
+				scale: 75,
+				
 			},
 			{
-				color: color('#e1864e'),
-				x: 80,
-				y: 70,
+				color: color('#b7910a').alpha(0.2),
+				x: 17,
+				y: 98,
+				scale: 75,
+				
+			},
+			{
+				color: color('#4271bb').alpha(0.6),
+				x: 10,
+				y: 56,
+				scale: 100,
 			},
 		],
 	},

@@ -29,18 +29,17 @@ export default function Card({
 					className={clsx(s.gradient, gradientClass)}
 					aria-hidden
 				/>
-				<div
-					className={glassFrameStyles.surfaceBorder}
-					aria-hidden
-				/>
+				<div className={glassFrameStyles.surfaceBorder} aria-hidden />
 				<div className={glassFrameStyles.rim} aria-hidden />
 				<div className={s.content}>
-					{title && (
-						<Heading className={s.title} depth={depth}>
-							{title}
-						</Heading>
-					)}
-					{children}
+					<div style={{ opacity: 0 }}>
+						{title && (
+							<Heading className={s.title} depth={depth}>
+								{title}
+							</Heading>
+						)}
+						{children}
+					</div>
 				</div>
 			</div>
 		</div>
