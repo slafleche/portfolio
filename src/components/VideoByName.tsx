@@ -22,7 +22,9 @@ type Props = React.VideoHTMLAttributes<HTMLVideoElement> & {
 	pauseWhenOffscreen?: boolean;
 	playbackRate?: number;
 	className?: string;
-	contentClassName?: string;
+	contentWrapClassName?: string;
+	visualItemClassName?: string;
+	backgroundClassName?: string; // gradient element
 	onReady?: (video: HTMLVideoElement, meta: VideoEntry) => void;
 };
 
@@ -38,7 +40,9 @@ export default function VideoByName({
 	controls = false,
 	playsInline = true,
 	className,
-	contentClassName,
+	contentWrapClassName,
+	backgroundClassName,
+	visualItemClassName,
 	priority = false,
 	pauseWhenOffscreen = true,
 	playbackRate = 1,
@@ -50,30 +54,31 @@ export default function VideoByName({
 	const ref = React.useRef<HTMLVideoElement | null>(null);
 	const ioRef = React.useRef<IntersectionObserver | null>(null);
 	const t = useT();
+
 	const [
 		shouldLoadVideo,
 		setShouldLoadVideo,
 	] = React.useState<boolean>(() => priority ?? false);
 	const [
-		isPosterVisible,
-		setPosterVisible,
-	] = React.useState(true);
-	const [
 		isVideoReady,
 		setVideoReady,
 	] = React.useState(false);
+	const [
+		isPosterLoaded,
+		setPosterLoaded,
+	] = React.useState(false);
 
 	React.useEffect(() => {
-		setPosterVisible(true);
 		setVideoReady(false);
+		setPosterLoaded(false);
 	}, [
 		name,
 	]);
 
 	React.useEffect(() => {
 		if (!shouldLoadVideo) {
-			setPosterVisible(true);
 			setVideoReady(false);
+			// posterLoaded will flip when the new poster paints
 		}
 	}, [
 		shouldLoadVideo,
@@ -115,34 +120,28 @@ export default function VideoByName({
 				if (canNative) {
 					video.src = src;
 				} else {
-					// Type the dynamic import so nothing is `any`
 					const mod: HlsModule = await import('hls.js');
 					if (cancelled) return;
 
 					const HlsCtor: HlsClass = mod.default;
 					if (HlsCtor.isSupported()) {
-						hls = new HlsCtor({
-							enableWorker: true,
-						});
+						hls = new HlsCtor({ enableWorker: true });
 						hls.loadSource(src);
 						hls.attachMedia(video);
 					} else {
-						// last-resort: some browsers can still load the URL directly
 						video.src = src;
 					}
 				}
 
 				if (autoPlay || priority) {
-					void video.play(); // intentionally ignore promise for ESLint
+					void video.play();
 				}
 				video.playbackRate = playbackRate;
 				onReady?.(video, data);
 			} catch {
 				// swallow autoplay/HLS setup errors
 			}
-		})().catch(() => {
-			// guard for no-floating-promises on the IIFE itself
-		});
+		})().catch(() => {});
 
 		if (pauseWhenOffscreen) {
 			ioRef.current?.disconnect();
@@ -155,7 +154,7 @@ export default function VideoByName({
 					if (entry.isIntersecting) {
 						if (autoPlay) void el.play();
 					} else {
-						el.pause(); // sync
+						el.pause();
 					}
 				},
 				{ threshold: 0.01 },
@@ -171,9 +170,7 @@ export default function VideoByName({
 			if (hls) {
 				try {
 					hls.destroy();
-				} catch {
-					// ignore
-				}
+				} catch {}
 			}
 		};
 	}, [
@@ -220,7 +217,6 @@ export default function VideoByName({
 		onPlay: userOnPlay,
 		...restVideoProps
 	} = videoProps;
-	// mark as used so it doesn't trigger no-unused-vars while still stripping from rest
 	void _ignoredChildren;
 
 	const rawAttrs = restVideoProps as Record<string, unknown>;
@@ -266,86 +262,104 @@ export default function VideoByName({
 		height: '100%',
 	};
 
-	const posterStyle: React.CSSProperties = {
-		...fillStyle,
-		pointerEvents: 'none',
-		opacity: isPosterVisible ? 1 : 0,
-		transition: 'opacity 240ms ease',
-	};
-
-	const fallbackPosterStyle: React.CSSProperties = {
-		...posterStyle,
-		objectFit: 'cover',
-	};
-
 	const videoStyle: React.CSSProperties = {
 		...fillStyle,
 		objectFit: 'cover',
-		opacity: shouldLoadVideo && isVideoReady ? 1 : 0,
+	};
+
+	const posterStyle: React.CSSProperties = {
+		...fillStyle,
+		objectFit: 'cover',
+		pointerEvents: 'none',
+	};
+
+	const videoStyles: React.CSSProperties = {
+		...fillStyle,
+	};
+
+	const imageStyles: React.CSSProperties = {
+		...fillStyle,
+		opacity: isPosterLoaded ? 1 : 0,
 		transition: 'opacity 240ms ease',
-		visibility: shouldLoadVideo ? 'visible' : 'hidden',
+	};
+
+	// Show gradient only after image or video is ready
+	const showBackground = isPosterLoaded || isVideoReady;
+	const backgroundStyle: React.CSSProperties = {
+		...fillStyle,
+		opacity: showBackground ? 1 : 0,
+		transition: 'opacity 240ms ease',
+		pointerEvents: 'none',
 	};
 
 	return (
 		<div
-			className={clsx(className)}
+			className={className}
 			style={containerStyle}
 			{...placeholderPassthrough}
 		>
-			{posterImage ? (
-				<ImageByName
-					style={posterStyle}
-					name={`video-${data.name}`}
-					className={contentClassName}
-					alt={placeholderAlt}
+			{/* Gradient layer, only renders when video or image is loaded to avoid flashing */}
+			<div className={backgroundClassName} style={backgroundStyle} />
+
+			<div className={contentWrapClassName} style={imageStyles}>
+				{posterImage ? (
+					<ImageByName
+						style={posterStyle}
+						name={`video-${data.name}`}
+						className={visualItemClassName}
+						alt={placeholderAlt}
+						title={title}
+						kind={kind === 'hero' ? 'lg' : 'md'}
+						priority={priority}
+						fit="cover"
+						// If ImageByName exposes onLoad/onLoadingComplete, use it to flip the flag.
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-expect-error: ImageByName may not declare onLoad in its props
+						onLoad={() => setPosterLoaded(true)}
+					/>
+				) : (
+					<img
+						style={posterStyle}
+						src={posterSrc}
+						srcSet={posterSrcSet}
+						sizes={posterSizes}
+						className={visualItemClassName}
+						alt={placeholderAlt}
+						decoding="async"
+						loading={priority ? 'eager' : 'lazy'}
+						onLoad={() => setPosterLoaded(true)}
+					/>
+				)}
+			</div>
+
+			{/* Video paints ASAP; no opacity on the video element */}
+			<div className={contentWrapClassName} style={videoStyles}>
+				<video
+					ref={ref}
+					style={videoStyle}
 					title={title}
-					kind={kind === 'hero' ? 'lg' : 'md'}
-					priority={priority}
-					fit="cover"
-				/>
-			) : (
-				<img
-					className={contentClassName}
-					style={fallbackPosterStyle}
-					src={posterSrc}
-					srcSet={posterSrcSet}
-					sizes={posterSizes}
-					alt={placeholderAlt}
-					decoding="async"
-					loading={priority ? 'eager' : 'lazy'}
-				/>
-			)}
-			<video
-				ref={ref}
-				className={contentClassName}
-				style={videoStyle}
-				title={title}
-				aria-label={label}
-				poster={posterSrc}
-				autoPlay={autoPlay}
-				muted={muted}
-				loop={loop}
-				controls={controls}
-				playsInline={playsInline}
-				preload={priority ? 'auto' : 'metadata'}
-				onLoadedData={(event) => {
-					setVideoReady(true);
-					requestAnimationFrame(() => {
-						setPosterVisible(false);
-					});
-					userOnLoadedData?.(event);
-				}}
-				onPlay={(event) => {
-					setVideoReady(true);
-					requestAnimationFrame(() => {
-						setPosterVisible(false);
-					});
-					userOnPlay?.(event);
-				}}
-				{...restVideoProps}
-			>
-				{t('error-video')}
-			</video>
+					aria-label={label}
+					poster={posterSrc}
+					autoPlay={autoPlay}
+					muted={muted}
+					loop={loop}
+					controls={controls}
+					playsInline={playsInline}
+					className={visualItemClassName}
+					preload={priority ? 'auto' : 'metadata'}
+					onLoadedData={(event) => {
+						setVideoReady(true);
+						userOnLoadedData?.(event);
+					}}
+					onPlay={(event) => {
+						setVideoReady(true);
+						userOnPlay?.(event);
+					}}
+					{...restVideoProps}
+				>
+					{t('error-video')}
+				</video>
+			</div>
 		</div>
 	);
 }
