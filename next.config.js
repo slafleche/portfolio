@@ -4,6 +4,12 @@ import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const vanillaDebugLoaderPath = path.join(
+	__dirname,
+	'scripts',
+	'vanillaDebugLoader.cjs',
+);
+const vanillaDebugTest = /\.css\.(ts|tsx|js|jsx|mjs|mts|cts)$/;
 
 const withVanillaExtract = createVanillaExtractPlugin();
 
@@ -19,6 +25,27 @@ const nextConfig = {
 	webpack(config) {
 		// keep your alias
 		config.resolve.alias['@'] = path.resolve(__dirname, 'src');
+
+		if (
+			!config.module.rules.some((rule) =>
+				Array.isArray(rule?.use) &&
+				rule.use.some(
+					(loader) =>
+						typeof loader === 'object' &&
+						loader?.loader === vanillaDebugLoaderPath,
+				),
+			)
+		) {
+			config.module.rules.unshift({
+				test: vanillaDebugTest,
+				enforce: 'pre',
+				use: [
+					{
+						loader: vanillaDebugLoaderPath,
+					},
+				],
+			});
+		}
 
 		// SVG as React component by default
 		config.module.rules.push({
