@@ -7,6 +7,7 @@ import Card from '../../src/components/Card';
 import * as card from '@/styles/components/card.css';
 import Hero from '../../src/components/Hero';
 import clsx from 'clsx';
+import ImageByName from '../../src/components/ImageByName';
 
 export default function HomePage() {
 	const t = useT();
@@ -22,16 +23,20 @@ export default function HomePage() {
 						<ReactMarkdown>{t('split-dev_content')}</ReactMarkdown>
 					</Card>
 
-					{/* <ImageByName
+					<ImageByName
 						name="portrait"
 						className={card.image}
 						title={t('image_portrait-title')}
 						alt={t('image_portrait-alt')}
 					/>
 
-					<Card title={t('split-design_title')} gradient="b" data-side="right">
+					<Card
+						title={t('split-design_title')}
+						gradient="b"
+						data-side="right"
+					>
 						<ReactMarkdown>{t('split-design_content')}</ReactMarkdown>
-					</Card> */}
+					</Card>
 				</section>
 
 				<section id={t('about-href')}>

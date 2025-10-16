@@ -2,8 +2,11 @@ import { color, type ColorWrapper } from './colorWrap';
 import type { Property } from 'csstype';
 import {
 	buildLinear,
+	resolveGradientSpotStops,
 	resolveLinearAngle,
 	stackBackground,
+	type GradientAlphaStop,
+	type GradientSpotStopPresetName,
 	type Layer,
 	type LinearDirectionInput,
 	type Stop,
@@ -46,7 +49,7 @@ type GradientSpot = {
 	/** Optional blend mode for this spot layer (default: "screen"). */
 	blendMode?: Property.MixBlendMode;
 	/** Optional custom stop definitions for the radial fade. */
-	stops?: SpotStop[];
+	stops?: SpotStopInput;
 };
 
 type CardGradientPack = {
@@ -54,16 +57,11 @@ type CardGradientPack = {
 	spots?: GradientSpot[];
 };
 
-type SpotStop = {
-	at: number;
-	alpha: number;
-	/**
-	 * Optional blend factor (0–1) controlling how strongly this stop
-	 * pulls the interpolated color toward itself. Similar to the linear
-	 * stop `blend`.
-	 */
-	blend?: number;
-};
+type SpotStop = GradientAlphaStop;
+type SpotStopInput =
+	| SpotStop[]
+	| GradientSpotStopPresetName
+	| undefined;
 
 const pctLerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const interiorPercents = (p1: number, p2: number, n: number) =>
@@ -82,23 +80,16 @@ const formatSpotSize = (spot: GradientSpot) =>
 	normalizeScalePercentPair(spot.scale);
 const ensureAlpha = (value: ColorWrapper) =>
 	color.wrap(value.css({ forceAlpha: true }));
-const defaultSpotStops: SpotStop[] = [
-	{
-		at: 0,
-		alpha: 1,
-	},
-	{
-		at: 100,
-		alpha: 0,
-	},
-];
+const defaultSpotStops: SpotStop[] =
+	resolveGradientSpotStops('soft') ?? [];
 
-const sanitizeSpotStops = (stops?: SpotStop[]): SpotStop[] => {
-	if (!stops?.length) {
+const sanitizeSpotStops = (stops?: SpotStopInput): SpotStop[] => {
+	const resolved = resolveGradientSpotStops(stops);
+	if (!resolved?.length) {
 		return defaultSpotStops;
 	}
 
-	const sanitized = stops
+	const sanitized = resolved
 		.map(({ at, alpha }) => ({
 			at: clampPercent(at),
 			alpha: clamp01(alpha),

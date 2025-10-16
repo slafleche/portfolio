@@ -29,7 +29,7 @@ export const glassVars = {
 	// Specular highlight in the top left corner
 	outerBorderHighlight: {
 		strength: 0.35,
-		spread: m(90, '%'),
+		spread: m(70, '%'),
 		angle: m(130, 'deg'),
 	},
 	// Blur effect

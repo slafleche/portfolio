@@ -53,6 +53,12 @@ const pct = (p: number | string) =>
 
 type MeasurementValue = number | IMeasurement;
 
+export type GradientAlphaStop = {
+	at: number;
+	alpha: number;
+	blend?: number;
+};
+
 export type DirectionPoint = {
 	x: MeasurementValue;
 	y: MeasurementValue;
@@ -165,6 +171,49 @@ function toModernOKLCH(input: ColorInput): OKLCH | undefined {
 		a: culori.alpha,
 	};
 }
+
+export const gradientSpotStopPresets = {
+	unset: [],
+	soft: [
+		{
+			at: 0,
+			alpha: 1,
+		},
+		{
+			at: 45,
+			alpha: 0.35,
+		},
+		{
+			at: 60,
+			alpha: 0.18,
+		},
+		{
+			at: 80,
+			alpha: 0.05,
+		},
+		{
+			at: 100,
+			alpha: 0,
+		},
+	],
+} as const satisfies Record<string, GradientAlphaStop[]>;
+
+export type GradientSpotStopPresetName =
+	keyof typeof gradientSpotStopPresets;
+
+export const resolveGradientSpotStops = (
+	stops?: GradientAlphaStop[] | GradientSpotStopPresetName,
+): GradientAlphaStop[] | undefined => {
+	if (stops == null) return undefined;
+	if (typeof stops === 'string') {
+		const preset = gradientSpotStopPresets[stops];
+		if (!preset) {
+			throw new Error(`Unknown gradient spot stop preset "${stops}"`);
+		}
+		return preset;
+	}
+	return stops;
+};
 
 function colorFallback(c: ColorInput): string {
 	if (isColorWrapper(c)) return c.css();
