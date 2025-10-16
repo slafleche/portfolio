@@ -44,6 +44,7 @@ type Props = {
 	fit?: React.CSSProperties['objectFit'];
 	priority?: boolean;
 	style?: React.CSSProperties;
+	onLoad?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
 };
 
 export default function ImageByName({
@@ -57,6 +58,7 @@ export default function ImageByName({
 	height,
 	fit = 'cover',
 	priority = false,
+	onLoad,
 }: Props) {
 	const data = getImage(name);
 	if (!data) return null;
@@ -94,7 +96,7 @@ export default function ImageByName({
 			<img
 				alt={alt}
 				title={title}
-				src={data.blurDataURL}
+				src={data.original.url}
 				srcSet={
 					data.variants.jpg?.length
 						? toSrcSet(data.variants.jpg)
@@ -115,6 +117,7 @@ export default function ImageByName({
 				loading={priority ? 'eager' : 'lazy'}
 				decoding="async"
 				fetchPriority={priority ? 'high' : 'auto'}
+				onLoad={onLoad}
 			/>
 		</picture>
 	);
