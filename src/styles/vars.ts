@@ -120,15 +120,15 @@ export const gradients = [
 	{
 		linear: [
 			{
-				color: color.create.rgba(229, 90, 179),
+				color: color('#E55AB3'),
 				at: 0,
 			},
 			{
-				color: color.create.oklch('0.56 0.17 274.53'),
+				color: themeColours.lights.a,
 				at: 100,
 			},
 			{
-				color: color.create.oklch('0.56 0.17 274.53'),
+				color: themeColours.lights.c,
 				at: 100,
 			},
 		],
@@ -459,7 +459,6 @@ export const logoVars = {
 		blobs: [
 			{
 				color: gradients[1].linear[1].color,
-				// color: gradients.b_linear_b,
 				posX: 24,
 				posY: 38,
 				radius: 46,
