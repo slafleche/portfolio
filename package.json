@@ -84,7 +84,7 @@
 		"format:img": "node scripts/generateImages.mjs",
 		"format:video": "node scripts/generateVideos.mjs",
 		"format:visual": "yarn format:video && yarn format:img",
-		"svg:clean": "yarn svgo && yarn format:svg && yarn format:img",
+		"svg:clean": "yarn svgo && yarn format:svg",
 		"svgo": "node scripts/optimizeSvgs.mjs --write",
 		"upgrade:latest": "yarn up \"*@latest\" \"@*/*@latest\" && yarn dedupe"
 	},
