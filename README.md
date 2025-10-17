@@ -16,5 +16,6 @@
 ### Install
 
 - Run `yarn`
-- You need to run the `locale` function to build missing locale files from the
-  src data. It will automatically run on `yarn dev`
+- After, you'll need to run the `format:all` function to build missing locale
+  data, as well as images and video that are downloaded from src urls. To run
+  locally, run `yarn dev`

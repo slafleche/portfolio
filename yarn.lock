@@ -5132,13 +5132,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"insert-css@npm:0.0.0":
-  version: 0.0.0
-  resolution: "insert-css@npm:0.0.0"
-  checksum: 10c0/0c4e324424bace00205e9ab81e26dd9e825df3f3be2c7f35e8b0e54b513cbbfa21cfc0100c15f410c2248a44648ae04e36d09f51d4a89122426878f5fe9723e2
-  languageName: node
-  linkType: hard
-
 "internal-slot@npm:^1.1.0":
   version: 1.1.0
   resolution: "internal-slot@npm:1.1.0"
@@ -6687,15 +6680,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"normalize-css@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "normalize-css@npm:2.3.1"
-  dependencies:
-    insert-css: "npm:0.0.0"
-  checksum: 10c0/90fe8b2637b1d3322084b64f1b97c4209f94d13107081f3d6ed00a23858c543fc13a0ede1abd34b975c79b21f118599e5dee85f67d7aed69073e353a11b8ea92
-  languageName: node
-  linkType: hard
-
 "normalize-path@npm:^3.0.0, normalize-path@npm:~3.0.0":
   version: 3.0.0
   resolution: "normalize-path@npm:3.0.0"
@@ -6707,6 +6691,13 @@ __metadata:
   version: 0.1.2
   resolution: "normalize-range@npm:0.1.2"
   checksum: 10c0/bf39b73a63e0a42ad1a48c2bd1bda5a07ede64a7e2567307a407674e595bcff0fa0d57e8e5f1e7fa5e91000797c7615e13613227aaaa4d6d6e87f5bd5cc95de6
+  languageName: node
+  linkType: hard
+
+"normalize.css@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "normalize.css@npm:8.0.1"
+  checksum: 10c0/4ddf56d1af5ca755fa5e692e718316d8758ecb792aa96e1ad206824b5810a043763d681d6f7697d46573515f5e9690038b4c91a95c1997567128815545fb8cd7
   languageName: node
   linkType: hard
 
@@ -7080,7 +7071,7 @@ __metadata:
     ffprobe-static: "npm:^3.1.0"
     hls.js: "npm:^1.6.13"
     next: "npm:^15.5.5"
-    normalize-css: "npm:^2.3.1"
+    normalize.css: "npm:^8.0.1"
     open-cli: "npm:^8.0.0"
     postcss: "npm:^8.5.6"
     postcss-cli: "npm:^11.0.1"
