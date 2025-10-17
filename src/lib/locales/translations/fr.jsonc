@@ -5,6 +5,7 @@
 	"title": "Développeur Front-End | Portfolio de Stéphane L.",
 	"description": "Stéphane L. développe des composants réutilisables, des expériences responsives et des interfaces fidèles aux marques — pour élever les projets au-delà du simple passage entre design et développement.",
 
+	"menu-skip_nav": "Aller au contenu",
 	"menu-left_label": "À propos de moi",
 	"menu-right_label": "Mon travail",
 	"localeChange": "Choix de la langue",
@@ -14,9 +15,7 @@
 	"hero-title_a": "Tisser le design et",
 	"hero-title_b": "le développement",
 	"hero-subtitle": "Un développeur avec l’*œil* d’un designer",
-
-	"image_hero-title": "Courants néon",
-	"image_hero-alt": "Illustration numérique abstraite avec des traînées courbes de couleurs néon — rose vif, bleu, violet et turquoise — évoquant des vagues lumineuses vibrantes en mouvement.",
+	"hero-console_description": "Arrière-plan de code décoratif",
 
 	"image_portrait-title": "Portrait de Stéphane L.",
 	"image_portrait-alt": "Une photo de Stéphane L. en train de travailler, avec un arrière-plan flou.",

@@ -3,6 +3,8 @@
 import clsx from 'clsx';
 import * as s from '@/styles/components/console.css';
 import type { ReactNode } from 'react';
+import { useT } from '../lib/locales/useT';
+import { useSafeId } from '../lib/dom';
 
 type ConsoleLine = {
 	content: ReactNode;
@@ -79,23 +81,30 @@ export default function Console({
 	title = 'stéphane_portfolio.tsx',
 	lines = defaultLines,
 }: Props) {
+	const t = useT();
+	const id = useSafeId();
+	const hintId = `${id}-hintId`;
+	const describedById = `${id}-describedById`;
 	return (
-		<div className={clsx(s.root, className)}>
-			<div className={s.header}>
-				<span className={s.windowDot} aria-hidden />
-				<span
-					className={s.windowDot}
-					data-variant="warn"
-					aria-hidden
-				/>
-				<span
-					className={s.windowDot}
-					data-variant="success"
-					aria-hidden
-				/>
-				<span className={s.title}>{title}</span>
+		<div
+			className={clsx(s.root, className)}
+			role="group"
+			aria-label={'Computer console with code'}
+			aria-describedby={describedById}
+		>
+			<div className={s.header} aria-hidden>
+				<span className={s.windowDot} />
+				<span className={s.windowDot} data-variant="warn" />
+				<span className={s.windowDot} data-variant="success" />
+				<span className={s.title} id={hintId}>
+					{title}
+				</span>
 			</div>
-			<div className={s.body}>
+
+			<p id={describedById} data-visible="sc-only">
+				{t('hero-console_description')}
+			</p>
+			<code className={s.body}>
 				{lines.map((line, idx) => (
 					<div key={idx} className={s.line}>
 						<span className={s.lineNumber}>{idx + 1}</span>
@@ -109,7 +118,7 @@ export default function Console({
 						</span>
 					</div>
 				))}
-			</div>
+			</code>
 		</div>
 	);
 }

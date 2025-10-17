@@ -1,65 +1,31 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle } from '@vanilla-extract/css';
 import * as CSS from 'csstype';
-import nest from '@/styles/helpers/nesting';
-// import { flexPosition } from './helpers/positioning';
 
-// Utility classes
-export const utilityStyles = style({
-	selectors: {
-		// Hide and element
-		'&[data-visibility="hidden"]': {
-			visibility: 'hidden !important' as CSS.Property.Visibility,
-		},
-		// Hide elements from user, but keep in DOM
-		'&[data-visually="src-only"]': {
-			position: 'absolute',
-			width: '1px',
-			height: '1px',
-			padding: '0',
-			margin: '-1px',
-			overflow: 'hidden',
-			clip: 'rect(0,0,0,0)',
-			border: '0',
-		},
-		// Disable user interaction
-		'&[data-interaction="none"]': {
-			userSelect: 'none',
-			pointerEvents: 'none',
-		},
-		// Accessibility, focus on visible only
-		'&[data-focus-visibility="focus"]': {
-			position: 'absolute',
-			clip: 'rect(0 0 0 0)',
-			height: '1px',
-			width: '1px',
-			margin: '-1px',
-			overflow: 'hidden',
-			padding: 0,
-		},
-		...nest('&[data-focus-visibility="focus"]', [
-			{
-				'&:focus, &.focus-visible': {
-					zIndex: 1,
-					width: 'auto',
-					height: 'auto',
-					clip: 'auto',
-				},
-			},
-		]),
-
-		// Set UI specific links with this reset to leave "user" content, e.g. markdown natural with the defaults
-		'&[data-ui="link"]': {
-			textDecoration: 'none',
-			color: 'inherit',
-		},
-		...nest('&[data-ui="link"]', [
-			{
-				'&:visited': {
-					color: 'inherit',
-				},
-			},
-		]),
-	},
+globalStyle('*[data-visible="hidden"]', {
+	visibility: 'hidden !important' as CSS.Property.Visibility,
 });
 
-export default utilityStyles;
+globalStyle('*[data-visible="sc-only"]', {
+	position: 'absolute !important' as CSS.Property.Position,
+	width: '1px !important' as CSS.Property.Width,
+	height: '1px !important' as CSS.Property.Height,
+	padding: '0 !important' as CSS.Property.Padding,
+	margin: '-1px !important' as CSS.Property.Margin,
+	overflow: 'hidden !important' as CSS.Property.Overflow,
+	clip: 'rect(0,0,0,0) !important' as CSS.Property.Clip,
+	border: '0 !important' as CSS.Property.Border,
+});
+
+globalStyle('*[data-interaction="none"]', {
+	userSelect: 'none !important' as CSS.Property.UserSelect,
+	pointerEvents: 'none !important' as CSS.Property.PointerEvents,
+});
+
+globalStyle('a[data-ui="link"]', {
+	textDecoration: 'none',
+	color: 'inherit',
+});
+
+globalStyle('a[data-ui="link"]:visited', {
+	color: 'inherit',
+});
