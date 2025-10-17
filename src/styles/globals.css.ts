@@ -5,6 +5,7 @@ import {
 	reducedMotion,
 } from './helpers/accessibility';
 import { fontWeightStyle } from './helpers/typography';
+import './utilities.css';
 
 globalStyle('body', {
 	minHeight: '100vh',
@@ -67,12 +68,3 @@ globalStyle('h2:not([data-reach-accordion-item])', {
 globalStyle('strong', {
 	fontWeight: 'bolder',
 });
-
-// export const fullRotationAnimation = keyframes({
-//   '0%': { transform: 'rotate(-360deg)' },
-// });
-
-// export const upAndDownAnimation = keyframes({
-//   '0%': { transform: 'translateY(0)' },
-//   '25%': { transform: 'translateY(2px)' },
-//   '75%': { tra

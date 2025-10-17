@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { SkipNavLink } from '@reach/skip-nav';
 import * as s from '@/styles/components/menu.css';
 import { useT } from '@/lib/locales/useT';
 import { useLocale } from '@/lib/locales/localeContext';
@@ -24,6 +25,7 @@ import {
 	useLogoAnimation,
 } from './menu/hooks/useLogoAnimation';
 import type { AnchorEntry } from './menu/menuUtils';
+import * as skipNavStyles from '@/styles/components/skipNav.css';
 
 type MenuProps = {
 	bokehDebug?: MiniBokehDebugOptions;
@@ -70,9 +72,9 @@ export default function Menu({
 	const baseFontsReady = false;
 	const fontsReady = debugActive ? true : baseFontsReady;
 	const debugOptions: MiniBokehDebugOptions | undefined = bokehDebug;
-const lockTarget = debugOptions?.lockTo;
-const raiseLayer =
-	debugOptions?.raiseLayer ?? (lockTarget !== undefined);
+	const lockTarget = debugOptions?.lockTo;
+	const raiseLayer =
+		debugOptions?.raiseLayer ?? lockTarget !== undefined;
 	const showArchPath = debugOptions?.showArchPath ?? false;
 
 	const {
@@ -558,6 +560,9 @@ const raiseLayer =
 	return (
 		<>
 			<div className={s.root} data-mounted={mounted}>
+				<SkipNavLink contentId="body" className={skipNavStyles.link}>
+					{t('menu-skip_nav')}
+				</SkipNavLink>
 				<Arch
 					ready={mounted}
 					glow={logoGlowState === 'idle' ? null : logoGlowState}
@@ -568,12 +573,12 @@ const raiseLayer =
 						ref={navRef}
 						onMouseLeave={handleNavMouseLeave}
 					>
-					<div
-						className={s.highlightLayer}
-						aria-hidden
-						style={raiseLayer ? { zIndex: 5 } : undefined}
-					>
-						{showArchPath && debugArch ? (
+						<div
+							className={s.highlightLayer}
+							aria-hidden
+							style={raiseLayer ? { zIndex: 5 } : undefined}
+						>
+							{showArchPath && debugArch ? (
 								<svg
 									className={s.debugArch}
 									viewBox={`0 0 ${debugArch.width} ${debugArch.height}`}

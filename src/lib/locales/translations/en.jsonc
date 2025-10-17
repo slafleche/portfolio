@@ -5,6 +5,7 @@
 	"title": "Front-End Developer | Stéphane L. Portfolio",
 	"description": "Stéphane L. builds reusable components, responsive experiences, and brand-faithful interfaces — elevating projects beyond the handoff between design and development.",
 
+	"menu-skip_nav": "Skip to content",
 	"menu-left_label": "About Me",
 	"menu-right_label": "My Work",
 	"localeChange": "Select language",
@@ -14,9 +15,7 @@
 	"hero-title_a": "Bridging design",
 	"hero-title_b": "and development",
 	"hero-subtitle": "A developer with a designer’s __eye__",
-
-	"image_hero-title": "Neon Currents",
-	"image_hero-alt": "Abstract digital artwork with flowing curved streaks of neon colors—bright pink, blue, purple, and turquoise—creating the impression of vibrant light waves in motion.",
+	"hero-console_description": "Decorative code backdrop",
 
 	"image_portrait-title": "Portrait of Stéphane L.",
 	"image_portrait-alt": "A photo of Stéphane L. working, with a blurred background.",

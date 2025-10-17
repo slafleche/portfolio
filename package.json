@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"dependencies": {
+		"@reach/skip-nav": "^0.18.0",
 		"chroma-js": "^3.1.2",
 		"clsx": "^2.1.1",
 		"culori": "^4.0.2",
