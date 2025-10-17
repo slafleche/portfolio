@@ -46,16 +46,34 @@ const tsNoProjectFiles = [
 
 /** @type {import('eslint').FlatConfig.Config[]} */
 export default [
-		{
-			ignores: [
-				'node_modules/**',
-				'.yarn/**',
-				'.next/**',
-				'dist/**',
-				'build/**',
+	{
+		ignores: [
+			'node_modules/**',
+			'.yarn/**',
+			'.next/**',
+			'dist/**',
+			'build/**',
 			'public/**',
 			'src/data/locales.gen.ts',
 		],
+	},
+	{
+		files: [
+			'*.config.{js,cjs,mjs}',
+			'**/*.config.{js,cjs,mjs}',
+			'next.config.js',
+			'prettier.config.cjs',
+		],
+		languageOptions: {
+			parserOptions: {
+				project: false,
+			},
+			globals: {
+				process: 'readonly',
+				module: 'readonly',
+				require: 'readonly',
+			},
+		},
 	},
 	{
 		...js.configs.recommended,
@@ -95,27 +113,53 @@ export default [
 			},
 		},
 	},
-		{
-			files: ['**/*.{js,jsx,ts,tsx,cjs,mjs}'],
-			plugins: {
-				import: importPlugin,
-			},
-			settings: {
-				'import/resolver': {
-					typescript: {
-						project: tsconfigPath,
-					},
+	{
+		files: ['**/*.{js,jsx,ts,tsx,cjs,mjs}'],
+		plugins: {
+			import: importPlugin,
+		},
+		settings: {
+			'import/resolver': {
+				typescript: {
+					project: tsconfigPath,
 				},
 			},
-			languageOptions: {
-				ecmaVersion: 'latest',
-				sourceType: 'module',
-			},
-			rules: importFlatConfig.rules ?? {},
+		},
+		languageOptions: {
+			ecmaVersion: 'latest',
+			sourceType: 'module',
+		},
+		rules: importFlatConfig.rules ?? {},
 	},
 	{
 		...promiseFlatConfig,
 		files: ['**/*.{js,jsx,ts,tsx}'],
+	},
+	{
+		files: ['scripts/**/*.{js,cjs,mjs,ts}'],
+		languageOptions: {
+			parserOptions: {
+				project: false,
+			},
+			globals: {
+				require: 'readonly',
+				module: 'readonly',
+				process: 'readonly',
+				console: 'readonly',
+				URL: 'readonly',
+				fetch: 'readonly',
+				Buffer: 'readonly',
+				__dirname: 'readonly',
+				setTimeout: 'readonly',
+				clearTimeout: 'readonly',
+				setInterval: 'readonly',
+				clearInterval: 'readonly',
+			},
+		},
+		rules: {
+			'no-unused-vars': 'off',
+			'no-empty': 'off',
+		},
 	},
 	{
 		files: ['**/*.{jsx,tsx,js,ts}'],
@@ -140,6 +184,9 @@ export default [
 			...(reactHooksRecommended.rules ?? {}),
 			'react/react-in-jsx-scope': 'off',
 			'react/jsx-uses-react': 'off',
+			'react/prop-types': 'off',
+			'react/no-unescaped-entities': 'off',
+			'react/jsx-no-comment-textnodes': 'off',
 		},
 	},
 	eslintConfigPrettier,
