@@ -6,6 +6,7 @@ import {
 	resolveLinearAngle,
 	stackBackground,
 	type GradientAlphaStop,
+	type GradientSpotStopCurveOptions,
 	type GradientSpotStopInput,
 	type Layer,
 	type LinearDirectionInput,
@@ -77,13 +78,18 @@ const formatSpotSize = (spot: GradientSpot) =>
 	normalizeScalePercentPair(spot.scale);
 const ensureAlpha = (value: ColorWrapper) =>
 	color.wrap(value.css({ forceAlpha: true }));
-const defaultSpotStops: SpotStop[] =
-	resolveGradientSpotStops('soft') ?? [];
 
-const sanitizeSpotStops = (stops?: SpotStopInput): SpotStop[] => {
-	const resolved = resolveGradientSpotStops(stops);
-	if (!resolved?.length) {
-		return defaultSpotStops;
+const sanitizeSpotStops = (
+	spot: GradientSpot,
+	defaultCurve: GradientSpotStopCurveOptions,
+): SpotStop[] => {
+	const stopsInput: GradientSpotStopInput =
+		spot.stops ?? {
+			...defaultCurve,
+		};
+	const resolved = resolveGradientSpotStops(stopsInput);
+	if (!resolved.length) {
+		return resolveGradientSpotStops({ ...defaultCurve });
 	}
 
 	const sanitized = resolved
@@ -93,11 +99,16 @@ const sanitizeSpotStops = (stops?: SpotStopInput): SpotStop[] => {
 		}))
 		.sort((a, b) => a.at - b.at);
 
-	return sanitized.length < 2 ? defaultSpotStops : sanitized;
+	return sanitized.length < 2
+		? resolveGradientSpotStops({ ...defaultCurve })
+		: sanitized;
 };
 
-const getSpotAnchors = (spot: GradientSpot) => {
-	const stops = sanitizeSpotStops(spot.stops);
+const getSpotAnchors = (
+	spot: GradientSpot,
+	defaultCurve: GradientSpotStopCurveOptions,
+) => {
+	const stops = sanitizeSpotStops(spot, defaultCurve);
 	return {
 		percents: stops.map((stop) => stop.at),
 		alphas: stops.map((stop) => stop.alpha),
@@ -311,7 +322,13 @@ export function makeCardGradient(
 
 	if (includeSpots) {
 		for (const spot of spots) {
-			const anchors = getSpotAnchors(spot);
+			const defaultCurve: GradientSpotStopCurveOptions = {
+				count: Math.max(
+					2,
+					(spot.extrasPerSpan ?? extrasPerSpan) + 2,
+				),
+			};
+			const anchors = getSpotAnchors(spot, defaultCurve);
 			layers.push({
 				kind: 'radial',
 				options: {

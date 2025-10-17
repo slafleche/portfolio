@@ -276,8 +276,6 @@ const generateCurveStops = (
 	});
 };
 
-const defaultSpotStopArray = generateCurveStops();
-
 export const gradientSpotStopPresets = {
 	soft: defaultSpotStopCurve,
 } as const satisfies Record<string, GradientSpotStopPresetValue>;
@@ -309,7 +307,7 @@ export const resolveGradientSpotStops = (
 	if (typeof stops === 'object' && stops) {
 		return generateCurveStops(stops);
 	}
-	return defaultSpotStopArray;
+	return generateCurveStops();
 };
 
 function colorFallback(c: ColorInput): string {

@@ -88,7 +88,7 @@ export const gradient = style({
 export const cardGradientA = style(
 	makeCardGradient(gradients[0], {
 		// extrasPerSpan: 100,
-		linearDirection: m(92, 'deg'),
+		linearDirection: m(110, 'deg'),
 		// includeLinear: false,
 		// includeSpots: false,
 	}),

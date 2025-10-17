@@ -48,12 +48,17 @@ export const gradients: CardGradientPack[] = [
 				at: 0,
 			},
 			{
-				color: color('#6E4DCC'),
-				at: 60,
-				blend: 0.3,
+				color: color('#51287a'),
+				at: 30,
+				blend: 1,
 			},
 			{
 				color: color('#5B66D6'),
+				at: 80,
+				blend: 0.3,
+			},
+			{
+				color: color('#6E4DCC'),
 				at: 100,
 			},
 		],
@@ -66,7 +71,7 @@ export const gradients: CardGradientPack[] = [
 				blendMode: 'normal',
 			},
 			{
-				color: color('#5B66D6').alpha(0.4),
+				color: color('#51287a').alpha(0.4),
 				x: 90,
 				y: 53,
 				scale: 100,
@@ -74,17 +79,17 @@ export const gradients: CardGradientPack[] = [
 				blendMode: 'normal',
 			},
 			{
-				color: color('#287a52').alpha(0.9),
+				color: color('#287a52').alpha(0.7),
 				x: 63,
 				y: 100,
 				scale: 80,
 				blendMode: 'normal',
 			},
 			{
-				color: color('#00ff6e').alpha(0.5),
+				color: color('#00ff6e').alpha(0.3),
 				x: 80,
 				y: 60,
-				scale: 70,
+				scale: 80,
 				blendMode: 'normal',
 			},
 			{
