@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+  width="105.29145mm"
+  height="95.100868mm"
+  viewBox="0 0 105.29145 95.100868"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <defs>
+    <!-- Base shape reused by all three layers -->
+    <path id="shape" d="M 24.878828,2.1447469 C 21.017869,2.2150334 16.743486,2.5504662 11.267537,3.6378634 7.6257326,6.4989485 3.4654375,10.6233 2.6221443,12.121 c -0.665525,1.162203 -0.703746,4.172956 0.1910106,5.722753 0.8947349,1.549797 18.8340341,33.258059 29.4534171,51.152756 3.868962,6.592239 6.220579,12.332163 13.579276,20.728715 4.298686,1.723403 9.950715,3.264469 11.669316,3.245988 1.339301,-0.0051 3.965807,-1.477401 4.860541,-3.027198 0.894735,-1.549796 19.385558,-32.939368 29.573472,-51.083633 3.774519,-6.646737 7.569994,-11.552899 11.162173,-22.12426 -0.65686,-4.584488 -2.14869,-10.24976 -3.02414,-11.7289793 -0.673746,-1.1574727 -3.262067,-2.695919 -5.051536,-2.695919 -1.789543,0 -38.218864,-0.3183777 -59.026161,-0.069195 -3.821741,0.027285 -7.268984,-0.1673126 -11.130161,-0.097004 z"/>
+
+    <!-- Robust shadow: uses SourceAlpha, big region, userSpaceOnUse -->
+    <filter id="shadowFilter"
+            x="-200" y="-200" width="1000" height="1000"
+            filterUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+      <!-- Blur the alpha of the incoming shape -->
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
+      <!-- Move the blurred alpha to form the shadow -->
+      <feOffset in="blur" dx="14" dy="14" result="offset"/>
+      <!-- Color the shadow -->
+      <feFlood flood-color="black" flood-opacity="0.8" result="flood"/>
+      <feComposite in="flood" in2="offset" operator="in" result="shadow"/>
+      <!-- Put the original graphic back on top -->
+      <feMerge>
+        <feMergeNode in="shadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Order matters: draw shadow first so it's under the fill -->
+  <use id="shadow" xlink:href="#shape" fill="none" filter="url(#shadowFilter)"/>
+  <use id="bg"     xlink:href="#shape" fill="#251a38"/>
+  <use id="border" xlink:href="#shape" fill="none" stroke="#ffffff" stroke-width="4.25867"/>
+</svg>
