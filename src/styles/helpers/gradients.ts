@@ -5,6 +5,11 @@ import {
 } from './colorWrap';
 import type { IMeasurement } from './measurement';
 import { isCssLike } from './measurement';
+import {
+	buildCurve,
+	easing,
+	type EasingFunction,
+} from './easingCurves';
 
 /** OKLCH tuple (percents for L, chroma as 0..~0.4, hue in degrees) */
 export type OKLCH = {
@@ -58,6 +63,26 @@ export type GradientAlphaStop = {
 	alpha: number;
 	blend?: number;
 };
+
+type NamedGradientEasing =
+	| { name: 'linear' }
+	| { name: 'easeOutQuad' }
+	| { name: 'easeOutCubic' }
+	| { name: 'powerDecay'; exponent?: number };
+
+export type GradientSpotStopCurveOptions = {
+	count?: number;
+	positions?: readonly number[];
+	easing?: NamedGradientEasing | EasingFunction;
+	minAlpha?: number;
+	maxAlpha?: number;
+	includeZero?: boolean;
+	includeOne?: boolean;
+};
+
+type GradientSpotStopPresetValue =
+	| GradientAlphaStop[]
+	| GradientSpotStopCurveOptions;
 
 export type DirectionPoint = {
 	x: MeasurementValue;
@@ -162,7 +187,7 @@ function toModernOKLCH(input: ColorInput): OKLCH | undefined {
 			? input
 			: undefined;
 	if (!source) return undefined;
-	const culori = color.toOKLCH(source);
+const culori = color.toOKLCH(source);
 	if (!culori) return undefined;
 	return {
 		l: culori.l * 100,
@@ -172,47 +197,119 @@ function toModernOKLCH(input: ColorInput): OKLCH | undefined {
 	};
 }
 
+type RequiredSpotStopCurveOptions = {
+	count: number;
+	positions?: readonly number[];
+	easing: NamedGradientEasing | EasingFunction;
+	minAlpha: number;
+	maxAlpha: number;
+	includeZero: boolean;
+	includeOne: boolean;
+};
+
+const defaultSpotStopCurve: RequiredSpotStopCurveOptions = {
+	count: 5,
+	easing: { name: 'powerDecay', exponent: 1.6 },
+	minAlpha: 0,
+	maxAlpha: 1,
+	includeZero: true,
+	includeOne: true,
+};
+
+const resolveEasingOption = (
+	option: NamedGradientEasing | EasingFunction,
+): EasingFunction => {
+	if (typeof option === 'function') {
+		return option;
+	}
+	switch (option.name) {
+		case 'linear':
+			return easing.linear;
+		case 'easeOutQuad':
+			return easing.easeOutQuad;
+		case 'easeOutCubic':
+			return easing.easeOutCubic;
+		case 'powerDecay':
+		default:
+			return easing.powerDecay(option.exponent);
+	}
+};
+
+const generateCurveStops = (
+	options?: GradientSpotStopCurveOptions,
+): GradientAlphaStop[] => {
+	const curve: RequiredSpotStopCurveOptions = {
+		...defaultSpotStopCurve,
+		...(options ?? {}),
+	};
+	const {
+		count,
+		positions,
+		includeZero,
+		includeOne,
+		minAlpha,
+		maxAlpha,
+	} = curve;
+
+	const easingFn = resolveEasingOption(curve.easing);
+	const hasCustomPositions = Array.isArray(positions) && positions.length >= 2;
+	const sampleCount = hasCustomPositions
+		? positions.length
+		: Math.max(2, Math.floor(count));
+	const samples = buildCurve({
+		positions: hasCustomPositions ? positions : undefined,
+		samples: sampleCount,
+		easing: easingFn,
+		includeZero,
+		includeOne,
+		min: 0,
+		max: 1,
+	});
+
+	return samples.map(({ position, value }) => {
+		const alpha =
+			maxAlpha - (maxAlpha - minAlpha) * value;
+		return {
+			at: Math.round(clamp(position * 100, 0, 100)),
+			alpha: Number(clamp(alpha, minAlpha, maxAlpha).toFixed(3)),
+		};
+	});
+};
+
+const defaultSpotStopArray = generateCurveStops();
+
 export const gradientSpotStopPresets = {
-	unset: [],
-	soft: [
-		{
-			at: 0,
-			alpha: 1,
-		},
-		{
-			at: 45,
-			alpha: 0.35,
-		},
-		{
-			at: 60,
-			alpha: 0.18,
-		},
-		{
-			at: 80,
-			alpha: 0.05,
-		},
-		{
-			at: 100,
-			alpha: 0,
-		},
-	],
-} as const satisfies Record<string, GradientAlphaStop[]>;
+	soft: defaultSpotStopCurve,
+} as const satisfies Record<string, GradientSpotStopPresetValue>;
 
 export type GradientSpotStopPresetName =
 	keyof typeof gradientSpotStopPresets;
 
+export type GradientSpotStopInput =
+	| GradientSpotStopCurveOptions
+	| GradientAlphaStop[]
+	| GradientSpotStopPresetName;
+
 export const resolveGradientSpotStops = (
-	stops?: GradientAlphaStop[] | GradientSpotStopPresetName,
-): GradientAlphaStop[] | undefined => {
-	if (stops == null) return undefined;
+	stops?: GradientSpotStopInput,
+): GradientAlphaStop[] => {
+	if (Array.isArray(stops)) {
+		return stops;
+	}
 	if (typeof stops === 'string') {
 		const preset = gradientSpotStopPresets[stops];
 		if (!preset) {
 			throw new Error(`Unknown gradient spot stop preset "${stops}"`);
 		}
-		return preset;
+		if (Array.isArray(preset)) {
+			return preset;
+		}
+		return generateCurveStops(preset);
 	}
-	return stops;
+	if (typeof stops === 'object' && stops) {
+		return generateCurveStops(stops);
+	}
+	return defaultSpotStopArray;
 };
 
 function colorFallback(c: ColorInput): string {

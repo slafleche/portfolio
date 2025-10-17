@@ -6,7 +6,7 @@ import {
 	resolveLinearAngle,
 	stackBackground,
 	type GradientAlphaStop,
-	type GradientSpotStopPresetName,
+	type GradientSpotStopInput,
 	type Layer,
 	type LinearDirectionInput,
 	type Stop,
@@ -58,10 +58,7 @@ type CardGradientPack = {
 };
 
 type SpotStop = GradientAlphaStop;
-type SpotStopInput =
-	| SpotStop[]
-	| GradientSpotStopPresetName
-	| undefined;
+type SpotStopInput = GradientSpotStopInput | undefined;
 
 const pctLerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const interiorPercents = (p1: number, p2: number, n: number) =>
