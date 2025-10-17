@@ -9,21 +9,21 @@ type Props = IHeadingDepth & {
 	title?: ReactNode;
 	children?: ReactNode;
 	className?: string;
-	gradient?: 'a' | 'b';
+	type?: string;
 };
 
 export default function Card({
 	title,
 	depth = 2,
 	className,
-	gradient = 'a',
+	type,
 	children,
 }: Props) {
 	const gradientClass =
-		gradient === 'a' ? s.cardGradientA : s.cardGradientB;
+		type === 'right' ? s.cardGradientB : s.cardGradientA;
 
 	return (
-		<div className={clsx(s.root, className)}>
+		<div className={clsx(s.root, className)} data-type={type}>
 			<div className={clsx(glassFrameStyles.frame, s.frame)}>
 				<div
 					className={clsx(s.gradient, gradientClass)}
@@ -32,14 +32,12 @@ export default function Card({
 				<div className={glassFrameStyles.surfaceBorder} aria-hidden />
 				<div className={glassFrameStyles.rim} aria-hidden />
 				<div className={s.content}>
-					<div style={{ opacity: 0 }}>
-						{title && (
-							<Heading className={s.title} depth={depth}>
-								{title}
-							</Heading>
-						)}
-						{children}
-					</div>
+					{title && (
+						<Heading className={s.title} depth={depth}>
+							{title}
+						</Heading>
+					)}
+					{children}
 				</div>
 			</div>
 		</div>

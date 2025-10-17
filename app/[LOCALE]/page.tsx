@@ -7,7 +7,7 @@ import Card from '../../src/components/Card';
 import * as card from '@/styles/components/card.css';
 import Hero from '../../src/components/Hero';
 import clsx from 'clsx';
-import ImageByName from '../../src/components/ImageByName';
+import Keystone from '../../src/components/Keystone';
 import { SkipNavContent } from '@reach/skip-nav';
 
 export default function HomePage() {
@@ -21,22 +21,18 @@ export default function HomePage() {
 					<section
 						className={clsx(card.container, layoutStyles.content)}
 					>
-						<Card title={t('split-dev_title')} data-side="left">
+						<Card title={t('split-dev_title')} type="left">
 							<ReactMarkdown>{t('split-dev_content')}</ReactMarkdown>
 						</Card>
 
-						<ImageByName
+						<Keystone
 							name="portrait"
 							className={card.image}
 							title={t('image_portrait-title')}
 							alt={t('image_portrait-alt')}
 						/>
 
-						<Card
-							title={t('split-design_title')}
-							gradient="b"
-							data-side="right"
-						>
+						<Card title={t('split-design_title')} type="right">
 							<ReactMarkdown>
 								{t('split-design_content')}
 							</ReactMarkdown>

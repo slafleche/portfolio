@@ -23,7 +23,7 @@ export const archGlassVars = {
 		direction: m(180, 'deg'),
 	},
 	outerBorderHighlight: {
-		spread: m(100, '%'),
+		mPercent: m(100),
 		angle: m(95, 'deg'),
 		width: m(3),
 		strength: 0.45,
