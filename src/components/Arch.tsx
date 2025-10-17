@@ -15,6 +15,15 @@ import { archGlassVars } from '@/styles/helpers/arch';
 import { archVars } from '@/styles/vars';
 import { shadowTotalY } from '../styles/helpers/shadow';
 import { noiseStyle } from '../styles/helpers/noiseSVG';
+import { assertUnit } from '@/styles/helpers/measurement';
+
+if (process.env.NODE_ENV !== 'production') {
+	assertUnit(archVars.top, 'px', 'Arch top');
+	assertUnit(archVars.curveHeight, 'px', 'Arch curveHeight');
+	assertUnit(archVars.ry, 'px', 'Arch ry');
+	assertUnit(archVars.bumpHeight, 'px', 'Arch bumpHeight');
+	assertUnit(archVars.bumpWidth, 'px', 'Arch bumpWidth');
+}
 
 type Props = {
 	className?: string;
@@ -41,7 +50,14 @@ function Arch({
 
 	// Safe numbers even before windowSize is known
 	const ws = Math.max(1, windowSize ?? 0);
-	const fullHeight = archVars.top.value + archVars.curveHeight.value;
+	const archTop = archVars.top;
+	const archCurveHeight = archVars.curveHeight;
+	const fullHeight = archTop.value + archCurveHeight.value;
+	const shadowYOffset = shadowTotalY();
+	if (process.env.NODE_ENV !== 'production') {
+		assertUnit(shadowYOffset, 'px', 'Arch shadowTotalY');
+	}
+	const shadowHeight = shadowYOffset.value;
 
 	const archPathId = `${baseId}-arch`;
 	const bottomPathId = `${baseId}-archBottom`;
@@ -74,7 +90,7 @@ function Arch({
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox={`0 0 ${ws} ${fullHeight}`}
 						width={ws}
-						height={fullHeight + shadowTotalY().value}
+						height={fullHeight + shadowHeight}
 						preserveAspectRatio="none"
 						overflow="visible"
 						aria-hidden

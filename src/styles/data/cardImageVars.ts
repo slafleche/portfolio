@@ -4,7 +4,7 @@ import { colorVars } from '../vars';
 
 export const cardImageVars = {
 	borders: {
-		width: m(6),
+		width: m(2),
 		color: colorVars.bodyFg,
 	},
 	shadows: {

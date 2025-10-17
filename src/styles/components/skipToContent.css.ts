@@ -1,7 +1,18 @@
 import { style } from '@vanilla-extract/css';
+import { assertUnit } from '../helpers/measurement';
 import { chevronVars, colorVars } from '../vars';
 // import borders from '../helpers/borders';
 import { globalBoxShadow } from '../helpers/shadow';
+
+if (process.env.NODE_ENV !== 'production') {
+	assertUnit(chevronVars.width, 'px', 'skipToContent chevron width');
+	assertUnit(chevronVars.padding, 'px', 'skipToContent chevron padding');
+	assertUnit(
+		chevronVars.container.height,
+		'px',
+		'skipToContent container height',
+	);
+}
 
 export const root = style({
 	display: 'flex',

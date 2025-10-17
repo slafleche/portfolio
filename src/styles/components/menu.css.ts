@@ -14,9 +14,35 @@ import {
 } from '../vars';
 
 import { paddings } from '../helpers/spacing';
-import { m } from '../helpers/measurement';
+import { assertUnit, m } from '../helpers/measurement';
 import transforms from '../helpers/transforms';
 import { fontStyles, fontWeightStyle } from '../helpers/typography';
+
+if (process.env.NODE_ENV !== 'production') {
+	assertUnit(archVars.top, 'px', 'menu archVars.top');
+	assertUnit(archVars.curveHeight, 'px', 'menu archVars.curveHeight');
+	assertUnit(archVars.bumpHeight, 'px', 'menu archVars.bumpHeight');
+	assertUnit(archVars.bumpWidth, 'px', 'menu archVars.bumpWidth');
+	assertUnit(archVars.ry, 'px', 'menu archVars.ry');
+	assertUnit(dropShadowVars.offsetY, 'px', 'menu dropShadow offsetY');
+	assertUnit(dropShadowVars.blur, 'px', 'menu dropShadow blur');
+	assertUnit(menuVars.height, 'px', 'menu height');
+	assertUnit(menuVars.padding.horizontal, 'px', 'menu padding horizontal');
+	assertUnit(menuVars.padding.vertical, 'px', 'menu padding vertical');
+	assertUnit(menuVars.yOffset, 'px', 'menu yOffset');
+	assertUnit(menuVars.hover.blur, 'px', 'menu hover blur');
+	assertUnit(menuVars.hover.shadow.spread, 'px', 'menu hover shadow spread');
+	assertUnit(menuVars.hover.shadow.blur, 'px', 'menu hover shadow blur');
+	assertUnit(menuVars.hover.text.offsetX, 'px', 'menu hover text offsetX');
+	assertUnit(menuVars.hover.text.offsetY, 'px', 'menu hover text offsetY');
+	assertUnit(menuVars.textShadow.offsetX, 'px', 'menu textShadow offsetX');
+	assertUnit(menuVars.textShadow.offsetY, 'px', 'menu textShadow offsetY');
+	assertUnit(menuVars.textShadow.blur, 'px', 'menu textShadow blur');
+	assertUnit(logoVars.width, 'px', 'menu logo width');
+	assertUnit(logoVars.offsetY, 'px', 'menu logo offsetY');
+	assertUnit(menuVars.rotationMax, 'deg', 'menu rotationMax');
+	assertUnit(menuVars.skew, 'deg', 'menu skew');
+}
 
 export const root = style({
 	position: 'fixed',
