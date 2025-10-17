@@ -1,5 +1,22 @@
+import { assertUnit } from '@/styles/helpers/measurement';
 import { archVars, menuVars } from '@/styles/vars';
 import type { Messages } from '@/data/locales';
+
+if (process.env.NODE_ENV !== 'production') {
+	assertUnit(menuVars.height, 'px', 'menuUtils menu height');
+	assertUnit(
+		menuVars.padding.horizontal,
+		'px',
+		'menuUtils padding horizontal',
+	);
+	assertUnit(menuVars.padding.vertical, 'px', 'menuUtils padding vertical');
+	assertUnit(menuVars.yOffset, 'px', 'menuUtils yOffset');
+	assertUnit(archVars.top, 'px', 'menuUtils arch top');
+	assertUnit(archVars.curveHeight, 'px', 'menuUtils arch curveHeight');
+	assertUnit(archVars.ry, 'px', 'menuUtils arch ry');
+	assertUnit(archVars.bumpWidth, 'px', 'menuUtils arch bumpWidth');
+	assertUnit(archVars.bumpHeight, 'px', 'menuUtils arch bumpHeight');
+}
 
 export type AnchorKey = Extract<keyof Messages, `${string}-href`>;
 export type AnchorEntry = {

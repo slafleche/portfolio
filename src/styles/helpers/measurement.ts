@@ -204,3 +204,9 @@ export function isCssLike(x: unknown): x is CssLike {
 		typeof (x as { css: unknown }).css === 'function'
 	);
 }
+
+export const assertUnit = (
+	measurement: IMeasurement,
+	expectedUnit: string,
+	context?: string,
+) => measurement.assertUnit(expectedUnit, context);

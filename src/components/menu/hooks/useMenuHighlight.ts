@@ -7,6 +7,7 @@ import {
 	useState,
 } from 'react';
 import transforms from '@/styles/helpers/transforms';
+import { assertUnit } from '@/styles/helpers/measurement';
 import { archVars, colorVars, menuVars } from '@/styles/vars';
 import type { CSSProperties } from 'react';
 import {
@@ -28,6 +29,28 @@ type HighlightStyles = {
 	containerStyle: CSSProperties;
 	innerStyle: CSSProperties;
 };
+
+if (process.env.NODE_ENV !== 'production') {
+	assertUnit(menuVars.height, 'px', 'useMenuHighlight menu height');
+	assertUnit(
+		menuVars.padding.horizontal,
+		'px',
+		'useMenuHighlight padding horizontal',
+	);
+	assertUnit(menuVars.yOffset, 'px', 'useMenuHighlight yOffset');
+	assertUnit(menuVars.hover.blur, 'px', 'useMenuHighlight hover blur');
+	assertUnit(
+		menuVars.hover.shadow.spread,
+		'px',
+		'useMenuHighlight hover shadow spread',
+	);
+	assertUnit(archVars.top, 'px', 'useMenuHighlight arch top');
+	assertUnit(
+		archVars.curveHeight,
+		'px',
+		'useMenuHighlight arch curveHeight',
+	);
+}
 
 /**
  * Developer-only knobs to inspect the menu highlight ("mini bokeh").

@@ -57,7 +57,9 @@ export const shadowTotalY = (
 ): IMeasurement => {
 	const y = props.y ?? dropShadowVars.offsetY;
 	const blur = props.blur ?? dropShadowVars.blur;
-	const unit = y.unit ?? 'px';
+	const unit = y.getUnit();
+	y.assertUnit(unit, 'shadowTotalY offsetY');
+	blur.assertUnit(unit, 'shadowTotalY blur');
 	return m((y.value ?? 0) + 2 * (blur.value ?? 0), unit);
 };
 
@@ -67,6 +69,8 @@ export const shadowTotalX = (
 ): IMeasurement => {
 	const x = props.x ?? dropShadowVars.offsetX;
 	const blur = props.blur ?? dropShadowVars.blur;
-	const unit = x.unit ?? 'px';
+	const unit = x.getUnit();
+	x.assertUnit(unit, 'shadowTotalX offsetX');
+	blur.assertUnit(unit, 'shadowTotalX blur');
 	return m((x.value ?? 0) + 2 * (blur.value ?? 0), unit);
 };
