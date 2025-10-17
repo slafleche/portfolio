@@ -4,9 +4,10 @@ import path from 'node:path';
 import sharp from 'sharp';
 
 const SRC_DIR = 'src/assets/images';
-const OUT_ROOT = 'public/images'; // cleaned each run
+const OUT_ROOT = 'public/images';
 const MANIFEST_PATH = 'src/data/generated/images.manifest.gen.json';
-const VIDEO_MANIFEST_PATH = 'src/data/generated/videos.manifest.gen.json';
+const VIDEO_MANIFEST_PATH =
+	'src/data/generated/videos.manifest.gen.json';
 const TEMP_ROOT = 'tmp/large-images';
 const IMAGE_SOURCES_DIR = path.join(SRC_DIR, 'largeImages');
 const IMAGE_SOURCES_CONFIG = path.join(SRC_DIR, 'imageSources.json');
@@ -14,6 +15,7 @@ const IGNORE_DIRS = new Set([
 	IMAGE_SOURCES_DIR,
 	path.join(SRC_DIR, 'imageBackup'),
 ]);
+
 const MIME_EXTENSIONS = new Map([
 	[
 		'image/jpeg',
@@ -52,21 +54,11 @@ const WIDTHS = [
 	1920,
 ];
 const FORMATS = [
-	{
-		ext: 'avif',
-		to: (img) => img.avif({ quality: 50 }),
-	},
-	{
-		ext: 'webp',
-		to: (img) => img.webp({ quality: 70 }),
-	},
+	{ ext: 'avif', to: (img) => img.avif({ quality: 50 }) },
+	{ ext: 'webp', to: (img) => img.webp({ quality: 70 }) },
 	{
 		ext: 'jpg',
-		to: (img) =>
-			img.jpeg({
-				quality: 82,
-				progressive: true,
-			}),
+		to: (img) => img.jpeg({ quality: 82, progressive: true }),
 	},
 ];
 const VALID_EXT = new Set([
@@ -79,6 +71,52 @@ const VALID_EXT = new Set([
 	'.avif',
 ]);
 
+// --- Duplicate-name handling ---
+class DuplicateNameError extends Error {
+	constructor(name, prev, next) {
+		const label = (s) =>
+			s === 'local'
+				? 'src/assets/images'
+				: s === 'remote'
+					? 'imageSources.json'
+					: 'videos.manifest.gen.json';
+
+		const message = [
+			'\n',
+			'🚫  DUPLICATE IMAGE NAME DETECTED',
+			'───────────────────────────────────────────────',
+			`❌  Name: ${name}`,
+			'',
+			`🟣 First seen in:  ${label(prev.source)}`,
+			`    ↳ ${prev.origin}`,
+			'',
+			`🔴 Conflicts with: ${label(next.source)}`,
+			`    ↳ ${next.origin}`,
+			'',
+			'💡 Rename one of them so every image name is unique.',
+			'───────────────────────────────────────────────',
+		].join('\n');
+		super(message);
+		this.name = 'DuplicateNameError';
+		this.code = 'DUPLICATE_IMAGE_NAME';
+	}
+}
+
+const seenNames = new Map();
+
+function ensureUniqueName(name, source, origin) {
+	if (!name)
+		throw new Error(
+			`Internal error: empty image name from ${source} (${origin}).`,
+		);
+	if (seenNames.has(name)) {
+		const prev = seenNames.get(name);
+		throw new DuplicateNameError(name, prev, { source, origin });
+	}
+	seenNames.set(name, { source, origin });
+}
+// --- end duplicate-name handling ---
+
 function ensureDirectDropboxUrl(rawUrl) {
 	try {
 		const url = new URL(rawUrl);
@@ -87,9 +125,8 @@ function ensureDirectDropboxUrl(rawUrl) {
 			url.hostname === 'dropbox.com'
 		) {
 			url.hostname = 'dl.dropboxusercontent.com';
-			if (url.searchParams.get('dl') === '0') {
+			if (url.searchParams.get('dl') === '0')
 				url.searchParams.set('dl', '1');
-			}
 			return url.toString();
 		}
 		return url.toString();
@@ -104,9 +141,8 @@ function normalizeRemoteImageUrl(rawUrl) {
 		const url = new URL(dropboxNormalized);
 		if (url.hostname === 'drive.google.com') {
 			const match = url.pathname.match(/\/file\/d\/([^/]+)/);
-			if (match) {
+			if (match)
 				return `https://drive.google.com/uc?export=download&id=${match[1]}`;
-			}
 		}
 		return url.toString();
 	} catch {
@@ -172,24 +208,21 @@ function toPublicPathFromUrl(rawUrl) {
 }
 
 async function downloadRemoteImage(name, rawUrl) {
-	if (typeof fetch !== 'function') {
+	if (typeof fetch !== 'function')
 		throw new Error(
 			'fetch is not available in this Node.js runtime.',
 		);
-	}
 	const normalizedUrl = normalizeRemoteImageUrl(rawUrl);
 	const response = await fetch(normalizedUrl);
-	if (!response.ok) {
+	if (!response.ok)
 		throw new Error(`HTTP ${response.status} ${response.statusText}`);
-	}
 	const arrayBuffer = await response.arrayBuffer();
 	let ext =
 		extensionFromUrl(normalizedUrl) || extensionFromUrl(rawUrl);
-	if (!VALID_EXT.has(ext)) {
+	if (!VALID_EXT.has(ext))
 		ext =
 			extensionFromMime(response.headers.get('content-type')) ||
 			'.jpg';
-	}
 	if (!VALID_EXT.has(ext)) ext = '.jpg';
 	const filePath = path.join(TEMP_ROOT, `${name}${ext}`);
 	await fs.writeFile(filePath, Buffer.from(arrayBuffer));
@@ -211,7 +244,6 @@ async function* walk(dir) {
 }
 
 function toName(filePath) {
-	// "hero/banner big.JPG" -> "hero-banner-big"
 	return path
 		.relative(SRC_DIR, filePath)
 		.replace(path.extname(filePath), '')
@@ -222,27 +254,31 @@ function toName(filePath) {
 
 async function cleanOutRoot() {
 	try {
-		await fs.rm(OUT_ROOT, {
-			recursive: true,
-			force: true,
-		});
+		await fs.rm(OUT_ROOT, { recursive: true, force: true });
 	} catch {}
-	await fs.mkdir(OUT_ROOT, {
-		recursive: true,
-	});
+	await fs.mkdir(OUT_ROOT, { recursive: true });
 }
 
-async function processImage(filePath, nameOverride, manifest) {
+async function processImage(
+	filePath,
+	nameOverride,
+	manifest,
+	provenance,
+) {
 	const ext = path.extname(filePath).toLowerCase();
 	if (!VALID_EXT.has(ext)) return;
 
 	const name = nameOverride ?? toName(filePath);
-	const outDir = path.join(OUT_ROOT, name);
-	await fs.mkdir(outDir, {
-		recursive: true,
-	});
+	ensureUniqueName(
+		name,
+		provenance?.source ?? 'local',
+		provenance?.origin ?? filePath,
+	);
 
-	const img = sharp(filePath).rotate(); // auto-orient EXIF
+	const outDir = path.join(OUT_ROOT, name);
+	await fs.mkdir(outDir, { recursive: true });
+
+	const img = sharp(filePath).rotate();
 	const meta = await img.metadata();
 	const srcW = meta.width ?? 0;
 	const srcH = meta.height ?? 0;
@@ -268,7 +304,6 @@ async function processImage(filePath, nameOverride, manifest) {
 		blurDataURL,
 		variants: {},
 	};
-
 	const targetWidths = WIDTHS.filter((w) => w <= srcW);
 
 	for (const { ext: outExt, to } of FORMATS) {
@@ -277,10 +312,7 @@ async function processImage(filePath, nameOverride, manifest) {
 			const fileName = `${w}.${outExt}`;
 			const outPath = path.join(outDir, fileName);
 			await to(img.clone().resize({ width: w })).toFile(outPath);
-			list.push({
-				w,
-				url: `/images/${name}/${fileName}`,
-			});
+			list.push({ w, url: `/images/${name}/${fileName}` });
 		}
 		item.variants[outExt] = list;
 	}
@@ -293,11 +325,6 @@ async function processImage(filePath, nameOverride, manifest) {
 		height: srcH,
 	};
 
-	if (manifest[name]) {
-		console.warn(
-			`⚠️ Duplicate image name "${name}" encountered. Overwriting previous entry.`,
-		);
-	}
 	manifest[name] = item;
 	console.log(
 		`   • Completed "${name}" (${targetWidths.length} responsive widths, plus original).`,
@@ -310,27 +337,25 @@ console.log(`   ✓ Cleared "${OUT_ROOT}"`);
 
 const manifestDir = path.dirname(MANIFEST_PATH);
 console.log(`→ Ensuring manifest directory "${manifestDir}" exists`);
-await fs.mkdir(manifestDir, {
-	recursive: true,
-});
+await fs.mkdir(manifestDir, { recursive: true });
 
 console.log(`→ Clearing temporary download directory "${TEMP_ROOT}"`);
 try {
-	await fs.rm(TEMP_ROOT, {
-		recursive: true,
-		force: true,
-	});
+	await fs.rm(TEMP_ROOT, { recursive: true, force: true });
 	console.log('   ✓ Temp directory emptied');
 } catch {
 	console.log('   • Temp directory not present, skipping removal');
 }
 
-const manifest = {}; // { [name]: {...} }
+const manifest = {};
 
 console.log(`→ Walking source images in "${SRC_DIR}"`);
 let localCount = 0;
 for await (const file of walk(SRC_DIR)) {
-	await processImage(file, undefined, manifest);
+	await processImage(file, undefined, manifest, {
+		source: 'local',
+		origin: file,
+	});
 	localCount += 1;
 }
 console.log(
@@ -365,11 +390,10 @@ if (manifestChanged) {
 		`${JSON.stringify(imageSourcesMap, null, 2)}\n`,
 	);
 	console.log('   ✓ Wrote normalized remote image source manifest.');
-	if (dropboxUpdates.length) {
+	if (dropboxUpdates.length)
 		console.log(
 			`     - Applied direct Dropbox links for: ${dropboxUpdates.join(', ')}`,
 		);
-	}
 } else {
 	console.log('   • No Dropbox URL updates needed.');
 }
@@ -377,9 +401,7 @@ if (manifestChanged) {
 const remoteImageEntries = Object.entries(imageSourcesMap);
 
 if (remoteImageEntries.length) {
-	await fs.mkdir(TEMP_ROOT, {
-		recursive: true,
-	});
+	await fs.mkdir(TEMP_ROOT, { recursive: true });
 	console.log(
 		`→ Downloading and processing ${remoteImageEntries.length} remote image${remoteImageEntries.length === 1 ? '' : 's'}`,
 	);
@@ -399,19 +421,20 @@ if (remoteImageEntries.length) {
 			console.log(`   • Downloading "${name}" from ${url}`);
 			const filePath = await downloadRemoteImage(name, url);
 			console.log(`     - Saved to ${filePath}`);
-			await processImage(filePath, name, manifest);
+			await processImage(filePath, name, manifest, {
+				source: 'remote',
+				origin: url,
+			});
 			remoteCount += 1;
 		} catch (error) {
+			if (error && error.code === 'DUPLICATE_IMAGE_NAME') throw error;
 			console.error(
 				`✗ Failed to process remote image "${name}": ${error.message}`,
 			);
 		}
 	}
 	try {
-		await fs.rm(TEMP_ROOT, {
-			recursive: true,
-			force: true,
-		});
+		await fs.rm(TEMP_ROOT, { recursive: true, force: true });
 		console.log('   ✓ Cleaned temporary download directory.');
 	} catch {
 		console.warn('⚠️ Could not clean temporary download directory.');
@@ -452,13 +475,19 @@ if (videoManifest) {
 			}
 			const posterPath = toPublicPathFromUrl(posterUrl);
 			if (!posterPath) {
-				unresolvedPosterPaths.push([name, posterUrl]);
+				unresolvedPosterPaths.push([
+					name,
+					posterUrl,
+				]);
 				continue;
 			}
 			try {
 				await fs.access(posterPath);
 			} catch {
-				missingPosterFiles.push([name, posterPath]);
+				missingPosterFiles.push([
+					name,
+					posterPath,
+				]);
 				continue;
 			}
 			const baseName =
@@ -468,12 +497,20 @@ if (videoManifest) {
 				data.name.trim()
 					? data.name.trim().toLowerCase()
 					: `${name}`.trim().toLowerCase();
-			const videoImageName = `video-${baseName.replace(
-				/[^\dA-Za-z_-]/g,
-				'-',
-			)}`;
-			await processImage(posterPath, videoImageName, manifest);
-			processed += 1;
+			const videoImageName = `video-${baseName.replace(/[^\dA-Za-z_-]/g, '-')}`;
+			try {
+				await processImage(posterPath, videoImageName, manifest, {
+					source: 'video',
+					origin: `${VIDEO_MANIFEST_PATH} → ${name}`,
+				});
+				processed += 1;
+			} catch (error) {
+				if (error && error.code === 'DUPLICATE_IMAGE_NAME')
+					throw error;
+				console.error(
+					`✗ Failed to process video poster "${name}": ${error.message}`,
+				);
+			}
 		}
 		if (manifestMissingPosterUrl.length) {
 			console.warn(
@@ -485,8 +522,10 @@ if (videoManifest) {
 				'⚠️ Could not resolve local poster path for videos:\n' +
 					unresolvedPosterPaths
 						.map(
-							([n, url]) =>
-								`   • ${n} → ${url}`,
+							([
+								n,
+								url,
+							]) => `   • ${n} → ${url}`,
 						)
 						.join('\n'),
 			);
@@ -496,8 +535,10 @@ if (videoManifest) {
 				'⚠️ Poster image missing for videos:\n' +
 					missingPosterFiles
 						.map(
-							([n, p]) =>
-								`   • ${n} → ${p}`,
+							([
+								n,
+								p,
+							]) => `   • ${n} → ${p}`,
 						)
 						.join('\n') +
 					'\n   Did you run "generateVideos" first?',
