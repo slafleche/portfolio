@@ -1,4 +1,5 @@
 import { color, type Color } from '@/styles/helpers/colorWrap';
+import type { CardGradientPack } from './helpers/cardGradient';
 import * as CSS from 'csstype';
 import { fontWeight } from './helpers/typography';
 import type {
@@ -39,7 +40,7 @@ export const themeColours = {
 	},
 };
 
-export const gradients = [
+export const gradients: CardGradientPack[] = [
 	{
 		linear: [
 			{

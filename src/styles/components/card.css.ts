@@ -94,4 +94,8 @@ export const cardGradientA = style(
 	}),
 );
 
-export const cardGradientB = style(makeCardGradient(gradients[1]));
+export const cardGradientB = style(
+	makeCardGradient(gradients[1], {
+		linearDirection: m(95, 'deg'),
+	}),
+);
