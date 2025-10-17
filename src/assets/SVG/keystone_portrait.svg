@@ -1,38 +1,109 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
-  width="105.29145mm"
-  height="95.100868mm"
-  viewBox="0 0 105.29145 95.100868"
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink">
+   width="105.29145mm"
+   height="95.100868mm"
+   viewBox="0 0 105.29145 95.100868"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:svg="http://www.w3.org/2000/svg">
 
-  <defs>
-    <!-- Base shape reused by all three layers -->
-    <path id="shape" d="M 24.878828,2.1447469 C 21.017869,2.2150334 16.743486,2.5504662 11.267537,3.6378634 7.6257326,6.4989485 3.4654375,10.6233 2.6221443,12.121 c -0.665525,1.162203 -0.703746,4.172956 0.1910106,5.722753 0.8947349,1.549797 18.8340341,33.258059 29.4534171,51.152756 3.868962,6.592239 6.220579,12.332163 13.579276,20.728715 4.298686,1.723403 9.950715,3.264469 11.669316,3.245988 1.339301,-0.0051 3.965807,-1.477401 4.860541,-3.027198 0.894735,-1.549796 19.385558,-32.939368 29.573472,-51.083633 3.774519,-6.646737 7.569994,-11.552899 11.162173,-22.12426 -0.65686,-4.584488 -2.14869,-10.24976 -3.02414,-11.7289793 -0.673746,-1.1574727 -3.262067,-2.695919 -5.051536,-2.695919 -1.789543,0 -38.218864,-0.3183777 -59.026161,-0.069195 -3.821741,0.027285 -7.268984,-0.1673126 -11.130161,-0.097004 z"/>
-
-    <!-- Robust shadow: uses SourceAlpha, big region, userSpaceOnUse -->
-    <filter id="shadowFilter"
-            x="-200" y="-200" width="1000" height="1000"
-            filterUnits="userSpaceOnUse"
-            color-interpolation-filters="sRGB">
-      <!-- Blur the alpha of the incoming shape -->
-      <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
-      <!-- Move the blurred alpha to form the shadow -->
-      <feOffset in="blur" dx="14" dy="14" result="offset"/>
-      <!-- Color the shadow -->
-      <feFlood flood-color="black" flood-opacity="0.8" result="flood"/>
-      <feComposite in="flood" in2="offset" operator="in" result="shadow"/>
-      <!-- Put the original graphic back on top -->
-      <feMerge>
-        <feMergeNode in="shadow"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+  <defs id="defs1">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter28"
+       x="-0.11995183"
+       y="-0.13332232"
+       width="1.3844968"
+       height="1.4268348">
+      <feFlood
+         result="flood"
+         in="SourceGraphic"
+         flood-opacity="1.000000"
+         flood-color="rgb(0,0,0)"
+         id="feFlood27" />
+      <feGaussianBlur
+         result="blur"
+         in="SourceGraphic"
+         stdDeviation="2.7160345"
+         id="feGaussianBlur27" />
+      <feOffset
+         result="offset"
+         in="blur"
+         dx="10.000000"
+         dy="10.000000"
+         id="feOffset27" />
+      <feComposite
+         result="comp1"
+         operator="out"
+         in="flood"
+         in2="offset"
+         id="feComposite27" />
+      <feComposite
+         result="fbSourceGraphic"
+         operator="atop"
+         in="comp1"
+         in2="SourceGraphic"
+         id="feComposite28" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix28" />
+      <feFlood
+         id="feFlood28"
+         result="flood"
+         in="fbSourceGraphic"
+         flood-opacity="1.000000"
+         flood-color="rgb(0,0,0)" />
+      <feGaussianBlur
+         id="feGaussianBlur28"
+         result="blur"
+         in="fbSourceGraphic"
+         stdDeviation="3.000000" />
+      <feOffset
+         id="feOffset28"
+         result="offset"
+         in="blur"
+         dx="10.000000"
+         dy="10.000000" />
+      <feComposite
+         id="feComposite29"
+         result="comp1"
+         operator="out"
+         in="flood"
+         in2="offset" />
+      <feComposite
+         id="feComposite30"
+         result="comp2"
+         operator="atop"
+         in="comp1"
+         in2="fbSourceGraphic" />
     </filter>
   </defs>
 
-  <!-- Order matters: draw shadow first so it's under the fill -->
-  <use id="shadow" xlink:href="#shape" fill="none" filter="url(#shadowFilter)"/>
-  <use id="bg"     xlink:href="#shape" fill="#251a38"/>
-  <use id="border" xlink:href="#shape" fill="none" stroke="#ffffff" stroke-width="4.25867"/>
+  <!-- background image instead of solid fill -->
+  <image
+     id="bg"
+     x="0"
+     y="0"
+     width="105.29145"
+     height="95.100868"
+     preserveAspectRatio="xMidYMid slice"
+     xlink:href="https://www.example.com/example.jpg" />
+
+  <path
+     id="shadow"
+     d="m 31.2623,0.12844 c -5.3064,0.0966 -11.181,0.55761 -18.707,2.0521 -5.0052,3.9322 -10.723,9.6006 -11.882,11.659 -0.91468,1.5973 -0.96721,5.7352 0.26252,7.8652 1.2297,2.13 25.885,45.709 40.48,70.303 5.3174,9.0602 8.5494,16.949 18.663,28.489 5.908,2.3686 13.676,4.4866 16.038,4.4612 1.8407,-0.007 5.4505,-2.0305 6.6802,-4.1605 1.2297,-2.13 26.643,-45.271 40.645,-70.208 5.1876,-9.1351 10.404,-15.878 15.341,-30.407 -0.90278,-6.3008 -2.9531,-14.087 -4.1563,-16.12 -0.92598,-1.5908 -4.4833,-3.7052 -6.9427,-3.7052 -2.4595,0 -52.527,-0.43757 -81.124,-0.0951 -5.2525,0.0375 -9.9903,-0.22995 -15.297,-0.13332 z"
+     style="display:inline;fill:#ffffff;fill-opacity:0.495763;stroke:#ffffff;stroke-width:5.853;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter28)"
+     transform="matrix(0.72760417,0,0,0.72760417,2.1322484,2.0512934)" />
+
+  <path
+     id="border"
+     d="M 24.878828,2.1447469 C 21.017869,2.2150334 16.743486,2.5504662 11.267537,3.6378634 7.6257326,6.4989485 3.4654375,10.6233 2.6221443,12.121 c -0.665525,1.162203 -0.703746,4.172956 0.1910106,5.722753 0.8947349,1.549797 18.8340341,33.258059 29.4534171,51.152756 3.868962,6.592239 6.220579,12.332163 13.579276,20.728715 4.298686,1.723403 9.950715,3.264469 11.669316,3.245988 1.339301,-0.0051 3.965807,-1.477401 4.860541,-3.027198 0.894735,-1.549796 19.385558,-32.939368 29.573472,-51.083633 3.774519,-6.646737 7.569994,-11.552899 11.162173,-22.12426 -0.65686,-4.584488 -2.14869,-10.24976 -3.02414,-11.7289793 -0.673746,-1.1574727 -3.262067,-2.695919 -5.051536,-2.695919 -1.789543,0 -38.218864,-0.3183777 -59.026161,-0.069195 -3.821741,0.027285 -7.268984,-0.1673126 -11.130161,-0.097004 z"
+     style="display:inline;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:4.25867;stroke-dasharray:none;stroke-opacity:1" />
 </svg>
