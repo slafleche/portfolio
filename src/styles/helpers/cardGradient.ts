@@ -52,7 +52,7 @@ type GradientSpot = {
 	stops?: SpotStopInput;
 };
 
-type CardGradientPack = {
+export type CardGradientPack = {
 	linear?: LinearGradientStop[] | null;
 	spots?: GradientSpot[];
 };
