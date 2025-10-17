@@ -79,7 +79,7 @@ export const image = style({
 
 export const gradient = style({
 	...absolutePosition.fullSize(),
-	filter: 'blur(1px)',
+	filter: 'blur(2px)',
 	pointerEvents: 'none',
 	borderRadius: 'inherit',
 	zIndex: 0,
