@@ -12,6 +12,7 @@ const IMAGE_SOURCES_DIR = path.join(SRC_DIR, 'largeImages');
 const IMAGE_SOURCES_CONFIG = path.join(SRC_DIR, 'imageSources.json');
 const IGNORE_DIRS = new Set([
 	IMAGE_SOURCES_DIR,
+	path.join(SRC_DIR, 'imageBackup'),
 ]);
 const MIME_EXTENSIONS = new Map([
 	[
