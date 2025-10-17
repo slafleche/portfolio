@@ -1,6 +1,5 @@
 import type * as CSS from 'csstype';
-import type { FontFamilyDef } from './types';
-import type { FontStyles } from './types';
+import type { FontFamilyDef, FontStyles } from './types';
 import { isCssLike } from './measurement';
 
 export type FontCSS = Partial<{
