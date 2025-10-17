@@ -4,6 +4,11 @@ export interface IMeasurement {
 	value: number;
 	unit?: string;
 	css: () => string;
+	getUnit: () => string;
+	isUnit: (unit: string) => boolean;
+assertUnit: (unit: string, context?: string) => void;
+	assert: (predicate: (measurement: IMeasurement) => boolean, message: string) => void;
+	toPercentDecimal: () => number;
 	add: (
 		delta:
 			| number
@@ -119,6 +124,33 @@ const createMeasurement = (
 		value,
 		unit,
 		css: () => `${value}${unit}`,
+		getUnit: () => unit,
+	isUnit: (expected: string) =>
+		unit.toLowerCase() === expected.toLowerCase(),
+	assertUnit: (expected: string, context?: string) => {
+		if (!measurement.isUnit(expected)) {
+			const location = context ? `${context}: ` : '';
+			throw new Error(
+				`${location}Expected unit "${expected}", received "${unit}".`,
+			);
+		}
+	},
+	assert: (
+		predicate: (measurement: IMeasurement) => boolean,
+		message: string,
+	) => {
+		if (!predicate(measurement)) {
+			throw new Error(message);
+		}
+	},
+	toPercentDecimal: () => {
+		if (!measurement.isUnit('%')) {
+			throw new Error(
+				`Cannot convert measurement with unit "${unit}" to percent decimal.`,
+			);
+		}
+		return value / 100;
+	},
 		add: (delta) => {
 			const { amount } = coerceDelta(measurement, delta);
 			return createMeasurement(value + amount, unit);
@@ -142,6 +174,9 @@ export const m = (
 	value: number,
 	unit: string = 'px',
 ): IMeasurement => createMeasurement(value, unit);
+
+export const mPercent = (value: number): IMeasurement =>
+	createMeasurement(value, '%');
 
 export const double = (measurement: IMeasurement) =>
 	measurement.double();

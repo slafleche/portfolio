@@ -2,21 +2,21 @@
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xml:space="preserve"
-  width="397.95194"
-  height="359.43635"
-  viewBox="0 0 105.29145 95.10087"
+  width="397.952"
+  height="359.436"
+  viewBox="0 0 105.291 95.101"
 >
   <defs>
     <filter
       id="a"
-      width="1.3845"
-      height="1.42683"
-      x="-.11995"
-      y="-.13332"
+      width="1.385"
+      height="1.427"
+      x="-.12"
+      y="-.133"
       style="color-interpolation-filters: sRGB"
     >
       <feFlood flood-color="#000" flood-opacity="1" result="flood" />
-      <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="2.71603" />
+      <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="2.716" />
       <feOffset dx="10" dy="10" in="blur" result="offset" />
       <feComposite in="flood" in2="offset" operator="out" result="comp1" />
       <feComposite
@@ -44,8 +44,8 @@
   </defs>
   <image
     xlink:href="https://www.example.com/example.jpg"
-    width="105.29145"
-    height="95.10087"
+    width="105.291"
+    height="95.101"
     preserveAspectRatio="xMidYMid slice"
   />
   <path
@@ -60,7 +60,7 @@
       stroke-opacity: 1;
       filter: url(#a);
     "
-    transform="translate(2.13225 2.0513)scale(.7276)"
+    transform="translate(2.132 2.051)scale(.7276)"
   />
   <path
     fill="none"

@@ -1,6 +1,6 @@
 import { colorVars, type IBorder } from '../vars';
 import { color } from '@/styles/helpers/colorWrap';
-import { m } from './measurement';
+import { m, mPercent } from './measurement';
 import type * as CSS from 'csstype';
 import { noiseStyle, type NoiseSvgOptions } from './noiseSVG';
 
@@ -29,7 +29,7 @@ export const glassVars = {
 	// Specular highlight in the top left corner
 	outerBorderHighlight: {
 		strength: 0.35,
-		spread: m(70, '%'),
+		spread: mPercent(70),
 		angle: m(130, 'deg'),
 	},
 	// Blur effect

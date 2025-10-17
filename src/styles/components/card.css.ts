@@ -1,28 +1,33 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { makeCardGradient } from '../helpers/cardGradient';
 import { colorVars, gradients } from '../vars';
 import { m } from '../helpers/measurement';
 import { paddings } from '../helpers/spacing';
 import { absolutePosition } from '../helpers/positioning';
-import { globalBoxShadow } from '../helpers/shadow';
 import { glassVars } from '../helpers/glassy';
 
 export const root = style({
 	position: 'relative',
 	margin: '20px',
-	// ...paddings({ all: m(10) }),
-	// minHeight: '100px',
-	// maxWidth: '50vw',
-	// margin: 'auto',
-
+	display: 'flex',
+	flexDirection: 'column',
 	selectors: {
-		'&[data-side="left"]': {
+		'&[data-type="left"]': {
 			gridColumn: '1',
 		},
-		'&[data-side="right"]': {
-			gridColumn: '2',
+		'&[data-type="right"]': {
+			gridColumn: '3',
 		},
 	},
+});
+
+globalStyle(`.${root}[data-type="right"] *`, {
+	borderTopLeftRadius: 0,
+	borderBottomLeftRadius: 0,
+});
+globalStyle(`.${root}[data-type="left"] *`, {
+	borderTopRightRadius: 0,
+	borderBottomRightRadius: 0,
 });
 
 export const container = style({
@@ -37,15 +42,21 @@ export const frame = style({
 	borderRadius: glassVars.border.radius.css(),
 	overflow: 'hidden',
 	backgroundColor: colorVars.transparent.css(),
+	display: 'flex',
+	flexDirection: 'column',
+	height: '100%',
 });
 
 export const content = style({
 	position: 'relative',
 	zIndex: 2,
 	...paddings({
-		all: m(4),
+		all: m(40),
 	}),
 	borderRadius: glassVars.border.radius.css(),
+	flex: 1,
+	display: 'flex',
+	flexDirection: 'column',
 });
 
 export const title = style({});
@@ -57,24 +68,8 @@ export const image = style({
 	position: 'relative',
 	display: 'block',
 	width: '200px',
-	height: '200px',
+	height: 'auto',
 	overflow: 'hidden',
-	borderRadius: '50%',
-	boxShadow: globalBoxShadow(),
-	border: `${m(6).css()} solid ${colorVars.bodyFg.css()}`,
-	...paddings({
-		top: '100%',
-	}),
-	selectors: {
-		'&:after': {
-			content: '',
-			...absolutePosition.fullSize(),
-			borderRadius: '50%',
-			boxShadow: globalBoxShadow({
-				inset: true,
-			}),
-		},
-	},
 });
 
 export const gradient = style({
