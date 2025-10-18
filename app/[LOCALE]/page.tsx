@@ -1,67 +1,137 @@
-'use client';
-import { useT } from '@/lib/locales/useT';
+import clsx from 'clsx';
+import { Fragment } from 'react';
+import { SkipNavContent } from '@reach/skip-nav';
+import ReactMarkdown from 'react-markdown';
+import { resolveLocale, DEFAULT_LOCALE } from '@/lib/locales/locale';
 import * as s from '@/styles/components/userContent.css';
 import * as layoutStyles from '@/styles/layout.css';
-import ReactMarkdown from 'react-markdown';
-import Card from '../../src/components/Card';
 import * as card from '@/styles/components/card.css';
-import Hero from '../../src/components/Hero';
-import clsx from 'clsx';
-import Keystone from '../../src/components/Keystone';
-import { SkipNavContent } from '@reach/skip-nav';
+import Card from '@/components/Card';
+import Hero from '@/components/Hero';
+import Keystone from '@/components/Keystone';
+import { TRANSLATIONS, type Locale } from '@/data/locales';
 
-export default function HomePage() {
-	const t = useT();
+type Messages = (typeof TRANSLATIONS)[Locale];
+type MessageKey = keyof Messages;
+
+const HERO_KEYS = {
+	videoTitle: 'hero-title',
+	videoLabel: 'hero-alt',
+	headingFirstLine: 'hero-title_a',
+	headingLastLine: 'hero-title_b',
+	subtitle: 'hero-subtitle',
+} as const satisfies Record<string, MessageKey>;
+
+const CARD_CONFIGS = [
+	{
+		type: 'left',
+		titleKey: 'split-dev_title',
+		contentKey: 'split-dev_content',
+	},
+	{
+		type: 'right',
+		titleKey: 'split-design_title',
+		contentKey: 'split-design_content',
+	},
+] as const satisfies readonly {
+	type: 'left' | 'right';
+	titleKey: MessageKey;
+	contentKey: MessageKey;
+}[];
+
+const SECTION_CONFIGS = [
+	{
+		idKey: 'about-href',
+		contentKey: 'about-content',
+	},
+	{
+		idKey: 'approach-href',
+		contentKey: 'approach-content',
+	},
+	{
+		idKey: 'case_study-href',
+		contentKey: 'case_study-content',
+	},
+	{
+		idKey: 'projects-href',
+		contentKey: 'projects-content',
+	},
+] as const satisfies readonly {
+	idKey: MessageKey;
+	contentKey: MessageKey;
+}[];
+
+const KEYSTONE_KEYS = {
+	name: 'portrait',
+	titleKey: 'image_portrait-title',
+	altKey: 'image_portrait-alt',
+} as const satisfies {
+	name: string;
+	titleKey: MessageKey;
+	altKey: MessageKey;
+};
+
+type PageParams = {
+	LOCALE: string;
+};
+
+export default async function HomePage({
+	params,
+}: {
+	params: Promise<PageParams>;
+}) {
+	const { LOCALE } = await params;
+	const locale = resolveLocale(LOCALE);
+	const messages = TRANSLATIONS[locale];
+	const fallbackMessages = TRANSLATIONS[DEFAULT_LOCALE];
+	const t = <K extends MessageKey>(key: K): string =>
+		messages[key] ?? fallbackMessages[key] ?? key;
+
+	const heroCopy = {
+		videoTitle: t(HERO_KEYS.videoTitle),
+		videoLabel: t(HERO_KEYS.videoLabel),
+		headingFirstLine: t(HERO_KEYS.headingFirstLine),
+		headingLastLine: t(HERO_KEYS.headingLastLine),
+		subtitle: t(HERO_KEYS.subtitle),
+	};
 
 	return (
 		<>
 			<SkipNavContent id="body">
-				<Hero />
+				<Hero copy={heroCopy} />
 				<div id="body">
 					<section
 						className={clsx(card.container, layoutStyles.content)}
 					>
-						<Card title={t('split-dev_title')} type="left">
-							<ReactMarkdown>{t('split-dev_content')}</ReactMarkdown>
-						</Card>
-
-						<Keystone
-							name="portrait"
-							className={card.image}
-							title={t('image_portrait-title')}
-							alt={t('image_portrait-alt')}
-						/>
-
-						<Card title={t('split-design_title')} type="right">
-							<ReactMarkdown>
-								{t('split-design_content')}
-							</ReactMarkdown>
-						</Card>
+						{CARD_CONFIGS.map((item, index) => (
+							<Fragment key={item.titleKey}>
+								<Card title={t(item.titleKey)} type={item.type}>
+									<ReactMarkdown>{t(item.contentKey)}</ReactMarkdown>
+								</Card>
+								{index === 0 ? (
+									<Keystone
+										name={KEYSTONE_KEYS.name}
+										className={card.image}
+										title={t(KEYSTONE_KEYS.titleKey)}
+										alt={t(KEYSTONE_KEYS.altKey)}
+									/>
+								) : null}
+							</Fragment>
+						))}
 					</section>
 
-					<section id={t('about-href')}>
-						<div className={s.userContent}>
-							<ReactMarkdown>{t('about-content')}</ReactMarkdown>
-						</div>
-					</section>
-
-					<section id={t('approach-href')}>
-						<div className={s.userContent}>
-							<ReactMarkdown>{t('approach-content')}</ReactMarkdown>
-						</div>
-					</section>
-
-					<section id={t('case_study-href')}>
-						<div className={s.userContent}>
-							<ReactMarkdown>{t('case_study-content')}</ReactMarkdown>
-						</div>
-					</section>
-
-					<section id={t('projects-href')}>
-						<div className={s.userContent}>
-							<ReactMarkdown>{t('projects-content')}</ReactMarkdown>
-						</div>
-					</section>
+					{SECTION_CONFIGS.map((section) => {
+						const id = t(section.idKey);
+						return (
+							<section key={section.idKey} id={id}>
+								<div className={s.userContent}>
+									<ReactMarkdown>
+										{t(section.contentKey)}
+									</ReactMarkdown>
+								</div>
+							</section>
+						);
+					})}
 				</div>
 			</SkipNavContent>
 		</>

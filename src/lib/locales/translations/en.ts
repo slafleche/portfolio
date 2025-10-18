@@ -1,0 +1,61 @@
+export const en = {
+	label: 'English',
+	'abbreviated-label': 'EN',
+	redirecting: 'Redirecting...',
+	title: 'Front-End Developer | Stéphane L. Portfolio',
+	description:
+		'Stéphane L. builds reusable components, responsive experiences, and brand-faithful interfaces — elevating projects beyond the handoff between design and development.',
+
+	'menu-skip_nav': 'Skip to content',
+	'menu-left_label': 'About Me',
+	'menu-right_label': 'My Work',
+	localeChange: 'Select language',
+
+	'scroll-cue': 'Scroll to content',
+
+	'hero-title_a': 'Bridging design',
+	'hero-title_b': 'and development',
+	'hero-subtitle': 'A developer with a designer’s __eye__',
+	'hero-console_description': 'Decorative code backdrop',
+
+	'image_portrait-title': 'Portrait of Stéphane L.',
+	'image_portrait-alt':
+		'A photo of Stéphane L. working, with a blurred background.',
+
+	'split-dev_title': 'What I Conceptualize',
+	'split-dev_content':
+		'* Theming systems that scale\n* Component and UX patterns\n* Refinements that improve the design vision',
+
+	'split-design_title': 'What I Deliver',
+	'split-design_content':
+		'* Interfaces faithful to design\n* Responsive layouts across devices\n* Accessibility from the start',
+
+	about: 'About',
+	'about-href': 'about',
+	'about-content':
+		'## About - I started my career as a **3D modeler**, which gave me a foundation in precision, attention to detail, and creating assets that balance both technical and visual requirements.\nThose same skills translate directly into my front-end work today: building UI components that are both **functional** and **aesthetically aligned** with your brand design. Over time, I’ve grown into a role where I naturally act as a **bridge between designers and developers**, ensuring both sides see their work realized in the final product.',
+
+	approach: 'Approach',
+	'approach-href': 'approach',
+	'approach-content':
+		'## Approach - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.',
+
+	'case_study': 'Case Study',
+	'case_study-href': 'case_study',
+	'case_study-content':
+		'## Case_study - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.',
+
+	projects: 'Projects',
+	'projects-href': 'projects',
+	'projects-content':
+		'## Projects I’ve been part of along the journey - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.',
+
+	'error-video': 'Sorry, your browser cannot play this video',
+	'hero-title': 'Animated Purple Gradient Circles',
+	'hero-alt':
+		'Abstract background of layered concentric circles in purple, violet, and magenta, with a subtle parallax movement that makes the layers shift slightly.',
+} as const;
+
+export type EnMessages = typeof en;
+
+export default en;

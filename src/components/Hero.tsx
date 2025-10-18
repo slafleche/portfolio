@@ -1,29 +1,38 @@
 'use client';
 import clsx from 'clsx';
-import * as s from '@/styles/components/hero.css';
-import { useT } from '@/lib/locales/useT';
-import * as layoutStyles from '@/styles/layout.css';
-// import SkipToContent from './SkipToContent';
-import GlassyPanel from './GlassyPanel';
 import ReactMarkdown from 'react-markdown';
 import type { Components } from 'react-markdown';
+import * as layoutStyles from '@/styles/layout.css';
+import * as s from '@/styles/components/hero.css';
+// import SkipToContent from './SkipToContent';
+import GlassyPanel from './GlassyPanel';
 import VideoByName from './VideoByName';
 import Console from './Console';
 
-type Props = { className?: string };
+type HeroCopy = {
+	videoTitle: string;
+	videoLabel: string;
+	headingFirstLine: string;
+	headingLastLine: string;
+	subtitle: string;
+};
+
+type Props = {
+	className?: string;
+	copy: HeroCopy;
+};
 
 const inlineMarkdownComponents: Components = {
 	p: ({ children }) => <>{children}</>,
 };
 
-export default function Hero({ className }: Props) {
-	const t = useT();
+export default function Hero({ className, copy }: Props) {
 	return (
 		<section className={clsx(s.root, className)}>
 			<VideoByName
 				name="hero"
-				title={t('hero-title')}
-				label={t('hero-alt')}
+				title={copy.videoTitle}
+				label={copy.videoLabel}
 				kind="hero"
 				className={s.video}
 				contentWrapClassName={s.contentWrap}
@@ -61,22 +70,22 @@ export default function Hero({ className }: Props) {
 								<span
 									className={s.line}
 									data-position="first"
-									data-text={t('hero-title_a')}
+									data-text={copy.headingFirstLine}
 								>
-									{t('hero-title_a')}
+									{copy.headingFirstLine}
 								</span>
 								<br className={s.title_break} />
 								<span
 									className={s.line}
 									data-position="last"
-									data-text={t('hero-title_b')}
+									data-text={copy.headingLastLine}
 								>
-									{t('hero-title_b')}
+									{copy.headingLastLine}
 								</span>
 							</h1>
 							<p className={s.paragraph}>
 								<ReactMarkdown components={inlineMarkdownComponents}>
-									{t('hero-subtitle')}
+									{copy.subtitle}
 								</ReactMarkdown>
 							</p>
 						</div>

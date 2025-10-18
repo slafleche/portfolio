@@ -6,7 +6,7 @@ import {
 	getTranslator,
 } from '@/lib/locales/locale';
 import LocaleAutoRedirect from '@/components/LocaleAutoRedirect';
-import type { Locale } from '@/data/generated/locales.gen';
+import type { Locale } from '@/data/locales';
 
 export default async function RootPage() {
 	const accept = (await headers()).get('accept-language');
