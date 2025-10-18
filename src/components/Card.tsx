@@ -1,4 +1,3 @@
-'use client';
 import * as s from '@/styles/components/card.css.ts';
 import type { ReactNode } from 'react';
 import Heading, { type IHeadingDepth } from './Heading';
