@@ -3,7 +3,7 @@ import path from 'node:path';
 import { generateGoogleFontUrls } from '../src/lib/gfonts.ts';
 import {
 	AVAILABLE_LOCALES,
-	TRANSLATIONS,
+	LOCALE_LOADERS,
 } from '../src/lib/locales/translations/index.ts';
 
 const FONTS_CONFIG = path.resolve('src', 'data', 'fonts.config.json');
@@ -41,7 +41,7 @@ const collectStringsForKeys = (
 		.map((key) => messages[key])
 		.filter((value): value is string => typeof value === 'string');
 
-function main() {
+async function main() {
 	if (!fs.existsSync(FONTS_CONFIG)) {
 		throw new Error(
 			`Missing ${FONTS_CONFIG}. Add your font families there.`,
@@ -51,9 +51,23 @@ function main() {
 		fs.readFileSync(FONTS_CONFIG, 'utf8'),
 	) as FontsConfig;
 
+	const translationsEntries = await Promise.all(
+		AVAILABLE_LOCALES.map(async (locale) => {
+			const mod = await LOCALE_LOADERS[locale]();
+			return [
+				locale,
+				mod.default as Record<string, string>,
+			] as const;
+		}),
+	);
+	const translations = Object.fromEntries(translationsEntries) as Record<
+		string,
+		Record<string, string>
+	>;
+
 	const referenceLocale = AVAILABLE_LOCALES[0];
 	const knownKeys = new Set(
-		Object.keys(TRANSLATIONS[referenceLocale]),
+		Object.keys(translations[referenceLocale]),
 	);
 	const unknownByFamily: Record<string, string[]> = {};
 
@@ -89,7 +103,7 @@ function main() {
 	> = {};
 
 	for (const locale of AVAILABLE_LOCALES) {
-		const messages = TRANSLATIONS[locale] as Record<string, string>;
+		const messages = translations[locale];
 		const resolvedMap: Record<
 			string,
 			{
@@ -168,4 +182,7 @@ export const GOOGLE_FONT_LINK_DESCRIPTORS_BY_LOCALE = ${JSON.stringify(
 	);
 }
 
-main();
+main().catch((error) => {
+	console.error(error);
+	process.exit(1);
+});

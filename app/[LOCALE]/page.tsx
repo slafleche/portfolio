@@ -2,16 +2,18 @@ import clsx from 'clsx';
 import { Fragment } from 'react';
 import { SkipNavContent } from '@reach/skip-nav';
 import ReactMarkdown from 'react-markdown';
-import { resolveLocale, DEFAULT_LOCALE } from '@/lib/locales/locale';
+import {
+	resolveLocale,
+	DEFAULT_LOCALE,
+	loadMessages,
+} from '@/lib/locales/locale';
 import * as s from '@/styles/components/userContent.css';
 import * as layoutStyles from '@/styles/layout.css';
 import * as card from '@/styles/components/card.css';
 import Card from '@/components/Card';
 import Hero from '@/components/Hero';
 import Keystone from '@/components/Keystone';
-import { TRANSLATIONS, type Locale } from '@/data/locales';
-
-type Messages = (typeof TRANSLATIONS)[Locale];
+import type { Messages } from '@/data/locales';
 type MessageKey = keyof Messages;
 
 const HERO_KEYS = {
@@ -82,8 +84,11 @@ export default async function HomePage({
 }) {
 	const { LOCALE } = await params;
 	const locale = resolveLocale(LOCALE);
-	const messages = TRANSLATIONS[locale];
-	const fallbackMessages = TRANSLATIONS[DEFAULT_LOCALE];
+	const messages = await loadMessages(locale);
+	const fallbackMessages =
+		locale === DEFAULT_LOCALE
+			? messages
+			: await loadMessages(DEFAULT_LOCALE);
 	const t = <K extends MessageKey>(key: K): string =>
 		messages[key] ?? fallbackMessages[key] ?? key;
 

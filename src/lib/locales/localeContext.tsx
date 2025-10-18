@@ -1,25 +1,35 @@
 'use client';
 import React, { createContext, useContext, useMemo } from 'react';
-import type { Locale } from '@/data/locales';
+import type { Locale, Messages } from '@/data/locales';
 import { LOCALE_LABELS } from '@/data/locales';
 
-type Ctx = { locale: Locale };
+type Ctx = {
+	locale: Locale;
+	messages: Messages;
+};
 
 // default context value is "en"
 const Ctx = createContext<Ctx>({
 	locale: 'en',
+	messages: {} as Messages,
 });
 
 export function LocaleProvider({
 	locale,
+	messages,
 	children,
 }: React.PropsWithChildren<{
 	locale: Locale;
+	messages: Messages;
 }>) {
 	const value = useMemo(
-		() => ({ locale }),
+		() => ({
+			locale,
+			messages,
+		}),
 		[
 			locale,
+			messages,
 		],
 	);
 	return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
@@ -40,7 +50,7 @@ export function useLocale(options?: {
 	withLabel?: boolean;
 	withRoot?: boolean;
 }) {
-	const locale = useContext(Ctx).locale;
+	const { locale } = useContext(Ctx);
 	const root = `/${locale}`;
 	if (options?.withLabel) {
 		return {
@@ -53,4 +63,8 @@ export function useLocale(options?: {
 		return { locale, root } as const;
 	}
 	return locale;
+}
+
+export function useLocaleMessages(): Messages {
+	return useContext(Ctx).messages;
 }

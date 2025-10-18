@@ -1,7 +1,8 @@
 import {
 	AVAILABLE_LOCALES,
-	TRANSLATIONS,
+	LOCALE_LOADERS,
 	type Locale,
+	type Messages,
 } from '../../data/locales';
 
 export const DEFAULT_LOCALE: Locale = 'en';
@@ -49,7 +50,17 @@ export function pickLocaleFromAcceptLanguage(
 }
 
 /** Translator helper */
-export function getTranslator(locale: Locale) {
-	return (key: keyof (typeof TRANSLATIONS)[Locale]) =>
-		TRANSLATIONS[locale]?.[key] ?? key;
+export async function loadMessages(locale: Locale): Promise<Messages> {
+	const mod = await LOCALE_LOADERS[locale]();
+	return mod.default;
+}
+
+export function createTranslator(messages: Messages) {
+	return <Key extends keyof Messages>(key: Key) =>
+		messages[key] ?? (key as string);
+}
+
+export async function getTranslator(locale: Locale) {
+	const messages = await loadMessages(locale);
+	return createTranslator(messages);
 }
