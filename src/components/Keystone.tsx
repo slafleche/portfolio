@@ -1,5 +1,3 @@
-'use client';
-
 import clsx from 'clsx';
 import { getImage } from '@/lib/images';
 import { useSafeId } from '../lib/dom';
