@@ -1,22 +1,26 @@
-import en from './en';
-import fr from './fr';
+import type { EnMessages } from './en';
+import type { FrMessages } from './fr';
 
-export const TRANSLATIONS = {
-	en,
-	fr,
+export const AVAILABLE_LOCALES = [
+	'en',
+	'fr',
+] as const;
+
+export type Locale = (typeof AVAILABLE_LOCALES)[number];
+
+type MessagesMap = {
+	en: EnMessages;
+	fr: FrMessages;
+};
+
+export type Messages = MessagesMap[Locale];
+
+export const LOCALE_LABELS: Record<Locale, string> = {
+	en: 'English',
+	fr: 'Français',
+};
+
+export const LOCALE_LOADERS = {
+	en: () => import('./en'),
+	fr: () => import('./fr'),
 } as const;
-
-export type Locale = keyof typeof TRANSLATIONS;
-export type Messages = (typeof TRANSLATIONS)[Locale];
-
-export const AVAILABLE_LOCALES = Object.keys(
-	TRANSLATIONS,
-) as Locale[];
-
-export const LOCALE_LABELS: Record<Locale, string> =
-	Object.fromEntries(
-		AVAILABLE_LOCALES.map((locale) => [
-			locale,
-			TRANSLATIONS[locale].label,
-		]),
-	) as Record<Locale, string>;

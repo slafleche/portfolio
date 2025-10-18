@@ -1,6 +1,10 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { resolveLocale, getTranslator } from '@/lib/locales/locale';
+import {
+	resolveLocale,
+	loadMessages,
+	createTranslator,
+} from '@/lib/locales/locale';
 import { ResponsiveProvider } from '@/lib/responsive/ResponsiveProvider';
 import LocaleProvider from '@/lib/locales/LocaleProvider';
 import Menu from '@/components/Menu';
@@ -17,9 +21,10 @@ export default async function LocaleSegmentLayout({
 }: SegmentLayoutProps) {
 	const { LOCALE } = await params;
 	const locale = resolveLocale(LOCALE);
+	const messages = await loadMessages(locale);
 
 	return (
-		<LocaleProvider locale={locale}>
+		<LocaleProvider locale={locale} messages={messages}>
 			<WindowSizeProvider>
 				<ResponsiveProvider>
 					<Menu />
@@ -37,7 +42,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
 	const { LOCALE } = await params;
 	const locale = resolveLocale(LOCALE);
-	const t = getTranslator(locale);
+	const messages = await loadMessages(locale);
+	const t = createTranslator(messages);
 	return {
 		title: t('title' as const),
 		description: t('description' as const),

@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-	TRANSLATIONS,
 	AVAILABLE_LOCALES,
+	LOCALE_LOADERS,
 } from '../src/lib/locales/translations/index.ts';
 
 const MAX_UNIQUE_CHARS = process.env.MAX_FONT_TEXT_CHARS
@@ -75,11 +75,12 @@ const addBothCasesIfNeeded = (text: string, enabled: boolean) => {
 
 const valuesForKeysAcrossLocales = (
 	keys: readonly string[],
+	translations: Record<string, Record<string, string>>,
 ) => {
 	const out: string[] = [];
 	for (const key of keys) {
 		for (const locale of AVAILABLE_LOCALES) {
-			const value = TRANSLATIONS[locale][key];
+			const value = translations[locale][key];
 			if (typeof value === 'string') {
 				out.push(value);
 			}
@@ -88,7 +89,7 @@ const valuesForKeysAcrossLocales = (
 	return out;
 };
 
-function main() {
+async function main() {
 	if (!fs.existsSync(FONT_CONFIG_JSON)) {
 		throw new Error(`Font config JSON missing: ${FONT_CONFIG_JSON}`);
 	}
@@ -97,9 +98,23 @@ function main() {
 		fs.readFileSync(FONT_CONFIG_JSON, 'utf8'),
 	) as FontsConfig;
 
+	const translationsEntries = await Promise.all(
+		AVAILABLE_LOCALES.map(async (locale) => {
+			const mod = await LOCALE_LOADERS[locale]();
+			return [
+				locale,
+				mod.default as Record<string, string>,
+			] as const;
+		}),
+	);
+	const translations = Object.fromEntries(translationsEntries) as Record<
+		string,
+		Record<string, string>
+	>;
+
 	const referenceLocale = AVAILABLE_LOCALES[0];
 	const knownKeys = new Set(
-		Object.keys(TRANSLATIONS[referenceLocale]),
+		Object.keys(translations[referenceLocale]),
 	);
 	const unknownByFamily: Record<string, string[]> = {};
 
@@ -155,7 +170,9 @@ function main() {
 		const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
 
 		const fromLocales =
-			keys.length > 0 ? valuesForKeysAcrossLocales(keys) : [];
+			keys.length > 0
+				? valuesForKeysAcrossLocales(keys, translations)
+				: [];
 		const sources = [
 			...literalTexts,
 			...fromLocales,
@@ -259,4 +276,7 @@ export default minimalFontText;
 	);
 }
 
-main();
+main().catch((error) => {
+	console.error(error);
+	process.exit(1);
+});

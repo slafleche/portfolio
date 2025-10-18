@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { SkipNavLink } from '@reach/skip-nav';
 import * as s from '@/styles/components/menu.css';
 import { useT } from '@/lib/locales/useT';
-import { useLocale } from '@/lib/locales/localeContext';
-import { AVAILABLE_LOCALES, TRANSLATIONS } from '@/data/locales';
+import { useLocale, useLocaleMessages } from '@/lib/locales/localeContext';
+import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
 import { menuVars } from '@/styles/vars';
 import transforms from '@/styles/helpers/transforms';
 import clsx from 'clsx';
@@ -36,6 +36,11 @@ const LOGO_GLOW_TOP_THRESHOLD = 3;
 const LOGO_GLOW_DURATION = 500;
 const LOGO_GLOW_HOLD_DELAY = 100;
 
+const LOCALE_ABBREVIATIONS: Record<Locale, string> = {
+	en: 'EN',
+	fr: 'FR',
+};
+
 export default function Menu({
 	bokehDebug,
 	debugGlow = false,
@@ -44,6 +49,7 @@ export default function Menu({
 	const { locale, root } = useLocale({
 		withLabel: true,
 	});
+	const messages = useLocaleMessages();
 
 	const [
 		mounted,
@@ -66,7 +72,7 @@ export default function Menu({
 	const logoGlowClickSuppressRef = useRef(false);
 	// no pending animation once we leave the top; we only fire when already there
 
-	const { anchors, anchorCount, sectionIds } = useMenuAnchors(locale);
+	const { anchors, anchorCount, sectionIds } = useMenuAnchors(messages);
 
 	const debugActive = Boolean(bokehDebug);
 	const baseFontsReady = false;
@@ -678,24 +684,24 @@ export default function Menu({
 						className={clsx(s.localeChanger, s.transitionAfterFonts)}
 						aria-label={t('localeChange')}
 					>
-						{AVAILABLE_LOCALES.filter((l) => l !== locale).map(
-							(l) => (
-								<Link
-									key={l}
-									href={`/${l}`}
-									className={clsx(s.link, s.localeLink)}
-									hrefLang={l}
-									data-ui="link"
-								>
-									<span className={s.fakeShadow} aria-hidden={true}>
-										{TRANSLATIONS[l]['abbreviated-label']}
-									</span>
-									<span className={s.text}>
-										{TRANSLATIONS[l]['abbreviated-label']}
-									</span>
-								</Link>
-							),
-						)}
+		{AVAILABLE_LOCALES.filter((l) => l !== locale).map(
+			(l) => (
+				<Link
+					key={l}
+					href={`/${l}`}
+					className={clsx(s.link, s.localeLink)}
+					hrefLang={l}
+					data-ui="link"
+				>
+					<span className={s.fakeShadow} aria-hidden={true}>
+						{LOCALE_ABBREVIATIONS[l]}
+					</span>
+					<span className={s.text}>
+						{LOCALE_ABBREVIATIONS[l]}
+					</span>
+				</Link>
+			),
+		)}
 					</nav>
 				</Arch>
 			</div>

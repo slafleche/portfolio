@@ -13,7 +13,7 @@ export default async function RootPage() {
 	const fallback: Locale =
 		pickLocaleFromAcceptLanguage(accept) ?? DEFAULT_LOCALE;
 
-	const t = getTranslator(fallback);
+	const t = await getTranslator(fallback);
 
 	return (
 		<>
