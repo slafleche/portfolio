@@ -1,19 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
-
-// Use relative imports so we don't depend on tsconfig path aliases here.
-// If your TS config requires it, enable:
-//   "moduleResolution": "Bundler",
-//   "allowImportingTsExtensions": true
 import { generateGoogleFontUrls } from '../src/lib/gfonts.ts';
+import {
+	AVAILABLE_LOCALES,
+	TRANSLATIONS,
+} from '../src/lib/locales/translations/index.ts';
 
-// ---- Paths (match locales output folder) ----
-const LOCALES_JSON = path.resolve(
-	'src',
-	'data',
-	'generated',
-	'locales.gen.json',
-);
 const FONTS_CONFIG = path.resolve('src', 'data', 'fonts.config.json');
 const OUT_FILE = path.resolve(
 	'src',
@@ -22,7 +14,6 @@ const OUT_FILE = path.resolve(
 	'googleFonts.gen.ts',
 );
 
-// ---- Types (lightweight runtime shapes) ----
 type FontCfgInput = {
 	texts?: string[];
 	keys?: string[];
@@ -32,31 +23,25 @@ type FontCfgInput = {
 };
 type FontsConfig = Record<string, FontCfgInput>;
 
-type PerLocaleMinSets = {
-	perLocale: Record<string, Record<string, string>>; // [locale][family] -> unique chars ("" if none)
+const collapseToUniqueChars = (
+	strings: string[],
+	{ stripWhitespace = false } = {},
+) => {
+	const joined = strings.join('');
+	const raw = stripWhitespace ? joined.replace(/\s+/g, '') : joined;
+	const nfc = raw.normalize('NFC');
+	return Array.from(new Set(nfc)).join('');
 };
 
-function main() {
-	// --- Load generated locales JSON (must exist from `yarn locales`) ---
-	if (!fs.existsSync(LOCALES_JSON)) {
-		throw new Error(
-			`Missing ${LOCALES_JSON}. Run "yarn locales" first.`,
-		);
-	}
-	const localesPayload = JSON.parse(
-		fs.readFileSync(LOCALES_JSON, 'utf8'),
-	) as {
-		AVAILABLE_LOCALES: string[];
-		FONT_MIN_SETS: PerLocaleMinSets;
-	};
-	const { AVAILABLE_LOCALES, FONT_MIN_SETS } = localesPayload;
-	if (!FONT_MIN_SETS || !FONT_MIN_SETS.perLocale) {
-		throw new Error(
-			`Invalid locales payload: FONT_MIN_SETS.perLocale missing in ${LOCALES_JSON}`,
-		);
-	}
+const collectStringsForKeys = (
+	keys: readonly string[],
+	messages: Record<string, string>,
+) =>
+	keys
+		.map((key) => messages[key])
+		.filter((value): value is string => typeof value === 'string');
 
-	// --- Load fonts config (weights/ital/subsets) ---
+function main() {
 	if (!fs.existsSync(FONTS_CONFIG)) {
 		throw new Error(
 			`Missing ${FONTS_CONFIG}. Add your font families there.`,
@@ -66,7 +51,37 @@ function main() {
 		fs.readFileSync(FONTS_CONFIG, 'utf8'),
 	) as FontsConfig;
 
-	// --- Build per-locale URLs map ---
+	const referenceLocale = AVAILABLE_LOCALES[0];
+	const knownKeys = new Set(
+		Object.keys(TRANSLATIONS[referenceLocale]),
+	);
+	const unknownByFamily: Record<string, string[]> = {};
+
+	for (const [
+		family,
+		cfg,
+	] of Object.entries(fontsConfig)) {
+		const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
+		const unknown = keys.filter((key) => !knownKeys.has(key));
+		if (unknown.length) {
+			unknownByFamily[family] = unknown;
+		}
+	}
+
+	if (Object.keys(unknownByFamily).length) {
+		const lines = Object.entries(unknownByFamily)
+			.map(
+				([
+					family,
+					keys,
+				]) => `  - ${family}: ${keys.join(', ')}`,
+			)
+			.join('\n');
+		throw new Error(
+			`fonts.config.json lists translation keys that do not exist in locale "${referenceLocale}":\n${lines}`,
+		);
+	}
+
 	const urlsByLocale: Record<string, string[]> = {};
 	const linkDescriptorsByLocale: Record<
 		string,
@@ -74,7 +89,7 @@ function main() {
 	> = {};
 
 	for (const locale of AVAILABLE_LOCALES) {
-		const perFontChars = FONT_MIN_SETS.perLocale[locale] || {};
+		const messages = TRANSLATIONS[locale] as Record<string, string>;
 		const resolvedMap: Record<
 			string,
 			{
@@ -89,9 +104,22 @@ function main() {
 			family,
 			cfg,
 		] of Object.entries(fontsConfig)) {
-			const charset = perFontChars[family] || '';
+			const literalTexts = Array.isArray(cfg.texts)
+				? cfg.texts
+				: [];
+			const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
+			const extracted = collectStringsForKeys(keys, messages);
+			const charsetSources = [
+				...literalTexts,
+				...extracted,
+			];
+			const charset = charsetSources.length
+				? collapseToUniqueChars(charsetSources, {
+						stripWhitespace: false,
+					})
+				: '';
+
 			resolvedMap[family] = {
-				// If charset is non-empty, pass it as a single-item texts array so we get &text=...
 				texts: charset
 					? [
 							charset,
@@ -107,31 +135,25 @@ function main() {
 			display: 'swap',
 			subsets: [
 				'latin',
-			], // per-font can override via cfg.subsets
-			stripWhitespaceFromText: false, // already collapsed; keep as-is
+			],
+			stripWhitespaceFromText: false,
 		});
 
 		urlsByLocale[locale] = urls;
-
-		// For non-blocking load we use the SAME href for preload and for stylesheet;
-		// the onload handler flips rel from "preload" to "stylesheet".
 		linkDescriptorsByLocale[locale] = urls.map((u) => ({
 			preloadHref: u,
 			stylesheetHref: u,
 		}));
 	}
 
-	// --- Emit TS module with per-locale URL arrays + non-blocking descriptors ---
 	const banner = `// AUTO-GENERATED by scripts/generateFontUrls.ts — DO NOT EDIT
 export const GOOGLE_FONT_URLS_BY_LOCALE = ${JSON.stringify(urlsByLocale, null, 2)} as const;
 
-// Use these two preconnects in <head> BEFORE any font requests.
 export const GOOGLE_FONT_PRECONNECTS = [
   { href: "https://fonts.googleapis.com", crossOrigin: false },
   { href: "https://fonts.gstatic.com", crossOrigin: true }
 ] as const;
 
-// Prefer these to render non-blocking preload->stylesheet links.
 export const GOOGLE_FONT_LINK_DESCRIPTORS_BY_LOCALE = ${JSON.stringify(
 		linkDescriptorsByLocale,
 		null,

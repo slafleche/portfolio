@@ -54,7 +54,7 @@ export default [
 			'dist/**',
 			'build/**',
 			'public/**',
-			'src/data/locales.gen.ts',
+			'src/data/generated/**/*.gen.ts',
 		],
 	},
 	{
