@@ -1,5 +1,3 @@
-'use client';
-
 import { useSafeId } from '@/lib/dom';
 import { chevronVars } from '@/styles/vars';
 import * as s from '@/styles/components/chevrons.css.ts';
