@@ -8,7 +8,7 @@ import React, {
 	useState,
 } from 'react';
 import * as s from '@/styles/components/bokeh.css';
-import { useSafeId } from '../lib/dom';
+import { createDomId } from '../lib/dom';
 import clsx from 'clsx';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import type { ColorWrapper } from '@/styles/helpers/colorWrap';
@@ -69,7 +69,7 @@ function BokehOverlay({
 	sizeScale = bokehVars.sizeScale,
 	className,
 }: BokehOverlayProps) {
-	const id = useSafeId();
+	const filterId = useMemo(() => createDomId('bokeh'), []);
 	const { width, height } = useWindowSize();
 	const [
 		mounted,
@@ -173,7 +173,7 @@ function BokehOverlay({
 				>
 					<defs>
 						<filter
-							id={id}
+							id={filterId}
 							filterUnits="userSpaceOnUse"
 							x={-pad}
 							y={-pad}
@@ -218,7 +218,7 @@ function BokehOverlay({
 					</defs>
 
 					{/* Two counter-rotating groups for a gentle parallax feel */}
-					<g className={s.rotating} filter={`url(#${id})`}>
+					<g className={s.rotating} filter={`url(#${filterId})`}>
 						{blobs0.map((b, i) => (
 							<circle
 								key={`g0-${i}`}
@@ -237,7 +237,7 @@ function BokehOverlay({
 						style={{
 							animationDirection: 'reverse',
 						}}
-						filter={`url(#${id})`}
+						filter={`url(#${filterId})`}
 					>
 						{blobs1.map((b, i) => (
 							<circle
