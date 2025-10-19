@@ -1,8 +1,6 @@
-'use client';
 import clsx from 'clsx';
 import * as s from '@/styles/components/logo.css';
 import { color, type ColorWrapper } from '@/styles/helpers/colorWrap';
-import { useSafeId } from '../lib/dom';
 
 const LogoMode = {
 	light: 'light',
@@ -19,6 +17,7 @@ type Props = {
 	title?: string;
 	bgColour?: ColorWrapper;
 	colourState?: 'color' | 'mono';
+	idBase?: string;
 };
 
 export default function Logo({
@@ -28,10 +27,11 @@ export default function Logo({
 	title = "Stéphane's Logo",
 	bgColour = color('#251a38'),
 	colourState = 'color',
+	idBase,
 }: Props) {
+	const baseId = idBase ?? 'sl-logo';
 	const isMono = mode === LogoMode.mono || colourState === 'mono';
 	const bgFill = bgColour;
-	const baseId = useSafeId();
 
 	const gradientA = `${baseId}-a`;
 	const gradientB = `${baseId}-b`;

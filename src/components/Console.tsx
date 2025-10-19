@@ -1,9 +1,6 @@
-'use client';
-
 import clsx from 'clsx';
 import * as s from '@/styles/components/console.css';
 import type { ReactNode } from 'react';
-import { useSafeId } from '../lib/dom';
 
 type ConsoleLine = {
 	content: ReactNode;
@@ -15,6 +12,7 @@ type Props = {
 	title?: string;
 	lines?: ConsoleLine[];
 	description?: string;
+	idBase?: string;
 };
 
 const defaultLines: ConsoleLine[] = [
@@ -81,10 +79,11 @@ export default function Console({
 	title = 'stéphane_portfolio.tsx',
 	lines = defaultLines,
 	description = 'Decorative code backdrop',
+	idBase,
 }: Props) {
-	const id = useSafeId();
-	const hintId = `${id}-hintId`;
-	const describedById = `${id}-describedById`;
+	const baseId = idBase ?? 'console';
+	const hintId = `${baseId}-hintId`;
+	const describedById = `${baseId}-describedById`;
 	return (
 		<div
 			className={clsx(s.root, className)}

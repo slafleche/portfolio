@@ -24,6 +24,7 @@ import {
 } from './menu/hooks/useLogoAnimation';
 import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
+import { createDomId } from '@/lib/dom';
 
 type MenuProps = {
 	root: string;
@@ -52,6 +53,7 @@ export default function Menu({
 	bokehDebug,
 	debugGlow = false,
 }: MenuProps) {
+	const logoId = createDomId('logo');
 	const [
 		mounted,
 		setMounted,
@@ -724,6 +726,7 @@ const renderNavLink = (
 										<div className={s.logoWrap}>
 											<Logo
 												className={s.logo}
+												idBase={logoId}
 												colourState={
 													logoAnimationState === 'enter'
 														? 'color'
