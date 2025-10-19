@@ -75,6 +75,7 @@ type UseMenuHighlightOptions = {
 	anchorCount: number;
 	bokehDebug?: MiniBokehDebugOptions;
 	fontsReady: boolean;
+	animationEnabled?: boolean;
 };
 
 export function useMenuHighlight({
@@ -82,6 +83,7 @@ export function useMenuHighlight({
 	anchorCount,
 	bokehDebug,
 	fontsReady,
+	animationEnabled = true,
 }: UseMenuHighlightOptions) {
 const debugOptions = bokehDebug ?? {};
 const {
@@ -92,6 +94,7 @@ const {
 } = debugOptions;
 const debugActive =
 	showArchPath || disableTimeout || raiseLayer || lockTo !== undefined;
+const highlightEnabled = animationEnabled || debugActive;
 const maxAnchorIndex = Math.max(0, anchorCount - 1);
 const requestedLockIndex = (() => {
 	if (lockTo === undefined) return null;
@@ -114,21 +117,21 @@ const isLocked = lockTargetIndex !== null;
 	] = useState<Array<LinkMetric | null>>([]);
 	const linkMetricsRef = useRef<Array<LinkMetric | null>>([]);
 	const lastMetricRef = useRef<LinkMetric | null>(null);
-	const [
-		highlight,
-		setHighlight,
-	] = useState<HighlightState>({
-		visible: false,
+const [
+	highlight,
+	setHighlight,
+] = useState<HighlightState>({
+	visible: false,
 		left: 0,
 		top: 0,
 		width: 0,
 		height: 0,
 	});
 	const highlightRef = useRef(highlight);
-	const [
-		transitionDisabled,
-		setTransitionDisabled,
-	] = useState(false);
+const [
+	transitionDisabled,
+	setTransitionDisabled,
+] = useState(false);
 	const navMetricsRef = useRef<{
 		width: number;
 		height: number;
@@ -151,6 +154,13 @@ const [
 	miniBokehActive,
 	setMiniBokehActive,
 ] = useState(false);
+useEffect(() => {
+	if (!highlightEnabled) {
+		setMiniBokehActive(false);
+	}
+}, [
+	highlightEnabled,
+]);
 	const miniBokehTimerRef = useRef<ReturnType<
 		typeof setTimeout
 	> | null>(null);
@@ -159,6 +169,22 @@ const [
 		activeIndex,
 		setActiveIndex,
 	] = useState<number | null>(null);
+	useEffect(() => {
+		if (highlightEnabled) return;
+		lastMetricRef.current = null;
+		setActiveIndex(null);
+		setTransitionDisabled(true);
+		setHighlight((prev) =>
+			prev.visible
+				? {
+						...prev,
+						visible: false,
+					}
+				: prev,
+		);
+	}, [
+		highlightEnabled,
+	]);
 	const lastHoverIndexRef = useRef<number | null>(null);
 	const hasResolvedHoverFromCacheRef = useRef(false);
 	const lastPersistedCacheValueRef = useRef<string | null>(null);
@@ -171,6 +197,9 @@ const [
 	]);
 
 useEffect(() => {
+	if (!highlightEnabled) {
+		return undefined;
+	}
 	if (miniBokehTimerRef.current) {
 		clearTimeout(miniBokehTimerRef.current);
 		miniBokehTimerRef.current = null;
@@ -207,6 +236,7 @@ useEffect(() => {
 	lockTargetIndex,
 	disableTimeout,
 	isLocked,
+	highlightEnabled,
 ]);
 
 	useEffect(
@@ -219,30 +249,32 @@ useEffect(() => {
 		[],
 	);
 
-	useEffect(() => {
+useEffect(() => {
+	if (!highlightEnabled) return;
 	if (isLocked) return;
-		if (hasResolvedHoverFromCacheRef.current) return;
-		if (typeof window === 'undefined') return;
-		hasResolvedHoverFromCacheRef.current = true;
-		try {
-			const cachedValue = window.localStorage.getItem(
-				MINI_BOKEH_CACHE_KEY,
-			);
-			lastPersistedCacheValueRef.current = cachedValue;
-			const resolvedIndex = resolveIndexFromCacheValue(
-				cachedValue,
-				anchors,
-			);
-			if (resolvedIndex != null) {
-				lastHoverIndexRef.current = resolvedIndex;
-			}
-		} catch {
-			lastPersistedCacheValueRef.current = null;
+	if (hasResolvedHoverFromCacheRef.current) return;
+	if (typeof window === 'undefined') return;
+	hasResolvedHoverFromCacheRef.current = true;
+	try {
+		const cachedValue = window.localStorage.getItem(
+			MINI_BOKEH_CACHE_KEY,
+		);
+		lastPersistedCacheValueRef.current = cachedValue;
+		const resolvedIndex = resolveIndexFromCacheValue(
+			cachedValue,
+			anchors,
+		);
+		if (resolvedIndex != null) {
+			lastHoverIndexRef.current = resolvedIndex;
 		}
-	}, [
-		anchors,
-		isLocked,
-	]);
+	} catch {
+		lastPersistedCacheValueRef.current = null;
+	}
+}, [
+	anchors,
+	isLocked,
+	highlightEnabled,
+]);
 
 	useEffect(() => {
 		linkRefs.current = new Array<HTMLAnchorElement | null>(
@@ -258,8 +290,9 @@ useEffect(() => {
 		anchorCount,
 	]);
 
-	const persistLastHover = useCallback(
-		(index: number | null) => {
+const persistLastHover = useCallback(
+	(index: number | null) => {
+		if (!highlightEnabled) return;
 	if (isLocked) return;
 			if (typeof window === 'undefined') return;
 			try {
@@ -280,20 +313,22 @@ useEffect(() => {
 			} catch {
 				// Ignore storage errors (quota exceeded, private mode, etc.).
 			}
-		},
-		[
+	},
+	[
+	highlightEnabled,
 		anchors,
 		isLocked,
-		],
-	);
+	],
+);
 
-	const updateHighlightFromMetric = useCallback(
-		(metric?: LinkMetric) => {
-			if (!metric) return;
-			const navMetrics = navMetricsRef.current;
+const updateHighlightFromMetric = useCallback(
+	(metric?: LinkMetric) => {
+		if (!highlightEnabled) return;
+		if (!metric) return;
+		const navMetrics = navMetricsRef.current;
 
-			if (!highlightRef.current.visible) {
-				setTransitionDisabled(true);
+		if (!highlightRef.current.visible) {
+			setTransitionDisabled(true);
 				const previous = lastMetricRef.current;
 				let startLeft = metric.left;
 				let startTop = metric.top;
@@ -354,11 +389,14 @@ useEffect(() => {
 				height: metric.highlightHeight,
 			});
 			lastMetricRef.current = metric;
-		},
-		[],
-	);
+	},
+	[
+		highlightEnabled,
+	],
+);
 
-	const hideHighlight = useCallback(() => {
+const hideHighlight = useCallback(() => {
+	if (!highlightEnabled) return;
 		if (isLocked) return;
 		if (animationFrameRef.current) {
 			cancelAnimationFrame(animationFrameRef.current);
@@ -371,12 +409,14 @@ useEffect(() => {
 		);
 		persistLastHover(null);
 	}, [
+		highlightEnabled,
 		persistLastHover,
 		isLocked,
 	]);
 
 const measure = useCallback(() => {
-	if (!fontsReady && !debugActive) return;
+	const canMeasureLayout = fontsReady || !highlightEnabled || debugActive;
+	if (!canMeasureLayout) return;
 		const navEl = navRef.current;
 		if (!navEl) return;
 
@@ -461,7 +501,11 @@ const measure = useCallback(() => {
 		linkMetricsRef.current = metrics;
 		setLinkMetrics(metrics);
 
-		if (activeIndex != null && highlightRef.current.visible) {
+		if (
+			highlightEnabled &&
+			activeIndex != null &&
+			highlightRef.current.visible
+		) {
 			updateHighlightFromMetric(metrics[activeIndex] ?? undefined);
 		}
 
@@ -487,6 +531,7 @@ const measure = useCallback(() => {
 	fontsReady,
 	debugActive,
 	updateHighlightFromMetric,
+	highlightEnabled,
 ]);
 
 useEffect(() => {
@@ -496,6 +541,7 @@ useEffect(() => {
 	anchorCount,
 	fontsReady,
 	debugActive,
+	highlightEnabled,
 ]);
 
 	useLayoutEffect(() => {
@@ -514,10 +560,11 @@ useEffect(() => {
 		measure,
 	]);
 
-	const activate = useCallback(
-		(index: number) => {
-			let metric =
-				linkMetricsRef.current[index] ?? linkMetrics[index];
+const activate = useCallback(
+	(index: number) => {
+		if (!highlightEnabled) return;
+		let metric =
+			linkMetricsRef.current[index] ?? linkMetrics[index];
 		if (!metric) {
 			const navEl = navRef.current;
 			const linkEl = linkRefs.current[index];
@@ -569,17 +616,32 @@ useEffect(() => {
 			persistLastHover(index);
 			if (activeIndex !== index) {
 				setActiveIndex(index);
-			}
-		},
-		[
-			activeIndex,
-			linkMetrics,
-			persistLastHover,
-			updateHighlightFromMetric,
-		],
+		}
+	},
+	[
+		highlightEnabled,
+		activeIndex,
+		linkMetrics,
+		persistLastHover,
+		updateHighlightFromMetric,
+	],
 	);
 
 	const highlightStyles = useMemo<HighlightStyles>(() => {
+		if (!highlightEnabled) {
+			return {
+				containerStyle: {
+					left: '0px',
+					top: '0px',
+					opacity: 0,
+				},
+				innerStyle: {
+					width: '0px',
+					height: '0px',
+					opacity: 0,
+				},
+			};
+		}
 		const navMetrics = navMetricsRef.current;
 		const hasMeasurements = highlight.width && highlight.height;
 		const defaultFallback = computeCenteredHighlight(navMetrics);
@@ -667,6 +729,7 @@ useEffect(() => {
 			innerStyle,
 		};
 	}, [
+		highlightEnabled,
 		highlight,
 		transitionDisabled,
 		debugActive,
@@ -675,6 +738,7 @@ useEffect(() => {
 	]);
 
 useEffect(() => {
+	if (!highlightEnabled) return;
 	if (lockTargetIndex === null) return;
 	const metric =
 		linkMetricsRef.current[lockTargetIndex] ??
@@ -689,6 +753,7 @@ useEffect(() => {
 	lockTargetIndex,
 	linkMetrics,
 	updateHighlightFromMetric,
+	highlightEnabled,
 ]);
 
 	return {
@@ -697,8 +762,8 @@ useEffect(() => {
 		navMetricsRef,
 		navMetrics,
 		highlightStyles,
-		highlightVisible: highlight.visible,
-		miniBokehActive,
+		highlightVisible: highlightEnabled && highlight.visible,
+		miniBokehActive: highlightEnabled && miniBokehActive,
 		debugArch,
 		activate,
 		hideHighlight,

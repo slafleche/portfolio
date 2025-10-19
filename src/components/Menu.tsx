@@ -77,9 +77,85 @@ export default function Menu({
 	const { anchors, anchorCount, sectionIds: derivedSectionIds } =
 		useMenuAnchors(sectionIds);
 
+	const [
+		prefersReducedMotion,
+		setPrefersReducedMotion,
+	] = useState<boolean | null>(null);
+	const [
+		decorReady,
+		setDecorReady,
+	] = useState(false);
+
+	useEffect(() => {
+		if (typeof window === 'undefined') return;
+		const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const updatePreference = () => {
+			setPrefersReducedMotion(media.matches);
+		};
+		updatePreference();
+		media.addEventListener('change', updatePreference);
+		return () => {
+			media.removeEventListener('change', updatePreference);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (prefersReducedMotion !== false) {
+			setDecorReady(false);
+			return;
+		}
+		let cancelled = false;
+		let timeoutId: number | null = null;
+		let idleHandle: number | null = null;
+
+		const activate = () => {
+			if (cancelled) return;
+			setDecorReady(true);
+		};
+
+		if (typeof window === 'undefined') {
+			activate();
+			return;
+		}
+
+		const win = window as typeof window & {
+			requestIdleCallback?: (
+				callback: IdleRequestCallback,
+				options?: IdleRequestOptions,
+			) => number;
+			cancelIdleCallback?: (handle: number) => void;
+		};
+
+		if (win.requestIdleCallback) {
+			idleHandle = win.requestIdleCallback(
+				() => {
+					activate();
+				},
+				{ timeout: 200 },
+			);
+		} else {
+			timeoutId = window.setTimeout(activate, 150);
+		}
+
+		return () => {
+			cancelled = true;
+			if (timeoutId != null) {
+				window.clearTimeout(timeoutId);
+			}
+			if (idleHandle != null && win.cancelIdleCallback) {
+				win.cancelIdleCallback(idleHandle);
+			}
+		};
+	}, [
+		prefersReducedMotion,
+	]);
+
 	const debugActive = Boolean(bokehDebug);
-	const baseFontsReady = false;
-	const fontsReady = debugActive ? true : baseFontsReady;
+	const highlightEnabled =
+		debugActive || (decorReady && prefersReducedMotion === false);
+	const fontsReady = highlightEnabled;
+	const motionPreference =
+		prefersReducedMotion === true ? 'reduced' : 'standard';
 	const debugOptions: MiniBokehDebugOptions | undefined = bokehDebug;
 	const lockTarget = debugOptions?.lockTo;
 	const raiseLayer =
@@ -101,6 +177,7 @@ export default function Menu({
 		anchorCount,
 		bokehDebug,
 		fontsReady,
+		animationEnabled: highlightEnabled,
 	});
 
 	const {
@@ -582,41 +659,45 @@ const renderNavLink = (
 						className={clsx(s.nav)}
 						ref={navRef}
 						onMouseLeave={handleNavMouseLeave}
+						data-mini-bokeh={highlightEnabled ? 'enabled' : 'disabled'}
+						data-motion={motionPreference}
 					>
-						<div
-							className={s.highlightLayer}
-							aria-hidden
-							style={raiseLayer ? { zIndex: 5 } : undefined}
-						>
-							{showArchPath && debugArch ? (
-								<svg
-									className={s.debugArch}
-									viewBox={`0 0 ${debugArch.width} ${debugArch.height}`}
-									width={debugArch.width}
-									height={debugArch.height}
-									preserveAspectRatio="none"
-								>
-									<path
-										d={debugArch.path}
-										fill="none"
-										stroke="rgba(255,255,255,0.35)"
-										strokeWidth={1}
-										strokeDasharray="4 4"
-									/>
-								</svg>
-							) : null}
+						{highlightEnabled ? (
 							<div
-								className={s.miniBokehContainer}
-								style={highlightStyles.containerStyle}
-								data-active={miniBokehActive ? 'true' : 'false'}
+								className={s.highlightLayer}
+								aria-hidden
+								style={raiseLayer ? { zIndex: 5 } : undefined}
 							>
+								{showArchPath && debugArch ? (
+									<svg
+										className={s.debugArch}
+										viewBox={`0 0 ${debugArch.width} ${debugArch.height}`}
+										width={debugArch.width}
+										height={debugArch.height}
+										preserveAspectRatio="none"
+									>
+										<path
+											d={debugArch.path}
+											fill="none"
+											stroke="rgba(255,255,255,0.35)"
+											strokeWidth={1}
+											strokeDasharray="4 4"
+										/>
+									</svg>
+								) : null}
 								<div
-									className={s.miniBokeh}
-									style={highlightStyles.innerStyle}
-									data-highlight={highlightVisible ? 'true' : 'false'}
-								/>
+									className={s.miniBokehContainer}
+									style={highlightStyles.containerStyle}
+									data-active={miniBokehActive ? 'true' : 'false'}
+								>
+									<div
+										className={s.miniBokeh}
+										style={highlightStyles.innerStyle}
+										data-highlight={highlightVisible ? 'true' : 'false'}
+									/>
+								</div>
 							</div>
-						</div>
+						) : null}
 
 						<div className={clsx(s.contents)}>
 							<div className={clsx(s.logoItem, s.item)}>
