@@ -1,15 +1,15 @@
-import { useSafeId } from '@/lib/dom';
 import { chevronVars } from '@/styles/vars';
 import * as s from '@/styles/components/chevrons.css.ts';
 import clsx from 'clsx';
+import { createDomId } from '@/lib/dom';
 
 type Props = {
 	className?: string;
 };
 
 export default function ChevronDown({ className }: Props = {}) {
-	const baseId = useSafeId();
-	const fillGradientId = `${baseId}-chevron-fill`;
+	const baseId = createDomId('chevron');
+	const fillGradientId = `${baseId}-fill`;
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

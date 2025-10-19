@@ -10,7 +10,7 @@ import {
 import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
-import { useSafeId } from '../lib/dom';
+import { createDomId } from '../lib/dom';
 import { archGlassVars } from '@/styles/helpers/arch';
 import { archVars } from '@/styles/vars';
 import { shadowTotalY } from '../styles/helpers/shadow';
@@ -41,7 +41,7 @@ function Arch({
 	debugGlow = false,
 }: Props) {
 	const windowSize = useWindowSize().width;
-	const baseId = useSafeId();
+	const baseId = useMemo(() => createDomId('arch'), []);
 	const [
 		mounted,
 		setMounted,

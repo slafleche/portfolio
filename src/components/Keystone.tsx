@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { getImage } from '@/lib/images';
-import { useSafeId } from '../lib/dom';
+import { createDomId } from '../lib/dom';
 import * as styles from '@/styles/components/keystone.css';
 import { cardImageVars } from '@/styles/data/cardImageVars';
 import type { CSSProperties } from 'react';
@@ -28,7 +28,7 @@ export default function Keystone({
 	className,
 	imageStyle,
 }: KeystoneProps) {
-	const baseId = useSafeId();
+	const baseId = createDomId('keystone');
 	const filterId = `${baseId}-filter`;
 	const titleId = `${baseId}-title`;
 	const clipId = `${baseId}-clip`;
