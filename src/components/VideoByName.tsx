@@ -4,7 +4,6 @@ import * as React from 'react';
 import { getVideo, type VideoEntry } from '@/lib/videos';
 import { getImage } from '@/lib/images';
 import ImageByName from './ImageByName';
-import { useT } from '../lib/locales/useT';
 
 // Strong types for the dynamic import
 type HlsModule = typeof import('hls.js');
@@ -25,6 +24,8 @@ type Props = React.VideoHTMLAttributes<HTMLVideoElement> & {
 	visualItemClassName?: string;
 	backgroundClassName?: string; // gradient element
 	onReady?: (video: HTMLVideoElement, meta: VideoEntry) => void;
+	errorMessage: string;
+	fallbackLabel: string;
 };
 
 export default function VideoByName({
@@ -46,14 +47,14 @@ export default function VideoByName({
 	pauseWhenOffscreen = true,
 	playbackRate = 1,
 	onReady,
+	errorMessage,
+	fallbackLabel,
 	...videoProps
 }: Props) {
 	const data = getVideo(name);
 	const posterImage = data ? getImage(`video-${data.name}`) : null;
 	const ref = React.useRef<HTMLVideoElement | null>(null);
 	const ioRef = React.useRef<IntersectionObserver | null>(null);
-	const t = useT();
-
 	const [
 		shouldLoadVideo,
 		setShouldLoadVideo,
@@ -210,7 +211,7 @@ export default function VideoByName({
 				: '(max-width: 768px) 100vw, 50vw'
 			: undefined;
 
-	const {
+const {
 		onLoadedData: userOnLoadedData,
 		onPlay: userOnPlay,
 		...restVideoProps
@@ -226,7 +227,7 @@ export default function VideoByName({
 				? false
 				: (ariaHiddenRaw as boolean | undefined);
 	const placeholderAlt =
-		ariaHiddenValue === true ? '' : (label ?? title ?? t('hero-alt'));
+		ariaHiddenValue === true ? '' : (label ?? title ?? fallbackLabel);
 	const placeholderPassthrough = Object.fromEntries(
 		Object.entries(rawAttrs).filter(
 			([
@@ -351,7 +352,7 @@ export default function VideoByName({
 					}}
 					{...restVideoProps}
 				>
-					{t('error-video')}
+					{errorMessage}
 				</video>
 			</div>
 		</div>

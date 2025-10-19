@@ -96,6 +96,8 @@ export default async function HomePage({
 		headingFirstLine: t(HERO_KEYS.headingFirstLine),
 		headingLastLine: t(HERO_KEYS.headingLastLine),
 		subtitleHtml: html(HERO_KEYS.subtitle),
+		consoleDescription: t('hero-console_description'),
+		videoErrorMessage: t('error-video'),
 	};
 
 	const cards = CARD_CONFIGS.map((config) => ({

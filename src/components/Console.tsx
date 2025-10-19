@@ -3,7 +3,6 @@
 import clsx from 'clsx';
 import * as s from '@/styles/components/console.css';
 import type { ReactNode } from 'react';
-import { useT } from '../lib/locales/useT';
 import { useSafeId } from '../lib/dom';
 
 type ConsoleLine = {
@@ -15,6 +14,7 @@ type Props = {
 	className?: string;
 	title?: string;
 	lines?: ConsoleLine[];
+	description?: string;
 };
 
 const defaultLines: ConsoleLine[] = [
@@ -80,8 +80,8 @@ export default function Console({
 	className,
 	title = 'stéphane_portfolio.tsx',
 	lines = defaultLines,
+	description = 'Decorative code backdrop',
 }: Props) {
-	const t = useT();
 	const id = useSafeId();
 	const hintId = `${id}-hintId`;
 	const describedById = `${id}-describedById`;
@@ -102,7 +102,7 @@ export default function Console({
 			</div>
 
 			<p id={describedById} data-visible="sc-only">
-				{t('hero-console_description')}
+				{description}
 			</p>
 			<code className={s.body}>
 				{lines.map((line, idx) => (
