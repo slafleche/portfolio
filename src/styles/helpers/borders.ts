@@ -6,6 +6,12 @@ import type {
 	BorderRadiusInput,
 } from '../vars';
 import { toCssMeasurement, toCssColor } from './style';
+import type {
+	AxisValues,
+	CompassCorners,
+	CompassRegion,
+	CornerPosition,
+} from './types';
 
 /**
  * Public UX:
@@ -21,43 +27,18 @@ import { toCssMeasurement, toCssColor } from './style';
  * border.horizontal(overrides?)// (left+right)
  */
 
-type EdgeKey =
-	| 'all'
-	| 'vertical'
-	| 'horizontal'
-	| 'top'
-	| 'right'
-	| 'bottom'
-	| 'left';
-type CornerKey = 'nw' | 'ne' | 'se' | 'sw';
-type ZoneKey = 'north' | 'south' | 'east' | 'west';
-
 type EdgeSpec = boolean | IBorder;
 
-export interface BorderIntent {
-	all?: EdgeSpec;
-	vertical?: EdgeSpec;
-	horizontal?: EdgeSpec;
-	top?: EdgeSpec;
-	right?: EdgeSpec;
-	bottom?: EdgeSpec;
-	left?: EdgeSpec;
-	radius?: RadiusCompass | 0 | null; // 0/null → explicit no radius
-}
+type RadiusSpec = CompassCorners<BorderRadiusInput>;
 
-export type RadiusCompass = {
-	all?: BorderRadiusInput;
-	// zones (pairs of corners)
-	north?: BorderRadiusInput; // top-left + top-right
-	south?: BorderRadiusInput; // bottom-left + bottom-right
-	east?: BorderRadiusInput; // top-right + bottom-right
-	west?: BorderRadiusInput; // top-left + bottom-left
-	// individual corners
-	nw?: BorderRadiusInput;
-	ne?: BorderRadiusInput;
-	se?: BorderRadiusInput;
-	sw?: BorderRadiusInput;
-};
+const isRadiusCompass = (
+	value: BorderIntent['radius'],
+): value is RadiusSpec =>
+	typeof value === 'object' && value !== null;
+
+export interface BorderIntent extends AxisValues<EdgeSpec> {
+	radius?: RadiusSpec | 0 | null; // 0/null → explicit no radius
+}
 
 interface FinalBorderCSS {
 	// global shorthands when possible
@@ -150,7 +131,7 @@ const applyEdgeSpec = (
 			next._wExp = true;
 		}
 		if (spec.style !== undefined) {
-			next.style = spec.style as CSS.Property.BorderStyle;
+			next.style = spec.style;
 			next._sExp = true;
 		}
 		if (spec.color !== undefined) {
@@ -221,7 +202,7 @@ const resolveIntentToEdges = (intent: BorderIntent | undefined) => {
 
 type Corner = 'tl' | 'tr' | 'br' | 'bl';
 
-const cornersForZone: Record<ZoneKey, Corner[]> = {
+const cornersForZone: Record<CompassRegion, Corner[]> = {
 	north: [
 		'tl',
 		'tr',
@@ -240,12 +221,27 @@ const cornersForZone: Record<ZoneKey, Corner[]> = {
 	],
 };
 
+const cornerLookup: Record<CornerPosition, Corner> = {
+	nw: 'tl',
+	ne: 'tr',
+	se: 'br',
+	sw: 'bl',
+};
+
+
+const zoneKeys: CompassRegion[] = [
+	'north',
+	'south',
+	'east',
+	'west',
+];
+
 const resolveRadiusCompass = (
 	radius: BorderIntent['radius'],
 	edges: ReturnType<typeof resolveIntentToEdges>,
 ): string | undefined => {
 	if (radius === 0 || radius === null) return undefined; // explicit opt-out
-	const rc = radius ?? {}; // undefined → empty object (no radius unless explicit corner/zone)
+	const rc = isRadiusCompass(radius) ? radius : undefined;
 
 	// Build corner map from inputs with precedence: corners > zones > all
 	const cornerVals: Partial<Record<Corner, string>> = {};
@@ -255,7 +251,7 @@ const resolveRadiusCompass = (
 	};
 
 	// start from 'all'
-	const allR = asRadius((rc as RadiusCompass).all);
+	const allR = asRadius(rc?.all);
 	if (allR) {
 		cornerVals.tl = allR;
 		cornerVals.tr = allR;
@@ -264,24 +260,20 @@ const resolveRadiusCompass = (
 	}
 
 	// zones
-	(
-		[
-			'north',
-			'south',
-			'east',
-			'west',
-		] as ZoneKey[]
-	).forEach((zone) => {
-		const zVal = asRadius((rc as RadiusCompass)[zone]);
-		if (zVal)
-			cornersForZone[zone].forEach((c) => (cornerVals[c] = zVal));
+	zoneKeys.forEach((zone) => {
+		const zVal = asRadius(rc?.[zone]);
+		if (zVal) {
+			cornersForZone[zone].forEach((c) => {
+				cornerVals[c] = zVal;
+			});
+		}
 	});
 
 	// corners (highest precedence)
-	putIf('tl', (rc as RadiusCompass).nw);
-	putIf('tr', (rc as RadiusCompass).ne);
-	putIf('br', (rc as RadiusCompass).se);
-	putIf('bl', (rc as RadiusCompass).sw);
+	(Object.entries(cornerLookup) as [CornerPosition, Corner][])
+		.forEach(([pos, corner]) => {
+			putIf(corner, rc?.[pos]);
+		});
 
 	// If no values were provided, don't emit borderRadius at all by default
 	const anyProvided = Object.keys(cornerVals).length > 0;
@@ -289,16 +281,11 @@ const resolveRadiusCompass = (
 
 	// Relevance rule: emit a corner radius only if at least one adjacent edge is active,
 	// unless that corner was *explicitly* set via corner key (nw/ne/se/sw).
-	// We detect explicit corner set by checking presence in rc with those keys.
 	const explicitCorners = new Set<Corner>();
-	if ((rc as RadiusCompass).nw !== undefined)
-		explicitCorners.add('tl');
-	if ((rc as RadiusCompass).ne !== undefined)
-		explicitCorners.add('tr');
-	if ((rc as RadiusCompass).se !== undefined)
-		explicitCorners.add('br');
-	if ((rc as RadiusCompass).sw !== undefined)
-		explicitCorners.add('bl');
+	(Object.entries(cornerLookup) as [CornerPosition, Corner][])
+		.forEach(([pos, corner]) => {
+			if (rc?.[pos] !== undefined) explicitCorners.add(corner);
+		});
 
 	const { t, r, b, l } = edges;
 	const cornerHasAdjacent = (c: Corner) => {
