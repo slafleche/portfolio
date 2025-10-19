@@ -16,8 +16,8 @@ type MessagesMap = {
 export type Messages = MessagesMap[Locale];
 
 export const LOCALE_LABELS: Record<Locale, string> = {
-	en: 'English',
-	fr: 'Français',
+	en: 'EN',
+	fr: 'FR',
 };
 
 export const LOCALE_LOADERS = {
