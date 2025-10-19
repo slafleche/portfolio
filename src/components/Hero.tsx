@@ -1,4 +1,3 @@
-'use client';
 import clsx from 'clsx';
 import * as layoutStyles from '@/styles/layout.css';
 import * as s from '@/styles/components/hero.css';

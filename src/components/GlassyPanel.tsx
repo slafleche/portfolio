@@ -1,5 +1,3 @@
-'use client';
-
 import clsx from 'clsx';
 import type { PropsWithChildren } from 'react';
 import * as glassSurfaceStyles from '@/styles/glassy.css';

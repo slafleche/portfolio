@@ -1,4 +1,3 @@
-'use client';
 import * as s from '@/styles/components/photo.css';
 
 export default function Photo() {
