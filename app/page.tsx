@@ -1,24 +1,18 @@
 // This page is only to redirect from `/` to `/{locale}`
 import { headers } from 'next/headers';
+import type { ReadonlyHeaders } from 'next/dist/server/web/spec-extension/adapters/headers';
+import { redirect } from 'next/navigation';
 import {
 	DEFAULT_LOCALE,
 	pickLocaleFromAcceptLanguage,
-	getTranslator,
 } from '@/lib/locales/locale';
-import LocaleAutoRedirect from '@/components/LocaleAutoRedirect';
 import type { Locale } from '@/data/locales';
 
-export default async function RootPage() {
-	const accept = (await headers()).get('accept-language');
-	const fallback: Locale =
+export default function RootPage() {
+	const headerList: ReadonlyHeaders = headers();
+	const accept = headerList.get('accept-language');
+	const target: Locale =
 		pickLocaleFromAcceptLanguage(accept) ?? DEFAULT_LOCALE;
 
-	const t = await getTranslator(fallback);
-
-	return (
-		<>
-			<LocaleAutoRedirect fallback={fallback} />
-			<p>{t('redirecting')}</p>
-		</>
-	);
+	redirect(`/${target}`);
 }
