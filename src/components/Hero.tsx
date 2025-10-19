@@ -5,6 +5,7 @@ import * as s from '@/styles/components/hero.css';
 import GlassyPanel from './GlassyPanel';
 import VideoByName from './VideoByName';
 import Console from './Console';
+import { createDomId } from '@/lib/dom';
 
 type HeroCopy = {
 	videoTitle: string;
@@ -21,6 +22,7 @@ type Props = {
 	copy: HeroCopy;
 };
 export default function Hero({ className, copy }: Props) {
+	const consoleId = createDomId('console');
 	return (
 		<section className={clsx(s.root, className)}>
 			<VideoByName
@@ -57,6 +59,7 @@ export default function Hero({ className, copy }: Props) {
 							<Console
 								className={s.console}
 								description={copy.consoleDescription}
+								idBase={consoleId}
 							/>
 						</div>
 					<GlassyPanel
