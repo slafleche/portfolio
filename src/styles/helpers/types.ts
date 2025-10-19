@@ -7,6 +7,21 @@ export type CssLike = {
 	css: () => string;
 };
 
+export type Axis = 'top' | 'right' | 'bottom' | 'left';
+
+export type AxisValues<T> = {
+	all?: T;
+	horizontal?: T;
+	vertical?: T;
+} & Partial<Record<Axis, T>>;
+
+export type CompassRegion = 'north' | 'south' | 'east' | 'west';
+export type CornerPosition = 'nw' | 'ne' | 'se' | 'sw';
+
+export type CompassCorners<T> = Partial<
+	Record<'all' | CompassRegion | CornerPosition, T>
+>;
+
 export type MeasurementLike =
 	| { value: number; unit?: string }
 	| CssLike

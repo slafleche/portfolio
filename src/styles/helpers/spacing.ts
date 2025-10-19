@@ -1,17 +1,9 @@
 import { toCssMeasurement } from './style';
-import type { MeasurementLike } from './types';
+import type { AxisValues, MeasurementLike } from './types';
 
 type SpacingValue = MeasurementLike | number | null | undefined;
 
-export interface SpacingProps {
-	all?: SpacingValue;
-	horizontal?: SpacingValue;
-	vertical?: SpacingValue;
-	top?: SpacingValue;
-	right?: SpacingValue;
-	bottom?: SpacingValue;
-	left?: SpacingValue;
-}
+export type SpacingProps = AxisValues<SpacingValue>;
 
 const resolve = (value: SpacingValue, fallback: string): string =>
 	toCssMeasurement(value) ?? fallback;
