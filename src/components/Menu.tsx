@@ -501,26 +501,35 @@ export default function Menu({
 
 	// Track active section for hash updates & highlighting
 	useEffect(() => {
-		const sections = derivedSectionIds
+		const sectionEls = derivedSectionIds
 			.map((id) => document.getElementById(id))
 			.filter((el): el is HTMLElement => Boolean(el));
 
-		if (!sections.length) {
+		if (!sectionEls.length) {
 			setActiveSection(null);
 			return;
 		}
 
-		let rafId = 0;
+		const entryMap = new Map<Element, IntersectionObserverEntry>();
 
-		const updateActiveSection = () => {
+		const selectSection = (nextId: string | null) => {
+			setActiveSection((prev) => (prev === nextId ? prev : nextId));
+		};
+
+		const updateFromEntries = () => {
+			const entries = Array.from(entryMap.values());
+			if (!entries.length) return;
+
 			const viewportAnchor = window.innerHeight * 0.4;
-			let nextId = sections[0]?.id ?? null;
+			let candidate: string | null = sectionEls[0]?.id ?? null;
 
-			for (const section of sections) {
-				const { top, bottom } = section.getBoundingClientRect();
-				if (bottom < 0) continue;
-				if (top <= viewportAnchor) {
-					nextId = section.id;
+			for (const section of sectionEls) {
+				const entry = entryMap.get(section);
+				if (!entry) continue;
+				const { boundingClientRect } = entry;
+				if (boundingClientRect.bottom < 0) continue;
+				if (boundingClientRect.top <= viewportAnchor) {
+					candidate = section.id;
 				} else {
 					break;
 				}
@@ -529,31 +538,36 @@ export default function Menu({
 			const nearBottom =
 				window.innerHeight + window.scrollY >=
 				document.body.scrollHeight - 2;
-			if (nearBottom && sections.length) {
-				nextId = sections[sections.length - 1].id;
+			if (nearBottom) {
+				candidate = sectionEls[sectionEls.length - 1]?.id ?? candidate;
 			}
 
-			setActiveSection((prev) => (prev === nextId ? prev : nextId));
+			selectSection(candidate);
 		};
 
-		const requestUpdate = () => {
-			if (rafId) return;
-			rafId = requestAnimationFrame(() => {
-				rafId = 0;
-				updateActiveSection();
-			});
-		};
+		const observer = new IntersectionObserver(
+			(entries) => {
+				let changed = false;
+				for (const entry of entries) {
+					entryMap.set(entry.target, entry);
+					changed = true;
+				}
+				if (!changed) return;
+				updateFromEntries();
+			},
+			{
+				root: null,
+				rootMargin: '0px 0px -60% 0px',
+				threshold: [0, 0.4, 1],
+			},
+		);
 
-		updateActiveSection();
-		window.addEventListener('scroll', requestUpdate, {
-			passive: true,
-		});
-		window.addEventListener('resize', requestUpdate);
+		sectionEls.forEach((el) => observer.observe(el));
+		updateFromEntries();
 
 		return () => {
-			if (rafId) cancelAnimationFrame(rafId);
-			window.removeEventListener('scroll', requestUpdate);
-			window.removeEventListener('resize', requestUpdate);
+			observer.disconnect();
+			entryMap.clear();
 		};
 	}, [
 		derivedSectionIds,
