@@ -1,7 +1,6 @@
 'use client';
 import clsx from 'clsx';
 import * as s from '@/styles/components/skipToContent.css';
-import { useT } from '@/lib/locales/useT';
 import Link from 'next/link';
 import { useCallback } from 'react';
 import type { MouseEventHandler } from 'react';
@@ -10,13 +9,14 @@ import ChevronDown from './ChevronDown';
 type Props = {
 	className?: string;
 	href?: string;
+	label: string;
 };
 
 export default function SkipToContent({
 	className,
 	href = '#body',
+	label,
 }: Props) {
-	const t = useT();
 	const handleClick = useCallback<
 		MouseEventHandler<HTMLAnchorElement>
 	>(
@@ -59,7 +59,7 @@ export default function SkipToContent({
 			<Link
 				href={href}
 				onClick={handleClick}
-				aria-label={t('scroll-cue')}
+				aria-label={label}
 				className={clsx(className, s.link)}
 				data-ui="link"
 			>

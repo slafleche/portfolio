@@ -13,6 +13,8 @@ type HeroCopy = {
 	headingFirstLine: string;
 	headingLastLine: string;
 	subtitleHtml: string;
+	consoleDescription: string;
+	videoErrorMessage: string;
 };
 
 type Props = {
@@ -37,6 +39,8 @@ export default function Hero({ className, copy }: Props) {
 				playsInline
 				aria-hidden
 				role="presentation"
+				errorMessage={copy.videoErrorMessage}
+				fallbackLabel={copy.videoLabel}
 			/>
 
 			{/* Banding-fix overlays (over video, under content) */}
@@ -49,10 +53,13 @@ export default function Hero({ className, copy }: Props) {
 
 			{/* <div className={clsx(layoutStyles.content, s.content)}> */}
 			<div className={clsx(layoutStyles.panel, s.panel)}>
-				<div className={s.vennContainer}>
-					<div className={s.consolePanel}>
-						<Console className={s.console} />
-					</div>
+					<div className={s.vennContainer}>
+						<div className={s.consolePanel}>
+							<Console
+								className={s.console}
+								description={copy.consoleDescription}
+							/>
+						</div>
 					<GlassyPanel
 						className={clsx(s.designPanel)}
 						surfaceClassName={s.heroSurface}

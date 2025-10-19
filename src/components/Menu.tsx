@@ -3,9 +3,7 @@
 import Link from 'next/link';
 import { SkipNavLink } from '@reach/skip-nav';
 import * as s from '@/styles/components/menu.css';
-import { useT } from '@/lib/locales/useT';
-import { useLocale, useLocaleMessages } from '@/lib/locales/localeContext';
-import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
+import type { Locale } from '@/data/locales';
 import { menuVars } from '@/styles/vars';
 import transforms from '@/styles/helpers/transforms';
 import clsx from 'clsx';
@@ -28,6 +26,13 @@ import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
 
 type MenuProps = {
+	root: string;
+	skipNavLabel: string;
+	leftLabel: string;
+	rightLabel: string;
+	localeChangeLabel: string;
+	sections: ReadonlyArray<{ id: string; label: string }>;
+	localeLinks: ReadonlyArray<{ locale: Locale; label: string }>;
 	bokehDebug?: MiniBokehDebugOptions;
 	debugGlow?: boolean;
 };
@@ -36,21 +41,17 @@ const LOGO_GLOW_TOP_THRESHOLD = 3;
 const LOGO_GLOW_DURATION = 500;
 const LOGO_GLOW_HOLD_DELAY = 100;
 
-const LOCALE_ABBREVIATIONS: Record<Locale, string> = {
-	en: 'EN',
-	fr: 'FR',
-};
-
 export default function Menu({
+	root,
+	skipNavLabel,
+	leftLabel,
+	rightLabel,
+	localeChangeLabel,
+	sections,
+	localeLinks,
 	bokehDebug,
 	debugGlow = false,
-}: MenuProps = {}) {
-	const t = useT();
-	const { locale, root } = useLocale({
-		withLabel: true,
-	});
-	const messages = useLocaleMessages();
-
+}: MenuProps) {
 	const [
 		mounted,
 		setMounted,
@@ -72,7 +73,9 @@ export default function Menu({
 	const logoGlowClickSuppressRef = useRef(false);
 	// no pending animation once we leave the top; we only fire when already there
 
-	const { anchors, anchorCount, sectionIds } = useMenuAnchors(messages);
+	const sectionIds = sections.map((section) => section.id);
+	const { anchors, anchorCount, sectionIds: derivedSectionIds } =
+		useMenuAnchors(sectionIds);
 
 	const debugActive = Boolean(bokehDebug);
 	const baseFontsReady = false;
@@ -419,7 +422,7 @@ export default function Menu({
 
 	// Track active section for hash updates & highlighting
 	useEffect(() => {
-		const sections = sectionIds
+		const sections = derivedSectionIds
 			.map((id) => document.getElementById(id))
 			.filter((el): el is HTMLElement => Boolean(el));
 
@@ -452,7 +455,6 @@ export default function Menu({
 			}
 
 			setActiveSection((prev) => (prev === nextId ? prev : nextId));
-			// previously tracked isAtTop to disable logo — removed
 		};
 
 		const requestUpdate = () => {
@@ -475,10 +477,10 @@ export default function Menu({
 			window.removeEventListener('resize', requestUpdate);
 		};
 	}, [
-		sectionIds,
+		derivedSectionIds,
 	]);
 
-	const firstSectionId = sectionIds[0] ?? null;
+	const firstSectionId = derivedSectionIds[0] ?? null;
 
 	// Keep URL hash synced with active section
 	useEffect(() => {
@@ -508,18 +510,20 @@ export default function Menu({
 		firstSectionId,
 	]);
 
-	const renderNavLink = (
-		entry: AnchorEntry,
-		index: number,
-		side: 'left' | 'right',
-		isOuter: boolean,
-		classes?: {
-			item?: string;
-			index?: string;
-		},
-	) => {
-		const id = t(entry.hrefKey);
-		const isActive = activeSection === id;
+const renderNavLink = (
+	entry: AnchorEntry,
+	section: { id: string; label: string } | undefined,
+	index: number,
+	side: 'left' | 'right',
+	isOuter: boolean,
+	classes?: {
+		item?: string;
+		index?: string;
+	},
+) => {
+	if (!section) return null;
+	const { id, label } = section;
+	const isActive = activeSection === id;
 		const skew = isOuter ? menuVars.skew : menuVars.skew.half();
 		return (
 			<li
@@ -555,9 +559,9 @@ export default function Menu({
 					data-ui="link"
 				>
 					<span className={s.fakeShadow} aria-hidden={true}>
-						{t(entry.labelKey)}
+						{label}
 					</span>
-					<span className={s.text}>{t(entry.labelKey)}</span>
+					<span className={s.text}>{label}</span>
 				</Link>
 			</li>
 		);
@@ -566,9 +570,9 @@ export default function Menu({
 	return (
 		<>
 			<div className={s.root} data-mounted={mounted}>
-				<SkipNavLink contentId="body" className={skipNavStyles.link}>
-					{t('menu-skip_nav')}
-				</SkipNavLink>
+		<SkipNavLink contentId="body" className={skipNavStyles.link}>
+			{skipNavLabel}
+		</SkipNavLink>
 				<Arch
 					ready={mounted}
 					glow={logoGlowState === 'idle' ? null : logoGlowState}
@@ -650,59 +654,62 @@ export default function Menu({
 								</Link>
 							</div>
 
-							<ul
-								className={clsx(s.list, s.transitionAfterFonts)}
-								aria-label={t('menu-left_label')}
-								data-side="left"
-								style={getRotationStyle('left', navMetrics.width)}
-							>
-								{anchors.slice(0, 2).map((entry, idx) =>
-									renderNavLink(entry, idx + 1, 'left', idx === 0, {
-										item: s.item,
-										index: idx === 0 ? s.item_1 : s.item_2,
-									}),
-								)}
-							</ul>
+			<ul
+				className={clsx(s.list, s.transitionAfterFonts)}
+				aria-label={leftLabel}
+				data-side="left"
+				style={getRotationStyle('left', navMetrics.width)}
+			>
+				{anchors.slice(0, 2).map((entry, idx) =>
+					renderNavLink(entry, sections[idx], idx + 1, 'left', idx === 0, {
+						item: s.item,
+						index: idx === 0 ? s.item_1 : s.item_2,
+					}),
+				)}
+			</ul>
 
-							<ul
-								className={clsx(s.list, s.transitionAfterFonts)}
-								aria-label={t('menu-right_label')}
-								data-side="right"
-								style={getRotationStyle('right', navMetrics.width)}
-							>
-								{anchors.slice(2).map((entry, idx) =>
-									renderNavLink(entry, idx + 3, 'right', idx === 1, {
-										item: s.item,
-										index: idx === 0 ? s.item_3 : s.item_4,
-									}),
-								)}
-							</ul>
+			<ul
+				className={clsx(s.list, s.transitionAfterFonts)}
+				aria-label={rightLabel}
+				data-side="right"
+				style={getRotationStyle('right', navMetrics.width)}
+			>
+				{anchors.slice(2).map((entry, idx) =>
+					renderNavLink(
+						entry,
+						sections[idx + 2],
+						idx + 3,
+						'right',
+						idx === 1,
+						{
+						item: s.item,
+						index: idx === 0 ? s.item_3 : s.item_4,
+					},
+					),
+				)}
+			</ul>
 						</div>
 					</nav>
 
-					<nav
-						className={clsx(s.localeChanger, s.transitionAfterFonts)}
-						aria-label={t('localeChange')}
+			<nav
+				className={clsx(s.localeChanger, s.transitionAfterFonts)}
+				aria-label={localeChangeLabel}
+			>
+				{localeLinks.map((link) => (
+					<Link
+						key={link.locale}
+						href={`/${link.locale}`}
+						className={clsx(s.link, s.localeLink)}
+						hrefLang={link.locale}
+						data-ui="link"
 					>
-		{AVAILABLE_LOCALES.filter((l) => l !== locale).map(
-			(l) => (
-				<Link
-					key={l}
-					href={`/${l}`}
-					className={clsx(s.link, s.localeLink)}
-					hrefLang={l}
-					data-ui="link"
-				>
-					<span className={s.fakeShadow} aria-hidden={true}>
-						{LOCALE_ABBREVIATIONS[l]}
-					</span>
-					<span className={s.text}>
-						{LOCALE_ABBREVIATIONS[l]}
-					</span>
-				</Link>
-			),
-		)}
-					</nav>
+						<span className={s.fakeShadow} aria-hidden={true}>
+							{link.label}
+						</span>
+						<span className={s.text}>{link.label}</span>
+					</Link>
+				))}
+			</nav>
 				</Arch>
 			</div>
 		</>
