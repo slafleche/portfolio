@@ -6,7 +6,7 @@ export interface IMeasurement {
 	css: () => string;
 	getUnit: () => string;
 	isUnit: (unit: string) => boolean;
-assertUnit: (unit: string, context?: string) => void;
+	assertUnit: (unit: string, context?: string) => void;
 	assert: (predicate: (measurement: IMeasurement) => boolean, message: string) => void;
 	toPercentDecimal: () => number;
 	add: (
@@ -35,6 +35,10 @@ assertUnit: (unit: string, context?: string) => void;
 	half: () => IMeasurement;
 	negation: (shouldNegate?: boolean) => IMeasurement;
 	absolute: () => IMeasurement;
+	round: (precision?: number) => IMeasurement;
+	floor: () => IMeasurement;
+	ceil: () => IMeasurement;
+	clamp: (min: IMeasurement, max: IMeasurement) => IMeasurement;
 }
 
 const assertMatchingUnits = (
@@ -166,6 +170,14 @@ const createMeasurement = (
 		negation: (shouldNegate = true) =>
 			shouldNegate ? createMeasurement(-value, unit) : measurement,
 		absolute: () => createMeasurement(Math.abs(value), unit),
+		round: (precision = 0) =>
+			createMeasurement(
+				Number(value.toFixed(precision)),
+				unit,
+			),
+		floor: () => createMeasurement(Math.floor(value), unit),
+		ceil: () => createMeasurement(Math.ceil(value), unit),
+		clamp: (min, max) => measurementMin(measurementMax(measurement, min), max),
 	};
 	return measurement;
 };
