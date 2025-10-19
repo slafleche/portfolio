@@ -45,6 +45,7 @@ src/data/*
 !src/data/.gitkeep
 public/images/*
 /src/data/generated/*
+src/lib/locales/generated/
 
 
 # -----------------------

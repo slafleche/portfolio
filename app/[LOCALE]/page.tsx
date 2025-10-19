@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { Fragment } from 'react';
 import { SkipNavContent } from '@reach/skip-nav';
-import ReactMarkdown from 'react-markdown';
 import {
 	resolveLocale,
 	DEFAULT_LOCALE,
@@ -14,6 +13,8 @@ import Card from '@/components/Card';
 import Hero from '@/components/Hero';
 import Keystone from '@/components/Keystone';
 import type { Messages } from '@/data/locales';
+import { getHtmlMessage } from '@/lib/locales/html';
+
 type MessageKey = keyof Messages;
 
 const HERO_KEYS = {
@@ -26,20 +27,16 @@ const HERO_KEYS = {
 
 const CARD_CONFIGS = [
 	{
-		type: 'left',
+		type: 'left' as const,
 		titleKey: 'split-dev_title',
 		contentKey: 'split-dev_content',
 	},
 	{
-		type: 'right',
+		type: 'right' as const,
 		titleKey: 'split-design_title',
 		contentKey: 'split-design_content',
 	},
-] as const satisfies readonly {
-	type: 'left' | 'right';
-	titleKey: MessageKey;
-	contentKey: MessageKey;
-}[];
+];
 
 const SECTION_CONFIGS = [
 	{
@@ -58,10 +55,7 @@ const SECTION_CONFIGS = [
 		idKey: 'projects-href',
 		contentKey: 'projects-content',
 	},
-] as const satisfies readonly {
-	idKey: MessageKey;
-	contentKey: MessageKey;
-}[];
+];
 
 const KEYSTONE_KEYS = {
 	name: 'portrait',
@@ -89,54 +83,77 @@ export default async function HomePage({
 		locale === DEFAULT_LOCALE
 			? messages
 			: await loadMessages(DEFAULT_LOCALE);
+
 	const t = <K extends MessageKey>(key: K): string =>
 		messages[key] ?? fallbackMessages[key] ?? key;
 
-	const heroCopy = {
+	const html = <K extends MessageKey>(key: K): string =>
+		getHtmlMessage(locale, key as string, t(key));
+
+	const hero = {
 		videoTitle: t(HERO_KEYS.videoTitle),
 		videoLabel: t(HERO_KEYS.videoLabel),
 		headingFirstLine: t(HERO_KEYS.headingFirstLine),
 		headingLastLine: t(HERO_KEYS.headingLastLine),
-		subtitle: t(HERO_KEYS.subtitle),
+		subtitleHtml: html(HERO_KEYS.subtitle),
+	};
+
+	const cards = CARD_CONFIGS.map((config) => ({
+		type: config.type,
+		title: t(config.titleKey),
+		html: html(config.contentKey),
+	}));
+
+	const sections = SECTION_CONFIGS.map((config) => ({
+		id: t(config.idKey),
+		html: html(config.contentKey),
+	}));
+
+	const keystone = {
+		name: KEYSTONE_KEYS.name,
+		title: t(KEYSTONE_KEYS.titleKey),
+		alt: t(KEYSTONE_KEYS.altKey),
 	};
 
 	return (
 		<>
 			<SkipNavContent id="body">
-				<Hero copy={heroCopy} />
+				<Hero copy={hero} />
 				<div id="body">
 					<section
 						className={clsx(card.container, layoutStyles.content)}
 					>
-						{CARD_CONFIGS.map((item, index) => (
-							<Fragment key={item.titleKey}>
-								<Card title={t(item.titleKey)} type={item.type}>
-									<ReactMarkdown>{t(item.contentKey)}</ReactMarkdown>
+						{cards.map((item, index) => (
+							<Fragment key={`${item.type}-${index}`}>
+								<Card title={item.title} type={item.type}>
+									<div
+										dangerouslySetInnerHTML={{
+											__html: item.html,
+										}}
+									/>
 								</Card>
 								{index === 0 ? (
 									<Keystone
-										name={KEYSTONE_KEYS.name}
+										name={keystone.name}
 										className={card.image}
-										title={t(KEYSTONE_KEYS.titleKey)}
-										alt={t(KEYSTONE_KEYS.altKey)}
+										title={keystone.title}
+										alt={keystone.alt}
 									/>
 								) : null}
 							</Fragment>
 						))}
 					</section>
 
-					{SECTION_CONFIGS.map((section) => {
-						const id = t(section.idKey);
-						return (
-							<section key={section.idKey} id={id}>
-								<div className={s.userContent}>
-									<ReactMarkdown>
-										{t(section.contentKey)}
-									</ReactMarkdown>
-								</div>
-							</section>
-						);
-					})}
+					{sections.map((section) => (
+						<section key={section.id} id={section.id}>
+							<div
+								className={s.userContent}
+								dangerouslySetInnerHTML={{
+									__html: section.html,
+								}}
+							/>
+						</section>
+					))}
 				</div>
 			</SkipNavContent>
 		</>

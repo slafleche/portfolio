@@ -1,7 +1,5 @@
 'use client';
 import clsx from 'clsx';
-import ReactMarkdown from 'react-markdown';
-import type { Components } from 'react-markdown';
 import * as layoutStyles from '@/styles/layout.css';
 import * as s from '@/styles/components/hero.css';
 // import SkipToContent from './SkipToContent';
@@ -14,18 +12,13 @@ type HeroCopy = {
 	videoLabel: string;
 	headingFirstLine: string;
 	headingLastLine: string;
-	subtitle: string;
+	subtitleHtml: string;
 };
 
 type Props = {
 	className?: string;
 	copy: HeroCopy;
 };
-
-const inlineMarkdownComponents: Components = {
-	p: ({ children }) => <>{children}</>,
-};
-
 export default function Hero({ className, copy }: Props) {
 	return (
 		<section className={clsx(s.root, className)}>
@@ -83,11 +76,10 @@ export default function Hero({ className, copy }: Props) {
 									{copy.headingLastLine}
 								</span>
 							</h1>
-							<p className={s.paragraph}>
-								<ReactMarkdown components={inlineMarkdownComponents}>
-									{copy.subtitle}
-								</ReactMarkdown>
-							</p>
+					<div
+						className={s.paragraph}
+						dangerouslySetInnerHTML={{ __html: copy.subtitleHtml }}
+					/>
 						</div>
 					</GlassyPanel>
 				</div>

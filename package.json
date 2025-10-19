@@ -13,9 +13,7 @@
 		"normalize.css": "^8.0.1",
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
-		"react-markdown": "^10.1.0",
-		"react-router-dom": "^7.9.4",
-		"remark-gfm": "^4.0.1"
+		"react-router-dom": "^7.9.4"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.37.0",
@@ -43,6 +41,7 @@
 		"execa": "^9.6.0",
 		"ffmpeg-static": "^5.2.0",
 		"ffprobe-static": "^3.1.0",
+		"marked": "^15.0.11",
 		"open-cli": "^8.0.0",
 		"postcss": "^8.5.6",
 		"postcss-cli": "^11.0.1",
@@ -66,11 +65,12 @@
 	},
 	"packageManager": "yarn@4.9.4",
 	"scripts": {
+		"copy:html": "tsx scripts/generateCopyHtml.ts",
 		"fonts:chars": "tsx scripts/generateFontTexts.ts",
 		"fonts:urls": "tsx scripts/generateFontUrls.ts",
 		"fonts": "yarn fonts:chars && yarn fonts:urls",
 		"dev": "DEBUG_VE=1 next dev",
-		"prebuild": "MINIFY=1 yarn fonts",
+		"prebuild": "yarn copy:html && MINIFY=1 yarn fonts",
 		"build": "next build",
 		"start": "next start",
 		"lint": "eslint .",
