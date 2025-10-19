@@ -24,7 +24,6 @@ import {
 } from './menu/hooks/useLogoAnimation';
 import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
-import { createDomId } from '@/lib/dom';
 
 type MenuProps = {
 	root: string;
@@ -53,7 +52,7 @@ export default function Menu({
 	bokehDebug,
 	debugGlow = false,
 }: MenuProps) {
-	const logoId = createDomId('logo');
+	const logoId = 'menu-logo';
 	const [
 		mounted,
 		setMounted,
@@ -413,6 +412,8 @@ export default function Menu({
 			if (typeof window === 'undefined') return;
 			if (logoGlowClickSuppressRef.current) {
 				logoGlowClickSuppressRef.current = false;
+				event.preventDefault();
+				event.stopPropagation();
 				return;
 			}
 			const { pathname: currentPath, search, hash } = window.location;

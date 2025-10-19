@@ -1,7 +1,6 @@
 // app/layout.tsx
 import type { ReactNode } from 'react';
 import { headers } from 'next/headers';
-import type { ReadonlyHeaders } from 'next/dist/server/web/spec-extension/adapters/headers';
 import { resolveLocale } from '@/lib/locales/locale';
 import '@/styles/globals.css';
 import Script from 'next/script';
@@ -12,10 +11,10 @@ interface RootLayoutProps {
 	children: ReactNode;
 }
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: RootLayoutProps) {
-	const headerList: ReadonlyHeaders = headers();
+	const headerList = await headers();
 	const requestedLocale = headerList.get('x-locale') ?? undefined;
 	const lang = resolveLocale(requestedLocale);
 	const fontUrls = GOOGLE_FONT_URLS_BY_LOCALE[lang] ?? [];
