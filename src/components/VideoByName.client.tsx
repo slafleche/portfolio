@@ -52,6 +52,7 @@ export default function VideoByNameClient({
 }: ClientProps) {
 	const ref = React.useRef<HTMLVideoElement | null>(null);
 	const ioRef = React.useRef<IntersectionObserver | null>(null);
+	const containerRef = React.useRef<HTMLDivElement | null>(null);
 	const [
 		shouldLoadVideo,
 		setShouldLoadVideo,
@@ -73,6 +74,12 @@ export default function VideoByNameClient({
 	]);
 
 	React.useEffect(() => {
+		if (priority) {
+			setShouldLoadVideo(true);
+		}
+	}, [priority]);
+
+	React.useEffect(() => {
 		if (!shouldLoadVideo) {
 			setVideoReady(false);
 		}
@@ -82,19 +89,37 @@ export default function VideoByNameClient({
 
 	React.useEffect(() => {
 		if (priority) return;
+		if (shouldLoadVideo) return;
 		if (typeof window === 'undefined') return;
+		const target = containerRef.current;
+		if (!target) return;
 
-		const enable = () => setShouldLoadVideo(true);
-
-		if (document.readyState === 'complete') {
-			enable();
-			return;
-		}
-
-		window.addEventListener('load', enable, { once: true });
-		return () => window.removeEventListener('load', enable);
+		let cancelled = false;
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (cancelled) return;
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						setShouldLoadVideo(true);
+						observer.disconnect();
+						return;
+					}
+				}
+			},
+			{
+				root: null,
+				rootMargin: '0px 0px 200px 0px',
+				threshold: 0.01,
+			},
+		);
+		observer.observe(target);
+		return () => {
+			cancelled = true;
+			observer.disconnect();
+		};
 	}, [
 		priority,
+		shouldLoadVideo,
 	]);
 
 	React.useEffect(() => {
@@ -286,6 +311,7 @@ export default function VideoByNameClient({
 
 	return (
 		<div
+			ref={containerRef}
 			className={className}
 			style={containerStyle}
 			{...placeholderPassthrough}

@@ -48,13 +48,26 @@ export default function VideoByName({
 	}
 
 	const posterImage = buildPosterPayload(getImage(`video-${video.name}`));
+	let preconnectHref: string | null = null;
+	if (typeof video.masterUrl === 'string' && video.masterUrl.startsWith('http')) {
+		try {
+			preconnectHref = new URL(video.masterUrl).origin;
+		} catch {
+			preconnectHref = null;
+		}
+	}
 
 	return (
-		<VideoByNameClient
-			video={video}
-			videoName={name}
-			posterImage={posterImage}
-			{...rest}
-		/>
+		<>
+			{preconnectHref ? (
+				<link rel="preconnect" href={preconnectHref} crossOrigin="anonymous" />
+			) : null}
+			<VideoByNameClient
+				video={video}
+				videoName={name}
+				posterImage={posterImage}
+				{...rest}
+			/>
+		</>
 	);
 }
