@@ -36,18 +36,25 @@ export default async function LocaleSegmentLayout({
 		rightLabel: messages['menu-right_label'],
 		localeChangeLabel: messages['localeChange'],
 		sections: menuSections,
-		localeLinks: AVAILABLE_LOCALES.filter((code) => code !== locale).map(
-			(code) => ({
-				locale: code,
-				label: LOCALE_LABELS[code],
-			}),
-		),
+		localeLinks: AVAILABLE_LOCALES.filter(
+			(code) => code !== locale,
+		).map((code) => ({
+			locale: code,
+			label: LOCALE_LABELS[code],
+		})),
 	};
 
 	return (
 		<WindowSizeProvider>
 			<ResponsiveProvider>
-				<Menu {...menuProps} />
+				<Menu
+					{...menuProps}
+					// bokehDebug={{
+					// 	showArchPath: true,
+					// 	disableTimeout: true,
+					// 	raiseLayer: true,
+					// }}
+				/>
 				{children}
 			</ResponsiveProvider>
 		</WindowSizeProvider>
