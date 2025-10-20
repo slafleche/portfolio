@@ -8,6 +8,10 @@ import type { Messages } from '@/data/locales';
 type MessageKey = keyof Messages;
 
 export type Translator = ((key: MessageKey) => string) & {
+	/**
+	 * Access the untranslated value for structured data (arrays/objects).
+	 * Returns the fallback locale value when the primary locale is missing.
+	 */
 	raw: <K extends MessageKey>(key: K) => Messages[K] | undefined;
 };
 
