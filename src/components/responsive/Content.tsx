@@ -1,22 +1,33 @@
 'use client';
-import type { ReactNode } from 'react';
+import type {
+	ComponentPropsWithoutRef,
+	ElementType,
+	ReactNode,
+} from 'react';
 
 import clsx from 'clsx';
 import * as s from '@/styles/layout.css';
+import Heading from '../Heading';
 
-type Props = {
-	id?: string;
+type ContentProps<T extends ElementType> = {
+	as?: T;
+	title?: ReactNode;
 	className?: string;
 	children?: ReactNode;
-	tag?: string;
-};
+} & Omit<ComponentPropsWithoutRef<T>, 'className' | 'children'>;
 
-export default function Content({
-	id,
+export default function Content<T extends ElementType = 'section'>({
+	as,
+	title,
 	className,
-	tag = 'section',
 	children,
-}: Props) {
-	const Tag = `${tag ?? 'section'}` as 'div';
-	return <Tag className={clsx(s.content, className)}>{children}</Tag>;
+	...rest
+}: ContentProps<T>) {
+	const Component: ElementType = as ?? 'section';
+	return (
+		<Component className={clsx(s.content, className)} {...rest}>
+			{title ? <Heading className={s.title}>{title}</Heading> : null}
+			{children}
+		</Component>
+	);
 }

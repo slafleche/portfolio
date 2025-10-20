@@ -17,6 +17,7 @@ export const en = {
 	'hero-title_b': 'and development',
 	'hero-subtitle': 'A developer with a designer’s __eye__',
 	'hero-console_description': 'Decorative code backdrop',
+	'hero-cta': 'Let\'s connect!',
 
 	// 'image_portrait-title': 'Portrait of Stéphane L.',
 	// 'image_portrait-alt':

@@ -25,6 +25,8 @@ export const content = style({
 	}),
 });
 
+export const title = style({});
+
 export const panel = style({
 	display: 'flex',
 	flexDirection: 'column',
