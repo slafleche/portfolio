@@ -18,7 +18,19 @@ type ProjectEntry = {
 	content?: string;
 };
 
-export const buildProjectsCopy = (t: Translator) => {
+export type ProjectListItem = {
+	id: string;
+	title: string;
+	content: string;
+};
+
+export type ProjectsCopy = {
+	title: string;
+	href: string;
+	list: ProjectListItem[];
+};
+
+export const buildProjectsCopy = (t: Translator): ProjectsCopy => {
 	const rawList = t.raw(PROJECTS_KEYS.list);
 	if (!rawList || typeof rawList !== 'object' || Array.isArray(rawList)) {
 		throw new Error(
@@ -27,7 +39,7 @@ export const buildProjectsCopy = (t: Translator) => {
 	}
 
 	const entries = rawList as Record<string, ProjectEntry | undefined>;
-	const list = Object.entries(entries).map(([key, value]) => {
+	const list: ProjectListItem[] = Object.entries(entries).map(([key, value]) => {
 		if (!value || typeof value.title !== 'string' || typeof value.content !== 'string') {
 			throw new Error(
 				`Invalid entry in "${PROJECTS_KEYS.list}" for key "${key}".`,

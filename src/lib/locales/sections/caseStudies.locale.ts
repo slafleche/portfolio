@@ -19,7 +19,19 @@ type CaseStudyEntry = {
 	content?: string;
 };
 
-export const buildCaseStudiesCopy = (t: Translator) => {
+export type CaseStudyListItem = {
+	title: string;
+	subTitle?: string;
+	content: string;
+};
+
+export type CaseStudiesCopy = {
+	title: string;
+	href: string;
+	list: CaseStudyListItem[];
+};
+
+export const buildCaseStudiesCopy = (t: Translator): CaseStudiesCopy => {
 	const rawList = t.raw(CASE_STUDY_KEYS.list);
 	if (!Array.isArray(rawList)) {
 		throw new Error(
@@ -27,7 +39,7 @@ export const buildCaseStudiesCopy = (t: Translator) => {
 		);
 	}
 
-	const list = rawList.map((item, index) => {
+	const list: CaseStudyListItem[] = rawList.map((item, index) => {
 		const entry = item as CaseStudyEntry | undefined;
 		if (
 			!entry ||
