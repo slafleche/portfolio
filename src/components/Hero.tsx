@@ -1,27 +1,29 @@
 import clsx from 'clsx';
 import * as layoutStyles from '@/styles/layout.css';
 import * as s from '@/styles/components/hero.css';
-// import SkipToContent from './SkipToContent';
 import GlassyPanel from './GlassyPanel';
 import VideoByName from './VideoByName';
 import Console from './Console';
 import { createDomId } from '@/lib/dom';
+import { Markdown } from '@/components/Markdown';
 
 type HeroCopy = {
 	videoTitle: string;
 	videoLabel: string;
 	headingFirstLine: string;
 	headingLastLine: string;
-	subtitleHtml: string;
+	subtitle: string;
 	consoleDescription: string;
 	videoErrorMessage: string;
+	ctaLabel?: string;
 };
 
 type Props = {
 	className?: string;
 	copy: HeroCopy;
+	ctaHref?: string;
 };
-export default function Hero({ className, copy }: Props) {
+export default function Hero({ className, copy, ctaHref }: Props) {
 	const consoleId = createDomId('console');
 	return (
 		<section className={clsx(s.root, className)}>
@@ -85,12 +87,15 @@ export default function Hero({ className, copy }: Props) {
 									{copy.headingLastLine}
 								</span>
 							</h1>
-							<div
+							<Markdown
 								className={s.paragraph}
-								dangerouslySetInnerHTML={{
-									__html: copy.subtitleHtml,
-								}}
+								source={copy.subtitle}
 							/>
+							{copy.ctaLabel ? (
+								<a href={ctaHref ?? '#contact'} className={s.cta}>
+									{copy.ctaLabel}
+								</a>
+							) : null}
 						</div>
 					</GlassyPanel>
 				</div>

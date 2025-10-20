@@ -19,7 +19,7 @@ export default async function HomePage({
 	const { LOCALE } = await params;
 	const t = await loadTranslator(LOCALE);
 
-	const hero = buildHeroCopy(t);
+	const heroCopy = buildHeroCopy(t);
 	const approach = buildApproachCopy(t);
 	const about = buildAboutCopy(t);
 	const caseStudies = buildCaseStudiesCopy(t);
@@ -29,7 +29,7 @@ export default async function HomePage({
 	return (
 		<>
 			<SkipNavContent id="body">
-				<Hero copy={hero} />
+				<Hero ctaHref={`#${contact.href}`} copy={heroCopy} />
 				<Content
 					id={approach.href}
 					title={approach.title}
