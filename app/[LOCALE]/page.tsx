@@ -1,4 +1,4 @@
-import { SkipNavContent } from '@reach/skip-nav';
+import { SkipNavContent } from '@/components/SkipNavContent';
 import Hero from '@/components/Hero';
 import type { PageParams } from '../../src/styles/helpers/types';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
@@ -29,22 +29,20 @@ export default async function HomePage({
 		<>
 			<SkipNavContent id="body">
 				<Hero copy={hero} />
-				<div id="body">
-					<Content
-						id={approach.href}
-						title={approach.title}
-						markdown={approach.content}
-					/>
-					<Content
-						id={about.href}
-						title={about.title}
-						markdown={about.content}
-					/>
+				<Content
+					id={approach.href}
+					title={approach.title}
+					markdown={approach.content}
+				/>
+				<Content
+					id={about.href}
+					title={about.title}
+					markdown={about.content}
+				/>
 
-					<Content id={caseStudies.href} title={caseStudies.title} />
-					<Content title={projects.title} id={projects.href} />
-					<Content title={contact.title} id={contact.href} />
-				</div>
+				<Content id={caseStudies.href} title={caseStudies.title} />
+				<Content title={projects.title} id={projects.href} />
+				<Content title={contact.title} id={contact.href} />
 			</SkipNavContent>
 		</>
 	);

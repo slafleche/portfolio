@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { SkipNavLink } from '@reach/skip-nav';
+import { SkipNavLink } from '@/components/SkipNavLink';
 import * as s from '@/styles/components/menu.css';
 import type { Locale } from '@/data/locales';
 import { menuVars } from '@/styles/vars';
