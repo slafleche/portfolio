@@ -6,14 +6,29 @@ type MarkdownProps = {
 	id?: string;
 	source: string;
 	className?: string;
+	openLinksInNewTab?: boolean;
+};
+
+const createTargetBlankRenderer = () => {
+	const renderer = new marked.Renderer();
+	renderer.link = function ({ href, title, tokens }) {
+		const safeHref = href ?? '';
+		const titleAttr = title ? ` title="${title}"` : '';
+		const content = this.parser.parseInline(tokens ?? []);
+		return `<a href="${safeHref}"${titleAttr} target="_blank" rel="noopener noreferrer">${content}</a>`;
+	};
+	return renderer;
 };
 
 function MarkdownBase({
 	id,
 	source,
 	className,
+	openLinksInNewTab = true,
 }: MarkdownProps): ReactElement {
-	const html = marked.parse(source);
+	const html = openLinksInNewTab
+		? marked.parse(source, { renderer: createTargetBlankRenderer() })
+		: marked.parse(source);
 	return (
 		<div
 			id={id}
