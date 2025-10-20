@@ -152,7 +152,7 @@ export const gradients: CardGradientPack[] = [
 export const bokehVars = {
 	// Default Bokeh overlay settings (consumed by components)
 	colors: [
-		gradients[0].linear[0].color,
+		gradients[0]?.linear?.[0]?.color ?? themeColours.lights.a,
 		// gradients[0].linear[1].color,
 		// gradients[1].linear[2].color,
 		// gradients[1].spots[0].color,

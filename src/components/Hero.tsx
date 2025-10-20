@@ -19,14 +19,15 @@ type HeroCopy = {
 };
 
 type Props = {
+  id?: string;
 	className?: string;
 	copy: HeroCopy;
 	ctaHref?: string;
 };
-export default function Hero({ className, copy, ctaHref }: Props) {
+export default function Hero({ id, className, copy, ctaHref }: Props) {
 	const consoleId = createDomId('console');
 	return (
-		<section className={clsx(s.root, className)}>
+		<section id={id} className={clsx(s.root, className)}>
 			<VideoByName
 				name="hero"
 				title={copy.videoTitle}
