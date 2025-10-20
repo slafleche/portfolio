@@ -12,7 +12,7 @@ import Heading from '../Heading';
 import * as userContentStyles from '@/styles/components/userContent.css';
 
 type BaseProps<T extends ElementType> = {
-	as?: T;
+	tag?: T;
 	title?: ReactNode;
 	className?: string;
 } & Omit<ComponentPropsWithoutRef<T>, 'className' | 'children'>;
@@ -31,14 +31,14 @@ type ContentProps<T extends ElementType> = BaseProps<T> &
 	(MarkdownOnly | ChildrenOnly);
 
 export default function Content<T extends ElementType = 'section'>({
-	as,
+	tag,
 	title,
 	className,
 	markdown,
 	children,
 	...rest
 }: ContentProps<T>) {
-	const Component: ElementType = as ?? 'section';
+	const Component: ElementType = tag ?? 'section';
 
 	if (
 		process.env.NODE_ENV !== 'production' &&

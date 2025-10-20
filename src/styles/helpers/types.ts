@@ -76,3 +76,7 @@ export type FontConfig = {
 	ital?: boolean;
 	subsets?: string[];
 };
+
+export type PageParams = {
+	LOCALE: string;
+};
