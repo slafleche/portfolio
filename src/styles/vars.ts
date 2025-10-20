@@ -8,7 +8,7 @@ import type {
 	FontStyles,
 	MeasurementLike,
 } from './helpers/types';
-import { m } from './helpers/measurement';
+import { m, mPercent } from './helpers/measurement';
 export type ColorKeys = keyof typeof colors;
 import fontsConfig, {
 	makeFamilyDef,
@@ -524,38 +524,42 @@ export const menuVars = {
 			opacity: 0.14,
 			blur: m(2),
 		},
-		blur: m(10),
-		blobs: [
-			{
-				color: themeColours.lights.a,
-				posX: 22,
-				posY: 48,
-				radius: 50,
-				intensity: 0.62,
-			},
-			{
-				color: themeColours.lights.b,
-				posX: 50,
-				posY: 72,
-				radius: 50,
-				intensity: 0.6,
-			},
-			{
-				color: themeColours.lights.c,
-				posX: 76,
-				posY: 30,
-				radius: 46,
-				intensity: 0.48,
-			},
-			{
-				color: themeColours.lights.d,
-				posX: 34,
-				posY: 82,
-				radius: 54,
-				intensity: 0.66,
-			},
-		],
 	},
+	blobDefaults: {
+		opacity: 0.6,
+		blur: m(15),
+		scale: 1,
+		size: mPercent(85),
+		radius: 50,
+	},
+	blobs: [
+		{
+			color: themeColours.lights.a,
+			posX: 22,
+			posY: 48,
+			intensity: 0.62,
+		},
+		{
+			color: themeColours.lights.b,
+			posX: 50,
+			posY: 72,
+			intensity: 0.6,
+		},
+		{
+			color: themeColours.lights.c,
+			posX: 76,
+			posY: 30,
+			radius: 46,
+			intensity: 0.48,
+		},
+		{
+			color: themeColours.lights.d,
+			posX: 34,
+			posY: 82,
+			radius: 54,
+			intensity: 0.66,
+		},
+	],
 };
 
 export const dropShadowVars = {

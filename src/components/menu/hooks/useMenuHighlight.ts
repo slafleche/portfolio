@@ -8,12 +8,11 @@ import {
 } from 'react';
 import transforms from '@/styles/helpers/transforms';
 import { assertUnit } from '@/styles/helpers/measurement';
-import { archVars, colorVars, menuVars } from '@/styles/vars';
+import { archVars, menuVars } from '@/styles/vars';
 import type { CSSProperties } from 'react';
 import {
 	BASE_ANCHORS,
 	MINI_BOKEH_CACHE_KEY,
-	clamp,
 	computeArchY,
 	computeCenteredHighlight,
 	getCacheValueForIndex,
@@ -38,7 +37,7 @@ if (process.env.NODE_ENV !== 'production') {
 		'useMenuHighlight padding horizontal',
 	);
 	assertUnit(menuVars.yOffset, 'px', 'useMenuHighlight yOffset');
-	assertUnit(menuVars.hover.blur, 'px', 'useMenuHighlight hover blur');
+	
 	assertUnit(
 		menuVars.hover.shadow.spread,
 		'px',
@@ -479,18 +478,13 @@ const measure = useCallback(() => {
 
 		definedMetrics.forEach((metric) => {
 			const archY = metric.archY + adjustment;
-			const highlightWidth = clamp(
-				metric.width + widthPaddingValue,
-				metric.width,
-				width,
-			);
-			const highlightHeight = highlightHeightValue;
-			const left = clamp(
-				metric.centerX - highlightWidth / 2,
-				0,
-				Math.max(0, width - highlightWidth),
-			);
-			const top = Math.max(0, archY - highlightHeight / 2);
+		const highlightWidth = Math.max(
+			metric.width,
+			metric.width + widthPaddingValue,
+		);
+		const highlightHeight = highlightHeightValue;
+		const left = metric.centerX - highlightWidth / 2;
+		const top = archY - highlightHeight / 2;
 			metric.archY = archY;
 			metric.highlightWidth = highlightWidth;
 			metric.highlightHeight = highlightHeight;
@@ -578,18 +572,13 @@ const activate = useCallback(
 					computeArchY(width, centerX) + menuVars.yOffset.value;
 				const adjustment = centerY - computedArch;
 				const archY = computedArch + adjustment;
-				const highlightWidth = clamp(
-					rect.width + menuVars.padding.horizontal.value,
-					rect.width,
-					width,
-				);
-				const highlightHeight = menuVars.height.value;
-				const left = clamp(
-					centerX - highlightWidth / 2,
-					0,
-					Math.max(0, width - highlightWidth),
-				);
-				const top = Math.max(0, archY - highlightHeight / 2);
+		const highlightWidth = Math.max(
+			rect.width,
+			rect.width + menuVars.padding.horizontal.value,
+		);
+		const highlightHeight = menuVars.height.value;
+		const left = centerX - highlightWidth / 2;
+		const top = archY - highlightHeight / 2;
 				metric = {
 					centerX,
 					centerY,
@@ -689,53 +678,11 @@ const activate = useCallback(
 			transform: transformValue ?? undefined,
 		};
 
-		const blobs = menuVars.hover.blobs;
-		const activeNavIndex =
-			highlight.visible && activeIndex != null && activeIndex > 0
-				? (activeIndex - 1) % Math.max(blobs.length, 1)
-				: null;
-		const ordered = blobs.map((blob, index) => ({
-			blob,
-			isActive: index === activeNavIndex,
-		}));
-		if (activeNavIndex != null) {
-			const activeEntry = ordered.splice(activeNavIndex, 1);
-			ordered.unshift(...activeEntry);
-		}
-		innerStyle.backgroundImage = ordered
-			.map(({ blob, isActive }) => {
-				const baseColor = blob.color ?? colorVars.contrast;
-				const intensity = Math.min(
-					0.6,
-					(blob.intensity ?? 0.3) * (isActive ? 1.35 : 1),
-				);
-				const radius = (blob.radius ?? 50) * (isActive ? 1.25 : 1);
-				const solid = baseColor.alpha(intensity).css();
-				const soft = baseColor.alpha(0).css();
-				const posX = blob.posX ?? 50;
-				const posY = blob.posY ?? 50;
-				return `radial-gradient(circle at ${posX}% ${posY}%, ${solid} 0%, ${soft} ${radius}%)`;
-			})
-			.join(', ');
-		innerStyle.filter = `blur(${menuVars.hover.blur.value}px)`;
-		innerStyle.boxShadow = `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast.alpha(menuVars.hover.shadow.opacity).css()}`;
-
-		if (debugActive) {
-			innerStyle.outline = '1px dashed rgba(255,255,255,0.4)';
-		}
-
 		return {
 			containerStyle,
 			innerStyle,
 		};
-	}, [
-		highlightEnabled,
-		highlight,
-		transitionDisabled,
-		debugActive,
-		activeIndex,
-		linkMetrics,
-	]);
+	}, [highlightEnabled, highlight, transitionDisabled, linkMetrics]);
 
 useEffect(() => {
 	if (!highlightEnabled) return;
@@ -756,6 +703,8 @@ useEffect(() => {
 	highlightEnabled,
 ]);
 
+	const isTraveling = highlightEnabled && highlight.visible && !transitionDisabled;
+
 	return {
 		navRef,
 		linkRefs,
@@ -767,5 +716,7 @@ useEffect(() => {
 		debugArch,
 		activate,
 		hideHighlight,
+		activeHighlightIndex: highlightEnabled ? activeIndex : null,
+		isHighlightTraveling: isTraveling,
 	};
 }

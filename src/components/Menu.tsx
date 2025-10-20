@@ -10,7 +10,12 @@ import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { FocusEvent, MouseEvent, PointerEvent } from 'react';
+import type {
+	CSSProperties,
+	FocusEvent,
+	MouseEvent,
+	PointerEvent,
+} from 'react';
 import { getRotationStyle } from '../lib/arch/archHelper';
 import { useMenuAnchors } from './menu/hooks/useMenuAnchors';
 import {
@@ -75,8 +80,11 @@ export default function Menu({
 	// no pending animation once we leave the top; we only fire when already there
 
 	const sectionIds = sections.map((section) => section.id);
-	const { anchors, anchorCount, sectionIds: derivedSectionIds } =
-		useMenuAnchors(sectionIds);
+	const {
+		anchors,
+		anchorCount,
+		sectionIds: derivedSectionIds,
+	} = useMenuAnchors(sectionIds);
 
 	const [
 		prefersReducedMotion,
@@ -89,7 +97,9 @@ export default function Menu({
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
-		const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const media = window.matchMedia(
+			'(prefers-reduced-motion: reduce)',
+		);
 		const updatePreference = () => {
 			setPrefersReducedMotion(media.matches);
 		};
@@ -173,6 +183,8 @@ export default function Menu({
 		debugArch,
 		activate,
 		hideHighlight,
+		activeHighlightIndex,
+		isHighlightTraveling,
 	} = useMenuHighlight({
 		anchors,
 		anchorCount,
@@ -180,6 +192,49 @@ export default function Menu({
 		fontsReady,
 		animationEnabled: highlightEnabled,
 	});
+
+	const bokehInlineStyle: CSSProperties = {};
+	if (highlightStyles.innerStyle.width !== undefined) {
+		bokehInlineStyle.width = highlightStyles.innerStyle.width;
+	}
+	if (highlightStyles.innerStyle.height !== undefined) {
+		bokehInlineStyle.height = highlightStyles.innerStyle.height;
+	}
+	if (highlightStyles.innerStyle.transform !== undefined) {
+		bokehInlineStyle.transform = highlightStyles.innerStyle.transform;
+	}
+	if (highlightStyles.innerStyle.transition !== undefined) {
+		bokehInlineStyle.transition =
+			highlightStyles.innerStyle.transition;
+	}
+	if (highlightStyles.innerStyle.opacity !== undefined) {
+		bokehInlineStyle.opacity = highlightStyles.innerStyle.opacity;
+	}
+
+	const highlightSlotIndex = (() => {
+		if (activeHighlightIndex == null) return 0;
+		const maxIndex = s.bokehSlotAlphaClasses.length - 1;
+		return Math.min(
+			Math.max(activeHighlightIndex, 0),
+			Math.max(0, maxIndex),
+		);
+	})();
+	const alphaSlotClass =
+		s.bokehSlotAlphaClasses[highlightSlotIndex] ?? undefined;
+	const betaSlotClass =
+		s.bokehSlotBetaClasses[highlightSlotIndex] ?? undefined;
+	const gammaSlotClass =
+		s.bokehSlotGammaClasses[highlightSlotIndex] ?? undefined;
+	const travelAlphaClass = isHighlightTraveling
+		? s.bokehTravelAlpha
+		: undefined;
+	const travelBetaClass = isHighlightTraveling
+		? s.bokehTravelBeta
+		: undefined;
+	const travelGammaClass = isHighlightTraveling
+		? s.bokehTravelGamma
+		: undefined;
+	const debugBlobClass = debugOptions ? s.bokehDebugBlob : undefined;
 
 	const {
 		state: logoAnimationState,
@@ -540,7 +595,8 @@ export default function Menu({
 				window.innerHeight + window.scrollY >=
 				document.body.scrollHeight - 2;
 			if (nearBottom) {
-				candidate = sectionEls[sectionEls.length - 1]?.id ?? candidate;
+				candidate =
+					sectionEls[sectionEls.length - 1]?.id ?? candidate;
 			}
 
 			selectSection(candidate);
@@ -559,7 +615,11 @@ export default function Menu({
 			{
 				root: null,
 				rootMargin: '0px 0px -60% 0px',
-				threshold: [0, 0.4, 1],
+				threshold: [
+					0,
+					0.4,
+					1,
+				],
 			},
 		);
 
@@ -604,20 +664,20 @@ export default function Menu({
 		firstSectionId,
 	]);
 
-const renderNavLink = (
-	entry: AnchorEntry,
-	section: { id: string; label: string } | undefined,
-	index: number,
-	side: 'left' | 'right',
-	isOuter: boolean,
-	classes?: {
-		item?: string;
-		index?: string;
-	},
-) => {
-	if (!section) return null;
-	const { id, label } = section;
-	const isActive = activeSection === id;
+	const renderNavLink = (
+		entry: AnchorEntry,
+		section: { id: string; label: string } | undefined,
+		index: number,
+		side: 'left' | 'right',
+		isOuter: boolean,
+		classes?: {
+			item?: string;
+			index?: string;
+		},
+	) => {
+		if (!section) return null;
+		const { id, label } = section;
+		const isActive = activeSection === id;
 		const skew = isOuter ? menuVars.skew : menuVars.skew.half();
 		return (
 			<li
@@ -664,9 +724,9 @@ const renderNavLink = (
 	return (
 		<>
 			<div className={s.root} data-mounted={mounted}>
-		<SkipNavLink contentId="body" className={skipNavStyles.link}>
-			{skipNavLabel}
-		</SkipNavLink>
+				<SkipNavLink contentId="body" className={skipNavStyles.link}>
+					{skipNavLabel}
+				</SkipNavLink>
 				<Arch
 					ready={mounted}
 					glow={logoGlowState === 'idle' ? null : logoGlowState}
@@ -676,7 +736,9 @@ const renderNavLink = (
 						className={clsx(s.nav)}
 						ref={navRef}
 						onMouseLeave={handleNavMouseLeave}
-						data-mini-bokeh={highlightEnabled ? 'enabled' : 'disabled'}
+						data-mini-bokeh={
+							highlightEnabled ? 'enabled' : 'disabled'
+						}
 						data-motion={motionPreference}
 					>
 						{highlightEnabled ? (
@@ -708,10 +770,45 @@ const renderNavLink = (
 									data-active={miniBokehActive ? 'true' : 'false'}
 								>
 									<div
-										className={s.miniBokeh}
-										style={highlightStyles.innerStyle}
-										data-highlight={highlightVisible ? 'true' : 'false'}
-									/>
+										className={clsx(s.miniBokeh)}
+										style={bokehInlineStyle}
+										data-bokeh-index={highlightSlotIndex}
+										data-bokeh-state={
+											highlightVisible
+												? isHighlightTraveling
+													? 'travel'
+													: 'idle'
+												: 'hidden'
+										}
+									>
+										<span
+											className={clsx(
+												s.bokehBlobAlpha,
+												alphaSlotClass,
+												travelAlphaClass,
+												debugBlobClass,
+											)}
+											data-blob="alpha"
+										/>
+										<span
+											className={clsx(
+												s.bokehBlobBeta,
+												betaSlotClass,
+												travelBetaClass,
+												debugBlobClass,
+											)}
+											data-blob="beta"
+										/>
+										<span
+											className={clsx(
+												s.bokehBlobGamma,
+												gammaSlotClass,
+												travelGammaClass,
+												debugBlobClass,
+											)}
+											data-blob="gamma"
+										/>
+									</div>
 								</div>
 							</div>
 						) : null}
@@ -753,62 +850,69 @@ const renderNavLink = (
 								</Link>
 							</div>
 
-			<ul
-				className={clsx(s.list, s.transitionAfterFonts)}
-				aria-label={leftLabel}
-				data-side="left"
-				style={getRotationStyle('left', navMetrics.width)}
-			>
-				{anchors.slice(0, 2).map((entry, idx) =>
-					renderNavLink(entry, sections[idx], idx + 1, 'left', idx === 0, {
-						item: s.item,
-						index: idx === 0 ? s.item_1 : s.item_2,
-					}),
-				)}
-			</ul>
+							<ul
+								className={clsx(s.list, s.transitionAfterFonts)}
+								aria-label={leftLabel}
+								data-side="left"
+								style={getRotationStyle('left', navMetrics.width)}
+							>
+								{anchors.slice(0, 2).map((entry, idx) =>
+									renderNavLink(
+										entry,
+										sections[idx],
+										idx + 1,
+										'left',
+										idx === 0,
+										{
+											item: s.item,
+											index: idx === 0 ? s.item_1 : s.item_2,
+										},
+									),
+								)}
+							</ul>
 
-			<ul
-				className={clsx(s.list, s.transitionAfterFonts)}
-				aria-label={rightLabel}
-				data-side="right"
-				style={getRotationStyle('right', navMetrics.width)}
-			>
-				{anchors.slice(2).map((entry, idx) =>
-					renderNavLink(
-						entry,
-						sections[idx + 2],
-						idx + 3,
-						'right',
-						idx === 1,
-						{
-						item: s.item,
-						index: idx === 0 ? s.item_3 : s.item_4,
-					},
-					),
-				)}
-			</ul>
+							<ul
+								className={clsx(s.list, s.transitionAfterFonts)}
+								aria-label={rightLabel}
+								data-side="right"
+								style={getRotationStyle('right', navMetrics.width)}
+							>
+								{anchors.slice(2).map((entry, idx) =>
+									renderNavLink(
+										entry,
+										sections[idx + 2],
+										idx + 3,
+										'right',
+										idx === 1,
+										{
+											item: s.item,
+											index: idx === 0 ? s.item_3 : s.item_4,
+										},
+									),
+								)}
+							</ul>
 						</div>
 					</nav>
 
-			<nav
-				className={clsx(s.localeChanger, s.transitionAfterFonts)}
-				aria-label={localeChangeLabel}
-			>
-				{localeLinks.map((link) => (
-					<Link
-						key={link.locale}
-						href={`/${link.locale}`}
-						className={clsx(s.link, s.localeLink)}
-						hrefLang={link.locale}
-						data-ui="link"
+					<nav
+						className={clsx(s.localeChanger, s.transitionAfterFonts)}
+						aria-label={localeChangeLabel}
 					>
-						<span className={s.fakeShadow} aria-hidden={true}>
-							{link.label}
-						</span>
-						<span className={s.text}>{link.label}</span>
-					</Link>
-				))}
-			</nav>
+						{localeLinks.map((link) => (
+							<Link
+								key={link.locale}
+								href={`/${link.locale}`}
+								className={clsx(s.link, s.localeLink)}
+								hrefLang={link.locale}
+								data-ui="link"
+							>
+								<span className={s.fakeShadow} aria-hidden={true}>
+									{link.label}
+								</span>
+								<span className={s.text}>{link.label}</span>
+							</Link>
+						))}
+					</nav>
 				</Arch>
 			</div>
 		</>
