@@ -7,13 +7,15 @@ import type { Messages } from '@/data/locales';
 
 type MessageKey = keyof Messages;
 
-export type Translator = <K extends MessageKey>(key: K) => string;
+export type Translator = ((key: MessageKey) => string) & {
+	raw: <K extends MessageKey>(key: K) => Messages[K] | undefined;
+};
 
 export function createSectionTranslator(
- messages: Messages,
- fallbackMessages: Messages,
+	messages: Messages,
+	fallbackMessages: Messages,
 ): Translator {
-	return (key) => {
+	const translator = ((key: MessageKey): string => {
 		const value = messages[key];
 		if (typeof value === 'string') {
 			return value;
@@ -25,7 +27,12 @@ export function createSectionTranslator(
 		}
 
 		return key;
-	};
+	}) as Translator;
+
+	translator.raw = (key) =>
+		messages[key] !== undefined ? messages[key] : fallbackMessages[key];
+
+	return translator;
 }
 
 export async function loadLocaleBlock(
