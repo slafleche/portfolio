@@ -15,7 +15,7 @@ export const fr = {
 
 	'hero-title_a': 'Tisser le design et',
 	'hero-title_b': 'le développement',
-	'hero-subtitle': 'Un développeur avec l\'*œil* d\'un designer',
+	'hero-subtitle': "Un développeur avec l'*œil* d'un designer",
 	'hero-console_description': 'Arrière-plan de code décoratif',
 
 	// 'image_portrait-title': 'Portrait de Stéphane L.',
@@ -49,7 +49,7 @@ export const fr = {
 
 	case_study: 'Études de cas',
 	'case_study-href': 'etudes-de-cas',
-	case_studies: [
+	'case_study-list': [
 		{
 			title: 'Thématisation dans le système',
 			subTitle: 'comprendre ses limites',
@@ -64,12 +64,12 @@ export const fr = {
 		},
 		{
 			title: 'Rejoindre la R&D',
-			subTitle: 'contribuer depuis l\'intérieur du système',
+			subTitle: "contribuer depuis l'intérieur du système",
 			content:
 				"J'ai intégré la **Recherche et Développement (R&D)** comme **intégrateur web**, en passant du stylisme au-dessus du système à la manière dont il fonctionne en profondeur. J'ai contribué directement au **produit principal**, ajouté de nouvelles fonctionnalités, corrigé des bugs et affiné le comportement front-end, tout en construisant le nouveau site **Vanilla.com** en autonomie et en collaborant sur des projets plus modestes comme une intégration Hootsuite. En entrant dans le code mutualisé, j'ai davantage pensé aux développeurs amenés à le maintenir, y compris au nouveau thémeur prenant ma place. Cette étape a renforcé mon attention à la clarté, à la maintenabilité et à l'expérience développeur.",
 		},
 		{
-			title: 'Préparer l\'héritage',
+			title: "Préparer l'héritage",
 			subTitle: 'créer les bases du changement',
 			content:
 				"Au sein de l'équipe **Knowledge Base**, j'ai travaillé sur la fondation front-end qui allait soutenir la prochaine génération de produits Vanilla. J'ai aidé à définir la manière dont les composants étaient stylés, structurés et thématisés, en me concentrant sur la cohérence, les pratiques CSS-in-JS et des schémas évolutifs. En parallèle, j'ai contribué à adapter l'ancien code Forums pour qu'il puisse se connecter aux nouveaux concepts de thématisation sans casser l'existant. Cette phase consistait à bâtir compatibilité et résilience, pour préparer les systèmes historiques à coexister avec ce qui était en train d'arriver.",
@@ -90,7 +90,33 @@ export const fr = {
 
 	projects: 'Projets',
 	'projects-href': 'projets',
-	'projects-content': '## Quelques clients avec qui j\'ai collaboré.',
+	'projects-list': {
+		cocacola: {
+			title: 'Brigade du Bonheur (Coca-Cola)',
+			content:
+				"Travail sur le front-end et le back-end du site de la campagne Brigade du Bonheur de Coca-Cola, dans le cadre d\'une initiative promotionnelle liée à leur page Facebook.",
+		},
+		ea: {
+			title: 'Electronic Arts (EA)',
+			content:
+				"Création d\'un thème pour les forums communautaires d\'EA, adopté par plusieurs de leurs propriétés, dont de nombreux titres sportifs. Ce thème a réduit le besoin de versions personnalisées et simplifié la maintenance à long terme pour les deux équipes.",
+		},
+		banq: {
+			title: 'BAnQ (via InMedia)',
+			content:
+				"Travail sur le système de gestion de bibliothèques d\'InMedia, utilisé par la BAnQ et d\'autres institutions au Canada et en France. Mise en place d\'une structure plus cohérente et d\'une meilleure constance dans un front-end devenu complexe au fil du temps.",
+		},
+		hootsuite: {
+			title: 'Hootsuite (collaboration interne)',
+			content:
+				"Collaboration avec le chef de produit et fondateur sur un premier essai utilisant React. Réalisation de prototypes HTML/CSS pour appuyer sa recherche et explorer comment le framework pouvait s\'intégrer dans les futurs développements produits.",
+		},
+		kingGames: {
+			title: 'King Games',
+			content:
+				"L\'un des premiers tests réels du nouveau système de thématisation. Collaboration avec le themer assigné au projet pour offrir des conseils et observer les premiers points de friction, afin d\'affiner la performance du système en contexte client.",
+		},
+	} as const,
 
 	contact: 'contact',
 	'contact-href': 'contact',

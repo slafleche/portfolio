@@ -47,7 +47,7 @@ export const en = {
 
 	case_study: 'Case Study',
 	'case_study-href': 'case_study',
-	case_studies: [
+	'case_study-list': [
 		{
 			title: 'Theming within the system',
 			subTitle: 'seeing the limits',
@@ -88,8 +88,33 @@ export const en = {
 
 	projects: 'Projects',
 	'projects-href': 'projects',
-	'projects-content': '',
-
+	'projects-list': {
+		cocacola: {
+			title: 'Brigade du Bonheur (Coca-Cola)',
+			content:
+				"Worked on both the front-end and back-end of Coca-Cola\'s Brigade du Bonheur campaign site, part of a promotional initiative linked with their Facebook page.",
+		},
+		ea: {
+			title: 'Electronic Arts (EA)',
+			content:
+				"Worked on a theme for EA's community forums that was adopted across several properties, including many of their sports titles. The theme reduced the need for separate custom builds and simplified long-term maintenance for both teams.",
+		},
+		banq: {
+			title: 'BAnQ (via InMedia)',
+			content:
+				"Worked on InMedia's library management system, used by BAnQ and other institutions in Canada and France. Focused on bringing structure and consistency to a front-end that had grown complex over time.",
+		},
+		hootsuite: {
+			title: 'Hootsuite (internal collaboration)',
+			content:
+				'Collaborated with the Chief Product Officer and Founder on an early test using React. Built HTML/CSS prototypes to support his research and explore how the framework could fit into future product development.',
+		},
+		kingGames: {
+			title: 'King Games',
+			content:
+				'One of the first real tests of the new theming system. Collaborated with the themer assigned to their project, offering guidance and observing early pain points to refine how the system performed in real client work.',
+		},
+	},
 	contact: 'contact',
 	'contact-href': 'contact',
 	'contact-content': "Think we'd work well together?",
