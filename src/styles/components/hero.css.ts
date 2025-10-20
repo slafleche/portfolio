@@ -141,6 +141,29 @@ export const paragraph = style({
 	}),
 });
 
+export const cta = style({
+	marginTop: m(16).css(),
+	display: 'inline-flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	alignSelf: 'center',
+	padding: `${m(3).css()} ${m(6).css()}`,
+	borderRadius: m(3).css(),
+	backgroundColor: colorVars.white.alpha(0.85).css(),
+	color: colorVars.navBg.css(),
+	fontWeight: 600,
+	textDecoration: 'none',
+	transition: 'transform 150ms ease, box-shadow 150ms ease',
+	boxShadow: `0 ${m(1).css()} ${m(4).css()} rgba(0,0,0,0.15)`,
+	selectors: {
+		'&:hover, &:focus-visible': {
+			transform: 'translateY(-2px)',
+			boxShadow: `0 ${m(2).css()} ${m(8).css()} rgba(0,0,0,0.25)`,
+			outline: 'none',
+		},
+	},
+});
+
 // Shared offsets for hero overlap framing.
 const offset = m(20);
 const designRotation = m(5, 'deg');

@@ -19,7 +19,8 @@ export const buildHeroCopy = (t: Translator) => ({
 	videoLabel: t(HERO_KEYS.videoLabel),
 	headingFirstLine: t(HERO_KEYS.headingFirstLine),
 	headingLastLine: t(HERO_KEYS.headingLastLine),
-	subtitleHtml: t(HERO_KEYS.subtitle),
+	subtitle: t(HERO_KEYS.subtitle),
+	ctaLabel: t(HERO_KEYS.cta),
 	consoleDescription: t(HERO_KEYS.consoleDescription),
 	videoErrorMessage: t(HERO_KEYS.videoErrorMessage),
 });

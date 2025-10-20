@@ -1,14 +1,16 @@
+"use client";
+
 import { chevronVars } from '@/styles/vars';
 import * as s from '@/styles/components/chevrons.css.ts';
 import clsx from 'clsx';
-import { createDomId } from '@/lib/dom';
+import { useSafeId } from '@/lib/dom';
 
 type Props = {
 	className?: string;
 };
 
 export default function ChevronDown({ className }: Props = {}) {
-	const baseId = createDomId('chevron');
+	const baseId = useSafeId('chevron');
 	const fillGradientId = `${baseId}-fill`;
 	return (
 		<svg

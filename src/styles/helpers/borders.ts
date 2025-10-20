@@ -11,6 +11,7 @@ import type {
 	CompassCorners,
 	CompassRegion,
 	CornerPosition,
+	MeasurementLike,
 } from './types';
 
 /**
@@ -95,10 +96,38 @@ const compressSides = (
 
 const asWidth = (
 	v: BorderWidthInput | undefined,
-): string | undefined => toCssMeasurement(v) ?? undefined;
+): string | undefined => {
+	if (
+		v &&
+		typeof v === 'object' &&
+		!Array.isArray(v) &&
+		!('value' in v) &&
+		!(typeof (v as { css?: unknown }).css === 'function')
+	) {
+		// Config objects are handled elsewhere; no direct shorthand.
+		return undefined;
+	}
+	return toCssMeasurement(
+		v as MeasurementLike | number | null | undefined,
+	) ?? undefined;
+};
+
 const asRadius = (
 	v: BorderRadiusInput | undefined,
-): string | undefined => toCssMeasurement(v) ?? undefined;
+): string | undefined => {
+	if (
+		v &&
+		typeof v === 'object' &&
+		!Array.isArray(v) &&
+		!('value' in v) &&
+		!(typeof (v as { css?: unknown }).css === 'function')
+	) {
+		return undefined;
+	}
+	return toCssMeasurement(
+		v as MeasurementLike | number | null | undefined,
+	) ?? undefined;
+};
 
 /* --------------------------
    Intent resolution
@@ -403,10 +432,10 @@ const resolve = (intent?: BorderIntent): FinalBorderCSS => {
 	if (styleAllEq) {
 		css.borderStyle = styles[0];
 	} else {
-		css.borderTopStyle = styles[0];
-		css.borderRightStyle = styles[1];
-		css.borderBottomStyle = styles[2];
-		css.borderLeftStyle = styles[3];
+		css.borderTopStyle = styles[0] as CSS.Property.BorderTopStyle;
+		css.borderRightStyle = styles[1] as CSS.Property.BorderRightStyle;
+		css.borderBottomStyle = styles[2] as CSS.Property.BorderBottomStyle;
+		css.borderLeftStyle = styles[3] as CSS.Property.BorderLeftStyle;
 	}
 
 	// Color
