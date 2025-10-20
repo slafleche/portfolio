@@ -17,6 +17,7 @@ export const fr = {
 	'hero-title_b': 'le développement',
 	'hero-subtitle': "Un développeur avec l'*œil* d'un designer",
 	'hero-console_description': 'Arrière-plan de code décoratif',
+	'hero-cta': 'Prenons contact !',
 
 	// 'image_portrait-title': 'Portrait de Stéphane L.',
 	// 'image_portrait-alt':
