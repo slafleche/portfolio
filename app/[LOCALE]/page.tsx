@@ -10,6 +10,11 @@ import { buildApproachCopy } from '../../src/lib/locales/sections/approach.local
 import { buildContactCopy } from '../../src/lib/locales/sections/contact.locale';
 import Content from '../../src/components/responsive/Content';
 import CaseStudy from '@/components/CaseStudy';
+import { Grid, Column } from '@/components/Grid';
+import Card from '@/components/Card';
+import { Markdown } from '@/components/Markdown';
+import Footer from '../../src/components/Footer';
+import * as layoutStyles from '@/styles/layout.css';
 
 export default async function HomePage({
 	params,
@@ -27,28 +32,68 @@ export default async function HomePage({
 	const contact = buildContactCopy(t);
 
 	return (
-		<>
-			<SkipNavContent id="body">
-				<Hero ctaHref={`#${contact.href}`} copy={heroCopy} />
-				<Content
-					id={approach.href}
-					title={approach.title}
-					markdown={approach.content}
-				/>
-				<Content
-					id={about.href}
-					title={about.title}
-					markdown={about.content}
-				/>
-				<Content id={caseStudies.href} title={caseStudies.title}>
-					<CaseStudy
-						id={caseStudies.href}
-						caseStudies={caseStudies.list}
+		<SkipNavContent id="body">
+			<div className={layoutStyles.page}>
+				<main className={layoutStyles.main}>
+					<Hero ctaHref={`#${contact.href}`} copy={heroCopy} />
+					<Content
+						id={approach.href}
+						title={approach.title}
+						markdown={approach.content}
 					/>
-				</Content>
-				<Content title={projects.title} id={projects.href} />
-				<Content title={contact.title} id={contact.href} />
-			</SkipNavContent>
-		</>
+					<Content
+						id={about.href}
+						title={about.title}
+						markdown={about.content}
+					/>
+					<Content id={caseStudies.href} title={caseStudies.title}>
+						<CaseStudy
+							id={caseStudies.href}
+							caseStudies={caseStudies.list}
+						/>
+					</Content>
+					<Content title={projects.title} id={projects.href}>
+						<Grid columns={2}>
+							<Column span={2}>
+								<Card title={projects.list[0]?.title}>
+									{projects.list[0] ? (
+										<Markdown source={projects.list[0].content} />
+									) : null}
+								</Card>
+							</Column>
+							<Column span={2}>
+								<Card title={projects.list[1]?.title}>
+									{projects.list[1] ? (
+										<Markdown source={projects.list[1].content} />
+									) : null}
+								</Card>
+							</Column>
+							<Column span={1}>
+								<Card title={projects.list[2]?.title}>
+									{projects.list[2] ? (
+										<Markdown source={projects.list[2].content} />
+									) : null}
+								</Card>
+							</Column>
+							<Column span={1}>
+								<Card title={projects.list[3]?.title}>
+									{projects.list[3] ? (
+										<Markdown source={projects.list[3].content} />
+									) : null}
+								</Card>
+							</Column>
+							<Column span={2}>
+								<Card title={projects.list[4]?.title}>
+									{projects.list[4] ? (
+										<Markdown source={projects.list[4].content} />
+									) : null}
+								</Card>
+							</Column>
+						</Grid>
+					</Content>
+				</main>
+				<Footer contact={contact} id={contact.href} />
+			</div>
+		</SkipNavContent>
 	);
 }

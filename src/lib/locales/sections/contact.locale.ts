@@ -10,7 +10,14 @@ export const CONTACT_KEYS = {
 	github: 'contact-github',
 } as const satisfies Record<string, MessageKey>;
 
-export const buildContactCopy = (t: Translator) => ({
+export type ContactCopy = {
+	title: string;
+	href: string;
+	content: string;
+	github: string;
+};
+
+export const buildContactCopy = (t: Translator): ContactCopy => ({
 	title: t(CONTACT_KEYS.title),
 	href: t(CONTACT_KEYS.href),
 	content: t(CONTACT_KEYS.content),

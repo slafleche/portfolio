@@ -31,3 +31,16 @@ export const panel = style({
 	display: 'flex',
 	flexDirection: 'column',
 });
+
+export const page = style({
+	minHeight: '100vh',
+	display: 'flex',
+	flexDirection: 'column',
+});
+
+export const main = style({
+	flex: 1,
+	display: 'flex',
+	flexDirection: 'column',
+	rowGap: 'clamp(2rem, 4vw, 4rem)',
+});

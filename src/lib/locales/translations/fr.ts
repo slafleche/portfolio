@@ -14,25 +14,14 @@ export const fr = {
 	'scroll-cue': 'Défiler vers le contenu',
 
 	'hero-title': 'Fond dégradé bleu et magenta en rotation',
-	'hero-alt': 'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
+	'hero-alt':
+		'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
 
 	'hero-title_a': 'Tisser le design et',
 	'hero-title_b': 'le développement',
 	'hero-subtitle': "Un développeur avec l'*œil* d'un designer",
 	'hero-console_description': 'Arrière-plan de code décoratif',
 	'hero-cta': 'Prenons contact !',
-
-	// 'image_portrait-title': 'Portrait de Stéphane L.',
-	// 'image_portrait-alt':
-	// 	'Une photo de Stéphane L. en train de travailler, avec un arrière-plan flou.',
-
-	// 'split-dev_title': 'Ce que je conçois',
-	// 'split-dev_content':
-	// 	'* Des systèmes de thématisation évolutifs\n* Des modèles de composants et d'UX\n* Des ajustements qui améliorent la vision initiale',
-
-	// 'split-design_title': 'Ce que je livre',
-	// 'split-design_content':
-	// 	'* Des interfaces fidèles au design\n* Des mises en page réactives sur tous les appareils\n* L'accessibilité dès la conception',
 
 	'error-video':
 		'Désolé, votre navigateur ne peut pas lire cette vidéo.',
@@ -120,9 +109,10 @@ export const fr = {
 
 	contact: 'contact',
 	'contact-href': 'contact',
-	'contact-content': 'Envie de collaborer ?',
+	'contact-content':
+		'Envie de collaborer ? Contactez-moi sur [LinkedIn](https://www.linkedin.com/in/slafleche)',
 	'contact-github':
-		'Le code du site est dispo sur [GitHub !](https://github.com/slafleche/portfolio)',
+		'Le code du site est dispo sur [GitHub](https://github.com/slafleche/portfolio) !',
 } as const;
 
 export type FrMessages = typeof fr;
