@@ -563,7 +563,7 @@ export const logoLink = style({
 	position: 'relative',
 	cursor: 'pointer',
 	selectors: {
-		'&:focus-visible': focusOutline({
+		'&:focus-visible, &[data-debug-focus="true"]': focusOutline({
 			width: logoHoverOutlineWidth,
 			offset: logoHoverOutlineOffset,
 			color: logoHoverOutlineColor,
@@ -632,7 +632,7 @@ export const logoWrap = style({
 		'[data-logo-anim="exit"] &': {
 			animation: `${logoHoverRotateReverse} ${logoHoverExitDuration}ms cubic-bezier(0.45, 0, 0.2, 1) forwards`,
 		},
-		[`${logoLink}:focus-visible &`]: {
+		[`${logoLink}:focus-visible &, ${logoLink}[data-debug-focus="true"] &`]: {
 			animation: 'none',
 			transform: transforms.value(
 				transforms.rotate(0),
@@ -757,7 +757,7 @@ export const navLink = style({
 		'&:visited': {
 			color: colors.navFg.css(),
 		},
-		'&[data-ui]:focus-visible': {
+		'&[data-ui]:focus-visible, &[data-ui][data-debug-focus="true"]': {
 			outline: '2px solid currentColor',
 			outlineOffset: 2,
 			opacity: 1,
