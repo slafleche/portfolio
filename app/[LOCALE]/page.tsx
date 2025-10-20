@@ -21,7 +21,7 @@ export default async function HomePage({
 	const hero = buildHeroCopy(t);
 	const approach = buildApproachCopy(t);
 	const about = buildAboutCopy(t);
-	const case_studies = buildCaseStudiesCopy(t);
+	const caseStudies = buildCaseStudiesCopy(t);
 	const projects = buildProjectsCopy(t);
 	const contact = buildContactCopy(t);
 
@@ -41,10 +41,7 @@ export default async function HomePage({
 						markdown={about.content}
 					/>
 
-					<Content
-						id={case_studies.href}
-						title={case_studies.title}
-					/>
+					<Content id={caseStudies.href} title={caseStudies.title} />
 					<Content title={projects.title} id={projects.href} />
 					<Content title={contact.title} id={contact.href} />
 				</div>
