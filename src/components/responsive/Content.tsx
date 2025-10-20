@@ -51,19 +51,19 @@ export default function Content<T extends ElementType = 'section'>({
 	}
 
 	const renderedBody =
-		typeof markdown === 'string'
-			? (
-					<div
-						className={userContentStyles.userContent}
-						dangerouslySetInnerHTML={{
-							__html: (() => {
-								const parsed = marked.parse(markdown);
-								return typeof parsed === 'string' ? parsed : '';
-							})(),
-						}}
-					/>
-				)
-			: children;
+		typeof markdown === 'string' ? (
+			<div
+				className={userContentStyles.userContent}
+				dangerouslySetInnerHTML={{
+					__html: (() => {
+						const parsed = marked.parse(markdown);
+						return typeof parsed === 'string' ? parsed : '';
+					})(),
+				}}
+			/>
+		) : (
+			children
+		);
 
 	return (
 		<Component className={clsx(s.content, className)} {...rest}>

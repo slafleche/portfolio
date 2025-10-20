@@ -13,6 +13,9 @@ export const fr = {
 
 	'scroll-cue': 'Défiler vers le contenu',
 
+	'hero-title': 'Fond dégradé bleu et magenta en rotation',
+	'hero-alt': 'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
+
 	'hero-title_a': 'Tisser le design et',
 	'hero-title_b': 'le développement',
 	'hero-subtitle': "Un développeur avec l'*œil* d'un designer",
@@ -34,19 +37,15 @@ export const fr = {
 	'error-video':
 		'Désolé, votre navigateur ne peut pas lire cette vidéo.',
 
-	'hero-title': 'Cercles violets en dégradé animés',
-	'hero-alt':
-		'Arrière-plan abstrait de cercles concentriques superposés en violet, pourpre et magenta, avec un léger mouvement en parallaxe qui fait subtilement bouger les couches.',
-
 	about: 'À propos',
 	'about-href': 'a-propos',
 	'about-content':
-		'## À propos - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.',
+		'Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.',
 
 	approach: 'Approche',
 	'approach-href': 'philosophie',
 	'approach-content':
-		'## Philosophie - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.',
+		'Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.',
 
 	case_study: 'Études de cas',
 	'case_study-href': 'etudes-de-cas',

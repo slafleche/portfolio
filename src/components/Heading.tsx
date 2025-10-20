@@ -16,7 +16,7 @@ export default function Heading({
 	className,
 	children,
 }: Props) {
-	const Tag = `h${depth || 3}` as 'h3';
+	const Tag = `h${depth || 2}` as 'h2';
 	return (
 		<Tag className={clsx(s.heading, className)} data-ui="heading">
 			{children}
