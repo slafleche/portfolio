@@ -24,17 +24,25 @@ export default async function LocaleSegmentLayout({
 	const locale = resolveLocale(LOCALE);
 	const messages = await loadMessages(locale);
 
+	const resolveText = <K extends keyof typeof messages>(
+		key: K,
+		fallback: string,
+	): string => {
+		const value = messages[key];
+		return typeof value === 'string' ? value : fallback;
+	};
+
 	const menuSections = BASE_ANCHORS.map(({ hrefKey, labelKey }) => ({
-		id: messages[hrefKey] ?? hrefKey,
-		label: messages[labelKey] ?? labelKey,
+		id: resolveText(hrefKey, hrefKey),
+		label: resolveText(labelKey, labelKey),
 	}));
 
 	const menuProps = {
 		root: `/${locale}`,
-		skipNavLabel: messages['menu-skip_nav'],
-		leftLabel: messages['menu-left_label'],
-		rightLabel: messages['menu-right_label'],
-		localeChangeLabel: messages['localeChange'],
+		skipNavLabel: resolveText('menu-skip_nav', 'Skip to content'),
+		leftLabel: resolveText('menu-left_label', 'About Me'),
+		rightLabel: resolveText('menu-right_label', 'My Work'),
+		localeChangeLabel: resolveText('localeChange', 'Select language'),
 		sections: menuSections,
 		localeLinks: AVAILABLE_LOCALES.filter(
 			(code) => code !== locale,
