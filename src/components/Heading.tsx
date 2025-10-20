@@ -9,16 +9,22 @@ export interface IHeadingDepth {
 type Props = IHeadingDepth & {
 	className?: string;
 	children: ReactNode;
+	id?: string;
 };
 
 export default function Heading({
 	depth = 3,
 	className,
 	children,
+	id,
 }: Props) {
 	const Tag = `h${depth || 2}` as 'h2';
 	return (
-		<Tag className={clsx(s.heading, className)} data-ui="heading">
+		<Tag
+			id={id}
+			className={clsx(s.heading, className)}
+			data-ui="heading"
+		>
 			{children}
 		</Tag>
 	);
