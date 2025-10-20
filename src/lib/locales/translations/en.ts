@@ -106,9 +106,10 @@ export const en = {
 	},
 	contact: 'Contact',
 	'contact-href': 'contact',
-	'contact-content': "Think we'd work well together?",
+	'contact-content':
+		"Think we'd work well together? Contact me on [LinkedIn!](https://www.linkedin.com/in/slafleche)",
 	'contact-github':
-		'Site sources available on [GitHub!](https://github.com/slafleche/portfolio)',
+		'Site sources available on [GitHub](https://github.com/slafleche/portfolio)!',
 } as const;
 
 export type EnMessages = typeof en;
