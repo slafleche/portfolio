@@ -7,6 +7,7 @@
 		"chroma-js": "^3.1.2",
 		"clsx": "^2.1.1",
 		"culori": "^4.0.2",
+		"marked": "^12.0.2",
 		"hls.js": "^1.6.13",
 		"next": "^15.5.5",
 		"normalize.css": "^8.0.1",
