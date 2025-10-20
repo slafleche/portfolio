@@ -3,6 +3,9 @@
 	"prettier.requireConfig": true,
 	"prettier.prettierPath": "node_modules/prettier",
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.insertSpaces": true,
+	"editor.tabSize": 2,
+	"editor.detectIndentation": false,
 	"[javascript]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode",
 		"editor.formatOnSave": true

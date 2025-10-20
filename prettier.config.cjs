@@ -3,8 +3,8 @@ module.exports = {
 	trailingComma: 'all',
 	printWidth: 70,
 	proseWrap: 'always',
-	// Indent with tabs so multiline arrays are clearly tabbed
-	useTabs: true,
+	// Use spaces so indentation stays consistent across tools
+	useTabs: false,
 	// Keep arrays and long constructs from collapsing too easily by using a tighter print width.
 	// Enable JSDoc reflow and force multi-line style even for short comments.
 	plugins: [
