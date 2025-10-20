@@ -61,12 +61,12 @@ export const LOGO_CACHE_VALUE = '__logo__';
 
 export const BASE_ANCHORS: readonly AnchorEntry[] = [
 	{
-		hrefKey: 'about-href',
-		labelKey: 'about',
-	},
-	{
 		hrefKey: 'approach-href',
 		labelKey: 'approach',
+	},
+	{
+		hrefKey: 'about-href',
+		labelKey: 'about',
 	},
 	{
 		hrefKey: 'case_study-href',

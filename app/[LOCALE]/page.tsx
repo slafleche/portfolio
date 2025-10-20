@@ -14,6 +14,7 @@ import Hero from '@/components/Hero';
 import Keystone from '@/components/Keystone';
 import type { Messages } from '@/data/locales';
 import { getHtmlMessage } from '@/lib/locales/html';
+import Content from '../../src/components/responsive/Content';
 
 type MessageKey = keyof Messages;
 
@@ -36,16 +37,20 @@ const CARD_CONFIGS = [
 		titleKey: 'split-design_title',
 		contentKey: 'split-design_content',
 	},
-];
+] as const satisfies ReadonlyArray<{
+	type: 'left' | 'right';
+	titleKey: MessageKey;
+	contentKey: MessageKey;
+}>;
 
 const SECTION_CONFIGS = [
 	{
-		idKey: 'about-href',
-		contentKey: 'about-content',
-	},
-	{
 		idKey: 'approach-href',
 		contentKey: 'approach-content',
+	},
+	{
+		idKey: 'about-href',
+		contentKey: 'about-content',
 	},
 	{
 		idKey: 'case_study-href',
@@ -55,7 +60,14 @@ const SECTION_CONFIGS = [
 		idKey: 'projects-href',
 		contentKey: 'projects-content',
 	},
-];
+	{
+		idKey: 'contatct-href',
+		contentKey: 'contact-content',
+	},
+] as const satisfies ReadonlyArray<{
+	idKey: MessageKey;
+	contentKey: MessageKey;
+}>;
 
 const KEYSTONE_KEYS = {
 	name: 'portrait',
@@ -122,7 +134,7 @@ export default async function HomePage({
 			<SkipNavContent id="body">
 				<Hero copy={hero} />
 				<div id="body">
-					<section
+					{/* <section
 						className={clsx(card.container, layoutStyles.content)}
 					>
 						{cards.map((item, index) => (
@@ -144,17 +156,17 @@ export default async function HomePage({
 								) : null}
 							</Fragment>
 						))}
-					</section>
+					</section> */}
 
 					{sections.map((section) => (
-						<section key={section.id} id={section.id}>
+						<Content key={section.id} id={section.id}>
 							<div
 								className={s.userContent}
 								dangerouslySetInnerHTML={{
 									__html: section.html,
 								}}
 							/>
-						</section>
+						</Content>
 					))}
 				</div>
 			</SkipNavContent>
