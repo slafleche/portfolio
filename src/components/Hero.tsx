@@ -84,6 +84,7 @@ export default function Hero({ className, copy }: Props) {
 								>
 									{copy.headingLastLine}
 								</span>
+								{/* // here */}
 							</h1>
 					<div
 						className={s.paragraph}
@@ -92,10 +93,7 @@ export default function Hero({ className, copy }: Props) {
 						</div>
 					</GlassyPanel>
 				</div>
-				{/* </div> */}
 			</div>
-
-			{/* <SkipToContent /> */}
 		</section>
 	);
 }
