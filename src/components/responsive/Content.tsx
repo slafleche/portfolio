@@ -45,7 +45,6 @@ export default function Content<T extends ElementType = 'section'>({
 		typeof markdown === 'string' &&
 		children !== undefined
 	) {
-		// eslint-disable-next-line no-console
 		console.error(
 			'Content: pass either `markdown` or `children`, but not both.',
 		);
