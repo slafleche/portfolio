@@ -30,6 +30,10 @@ import {
 import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
 
+type FocusDebugOptions = {
+	lockTo?: 'logo' | number;
+};
+
 type MenuProps = {
 	root: string;
 	skipNavLabel: string;
@@ -40,6 +44,7 @@ type MenuProps = {
 	localeLinks: ReadonlyArray<{ locale: Locale; label: string }>;
 	bokehDebug?: MiniBokehDebugOptions;
 	debugGlow?: boolean;
+	focusDebug?: FocusDebugOptions;
 };
 
 const LOGO_GLOW_TOP_THRESHOLD = 3;
@@ -56,6 +61,7 @@ export default function Menu({
 	localeLinks,
 	bokehDebug,
 	debugGlow = false,
+	focusDebug,
 }: MenuProps) {
 	const logoId = 'menu-logo';
 	const [
@@ -85,6 +91,18 @@ export default function Menu({
 		anchorCount,
 		sectionIds: derivedSectionIds,
 	} = useMenuAnchors(sectionIds);
+	const focusDebugIndex = (() => {
+		if (!focusDebug) return null;
+		const { lockTo } = focusDebug;
+		if (lockTo === undefined) return null;
+		if (lockTo === 'logo') return 0;
+		if (typeof lockTo === 'number' && Number.isFinite(lockTo)) {
+			const rounded = Math.round(lockTo);
+			const maxIndex = Math.max(0, anchorCount - 1);
+			return Math.min(Math.max(0, rounded), maxIndex);
+		}
+		return null;
+	})();
 
 	const [
 		prefersReducedMotion,
@@ -679,6 +697,8 @@ export default function Menu({
 		const { id, label } = section;
 		const isActive = activeSection === id;
 		const skew = isOuter ? menuVars.skew : menuVars.skew.half();
+		const debugFocusAttr =
+			focusDebugIndex === index ? 'true' : undefined;
 		return (
 			<li
 				className={clsx(classes?.item, classes?.index)}
@@ -693,6 +713,7 @@ export default function Menu({
 					data-side={side}
 					data-active={isActive}
 					data-outer={isOuter}
+					data-debug-focus={debugFocusAttr}
 					aria-current={isActive ? 'true' : undefined}
 					style={transforms(
 						transforms.skewX(skew).negate(side === 'right'),
@@ -831,6 +852,9 @@ export default function Menu({
 									onFocus={handleLogoFocus}
 									onBlur={handleBlur}
 									data-ui="link"
+									data-debug-focus={
+										focusDebugIndex === 0 ? 'true' : undefined
+									}
 									/* removed: data-at-top */
 									data-logo-anim={logoAnimationState}
 								>
