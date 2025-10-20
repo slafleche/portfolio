@@ -6,28 +6,70 @@ import type {
 } from 'react';
 
 import clsx from 'clsx';
+import { marked } from 'marked';
 import * as s from '@/styles/layout.css';
 import Heading from '../Heading';
+import * as userContentStyles from '@/styles/components/userContent.css';
 
-type ContentProps<T extends ElementType> = {
+type BaseProps<T extends ElementType> = {
 	as?: T;
 	title?: ReactNode;
 	className?: string;
-	children?: ReactNode;
 } & Omit<ComponentPropsWithoutRef<T>, 'className' | 'children'>;
+
+type MarkdownOnly = {
+	markdown: string;
+	children?: never;
+};
+
+type ChildrenOnly = {
+	markdown?: undefined;
+	children?: ReactNode;
+};
+
+type ContentProps<T extends ElementType> = BaseProps<T> &
+	(MarkdownOnly | ChildrenOnly);
 
 export default function Content<T extends ElementType = 'section'>({
 	as,
 	title,
 	className,
+	markdown,
 	children,
 	...rest
 }: ContentProps<T>) {
 	const Component: ElementType = as ?? 'section';
+
+	if (
+		process.env.NODE_ENV !== 'production' &&
+		typeof markdown === 'string' &&
+		children !== undefined
+	) {
+		// eslint-disable-next-line no-console
+		console.error(
+			'Content: pass either `markdown` or `children`, but not both.',
+		);
+	}
+
+	const renderedBody =
+		typeof markdown === 'string'
+			? (
+					<div
+						className={userContentStyles.userContent}
+						dangerouslySetInnerHTML={{
+							__html: (() => {
+								const parsed = marked.parse(markdown);
+								return typeof parsed === 'string' ? parsed : '';
+							})(),
+						}}
+					/>
+				)
+			: children;
+
 	return (
 		<Component className={clsx(s.content, className)} {...rest}>
 			{title ? <Heading className={s.title}>{title}</Heading> : null}
-			{children}
+			{renderedBody}
 		</Component>
 	);
 }
