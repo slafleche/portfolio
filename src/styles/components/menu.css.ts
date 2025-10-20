@@ -1,8 +1,10 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
+import type { StyleRule } from '@vanilla-extract/css';
 import {
 	absolutePosition,
 	flexPosition,
 } from '../helpers/positioning';
+import type { ColorWrapper } from '../helpers/colorWrap';
 import {
 	archVars,
 	colors,
@@ -11,10 +13,16 @@ import {
 	fontVars,
 	logoVars,
 	menuVars,
+	themeColours,
 } from '../vars';
 
 import { paddings } from '../helpers/spacing';
-import { assertUnit, m } from '../helpers/measurement';
+import {
+	assertUnit,
+	m,
+	mPercent,
+	type IMeasurement,
+} from '../helpers/measurement';
 import transforms from '../helpers/transforms';
 import { fontStyles, fontWeightStyle } from '../helpers/typography';
 
@@ -27,16 +35,48 @@ if (process.env.NODE_ENV !== 'production') {
 	assertUnit(dropShadowVars.offsetY, 'px', 'menu dropShadow offsetY');
 	assertUnit(dropShadowVars.blur, 'px', 'menu dropShadow blur');
 	assertUnit(menuVars.height, 'px', 'menu height');
-	assertUnit(menuVars.padding.horizontal, 'px', 'menu padding horizontal');
-	assertUnit(menuVars.padding.vertical, 'px', 'menu padding vertical');
+	assertUnit(
+		menuVars.padding.horizontal,
+		'px',
+		'menu padding horizontal',
+	);
+	assertUnit(
+		menuVars.padding.vertical,
+		'px',
+		'menu padding vertical',
+	);
 	assertUnit(menuVars.yOffset, 'px', 'menu yOffset');
-	assertUnit(menuVars.hover.blur, 'px', 'menu hover blur');
-	assertUnit(menuVars.hover.shadow.spread, 'px', 'menu hover shadow spread');
-	assertUnit(menuVars.hover.shadow.blur, 'px', 'menu hover shadow blur');
-	assertUnit(menuVars.hover.text.offsetX, 'px', 'menu hover text offsetX');
-	assertUnit(menuVars.hover.text.offsetY, 'px', 'menu hover text offsetY');
-	assertUnit(menuVars.textShadow.offsetX, 'px', 'menu textShadow offsetX');
-	assertUnit(menuVars.textShadow.offsetY, 'px', 'menu textShadow offsetY');
+	assertUnit(menuVars.blobDefaults.blur, 'px', 'menu hover blur');
+	assertUnit(
+		menuVars.hover.shadow.spread,
+		'px',
+		'menu hover shadow spread',
+	);
+	assertUnit(
+		menuVars.hover.shadow.blur,
+		'px',
+		'menu hover shadow blur',
+	);
+	assertUnit(
+		menuVars.hover.text.offsetX,
+		'px',
+		'menu hover text offsetX',
+	);
+	assertUnit(
+		menuVars.hover.text.offsetY,
+		'px',
+		'menu hover text offsetY',
+	);
+	assertUnit(
+		menuVars.textShadow.offsetX,
+		'px',
+		'menu textShadow offsetX',
+	);
+	assertUnit(
+		menuVars.textShadow.offsetY,
+		'px',
+		'menu textShadow offsetY',
+	);
 	assertUnit(menuVars.textShadow.blur, 'px', 'menu textShadow blur');
 	assertUnit(logoVars.width, 'px', 'menu logo width');
 	assertUnit(logoVars.offsetY, 'px', 'menu logo offsetY');
@@ -122,27 +162,235 @@ export const miniBokehContainer = style({
 	},
 });
 
-export const miniBokeh = style({
+const blobBase = style({
 	position: 'absolute',
 	borderRadius: '999px',
-	background: (() => {
-		const gradients = menuVars.hover.blobs.map(
-			({ color, posX, posY, radius, intensity }) => {
-				const chromaColor = color ?? colorVars.contrast;
-				const solid = chromaColor.alpha(intensity ?? 0.3).css();
-				const soft = chromaColor.alpha(0).css();
-				return `radial-gradient(circle at ${posX}% ${posY}%, ${solid} 0%, ${soft} ${radius}%)`;
-			},
-		);
-		return gradients.join(', ');
-	})(),
-	filter: `blur(${menuVars.hover.blur.value}px)`,
-	boxShadow: `0 0 ${menuVars.hover.shadow.spread.value}px ${colorVars.contrast.alpha(menuVars.hover.shadow.opacity).css()}`,
-	opacity: 1,
-	transform: transforms.value(transforms.translate3d(0, 0, 0)),
-	transition:
-		'transform 450ms cubic-bezier(0.4, 0, 0.2, 1), width 350ms ease, height 350ms ease',
+	pointerEvents: 'none',
 	mixBlendMode: 'screen',
+	transform: 'translate(-50%, -50%)',
+	transition:
+		'transform 320ms cubic-bezier(0.4, 0, 0.2, 1), opacity 320ms ease, width 320ms ease, height 320ms ease, filter 320ms ease, left 320ms cubic-bezier(0.4,0,0.2,1), top 320ms cubic-bezier(0.4,0,0.2,1)',
+});
+
+export const bokehBlobAlpha = style([
+	blobBase,
+]);
+export const bokehBlobBeta = style([
+	blobBase,
+]);
+export const bokehBlobGamma = style([
+	blobBase,
+]);
+
+type BlobSlotConfig = {
+	left: IMeasurement;
+	top: IMeasurement;
+	size?: IMeasurement;
+	color: ColorWrapper;
+	opacity?: number;
+	blur?: IMeasurement;
+	zIndex?: number;
+	scale?: number;
+};
+
+type BlobName = 'alpha' | 'beta' | 'gamma';
+
+const createBlobRule = (config: BlobSlotConfig): StyleRule => {
+	const diameter = config.size ?? menuVars.blobDefaults.size;
+	const opacity = config.opacity ?? menuVars.blobDefaults.opacity;
+	const blur = config.blur ?? menuVars.blobDefaults.blur;
+	const scale = config.scale ?? menuVars.blobDefaults.scale;
+	const colorCss = config.color.alpha(opacity).css();
+	return {
+		left: config.left.css(),
+		top: config.top.css(),
+		width: diameter.css(),
+		height: diameter.css(),
+		background: colorCss,
+		opacity,
+		filter: `blur(${blur.css()})`,
+		// boxShadow: `0 0 ${blur.round().css()} ${config.color
+		// 	.alpha(Math.min(1, opacity * 1.15))
+		// 	.css()}`,
+		transform: `translate(-50%, -50%) scale(${scale})`,
+	};
+};
+
+const slotConfigs: Array<Record<BlobName, BlobSlotConfig>> = [
+	{
+		alpha: {
+			left: mPercent(26),
+			top: mPercent(38),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.a,
+			opacity: 0.6,
+			blur: menuVars.blobDefaults.blur.multiply(1.45),
+		},
+		beta: {
+			left: mPercent(58),
+			top: mPercent(56),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.b,
+			opacity: 0.52,
+			blur: menuVars.blobDefaults.blur.multiply(1.35),
+		},
+		gamma: {
+			left: mPercent(42),
+			top: mPercent(70),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.d,
+			opacity: 0.5,
+			blur: menuVars.blobDefaults.blur.multiply(1.4),
+		},
+	},
+	{
+		alpha: {
+			left: mPercent(32),
+			top: mPercent(36),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.b,
+			opacity: 0.58,
+			blur: menuVars.blobDefaults.blur.multiply(1.5),
+		},
+		beta: {
+			left: mPercent(66),
+			top: mPercent(52),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.c,
+			opacity: 0.5,
+			blur: menuVars.blobDefaults.blur.multiply(1.3),
+		},
+		gamma: {
+			left: mPercent(46),
+			top: mPercent(74),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.d,
+			opacity: 0.48,
+			blur: menuVars.blobDefaults.blur.multiply(1.35),
+		},
+	},
+	{
+		alpha: {
+			left: mPercent(22),
+			top: mPercent(40),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.c,
+			opacity: 0.56,
+			blur: menuVars.blobDefaults.blur.multiply(1.45),
+		},
+		beta: {
+			left: mPercent(60),
+			top: mPercent(60),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.a,
+			opacity: 0.54,
+			blur: menuVars.blobDefaults.blur.multiply(1.4),
+		},
+		gamma: {
+			left: mPercent(48),
+			top: mPercent(76),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.d,
+			opacity: 0.46,
+			blur: menuVars.blobDefaults.blur.multiply(1.38),
+		},
+	},
+	{
+		alpha: {
+			left: mPercent(28),
+			top: mPercent(34),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.a,
+			opacity: 0.6,
+			blur: menuVars.blobDefaults.blur.multiply(1.3),
+		},
+		beta: {
+			left: mPercent(64),
+			top: mPercent(56),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.b,
+			opacity: 0.5,
+			blur: menuVars.blobDefaults.blur.multiply(1.35),
+		},
+		gamma: {
+			left: mPercent(46),
+			top: mPercent(68),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.c,
+			opacity: 0.44,
+			blur: menuVars.blobDefaults.blur.multiply(1.3),
+		},
+	},
+	{
+		alpha: {
+			left: mPercent(24),
+			top: mPercent(36),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.d,
+			opacity: 0.58,
+			blur: menuVars.blobDefaults.blur.multiply(1.4),
+		},
+		beta: {
+			left: mPercent(60),
+			top: mPercent(58),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.a,
+			opacity: 0.52,
+			blur: menuVars.blobDefaults.blur.multiply(1.32),
+		},
+		gamma: {
+			left: mPercent(44),
+			top: mPercent(74),
+			size: menuVars.blobDefaults.size,
+			color: themeColours.lights.b,
+			opacity: 0.46,
+			blur: menuVars.blobDefaults.blur.multiply(1.36),
+		},
+	},
+];
+
+export const bokehSlotAlphaClasses = slotConfigs.map((config) =>
+	style(createBlobRule(config.alpha)),
+);
+
+export const bokehSlotBetaClasses = slotConfigs.map((config) =>
+	style(createBlobRule(config.beta)),
+);
+
+export const bokehSlotGammaClasses = slotConfigs.map((config) =>
+	style(createBlobRule(config.gamma)),
+);
+
+export const bokehTravelAlpha = style({
+	opacity: 0.62,
+	transform: 'translate(-50%, -50%) scale(0.96)',
+});
+
+export const bokehTravelBeta = style({
+	opacity: 0.58,
+	transform: 'translate(-50%, -50%) scale(0.95)',
+});
+
+export const bokehTravelGamma = style({
+	opacity: 0.52,
+	transform: 'translate(-50%, -50%) scale(0.94)',
+});
+
+export const bokehDebugBlob = style({
+	outline: '1px dashed rgba(255,255,255,0.45)',
+});
+
+export const miniBokeh = style({
+	position: 'absolute',
+	left: 0,
+	top: 0,
+	width: '100%',
+	height: '100%',
+	borderRadius: '999px',
+	mixBlendMode: 'screen',
+	opacity: 0.5,
+	transition:
+		'width 350ms ease, height 350ms ease, transform 350ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms ease, background 420ms ease',
 });
 
 const focusScale = logoVars.focus?.scale ?? 1.05;
@@ -155,22 +403,18 @@ const rotationScaleFactor =
 const autoHitboxScale = hoverScale * rotationScaleFactor;
 const focusTransition = logoVars.focus?.transitionMs ?? 260;
 
-const logoHoverOutline = logoVars.hover?.outline;
+
 const logoHitboxSize = logoVars.width.multiply(autoHitboxScale);
 const hitboxBuffer = m(6);
-const logoHitboxDiameter = logoHitboxSize.add(hitboxBuffer.value);
+const logoHitboxDiameter = logoHitboxSize.add(hitboxBuffer);
 const logoHitboxPadding = logoHitboxDiameter.divide(2);
-const navPaddingValue = logoVars.width.value / 2 + 6;
-const logoNavPaddingMeasurement = m(
-	navPaddingValue,
-	logoVars.width.unit ?? 'px',
-);
-const logoNavPadding = logoNavPaddingMeasurement.css();
-const logoHoverOutlineWidth = logoHoverOutline?.width.css() ?? '2px';
-const logoHoverOutlineOffset =
-	logoHoverOutline?.offset.css() ?? '6px';
+const logoNavPaddingMeasurement = logoVars.width.divide(2).add(hitboxBuffer);
+
+const logoOutline = logoVars.hover?.outline;
+const logoHoverOutlineWidth = (logoOutline?.width ?? m(2)).css();
+const logoHoverOutlineOffset = (logoOutline?.offset ?? m(6)).css();
 const logoHoverOutlineColor = (
-	logoHoverOutline?.color ?? colorVars.contrast.alpha(0.6)
+	logoOutline?.color ?? colorVars.contrast.alpha(0.6)
 ).css();
 
 const logoHoverRotate = keyframes({
@@ -265,8 +509,8 @@ export const list = style({
 			justifyContent: 'flex-end',
 			order: 0,
 			...paddings({
-				right: logoNavPadding,
-				left: logoNavPadding,
+				right: logoNavPaddingMeasurement.css(),
+				left: logoNavPaddingMeasurement.css(),
 			}),
 			transformOrigin: 'right center',
 		},
@@ -275,8 +519,8 @@ export const list = style({
 			justifyContent: 'flex-start',
 			order: 1,
 			...paddings({
-				right: logoNavPadding,
-				left: logoNavPadding,
+				right: logoNavPaddingMeasurement.css(),
+				left: logoNavPaddingMeasurement.css(),
 			}),
 			transformOrigin: 'left center',
 		},
