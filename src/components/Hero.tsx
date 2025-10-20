@@ -54,14 +54,14 @@ export default function Hero({ className, copy }: Props) {
 
 			{/* <div className={clsx(layoutStyles.content, s.content)}> */}
 			<div className={clsx(layoutStyles.panel, s.panel)}>
-					<div className={s.vennContainer}>
-						<div className={s.consolePanel}>
-							<Console
-								className={s.console}
-								description={copy.consoleDescription}
-								idBase={consoleId}
-							/>
-						</div>
+				<div className={s.vennContainer}>
+					<div className={s.consolePanel}>
+						<Console
+							className={s.console}
+							description={copy.consoleDescription}
+							idBase={consoleId}
+						/>
+					</div>
 					<GlassyPanel
 						className={clsx(s.designPanel)}
 						surfaceClassName={s.heroSurface}
@@ -84,12 +84,13 @@ export default function Hero({ className, copy }: Props) {
 								>
 									{copy.headingLastLine}
 								</span>
-								{/* // here */}
 							</h1>
-					<div
-						className={s.paragraph}
-						dangerouslySetInnerHTML={{ __html: copy.subtitleHtml }}
-					/>
+							<div
+								className={s.paragraph}
+								dangerouslySetInnerHTML={{
+									__html: copy.subtitleHtml,
+								}}
+							/>
 						</div>
 					</GlassyPanel>
 				</div>

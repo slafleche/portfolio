@@ -18,42 +18,83 @@ export const en = {
 	'hero-subtitle': 'A developer with a designer’s __eye__',
 	'hero-console_description': 'Decorative code backdrop',
 
-	'image_portrait-title': 'Portrait of Stéphane L.',
-	'image_portrait-alt':
-		'A photo of Stéphane L. working, with a blurred background.',
+	// 'image_portrait-title': 'Portrait of Stéphane L.',
+	// 'image_portrait-alt':
+	// 	'A photo of Stéphane L. working, with a blurred background.',
 
-	'split-dev_title': 'What I Conceptualize',
-	'split-dev_content':
-		'* Theming systems that scale\n* Component and UX patterns\n* Refinements that improve the design vision',
+	// 'split-dev_title': 'What I Conceptualize',
+	// 'split-dev_content':
+	// 	'* Theming systems that scale\n* Component and UX patterns\n* Refinements that improve the design vision',
 
-	'split-design_title': 'What I Deliver',
-	'split-design_content':
-		'* Interfaces faithful to design\n* Responsive layouts across devices\n* Accessibility from the start',
-
-	about: 'About',
-	'about-href': 'about',
-	'about-content':
-		'## About - I started my career as a **3D modeler**, which gave me a foundation in precision, attention to detail, and creating assets that balance both technical and visual requirements.\nThose same skills translate directly into my front-end work today: building UI components that are both **functional** and **aesthetically aligned** with your brand design. Over time, I’ve grown into a role where I naturally act as a **bridge between designers and developers**, ensuring both sides see their work realized in the final product.',
-
-	approach: 'Approach',
-	'approach-href': 'approach',
-	'approach-content':
-		'## Approach - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.',
-
-	'case_study': 'Case Study',
-	'case_study-href': 'case_study',
-	'case_study-content':
-		'## Case_study - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.',
-
-	projects: 'Projects',
-	'projects-href': 'projects',
-	'projects-content':
-		'## Projects I’ve been part of along the journey - This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.This is sample Markdown Text\n\nYou can write *Markdown* content **here**.',
+	// 'split-design_title': 'What I Deliver',
+	// 'split-design_content':
+	// 	'* Interfaces faithful to design\n* Responsive layouts across devices\n* Accessibility from the start',
 
 	'error-video': 'Sorry, your browser cannot play this video',
 	'hero-title': 'Animated Purple Gradient Circles',
 	'hero-alt':
 		'Abstract background of layered concentric circles in purple, violet, and magenta, with a subtle parallax movement that makes the layers shift slightly.',
+
+	approach: 'Approach',
+	'approach-href': 'approach',
+	'approach-content':
+		'## Approach\n\nGood design systems don’t happen by accident.\n\nThey work best when design and development stay in sync, when someone pays attention to how ideas translate from one side to the other.\n\nThat’s the space I like to work in: turning design intent into components, theming systems, and patterns that hold together in code. I think about the flow of decisions: how color tokens, motion, and layout all connect so the final product feels consistent and intentional.\n\nFor me, it’s about building structure without friction—systems that make it easier for everyone to create something that looks right, feels right, and works right.',
+
+	about: 'About',
+	'about-href': 'about',
+	'about-content':
+		'## About me\n\nBefore I ever wrote a line of code, I studied **Animation Art and Design** before moving into 3D modeling, where I built objects that had to match both artistic vision and strict technical specs. That mix of creative and technical work taught me to observe how things fit together, to notice the systems and patterns beneath the surface.\n\nWhen I moved into front-end development, that same curiosity led me toward user experience, theming, and reusability. I began thinking less about single components and more about how entire interfaces connect—how design decisions scale and how systems stay flexible over time.\n\nI’ve played a key role in developing a theming system that served multiple products.\n\nIt was built to keep the design language consistent while still allowing each app to express its own identity.\n\nProjects like that shaped how I think about collaboration between design and development: not as a handoff, but as a shared process that keeps ideas coherent from concept to deployment. I think about **developer experience** the same way designers think about user experience: the clearer and more consistent the system, the easier it is for good ideas to carry through.\n\nI try to build environments where teams can focus on the work itself instead of fighting the tools—where design, development, and intent stay aligned from the first sketch to the final release.',
+
+	case_study: 'Case Study',
+	'case_study-href': 'case_study',
+	case_studies: [
+		{
+			title: 'Theming within the system',
+			subTitle: 'seeing the limits',
+			content:
+				'I began as a **themer**, building client themes inside Vanilla’s existing framework. That work exposed me to how the system actually behaved: where it flexed, where it resisted, and how design intent carried through to code. I often had to balance two conflicting pressures: clients who wanted full creative freedom, and my lead, who emphasized restraint to keep refactors safe. I naturally found myself bridging those needs, finding solutions that respected both the visual goals and the system’s structural limits.',
+		},
+		{
+			title: 'Streamlining theming',
+			subTitle: 'making the system easier to work with',
+			content:
+				'While theming, I began noticing repeating friction points, duplicated styles, inconsistent spacing, unclear naming. Even though no one else used my work, I started creating small helpers and reusable snippets to make my own process cleaner. Those self-built tools taught me that organization and predictability don’t just speed up development, they make the system itself easier to trust.',
+		},
+		{
+			title: 'Joining Research and Development',
+			subTitle: 'contributing from inside the system',
+			content:
+				'I transitioned into **Research and Development (R&D)** as an **Application Web Integrator**, moving from styling on top of the system to shaping how it worked underneath. I contributed directly to the **core product**, adding new functionality, fixing bugs, and refining front-end behavior, while also building the new **Vanilla.com** site independently and collaborating on smaller projects like a Hootsuite integration. As my work began influencing shared code, I started thinking about the developers who would maintain it, including the new themer stepping into my old role. That shift deepened my focus on clarity, maintainability, and developer experience.',
+		},
+		{
+			title: 'Preparing legacy systems',
+			subTitle: 'setting the stage for change',
+			content:
+				'As part of the **Knowledge Base** team, I worked on the front-end foundation that would later support the next generation of Vanilla’s products. I helped shape how components were styled, structured, and themed, focusing on consistency, CSS-in-JS practices, and scalable patterns. At the same time, I helped adapt the legacy Forums codebase so it could connect to new theming concepts without breaking. This phase was about building compatibility and resilience, preparing old systems to coexist with what came next.',
+		},
+		{
+			title: 'New Theming System',
+			subTitle: 'bridging legacy and modern platforms',
+			content:
+				'I helped develop a new theming architecture that translated each client’s style into a set of **design tokens**, shared values interpreted by every product to its own needs. A concise set of global defaults kept everything consistent, while components could adapt granularly to those tokens. This **token-based decoupling** allowed products to evolve safely: teams could update components without breaking client themes. Even when components were replaced entirely, the design language persisted, proving the system’s resilience over time.',
+		},
+		{
+			title: 'Lessons learned',
+			subTitle: 'keeping design and development aligned',
+			content:
+				'Through all of this, I realized that building scalable systems means aligning everyone who touches them, not just the code. The work had to serve **three audiences** at once: the internal team evolving the platform, product developers building on it, and clients defining their brand themes. Keeping intent consistent across those groups became the true measure of success. For me, that alignment—between design, development, and intent—is what turns good systems into lasting ones.',
+		},
+	] as const,
+
+	projects: 'Projects',
+	'projects-href': 'projects',
+	'projects-content': '',
+
+	contact: 'contact',
+	'contact-href': 'contact',
+	'contact-content': "Think we'd work well together?",
+	'contact-github':
+		'Site sources available on [GitHub!](https://github.com/slafleche/portfolio)',
 } as const;
 
 export type EnMessages = typeof en;

@@ -15,20 +15,27 @@ export const fr = {
 
 	'hero-title_a': 'Tisser le design et',
 	'hero-title_b': 'le développement',
-	'hero-subtitle': 'Un développeur avec l’*œil* d’un designer',
+	'hero-subtitle': 'Un développeur avec l\'*œil* d\'un designer',
 	'hero-console_description': 'Arrière-plan de code décoratif',
 
-	'image_portrait-title': 'Portrait de Stéphane L.',
-	'image_portrait-alt':
-		'Une photo de Stéphane L. en train de travailler, avec un arrière-plan flou.',
+	// 'image_portrait-title': 'Portrait de Stéphane L.',
+	// 'image_portrait-alt':
+	// 	'Une photo de Stéphane L. en train de travailler, avec un arrière-plan flou.',
 
-	'split-dev_title': 'Ce que je conçois',
-	'split-dev_content':
-		'* Des systèmes de thématisation évolutifs\n* Des modèles de composants et d’UX\n* Des ajustements qui améliorent la vision initiale',
+	// 'split-dev_title': 'Ce que je conçois',
+	// 'split-dev_content':
+	// 	'* Des systèmes de thématisation évolutifs\n* Des modèles de composants et d'UX\n* Des ajustements qui améliorent la vision initiale',
 
-	'split-design_title': 'Ce que je livre',
-	'split-design_content':
-		'* Des interfaces fidèles au design\n* Des mises en page réactives sur tous les appareils\n* L’accessibilité dès la conception',
+	// 'split-design_title': 'Ce que je livre',
+	// 'split-design_content':
+	// 	'* Des interfaces fidèles au design\n* Des mises en page réactives sur tous les appareils\n* L'accessibilité dès la conception',
+
+	'error-video':
+		'Désolé, votre navigateur ne peut pas lire cette vidéo.',
+
+	'hero-title': 'Cercles violets en dégradé animés',
+	'hero-alt':
+		'Arrière-plan abstrait de cercles concentriques superposés en violet, pourpre et magenta, avec un léger mouvement en parallaxe qui fait subtilement bouger les couches.',
 
 	about: 'À propos',
 	'about-href': 'a-propos',
@@ -40,22 +47,56 @@ export const fr = {
 	'approach-content':
 		'## Philosophie - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.',
 
-	'case_study': 'Étude de cas',
-	'case_study-href': 'etude-de-cas',
-	'case_study-content':
-		'## Étude de cas - Ceci est un texte Markdown\n\nVous pouvez écrire du contenu *Markdown* **ici**.',
+	case_study: 'Études de cas',
+	'case_study-href': 'etudes-de-cas',
+	case_studies: [
+		{
+			title: 'Thématisation dans le système',
+			subTitle: 'comprendre ses limites',
+			content:
+				"J'ai commencé comme **thémeur**, à construire des thèmes clients dans le cadre déjà en place de Vanilla. Ce travail m'a dévoilé le comportement réel du système : où il était souple, où il résistait, et comment l'intention de design se traduisait en code. Je devais souvent concilier deux attentes opposées : des clients voulant une grande liberté créative et mon responsable qui privilégiait la sécurité des refactorisations. J'ai naturellement fait le pont entre ces besoins, en trouvant des solutions respectant autant l'objectif visuel que les limites structurelles du système.",
+		},
+		{
+			title: 'Fluidifier la thématisation',
+			subTitle: 'simplifier le système au quotidien',
+			content:
+				"En thématisant, j'ai repéré des frictions récurrentes : styles dupliqués, espacements incohérents, noms peu clairs. Même si personne n'utilisait mon travail, j'ai commencé à écrire de petits utilitaires et des snippets réutilisables pour rendre mon processus plus net. Ces outils personnels m'ont montré qu'organisation et prévisibilité ne font pas que gagner du temps : ils renforcent la confiance qu'on peut avoir dans le système.",
+		},
+		{
+			title: 'Rejoindre la R&D',
+			subTitle: 'contribuer depuis l\'intérieur du système',
+			content:
+				"J'ai intégré la **Recherche et Développement (R&D)** comme **intégrateur web**, en passant du stylisme au-dessus du système à la manière dont il fonctionne en profondeur. J'ai contribué directement au **produit principal**, ajouté de nouvelles fonctionnalités, corrigé des bugs et affiné le comportement front-end, tout en construisant le nouveau site **Vanilla.com** en autonomie et en collaborant sur des projets plus modestes comme une intégration Hootsuite. En entrant dans le code mutualisé, j'ai davantage pensé aux développeurs amenés à le maintenir, y compris au nouveau thémeur prenant ma place. Cette étape a renforcé mon attention à la clarté, à la maintenabilité et à l'expérience développeur.",
+		},
+		{
+			title: 'Préparer l\'héritage',
+			subTitle: 'créer les bases du changement',
+			content:
+				"Au sein de l'équipe **Knowledge Base**, j'ai travaillé sur la fondation front-end qui allait soutenir la prochaine génération de produits Vanilla. J'ai aidé à définir la manière dont les composants étaient stylés, structurés et thématisés, en me concentrant sur la cohérence, les pratiques CSS-in-JS et des schémas évolutifs. En parallèle, j'ai contribué à adapter l'ancien code Forums pour qu'il puisse se connecter aux nouveaux concepts de thématisation sans casser l'existant. Cette phase consistait à bâtir compatibilité et résilience, pour préparer les systèmes historiques à coexister avec ce qui était en train d'arriver.",
+		},
+		{
+			title: 'Nouveau système de thème',
+			subTitle: 'relier plateformes legacy et modernes',
+			content:
+				"J'ai participé à la mise en place d'une architecture de thème qui traduisait le style de chaque client en un ensemble de **design tokens** : des valeurs partagées interprétées selon les besoins de chaque produit. Un ensemble concis de paramètres globaux gardait tout cohérent, tandis que les composants pouvaient s'adapter finement à ces tokens. Ce **découplage par tokens** a permis aux produits d'évoluer en toute sécurité : les équipes pouvaient mettre à jour les composants sans casser les thèmes clients. Même lorsque des composants étaient entièrement remplacés, le langage visuel restait intact, preuve de la résilience du système.",
+		},
+		{
+			title: 'Leçons retenues',
+			subTitle: 'garder design et développement alignés',
+			content:
+				"De tout cela, j'ai retenu que bâtir des systèmes évolutifs impose d'aligner toutes les personnes qui les touchent, pas uniquement le code. Le travail devait servir **trois publics** à la fois : l'équipe interne qui fait avancer la plateforme, les développeurs produits qui l'utilisent et les clients qui définissent leurs thèmes de marque. Garder l'intention cohérente entre ces groupes est devenu le vrai indicateur de réussite. Pour moi, cet alignement — entre design, développement et intention — est ce qui transforme de bons systèmes en systèmes durables.",
+		},
+	] as const,
 
 	projects: 'Projets',
 	'projects-href': 'projets',
-	'projects-content':
-		'## Quelques clients avec qui j’ai collaboré.',
+	'projects-content': '## Quelques clients avec qui j\'ai collaboré.',
 
-	'error-video':
-		'Désolé, votre navigateur ne peut pas lire cette vidéo.',
-
-	'hero-title': 'Cercles violets en dégradé animés',
-	'hero-alt':
-		'Arrière-plan abstrait de cercles concentriques superposés en violet, pourpre et magenta, avec un léger mouvement en parallaxe qui fait subtilement bouger les couches.',
+	contact: 'contact',
+	'contact-href': 'contact',
+	'contact-content': 'Envie de collaborer ?',
+	'contact-github':
+		'Le code du site est dispo sur [GitHub !](https://github.com/slafleche/portfolio)',
 } as const;
 
 export type FrMessages = typeof fr;
