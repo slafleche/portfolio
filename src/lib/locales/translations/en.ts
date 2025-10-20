@@ -13,38 +13,26 @@ export const en = {
 
 	'scroll-cue': 'Scroll to content',
 
+	'hero-title': 'Blue–magenta gradient rotation background',
+	'hero-alt':
+		'Slowly rotating diagonal gradient blending cool blue and soft magenta tones with subtle light bands',
 	'hero-title_a': 'Bridging design',
 	'hero-title_b': 'and development',
 	'hero-subtitle': 'A developer with a designer’s __eye__',
 	'hero-console_description': 'Decorative code backdrop',
-	'hero-cta': 'Let\'s connect!',
-
-	// 'image_portrait-title': 'Portrait of Stéphane L.',
-	// 'image_portrait-alt':
-	// 	'A photo of Stéphane L. working, with a blurred background.',
-
-	// 'split-dev_title': 'What I Conceptualize',
-	// 'split-dev_content':
-	// 	'* Theming systems that scale\n* Component and UX patterns\n* Refinements that improve the design vision',
-
-	// 'split-design_title': 'What I Deliver',
-	// 'split-design_content':
-	// 	'* Interfaces faithful to design\n* Responsive layouts across devices\n* Accessibility from the start',
+	'hero-cta': "Let's connect!",
 
 	'error-video': 'Sorry, your browser cannot play this video',
-	'hero-title': 'Animated Purple Gradient Circles',
-	'hero-alt':
-		'Abstract background of layered concentric circles in purple, violet, and magenta, with a subtle parallax movement that makes the layers shift slightly.',
 
 	approach: 'Approach',
 	'approach-href': 'approach',
 	'approach-content':
-		'## Approach\n\nGood design systems don’t happen by accident.\n\nThey work best when design and development stay in sync, when someone pays attention to how ideas translate from one side to the other.\n\nThat’s the space I like to work in: turning design intent into components, theming systems, and patterns that hold together in code. I think about the flow of decisions: how color tokens, motion, and layout all connect so the final product feels consistent and intentional.\n\nFor me, it’s about building structure without friction—systems that make it easier for everyone to create something that looks right, feels right, and works right.',
+		'Good design systems don’t happen by accident.\n\nThey work best when design and development stay in sync, when someone pays attention to how ideas translate from one side to the other.\n\nThat’s the space I like to work in: turning design intent into components, theming systems, and patterns that hold together in code. I think about the flow of decisions: how color tokens, motion, and layout all connect so the final product feels consistent and intentional.\n\nFor me, it’s about building structure without friction—systems that make it easier for everyone to create something that looks right, feels right, and works right.',
 
-	about: 'About',
+	about: 'About Me',
 	'about-href': 'about',
 	'about-content':
-		'## About me\n\nBefore I ever wrote a line of code, I studied **Animation Art and Design** before moving into 3D modeling, where I built objects that had to match both artistic vision and strict technical specs. That mix of creative and technical work taught me to observe how things fit together, to notice the systems and patterns beneath the surface.\n\nWhen I moved into front-end development, that same curiosity led me toward user experience, theming, and reusability. I began thinking less about single components and more about how entire interfaces connect—how design decisions scale and how systems stay flexible over time.\n\nI’ve played a key role in developing a theming system that served multiple products.\n\nIt was built to keep the design language consistent while still allowing each app to express its own identity.\n\nProjects like that shaped how I think about collaboration between design and development: not as a handoff, but as a shared process that keeps ideas coherent from concept to deployment. I think about **developer experience** the same way designers think about user experience: the clearer and more consistent the system, the easier it is for good ideas to carry through.\n\nI try to build environments where teams can focus on the work itself instead of fighting the tools—where design, development, and intent stay aligned from the first sketch to the final release.',
+		'Before I ever wrote a line of code, I studied **Animation Art and Design** before moving into 3D modeling, where I built objects that had to match both artistic vision and strict technical specs. That mix of creative and technical work taught me to observe how things fit together, to notice the systems and patterns beneath the surface.\n\nWhen I moved into front-end development, that same curiosity led me toward user experience, theming, and reusability. I began thinking less about single components and more about how entire interfaces connect—how design decisions scale and how systems stay flexible over time.\n\nI’ve played a key role in developing a theming system that served multiple products.\n\nIt was built to keep the design language consistent while still allowing each app to express its own identity.\n\nProjects like that shaped how I think about collaboration between design and development: not as a handoff, but as a shared process that keeps ideas coherent from concept to deployment. I think about **developer experience** the same way designers think about user experience: the clearer and more consistent the system, the easier it is for good ideas to carry through.\n\nI try to build environments where teams can focus on the work itself instead of fighting the tools—where design, development, and intent stay aligned from the first sketch to the final release.',
 
 	case_study: 'Case Study',
 	'case_study-href': 'case_study',
@@ -116,7 +104,7 @@ export const en = {
 				'One of the first real tests of the new theming system. Collaborated with the themer assigned to their project, offering guidance and observing early pain points to refine how the system performed in real client work.',
 		},
 	},
-	contact: 'contact',
+	contact: 'Contact',
 	'contact-href': 'contact',
 	'contact-content': "Think we'd work well together?",
 	'contact-github':
