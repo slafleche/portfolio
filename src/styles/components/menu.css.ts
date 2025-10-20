@@ -4,6 +4,7 @@ import {
 	absolutePosition,
 	flexPosition,
 } from '../helpers/positioning';
+import { focusOutline } from '../helpers/focusOutline';
 import type { ColorWrapper } from '../helpers/colorWrap';
 import {
 	archVars,
@@ -411,11 +412,10 @@ const logoHitboxPadding = logoHitboxDiameter.divide(2);
 const logoNavPaddingMeasurement = logoVars.width.divide(2).add(hitboxBuffer);
 
 const logoOutline = logoVars.hover?.outline;
-const logoHoverOutlineWidth = (logoOutline?.width ?? m(2)).css();
-const logoHoverOutlineOffset = (logoOutline?.offset ?? m(6)).css();
-const logoHoverOutlineColor = (
-	logoOutline?.color ?? colorVars.contrast.alpha(0.6)
-).css();
+const logoHoverOutlineWidth = logoOutline?.width ?? m(2);
+const logoHoverOutlineOffset = logoOutline?.offset ?? m(6);
+const logoHoverOutlineColor =
+	logoOutline?.color ?? colorVars.contrast.alpha(0.6);
 
 const logoHoverRotate = keyframes({
 	'0%': {
@@ -563,10 +563,11 @@ export const logoLink = style({
 	position: 'relative',
 	cursor: 'pointer',
 	selectors: {
-		'&:focus-visible': {
-			outline: `${logoHoverOutlineWidth} solid ${logoHoverOutlineColor}`,
-			outlineOffset: logoHoverOutlineOffset,
-		},
+		'&:focus-visible': focusOutline({
+			width: logoHoverOutlineWidth,
+			offset: logoHoverOutlineOffset,
+			color: logoHoverOutlineColor,
+		}),
 		'&[data-at-top="true"]': {
 			cursor: 'default',
 		},

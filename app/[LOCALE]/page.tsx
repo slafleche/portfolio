@@ -14,6 +14,7 @@ import { Grid, Column } from '@/components/Grid';
 import Card from '@/components/Card';
 import { Markdown } from '@/components/Markdown';
 import Footer from '../../src/components/Footer';
+import ScrollContactButton from '@/components/ScrollContactButton';
 import * as layoutStyles from '@/styles/layout.css';
 
 export default async function HomePage({
@@ -24,18 +25,18 @@ export default async function HomePage({
 	const { LOCALE } = await params;
 	const t = await loadTranslator(LOCALE);
 
-	const heroCopy = buildHeroCopy(t);
-	const approach = buildApproachCopy(t);
-	const about = buildAboutCopy(t);
-	const caseStudies = buildCaseStudiesCopy(t);
-	const projects = buildProjectsCopy(t);
-	const contact = buildContactCopy(t);
+  const heroCopy = buildHeroCopy(t);
+  const approach = buildApproachCopy(t);
+  const about = buildAboutCopy(t);
+  const caseStudies = buildCaseStudiesCopy(t);
+  const projects = buildProjectsCopy(t);
+  const contact = buildContactCopy(t);
 
 	return (
 		<SkipNavContent id="body">
-			<div className={layoutStyles.page}>
-				<main className={layoutStyles.main}>
-					<Hero ctaHref={`#${contact.href}`} copy={heroCopy} />
+      <div className={layoutStyles.page}>
+        <main className={layoutStyles.main}>
+          <Hero id="hero" ctaHref={`#${contact.href}`} copy={heroCopy} />
 					<Content
 						id={approach.href}
 						title={approach.title}
@@ -92,8 +93,15 @@ export default async function HomePage({
 						</Grid>
 					</Content>
 				</main>
-				<Footer contact={contact} id={contact.href} />
-			</div>
-		</SkipNavContent>
-	);
+        <Footer contact={contact} id={contact.href} />
+        {heroCopy.ctaLabel ? (
+          <ScrollContactButton
+            watchId="hero"
+            href={`#${contact.href}`}
+            label={heroCopy.ctaLabel}
+          />
+        ) : null}
+      </div>
+    </SkipNavContent>
+  );
 }
