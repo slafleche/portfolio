@@ -1,15 +1,13 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import {
-	resolveLocale,
-	loadMessages,
-	createTranslator,
-} from '@/lib/locales/locale';
+import { resolveLocale, loadMessages, createTranslator } from '@/lib/locales/locale';
 import { ResponsiveProvider } from '@/lib/responsive/ResponsiveProvider';
 import Menu from '@/components/Menu';
 import { WindowSizeProvider } from '@/lib/responsive/WindowSizeContext';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { BASE_ANCHORS } from '@/components/menu/menuUtils';
+import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 
 interface SegmentLayoutProps {
 	children: ReactNode;
@@ -22,27 +20,20 @@ export default async function LocaleSegmentLayout({
 }: SegmentLayoutProps) {
 	const { LOCALE } = await params;
 	const locale = resolveLocale(LOCALE);
-	const messages = await loadMessages(locale);
-
-	const resolveText = <K extends keyof typeof messages>(
-		key: K,
-		fallback: string,
-	): string => {
-		const value = messages[key];
-		return typeof value === 'string' ? value : fallback;
-	};
+	const t = await loadTranslator(locale);
+	const menuCopy = buildMenuCopy(t);
 
 	const menuSections = BASE_ANCHORS.map(({ hrefKey, labelKey }) => ({
-		id: resolveText(hrefKey, hrefKey),
-		label: resolveText(labelKey, labelKey),
+		id: t(hrefKey),
+		label: t(labelKey),
 	}));
 
 	const menuProps = {
 		root: `/${locale}`,
-		skipNavLabel: resolveText('menu-skip_nav', 'Skip to content'),
-		leftLabel: resolveText('menu-left_label', 'About Me'),
-		rightLabel: resolveText('menu-right_label', 'My Work'),
-		localeChangeLabel: resolveText('localeChange', 'Select language'),
+		skipNavLabel: menuCopy.skipNavLabel,
+		leftLabel: menuCopy.leftLabel,
+		rightLabel: menuCopy.rightLabel,
+		localeChangeLabel: menuCopy.languageLabel,
 		sections: menuSections,
 		localeLinks: AVAILABLE_LOCALES.filter(
 			(code) => code !== locale,
