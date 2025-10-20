@@ -6,10 +6,10 @@ import type {
 } from 'react';
 
 import clsx from 'clsx';
-import { marked } from 'marked';
 import * as s from '@/styles/layout.css';
 import Heading from '../Heading';
 import * as userContentStyles from '@/styles/components/userContent.css';
+import { Markdown } from '@/components/Markdown';
 
 type BaseProps<T extends ElementType> = {
 	tag?: T;
@@ -52,14 +52,9 @@ export default function Content<T extends ElementType = 'section'>({
 
 	const renderedBody =
 		typeof markdown === 'string' ? (
-			<div
+			<Markdown
+				source={markdown}
 				className={userContentStyles.userContent}
-				dangerouslySetInnerHTML={{
-					__html: (() => {
-						const parsed = marked.parse(markdown);
-						return typeof parsed === 'string' ? parsed : '';
-					})(),
-				}}
 			/>
 		) : (
 			children

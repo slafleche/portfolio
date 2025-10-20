@@ -9,6 +9,7 @@ import { buildAboutCopy } from '../../src/lib/locales/sections/about.locale';
 import { buildApproachCopy } from '../../src/lib/locales/sections/approach.locale';
 import { buildContactCopy } from '../../src/lib/locales/sections/contact.locale';
 import Content from '../../src/components/responsive/Content';
+import CaseStudy from '@/components/CaseStudy';
 
 export default async function HomePage({
 	params,
@@ -39,8 +40,12 @@ export default async function HomePage({
 					title={about.title}
 					markdown={about.content}
 				/>
-
-				<Content id={caseStudies.href} title={caseStudies.title} />
+				<Content id={caseStudies.href} title={caseStudies.title}>
+					<CaseStudy
+						id={caseStudies.href}
+						caseStudies={caseStudies.list}
+					/>
+				</Content>
 				<Content title={projects.title} id={projects.href} />
 				<Content title={contact.title} id={contact.href} />
 			</SkipNavContent>
