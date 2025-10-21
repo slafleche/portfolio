@@ -4,30 +4,32 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 
-import * as s from '@/styles/components/scrollContactButton.css';
+import * as s from '@/styles/components/contactButton.css';
 import SendIcon from '@/components/icons/SendIcon';
 
-interface ScrollContactButtonProps {
+interface ContactButtonProps {
     watchId: string;
     href: string;
     label: string;
     className?: string;
 }
 
-export default function ScrollContactButton({
+export default function ContactButton({
     watchId,
     href,
     label,
     className,
-}: ScrollContactButtonProps) {
+}: ContactButtonProps) {
     const [visible, setVisible] = useState(false);
     const previousVisibleRef = useRef(false);
     const leaving = previousVisibleRef.current && !visible;
+    const active = visible || leaving;
+    const state = visible ? 'visible' : leaving ? 'leaving' : 'hidden';
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        const hero = document.getElementById(watchId);
-        if (!hero) return;
+        const target = document.getElementById(watchId);
+        if (!target) return;
 
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -36,7 +38,7 @@ export default function ScrollContactButton({
             { threshold: 0.1 },
         );
 
-        observer.observe(hero);
+        observer.observe(target);
         return () => observer.disconnect();
     }, [watchId]);
 
@@ -45,19 +47,25 @@ export default function ScrollContactButton({
     }, [visible]);
 
     return (
-        <div className={s.wrapper} data-visible={visible ? 'true' : 'false'}>
+        <div className={s.wrapper} data-state={state}>
             <Link
                 href={href}
                 className={clsx(
                     s.root,
                     className,
-                    visible && s.visible,
+                    active && s.visible,
                     leaving && s.leaving,
                 )}
                 aria-label={label}
             >
                 <span className={clsx(s.gradient, s.gradientVisible)} aria-hidden />
-                <SendIcon className={clsx(s.icon, s.iconVisible)} />
+                <SendIcon
+                    className={clsx(
+                        s.icon,
+                        s.iconVisible,
+                        leaving && s.iconLeaving,
+                    )}
+                />
             </Link>
         </div>
     );

@@ -14,7 +14,7 @@ import { Grid, Column } from '@/components/Grid';
 import Card from '@/components/Card';
 import { Markdown } from '@/components/Markdown';
 import Footer from '../../src/components/Footer';
-import ScrollContactButton from '@/components/ScrollContactButton';
+import ContactButton from '@/components/ContactButton';
 import * as layoutStyles from '@/styles/layout.css';
 
 export default async function HomePage({
@@ -100,7 +100,7 @@ export default async function HomePage({
                 </main>
                 <Footer contact={contact} id={contact.href} />
                 {heroCopy.ctaLabel ? (
-                    <ScrollContactButton
+                    <ContactButton
                         watchId="hero"
                         href={`#${contact.href}`}
                         label={heroCopy.ctaLabel}

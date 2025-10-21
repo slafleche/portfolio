@@ -6,6 +6,7 @@ import VideoByName from './VideoByName';
 import Console from './Console';
 import { createDomId } from '@/lib/dom';
 import { Markdown } from '@/components/Markdown';
+import SendIcon from '@/components/icons/SendIcon';
 
 type HeroCopy = {
 	videoTitle: string;
@@ -93,8 +94,13 @@ export default function Hero({ id, className, copy, ctaHref }: Props) {
 								source={copy.subtitle}
 							/>
 							{copy.ctaLabel ? (
-								<a href={ctaHref ?? '#contact'} className={s.cta}>
-									{copy.ctaLabel}
+								<a
+									href={ctaHref ?? '#contact'}
+									className={s.cta}
+									data-ui="link"
+								>
+									<span>{copy.ctaLabel}</span>
+									<SendIcon className={s.ctaIcon} />
 								</a>
 							) : null}
 						</div>

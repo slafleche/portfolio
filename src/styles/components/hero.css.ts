@@ -145,6 +145,7 @@ export const cta = style({
 	marginTop: m(16).css(),
 	display: 'inline-flex',
 	alignItems: 'center',
+	gap: m(3).css(),
 	justifyContent: 'center',
 	alignSelf: 'center',
 	padding: `${m(3).css()} ${m(6).css()}`,
@@ -160,6 +161,20 @@ export const cta = style({
 			transform: 'translateY(-2px)',
 			boxShadow: `0 ${m(2).css()} ${m(8).css()} rgba(0,0,0,0.25)`,
 			outline: 'none',
+		},
+	},
+});
+
+export const ctaIcon = style({
+	width: m(14).css(),
+	height: m(14).css(),
+	transition: 'transform 160ms ease',
+	selectors: {
+		[`${cta}:hover &`]: {
+			transform: 'translateX(6%)',
+		},
+		[`${cta}:focus-visible &`]: {
+			transform: 'translateX(6%)',
 		},
 	},
 });
