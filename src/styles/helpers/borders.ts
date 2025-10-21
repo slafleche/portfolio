@@ -1,132 +1,136 @@
 import * as CSS from 'csstype';
 import { borderVars, colorVars } from '../vars';
 import type {
-	IBorder,
-	BorderWidthInput,
-	BorderRadiusInput,
+  IBorder,
+  BorderWidthInput,
+  BorderRadiusInput,
 } from '../vars';
-import { toCssMeasurement, toCssColor } from './style';
+import { isMeasurement, hasCssMethod } from './measurement';
 import type {
-	AxisValues,
-	CompassCorners,
-	CompassRegion,
-	CornerPosition,
-	MeasurementLike,
+  AxisValues,
+  CompassCorners,
+  CompassRegion,
+  CornerPosition,
+  MeasurementLike,
 } from './types';
 
 /**
- * Public UX:
- *
- * Border({ bottom: true, // use ambient defaults for bottom // or
- * bottom: { width: m(6) } // override per intent radius: { south:
- * m(8) }, // compass radius: north/south/east/west/nw/ne/se/sw/all
- * })
- *
- * Also available helpers: border.none() border.top(overrides?)
- * border.right(overrides?) border.bottom(overrides?)
- * border.left(overrides?) border.vertical(overrides?) // (top+bottom)
- * border.horizontal(overrides?)// (left+right)
+ * Public UX: Border({ bottom: true, bottom: { width: m(6) }, radius:
+ * { south: m(8) } }) Helpers:
+ * borders.none/top/right/bottom/left/vertical/horizontal/all
  */
 
 type EdgeSpec = boolean | IBorder;
-
 type RadiusSpec = CompassCorners<BorderRadiusInput>;
 
 const isRadiusCompass = (
-	value: BorderIntent['radius'],
-): value is RadiusSpec =>
-	typeof value === 'object' && value !== null;
+  value: BorderIntent['radius'],
+): value is RadiusSpec => typeof value === 'object' && value !== null;
 
 export interface BorderIntent extends AxisValues<EdgeSpec> {
-	radius?: RadiusSpec | 0 | null; // 0/null → explicit no radius
+  radius?: RadiusSpec | 0 | null; // 0/null → explicit no radius
 }
 
 interface FinalBorderCSS {
-	// global shorthands when possible
-	borderColor?: CSS.Property.BorderColor;
-	borderStyle?: CSS.Property.BorderStyle;
-	borderWidth?: CSS.Property.BorderWidth;
-	borderRadius?: CSS.Property.BorderRadius;
-	// per-edge fallbacks if values differ
-	borderTopColor?: CSS.Property.BorderTopColor;
-	borderRightColor?: CSS.Property.BorderRightColor;
-	borderBottomColor?: CSS.Property.BorderBottomColor;
-	borderLeftColor?: CSS.Property.BorderLeftColor;
+  borderColor?: CSS.Property.BorderColor;
+  borderStyle?: CSS.Property.BorderStyle;
+  borderWidth?: CSS.Property.BorderWidth;
+  borderRadius?: CSS.Property.BorderRadius;
 
-	borderTopStyle?: CSS.Property.BorderTopStyle;
-	borderRightStyle?: CSS.Property.BorderRightStyle;
-	borderBottomStyle?: CSS.Property.BorderBottomStyle;
-	borderLeftStyle?: CSS.Property.BorderLeftStyle;
+  borderTopColor?: CSS.Property.BorderTopColor;
+  borderRightColor?: CSS.Property.BorderRightColor;
+  borderBottomColor?: CSS.Property.BorderBottomColor;
+  borderLeftColor?: CSS.Property.BorderLeftColor;
 
-	borderTopWidth?: CSS.Property.BorderTopWidth;
-	borderRightWidth?: CSS.Property.BorderRightWidth;
-	borderBottomWidth?: CSS.Property.BorderBottomWidth;
-	borderLeftWidth?: CSS.Property.BorderLeftWidth;
+  borderTopStyle?: CSS.Property.BorderTopStyle;
+  borderRightStyle?: CSS.Property.BorderRightStyle;
+  borderBottomStyle?: CSS.Property.BorderBottomStyle;
+  borderLeftStyle?: CSS.Property.BorderLeftStyle;
 
-	// convenience for hard-off
-	border?: 'none';
+  borderTopWidth?: CSS.Property.BorderTopWidth;
+  borderRightWidth?: CSS.Property.BorderRightWidth;
+  borderBottomWidth?: CSS.Property.BorderBottomWidth;
+  borderLeftWidth?: CSS.Property.BorderLeftWidth;
+
+  border?: 'none';
 }
 
 /* --------------------------
    Utilities
 -------------------------- */
 
-const fallbackWidth = (): string =>
-	toCssMeasurement(borderVars.width) ?? '0';
+// number → px, IMeasurement → .css(), string passthrough
+const toCssLen = (
+  v: MeasurementLike | number | null | undefined,
+): string | undefined => {
+  if (v == null) return undefined;
+  if (typeof v === 'string') return v;
+  if (typeof v === 'number')
+    return Number.isFinite(v) ? `${v}px` : undefined;
+  if (isMeasurement(v)) return v.css();
+  return undefined;
+};
+
+const fallbackWidth = (): string => toCssLen(borderVars.width) ?? '0';
 const fallbackRadius = (): string =>
-	toCssMeasurement(borderVars.radius) ?? '0';
+  toCssLen(borderVars.radius) ?? '0';
 const fallbackStyle = (): CSS.Property.BorderStyle =>
-	(borderVars.style as CSS.Property.BorderStyle) ?? 'solid';
-const fallbackColor = (): string => toCssColor(colorVars.border);
+  (borderVars.style as CSS.Property.BorderStyle) ?? 'solid';
+const fallbackColor = (): string =>
+  colorVars.border.css() ?? 'transparent';
 
 const compressSides = (
-	t: string,
-	r: string,
-	b: string,
-	l: string,
+  t: string,
+  r: string,
+  b: string,
+  l: string,
 ) => {
-	const allEq = t === r && r === b && b === l;
-	if (allEq) return t;
-	const vr = t === b;
-	const hr = r === l;
-	if (vr && hr) return `${t} ${r}`;
-	if (hr) return `${t} ${r} ${b}`;
-	return `${t} ${r} ${b} ${l}`;
+  const allEq = t === r && r === b && b === l;
+  if (allEq) return t;
+  const vr = t === b;
+  const hr = r === l;
+  if (vr && hr) return `${t} ${r}`;
+  if (hr) return `${t} ${r} ${b}`;
+  return `${t} ${r} ${b} ${l}`;
 };
 
 const asWidth = (
-	v: BorderWidthInput | undefined,
+  v: BorderWidthInput | undefined,
 ): string | undefined => {
-	if (
-		v &&
-		typeof v === 'object' &&
-		!Array.isArray(v) &&
-		!('value' in v) &&
-		!(typeof (v as { css?: unknown }).css === 'function')
-	) {
-		// Config objects are handled elsewhere; no direct shorthand.
-		return undefined;
-	}
-	return toCssMeasurement(
-		v as MeasurementLike | number | null | undefined,
-	) ?? undefined;
+  if (
+    v &&
+    typeof v === 'object' &&
+    !Array.isArray(v) &&
+    !('value' in v) &&
+    !(typeof (v as { css?: unknown }).css === 'function')
+  ) {
+    // config object — no direct shorthand
+    return undefined;
+  }
+  return (
+    toCssLen(
+      v as unknown as MeasurementLike | number | null | undefined,
+    ) ?? undefined
+  );
 };
 
 const asRadius = (
-	v: BorderRadiusInput | undefined,
+  v: BorderRadiusInput | undefined,
 ): string | undefined => {
-	if (
-		v &&
-		typeof v === 'object' &&
-		!Array.isArray(v) &&
-		!('value' in v) &&
-		!(typeof (v as { css?: unknown }).css === 'function')
-	) {
-		return undefined;
-	}
-	return toCssMeasurement(
-		v as MeasurementLike | number | null | undefined,
-	) ?? undefined;
+  if (
+    v &&
+    typeof v === 'object' &&
+    !Array.isArray(v) &&
+    !('value' in v) &&
+    !(typeof (v as { css?: unknown }).css === 'function')
+  ) {
+    return undefined;
+  }
+  return (
+    toCssLen(
+      v as unknown as MeasurementLike | number | null | undefined,
+    ) ?? undefined
+  );
 };
 
 /* --------------------------
@@ -134,95 +138,107 @@ const asRadius = (
 -------------------------- */
 
 type EdgeState = {
-	active: boolean;
-	// resolved per-edge overrides (strings only)
-	width?: string;
-	style?: CSS.Property.BorderStyle;
-	color?: string;
-	// did the width/style/color come from an explicit override (vs default)?
-	_wExp?: boolean;
-	_sExp?: boolean;
-	_cExp?: boolean;
+  active: boolean;
+  width?: string;
+  style?: CSS.Property.BorderStyle;
+  color?: string;
+  _wExp?: boolean;
+  _sExp?: boolean;
+  _cExp?: boolean;
 };
 
 const emptyEdge = (): EdgeState => ({ active: false });
 
 const applyEdgeSpec = (
-	edge: EdgeState,
-	spec?: EdgeSpec,
+  edge: EdgeState,
+  spec?: EdgeSpec,
 ): EdgeState => {
-	if (spec === undefined) return edge;
-	if (spec === false) return edge; // ignored; use absence rather than false to deactivate
-	const next: EdgeState = { ...edge, active: true };
-	if (spec !== true) {
-		if (spec.width !== undefined) {
-			next.width = asWidth(spec.width) ?? fallbackWidth();
-			next._wExp = true;
-		}
-		if (spec.style !== undefined) {
-			next.style = spec.style;
-			next._sExp = true;
-		}
-		if (spec.color !== undefined) {
-			next.color = toCssColor(spec.color);
-			next._cExp = true;
-		}
-	}
-	return next;
+  if (spec === undefined || spec === false) return edge;
+  if (spec === true) return { ...edge, active: true };
+
+  // Narrow to object before property access
+  if (typeof spec !== 'object' || spec === null) return edge;
+
+  const next: EdgeState = { ...edge, active: true };
+
+  if ('width' in spec && spec.width !== undefined) {
+    next.width =
+      asWidth((spec as { width?: BorderWidthInput }).width) ??
+      fallbackWidth();
+    next._wExp = true;
+  }
+
+  if ('style' in spec && spec.style !== undefined) {
+    next.style = (
+      spec as { style?: CSS.Property.BorderStyle }
+    ).style!;
+    next._sExp = true;
+  }
+
+  if (
+    'color' in spec &&
+    (spec as { color?: unknown }).color !== undefined
+  ) {
+    const c = (spec as { color?: unknown }).color;
+    next.color =
+      typeof c === 'string'
+        ? c // 'transparent' / 'currentColor' etc.
+        : hasCssMethod(c)
+          ? c.css()
+          : fallbackColor(); // dev-only: you can throw here if you prefer
+    next._cExp = true;
+  }
+
+  return next;
 };
 
 const resolveIntentToEdges = (intent: BorderIntent | undefined) => {
-	const t = emptyEdge(),
-		r = emptyEdge(),
-		b = emptyEdge(),
-		l = emptyEdge();
+  const t = emptyEdge(),
+    r = emptyEdge(),
+    b = emptyEdge(),
+    l = emptyEdge();
 
-	// 1) all
-	if (intent?.all !== undefined) {
-		[
-			t,
-			r,
-			b,
-			l,
-		].forEach((e) => applyEdgeSpec(e, intent.all));
-	}
+  if (intent?.all !== undefined)
+    [
+      t,
+      r,
+      b,
+      l,
+    ].forEach((e) => applyEdgeSpec(e, intent.all));
 
-	// 2) vertical / horizontal
-	if (intent?.vertical !== undefined) {
-		applyEdgeSpec(t, intent.vertical);
-		applyEdgeSpec(b, intent.vertical);
-	}
-	if (intent?.horizontal !== undefined) {
-		applyEdgeSpec(l, intent.horizontal);
-		applyEdgeSpec(r, intent.horizontal);
-	}
+  if (intent?.vertical !== undefined) {
+    applyEdgeSpec(t, intent.vertical);
+    applyEdgeSpec(b, intent.vertical);
+  }
+  if (intent?.horizontal !== undefined) {
+    applyEdgeSpec(l, intent.horizontal);
+    applyEdgeSpec(r, intent.horizontal);
+  }
 
-	// 3) top/right/bottom/left (highest precedence)
-	if (intent?.top !== undefined) applyEdgeSpec(t, intent.top);
-	if (intent?.right !== undefined) applyEdgeSpec(r, intent.right);
-	if (intent?.bottom !== undefined) applyEdgeSpec(b, intent.bottom);
-	if (intent?.left !== undefined) applyEdgeSpec(l, intent.left);
+  if (intent?.top !== undefined) applyEdgeSpec(t, intent.top);
+  if (intent?.right !== undefined) applyEdgeSpec(r, intent.right);
+  if (intent?.bottom !== undefined) applyEdgeSpec(b, intent.bottom);
+  if (intent?.left !== undefined) applyEdgeSpec(l, intent.left);
 
-	// Fill defaults where active but unspecified
-	const dW = fallbackWidth();
-	const dS = fallbackStyle();
-	const dC = fallbackColor();
-	[
-		t,
-		r,
-		b,
-		l,
-	].forEach((e) => {
-		if (e.active) {
-			if (!e.width) e.width = dW;
-			if (!e.style) e.style = dS;
-			if (!e.color) e.color = dC;
-		} else {
-			e.width = '0'; // inactive edges collapse via width=0
-		}
-	});
+  const dW = fallbackWidth();
+  const dS = fallbackStyle();
+  const dC = fallbackColor();
+  [
+    t,
+    r,
+    b,
+    l,
+  ].forEach((e) => {
+    if (e.active) {
+      if (!e.width) e.width = dW;
+      if (!e.style) e.style = dS;
+      if (!e.color) e.color = dC;
+    } else {
+      e.width = '0';
+    }
+  });
 
-	return { t, r, b, l };
+  return { t, r, b, l };
 };
 
 /* --------------------------
@@ -232,146 +248,138 @@ const resolveIntentToEdges = (intent: BorderIntent | undefined) => {
 type Corner = 'tl' | 'tr' | 'br' | 'bl';
 
 const cornersForZone: Record<CompassRegion, Corner[]> = {
-	north: [
-		'tl',
-		'tr',
-	],
-	south: [
-		'bl',
-		'br',
-	],
-	east: [
-		'tr',
-		'br',
-	],
-	west: [
-		'tl',
-		'bl',
-	],
+  north: [
+    'tl',
+    'tr',
+  ],
+  south: [
+    'bl',
+    'br',
+  ],
+  east: [
+    'tr',
+    'br',
+  ],
+  west: [
+    'tl',
+    'bl',
+  ],
 };
 
 const cornerLookup: Record<CornerPosition, Corner> = {
-	nw: 'tl',
-	ne: 'tr',
-	se: 'br',
-	sw: 'bl',
+  nw: 'tl',
+  ne: 'tr',
+  se: 'br',
+  sw: 'bl',
 };
 
-
 const zoneKeys: CompassRegion[] = [
-	'north',
-	'south',
-	'east',
-	'west',
+  'north',
+  'south',
+  'east',
+  'west',
 ];
 
 const resolveRadiusCompass = (
-	radius: BorderIntent['radius'],
-	edges: ReturnType<typeof resolveIntentToEdges>,
+  radius: BorderIntent['radius'],
+  edges: ReturnType<typeof resolveIntentToEdges>,
 ): string | undefined => {
-	if (radius === 0 || radius === null) return undefined; // explicit opt-out
-	const rc = isRadiusCompass(radius) ? radius : undefined;
+  if (radius === 0 || radius === null) return undefined;
+  const rc = isRadiusCompass(radius) ? radius : undefined;
 
-	// Build corner map from inputs with precedence: corners > zones > all
-	const cornerVals: Partial<Record<Corner, string>> = {};
-	const putIf = (c: Corner, v?: BorderRadiusInput) => {
-		const val = asRadius(v);
-		if (val) cornerVals[c] = val;
-	};
+  const cornerVals: Partial<Record<Corner, string>> = {};
+  const putIf = (c: Corner, v?: BorderRadiusInput) => {
+    const val = asRadius(v);
+    if (val) cornerVals[c] = val;
+  };
 
-	// start from 'all'
-	const allR = asRadius(rc?.all);
-	if (allR) {
-		cornerVals.tl = allR;
-		cornerVals.tr = allR;
-		cornerVals.br = allR;
-		cornerVals.bl = allR;
-	}
+  const allR = asRadius(rc?.all);
+  if (allR)
+    cornerVals.tl =
+      cornerVals.tr =
+      cornerVals.br =
+      cornerVals.bl =
+        allR;
 
-	// zones
-	zoneKeys.forEach((zone) => {
-		const zVal = asRadius(rc?.[zone]);
-		if (zVal) {
-			cornersForZone[zone].forEach((c) => {
-				cornerVals[c] = zVal;
-			});
-		}
-	});
+  zoneKeys.forEach((zone) => {
+    const zVal = asRadius(rc?.[zone]);
+    if (zVal)
+      cornersForZone[zone].forEach((c) => (cornerVals[c] = zVal));
+  });
 
-	// corners (highest precedence)
-	(Object.entries(cornerLookup) as [CornerPosition, Corner][])
-		.forEach(([pos, corner]) => {
-			putIf(corner, rc?.[pos]);
-		});
+  (
+    Object.entries(cornerLookup) as [CornerPosition, Corner][]
+  ).forEach(
+    ([
+      pos,
+      corner,
+    ]) => putIf(corner, rc?.[pos]),
+  );
 
-	// If no values were provided, don't emit borderRadius at all by default
-	const anyProvided = Object.keys(cornerVals).length > 0;
-	if (!anyProvided) return undefined;
+  if (Object.keys(cornerVals).length === 0) return undefined;
 
-	// Relevance rule: emit a corner radius only if at least one adjacent edge is active,
-	// unless that corner was *explicitly* set via corner key (nw/ne/se/sw).
-	const explicitCorners = new Set<Corner>();
-	(Object.entries(cornerLookup) as [CornerPosition, Corner][])
-		.forEach(([pos, corner]) => {
-			if (rc?.[pos] !== undefined) explicitCorners.add(corner);
-		});
+  const explicitCorners = new Set<Corner>();
+  (
+    Object.entries(cornerLookup) as [CornerPosition, Corner][]
+  ).forEach(
+    ([
+      pos,
+      corner,
+    ]) => {
+      if (rc?.[pos] !== undefined) explicitCorners.add(corner);
+    },
+  );
 
-	const { t, r, b, l } = edges;
-	const cornerHasAdjacent = (c: Corner) => {
-		switch (c) {
-			case 'tl':
-				return t.active || l.active;
-			case 'tr':
-				return t.active || r.active;
-			case 'br':
-				return b.active || r.active;
-			case 'bl':
-				return b.active || l.active;
-		}
-	};
+  const { t, r, b, l } = edges;
+  const cornerHasAdjacent = (c: Corner) => {
+    switch (c) {
+      case 'tl':
+        return t.active || l.active;
+      case 'tr':
+        return t.active || r.active;
+      case 'br':
+        return b.active || r.active;
+      case 'bl':
+        return b.active || l.active;
+    }
+  };
 
-	const tl =
-		explicitCorners.has('tl') || cornerHasAdjacent('tl')
-			? (cornerVals.tl ?? fallbackRadius())
-			: undefined;
-	const tr =
-		explicitCorners.has('tr') || cornerHasAdjacent('tr')
-			? (cornerVals.tr ?? fallbackRadius())
-			: undefined;
-	const br =
-		explicitCorners.has('br') || cornerHasAdjacent('br')
-			? (cornerVals.br ?? fallbackRadius())
-			: undefined;
-	const bl =
-		explicitCorners.has('bl') || cornerHasAdjacent('bl')
-			? (cornerVals.bl ?? fallbackRadius())
-			: undefined;
+  const tl =
+    explicitCorners.has('tl') || cornerHasAdjacent('tl')
+      ? (cornerVals.tl ?? fallbackRadius())
+      : undefined;
+  const tr =
+    explicitCorners.has('tr') || cornerHasAdjacent('tr')
+      ? (cornerVals.tr ?? fallbackRadius())
+      : undefined;
+  const br =
+    explicitCorners.has('br') || cornerHasAdjacent('br')
+      ? (cornerVals.br ?? fallbackRadius())
+      : undefined;
+  const bl =
+    explicitCorners.has('bl') || cornerHasAdjacent('bl')
+      ? (cornerVals.bl ?? fallbackRadius())
+      : undefined;
 
-	// If all filtered away, don't emit
-	if (!tl && !tr && !br && !bl) return undefined;
+  if (!tl && !tr && !br && !bl) return undefined;
 
-	// Fill missing with 0 (to ensure stable shorthand) but minimize with compression
-	const ftl = tl ?? '0';
-	const ftr = tr ?? '0';
-	const fbr = br ?? '0';
-	const fbl = bl ?? '0';
+  const ftl = tl ?? '0';
+  const ftr = tr ?? '0';
+  const fbr = br ?? '0';
+  const fbl = bl ?? '0';
 
-	// Compress 1/2/3/4 values like CSS border-radius:
-	// tl tr br bl (we keep the classic 4-value syntax, then rely on CSS compression rules)
-	const allEq = ftl === ftr && ftr === fbr && fbr === fbl;
-	if (allEq) return ftl;
+  const allEq = ftl === ftr && ftr === fbr && fbr === fbl;
+  if (allEq) return ftl;
 
-	const oppositeEq = ftl === fbr && ftr === fbl;
-	if (oppositeEq) {
-		const adjacentEq = ftl === ftr; // tl==tr && br==bl imply allEq (caught above), so only case left is 2 values
-		if (!adjacentEq) return `${ftl} ${ftr}`; // tl==br, tr==bl
-	}
+  const oppositeEq = ftl === fbr && ftr === fbl;
+  if (oppositeEq) {
+    const adjacentEq = ftl === ftr;
+    if (!adjacentEq) return `${ftl} ${ftr}`;
+  }
 
-	// 3-value compression (tl, tr/bl, br) only applies if tr==bl, but tl!=br
-	if (ftr === fbl && ftl !== fbr) return `${ftl} ${ftr} ${fbr}`;
+  if (ftr === fbl && ftl !== fbr) return `${ftl} ${ftr} ${fbr}`;
 
-	// 4 values
-	return `${ftl} ${ftr} ${fbr} ${fbl}`;
+  return `${ftl} ${ftr} ${fbr} ${fbl}`;
 };
 
 /* --------------------------
@@ -379,87 +387,76 @@ const resolveRadiusCompass = (
 -------------------------- */
 
 const resolve = (intent?: BorderIntent): FinalBorderCSS => {
-	// Hard off
-	if (intent && 'all' in intent && intent.all === false) {
-		// not a supported pattern; use border.none() if you need explicit off
-	}
+  if (intent && 'all' in intent && intent.all === false) {
+    // prefer borders.none()
+  }
 
-	const { t, r, b, l } = resolveIntentToEdges(intent ?? {});
+  const { t, r, b, l } = resolveIntentToEdges(intent ?? {});
+  const anyActive = t.active || r.active || b.active || l.active;
+  if (!anyActive) return {};
 
-	// If no edges active, return nothing (or none if you prefer)
-	const anyActive = t.active || r.active || b.active || l.active;
-	if (!anyActive) return {};
+  const widths = [
+    t.width!,
+    r.width!,
+    b.width!,
+    l.width!,
+  ];
+  const styles = [
+    t.style!,
+    r.style!,
+    b.style!,
+    l.style!,
+  ];
+  const colors = [
+    t.color!,
+    r.color!,
+    b.color!,
+    l.color!,
+  ];
 
-	// Resolve per-edge values (strings ensured)
-	const widths = [
-		t.width!,
-		r.width!,
-		b.width!,
-		l.width!,
-	];
+  const styleAllEq = styles.every((s) => s === styles[0]);
+  const colorAllEq = colors.every((c) => c === colors[0]);
 
-	// Styles & colors: prefer global shorthand if all equal
-	const styles = [
-		t.style!,
-		r.style!,
-		b.style!,
-		l.style!,
-	];
-	const colors = [
-		t.color!,
-		r.color!,
-		b.color!,
-		l.color!,
-	];
+  const css: FinalBorderCSS = {};
 
-	const styleAllEq = styles.every((s) => s === styles[0]);
-	const colorAllEq = colors.every((c) => c === colors[0]);
+  const [
+    tw,
+    rw,
+    bw,
+    lw,
+  ] = widths;
+  css.borderWidth = compressSides(tw, rw, bw, lw);
 
-	const css: FinalBorderCSS = {};
+  if (styleAllEq) {
+    css.borderStyle = styles[0];
+  } else {
+    css.borderTopStyle = styles[0] as CSS.Property.BorderTopStyle;
+    css.borderRightStyle = styles[1] as CSS.Property.BorderRightStyle;
+    css.borderBottomStyle =
+      styles[2] as CSS.Property.BorderBottomStyle;
+    css.borderLeftStyle = styles[3] as CSS.Property.BorderLeftStyle;
+  }
 
-	// Width: we can safely use shorthand unless a caller really needs per-edge properties;
-	// if you prefer per-edge for clarity, uncomment the verbose assignments below.
-	const [
-		tw,
-		rw,
-		bw,
-		lw,
-	] = widths;
-	const widthShorthand = compressSides(tw, rw, bw, lw);
-	css.borderWidth = widthShorthand;
+  if (colorAllEq) {
+    css.borderColor = colors[0];
+  } else {
+    css.borderTopColor = colors[0];
+    css.borderRightColor = colors[1];
+    css.borderBottomColor = colors[2];
+    css.borderLeftColor = colors[3];
+  }
 
-	// Style
-	if (styleAllEq) {
-		css.borderStyle = styles[0];
-	} else {
-		css.borderTopStyle = styles[0] as CSS.Property.BorderTopStyle;
-		css.borderRightStyle = styles[1] as CSS.Property.BorderRightStyle;
-		css.borderBottomStyle = styles[2] as CSS.Property.BorderBottomStyle;
-		css.borderLeftStyle = styles[3] as CSS.Property.BorderLeftStyle;
-	}
+  const radiusVal = resolveRadiusCompass(intent?.radius, {
+    t,
+    r,
+    b,
+    l,
+  });
+  if (radiusVal && radiusVal !== '0' && radiusVal !== '0px') {
+    css.borderRadius = radiusVal;
+  }
 
-	// Color
-	if (colorAllEq) {
-		css.borderColor = colors[0];
-	} else {
-		css.borderTopColor = colors[0];
-		css.borderRightColor = colors[1];
-		css.borderBottomColor = colors[2];
-		css.borderLeftColor = colors[3];
-	}
-
-	// Radius — only emit when relevant / requested
-	const radiusVal = resolveRadiusCompass(intent?.radius, {
-		t,
-		r,
-		b,
-		l,
-	});
-	if (radiusVal && radiusVal !== '0' && radiusVal !== '0px') {
-		css.borderRadius = radiusVal;
-	}
-
-	return css;
+  return css;
 };
 
 /* --------------------------
@@ -493,7 +490,7 @@ export const borders = Object.assign(
     all(overrides?: IBorder): FinalBorderCSS {
       return resolve({ all: overrides ?? true });
     },
-  }
+  },
 );
 
 export default borders;

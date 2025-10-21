@@ -1,35 +1,49 @@
-import type * as CSS from 'csstype';
+// helpers/style.ts
+import type { ColorWrapper } from './colorWrap';
+import type { Color as ChromaColor } from 'chroma-js';
+import { isMeasurement, hasCssMethod } from './measurement';
+import type { MeasurementLike } from './types';
 
-import { type MeasurementLike, type CssLike } from './types';
+export type CssColorish =
+  | string
+  | ColorWrapper
+  | ChromaColor
+  | null
+  | undefined;
 
-// Guard for tokens that expose a `.css()` helper (IMeasurement, chroma color wrappers, etc.).
-export const hasCss = (value: unknown): value is CssLike =>
-	typeof value === 'object' &&
-	value !== null &&
-	'css' in (value as Record<string, unknown>) &&
-	typeof (value as Record<string, unknown>).css === 'function';
-
-// Normalize measurement-like inputs to CSS strings.
-// Accepts strings, measurement tokens, `{ value, unit }`, and bare numbers.
-export const toCssMeasurement = (
-	value?: MeasurementLike | number | null,
+export const toCssColor = (
+  value?: CssColorish,
 ): string | undefined => {
-	if (value === undefined || value === null) return undefined;
-	if (typeof value === 'string') return value;
-	if (typeof value === 'number' && Number.isFinite(value))
-		return `${value}px`;
-	if (hasCss(value)) return value.css();
-	if (typeof value === 'object' && 'value' in value) {
-		const numeric = (value as { value: number }).value;
-		const unit = (value as { unit?: string }).unit ?? 'px';
-		return `${numeric}${unit}`;
-	}
-	return undefined;
+  if (value == null) return undefined;
+  if (typeof value === 'string') return value;
+  if (hasCssMethod(value)) return value.css();
+
+  if (process.env.NODE_ENV !== 'production') {
+    throw new Error(
+      `[toCssColor] Unsupported input: ${Object.prototype.toString.call(value)}`,
+    );
+  }
+  // eslint-disable-next-line no-console
+  console.warn('[toCssColor] Unsupported input; ignoring');
+  return undefined;
 };
 
-// Normalize color-like values (strings, chroma tokens, etc.) into CSS strings.
-export const toCssColor = (value: unknown): CSS.Property.Color => {
-	if (typeof value === 'string') return value;
-	if (hasCss(value)) return value.css();
-	return String(value);
+// number → px, string passthrough, IMeasurement → .css()
+export const toCssMeasurement = (
+  value?: MeasurementLike | number | string | null,
+): string | undefined => {
+  if (value == null) return undefined;
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' && Number.isFinite(value))
+    return `${value}px`;
+  if (isMeasurement(value)) return value.css();
+
+  if (process.env.NODE_ENV !== 'production') {
+    throw new Error(
+      `[toCssMeasurement] Unsupported input: ${Object.prototype.toString.call(value)}`,
+    );
+  }
+  // eslint-disable-next-line no-console
+  console.warn('[toCssMeasurement] Unsupported input; ignoring');
+  return undefined;
 };
