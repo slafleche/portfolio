@@ -28,67 +28,68 @@ export type { Color } from 'chroma-js';
 type MixArgs = Parameters<Color['mix']>;
 
 type CssOptions = {
-	forceAlpha?: boolean;
+  forceAlpha?: boolean;
+  preferKeywordTransparent?: boolean;
 };
 
 export type ColorWrapper = {
-	unsafeColor: Color;
-	css: (options?: CssOptions) => string;
-	alpha: {
-		(): number;
-		(value: number): ColorWrapper;
-	};
-	darken: (value?: number) => ColorWrapper;
-	brighten: (value?: number) => ColorWrapper;
-	saturate: (value?: number) => ColorWrapper;
-	desaturate: (value?: number) => ColorWrapper;
-	mix: (
-		target: ColorInput,
-		ratio?: number,
-		mode?: MixArgs[2],
-	) => ColorWrapper;
-	mixSolid: (
-		target: ColorInput,
-		ratio?: number,
-		mode?: MixArgs[2],
-	) => ColorWrapper;
-	clone: () => ColorWrapper;
-	value: () => Color;
-	solid: () => ColorWrapper;
+  unsafeColor: Color;
+  css: (options?: CssOptions) => string;
+  alpha: {
+    (): number;
+    (value: number): ColorWrapper;
+  };
+  darken: (value?: number) => ColorWrapper;
+  brighten: (value?: number) => ColorWrapper;
+  saturate: (value?: number) => ColorWrapper;
+  desaturate: (value?: number) => ColorWrapper;
+  mix: (
+    target: ColorInput,
+    ratio?: number,
+    mode?: MixArgs[2],
+  ) => ColorWrapper;
+  mixSolid: (
+    target: ColorInput,
+    ratio?: number,
+    mode?: MixArgs[2],
+  ) => ColorWrapper;
+  clone: () => ColorWrapper;
+  value: () => Color;
+  solid: () => ColorWrapper;
 };
 
 type ColorInput = Color | ColorWrapper | string;
 
 const isColorWrapper = (value: ColorInput): value is ColorWrapper =>
-	typeof value === 'object' &&
-	value !== null &&
-	'unsafeColor' in value;
+  typeof value === 'object' &&
+  value !== null &&
+  'unsafeColor' in value;
 
 const toColor = (input: ColorInput): Color => {
-	if (typeof input === 'string') {
-		return chroma(input);
-	}
-	return isColorWrapper(input) ? input.unsafeColor : input;
+  if (typeof input === 'string') {
+    return chroma(input);
+  }
+  return isColorWrapper(input) ? input.unsafeColor : input;
 };
 
 const cloneColor = (source: Color): Color => chroma(source.css());
 
 const clampRatio = (ratio?: number) =>
-	ratio === undefined ? undefined : Math.max(0, Math.min(1, ratio));
+  ratio === undefined ? undefined : Math.max(0, Math.min(1, ratio));
 
 const derive = (
-	source: Color,
-	modifier: (draft: Color) => Color,
+  source: Color,
+  modifier: (draft: Color) => Color,
 ): ColorWrapper => {
-	const draft = cloneColor(source);
-	const next = modifier(draft);
-	return wrap(next);
+  const draft = cloneColor(source);
+  const next = modifier(draft);
+  return wrap(next);
 };
 
 type ChromaScale = ReturnType<typeof chroma.scale>;
 
 const createScale = (stops: ColorInput[]): ChromaScale =>
-	chroma.scale(stops.map((stop) => toColor(stop)));
+  chroma.scale(stops.map((stop) => toColor(stop)));
 
 export type CuloriOKLCH = Oklch;
 
@@ -96,163 +97,194 @@ const toCuloriOKLCH = converter('oklch');
 const fromCuloriOKLCH = converter('rgb');
 
 const colorToCuloriOklch = (
-	input: ColorInput,
+  input: ColorInput,
 ): CuloriOKLCH | undefined => {
-	const base = toColor(input);
-	const converted = toCuloriOKLCH(base.css()) as Oklch | null;
-	if (!converted) {
-		return undefined;
-	}
-	return {
-		mode: 'oklch',
-		l: converted.l,
-		c: converted.c,
-		h: converted.h,
-		alpha: converted.alpha,
-	};
+  const base = toColor(input);
+  const converted = toCuloriOKLCH(base.css()) as Oklch | null;
+  if (!converted) {
+    return undefined;
+  }
+  return {
+    mode: 'oklch',
+    l: converted.l,
+    c: converted.c,
+    h: converted.h,
+    alpha: converted.alpha,
+  };
 };
 
 const culoriOklchToWrapper = (value: CuloriOKLCH): ColorWrapper => {
-	const converted = fromCuloriOKLCH(value);
-	if (!converted || converted.mode !== 'rgb') {
-		throw new Error('Unable to convert OKLCH color to sRGB');
-	}
-	const toChannel = (channel: number) =>
-		Math.max(0, Math.min(255, channel * 255));
-	const base = chroma
-		.rgb(
-			toChannel(converted.r),
-			toChannel(converted.g),
-			toChannel(converted.b),
-		)
-		.alpha(converted.alpha ?? 1);
-	return wrap(base);
+  const converted = fromCuloriOKLCH(value);
+  if (!converted || converted.mode !== 'rgb') {
+    throw new Error('Unable to convert OKLCH color to sRGB');
+  }
+  const toChannel = (channel: number) =>
+    Math.max(0, Math.min(255, channel * 255));
+  const base = chroma
+    .rgb(
+      toChannel(converted.r),
+      toChannel(converted.g),
+      toChannel(converted.b),
+    )
+    .alpha(converted.alpha ?? 1);
+  return wrap(base);
 };
 
 const culoriOklchFromCss = (value: string): ColorWrapper => {
-	const trimmed = value.trim();
-	const normalized = trimmed.startsWith('oklch')
-		? trimmed
-		: `oklch(${trimmed})`;
-	const parsed = parse(normalized);
-	if (!parsed || parsed.mode !== 'oklch') {
-		throw new Error(
-			`Expected OKLCH color string, received "${value}"`,
-		);
-	}
-	return culoriOklchToWrapper(parsed);
+  const trimmed = value.trim();
+  const normalized = trimmed.startsWith('oklch')
+    ? trimmed
+    : `oklch(${trimmed})`;
+  const parsed = parse(normalized);
+  if (!parsed || parsed.mode !== 'oklch') {
+    throw new Error(
+      `Expected OKLCH color string, received "${value}"`,
+    );
+  }
+  return culoriOklchToWrapper(parsed);
 };
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 const normalizeFraction = (value: number) =>
-	clamp01(value > 1 ? value / 100 : value);
+  clamp01(value > 1 ? value / 100 : value);
 const normalizeHue = (value: number) => ((value % 360) + 360) % 360;
 const normalizePercent = (value: number) => {
-	const percent = value <= 1 ? value * 100 : value;
-	return Math.max(0, Math.min(100, percent));
+  const percent = value <= 1 ? value * 100 : value;
+  return Math.max(0, Math.min(100, percent));
 };
 const normalizeRgbChannel = (value: number) => {
-	const absolute = value <= 1 ? value * 255 : value;
-	return Math.max(0, Math.min(255, Math.round(absolute)));
+  const absolute = value <= 1 ? value * 255 : value;
+  return Math.max(0, Math.min(255, Math.round(absolute)));
 };
 const normalizeAlpha = (value?: number) =>
-	value === undefined ? undefined : normalizeFraction(value);
+  value === undefined ? undefined : normalizeFraction(value);
 
 const formatHex = (value: string) => {
-	const trimmed = value.trim();
-	const bare = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
-	return `#${bare}`;
+  const trimmed = value.trim();
+  const bare = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
+  return `#${bare}`;
 };
 
 type OklchCreator = {
-	(value: string): ColorWrapper;
-	(l: number, c: number, h: number, alpha?: number): ColorWrapper;
+  (value: string): ColorWrapper;
+  (l: number, c: number, h: number, alpha?: number): ColorWrapper;
 };
 
 type ColorCreators = {
-	css: (value: string) => ColorWrapper;
-	hex: (value: string) => ColorWrapper;
-	rgba: (
-		r: number,
-		g: number,
-		b: number,
-		alpha?: number,
-	) => ColorWrapper;
-	hsl: (
-		h: number,
-		s: number,
-		l: number,
-		alpha?: number,
-	) => ColorWrapper;
-	oklch: OklchCreator;
+  css: (value: string) => ColorWrapper;
+  hex: (value: string) => ColorWrapper;
+  rgba: (
+    r: number,
+    g: number,
+    b: number,
+    alpha?: number,
+  ) => ColorWrapper;
+  hsl: (
+    h: number,
+    s: number,
+    l: number,
+    alpha?: number,
+  ) => ColorWrapper;
+  oklch: OklchCreator;
 };
 
 const create: ColorCreators = {
-	css: (value) => wrap(value),
-	hex: (value) => wrap(formatHex(value)),
-	rgba: (r, g, b, alpha) => {
-		const R = normalizeRgbChannel(r);
-		const G = normalizeRgbChannel(g);
-		const B = normalizeRgbChannel(b);
-		const A = normalizeAlpha(alpha);
-		if (A === undefined) {
-			return wrap(`rgb(${R}, ${G}, ${B})`);
-		}
-		return wrap(`rgba(${R}, ${G}, ${B}, ${Number(A.toFixed(3))})`);
-	},
-	hsl: (h, s, l, alpha) => {
-		const H = normalizeHue(h);
-		const S = normalizePercent(s);
-		const L = normalizePercent(l);
-		const A = normalizeAlpha(alpha);
-		if (A === undefined) {
-			return wrap(`hsl(${H}, ${S}%, ${L}%)`);
-		}
-		return wrap(`hsla(${H}, ${S}%, ${L}%, ${Number(A.toFixed(3))})`);
-	},
-	oklch: ((
-		first: number | string,
-		c?: number,
-		h?: number,
-		alpha?: number,
-	) => {
-		if (typeof first === 'string') {
-			return culoriOklchFromCss(first);
-		}
-		if (c === undefined || h === undefined) {
-			throw new Error(
-				'color.create.oklch requires l, c, and h values when not using a CSS string',
-			);
-		}
-		const normalized: CuloriOKLCH = {
-			mode: 'oklch',
-			l: normalizeFraction(first),
-			c,
-			h,
-			alpha: normalizeAlpha(alpha) ?? 1,
-		};
-		return culoriOklchToWrapper(normalized);
-	}) as OklchCreator,
+  css: (value) => wrap(value),
+  hex: (value) => wrap(formatHex(value)),
+  rgba: (r, g, b, alpha) => {
+    const R = normalizeRgbChannel(r);
+    const G = normalizeRgbChannel(g);
+    const B = normalizeRgbChannel(b);
+    const A = normalizeAlpha(alpha);
+    if (A === undefined) {
+      return wrap(`rgb(${R}, ${G}, ${B})`);
+    }
+    return wrap(`rgba(${R}, ${G}, ${B}, ${Number(A.toFixed(3))})`);
+  },
+  hsl: (h, s, l, alpha) => {
+    const H = normalizeHue(h);
+    const S = normalizePercent(s);
+    const L = normalizePercent(l);
+    const A = normalizeAlpha(alpha);
+    if (A === undefined) {
+      return wrap(`hsl(${H}, ${S}%, ${L}%)`);
+    }
+    return wrap(`hsla(${H}, ${S}%, ${L}%, ${Number(A.toFixed(3))})`);
+  },
+  oklch: ((
+    first: number | string,
+    c?: number,
+    h?: number,
+    alpha?: number,
+  ) => {
+    if (typeof first === 'string') {
+      return culoriOklchFromCss(first);
+    }
+    if (c === undefined || h === undefined) {
+      throw new Error(
+        'color.create.oklch requires l, c, and h values when not using a CSS string',
+      );
+    }
+    const normalized: CuloriOKLCH = {
+      mode: 'oklch',
+      l: normalizeFraction(first),
+      c,
+      h,
+      alpha: normalizeAlpha(alpha) ?? 1,
+    };
+    return culoriOklchToWrapper(normalized);
+  }) as OklchCreator,
 };
 
 const toRgbChannel = (channel: number) =>
-	Math.round(Math.max(0, Math.min(255, channel)));
+  Math.round(Math.max(0, Math.min(255, channel)));
 
 const formatRgba = (value: Color): string => {
-	const [
-		r,
-		g,
-		b,
-	] = value.rgb(false);
-	const alpha = value.alpha();
-	const formattedAlpha =
-		alpha === 1 ? '1' : Number(alpha.toFixed(3)).toString();
-	return `rgba(${toRgbChannel(r)}, ${toRgbChannel(g)}, ${toRgbChannel(
-		b,
-	)}, ${formattedAlpha})`;
+  const [
+    r,
+    g,
+    b,
+  ] = value.rgb(false);
+  const alpha = value.alpha();
+  const formattedAlpha =
+    alpha === 1 ? '1' : Number(alpha.toFixed(3)).toString();
+  return `rgba(${toRgbChannel(r)}, ${toRgbChannel(g)}, ${toRgbChannel(
+    b,
+  )}, ${formattedAlpha})`;
 };
 
 export function wrap(input: ColorInput): ColorWrapper {
+	// ---- special symbolic case ----
+	if (input === 'currentColor') {
+		// dummy immutable wrapper
+		const err = (fn: string) => {
+			const msg = `Cannot modify symbolic color 'currentColor' via ${fn}().`;
+			if (process.env.NODE_ENV !== 'production') throw new Error(msg);
+			console.warn(msg);
+			return symbolic;
+		};
+
+		const symbolic: ColorWrapper = {
+			unsafeColor: chroma('black'),
+			css: () => 'currentColor',
+			alpha: ((value?: number) => {
+				if (value === undefined) return 1;
+				return err('alpha');
+			}) as ColorWrapper['alpha'],
+			darken: () => err('darken'),
+			brighten: () => err('brighten'),
+			saturate: () => err('saturate'),
+			desaturate: () => err('desaturate'),
+			mix: () => err('mix'),
+			mixSolid: () => err('mixSolid'),
+			clone: () => symbolic,
+			value: () => chroma('black'),
+			solid: () => symbolic,
+		};
+		return symbolic;
+	}
+
+	// ---- regular flow ----
 	const base = toColor(input);
 	const alpha = ((value?: number) => {
 		if (value === undefined) {
@@ -263,26 +295,23 @@ export function wrap(input: ColorInput): ColorWrapper {
 
 	return {
 		unsafeColor: base,
-		css: (options?: CssOptions) =>
-			options?.forceAlpha ? formatRgba(base) : base.css(),
+		css: (options?: CssOptions) => {
+			const result = options?.forceAlpha ? formatRgba(base) : base.css();
+			if (options?.preferKeywordTransparent && base.alpha() === 0)
+				return 'transparent';
+			return result;
+		},
 		alpha,
-		darken: (value?: number) =>
-			derive(base, (draft) => draft.darken(value)),
-		brighten: (value?: number) =>
-			derive(base, (draft) => draft.brighten(value)),
-		saturate: (value?: number) =>
-			derive(base, (draft) => draft.saturate(value)),
+		darken: (value?: number) => derive(base, (draft) => draft.darken(value)),
+		brighten: (value?: number) => derive(base, (draft) => draft.brighten(value)),
+		saturate: (value?: number) => derive(base, (draft) => draft.saturate(value)),
 		desaturate: (value?: number) =>
 			derive(base, (draft) => draft.desaturate(value)),
 		mix: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
 			derive(base, (draft) =>
 				draft.mix(toColor(target), clampRatio(ratio), mode),
 			),
-		mixSolid: (
-			target: ColorInput,
-			ratio?: number,
-			mode?: MixArgs[2],
-		) =>
+		mixSolid: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
 			derive(base, (draft) =>
 				draft.alpha(1).mix(toColor(target), clampRatio(ratio), mode),
 			),
@@ -292,30 +321,31 @@ export function wrap(input: ColorInput): ColorWrapper {
 	};
 }
 
+
 export const color = Object.assign(
-	(input: ColorInput) => wrap(input),
-	{
-		wrap,
-		from: wrap,
-		unsafeChroma: chroma,
-		unsafeToColor: toColor,
-		toOKLCH: (input: ColorInput) => colorToCuloriOklch(input),
-		fromOKLCH: (value: CuloriOKLCH) => culoriOklchToWrapper(value),
-		oklch: (value: CuloriOKLCH) => culoriOklchToWrapper(value),
-		create,
-		scale: (stops: ColorInput[]): ChromaScale => createScale(stops),
-		lch: (l: number, c: number, h: number) =>
-			wrap(chroma.lch(l, c, h)),
-		fromCss: (value: string) => wrap(value),
-	},
+  (input: ColorInput) => wrap(input),
+  {
+    wrap,
+    from: wrap,
+    unsafeChroma: chroma,
+    unsafeToColor: toColor,
+    toOKLCH: (input: ColorInput) => colorToCuloriOklch(input),
+    fromOKLCH: (value: CuloriOKLCH) => culoriOklchToWrapper(value),
+    oklch: (value: CuloriOKLCH) => culoriOklchToWrapper(value),
+    create,
+    scale: (stops: ColorInput[]): ChromaScale => createScale(stops),
+    lch: (l: number, c: number, h: number) =>
+      wrap(chroma.lch(l, c, h)),
+    fromCss: (value: string) => wrap(value),
+  },
 );
 
 export const mixWithAlpha = (
-	base: ColorWrapper,
-	target: ColorInput,
-	ratio: number,
-	alpha?: number,
+  base: ColorWrapper,
+  target: ColorInput,
+  ratio: number,
+  alpha?: number,
 ): ColorWrapper => {
-	const desiredAlpha = alpha ?? base.alpha();
-	return base.mixSolid(target, ratio).alpha(desiredAlpha);
+  const desiredAlpha = alpha ?? base.alpha();
+  return base.mixSolid(target, ratio).alpha(desiredAlpha);
 };
