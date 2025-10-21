@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import SkipToContentClient from './SkipToContent.client';
-import ChevronDown from './ChevronDown';
+import ChevronDown from './icons/ChevronDown';
+import * as chevronStyles from '@/styles/components/chevrons.css';
 
 type Props = {
 	className?: string;
@@ -20,7 +21,7 @@ export default function SkipToContent({
 			className={className}
 			href={href}
 			label={label}
-			icon={icon ?? <ChevronDown />}
+			icon={icon ?? <ChevronDown className={chevronStyles.down} />}
 		/>
 	);
 }

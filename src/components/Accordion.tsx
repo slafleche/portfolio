@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 import { createDomId } from '@/lib/dom';
 import * as s from '@/styles/components/accordion.css';
-import ChevronDown from '@/components/ChevronDown';
+import ChevronDown from '@/components/icons/ChevronDown';
 
 type AccordionItemData = {
 	id?: string;
