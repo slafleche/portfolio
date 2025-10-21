@@ -1,7 +1,4 @@
-"use client";
-
 import type { SVGProps } from 'react';
-import clsx from 'clsx';
 
 export default function SendIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
 	return (
@@ -13,7 +10,7 @@ export default function SendIcon({ className, ...props }: SVGProps<SVGSVGElement
 			strokeWidth="2"
 			strokeLinecap="round"
 			strokeLinejoin="round"
-			className={clsx(className)}
+			className={className}
 			aria-hidden
 			{...props}
 		>
