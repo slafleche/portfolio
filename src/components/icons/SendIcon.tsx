@@ -1,21 +1,30 @@
 import type { SVGProps } from 'react';
 
-export default function SendIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
-	return (
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className={className}
-			aria-hidden
-			{...props}
-		>
-			<path d="M22 2 11 13" />
-			<path d="M22 2 15 22 11 13 2 9 22 2" />
-		</svg>
-	);
+export default function SendIcon({
+  className,
+  ...props
+}: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={3}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+      {...props}
+    >
+      <g transform="rotate(-45 12 12)">
+        <g transform="translate(2, 0.25)">
+          <path
+            d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+            vectorEffect="non-scaling-stroke"
+          />
+        </g>
+      </g>
+    </svg>
+  );
 }

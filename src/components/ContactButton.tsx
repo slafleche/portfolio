@@ -27,7 +27,6 @@ export default function ContactButton({
   const previousVisibleRef = useRef(false);
 
   const leaving = previousVisibleRef.current && !visible;
-  const state = visible ? 'visible' : leaving ? 'leaving' : 'hidden';
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -57,7 +56,7 @@ export default function ContactButton({
   ]);
 
   return (
-    <div className={s.root} data-state={state}>
+    <div className={s.root}>
       <div className={s.rail}>
         <div
           className={clsx(
@@ -76,13 +75,11 @@ export default function ContactButton({
                 className={clsx(s.gradient, s.gradientVisible)}
                 aria-hidden
               />
-              <SendIcon
-                className={clsx(
-                  s.icon,
-                  s.iconVisible,
-                  leaving && s.iconLeaving,
-                )}
-              />
+              <span className={s.iconWrap}>
+                <span className={s.iconShell}>
+                  <SendIcon className={s.iconGlyph} />
+                </span>
+              </span>
             </Link>
           </div>
         </div>
