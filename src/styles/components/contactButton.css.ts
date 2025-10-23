@@ -35,14 +35,14 @@ const shuttleHoldPctA = 30; // % — reach pushed position
 const shuttleHoldPctB = 50; // % — hold pushed position so it reads
 
 /** Icon rotation (SVG glyph) */
-const iconExitTotalMs = 780; // ms — total rotate-out time
+const iconExitTotalMs = 500; // ms — total rotate-out time
 const iconWindupDeg = 20; // deg — anticipation (+deg)
 const iconOvershootDeg = -20; // deg — overshoot OFFSET around final target (negative = past, positive = short)
-const iconFinalRotationDeg = -540; // deg — final facing (≡ -180° after one extra turn)
+const iconFinalRotationDeg = -180; // deg — final facing (≡ -180° after one extra turn)
 const iconBaseRotationDeg = 0; // deg — keep 0 now that the SVG is optically centered
 
 /** Exit translation start (phase control relative to icon timeline) */
-const shuttleStartPct = 0.68; // 0–1 — when shuttle translation begins (relative to icon timeline)
+const shuttleStartPct = 1; // 0–1 — when shuttle translation begins (relative to icon timeline)
 const shuttleStartOffsetMs = 0; // ms — optional extra offset after shuttleStartPct
 
 /** Derived: exit translation delay (ms) */
@@ -51,11 +51,11 @@ const exitTranslationDelayMs = Math.round(
 );
 
 /** Icon spring (translation lag on shell) */
-const springDelayMs = 50; // ms — lag behind shuttle on both directions
+const springDelayMs = 80; // ms — lag behind shuttle on both directions
 
 /** Entry spring (icon shell translate) */
 const iconLagInDistance = m(8); // px — initial offset
-const iconLagInMicro = m(3); // px — micro rebound
+const iconLagInMicro = m(1.5); // px — micro rebound
 const iconLagInDuration = 160; // ms
 
 /** Exit spring (lags shuttle; push direction: +X, -Y) */
