@@ -8,84 +8,92 @@ import { globalBoxShadow } from '../helpers/shadow';
 import { focusOutline } from '../helpers/focusOutline';
 import { absolutePosition } from '../helpers/positioning';
 
-/* ============================================================================
-   KNOBS — all units annotated
-   ============================================================================ */
+/* =========================
+   KNOBS — all units via m()
+   ========================= */
 
-/** Layout (px via m()) */
-const offset = m(26); // px — inset of final resting button along each axis before rotation
-const buttonSize = m(66); // px — circular button diameter
-const iconSize = m(36); // px — glyph box (not stroke size)
+/** Layout */
+const offsetPx = m(26); // px
+const buttonSizePx = m(66); // px
+const iconSizePx = m(36); // px
 
-/** Easing curves */
-const SNAP = 'cubic-bezier(0.45, 0, 0.2, 1)'; // snap/impact
-const SETTLE = 'cubic-bezier(0.2, 0.8, 0.2, 1)'; // soft settle
-const FAST = 'cubic-bezier(0.05, 0.9, 0.1, 1)'; // quick push (entry)
+/** Easing (unitless) */
+const SNAP = 'cubic-bezier(0.45, 0, 0.2, 1)';
+const SETTLE = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
+const FAST = 'cubic-bezier(0.05, 0.9, 0.1, 1)';
 
-/** Shuttle timing (translate along 45° rail) */
-const shuttleDurationMs = 520; // ms — entry duration
-const shuttleExitDurationMs = shuttleDurationMs; // ms — exit mirrors entry
+/** Shuttle timing */
+const shuttleDurationMs = m(520, 'ms'); // ms
+const shuttleExitDurationMs = shuttleDurationMs; // ms
 
-/** Entry overshoot (translate past rest, then settle) */
-const entryOvershoot = m(14); // px
+/** Entry/Exit distances */
+const entryOvershootPx = m(14); // px
+const exitPushPx = m(22); // px
 
-/** Exit push (translate farther into corner before snapping off) */
-const exitPush = m(22); // px
-const shuttleHoldPctA = 30; // % — reach pushed position
-const shuttleHoldPctB = 50; // % — hold pushed position so it reads
+/** Percentages (for property values, NOT keyframe selectors) */
+const pct0 = m(0, '%');
+const pct50 = m(50, '%');
+const pct100 = m(100, '%');
 
-/** Icon rotation (SVG glyph) */
-const iconExitTotalMs = 500; // ms — total rotate-out time
-const iconWindupDeg = 20; // deg — anticipation (+deg)
-const iconOvershootDeg = -20; // deg — overshoot OFFSET around final target (negative = past, positive = short)
-const iconFinalRotationDeg = -180; // deg — final facing (≡ -180° after one extra turn)
-const iconBaseRotationDeg = 0; // deg — keep 0 now that the SVG is optically centered
+/** Angles */
+const rotNeg45Deg = m(-45, 'deg');
+const rot45Deg = m(45, 'deg');
+const rot0Deg = m(0, 'deg');
+const gradAngle135Deg = m(135, 'deg');
 
-/** Exit translation start (phase control relative to icon timeline) */
-const shuttleStartPct = 1; // 0–1 — when shuttle translation begins (relative to icon timeline)
-const shuttleStartOffsetMs = 0; // ms — optional extra offset after shuttleStartPct
+/** Icon rotation */
+const iconExitTotalMs = m(500, 'ms');
+const iconWindupDeg = m(20, 'deg');
+const iconOvershootDeg = m(-20, 'deg');
+const iconFinalDeg = m(-180, 'deg');
+const iconBaseDeg = m(0, 'deg');
 
-/** Derived: exit translation delay (ms) */
-const exitTranslationDelayMs = Math.round(
-  iconExitTotalMs * shuttleStartPct + shuttleStartOffsetMs,
-);
+/** Exit translation start */
+const shuttleStartRatio = 1; // 0–1
+const shuttleStartOffsetMs = m(0, 'ms');
+const exitTranslationDelayMs = iconExitTotalMs
+  .multiply(shuttleStartRatio)
+  .add(shuttleStartOffsetMs);
 
-/** Icon spring (translation lag on shell) */
-const springDelayMs = 80; // ms — lag behind shuttle on both directions
+/** Springs */
+const springDelayMs = m(80, 'ms');
+const iconLagInDistancePx = m(8); // px
+const iconLagInMicroPx = m(1.5); // px
+const iconLagInDurationMs = m(160, 'ms');
+const iconLagOutDistancePx = m(3); // px
+const iconLagOutDurationMs = shuttleExitDurationMs;
 
-/** Entry spring (icon shell translate) */
-const iconLagInDistance = m(8); // px — initial offset
-const iconLagInMicro = m(1.5); // px — micro rebound
-const iconLagInDuration = 160; // ms
-
-/** Exit spring (lags shuttle; push direction: +X, -Y) */
-const iconLagOutDistance = m(3); // px
-const iconLagOutDuration = shuttleExitDurationMs; // ms
-
-/** Motion shadow while moving — cheap hard shadow */
+/** Misc */
+const radiusCirclePct = m(50, '%');
+const hoverTransitionMs = m(220, 'ms');
+const gradientFadeMs = m(200, 'ms');
 const motionShadow = '0 2px 6px rgba(0,0,0,0.18)';
 
-/* ============================================================================
-   DERIVED
-   ============================================================================ */
+/* =========================
+   DERIVED (no .css() yet)
+   ========================= */
 
-const containerSize = buttonSize.multiply(3.6); // px — canvas size
-const diagonalOffset = offset.multiply(Math.SQRT2); // px — 45° inset
+const containerSizePx = buttonSizePx.multiply(3.6); // px
+const diagonalOffsetPx = offsetPx.multiply(Math.SQRT2); // px
 
-const startOffscreen = `translate3d(calc(-100% - ${diagonalOffset.css()}),0,0)`;
-const endInset = `translate3d(${diagonalOffset.css()},0,0)`;
-const endOvershoot = `translate3d(calc(${diagonalOffset.css()} + ${entryOvershoot.css()}),0,0)`;
+const t3dInset = () => `translate3d(${diagonalOffsetPx.css()},0,0)`;
+const t3dOffscreen = () =>
+  `translate3d(calc(-100% - ${diagonalOffsetPx.css()}),0,0)`;
+const t3dOvershootIn = () =>
+  `translate3d(calc(${diagonalOffsetPx.css()} + ${entryOvershootPx.css()}),0,0)`;
+const t3dPushedOut = () =>
+  `translate3d(calc(${diagonalOffsetPx.css()} + ${exitPushPx.css()}),0,0)`;
 
-/* ============================================================================
+/* =========================
    STRUCTURE
-   ============================================================================ */
+   ========================= */
 
 export const root = style({
   position: 'fixed',
   left: 0,
   bottom: 0,
-  width: containerSize.css(),
-  height: containerSize.css(),
+  width: containerSizePx.css(),
+  height: containerSizePx.css(),
   zIndex: 30,
   overflow: 'hidden',
   pointerEvents: 'auto',
@@ -93,149 +101,138 @@ export const root = style({
 
 export const rail = style({
   ...absolutePosition.bottomLeft(),
-  width: measurementHypotenuse(containerSize).css(),
-  height: buttonSize.css(),
-  transformOrigin: '0 50%',
-  transform: 'translateY(50%) rotate(-45deg)', // align local X to ↗︎ diagonal
+  width: measurementHypotenuse(containerSizePx).css(),
+  height: buttonSizePx.css(),
+  transformOrigin: `0 ${pct50.css()}`,
+  transform: `translateY(${pct50.css()}) rotate(${rotNeg45Deg.css()})`,
   pointerEvents: 'none',
 });
 
-/* ============================================================================
+/* =========================
    SHUTTLE (translate along rail)
-   ============================================================================ */
+   ========================= */
 
-/** Entry: offscreen → overshoot → settle */
 const enterMotion = keyframes({
-  '0%': { transform: startOffscreen, animationTimingFunction: FAST },
-  '68%': { transform: endOvershoot, animationTimingFunction: SETTLE },
-  '100%': { transform: endInset },
+  '0%': { transform: t3dOffscreen(), animationTimingFunction: FAST },
+  '68%': {
+    transform: t3dOvershootIn(),
+    animationTimingFunction: SETTLE,
+  },
+  '100%': { transform: t3dInset() },
 });
 
-/** Exit: push PAST corner → HOLD → snap OFFSCREEN */
-const shuttlePushed = `translate3d(calc(${diagonalOffset.css()} + ${exitPush.css()}),0,0)`;
 const shuttleExit = keyframes({
-  '0%': { transform: endInset, animationTimingFunction: SNAP },
-  [`${shuttleHoldPctA}%`]: {
-    transform: shuttlePushed,
+  '0%': { transform: t3dInset(), animationTimingFunction: SNAP },
+  '30%': {
+    transform: t3dPushedOut(),
     animationTimingFunction: 'linear',
-  }, // arrive at push
-  [`${shuttleHoldPctB}%`]: {
-    transform: shuttlePushed,
-    animationTimingFunction: SNAP,
-  }, // hold visibly
-  '100%': { transform: startOffscreen }, // snap away
+  },
+  '50%': { transform: t3dPushedOut(), animationTimingFunction: SNAP },
+  '100%': { transform: t3dOffscreen() },
 });
 
 export const shuttle = style({
   position: 'absolute',
   left: 0,
   top: 0,
-  height: buttonSize.css(),
-  width: buttonSize.css(),
-  transform: `${startOffscreen} translateZ(0)`,
+  height: buttonSizePx.css(),
+  width: buttonSizePx.css(),
+  transform: `${t3dOffscreen()} translateZ(0)`,
   willChange: 'transform',
   backfaceVisibility: 'hidden',
   pointerEvents: 'auto',
 });
 
 export const visible = style({
-  animation: `${enterMotion} ${shuttleDurationMs}ms both`,
+  animation: `${enterMotion} ${shuttleDurationMs.css()} both`,
   '@media': {
     '(prefers-reduced-motion: reduce)': {
       animation: 'none',
-      transform: endInset,
+      transform: t3dInset(),
     },
   },
 });
 
 export const leaving = style({
-  transform: endInset, // hold at rest until delay (prevents blink)
-  animation: `${shuttleExit} ${shuttleExitDurationMs}ms ${SNAP} ${exitTranslationDelayMs}ms both`,
+  transform: t3dInset(),
+  animation: `${shuttleExit} ${shuttleExitDurationMs.css()} ${SNAP} ${exitTranslationDelayMs.css()} both`,
   '@media': {
     '(prefers-reduced-motion: reduce)': {
       animation: 'none',
-      transform: startOffscreen,
+      transform: t3dOffscreen(),
     },
   },
 });
 
-/* ============================================================================
-   PAYLOAD (upright content inside rotated rail)
-   ============================================================================ */
+/* =========================
+   PAYLOAD
+   ========================= */
 
 export const payload = style({
   width: '100%',
   height: '100%',
-  transform: 'rotate(45deg)',
-  transformOrigin: '50% 50%',
+  transform: `rotate(${rot45Deg.css()})`,
+  transformOrigin: `${pct50.css()} ${pct50.css()}`,
   position: 'relative',
 });
 
-/* ============================================================================
+/* =========================
    BUTTON
-   ============================================================================ */
+   ========================= */
 
 export const button = style({
   position: 'absolute',
-  width: buttonSize.css(),
-  height: buttonSize.css(),
+  width: buttonSizePx.css(),
+  height: buttonSizePx.css(),
   left: 0,
   bottom: 0,
-  borderRadius: '50%',
+  borderRadius: radiusCirclePct.css(),
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: colorVars.white.alpha(0.95).css(),
-  color: colorVars.navBg.css(),
+  color: colorVars.svgColor.css(),
   textDecoration: 'none',
-
-  // Idle: global blur shadow
   boxShadow: globalBoxShadow(),
-
   pointerEvents: 'auto',
-  transition: 'box-shadow 220ms ease', // ms
+  transition: `box-shadow ${hoverTransitionMs.css()} ease`,
   willChange: 'transform',
-
   selectors: {
-    // During motion: cheap/hard shadow + no transition
     [`${visible} &`]: { boxShadow: motionShadow, transition: 'none' },
     [`${leaving} &`]: {
       pointerEvents: 'none',
       boxShadow: motionShadow,
       transition: 'none',
     },
-
-    // Idle hover/focus: heavier blur
     '&:hover, &:focus-visible': {
       boxShadow: globalBoxShadow({ blur: m(12) }),
     },
-
     '&:focus-visible': focusOutline({
       color: themeColours.lights.b
         .mix(themeColours.lights.d, 0.5)
         .css(),
-      width: m(3), // px
-      offset: m(4), // px
+      width: m(3),
+      offset: m(4),
     }),
   },
 });
 
-/* ============================================================================
+/* =========================
    GRADIENT (hover)
-   ============================================================================ */
+   ========================= */
 
 export const gradient = style({
   position: 'absolute',
   inset: 0,
-  borderRadius: '50%',
-  backgroundImage: `linear-gradient(135deg, ${themeColours.lights.b.css()} 0%, ${themeColours.lights.d.css()} 100%)`,
+  borderRadius: radiusCirclePct.css(),
+  backgroundImage: `linear-gradient(${gradAngle135Deg.css()}, ${themeColours.lights.b.css()} ${pct0.css()}, ${themeColours.lights.d.css()} ${pct100.css()})`,
   opacity: 0,
-  transition: 'opacity 200ms ease', // ms
+  transition: `opacity ${gradientFadeMs.css()} ease`,
   zIndex: 0,
   pointerEvents: 'none',
   willChange: 'opacity',
   selectors: {
-    [`${leaving} &`]: { opacity: 0 }, // avoid overdraw while exiting
+    [`${leaving} &`]: { opacity: 0 },
   },
 });
 
@@ -246,83 +243,68 @@ export const gradientVisible = style({
   },
 });
 
-/* ============================================================================
+/* =========================
    ICON (barrel roll + spring)
-   ============================================================================ */
+   ========================= */
 
-/**
- * Wrapper: size owner; no optical offset, no rotation (SVG is
- * centered now)
- */
 export const iconWrap = style({
-  width: iconSize.css(),
-  height: iconSize.css(),
+  width: iconSizePx.css(),
+  height: iconSizePx.css(),
   display: 'grid',
   placeItems: 'center',
   overflow: 'visible',
   transform: 'translate3d(0,0,0)',
 });
 
-/**
- * Barrel roll with readable small overshoot: 0 → wind-up → SNAP to
- * (final + overshoot) → dwell → settle at final. Final is -540° (≡
- * -180° after one full turn). Keyframes include the base rotation
- * (iconBaseRotationDeg) so there’s no composition jump.
- */
-const base = (deg: number) => `${iconBaseRotationDeg + deg}deg`;
+const addBaseDeg = (deg: ReturnType<typeof m>) =>
+  deg.add(iconBaseDeg);
 
 const iconRotateExit = keyframes({
-  '0%': { transform: `rotate(${base(0)})` },
-  '20%': { transform: `rotate(${base(iconWindupDeg)})` }, // anticipation
+  '0%': { transform: `rotate(${addBaseDeg(rot0Deg).css()})` },
+  '20%': { transform: `rotate(${addBaseDeg(iconWindupDeg).css()})` },
   '40%': {
-    transform: `rotate(${base(iconWindupDeg)})`,
+    transform: `rotate(${addBaseDeg(iconWindupDeg).css()})`,
     animationTimingFunction: SNAP,
-  }, // brief hold
+  },
   '58%': {
-    transform: `rotate(calc(${iconBaseRotationDeg + iconFinalRotationDeg}deg + ${iconOvershootDeg}deg))`,
-    animationTimingFunction: 'cubic-bezier(0.18,0.92,0.12,1)', // hard snap
+    transform: `rotate(calc(${iconBaseDeg.add(iconFinalDeg).css()} + ${iconOvershootDeg.css()}))`,
+    animationTimingFunction: 'cubic-bezier(0.18,0.92,0.12,1)',
   },
   '78%': {
-    transform: `rotate(calc(${iconBaseRotationDeg + iconFinalRotationDeg}deg + ${iconOvershootDeg}deg))`,
-    animationTimingFunction: SETTLE, // longer dwell so small angles read
+    transform: `rotate(calc(${iconBaseDeg.add(iconFinalDeg).css()} + ${iconOvershootDeg.css()}))`,
+    animationTimingFunction: SETTLE,
   },
-  '100%': { transform: `rotate(${base(iconFinalRotationDeg)})` }, // settle exactly flat at final
+  '100%': { transform: `rotate(${addBaseDeg(iconFinalDeg).css()})` },
 });
 
-/** Icon SPRING on shell (translate only) — entry lag */
 const iconLagIn = keyframes({
   '0%': {
-    transform: `translate3d(${iconLagInDistance.negation().css()}, ${iconLagInDistance.css()}, 0)`,
+    transform: `translate3d(${iconLagInDistancePx.negation().css()}, ${iconLagInDistancePx.css()}, 0)`,
     animationTimingFunction: SNAP,
   },
   '72%': {
-    transform: `translate3d(${iconLagInMicro.css()}, ${iconLagInMicro.negation().css()}, 0)`,
+    transform: `translate3d(${iconLagInMicroPx.css()}, ${iconLagInMicroPx.negation().css()}, 0)`,
     animationTimingFunction: SETTLE,
   },
   '100%': { transform: 'translate3d(0,0,0)' },
 });
 
-/**
- * Icon SPRING on shell (translate only) — exit lag; push direction:
- * +X, -Y
- */
 const iconLagOut = keyframes({
   '0%': {
     transform: 'translate3d(0,0,0)',
     animationTimingFunction: SNAP,
   },
   '30%': {
-    transform: `translate3d(${iconLagOutDistance.css()}, ${iconLagOutDistance.negation().css()}, 0)`,
+    transform: `translate3d(${iconLagOutDistancePx.css()}, ${iconLagOutDistancePx.negation().css()}, 0)`,
     animationTimingFunction: 'linear',
   },
   '50%': {
-    transform: `translate3d(${iconLagOutDistance.css()}, ${iconLagOutDistance.negation().css()}, 0)`,
+    transform: `translate3d(${iconLagOutDistancePx.css()}, ${iconLagOutDistancePx.negation().css()}, 0)`,
     animationTimingFunction: SETTLE,
   },
   '100%': { transform: 'translate3d(0,0,0)' },
 });
 
-/** Shell follows the shuttle with delay (entry & exit) */
 export const iconShell = style({
   display: 'grid',
   placeItems: 'center',
@@ -332,18 +314,15 @@ export const iconShell = style({
   willChange: 'transform',
   backfaceVisibility: 'hidden',
   selectors: {
-    // Entry: follow with constant lag
     [`${visible} &`]: {
-      animation: `${iconLagIn} ${iconLagInDuration}ms ${springDelayMs}ms both`,
+      animation: `${iconLagIn} ${iconLagInDurationMs.css()} ${springDelayMs.css()} both`,
     },
-    // Exit: start at shuttle delay + lag
     [`${leaving} &`]: {
-      animation: `${iconLagOut} ${iconLagOutDuration}ms ${exitTranslationDelayMs + springDelayMs}ms both`,
+      animation: `${iconLagOut} ${iconLagOutDurationMs.css()} ${exitTranslationDelayMs.add(springDelayMs).css()} both`,
     },
   },
 });
 
-/** The SVG glyph: rotation only; pivot at true center (SVG corrected) */
 export const iconGlyph = style({
   display: 'block',
   width: 'auto',
@@ -351,17 +330,15 @@ export const iconGlyph = style({
   maxWidth: '100%',
   maxHeight: '100%',
   transformBox: 'fill-box',
-  transformOrigin: '50% 50%', // SVG is now centered; true geometric center is correct
-  transform: `translateZ(0) rotate(${iconBaseRotationDeg}deg)`, // base pose (0 by default)
+  transformOrigin: `${pct50.css()} ${pct50.css()}`,
+  transform: `translateZ(0) rotate(${iconBaseDeg.css()})`,
   willChange: 'transform',
   backfaceVisibility: 'hidden',
   selectors: {
-    // Hover/focus color shift
     [`${button}:hover &`]: { color: colorVars.white.css() },
     [`${button}:focus-visible &`]: { color: colorVars.white.css() },
-    // Exit rotation timeline
     [`${leaving} &`]: {
-      animation: `${iconRotateExit} ${iconExitTotalMs}ms both`,
+      animation: `${iconRotateExit} ${iconExitTotalMs.css()} both`,
     },
   },
 });
