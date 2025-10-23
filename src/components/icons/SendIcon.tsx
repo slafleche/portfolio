@@ -18,7 +18,7 @@ export default function SendIcon({
       {...props}
     >
       <g transform="rotate(-45 12 12)">
-        <g transform="translate(2, 0.25)">
+        <g transform="translate(1, 0)">
           <path
             d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
             vectorEffect="non-scaling-stroke"

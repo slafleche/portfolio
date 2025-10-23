@@ -26,10 +26,10 @@ export default function ContactButton({
   ] = useState(false);
   const previousVisibleRef = useRef(false);
 
+  // true for one render when we transition from visible -> not visible
   const leaving = previousVisibleRef.current && !visible;
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
     const target = document.getElementById(watchId);
     if (!target) return;
 
@@ -65,22 +65,24 @@ export default function ContactButton({
             leaving && s.leaving,
           )}
         >
-          <div className={s.payload}>
-            <Link
-              href={href}
-              className={clsx(s.button, className)}
-              aria-label={label}
-            >
-              <span
-                className={clsx(s.gradient, s.gradientVisible)}
-                aria-hidden
-              />
-              <span className={s.iconWrap}>
-                <span className={s.iconShell}>
-                  <SendIcon className={s.iconGlyph} />
+          <div className={s.scaleShell}>   
+            <div className={s.payload}>
+              <Link
+                href={href}
+                className={clsx(s.button, className)}
+                aria-label={label}
+              >
+                <span
+                  className={clsx(s.gradient, s.gradientVisible)}
+                  aria-hidden
+                />
+                <span className={s.iconWrap}>
+                  <span className={s.iconShell}>
+                    <SendIcon className={s.iconGlyph} />
+                  </span>
                 </span>
-              </span>
-            </Link>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
