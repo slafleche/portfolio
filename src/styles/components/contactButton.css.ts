@@ -9,72 +9,73 @@ import { focusOutline } from '../helpers/focusOutline';
 import { absolutePosition } from '../helpers/positioning';
 
 /* =========================
-   KNOBS — all units via m()
+   KNOBS
    ========================= */
 
-/** Layout */
-const offsetPx = m(26); // px
-const buttonSizePx = m(66); // px
-const iconSizePx = m(36); // px
+const offsetPx = m(26);
+const buttonSizePx = m(66);
+const iconSizePx = m(36);
 
-/** Easing (unitless) */
 const SNAP = 'cubic-bezier(0.45, 0, 0.2, 1)';
 const SETTLE = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
 const FAST = 'cubic-bezier(0.05, 0.9, 0.1, 1)';
 
-/** Shuttle timing */
-const shuttleDurationMs = m(520, 'ms'); // ms
-const shuttleExitDurationMs = shuttleDurationMs; // ms
+const shuttleDurationMs = m(520, 'ms');
+const shuttleExitDurationMs = shuttleDurationMs;
 
-/** Entry/Exit distances */
-const entryOvershootPx = m(14); // px
-const exitPushPx = m(22); // px
+const entryOvershootPx = m(14);
+const exitPushPx = m(5);
 
-/** Percentages (for property values, NOT keyframe selectors) */
 const pct0 = m(0, '%');
 const pct50 = m(50, '%');
 const pct100 = m(100, '%');
 
-/** Angles */
 const rotNeg45Deg = m(-45, 'deg');
 const rot45Deg = m(45, 'deg');
 const rot0Deg = m(0, 'deg');
 const gradAngle135Deg = m(135, 'deg');
 
-/** Icon rotation */
 const iconExitTotalMs = m(500, 'ms');
 const iconWindupDeg = m(20, 'deg');
 const iconOvershootDeg = m(-20, 'deg');
 const iconFinalDeg = m(-180, 'deg');
 const iconBaseDeg = m(0, 'deg');
 
-/** Exit translation start */
 const shuttleStartRatio = 1; // 0–1
 const shuttleStartOffsetMs = m(0, 'ms');
 const exitTranslationDelayMs = iconExitTotalMs
   .multiply(shuttleStartRatio)
   .add(shuttleStartOffsetMs);
 
-/** Springs */
-const springDelayMs = m(80, 'ms');
-const iconLagInDistancePx = m(8); // px
-const iconLagInMicroPx = m(1.5); // px
+const springDelayMs = m(100, 'ms');
+const iconLagInDistancePx = m(8);
+const iconLagInMicroPx = m(1.5);
 const iconLagInDurationMs = m(160, 'ms');
-const iconLagOutDistancePx = m(3); // px
+const iconLagOutDistancePx = m(3);
 const iconLagOutDurationMs = shuttleExitDurationMs;
 
-/** Misc */
 const radiusCirclePct = m(50, '%');
 const hoverTransitionMs = m(220, 'ms');
 const gradientFadeMs = m(200, 'ms');
+
 const motionShadow = '0 2px 6px rgba(0,0,0,0.18)';
+
+/* Squash & Stretch (volume-preserving in rail space) */
+const scaleEnterDurationMs = m(260, 'ms');
+const scaleExitDurationMs = m(420, 'ms');
+const scaleDelayEnterMs = m(0, 'ms');
+const scaleDelayExitMs = exitTranslationDelayMs.subtract(100);
+const stretch = 1.06; // along rail-X
+const squash = 1 / stretch; // inverse on rail-Y
+const stretchExit = stretch;
+const squashExit = 1 / stretchExit;
 
 /* =========================
    DERIVED (no .css() yet)
    ========================= */
 
-const containerSizePx = buttonSizePx.multiply(3.6); // px
-const diagonalOffsetPx = offsetPx.multiply(Math.SQRT2); // px
+const containerSizePx = buttonSizePx.multiply(3.6);
+const diagonalOffsetPx = offsetPx.multiply(Math.SQRT2);
 
 const t3dInset = () => `translate3d(${diagonalOffsetPx.css()},0,0)`;
 const t3dOffscreen = () =>
@@ -165,7 +166,59 @@ export const leaving = style({
 });
 
 /* =========================
-   PAYLOAD
+   SCALE SHELL (in rail space; BEFORE payload)
+   ========================= */
+
+// ENTRY: single squash → stretch → neutral
+const scaleEnter = keyframes({
+  '0%': {
+    transform: `translateZ(0) scale3d(${squash}, ${stretch}, 1)`,
+  }, // anticipation: squat
+  '18%': {
+    transform: 'translateZ(0) scale3d(1, 1, 1)',
+    animationTimingFunction: SNAP,
+  }, // release
+  '70%': {
+    transform: `translateZ(0) scale3d(${stretch}, ${squash}, 1)`,
+  }, // stretch during peak velocity
+  '100%': { transform: 'translateZ(0) scale3d(1, 1, 1)' }, // settle neutral
+});
+
+// EXIT: single squash (anticipation) → stretch (push) → neutral
+const scaleExit = keyframes({
+  '0%': { transform: 'translateZ(0) scale3d(1, 1, 1)' },
+  '20%': {
+    transform: `translateZ(0) scale3d(${squashExit}, ${stretchExit}, 1)`,
+    animationTimingFunction: SNAP,
+  }, // anticipation
+  '55%': {
+    transform: `translateZ(0) scale3d(${stretchExit}, ${squashExit}, 1)`,
+  }, // stretch during push into corner
+  '100%': { transform: 'translateZ(0) scale3d(1, 1, 1)' }, // back to neutral
+});
+
+export const scaleShell = style({
+  width: '100%',
+  height: '100%',
+  transform: 'translateZ(0)',
+  transformOrigin: `${m(0, '%').css()} ${m(50, '%').css()}`, // hinge at left-center (rail origin)
+  willChange: 'transform',
+  backfaceVisibility: 'hidden',
+  selectors: {
+    [`${visible} &`]: {
+      animation: `${scaleEnter} ${scaleEnterDurationMs.css()} ${scaleDelayEnterMs.css()} both`,
+    },
+    [`${leaving} &`]: {
+      animation: `${scaleExit} ${scaleExitDurationMs.css()} ${scaleDelayExitMs.css()} both`,
+    },
+  },
+  '@media': {
+    '(prefers-reduced-motion: reduce)': { animation: 'none' },
+  },
+});
+
+/* =========================
+   PAYLOAD (counter-rotate back to upright)
    ========================= */
 
 export const payload = style({
@@ -218,7 +271,7 @@ export const button = style({
 });
 
 /* =========================
-   GRADIENT (hover)
+   GRADIENT
    ========================= */
 
 export const gradient = style({
@@ -231,9 +284,7 @@ export const gradient = style({
   zIndex: 0,
   pointerEvents: 'none',
   willChange: 'opacity',
-  selectors: {
-    [`${leaving} &`]: { opacity: 0 },
-  },
+  selectors: { [`${leaving} &`]: { opacity: 0 } },
 });
 
 export const gradientVisible = style({
