@@ -1,11 +1,18 @@
-// FILE: src/components/ContactButton.tsx
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import clsx from 'clsx';
+
 import * as s from '@/styles/components/contactButton.css';
 import SendIcon from '@/components/icons/SendIcon';
+
+import {
+  shuttleDurationMs,
+  shuttleExitDurationMs,
+  exitTranslationDelayMs,
+} from '@/styles/components/contactButton.vars';
 
 type Phase = 'hidden' | 'entering' | 'shown' | 'exiting';
 
@@ -21,51 +28,39 @@ export default function ContactButton({
   className?: string;
 }) {
   const [
+    mounted,
+    setMounted,
+  ] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const [
     phase,
     _setPhase,
   ] = useState<Phase>('hidden');
   const phaseRef = useRef<Phase>('hidden');
   const phaseSinceRef = useRef<number>(Date.now());
-
   const shuttleRef = useRef<HTMLDivElement | null>(null);
+  const linkRef = useRef<HTMLAnchorElement | null>(null);
+
   const tDebounceRef = useRef<number | null>(null);
   const scrollRafRef = useRef<number | null>(null);
-  const pendingExitRef = useRef(false);
   const wantVisibleRef = useRef<boolean>(false);
 
-  // IO authority window to prevent IO vs poll flapping
+  const enterFallbackRef = useRef<number | null>(null);
+  const exitFallbackRef = useRef<number | null>(null);
+
   const lastIOSampleRef = useRef<number>(0);
   const IO_AUTHORITY_MS = 300;
-
-  // Tunables
   const VISIBLE_DEBOUNCE_MS = 80;
   const MIN_SHOWN_DWELL_MS = 200;
 
-  // --- Logging helpers -------------------------------------------------------
   const T0 = useRef<number>(performance.now());
   const nowMs = () => Math.round(performance.now() - T0.current);
   const since = () => Date.now() - phaseSinceRef.current;
 
-  const L = (...a: any[]) =>
+  const L = useCallback((...a: unknown[]) => {
     console.log('[ContactButton]', `${nowMs()}ms`, ...a);
-
-  const logCSS = (when: string) => {
-    const el = shuttleRef.current;
-    if (!el) return;
-    const cs = getComputedStyle(el);
-    L(`CSS @ ${when}:`, {
-      transitionProperty: cs.transitionProperty,
-      transitionDuration: cs.transitionDuration,
-      transitionTimingFunction: cs.transitionTimingFunction,
-      transitionDelay: cs.transitionDelay,
-      animationName: cs.animationName,
-      animationDuration: cs.animationDuration,
-      animationTimingFunction: cs.animationTimingFunction,
-      animationDelay: cs.animationDelay,
-      transform: cs.transform,
-      willChange: cs.willChange,
-    });
-  };
+  }, []);
 
   const setPhase = useCallback((next: Phase, why?: string) => {
     if (next === phaseRef.current) return;
@@ -77,194 +72,177 @@ export default function ContactButton({
     L(`PHASE ${prev} -> ${next}${why ? `  (${why})` : ''}`, {
       dtFromPrevMs: dt,
     });
-    logCSS(`phase=${next}`);
   }, []);
 
-  // --- Mirror data-phase (do NOT touch inline transform) ---------------------
-  useEffect(() => {
-    const el = shuttleRef.current;
-    if (!el) return;
-    el.dataset.phase = phase;
-  }, [
-    phase,
-  ]);
-
-  // --- Mount diagnostics -----------------------------------------------------
-  useEffect(() => {
-    L('MOUNT', { watchId });
-    logCSS('mount');
-    return () => {
-      L('UNMOUNT');
-    };
-  }, [
-    watchId,
-  ]);
-
-  // --- Transition/Animation end -> complete phases ---------------------------
-  useEffect(() => {
-    const el = shuttleRef.current;
-    if (!el) return;
-
-    const onTransitionEnd = (e: globalThis.TransitionEvent) => {
-      if (e.target !== el) return;
-      if (e.propertyName !== 'transform') {
-        L('transitionend (ignored)', { prop: e.propertyName });
-        return;
+  const requestExitIfAllowed = useCallback(
+    (why: string) => {
+      if (phaseRef.current !== 'shown') return;
+      if (!wantVisibleRef.current) {
+        if (since() >= MIN_SHOWN_DWELL_MS) {
+          L('→ set exiting (allowed immediately)', { why });
+          setPhase('exiting', `requestExitIfAllowed: ${why}`);
+        } else {
+          const wait = MIN_SHOWN_DWELL_MS - since();
+          L('→ wait dwell then exit', { wait, why });
+          window.setTimeout(() => {
+            if (
+              phaseRef.current === 'shown' &&
+              !wantVisibleRef.current
+            ) {
+              L('→ dwell elapsed, set exiting', { why });
+              setPhase(
+                'exiting',
+                `requestExitIfAllowed after dwell: ${why}`,
+              );
+            }
+          }, wait);
+        }
       }
-      L('transitionend', {
-        prop: e.propertyName,
-        phase: phaseRef.current,
-      });
-      if (phaseRef.current === 'entering') {
-        setPhase('shown', 'enter finished');
-        if (!wantVisibleRef.current) {
-          L('post-enter wants HIDDEN → request exit');
-          requestExitIfAllowed('post-enter check');
-        }
-      } else if (phaseRef.current === 'exiting') {
-        setPhase('hidden', 'exit finished');
-      }
-    };
-
-    const onAnimationEnd = (e: globalThis.AnimationEvent) => {
-      if (e.target !== el) return;
-      L('animationend', {
-        name: e.animationName,
-        phase: phaseRef.current,
-      });
-      if (phaseRef.current === 'entering') {
-        setPhase('shown', 'enter (keyframes) finished');
-        if (!wantVisibleRef.current) {
-          L('post-enter wants HIDDEN → request exit');
-          requestExitIfAllowed('post-enter check (keyframes)');
-        }
-      } else if (phaseRef.current === 'exiting') {
-        setPhase('hidden', 'exit (keyframes) finished');
-      }
-    };
-
-    el.addEventListener('transitionend', onTransitionEnd);
-    el.addEventListener('animationend', onAnimationEnd);
-    return () => {
-      el.removeEventListener('transitionend', onTransitionEnd);
-      el.removeEventListener('animationend', onAnimationEnd);
-    };
-  }, [
-    setPhase,
-  ]);
-
-  // --- Visibility signal handling -------------------------------------------
-  const applySignal = useCallback(
-    (wantVisible: boolean, src: 'IO' | 'poll') => {
-      // IO is authoritative for a short window; ignore poll during it
-      if (
-        src === 'poll' &&
-        performance.now() - lastIOSampleRef.current < IO_AUTHORITY_MS
-      ) {
-        L('signal (poll ignored — recent IO authority)', {
-          wantVisible,
-          phase: phaseRef.current,
-        });
-        return;
-      }
-
-      wantVisibleRef.current = wantVisible;
-      L('signal', { src, wantVisible, phase: phaseRef.current });
-
-      if (tDebounceRef.current)
-        window.clearTimeout(tDebounceRef.current);
-      tDebounceRef.current = window.setTimeout(() => {
-        const p = phaseRef.current;
-
-        if (p === 'hidden' && wantVisible) {
-          setPhase('entering', 'signal->enter');
-          return;
-        }
-
-        if (p === 'entering') {
-          if (!wantVisible) {
-            pendingExitRef.current = true;
-            L('queue exit (mid-enter)');
-          }
-          return;
-        }
-
-        if (p === 'shown' && !wantVisible) {
-          if (since() >= MIN_SHOWN_DWELL_MS) {
-            setPhase('exiting', 'signal->exit');
-          } else {
-            const wait = MIN_SHOWN_DWELL_MS - since();
-            L('exit dwell delay', { waitMs: wait });
-            window.setTimeout(() => {
-              if (
-                phaseRef.current === 'shown' &&
-                !wantVisibleRef.current
-              ) {
-                setPhase('exiting', 'exit after dwell');
-              } else {
-                L('exit dwell aborted', {
-                  phase: phaseRef.current,
-                  stillNotWanted: !wantVisibleRef.current,
-                });
-              }
-            }, wait);
-          }
-          return;
-        }
-
-        if (p === 'exiting' && wantVisible) {
-          L('visible during exit (ignored)');
-        }
-      }, VISIBLE_DEBOUNCE_MS);
     },
     [
       setPhase,
     ],
   );
 
-  // Called right after enter finishes if we already know it shouldn't be visible
-  const requestExitIfAllowed = (why: string) => {
-    pendingExitRef.current = false;
-    if (phaseRef.current !== 'shown') {
-      L('requestExitIfAllowed ignored (not shown)', {
-        phase: phaseRef.current,
-        why,
-      });
-      return;
-    }
-    if (!wantVisibleRef.current) {
-      if (since() >= MIN_SHOWN_DWELL_MS) {
-        setPhase('exiting', `requestExitIfAllowed: ${why}`);
-      } else {
-        const wait = MIN_SHOWN_DWELL_MS - since();
-        L('requestExitIfAllowed dwell delay', { waitMs: wait, why });
-        window.setTimeout(() => {
-          if (
-            phaseRef.current === 'shown' &&
-            !wantVisibleRef.current
-          ) {
-            setPhase(
-              'exiting',
-              `requestExitIfAllowed after dwell: ${why}`,
-            );
-          } else {
-            L('requestExitIfAllowed aborted', {
-              phase: phaseRef.current,
-              stillNotWanted: !wantVisibleRef.current,
-            });
-          }
-        }, wait);
-      }
-    }
-  };
+  /* keep phase dataset on shuttle + button (for CSS-driven keyframes) */
+  useEffect(() => {
+    const el = shuttleRef.current;
+    if (el) el.dataset.phase = phase;
+    const btn = el?.querySelector('a');
+    if (btn) (btn as HTMLElement).dataset.phase = phase;
+  }, [
+    phase,
+  ]);
 
-  // --- IO + fallback ---------------------------------------------------------
+  /* DOM-level inert control to avoid React boolean attribute warning */
+  useEffect(() => {
+    const a = linkRef.current as unknown as {
+      inert?: boolean;
+    } | null;
+    if (!a) return;
+    // @ts-expect-error: inert is not in TS DOM lib yet everywhere
+    (a as any).inert = phase === 'exiting';
+  }, [
+    phase,
+  ]);
+
+  /* CSS animationend primary path */
+  useEffect(() => {
+    const el = shuttleRef.current;
+    if (!el) return;
+
+    const onAnimationEnd = (e: AnimationEvent) => {
+      if (e.target !== el) return;
+      L('animationend on shuttle', {
+        phase: phaseRef.current,
+        name: (e as any).animationName,
+      });
+      if (phaseRef.current === 'entering') {
+        setPhase('shown', 'enter finished');
+        if (!wantVisibleRef.current)
+          requestExitIfAllowed('post-enter check');
+      } else if (phaseRef.current === 'exiting') {
+        setPhase('hidden', 'exit finished');
+      }
+    };
+
+    el.addEventListener('animationend', onAnimationEnd);
+    return () => {
+      el.removeEventListener('animationend', onAnimationEnd);
+    };
+  }, [
+    setPhase,
+    requestExitIfAllowed,
+  ]);
+
+  /* Fallback timers: ensure phase flips even if CSS events are lost */
+  useEffect(() => {
+    if (enterFallbackRef.current) {
+      window.clearTimeout(enterFallbackRef.current);
+      enterFallbackRef.current = null;
+    }
+    if (exitFallbackRef.current) {
+      window.clearTimeout(exitFallbackRef.current);
+      exitFallbackRef.current = null;
+    }
+
+    if (phase === 'entering') {
+      const ms = Number(shuttleDurationMs) + 40;
+      L('fallback timer armed for entering→shown', { ms });
+      enterFallbackRef.current = window.setTimeout(() => {
+        if (phaseRef.current === 'entering') {
+          L('fallback fired: forcing shown');
+          setPhase('shown', 'enter fallback');
+          if (!wantVisibleRef.current)
+            requestExitIfAllowed('post-enter check (fallback)');
+        }
+      }, ms);
+    }
+
+    if (phase === 'exiting') {
+      const ms =
+        Number(exitTranslationDelayMs) +
+        Number(shuttleExitDurationMs) +
+        40;
+      L('fallback timer armed for exiting→hidden', { ms });
+      exitFallbackRef.current = window.setTimeout(() => {
+        if (phaseRef.current === 'exiting') {
+          L('fallback fired: forcing hidden');
+          setPhase('hidden', 'exit fallback');
+        }
+      }, ms);
+    }
+
+    return () => {
+      if (enterFallbackRef.current) {
+        window.clearTimeout(enterFallbackRef.current);
+        enterFallbackRef.current = null;
+      }
+      if (exitFallbackRef.current) {
+        window.clearTimeout(exitFallbackRef.current);
+        exitFallbackRef.current = null;
+      }
+    };
+  }, [
+    phase,
+    setPhase,
+    requestExitIfAllowed,
+  ]);
+
+  const applySignal = useCallback(
+    (wantVisible: boolean, src: 'IO' | 'poll') => {
+      if (
+        src === 'poll' &&
+        performance.now() - lastIOSampleRef.current < IO_AUTHORITY_MS
+      )
+        return;
+
+      wantVisibleRef.current = wantVisible;
+      L('applySignal', { src, wantVisible, phase: phaseRef.current });
+
+      if (tDebounceRef.current)
+        window.clearTimeout(tDebounceRef.current);
+      tDebounceRef.current = window.setTimeout(() => {
+        const p = phaseRef.current;
+        if (p === 'hidden' && wantVisible) {
+          L('→ signal enter');
+          setPhase('entering', 'signal->enter');
+        }
+        if (p === 'shown' && !wantVisible) {
+          L('→ signal exit (request)');
+          requestExitIfAllowed('signal->exit');
+        }
+      }, VISIBLE_DEBOUNCE_MS);
+    },
+    [
+      setPhase,
+      requestExitIfAllowed,
+    ],
+  );
+
   useEffect(() => {
     const target = document.getElementById(watchId);
-    if (!target) {
-      L('NO TARGET', { watchId });
-      return;
-    }
+    if (!target) return;
 
     const io = new IntersectionObserver(
       ([
@@ -272,13 +250,6 @@ export default function ContactButton({
       ]) => {
         const off = !entry.isIntersecting;
         lastIOSampleRef.current = performance.now();
-        L('IO', {
-          isIntersecting: entry.isIntersecting,
-          ratio: entry.intersectionRatio,
-          top: entry.boundingClientRect.top.toFixed(1),
-          bottom: entry.boundingClientRect.bottom.toFixed(1),
-          vh: window.innerHeight,
-        });
         applySignal(off, 'IO');
       },
       { root: null, threshold: 0 },
@@ -288,12 +259,6 @@ export default function ContactButton({
     const poll = () => {
       const rect = target.getBoundingClientRect();
       const off = rect.bottom <= 0 || rect.top >= window.innerHeight;
-      L('POLL', {
-        top: Math.round(rect.top),
-        bottom: Math.round(rect.bottom),
-        vh: window.innerHeight,
-        off,
-      });
       applySignal(off, 'poll');
     };
 
@@ -307,8 +272,6 @@ export default function ContactButton({
       passive: true,
     });
     window.addEventListener('resize', onScrollOrResize);
-
-    // Initial sample
     poll();
 
     return () => {
@@ -319,16 +282,23 @@ export default function ContactButton({
         cancelAnimationFrame(scrollRafRef.current);
       if (tDebounceRef.current)
         window.clearTimeout(tDebounceRef.current);
+      if (enterFallbackRef.current)
+        window.clearTimeout(enterFallbackRef.current);
+      if (exitFallbackRef.current)
+        window.clearTimeout(exitFallbackRef.current);
       scrollRafRef.current = null;
       tDebounceRef.current = null;
+      enterFallbackRef.current = null;
+      exitFallbackRef.current = null;
     };
   }, [
     watchId,
     applySignal,
-    L,
   ]);
 
-  return (
+  const exiting = phase === 'exiting';
+
+  const content = (
     <div className={s.root}>
       <div className={s.rail}>
         <div
@@ -339,19 +309,30 @@ export default function ContactButton({
           <div className={s.payload}>
             <Link
               href={href}
+              ref={linkRef}
               className={clsx(s.button, className)}
               aria-label={label}
+              data-phase={phase}
+              aria-disabled={exiting ? 'true' : undefined}
+              style={exiting ? { pointerEvents: 'none' } : undefined}
             >
-              <span className={s.iconWrap}>
-                <SendIcon
-                  className={s.iconGlyph}
-                  data-phase={phase}
-                />
-              </span>
+              <div className={clsx(s.gradient, s.gradientVisible)} />
+              <div className={s.iconWrap}>
+                <div className={s.iconShell}>
+                  <div className={s.iconTrack} data-phase={phase}>
+                    <SendIcon
+                      className={s.iconGlyph}
+                      data-phase={phase}
+                    />
+                  </div>
+                </div>
+              </div>
             </Link>
           </div>
         </div>
       </div>
     </div>
   );
+
+  return mounted ? createPortal(content, document.body) : null;
 }
