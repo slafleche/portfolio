@@ -152,18 +152,15 @@ const buttonScaleExit = keyframes({
   '0%': {
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(1,1,1) rotate(${rot45Deg.css()})`,
   },
-  // Anticipation (stretch)
   [exitAnticPct.css()]: {
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kAntic}, ${kAnticY}, 1) rotate(${rot45Deg.css()})`,
   },
-  // Squash hold window (press against wall)
   [SQUASH_START]: {
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kSquash}, ${kSquashY}, 1) rotate(${rot45Deg.css()})`,
   },
   [HOLD_END]: {
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kSquash}, ${kSquashY}, 1) rotate(${rot45Deg.css()})`,
   },
-  // Release: briefly stretch, then neutral (never cross the wall)
   '80%': {
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kAntic}, ${kAnticY}, 1) rotate(${rot45Deg.css()})`,
   },
@@ -264,33 +261,37 @@ const FINAL_SPIN_OVERSHOOT_DEG = addDeg(
   -(spinRevs * 360 + spinOvershootDeg),
 );
 
+/* --- ICON: rotation + subtle scale (icon only) --- */
+const ICON_SCALE_ANTIC = 0.95;
+const ICON_SCALE_OS = 1.1;
+
 const iconRotateExit = keyframes({
   '0%': {
     animationTimingFunction: ANTIC,
-    transform: `rotate(${addDeg(0)})`,
+    transform: `rotate(${addDeg(0)}) scale(1)`,
   },
   [A]: {
     animationTimingFunction: 'linear', // antic reaches spinAnticDeg
-    transform: `rotate(${spinAnticDeg.css()})`,
+    transform: `rotate(${spinAnticDeg.css()}) scale(${ICON_SCALE_ANTIC})`,
   },
   [A_HOLD_END]: {
     animationTimingFunction: 'linear', // hold antic pose
-    transform: `rotate(${spinAnticDeg.css()})`,
+    transform: `rotate(${spinAnticDeg.css()}) scale(${ICON_SCALE_ANTIC})`,
   },
   [SPIN_END]: {
-    animationTimingFunction: 'linear', // spin to final+overshoot
-    transform: `rotate(${FINAL_SPIN_OVERSHOOT_DEG})`,
+    animationTimingFunction: 'linear', // spin to final+overshoot; scale up
+    transform: `rotate(${FINAL_SPIN_OVERSHOOT_DEG}) scale(${ICON_SCALE_OS})`,
   },
   [OS_HOLD_END]: {
     animationTimingFunction: 'linear', // HOLD at overshoot (visible!)
-    transform: `rotate(${FINAL_SPIN_OVERSHOOT_DEG})`,
+    transform: `rotate(${FINAL_SPIN_OVERSHOOT_DEG}) scale(${ICON_SCALE_OS})`,
   },
   [SPIN_HOLD_END]: {
-    animationTimingFunction: SETTLE, // settle to exact final (straight) and hold
-    transform: `rotate(${FINAL_SPIN_DEG})`,
+    animationTimingFunction: SETTLE, // settle to exact final; keep scale briefly
+    transform: `rotate(${FINAL_SPIN_DEG}) scale(${ICON_SCALE_OS})`,
   },
   '100%': {
-    transform: `rotate(${FINAL_SPIN_DEG})`,
+    transform: `rotate(${FINAL_SPIN_DEG}) scale(1)`,
   },
 });
 
