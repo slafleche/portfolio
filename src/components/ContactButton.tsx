@@ -62,17 +62,22 @@ export default function ContactButton({
     console.log('[ContactButton]', `${nowMs()}ms`, ...a);
   }, []);
 
-  const setPhase = useCallback((next: Phase, why?: string) => {
-    if (next === phaseRef.current) return;
-    const prev = phaseRef.current;
-    phaseRef.current = next;
-    _setPhase(next);
-    const dt = since();
-    phaseSinceRef.current = Date.now();
-    L(`PHASE ${prev} -> ${next}${why ? `  (${why})` : ''}`, {
-      dtFromPrevMs: dt,
-    });
-  }, []);
+  const setPhase = useCallback(
+    (next: Phase, why?: string) => {
+      if (next === phaseRef.current) return;
+      const prev = phaseRef.current;
+      phaseRef.current = next;
+      _setPhase(next);
+      const dt = since();
+      phaseSinceRef.current = Date.now();
+      L(`PHASE ${prev} -> ${next}${why ? `  (${why})` : ''}`, {
+        dtFromPrevMs: dt,
+      });
+    },
+    [
+      L,
+    ],
+  );
 
   const requestExitIfAllowed = useCallback(
     (why: string) => {
@@ -100,6 +105,7 @@ export default function ContactButton({
       }
     },
     [
+      L,
       setPhase,
     ],
   );
@@ -114,14 +120,26 @@ export default function ContactButton({
     phase,
   ]);
 
-  /* DOM-level inert control to avoid React boolean attribute warning */
+  /* Robust interactivity gating WITHOUT any-casts */
   useEffect(() => {
-    const a = linkRef.current as unknown as {
-      inert?: boolean;
-    } | null;
+    const a = linkRef.current;
     if (!a) return;
-    // @ts-expect-error: inert is not in TS DOM lib yet everywhere
-    (a as any).inert = phase === 'exiting';
+
+    if (
+      phase === 'exiting' ||
+      phase === 'hidden' ||
+      phase === 'entering'
+    ) {
+      a.setAttribute('inert', '');
+      a.setAttribute('aria-disabled', 'true');
+      // keep it out of tab order while not interactive
+      a.tabIndex = -1;
+    } else {
+      a.removeAttribute('inert');
+      a.removeAttribute('aria-disabled');
+      // don't force a positive tabIndex; let DOM/default manage it
+      a.removeAttribute('tabindex');
+    }
   }, [
     phase,
   ]);
@@ -135,7 +153,7 @@ export default function ContactButton({
       if (e.target !== el) return;
       L('animationend on shuttle', {
         phase: phaseRef.current,
-        name: (e as any).animationName,
+        name: e.animationName, // typed; no any
       });
       if (phaseRef.current === 'entering') {
         setPhase('shown', 'enter finished');
@@ -153,6 +171,7 @@ export default function ContactButton({
   }, [
     setPhase,
     requestExitIfAllowed,
+    L,
   ]);
 
   /* Fallback timers: ensure phase flips even if CSS events are lost */
@@ -207,6 +226,7 @@ export default function ContactButton({
     phase,
     setPhase,
     requestExitIfAllowed,
+    L,
   ]);
 
   const applySignal = useCallback(
@@ -235,6 +255,7 @@ export default function ContactButton({
       }, VISIBLE_DEBOUNCE_MS);
     },
     [
+      L,
       setPhase,
       requestExitIfAllowed,
     ],
@@ -315,6 +336,19 @@ export default function ContactButton({
               data-phase={phase}
               aria-disabled={exiting ? 'true' : undefined}
               style={exiting ? { pointerEvents: 'none' } : undefined}
+              // extra guard for keyboard activation while exiting
+              onKeyDown={(e) => {
+                if (exiting && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              }}
+              onClick={(e) => {
+                if (exiting) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              }}
             >
               <div className={clsx(s.gradient, s.gradientVisible)} />
               <div className={s.iconWrap}>
