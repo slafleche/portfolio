@@ -17,24 +17,16 @@ import {
   rot45Deg,
   gradAngle135Deg,
   iconExitTotalMs,
-  iconWindupDeg,
-  iconOvershootDeg,
-  iconFinalDeg,
-  iconBaseDeg,
   exitTranslationDelayMs,
   springDelayMs,
   iconLagInDistancePx,
   iconLagInMicroPx,
   iconLagInDurationMs,
-  iconLagOutDistancePx,
-  iconLagOutDurationMs,
   radiusCirclePct,
   hoverTransitionMs,
   gradientFadeMs,
   iconScaleEnterMs,
   iconScaleExitMs,
-  iconScaleDelayInMs,
-  iconScaleDelayOutMs,
   containerSizePx,
   t3dInset,
   t3dOffscreen,
@@ -43,16 +35,24 @@ import {
   hoverBlurPx,
   focusWidthPx,
   focusOffsetPx,
-  /* knobs */
+
+  /* SPIN + SQUASH knobs */
+  spinAnticDeg,
+  spinAnticHoldPct,
+  spinRevs,
+  spinAccelPct,
+  spinHoldPct,
+  spinOvershootDeg,
+  spinOvershootHoldPct,
+  exitAnticPct,
+  exitHoldPct,
+  squashStartDeltaPct,
   kEnter,
   kEnterY,
   kAntic,
   kAnticY,
   kSquash,
   kSquashY,
-  exitHoldPct,
-  exitAnticPct,
-  exitSpinHitDeltaPct,
 } from './contactButton.vars';
 
 /* EASING */
@@ -83,19 +83,17 @@ export const rail = style({
   pointerEvents: 'none',
 });
 
-/* SHUTTLE */
+/* SHUTTLE motion */
 const enterMotion = keyframes({
   '0%': { transform: t3dOffscreen() },
   '58%': { transform: t3dOvershootInSoft() },
   '100%': { transform: t3dInset() },
 });
-
 const shuttleExit = keyframes({
   '0%': { transform: t3dInset() },
   '26%': { transform: t3dPushedOutSoft() },
   '100%': { transform: t3dOffscreen() },
 });
-
 export const shuttle = style({
   position: 'absolute',
   left: 0,
@@ -124,7 +122,7 @@ export const shuttle = style({
   },
 });
 
-/* PAYLOAD — a single rotate to keep axes clean */
+/* PAYLOAD — keep axes clean */
 export const payload = style({
   width: '100%',
   height: '100%',
@@ -133,11 +131,7 @@ export const payload = style({
   position: 'relative',
 });
 
-/* BUTTON — rotate-sandwich volume-preserving scale (correct axes) */
-const HOLD_END = exitAnticPct.add(exitHoldPct).css();
-const SPIN_HIT = exitAnticPct.add(exitSpinHitDeltaPct).css();
-
-/* ENTER: stretch along X (travel), squish Y = 1/X */
+/* BUTTON — rotate-sandwich, volume preserved */
 const buttonScaleEnter = keyframes({
   '0%': {
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kEnter}, ${kEnterY}, 1) rotate(${rot45Deg.css()})`,
@@ -150,21 +144,30 @@ const buttonScaleEnter = keyframes({
   },
 });
 
-/* EXIT: anticipate (stretch) → HOLD (squash) → release */
+/* Exit: anticipate stretch → squash hold → release (squash→stretch→neutral) */
+const HOLD_END = exitAnticPct.add(exitHoldPct).css();
+const SQUASH_START = exitAnticPct.add(squashStartDeltaPct).css();
+
 const buttonScaleExit = keyframes({
   '0%': {
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(1,1,1) rotate(${rot45Deg.css()})`,
   },
+  // Anticipation (stretch)
   [exitAnticPct.css()]: {
-    /* anticipation stretch */
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kAntic}, ${kAnticY}, 1) rotate(${rot45Deg.css()})`,
   },
-  [HOLD_END]: {
-    /* readable squash hold */
+  // Squash hold window (press against wall)
+  [SQUASH_START]: {
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kSquash}, ${kSquashY}, 1) rotate(${rot45Deg.css()})`,
   },
+  [HOLD_END]: {
+    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kSquash}, ${kSquashY}, 1) rotate(${rot45Deg.css()})`,
+  },
+  // Release: briefly stretch, then neutral (never cross the wall)
+  '80%': {
+    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kAntic}, ${kAnticY}, 1) rotate(${rot45Deg.css()})`,
+  },
   '100%': {
-    /* release to neutral */
     transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(1,1,1) rotate(${rot45Deg.css()})`,
   },
 });
@@ -227,28 +230,67 @@ export const gradientVisible = style({
   },
 });
 
-/* ICON — anticipation first, then spin to final+overshoot, hold, done */
-const addBaseDeg = (deg: ReturnType<typeof m>) =>
-  deg.add(iconBaseDeg);
+const iconLagIn = keyframes({
+  '0%': {
+    transform: `translate3d(${iconLagInDistancePx.negation().css()}, ${iconLagInDistancePx.css()}, 0)`,
+  },
+  '72%': {
+    transform: `translate3d(${iconLagInMicroPx.css()}, ${iconLagInMicroPx.negation().css()}, 0)`,
+  },
+  '100%': { transform: 'translate3d(0,0,0)' },
+});
+
+const addDeg = (n: number) => m(n, 'deg').css();
+const A = exitAnticPct.css();
+const A_HOLD_END = exitAnticPct.add(spinAnticHoldPct).css();
+const SPIN_END = exitAnticPct
+  .add(spinAnticHoldPct)
+  .add(spinAccelPct)
+  .css();
+const OS_HOLD_END = exitAnticPct
+  .add(spinAnticHoldPct)
+  .add(spinAccelPct)
+  .add(spinOvershootHoldPct)
+  .css();
+const SPIN_HOLD_END = exitAnticPct
+  .add(spinAnticHoldPct)
+  .add(spinAccelPct)
+  .add(spinOvershootHoldPct)
+  .add(spinHoldPct)
+  .css();
+
+const FINAL_SPIN_DEG = addDeg(-(spinRevs * 360));
+const FINAL_SPIN_OVERSHOOT_DEG = addDeg(
+  -(spinRevs * 360 + spinOvershootDeg),
+);
 
 const iconRotateExit = keyframes({
   '0%': {
     animationTimingFunction: ANTIC,
-    transform: `rotate(${addBaseDeg(m(0, 'deg')).css()})`,
+    transform: `rotate(${addDeg(0)})`,
   },
-  [exitAnticPct.css()]: {
-    animationTimingFunction: SNAP_OUT,
-    transform: `rotate(${addBaseDeg(iconWindupDeg).css()})`,
+  [A]: {
+    animationTimingFunction: 'linear', // antic reaches spinAnticDeg
+    transform: `rotate(${spinAnticDeg.css()})`,
   },
-  [SPIN_HIT]: {
-    animationTimingFunction: SETTLE,
-    transform: `rotate(calc(${iconBaseDeg.add(iconFinalDeg).css()} + ${iconOvershootDeg.css()}))`,
+  [A_HOLD_END]: {
+    animationTimingFunction: 'linear', // hold antic pose
+    transform: `rotate(${spinAnticDeg.css()})`,
   },
-  [HOLD_END]: {
-    transform: `rotate(${addBaseDeg(iconFinalDeg).css()})`,
+  [SPIN_END]: {
+    animationTimingFunction: 'linear', // spin to final+overshoot
+    transform: `rotate(${FINAL_SPIN_OVERSHOOT_DEG})`,
+  },
+  [OS_HOLD_END]: {
+    animationTimingFunction: 'linear', // HOLD at overshoot (visible!)
+    transform: `rotate(${FINAL_SPIN_OVERSHOOT_DEG})`,
+  },
+  [SPIN_HOLD_END]: {
+    animationTimingFunction: SETTLE, // settle to exact final (straight) and hold
+    transform: `rotate(${FINAL_SPIN_DEG})`,
   },
   '100%': {
-    transform: `rotate(${addBaseDeg(iconFinalDeg).css()})`,
+    transform: `rotate(${FINAL_SPIN_DEG})`,
   },
 });
 
@@ -272,34 +314,13 @@ export const iconTrack = style({
   height: '100%',
   willChange: 'transform',
   selectors: {
-    /* keep simple lag; exit rotation is the star */
     '&[data-phase="entering"]': {
-      animation: `iconLagIn ${iconLagInDurationMs.css()} ${springDelayMs.css()} both`,
+      animation: `${iconLagIn} ${iconLagInDurationMs.css()} ${springDelayMs.css()} both`,
     },
     '&[data-phase="exiting"]': {
-      animation: `iconLagOut ${iconLagOutDurationMs.css()} ${exitTranslationDelayMs.add(springDelayMs).css()} both`,
+      animation: 'none', // disable lag on exit so spin reads clean
     },
   },
-});
-
-const iconLagIn = keyframes({
-  '0%': {
-    transform: `translate3d(${iconLagInDistancePx.negation().css()}, ${iconLagInDistancePx.css()}, 0)`,
-  },
-  '72%': {
-    transform: `translate3d(${iconLagInMicroPx.css()}, ${iconLagInMicroPx.negation().css()}, 0)`,
-  },
-  '100%': { transform: 'translate3d(0,0,0)' },
-});
-const iconLagOut = keyframes({
-  '0%': { transform: 'translate3d(0,0,0)' },
-  '30%': {
-    transform: `translate3d(${iconLagOutDistancePx.css()}, ${iconLagOutDistancePx.negation().css()}, 0)`,
-  },
-  '50%': {
-    transform: `translate3d(${iconLagOutDistancePx.css()}, ${iconLagOutDistancePx.negation().css()}, 0)`,
-  },
-  '100%': { transform: 'translate3d(0,0,0)' },
 });
 
 export const iconGlyph = style({
@@ -310,13 +331,15 @@ export const iconGlyph = style({
   maxHeight: '100%',
   transformBox: 'fill-box',
   transformOrigin: `50% 50%`,
-  transform: `translateZ(0) rotate(${iconBaseDeg.css()})`,
+  transform: `translateZ(0)`,
   willChange: 'transform',
   selectors: {
     '&[data-phase="exiting"]': {
       animation: `${iconRotateExit} ${iconExitTotalMs.css()} 0s both`,
     },
     [`${button}:hover &`]: { color: colorVars.white.css() },
-    [`${button}:focus-visible &`]: { color: colorVars.white.css() },
+    [`${button}:focus-visible &`]: {
+      color: themeColours.lights.d.css(),
+    },
   },
 });
