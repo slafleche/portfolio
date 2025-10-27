@@ -16,17 +16,21 @@ import {
 
 type Phase = 'hidden' | 'entering' | 'shown' | 'exiting';
 
+type ContactButtonProps = {
+  watchId: string;
+  href: string;
+  label: string;
+  className?: string;
+  debugLog?: boolean;
+};
+
 export default function ContactButton({
   watchId,
   href,
   label,
   className,
-}: {
-  watchId: string;
-  href: string;
-  label: string;
-  className?: string;
-}) {
+  debugLog = false,
+}: ContactButtonProps) {
   const [
     mounted,
     setMounted,
@@ -58,9 +62,14 @@ export default function ContactButton({
   const nowMs = () => Math.round(performance.now() - T0.current);
   const since = () => Date.now() - phaseSinceRef.current;
 
-  const L = useCallback((...a: unknown[]) => {
-    console.log('[ContactButton]', `${nowMs()}ms`, ...a);
-  }, []);
+  const enableDebug = debugLog && process.env.NODE_ENV !== 'production';
+  const L = useCallback(
+    (...a: unknown[]) => {
+      if (!enableDebug) return;
+      console.log('[ContactButton]', `${nowMs()}ms`, ...a);
+    },
+    [enableDebug],
+  );
 
   const setPhase = useCallback(
     (next: Phase, why?: string) => {
