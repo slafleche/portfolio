@@ -5,6 +5,7 @@ import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { BASE_ANCHORS } from '@/components/menu/menuUtils';
 import * as layoutStyles from '@/styles/layout.css';
 import type { PageParams } from '@/styles/helpers/types';
+import { buildSystemsLink } from '@/lib/routes/systemsLink';
 
 type SystemsPageProps = {
     params: Promise<PageParams>;
@@ -19,6 +20,7 @@ export default async function SystemsPage({ params }: SystemsPageProps) {
         id: translator(hrefKey),
         label: translator(labelKey),
     }));
+    const systemsLink = buildSystemsLink(LOCALE, translator);
 
     return (
         <SkipNavContent id="body">
@@ -37,7 +39,11 @@ export default async function SystemsPage({ params }: SystemsPageProps) {
                         </section>
                     ))}
                 </main>
-                <Footer contact={contactCopy} id={contactCopy.href} />
+                <Footer
+                    contact={contactCopy}
+                    id={contactCopy.href}
+                    systemsLink={systemsLink}
+                />
             </div>
         </SkipNavContent>
     );

@@ -119,6 +119,7 @@ export const fr = {
     'Envie de collaborer ? Contactez-moi sur [LinkedIn](https://www.linkedin.com/in/slafleche)',
   'contact-github':
     'Le code du site est dispo sur [GitHub](https://github.com/slafleche/portfolio) !',
+  'systems-link-label': 'Systèmes',
 } as const;
 
 export type FrMessages = typeof fr;

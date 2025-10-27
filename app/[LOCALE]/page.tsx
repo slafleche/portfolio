@@ -16,6 +16,7 @@ import { Markdown } from '@/components/Markdown';
 import Footer from '../../src/components/Footer';
 import ContactButton from '@/components/ContactButton';
 import * as layoutStyles from '@/styles/layout.css';
+import { buildSystemsLink } from '@/lib/routes/systemsLink';
 
 export default async function HomePage({
   params,
@@ -31,6 +32,7 @@ export default async function HomePage({
   const caseStudies = buildCaseStudiesCopy(t);
   const projects = buildProjectsCopy(t);
   const contact = buildContactCopy(t);
+  const systemsLink = buildSystemsLink(LOCALE, t);
 
   return (
     <SkipNavContent id="body">
@@ -98,7 +100,11 @@ export default async function HomePage({
             </Grid>
           </Content>
         </main>
-        <Footer contact={contact} id={contact.href} />
+        <Footer
+          contact={contact}
+          id={contact.href}
+          systemsLink={systemsLink}
+        />
         {heroCopy.ctaLabel ? (
           <ContactButton
             watchId="hero"
