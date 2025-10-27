@@ -67,6 +67,7 @@ export default async function LocaleSegmentLayout({
             hint: curiosityMessages.hint,
             targetHref: curiosityTarget,
           }}
+          logoRedirectPaths={[curiosityTarget]}
           // bokehDebug={{
           //     showArchPath: true,
           //     disableTimeout: true,

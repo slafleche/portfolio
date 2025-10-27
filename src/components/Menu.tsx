@@ -9,7 +9,13 @@ import transforms from '@/styles/helpers/transforms';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { usePathname } from 'next/navigation';
 import ConsoleCuriosity from '@/components/ConsoleCuriosity';
 import {
@@ -58,6 +64,7 @@ type MenuProps = {
     hint: string;
     targetHref: string;
   };
+  logoRedirectPaths?: ReadonlyArray<string>;
 };
 
 const LOGO_GLOW_TOP_THRESHOLD = 3;
@@ -76,6 +83,7 @@ export default function Menu({
   debugGlow = false,
   focusDebug,
   curiosityMessages,
+  logoRedirectPaths,
 }: MenuProps) {
   const pathname = usePathname();
   const normalizedPath = pathname ?? '/';
@@ -98,6 +106,38 @@ export default function Menu({
   const curiosityTarget = curiosityMessages?.targetHref ?? '';
   const shouldRenderCuriosity =
     Boolean(curiosityMessages) && normalizedPath !== curiosityTarget;
+  const normalizedRoot = useMemo(() => {
+    if (root === '/') return '/';
+    return root.replace(/\/+$/, '');
+  }, [root]);
+  const normalizedLogoRedirects = useMemo(() => {
+    if (!logoRedirectPaths || logoRedirectPaths.length === 0) {
+      return [];
+    }
+    const normalizePath = (candidate: string) => {
+      if (!candidate) return null;
+      if (candidate === '/') return '/';
+      return candidate.replace(/\/+$/, '') || '/';
+    };
+    const fromProp = logoRedirectPaths
+      .map((path) => normalizePath(path))
+      .filter((path): path is string => Boolean(path));
+    if (!currentLocale) return fromProp;
+    const override = canonicalToLocalizedSlugs[
+      currentLocale as Locale
+    ];
+    if (!override?.systems) return fromProp;
+    const localized = normalizePath(
+      normalizedRoot === '/'
+        ? `/${override.systems}`
+        : `${normalizedRoot}/${override.systems}`,
+    );
+    return localized ? [...fromProp, localized] : fromProp;
+  }, [
+    logoRedirectPaths,
+    currentLocale,
+    normalizedRoot,
+  ]);
   const logoId = 'menu-logo';
   const [
     mounted,
@@ -375,7 +415,10 @@ export default function Menu({
       if (typeof window === 'undefined') return;
       if (event.pointerType === 'mouse' && event.button !== 0) return;
       const { pathname } = window.location;
-      const isRootPath = pathname === root || pathname === `${root}/`;
+      const isRootPath =
+        pathname === normalizedRoot ||
+        (normalizedRoot !== '/' &&
+          pathname === `${normalizedRoot}/`);
       if (!isRootPath) return;
       logoGlowHoldIntentRef.current = true;
       logoGlowHoldActiveRef.current = false;
@@ -393,11 +436,7 @@ export default function Menu({
         queueLogoGlow('hold');
       }, LOGO_GLOW_HOLD_DELAY);
     },
-    [
-      clearLogoGlowHoldTimer,
-      queueLogoGlow,
-      root,
-    ],
+    [clearLogoGlowHoldTimer, normalizedRoot, queueLogoGlow],
   );
 
   const handleLogoPointerUp = useCallback(
@@ -518,16 +557,30 @@ export default function Menu({
   const handleLogoClick = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
       if (typeof window === 'undefined') return;
+      const { pathname: currentPath, search, hash } = window.location;
+      const isRootPath =
+        currentPath === normalizedRoot ||
+        (normalizedRoot !== '/' &&
+          currentPath === `${normalizedRoot}/`);
+      const isRedirectPath = normalizedLogoRedirects.some(
+        (path) => currentPath === path || currentPath === `${path}/`,
+      );
+
       if (logoGlowClickSuppressRef.current) {
         logoGlowClickSuppressRef.current = false;
+        if (!isRootPath && isRedirectPath) {
+          return;
+        }
         event.preventDefault();
         event.stopPropagation();
         return;
       }
-      const { pathname: currentPath, search, hash } = window.location;
-      const isRootPath =
-        currentPath === root || currentPath === `${root}/`;
-      if (!isRootPath) return;
+
+      if (!isRootPath) {
+        if (!isRedirectPath) return;
+        return;
+      }
+
       event.preventDefault();
       if (hash) {
         window.history.replaceState(
@@ -545,7 +598,8 @@ export default function Menu({
       }
     },
     [
-      root,
+      normalizedRoot,
+      normalizedLogoRedirects,
       queueLogoGlow,
     ],
   );
