@@ -13,7 +13,6 @@ type ConsoleCuriosityProps = {
 declare global {
   interface Window {
     curiosity?: () => void;
-    curiosite?: () => void;
     __curiosityLogged?: boolean;
     __curiositySignature?: string;
   }
@@ -133,11 +132,9 @@ export default function ConsoleCuriosity({
     }
 
     w.curiosity = navigatorFn;
-    w.curiosite = navigatorFn;
 
     return () => {
       if (w.curiosity === navigatorFn) delete w.curiosity;
-      if (w.curiosite === navigatorFn) delete w.curiosite;
     };
   }, [
     title,
