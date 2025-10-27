@@ -1,4 +1,4 @@
-import { m } from './helpers/measurement';
+import { m } from '../helpers/measurement';
 
 const contentPadding = m(40);
 const compactContentPadding = m(26);

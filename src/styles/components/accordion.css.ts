@@ -79,7 +79,7 @@ export const panelOpen = style({
 });
 
 export const panelInner = style({
-  padding: `${m(2).css()} ${m(4).css()} ${m(4).css()}`,
+  padding: `4px`,
   color: colorVars.bodyFg.css(),
   opacity: 0.85,
 });
