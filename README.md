@@ -13,9 +13,11 @@
 - Accessibility in mind
 - Responsive
 
-### Install
+### Setup
 
-- Run `yarn`
-- After, you'll need to run the `format:all` function to build missing locale
-  data, as well as images and video that are downloaded from src urls. To run
-  locally, run `yarn dev`
+- Run `yarn fresh` after cloning. This installs dependencies and runs the full
+  asset pipeline (`copy:html`, fonts, images, and video variants) so generated
+  files are up to date.
+- Use `yarn setup` whenever locale copy or asset sources change and you need to
+  regenerate everything without reinstalling dependencies.
+- Start the dev server with `yarn dev`.
