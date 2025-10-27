@@ -10,6 +10,12 @@ import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import type { Locale } from '@/data/locales';
+import {
+	canonicalToLocalizedSlugs,
+	localizedToCanonicalSlugs,
+} from '@/lib/routes/localeSlugs';
 import type {
 	CSSProperties,
 	FocusEvent,
@@ -63,6 +69,17 @@ export default function Menu({
 	debugGlow = false,
 	focusDebug,
 }: MenuProps) {
+    const pathname = usePathname();
+    const normalizedPath = pathname ?? '/';
+    const parts = normalizedPath.split('/').filter(Boolean);
+    const [currentLocale, ...restSegments] = parts;
+    const [firstSegment, ...tailSegments] = restSegments;
+    const currentLocaleSlugMap = (currentLocale
+        ? localizedToCanonicalSlugs[currentLocale as Locale]
+        : undefined) ?? {};
+    const canonicalFirstSegment = firstSegment
+        ? currentLocaleSlugMap[firstSegment] ?? firstSegment
+        : firstSegment;
 	const logoId = 'menu-logo';
 	const [
 		mounted,
@@ -922,20 +939,31 @@ export default function Menu({
 						className={clsx(s.localeChanger, s.transitionAfterFonts)}
 						aria-label={localeChangeLabel}
 					>
-						{localeLinks.map((link) => (
-							<Link
-								key={link.locale}
-								href={`/${link.locale}`}
-								className={clsx(s.link, s.localeLink)}
-								hrefLang={link.locale}
-								data-ui="link"
-							>
-								<span className={s.fakeShadow} aria-hidden={true}>
-									{link.label}
-								</span>
-								<span className={s.text}>{link.label}</span>
-							</Link>
-						))}
+                        {localeLinks.map((link) => {
+                            const overrides = canonicalToLocalizedSlugs[link.locale] ?? {};
+                            const localizedFirst = canonicalFirstSegment
+                                ? overrides[canonicalFirstSegment] ?? canonicalFirstSegment
+                                : canonicalFirstSegment;
+                            const localizedSegments = [localizedFirst, ...tailSegments].filter(Boolean);
+                            const targetPath = localizedSegments.length
+                                ? `/${localizedSegments.join('/')}`
+                                : '';
+                            const target = `/${link.locale}${targetPath}`;
+                            return (
+                                <Link
+                                    key={link.locale}
+                                    href={target}
+                                    className={clsx(s.link, s.localeLink)}
+                                    hrefLang={link.locale}
+                                    data-ui="link"
+                                >
+                                    <span className={s.fakeShadow} aria-hidden={true}>
+                                        {link.label}
+                                    </span>
+                                    <span className={s.text}>{link.label}</span>
+                                </Link>
+                            );
+                        })}
 					</nav>
 				</Arch>
 			</div>
