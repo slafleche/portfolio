@@ -22,6 +22,7 @@ export const en = {
   'hero-console_description': 'Decorative code backdrop',
   'hero-cta': "Let's connect!",
 
+  'console-curiosity-title':'🔎 Curious?',
   'console-curiosity-test':'[test] 👀 Observer detected.',
   'console-curiosity-result': '[result] Access granted.',
   'console-curiosity-hint': '[hint] The code shows what I built; curiosity() shows how I think.',

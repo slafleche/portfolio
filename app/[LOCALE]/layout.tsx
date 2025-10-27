@@ -30,14 +30,15 @@ export default async function LocaleSegmentLayout({
     label: t(labelKey),
   }));
 
-	const curiosityMessages = {
-		test: t('console-curiosity-test'),
-		result: t('console-curiosity-result'),
-		hint: t('console-curiosity-hint'),
-	};
-	const systemsSlug =
-		canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
-	const curiosityTarget = `/${locale}/${systemsSlug}`;
+  const curiosityMessages = {
+    title: t('console-curiosity-title'),
+    test: t('console-curiosity-test'),
+    result: t('console-curiosity-result'),
+    hint: t('console-curiosity-hint'),
+  };
+  const systemsSlug =
+    canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
+  const curiosityTarget = `/${locale}/${systemsSlug}`;
 
   const menuProps = {
     root: `/${locale}`,
@@ -54,17 +55,18 @@ export default async function LocaleSegmentLayout({
     })),
   };
 
-	return (
-		<WindowSizeProvider>
-			<ResponsiveProvider>
-				<Menu
-					{...menuProps}
-					curiosityMessages={{
-						test: curiosityMessages.test,
-						result: curiosityMessages.result,
-						hint: curiosityMessages.hint,
-						targetHref: curiosityTarget,
-					}}
+  return (
+    <WindowSizeProvider>
+      <ResponsiveProvider>
+        <Menu
+          {...menuProps}
+          curiosityMessages={{
+            title: curiosityMessages.title,
+            test: curiosityMessages.test,
+            result: curiosityMessages.result,
+            hint: curiosityMessages.hint,
+            targetHref: curiosityTarget,
+          }}
           // bokehDebug={{
           //     showArchPath: true,
           //     disableTimeout: true,
