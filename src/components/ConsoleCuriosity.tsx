@@ -61,11 +61,41 @@ export default function ConsoleCuriosity({
             ? badgeGreen
             : badgeHint;
       const textStyle = (banner ? bannerText : baseText) || '';
+
+      const boldToken = 'curiosity()';
+
       if (tag) {
-        // "%c[tag]%c rest"
-        console.log(`%c${tag}%c ${rest}`, badgeStyle, textStyle);
+        if (rest.includes(boldToken)) {
+          const [
+            before,
+            after,
+          ] = rest.split(boldToken, 2);
+          // "%c[tag]%c before %c cur %c after"
+          console.log(
+            `%c${tag}%c ${before}%c${boldToken}%c${after}`,
+            badgeStyle,
+            textStyle,
+            textStyle + 'font-weight:bold;',
+            textStyle,
+          );
+        } else {
+          console.log(`%c${tag}%c ${rest}`, badgeStyle, textStyle);
+        }
       } else {
-        console.log(`%c${raw}`, textStyle);
+        if (raw.includes(boldToken)) {
+          const [
+            before,
+            after,
+          ] = raw.split(boldToken, 2);
+          console.log(
+            `%c${before}%c${boldToken}%c${after}`,
+            textStyle,
+            textStyle + 'font-weight:bold;',
+            textStyle,
+          );
+        } else {
+          console.log(`%c${raw}`, textStyle);
+        }
       }
     };
 
