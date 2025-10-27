@@ -115,6 +115,7 @@ export const en = {
     "Think we'd work well together? Contact me on [LinkedIn!](https://www.linkedin.com/in/slafleche)",
   'contact-github':
     'Site sources available on [GitHub](https://github.com/slafleche/portfolio)!',
+  'systems-link-label': 'Systems',
 } as const;
 
 export type EnMessages = typeof en;
