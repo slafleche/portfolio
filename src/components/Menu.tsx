@@ -11,7 +11,7 @@ import Arch from './Arch';
 import Logo from './Logo';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import type { Locale } from '@/data/locales';
+import ConsoleCuriosity from '@/components/ConsoleCuriosity';
 import {
 	canonicalToLocalizedSlugs,
 	localizedToCanonicalSlugs,
@@ -51,6 +51,12 @@ type MenuProps = {
 	bokehDebug?: MiniBokehDebugOptions;
 	debugGlow?: boolean;
 	focusDebug?: FocusDebugOptions;
+	curiosityMessages?: {
+		test: string;
+		result: string;
+		hint: string;
+		targetHref: string;
+	};
 };
 
 const LOGO_GLOW_TOP_THRESHOLD = 3;
@@ -68,18 +74,22 @@ export default function Menu({
 	bokehDebug,
 	debugGlow = false,
 	focusDebug,
+	curiosityMessages,
 }: MenuProps) {
-    const pathname = usePathname();
-    const normalizedPath = pathname ?? '/';
-    const parts = normalizedPath.split('/').filter(Boolean);
-    const [currentLocale, ...restSegments] = parts;
-    const [firstSegment, ...tailSegments] = restSegments;
-    const currentLocaleSlugMap = (currentLocale
-        ? localizedToCanonicalSlugs[currentLocale as Locale]
-        : undefined) ?? {};
-    const canonicalFirstSegment = firstSegment
-        ? currentLocaleSlugMap[firstSegment] ?? firstSegment
-        : firstSegment;
+	const pathname = usePathname();
+	const normalizedPath = pathname ?? '/';
+	const parts = normalizedPath.split('/').filter(Boolean);
+	const [currentLocale, ...restSegments] = parts;
+	const [firstSegment, ...tailSegments] = restSegments;
+	const currentLocaleSlugMap = (currentLocale
+		? localizedToCanonicalSlugs[currentLocale as Locale]
+		: undefined) ?? {};
+	const canonicalFirstSegment = firstSegment
+		? currentLocaleSlugMap[firstSegment] ?? firstSegment
+		: firstSegment;
+	const curiosityTarget = curiosityMessages?.targetHref ?? '';
+	const shouldRenderCuriosity =
+		Boolean(curiosityMessages) && normalizedPath !== curiosityTarget;
 	const logoId = 'menu-logo';
 	const [
 		mounted,
@@ -761,6 +771,14 @@ export default function Menu({
 
 	return (
 		<>
+			{shouldRenderCuriosity && curiosityMessages ? (
+				<ConsoleCuriosity
+					test={curiosityMessages.test}
+					result={curiosityMessages.result}
+					hint={curiosityMessages.hint}
+					targetHref={curiosityMessages.targetHref}
+				/>
+			) : null}
 			<div className={s.root} data-mounted={mounted}>
 				<SkipNavLink contentId="body" className={skipNavStyles.link}>
 					{skipNavLabel}
