@@ -36,7 +36,7 @@
 		]
 	},
 	"include": [
-		"app/[LOCALE]/page.tsx",
+		"app/[LOCALE]/**/*.tsx",
 		"src/**/*",
 		".next/types/**/*.ts",
 		"types/**/*.d.ts"
