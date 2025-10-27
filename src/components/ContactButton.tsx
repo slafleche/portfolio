@@ -62,13 +62,16 @@ export default function ContactButton({
   const nowMs = () => Math.round(performance.now() - T0.current);
   const since = () => Date.now() - phaseSinceRef.current;
 
-  const enableDebug = debugLog && process.env.NODE_ENV !== 'production';
+  const enableDebug =
+    debugLog && process.env.NODE_ENV !== 'production';
   const L = useCallback(
     (...a: unknown[]) => {
       if (!enableDebug) return;
       console.log('[ContactButton]', `${nowMs()}ms`, ...a);
     },
-    [enableDebug],
+    [
+      enableDebug,
+    ],
   );
 
   const setPhase = useCallback(

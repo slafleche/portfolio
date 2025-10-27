@@ -1,19 +1,19 @@
 import { color, type Color } from '@/styles/helpers/colorWrap';
-import type { CardGradientPack } from './helpers/cardGradient';
+import type { CardGradientPack } from '../helpers/cardGradient';
 import * as CSS from 'csstype';
-import { fontWeight } from './helpers/typography';
+import { fontWeight } from '../helpers/typography';
 import type {
   CssLike,
   FontFamilyDef,
   FontStyles,
   MeasurementLike,
-} from './helpers/types';
-import { m, mPercent } from './helpers/measurement';
+} from '../helpers/types';
+import { m, mPercent } from '../helpers/measurement';
 export type ColorKeys = keyof typeof colors;
 import fontsConfig, {
   makeFamilyDef,
 } from '@/styles/helpers/fontConfig';
-import type { Stop } from './helpers/gradients';
+import type { Stop } from '../helpers/gradients';
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are

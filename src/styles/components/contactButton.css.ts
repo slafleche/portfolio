@@ -1,8 +1,5 @@
 import { keyframes, style } from '@vanilla-extract/css';
-import {
-  m,
-  measurementHypotenuse,
-} from '@/styles/helpers/measurement';
+import { m, measurementHypotenuse } from '../helpers/measurement';
 import { colorVars, themeColours } from '../vars';
 import { globalBoxShadow } from '../helpers/shadow';
 import { focusOutline } from '../helpers/focusOutline';
