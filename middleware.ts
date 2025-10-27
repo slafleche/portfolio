@@ -5,12 +5,9 @@ import {
 	DEFAULT_LOCALE,
 	pickLocaleFromAcceptLanguage,
 } from '@/lib/locales/locale';
+import { localizedToCanonicalSlugs } from '@/lib/routes/localeSlugs';
 
 const LOCALES = new Set(AVAILABLE_LOCALES as readonly string[]);
-
-const SYSTEMS_SLUGS: Record<string, string> = {
-	fr: 'systemes',
-};
 
 function pickPreferredLocale(request: NextRequest): string {
 	const headerLocale = pickLocaleFromAcceptLanguage(
@@ -38,13 +35,20 @@ export function middleware(request: NextRequest) {
 	if (LOCALES.has(seg)) {
 		requestHeaders.set('x-locale', seg);
 		const locale = seg;
-		const parts = pathname.split('/');
-		const nextSegment = parts[2] ?? '';
-		const mappedSlug = SYSTEMS_SLUGS[locale];
-		if (mappedSlug && nextSegment === mappedSlug) {
-			const rewriteUrl = request.nextUrl.clone();
-			rewriteUrl.pathname = `/${locale}/systems`;
-			return NextResponse.rewrite(rewriteUrl);
+		const segments = pathname.split('/').filter(Boolean).slice(1);
+		const [firstSegment, ...restSegments] = segments;
+		const localizedMaps = localizedToCanonicalSlugs[locale];
+		if (localizedMaps && firstSegment) {
+			const canonicalFirst = localizedMaps[firstSegment];
+			if (canonicalFirst) {
+				const rewriteUrl = request.nextUrl.clone();
+				const canonicalSegments = [canonicalFirst, ...restSegments.filter(Boolean)];
+				const canonicalPath = canonicalSegments.length
+					? `/${canonicalSegments.join('/')}`
+					: '';
+				rewriteUrl.pathname = `/${locale}${canonicalPath}`;
+				return NextResponse.rewrite(rewriteUrl);
+			}
 		}
 	} else {
 		requestHeaders.delete('x-locale');
