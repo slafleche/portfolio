@@ -23,6 +23,7 @@ export const fr = {
   'hero-console_description': 'Arrière-plan de code décoratif',
   'hero-cta': 'Prenons contact !',
 
+  'console-curiosity-title': '🔎 Curieux ?',
   'console-curiosity-test': '[test] 👀 Observateur détecté.',
   'console-curiosity-result': '[résultat] Accès accordé.',
   'console-curiosity-hint':
