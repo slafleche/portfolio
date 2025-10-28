@@ -57,7 +57,6 @@ const SNAP = 'cubic-bezier(0.45, 0, 0.2, 1)';
 const SETTLE = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
 const FAST = 'cubic-bezier(0.05, 0.9, 0.1, 1)';
 const ANTIC = 'cubic-bezier(0.3, 0.9, 0.2, 1)';
-const SNAP_OUT = 'cubic-bezier(0.1, 0.8, 0, 1)';
 
 /* ROOT + RAIL */
 export const root = style({
