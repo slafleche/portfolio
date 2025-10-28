@@ -220,21 +220,22 @@ A good system holds together even as its parts change.
 New checks, libraries, or ideas should fit without breaking what came before.
 
 Each layer knows its boundaries.  
-Functions, wrappers, and components depend on clear contracts instead of internal details.  
+Functions, wrappers, and components depend on clear contracts instead of
+internal details.  
 That keeps change local and technical debt contained.
 
-In practice, we do not always refactor when we should, but good structure keeps that debt from spreading.  
+In practice, we do not always refactor when we should, but good structure keeps
+that debt from spreading.  
 The system evolves safely because its relationships stay clear.  
-Clean architecture is not just for data or APIs, styles can be just as reliable when treated with the same discipline.
+Clean architecture is not just for data or APIs, styles can be just as reliable
+when treated with the same discipline.
 
 ## Big Picture
 
-The same loop that shapes the code also shapes the work itself.  
-Each project moves through discovery, evaluation, definition, and validation, then starts again with a clearer view.
+The same loop that shapes the code also shapes the work.  
+Each project moves through discovery, evaluation, definition, and validation,
+then repeats with better context.
 
-Even this page followed that path.  
-Each section was tested, refined, and rewritten until the structure held and the reasoning stayed intact.  
-The words changed, but the intent did not.
-
-That is the point of the system.  
-Change is safe because the logic that holds it together does not depend on any single part.
+It works because every part can change without breaking the whole.  
+That principle, the Ship of Theseus idea, runs through everything here.  
+Structure, process, and intent stay aligned even as the details evolve.
