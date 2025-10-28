@@ -27,7 +27,6 @@ const resolve = (value: SpacingValue, fallback: string): string => {
   if (process.env.NODE_ENV !== 'production') {
     throw new Error(msg);
   }
-  // eslint-disable-next-line no-console
   console.warn(msg);
   return fallback;
 };

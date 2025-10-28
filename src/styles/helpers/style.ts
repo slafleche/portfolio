@@ -23,7 +23,6 @@ export const toCssColor = (
       `[toCssColor] Unsupported input: ${Object.prototype.toString.call(value)}`,
     );
   }
-  // eslint-disable-next-line no-console
   console.warn('[toCssColor] Unsupported input; ignoring');
   return undefined;
 };
@@ -43,7 +42,6 @@ export const toCssMeasurement = (
       `[toCssMeasurement] Unsupported input: ${Object.prototype.toString.call(value)}`,
     );
   }
-  // eslint-disable-next-line no-console
   console.warn('[toCssMeasurement] Unsupported input; ignoring');
   return undefined;
 };
