@@ -73,7 +73,7 @@ export async function loadMessages(locale: Locale): Promise<Messages> {
 		for (const key of MARKDOWN_MESSAGE_KEYS) {
 			const value = typed[key];
 			if (value === undefined || value === fallback[key]) {
-				console.warn(
+				console.error(
 					`[locales] Locale "${locale}" is missing markdown copy for "${key}". Falling back to default locale.`,
 				);
 			}
