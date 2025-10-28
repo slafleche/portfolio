@@ -75,6 +75,7 @@
     "prebuild": "yarn copy:html && MINIFY=1 yarn fonts",
     "build": "next build",
     "start": "next start",
+    "lint:locales": "tsx scripts/checkLocaleMarkdown.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format:code": "prettier --write .",
