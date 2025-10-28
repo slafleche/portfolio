@@ -1,9 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {
-	AVAILABLE_LOCALES,
-	LOCALE_LOADERS,
-} from '../src/lib/locales/translations/index.ts';
+import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
+import { loadMessages } from '../src/lib/locales/locale.ts';
 
 const MAX_UNIQUE_CHARS = process.env.MAX_FONT_TEXT_CHARS
 	? Number(process.env.MAX_FONT_TEXT_CHARS)
@@ -75,7 +73,7 @@ const addBothCasesIfNeeded = (text: string, enabled: boolean) => {
 
 const valuesForKeysAcrossLocales = (
 	keys: readonly string[],
-	translations: Record<string, Record<string, string>>,
+	translations: Record<string, Record<string, unknown>>,
 ) => {
 	const out: string[] = [];
 	for (const key of keys) {
@@ -100,16 +98,16 @@ async function main() {
 
 	const translationsEntries = await Promise.all(
 		AVAILABLE_LOCALES.map(async (locale) => {
-			const mod = await LOCALE_LOADERS[locale]();
+			const messages = await loadMessages(locale);
 			return [
 				locale,
-				mod.default as Record<string, string>,
+				messages as Record<string, unknown>,
 			] as const;
 		}),
 	);
 	const translations = Object.fromEntries(translationsEntries) as Record<
 		string,
-		Record<string, string>
+		Record<string, unknown>
 	>;
 
 	const referenceLocale = AVAILABLE_LOCALES[0];

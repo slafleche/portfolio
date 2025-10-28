@@ -2,10 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
-import {
-	AVAILABLE_LOCALES,
-	LOCALE_LOADERS,
-} from '../src/lib/locales/translations/index.ts';
+import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
+import { loadMessages } from '../src/lib/locales/locale.ts';
 
 const markdownKeyPattern = /(?:^|[-_])content$/;
 const extraMarkdownKeys = new Set(['hero-subtitle']);
@@ -37,8 +35,7 @@ async function main() {
 	marked.use({ mangle: false, headerIds: false });
 
 	for (const locale of AVAILABLE_LOCALES) {
-		const mod = await LOCALE_LOADERS[locale]();
-		const messages = mod.default as Record<string, unknown>;
+		const messages = await loadMessages(locale);
 		const htmlMap: Record<string, string> = {};
 
 		for (const [key, value] of Object.entries(messages)) {

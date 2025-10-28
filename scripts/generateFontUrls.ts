@@ -1,10 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { generateGoogleFontUrls } from '../src/lib/gfonts.ts';
-import {
-	AVAILABLE_LOCALES,
-	LOCALE_LOADERS,
-} from '../src/lib/locales/translations/index.ts';
+import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
+import { loadMessages } from '../src/lib/locales/locale.ts';
 
 const FONTS_CONFIG = path.resolve('src', 'data', 'fonts.config.json');
 const OUT_FILE = path.resolve(
@@ -35,7 +33,7 @@ const collapseToUniqueChars = (
 
 const collectStringsForKeys = (
 	keys: readonly string[],
-	messages: Record<string, string>,
+	messages: Record<string, unknown>,
 ) =>
 	keys
 		.map((key) => messages[key])
@@ -53,16 +51,16 @@ async function main() {
 
 	const translationsEntries = await Promise.all(
 		AVAILABLE_LOCALES.map(async (locale) => {
-			const mod = await LOCALE_LOADERS[locale]();
+			const messages = await loadMessages(locale);
 			return [
 				locale,
-				mod.default as Record<string, string>,
+				messages as Record<string, unknown>,
 			] as const;
 		}),
 	);
 	const translations = Object.fromEntries(translationsEntries) as Record<
 		string,
-		Record<string, string>
+		Record<string, unknown>
 	>;
 
 	const referenceLocale = AVAILABLE_LOCALES[0];

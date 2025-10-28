@@ -4,6 +4,10 @@ import {
 	type Locale,
 	type Messages,
 } from '../../data/locales';
+import {
+	MARKDOWN_MESSAGE_KEYS,
+	type LocaleMessagesShape,
+} from './localeTypes';
 
 export const DEFAULT_LOCALE: Locale = 'en';
 
@@ -49,10 +53,34 @@ export function pickLocaleFromAcceptLanguage(
 	return null;
 }
 
-/** Translator helper */
+let defaultMessagesCache: LocaleMessagesShape | null = null;
+
+const loadDefaultMessages = async (): Promise<LocaleMessagesShape> => {
+	if (!defaultMessagesCache) {
+		const mod = await LOCALE_LOADERS[DEFAULT_LOCALE]();
+		defaultMessagesCache = mod.default as LocaleMessagesShape;
+	}
+	return defaultMessagesCache;
+};
+
 export async function loadMessages(locale: Locale): Promise<Messages> {
 	const mod = await LOCALE_LOADERS[locale]();
-	return mod.default;
+	const resolved = mod.default as Messages;
+	const typed = resolved as LocaleMessagesShape;
+
+	if (process.env.NODE_ENV !== 'production' && locale !== DEFAULT_LOCALE) {
+		const fallback = await loadDefaultMessages();
+		for (const key of MARKDOWN_MESSAGE_KEYS) {
+			const value = typed[key];
+			if (value === undefined || value === fallback[key]) {
+				console.warn(
+					`[locales] Locale "${locale}" is missing markdown copy for "${key}". Falling back to default locale.`,
+				);
+			}
+		}
+	}
+
+	return resolved;
 }
 
 export function createTranslator(messages: Messages) {

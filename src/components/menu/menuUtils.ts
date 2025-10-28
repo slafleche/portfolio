@@ -1,6 +1,6 @@
 import { assertUnit } from '@/styles/helpers/measurement';
 import { archVars, menuVars } from '@/styles/vars';
-import type { Messages } from '@/data/locales';
+import type { LocaleMessagesShape } from '@/lib/locales/localeTypes';
 
 if (process.env.NODE_ENV !== 'production') {
 	assertUnit(menuVars.height, 'px', 'menuUtils menu height');
@@ -18,10 +18,10 @@ if (process.env.NODE_ENV !== 'production') {
 	assertUnit(archVars.bumpHeight, 'px', 'menuUtils arch bumpHeight');
 }
 
-export type AnchorKey = Extract<keyof Messages, `${string}-href`>;
+export type AnchorKey = Extract<keyof LocaleMessagesShape, `${string}-href`>;
 export type AnchorEntry = {
 	hrefKey: AnchorKey;
-	labelKey: keyof Messages;
+	labelKey: keyof LocaleMessagesShape;
 };
 
 export type LinkMetric = {
