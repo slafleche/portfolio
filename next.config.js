@@ -77,6 +77,12 @@ const nextConfig = {
 			type: 'asset/resource',
 		});
 
+		// Allow importing markdown content as raw strings
+		config.module.rules.push({
+			test: /\.md$/i,
+			type: 'asset/source',
+		});
+
 		return config;
 	},
 };
