@@ -1,21 +1,24 @@
 # Ship of Theseus: The Best System
 
 > Every part can be replaced over time without breaking the whole.  
-> This page shows how that idea shapes the way systems are built,  
-> where structure, process, and intent hold together even as the parts evolve.
+> This page shows how that idea shapes the way systems are made,  
+> where structure, process, and intent stay aligned as parts evolve.
 
 ## Process
 
-Every system I design moves through the same loop: **analyze, test, codify,
-prove.**
+Every system moves through the same loop: **discover, evaluate, define,
+validate.**
 
-- **Analyze →** study how parts fit together and what must remain stable.
-- **Test →** try edge cases, see where it breaks, refine the rule.
-- **Codify →** turn the refined rule into code so intent cannot drift later.
-- **Prove →** apply it in use until it holds up on its own.
+- **Discover →** find what matters — the elements, patterns, or relationships
+  that shape the system.
+- **Evaluate →** test boundaries and responsibilities, see how each behaves
+  under pressure.
+- **Define →** set clear rules so intent remains consistent as parts change.
+- **Validate →** apply those rules in real use, confirm they hold, refine where
+  they do not.
 
-That loop scales from a single CSS value to an entire workflow.  
-It keeps change safe and lets identity survive replacement.
+When it holds, zoom out and start again.  
+That loop keeps the system alive, evolving without losing itself.
 
 ---
 

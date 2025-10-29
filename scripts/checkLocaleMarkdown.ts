@@ -4,15 +4,11 @@ import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 
 import {
-	AVAILABLE_LOCALES,
-	LOCALE_LOADERS,
-	type Locale,
-} from '../src/lib/locales/translations';
-import {
-	MARKDOWN_FILE_MAP,
 	MARKDOWN_MESSAGE_KEYS,
-	type LocaleMessagesShape,
-} from '../src/lib/locales/localeTypes';
+	MARKDOWN_MESSAGES,
+} from '../src/lib/locales/generated/markdown.gen';
+import type { LocaleMessagesShape } from '../src/lib/locales/localeTypes';
+import type { Locale } from '../src/lib/locales/translations';
 
 type MarkdownKey = (typeof MARKDOWN_MESSAGE_KEYS)[number];
 
@@ -22,34 +18,51 @@ const markdownDir = path.resolve(
 	'../src/lib/locales/translations/markdown',
 );
 
+const { AVAILABLE_LOCALES, LOCALE_LOADERS } =
+	await import('../src/lib/locales/translations');
+
 type Issue = {
 	locale: Locale;
-	key: MarkdownKey;
+	key: string | '*';
 	reason: string;
 };
 
-const issues: Issue[] = [];
+const issuesByLocale = new Map<Locale, Issue[]>();
+
+const recordIssue = (issue: Issue) => {
+	const list = issuesByLocale.get(issue.locale);
+	if (list) list.push(issue);
+	else issuesByLocale.set(issue.locale, [issue]);
+};
 
 const loadLocaleMessages = async (
 	locale: Locale,
-): Promise<LocaleMessagesShape> => {
-	const mod = await LOCALE_LOADERS[locale]();
-	return mod.default as LocaleMessagesShape;
+): Promise<LocaleMessagesShape | null> => {
+	try {
+		const mod = await LOCALE_LOADERS[locale]();
+		return mod.default as LocaleMessagesShape;
+	} catch (error) {
+		recordIssue({
+			locale,
+			key: '*',
+			reason: `failed to load messages (${(error as Error).message})`,
+		});
+		return null;
+	}
 };
 
 const readMarkdownFor = async (
 	key: MarkdownKey,
 	locale: Locale,
 ): Promise<string | null> => {
-	const base = MARKDOWN_FILE_MAP[key];
-	const fileName = `${base}.${locale}.md`;
+	const fileName = `${key}.${locale}.md`;
 	const filePath = path.join(markdownDir, fileName);
 	try {
 		const content = await fs.readFile(filePath, 'utf8');
 		return content;
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-			issues.push({
+			recordIssue({
 				locale,
 				key,
 				reason: `missing markdown file (${fileName})`,
@@ -60,48 +73,115 @@ const readMarkdownFor = async (
 	}
 };
 
-const checkLocale = async (locale: Locale) => {
-	const messages = await loadLocaleMessages(locale);
+const ensureGeneratedContentIsCurrent = (
+	key: MarkdownKey,
+	locale: Locale,
+	expected: string,
+) => {
+	const generated = MARKDOWN_MESSAGES[locale]?.[key];
+	if (generated === undefined) {
+		recordIssue({
+			locale,
+			key,
+			reason: 'generated map missing markdown content',
+		});
+		return;
+	}
 
-	for (const key of MARKDOWN_MESSAGE_KEYS) {
-		const expected = await readMarkdownFor(key, locale);
-		if (expected == null) continue;
-
-		const value = messages[key];
-		if (typeof value !== 'string') {
-			issues.push({
-				locale,
-				key,
-				reason: `expected string value, received ${typeof value}`,
-			});
-			continue;
-		}
-
-		if (value !== expected) {
-			issues.push({
-				locale,
-				key,
-				reason: 'message value does not match markdown file contents',
-			});
-		}
+	if (generated !== expected) {
+		recordIssue({
+			locale,
+			key,
+			reason: 'generated map is out of sync with markdown file',
+		});
 	}
 };
 
 const main = async () => {
 	process.env.NODE_ENV = 'production';
 
-	await Promise.all(
-		AVAILABLE_LOCALES.map((locale) => checkLocale(locale)),
-	);
+	const localeMessages: Array<{
+		locale: Locale;
+		messages: LocaleMessagesShape;
+	}> = [];
+	const allKeys = new Set<string>(MARKDOWN_MESSAGE_KEYS);
 
-	if (issues.length === 0) {
+	for (const locale of AVAILABLE_LOCALES) {
+		const messages = await loadLocaleMessages(locale);
+		if (!messages) continue;
+
+		localeMessages.push({ locale, messages });
+		for (const key of Object.keys(messages)) {
+			allKeys.add(key);
+		}
+	}
+
+	for (const { locale, messages } of localeMessages) {
+		for (const key of allKeys) {
+			const value = (messages as Record<string, unknown>)[key];
+
+			if (value === undefined) {
+				recordIssue({
+					locale,
+					key,
+					reason: 'missing message value (resolved to undefined)',
+				});
+				continue;
+			}
+
+			if (
+				MARKDOWN_MESSAGE_KEYS.includes(key as MarkdownKey)
+			) {
+				const expected = await readMarkdownFor(
+					key as MarkdownKey,
+					locale,
+				);
+				if (expected == null) continue;
+
+				ensureGeneratedContentIsCurrent(
+					key as MarkdownKey,
+					locale,
+					expected,
+				);
+
+				const generated =
+					MARKDOWN_MESSAGES[locale]?.[
+						key as MarkdownKey
+					];
+				if (generated === undefined) continue;
+
+				if (typeof value !== 'string') {
+					recordIssue({
+						locale,
+						key,
+						reason: `expected string value, received ${typeof value}`,
+					});
+					continue;
+				}
+
+				if (value !== generated) {
+					recordIssue({
+						locale,
+						key,
+						reason:
+							'message value does not match generated markdown content',
+					});
+				}
+			}
+		}
+	}
+
+	if (issuesByLocale.size === 0) {
 		console.log('✅ Locale markdown checks passed.');
 		return;
 	}
 
 	console.error('⚠️  Locale markdown issues found:');
-	for (const { locale, key, reason } of issues) {
-		console.error(`  - [${locale}] ${key}: ${reason}`);
+	for (const [locale, localeIssues] of issuesByLocale) {
+		console.error(`  - [${locale}]`);
+		for (const { key, reason } of localeIssues) {
+			console.error(`      • ${key}: ${reason}`);
+		}
 	}
 	process.exit(1);
 };

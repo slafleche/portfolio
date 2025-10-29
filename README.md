@@ -21,3 +21,11 @@
 - Use `yarn setup` whenever locale copy or asset sources change and you need to
   regenerate everything without reinstalling dependencies.
 - Start the dev server with `yarn dev`.
+- Enable the locale guardrail pre-commit hook so commits fail when markdown
+  translations are missing:
+  ```bash
+  cp scripts/pre-commit.sh .git/hooks/pre-commit
+  chmod +x .git/hooks/pre-commit
+  ```
+  The hook runs `yarn lint:locales` on every commit; fix any reported issues and
+  re-run `git commit`.

@@ -1,7 +1,16 @@
-import { frData } from './fr.data';
+import { MARKDOWN_MESSAGES } from '../generated/markdown.gen';
 import type { LocaleMessagesShape } from '../localeTypes';
+import { resolveMarkdownPlaceholders } from './markdownRefs';
+import { frData } from './fr.data';
 
-export const fr = frData satisfies LocaleMessagesShape ? frData : frData;
+const frResolved = resolveMarkdownPlaceholders(
+	frData,
+	MARKDOWN_MESSAGES.fr,
+	'fr',
+);
+
+export const fr =
+	frResolved satisfies LocaleMessagesShape ? frResolved : frResolved;
 
 export type FrMessages = typeof fr;
 
