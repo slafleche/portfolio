@@ -1,4 +1,4 @@
-import systemsContent from './markdown/systems.en.md';
+import { markdownRef } from './markdownRefs';
 
 export const enData = {
   label: 'English',
@@ -120,7 +120,7 @@ export const enData = {
     'Site sources available on [GitHub](https://github.com/slafleche/portfolio)!',
 
   'systems-title': 'Ship of Theseus: The Best System',
-  'systems-content': systemsContent,
+  ...markdownRef('systems-content'),
   'systems-link-label': 'Systems',
 } as const;
 

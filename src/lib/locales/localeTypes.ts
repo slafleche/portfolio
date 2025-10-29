@@ -1,3 +1,5 @@
+import { MARKDOWN_MESSAGE_KEYS } from './generated/markdown.gen';
+import type { MarkdownMessageKey } from './generated/markdown.gen';
 import type { EnData } from './translations/en.data';
 import type { MarkdownContent } from './markdownTypes';
 
@@ -13,15 +15,6 @@ type DeepWiden<T> = T extends MarkdownContent
 
 export type LocaleMessagesShape = DeepWiden<EnData>;
 
-export const MARKDOWN_FILE_MAP = {
-  'systems-content': 'systems',
-} as const;
-
-export const MARKDOWN_MESSAGE_KEYS = Object.keys(
-  MARKDOWN_FILE_MAP,
-) as (keyof typeof MARKDOWN_FILE_MAP)[];
-
-export type MarkdownMessageKey =
-  (typeof MARKDOWN_MESSAGE_KEYS)[number];
-
 export type { MarkdownContent } from './markdownTypes';
+export { MARKDOWN_MESSAGE_KEYS };
+export type { MarkdownMessageKey };

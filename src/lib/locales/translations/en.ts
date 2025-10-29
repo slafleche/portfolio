@@ -1,7 +1,16 @@
-import { enData } from './en.data';
+import { MARKDOWN_MESSAGES } from '../generated/markdown.gen';
 import type { LocaleMessagesShape } from '../localeTypes';
+import { resolveMarkdownPlaceholders } from './markdownRefs';
+import { enData } from './en.data';
 
-export const en = enData satisfies LocaleMessagesShape ? enData : enData;
+const enResolved = resolveMarkdownPlaceholders(
+	enData,
+	MARKDOWN_MESSAGES.en,
+	'en',
+);
+
+export const en =
+	enResolved satisfies LocaleMessagesShape ? enResolved : enResolved;
 
 export type EnMessages = typeof en;
 
