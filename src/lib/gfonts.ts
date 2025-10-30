@@ -18,6 +18,7 @@ export type FontConfig = {
 	weights: string | string[]; // e.g. "400", ["400","700"], "100..900"
 	ital?: boolean; // include italics axis as well
 	subsets?: string[]; // per-font override (default is ["latin"])
+	axes?: Record<string, string | string[]>;
 	rawAxis?: string; // advanced: e.g. "ital,wght@0,100..900;1,100..900"
 };
 
@@ -68,17 +69,62 @@ function buildAxisParam(cfg: FontConfig): string {
 	const weights = normalizeAndSortWeights(toArray(cfg.weights));
 	if (weights.length === 0) return '';
 
+	const axesMap = cfg.axes ?? {};
+	const extraAxes = Object.keys(axesMap)
+		.filter((name) => name !== 'ital' && name !== 'wght')
+		.sort();
+
+	const axisNames = [
+		...(cfg.ital ? ['ital'] : []),
+		...extraAxes,
+		'wght',
+	];
+
+	const axisValues: Record<string, string[]> = {};
+
 	if (cfg.ital) {
-		// Tuples MUST be sorted: all 0,* first (roman), then all 1,* (italic), each by weight asc
-		const roman = weights.map((w) => `0,${w}`);
-		const italic = weights.map((w) => `1,${w}`);
-		return `:ital,wght@${[
-			...roman,
-			...italic,
-		].join(';')}`;
+		axisValues.ital = ['0', '1'];
 	}
 
-	return `:wght@${weights.join(';')}`;
+	for (const axisName of extraAxes) {
+		const raw = axesMap[axisName];
+		const tokens = Array.isArray(raw) ? raw : [raw];
+		const normalized = tokens
+			.map((token) => String(token ?? '').trim())
+			.filter((token) => token.length > 0);
+		if (normalized.length === 0) {
+			throw new Error(
+				`Google Fonts axis "${axisName}" is missing a value`,
+			);
+		}
+		axisValues[axisName] = normalized;
+	}
+
+	axisValues.wght = weights;
+
+	const axisTuples: string[] = [];
+	const buildTuples = (index: number, acc: string[]) => {
+		if (index === axisNames.length) {
+			axisTuples.push(acc.join(','));
+			return;
+		}
+		const axisName = axisNames[index];
+		const values = axisValues[axisName];
+		if (!values || values.length === 0) {
+			throw new Error(
+				`Google Fonts axis "${axisName}" has no values`,
+			);
+		}
+		for (const value of values) {
+			acc.push(value);
+			buildTuples(index + 1, acc);
+			acc.pop();
+		}
+	};
+
+	buildTuples(0, []);
+
+	return `:${axisNames.join(',')}@${axisTuples.join(';')}`;
 }
 
 /** Build &text=... if texts provided */

@@ -7,6 +7,7 @@ export type FontCfgInput = {
 	keys?: string[];
 	weights: string | string[]; // e.g. "400..800", ["300..700"], ["400","700"]
 	ital?: boolean;
+	axes?: Record<string, string | string[]>;
 	subsets?: string[];
 };
 export type FontsConfig = Record<string, FontCfgInput>;
@@ -189,11 +190,26 @@ export function asFontsConfig(input: unknown): FontsConfig {
 			? cfg.subsets.map(String)
 			: undefined;
 
+		let axes: Record<string, string | string[]> | undefined;
+		if (cfg.axes && typeof cfg.axes === 'object') {
+			axes = {};
+			for (const [axis, value] of Object.entries(
+				cfg.axes as Record<string, unknown>,
+			)) {
+				if (typeof value === 'string') {
+					axes[axis] = value;
+				} else if (Array.isArray(value)) {
+					axes[axis] = value.map(String);
+				}
+			}
+		}
+
 		out[family] = {
 			texts,
 			keys,
 			weights,
 			ital,
+			axes,
 			subsets,
 		};
 	}

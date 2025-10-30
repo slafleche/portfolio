@@ -4,6 +4,7 @@ import * as s from '@/styles/components/hero.css';
 import VideoByName from './VideoByName';
 import { Markdown } from '@/components/Markdown';
 import HeroHeading from './HeroHeading.client';
+import { toTrimmedOrNull } from '@/lib/stringUtils';
 
 type HeroCopy = {
   videoTitle: string;
@@ -22,7 +23,13 @@ type Props = {
   copy: HeroCopy;
   ctaHref?: string;
 };
+
 export default function Hero({ id, className, copy }: Props) {
+  const headingLabel = toTrimmedOrNull(
+    `${copy.headingFirstLine} ${copy.headingLastLine}`,
+  );
+  if (!headingLabel) return null;
+
   return (
     <section id={id} className={clsx(s.root, className)}>
       <VideoByName
@@ -55,8 +62,9 @@ export default function Hero({ id, className, copy }: Props) {
       <div className={clsx(layoutStyles.content, s.content)}>
         <div className={clsx(layoutStyles.panel, s.panel)}>
           <div className={s.bridge}>
-            <HeroHeading 
-            // debugStage="initial"
+            <HeroHeading
+              label={headingLabel}
+              // debugStage="initial"
             >
               <span
                 className={s.line}
@@ -81,58 +89,6 @@ export default function Hero({ id, className, copy }: Props) {
           </div>
         </div>
       </div>
-
-      {/* <div className={clsx(layoutStyles.content, s.content)}> */}
-      {/* <div className={clsx(layoutStyles.panel, s.panel)}>
-				<div className={s.vennContainer}>
-					<div className={s.consolePanel}>
-						<Console
-							className={s.console}
-							description={copy.consoleDescription}
-							idBase={consoleId}
-						/>
-					</div>
-					<GlassyPanel
-						className={clsx(s.designPanel)}
-						surfaceClassName={s.heroSurface}
-						contentClassName={clsx(s.panelContents)}
-					>
-						<div className={s.vennContents}>
-								<HeroHeading>
-									<span
-										className={s.line}
-										data-position="first"
-										data-text={copy.headingFirstLine}
-									>
-										{copy.headingFirstLine}
-									</span>
-									<br className={s.title_break} />
-									<span
-										className={s.line}
-										data-position="last"
-										data-text={copy.headingLastLine}
-									>
-										{copy.headingLastLine}
-									</span>
-								</HeroHeading>
-							<Markdown
-								className={s.paragraph}
-								source={copy.subtitle}
-							/>
-							{copy.ctaLabel ? (
-								<a
-									href={ctaHref ?? '#contact'}
-									className={s.cta}
-									data-ui="link"
-								>
-									<span>{copy.ctaLabel}</span>
-									<SendIcon className={s.ctaIcon} />
-								</a>
-							) : null}
-						</div>
-					</GlassyPanel> */}
-      {/* </div> */}
-      {/* </div> */}
     </section>
   );
 }
