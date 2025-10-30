@@ -567,9 +567,9 @@ export const menuVars = {
 };
 
 export const dropShadowVars = {
-  offsetY: m(10),
-  offsetX: m(10),
-  blur: m(3),
+  offsetY: m(2),
+  offsetX: m(2),
+  blur: m(2),
   color: colorVars.shadow,
 };
 
