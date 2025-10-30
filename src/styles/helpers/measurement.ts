@@ -232,10 +232,12 @@ export const measurementHypotenuse = (
 };
 
 export const assertCondition = (
-  condition: boolean,
+  condition: boolean | (() => boolean),
   message: string,
 ): void => {
-  if (!condition) {
+  const passed =
+    typeof condition === 'function' ? condition() : condition;
+  if (!passed) {
     throw new Error(message);
   }
 };

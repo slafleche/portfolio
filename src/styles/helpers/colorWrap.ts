@@ -67,7 +67,22 @@ const isColorWrapper = (value: ColorInput): value is ColorWrapper =>
 
 const toColor = (input: ColorInput): Color => {
   if (typeof input === 'string') {
-    return chroma(input);
+    try {
+      return chroma(input);
+    } catch (raw) {
+      const reason =
+        raw instanceof Error && raw.message
+          ? raw.message
+          : String(raw);
+      throw new Error(
+        [
+          `Failed to parse color string "${input}".`,
+          'Supported formats include hex ("#ff00ff"), rgb("rgb(255, 0, 0)"), hsl,',
+          'oklch, or any value accepted by chroma-js.',
+          `Original error: ${reason}`,
+        ].join(' '),
+      );
+    }
   }
   return isColorWrapper(input) ? input.unsafeColor : input;
 };
