@@ -56,6 +56,8 @@ export type FontStyles = {
 		| { value: number; unit?: string }
 		| undefined;
 	color?: CssLike | Color | CSS.Property.Color;
+	waitForFonts?: string[];
+	waitForFontsTimeoutMs?: number;
 };
 
 /**

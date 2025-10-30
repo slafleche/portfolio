@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { SkipNavLink } from '@/components/SkipNavLink';
 import * as s from '@/styles/components/menu.css';
 import type { Locale } from '@/data/locales';
-import { menuVars } from '@/styles/vars';
+import { menuVars, fontVars } from '@/styles/vars';
 import transforms from '@/styles/helpers/transforms';
 import clsx from 'clsx';
 import Arch from './Arch';
@@ -41,6 +41,7 @@ import {
 } from './menu/hooks/useLogoAnimation';
 import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
+import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
 
 type FocusDebugOptions = {
   lockTo?: 'logo' | number;
@@ -187,6 +188,10 @@ export default function Menu({
     decorReady,
     setDecorReady,
   ] = useState(false);
+  const [fontsReady, setFontsReady] = useState(() => {
+    const { fonts } = collectWaitForFonts(fontVars.menu);
+    return fonts.length === 0;
+  });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -204,60 +209,36 @@ export default function Menu({
   }, []);
 
   useEffect(() => {
-    if (prefersReducedMotion !== false) {
-      setDecorReady(false);
+    setDecorReady(prefersReducedMotion === false);
+  }, [prefersReducedMotion]);
+
+  useEffect(() => {
+    const { fonts, timeoutMs } = collectWaitForFonts(fontVars.menu);
+    if (fonts.length === 0) {
+      setFontsReady(true);
       return;
     }
     let cancelled = false;
-    let timeoutId: number | null = null;
-    let idleHandle: number | null = null;
-
-    const activate = () => {
-      if (cancelled) return;
-      setDecorReady(true);
+    const run = async () => {
+      try {
+        await waitForFonts(fonts, { timeoutMs });
+      } catch {
+        // swallow errors; we'll still proceed with fallback fonts
+      }
+      if (!cancelled) {
+        setFontsReady(true);
+      }
     };
-
-    if (typeof window === 'undefined') {
-      activate();
-      return;
-    }
-
-    const win = window as typeof window & {
-      requestIdleCallback?: (
-        callback: IdleRequestCallback,
-        options?: IdleRequestOptions,
-      ) => number;
-      cancelIdleCallback?: (handle: number) => void;
-    };
-
-    if (win.requestIdleCallback) {
-      idleHandle = win.requestIdleCallback(
-        () => {
-          activate();
-        },
-        { timeout: 200 },
-      );
-    } else {
-      timeoutId = window.setTimeout(activate, 150);
-    }
-
+    void run();
     return () => {
       cancelled = true;
-      if (timeoutId != null) {
-        window.clearTimeout(timeoutId);
-      }
-      if (idleHandle != null && win.cancelIdleCallback) {
-        win.cancelIdleCallback(idleHandle);
-      }
     };
-  }, [
-    prefersReducedMotion,
-  ]);
+  }, []);
 
   const debugActive = Boolean(bokehDebug);
   const highlightEnabled =
-    debugActive || (decorReady && prefersReducedMotion === false);
-  const fontsReady = highlightEnabled;
+    debugActive ||
+    (decorReady && prefersReducedMotion === false && fontsReady);
   const motionPreference =
     prefersReducedMotion === true ? 'reduced' : 'standard';
   const debugOptions: MiniBokehDebugOptions | undefined = bokehDebug;
