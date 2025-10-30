@@ -16,6 +16,8 @@ import { playProjectorText } from '@/lib/projectorText';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { projectorVars } from '@/styles/vars/projector.vars';
 import type { ProjectorChannel } from '@/styles/vars/projector.vars';
+import { fontVars } from '@/styles/vars';
+import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
 
 type Props = {
   label: string; // for accessibility
@@ -118,17 +120,39 @@ export default function HeroHeading({
       prefersReducedMotion,
     });
 
-    const playHandle = playProjectorText(master, ghost, 'desktop', {
-      prefersReducedMotion,
-      debugFreezeStage: debugStage,
+    let cancelled = false;
+    let playHandle: ReturnType<typeof playProjectorText> | null = null;
+
+    const start = async () => {
+      const { fonts, timeoutMs } = collectWaitForFonts(fontVars.hero);
+      if (fonts.length > 0) {
+        await waitForFonts(fonts, { timeoutMs });
+        if (cancelled) return;
+      }
+
+      playHandle = playProjectorText(master, ghost, 'desktop', {
+        prefersReducedMotion,
+        debugFreezeStage: debugStage,
+      });
+
+      if (typeof window !== 'undefined') {
+        (window as typeof window & { __heroDebug?: true }).__heroDebug =
+          true;
+      }
+    };
+
+    start().catch(() => {
+      if (cancelled) return;
+      playHandle = playProjectorText(master, ghost, 'desktop', {
+        prefersReducedMotion,
+        debugFreezeStage: debugStage,
+      });
     });
 
-    if (typeof window !== 'undefined') {
-      (window as typeof window & { __heroDebug?: true }).__heroDebug =
-        true;
-    }
-
-    return () => playHandle.cancel();
+    return () => {
+      cancelled = true;
+      playHandle?.cancel();
+    };
   }, [
     contentSignature,
     prefersReducedMotion,

@@ -309,21 +309,8 @@ const fontFamilies = {
     spacing: m(0.5, 'rem'),
     offsetToFlushTop: m(-0.3, 'rem'),
   }),
-  // baloo: makeFamilyDef({
-  // 	familyName: 'Baloo 2',
-  // 	fallbacks: [
-  // 		'Poppins',
-  // 		'Comfortaa',
-  // 		'Helvetica',
-  // 		'Arial',
-  // 		'sans-serif',
-  // 	],
-  // 	cfgMap: fontsConfig,
-  // 	spacing: m(0.3, 'rem'),
-  // 	offsetToFlushTop: m(-0.3, 'rem'),
-  // }),
-  inter: makeFamilyDef({
-    familyName: 'Inter',
+  ibm: makeFamilyDef({
+    familyName: 'IBM Plex Sans',
     fallbacks: [
       'Arial Rounded MT Bold',
       '-apple-system',
@@ -338,8 +325,8 @@ const fontFamilies = {
     spacing: m(0, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
   }),
-  outfit: makeFamilyDef({
-    familyName: 'Outfit',
+  urbanist: makeFamilyDef({
+    familyName: 'Urbanist',
     fallbacks: [
       'Segoe UI',
       'Roboto',
@@ -348,23 +335,31 @@ const fontFamilies = {
       'sans-serif',
     ],
     cfgMap: fontsConfig,
-    spacing: m(0.1, 'rem'),
+    spacing: m(0.0, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
   }),
 } satisfies Record<string, FontFamilyDef>;
 
-const defaultHeadingFont = fontFamilies.inter;
+const defaultHeadingFont = fontFamilies.urbanist;
+const defaultBodyFont = fontFamilies.ibm;
 
 export const fontVars = {
   menu: {
     size: m(16),
-    ...fontFamilies.system,
+    ...fontFamilies.urbanist,
+    waitForFonts: [
+      'Urbanist',
+    ],
   },
   hero: {
     ...defaultHeadingFont,
     ...fontWeight(defaultHeadingFont, 20),
     lineHeight: 1.1,
     size: m(45),
+    waitForFonts: [
+      'Outfit',
+    ],
+    waitForFontsTimeoutMs: 1500,
   },
   heading: {
     ...defaultHeadingFont,
@@ -381,11 +376,16 @@ export const fontVars = {
     size: m(20),
     ...fontWeight(defaultHeadingFont, 100),
   },
+  h4: {
+    size: m(20),
+    ...fontWeight(defaultHeadingFont, 100),
+  },
   body: {
-    size: m(22),
+    size: m(16),
     color: colorVars.bodyFg,
-    ...fontFamilies.outfit,
-    ...fontWeight(fontFamilies.outfit, 50),
+    lineHeight: 1,
+    ...defaultBodyFont,
+    ...fontWeight(defaultBodyFont, 0),
   },
 } satisfies Record<string, FontStyles>;
 
