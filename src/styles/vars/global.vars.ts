@@ -377,7 +377,15 @@ export const fontVars = {
     ...fontWeight(defaultHeadingFont, 100),
   },
   h4: {
-    size: m(20),
+    size: m(18),
+    ...fontWeight(defaultHeadingFont, 100),
+  },
+  h5: {
+    size: m(16),
+    ...fontWeight(defaultHeadingFont, 100),
+  },
+  h6: {
+    size: m(14),
     ...fontWeight(defaultHeadingFont, 100),
   },
   body: {
