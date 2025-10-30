@@ -114,7 +114,7 @@ export default function HeroHeading({ children, debugStage }: Props) {
 		}
 
 		return () => playHandle.cancel();
-	}, [contentSignature, prefersReducedMotion]);
+	}, [contentSignature, prefersReducedMotion, debugStage]);
 
 	const channelClassMap: Record<ProjectorChannel, string> = {
 		blue: revealStyles.channelBlue,

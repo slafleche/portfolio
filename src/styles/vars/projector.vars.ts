@@ -4,7 +4,7 @@ import {
   assertUnit,
   m,
 } from '../helpers/measurement';
-import { colors, dropShadowVars } from './global.vars';
+import { dropShadowVars } from './global.vars';
 
 export type ProjectorChannel = 'blue' | 'green' | 'red';
 export type ProjectorStage = 'initial' | 'waypoint' | 'focus';
@@ -25,8 +25,10 @@ export const projectorStages: readonly ProjectorStage[] = [
 // type StageBlur = Record<ProjectorChannel, ReturnType<typeof m>>;
 // type StageScale = Record<ProjectorChannel, number>;
 
+const initialHoldTime = m(200, 'ms');
 const toWayPointTime = m(800, 'ms');
-const toFocusTime = m(200, 'ms');
+const waypointHoldTime = m(0, 'ms');
+const toFocusTime = m(100, 'ms');
 
 if (process.env.NODE_ENV !== 'production') {
   assertCondition(() => {
@@ -35,10 +37,15 @@ if (process.env.NODE_ENV !== 'production') {
   assertUnit(toWayPointTime, 'ms', 'toWayPointTime - needs to be ms');
   assertUnit(toFocusTime, 'ms', 'toFocusTime - needs to be ms');
 }
-const calibrationTime = toWayPointTime.add(toFocusTime);
+const calibrationTime = initialHoldTime
+  .add(toWayPointTime)
+  .add(waypointHoldTime)
+  .add(toFocusTime);
 
 export const projectorCalibrationDurations = {
+  initialHold: initialHoldTime,
   toWayPoint: toWayPointTime,
+  waypointHold: waypointHoldTime,
   toFocus: toFocusTime,
   totalCalibration: calibrationTime,
 } as const;
@@ -54,9 +61,9 @@ export const projectorVars = {
   },
   timing: {
     calibration: {
-      initialHoldTime: m(500, 'ms'),
+      initialHoldTime,
       toWayPointTime,
-      waypointHoldTime: m(0, 'ms'),
+      waypointHoldTime,
       toFocusTime,
       totalCalibrationTime: calibrationTime,
     },

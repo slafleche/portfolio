@@ -1,4 +1,7 @@
-import { projectorVars, projectorChannels } from '@/styles/vars/projector.vars';
+import {
+  projectorVars,
+  projectorChannels,
+} from '@/styles/vars/projector.vars';
 
 type Tier = 'desktop';
 
@@ -39,8 +42,10 @@ const getStageTimings = () => {
   const calibration = projectorVars.timing.calibration;
 
   const initialHoldEnd = calibration.initialHoldTime.value;
-  const toWayPointEnd = initialHoldEnd + calibration.toWayPointTime.value;
-  const waypointHoldEnd = toWayPointEnd + calibration.waypointHoldTime.value;
+  const toWayPointEnd =
+    initialHoldEnd + calibration.toWayPointTime.value;
+  const waypointHoldEnd =
+    toWayPointEnd + calibration.waypointHoldTime.value;
   const toFocusEnd = waypointHoldEnd + calibration.toFocusTime.value;
 
   const totalCalibration = calibration.totalCalibrationTime.value;
@@ -89,19 +94,11 @@ const sampleStage = (
       toWayPointEnd - initialHoldEnd,
       Number.EPSILON,
     );
-    const t = clamp(
-      (elapsed - initialHoldEnd) / span,
-      0,
-      1,
-    );
+    const t = clamp((elapsed - initialHoldEnd) / span, 0, 1);
     return {
       x: lerp(stages.initial.x, stages.waypoint.x, t),
       y: lerp(stages.initial.y, stages.waypoint.y, t),
-      scale: lerp(
-        stages.initial.scale,
-        stages.waypoint.scale,
-        t,
-      ),
+      scale: lerp(stages.initial.scale, stages.waypoint.scale, t),
     };
   }
 
@@ -114,11 +111,7 @@ const sampleStage = (
       toFocusEnd - waypointHoldEnd,
       Number.EPSILON,
     );
-    const t = clamp(
-      (elapsed - waypointHoldEnd) / span,
-      0,
-      1,
-    );
+    const t = clamp((elapsed - waypointHoldEnd) / span, 0, 1);
     return {
       x: lerp(stages.waypoint.x, stages.focus.x, t),
       y: lerp(stages.waypoint.y, stages.focus.y, t),
@@ -136,16 +129,21 @@ const createBlurSeries = (
   totalCalibration: number,
 ): BlurPoint[] => {
   return Object.entries(blurCurve)
-    .map(([percent, measurementOrNumber]) => {
-      const measurement =
-        typeof measurementOrNumber === 'number'
-          ? measurementOrNumber
-          : measurementOrNumber.value;
-      return {
-        time: (Number(percent) / 100) * totalCalibration,
-        value: measurement,
-      };
-    })
+    .map(
+      ([
+        percent,
+        measurementOrNumber,
+      ]) => {
+        const measurement =
+          typeof measurementOrNumber === 'number'
+            ? measurementOrNumber
+            : measurementOrNumber.value;
+        return {
+          time: (Number(percent) / 100) * totalCalibration,
+          value: measurement,
+        };
+      },
+    )
     .sort((a, b) => a.time - b.time);
 };
 
@@ -247,7 +245,10 @@ export function playProjectorText(
       initial: toStage(states.initial),
       waypoint: toStage(states.waypoint),
       focus: toStage(states.focus),
-      blur: createBlurSeries(states.blurCurve, timings.totalCalibration),
+      blur: createBlurSeries(
+        states.blurCurve,
+        timings.totalCalibration,
+      ),
       opacity: states.opacity ?? 0.85,
     };
     return acc;
@@ -274,9 +275,10 @@ export function playProjectorText(
     masterEl.style.willChange = 'opacity, transform, filter';
     ghostEl.style.willChange = 'opacity, filter';
     projectorChannels.forEach((channel) => {
-      channelElements[channel]?.style &&
-        (channelElements[channel]!.style.willChange =
-          'transform, filter');
+      const element = channelElements[channel];
+      if (element) {
+        element.style.willChange = 'transform, filter';
+      }
     });
   };
 
@@ -293,14 +295,16 @@ export function playProjectorText(
   const freezeStage = options?.debugFreezeStage ?? null;
   const isFrozen = freezeStage !== null && freezeStage !== undefined;
 
-  const applyStageSnapshot = (stage: 'initial' | 'waypoint' | 'focus') => {
+  const applyStageSnapshot = (
+    stage: 'initial' | 'waypoint' | 'focus',
+  ) => {
     projectorChannels.forEach((channel) => {
       const state = channelStates[channel][stage];
       const blurSeries = channelStates[channel].blur;
       const blurAtStage =
         stage === 'focus'
-          ? blurSeries[blurSeries.length - 1]?.value ?? 0
-          : blurSeries[0]?.value ?? 0;
+          ? (blurSeries[blurSeries.length - 1]?.value ?? 0)
+          : (blurSeries[0]?.value ?? 0);
 
       applyChannelTransform(channelElements[channel], {
         ...state,
@@ -324,7 +328,12 @@ export function playProjectorText(
 
   if (prefersReducedMotion) {
     addWillChange();
-    applyFinalState(masterEl, ghostEl, channelElements, channelStates);
+    applyFinalState(
+      masterEl,
+      ghostEl,
+      channelElements,
+      channelStates,
+    );
     removeWillChange();
     return Object.assign(Promise.resolve(), {
       cancel: () => undefined,
@@ -427,10 +436,7 @@ export function playProjectorText(
         timings,
         channelStates[channel],
       );
-      const blur = sampleBlur(
-        channelStates[channel].blur,
-        elapsed,
-      );
+      const blur = sampleBlur(channelStates[channel].blur, elapsed);
 
       applyChannelTransform(channelElements[channel], {
         ...state,
@@ -456,11 +462,7 @@ export function playProjectorText(
         timings.revealEnd - timings.revealStart,
         Number.EPSILON,
       );
-      const t = clamp(
-        (elapsed - timings.revealStart) / span,
-        0,
-        1,
-      );
+      const t = clamp((elapsed - timings.revealStart) / span, 0, 1);
       masterOpacity = t;
       ghostOpacity = lerp(baseGhostOpacity, 0, t);
     }
