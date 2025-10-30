@@ -15,6 +15,8 @@ import fontsConfig, {
 } from '@/styles/helpers/fontConfig';
 import type { Stop } from '../helpers/gradients';
 
+const failLint = true;
+
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
 // meant to be more abstract and used in different wayt. For example, you
