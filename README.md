@@ -21,6 +21,12 @@
 - Use `yarn setup` whenever locale copy or asset sources change and you need to
   regenerate everything without reinstalling dependencies.
 - Start the dev server with `yarn dev`.
+- When updating `fonts.config.json`, regenerate the Google Fonts URL bundle and
+  optionally verify that each generated URL resolves:
+  ```bash
+  yarn fonts:urls                    # rebuild src/data/generated/googleFonts.gen.ts
+  VERIFY_FONT_URLS=true yarn fonts:urls  # repeat with live HEAD checks against Google Fonts
+  ```
 - Enable the locale guardrail pre-commit hook so commits fail when markdown
   translations are missing:
   ```bash

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
+import type { FontConfig } from '../src/lib/gfonts.ts';
 import { loadMessages } from '../src/lib/locales/locale.ts';
 
 const MAX_UNIQUE_CHARS = process.env.MAX_FONT_TEXT_CHARS
@@ -27,13 +28,7 @@ const OUT_TS = path.resolve(
 	'minimalFontText.gen.ts',
 );
 
-type FontCfgInput = {
-	texts?: string[];
-	keys?: string[];
-	weights: string | string[];
-	ital?: boolean;
-	subsets?: string[];
-};
+type FontCfgInput = FontConfig & { keys?: string[] };
 
 type FontsConfig = Record<string, FontCfgInput>;
 
@@ -148,6 +143,8 @@ async function main() {
 			weights: string | string[];
 			ital: boolean;
 			subsets?: string[];
+			axes?: Record<string, string | string[]>;
+			rawAxis?: string;
 		}
 	> = {};
 

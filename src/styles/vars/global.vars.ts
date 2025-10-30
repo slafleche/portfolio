@@ -1,19 +1,23 @@
-import { color, type Color } from '@/styles/helpers/colorWrap';
+import { color } from '@/styles/helpers/colorWrap';
 import type { CardGradientPack } from '../helpers/cardGradient';
 import * as CSS from 'csstype';
 import { fontWeight } from '../helpers/typography';
-import type {
-  CssLike,
-  FontFamilyDef,
-  FontStyles,
-  MeasurementLike,
-} from '../helpers/types';
+import type { FontFamilyDef, FontStyles } from '../helpers/types';
 import { m, mPercent } from '../helpers/measurement';
 export type ColorKeys = keyof typeof colors;
 import fontsConfig, {
   makeFamilyDef,
 } from '@/styles/helpers/fontConfig';
 import type { Stop } from '../helpers/gradients';
+
+export type {
+  BorderMeasurementInput,
+  BorderWidthConfig,
+  BorderWidthInput,
+  BorderRadiusConfig,
+  BorderRadiusInput,
+  IBorder,
+} from '../helpers/types';
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
@@ -318,17 +322,15 @@ const fontFamilies = {
   // 	spacing: m(0.3, 'rem'),
   // 	offsetToFlushTop: m(-0.3, 'rem'),
   // }),
-  comfortaa: makeFamilyDef({
-    familyName: 'Comfortaa',
+  inter: makeFamilyDef({
+    familyName: 'Inter',
     fallbacks: [
       'Arial Rounded MT Bold',
-      'Helvetica Rounded',
-      'Segoe UI Rounded',
-      'SF Pro Rounded',
-      'Trebuchet MS',
-      'Verdana',
+      '-apple-system',
+      'BlinkMacSystemFont',
       'Segoe UI',
-      'Helvetica',
+      'Roboto',
+      'Helvetica Neue',
       'Arial',
       'sans-serif',
     ],
@@ -336,16 +338,13 @@ const fontFamilies = {
     spacing: m(0, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
   }),
-  titan_one: makeFamilyDef({
-    familyName: 'Titan One',
+  outfit: makeFamilyDef({
+    familyName: 'Outfit',
     fallbacks: [
-      'Impact',
-      'Arial Black',
-      'Segoe UI Black',
-      'Helvetica Black',
-      'SF Pro Display Heavy',
-      'Verdana Bold',
-      'Tahoma Bold',
+      'Segoe UI',
+      'Roboto',
+      'Helvetica Neue',
+      'Arial',
       'sans-serif',
     ],
     cfgMap: fontsConfig,
@@ -354,80 +353,41 @@ const fontFamilies = {
   }),
 } satisfies Record<string, FontFamilyDef>;
 
+const defaultHeadingFont = fontFamilies.inter;
+
 export const fontVars = {
   menu: {
     size: m(16),
     ...fontFamilies.system,
   },
   hero: {
-    ...fontFamilies.titan_one,
-    ...fontWeight(fontFamilies.titan_one, 0),
+    ...defaultHeadingFont,
+    ...fontWeight(defaultHeadingFont, 20),
     lineHeight: 1.1,
     size: m(45),
   },
   heading: {
-    ...fontFamilies.comfortaa,
+    ...defaultHeadingFont,
   },
   h1: {
     size: m(45),
-    ...fontWeight(fontFamilies.comfortaa, 100),
+    ...fontWeight(defaultHeadingFont, 100),
   },
   h2: {
     size: m(25),
-    ...fontWeight(fontFamilies.comfortaa, 100),
+    ...fontWeight(defaultHeadingFont, 100),
   },
   h3: {
     size: m(20),
-    ...fontWeight(fontFamilies.comfortaa, 100),
+    ...fontWeight(defaultHeadingFont, 100),
   },
   body: {
     size: m(22),
     color: colorVars.bodyFg,
-    ...fontFamilies.comfortaa,
-    ...fontWeight(fontFamilies.comfortaa, 60),
+    ...fontFamilies.outfit,
+    ...fontWeight(fontFamilies.outfit, 50),
   },
 } satisfies Record<string, FontStyles>;
-
-export type BorderMeasurementInput =
-  | MeasurementLike
-  | number
-  | string
-  | null
-  | undefined;
-
-export interface BorderWidthConfig {
-  all?: BorderMeasurementInput;
-  horizontal?: BorderMeasurementInput;
-  vertical?: BorderMeasurementInput;
-  top?: BorderMeasurementInput;
-  right?: BorderMeasurementInput;
-  bottom?: BorderMeasurementInput;
-  left?: BorderMeasurementInput;
-}
-
-export type BorderWidthInput =
-  | BorderMeasurementInput
-  | BorderWidthConfig;
-
-export interface BorderRadiusConfig {
-  all?: BorderMeasurementInput;
-  topLeft?: BorderMeasurementInput;
-  topRight?: BorderMeasurementInput;
-  bottomRight?: BorderMeasurementInput;
-  bottomLeft?: BorderMeasurementInput;
-}
-
-export type BorderRadiusInput =
-  | BorderMeasurementInput
-  | BorderMeasurementInput[]
-  | BorderRadiusConfig;
-
-export interface IBorder {
-  color?: CSS.Property.BorderColor | CssLike | Color;
-  width?: BorderWidthInput;
-  style?: CSS.Property.BorderStyle;
-  radius?: BorderRadiusInput;
-}
 
 export const borderVars = {
   color: colorVars.border,

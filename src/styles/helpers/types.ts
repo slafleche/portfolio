@@ -75,8 +75,53 @@ export type FontConfig = {
 	weights: string | string[];
 	ital?: boolean;
 	subsets?: string[];
+	axes?: Record<string, string | string[]>;
+	rawAxis?: string;
 };
 
 export type PageParams = {
 	LOCALE: string;
 };
+
+export type NonEmptyString = string & { __brand: 'NonEmptyString' };
+
+export type BorderMeasurementInput =
+	| MeasurementLike
+	| number
+	| string
+	| null
+	| undefined;
+
+export interface BorderWidthConfig {
+	all?: BorderMeasurementInput;
+	horizontal?: BorderMeasurementInput;
+	vertical?: BorderMeasurementInput;
+	top?: BorderMeasurementInput;
+	right?: BorderMeasurementInput;
+	bottom?: BorderMeasurementInput;
+	left?: BorderMeasurementInput;
+}
+
+export type BorderWidthInput =
+	| BorderMeasurementInput
+	| BorderWidthConfig;
+
+export interface BorderRadiusConfig {
+	all?: BorderMeasurementInput;
+	topLeft?: BorderMeasurementInput;
+	topRight?: BorderMeasurementInput;
+	bottomRight?: BorderMeasurementInput;
+	bottomLeft?: BorderMeasurementInput;
+}
+
+export type BorderRadiusInput =
+	| BorderMeasurementInput
+	| BorderMeasurementInput[]
+	| BorderRadiusConfig;
+
+export interface IBorder {
+	color?: CSS.Property.BorderColor | CssLike | Color;
+	width?: BorderWidthInput;
+	style?: CSS.Property.BorderStyle;
+	radius?: BorderRadiusInput;
+}
