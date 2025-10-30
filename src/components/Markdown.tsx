@@ -4,7 +4,7 @@ import { marked } from 'marked';
 
 type MarkdownProps = {
 	id?: string;
-	source: string;
+	source?: string | null;
 	className?: string;
 	openLinksInNewTab?: boolean;
 };
@@ -25,7 +25,10 @@ function MarkdownBase({
 	source,
 	className,
 	openLinksInNewTab = true,
-}: MarkdownProps): ReactElement {
+}: MarkdownProps): ReactElement | null {
+	if (typeof source !== 'string' || source.trim() === '') {
+		return null;
+	}
 	const html = openLinksInNewTab
 		? marked.parse(source, { renderer: createTargetBlankRenderer() })
 		: marked.parse(source);

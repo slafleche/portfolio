@@ -6,12 +6,10 @@ import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
 import { loadMessages } from '../src/lib/locales/locale.ts';
 
 const markdownKeyPattern = /(?:^|[-_])content$/;
-const extraMarkdownKeys = new Set(['hero-subtitle']);
-
 function shouldConvert(key: string, value: unknown): value is string {
 	if (typeof value !== 'string') return false;
 	if (!value.trim()) return false;
-	return markdownKeyPattern.test(key) || extraMarkdownKeys.has(key);
+	return markdownKeyPattern.test(key);
 }
 
 function wrapHtmlIfNeeded(key: string, rendered: string): string {
