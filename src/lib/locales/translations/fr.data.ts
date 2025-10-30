@@ -19,9 +19,9 @@ export const frData = {
   'hero-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
 
-  'hero-title_a': 'Tisser le design et',
-  'hero-title_b': 'le développement',
-  'hero-subtitle': "Un développeur avec l'*œil* d\'un designer",
+  'hero-title_a': 'Des systèmes techniques ;',
+  'hero-title_b': 'dictés par le design',
+
   'hero-console_description': 'Arrière-plan de code décoratif',
   'hero-cta': 'Prenons contact !',
 
@@ -43,7 +43,6 @@ export const frData = {
   'approach-href': 'philosophie',
   'approach-content':
     "Les syst\u00e8mes de design r\u00e9ussis ne naissent pas par hasard.\n\nIls fonctionnent vraiment bien quand le design et le d\u00e9veloppement restent synchronis\u00e9s \u2013 quand quelqu'un surveille la fa\u00e7on dont les id\u00e9es se traduisent d'un c\u00f4t\u00e9 \u00e0 l'autre.\n\nC'est l'espace o\u00f9 j'aime travailler : transformer l'intention de design en composants, en syst\u00e8mes de th\u00e9matisation et en sch\u00e9mas qui tiennent la route dans le code. Je pense au flux des d\u00e9cisions : comment les tokens de couleur, le mouvement et la mise en page se r\u00e9pondent pour que le rendu final reste coh\u00e9rent et intentionnel.\n\nPour moi, il s'agit de cr\u00e9er de la structure sans ajouter de friction \u2014 des syst\u00e8mes qui facilitent la t\u00e2che de chacun pour construire quelque chose qui semble juste, qui se ressent juste et qui fonctionne juste.",
-
 
   case_study: 'Études de cas',
   'case_study-href': 'etudes-de-cas',

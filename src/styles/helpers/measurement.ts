@@ -230,3 +230,12 @@ export const measurementHypotenuse = (
   assertMatchingUnits(a, b, 'measurementHypotenuse');
   return m(Math.hypot(a.value, b.value), a.unit);
 };
+
+export const assertCondition = (
+  condition: boolean,
+  message: string,
+): void => {
+  if (!condition) {
+    throw new Error(message);
+  }
+};
