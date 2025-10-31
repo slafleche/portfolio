@@ -4,7 +4,7 @@ import {
   ReducedMotion,
   reducedMotion,
 } from './helpers/accessibility';
-import { fontWeightStyle } from './helpers/typography';
+import { composeFontStyles } from './helpers/typography';
 import './utilities.css';
 
 globalStyle('body', {
@@ -27,8 +27,7 @@ globalStyle('html, body', {
 
   fontSize: fontVars.body.size.css(),
 
-  fontFamily: fontVars.body.family,
-  ...fontWeightStyle(fontVars.body, 0),
+  ...composeFontStyles({ token: fontVars.body }),
 
   fontOpticalSizing: 'auto',
   fontStyle: 'normal',
@@ -52,8 +51,7 @@ globalStyle('h1, h2, h3, h4, h5, h6', {
   padding: 0,
   border: 0,
   position: 'relative',
-  fontFamily: fontVars.heading.family,
-  // lineHeight: fontVars.heading.lineHeight,
+  ...composeFontStyles({ token: fontVars.heading }),
 });
 
 globalStyle("*, *:after, *:before, input[type='search']", {

@@ -25,7 +25,7 @@ export type {
 // could flip the fg and bg colours if you want a dark/light mode or you
 // could do math on a value.
 
-const backgroundColour = color('#453564');
+const backgroundColour = color('#020014');
 // Target colour: #2c244b on #453564
 const shadow = backgroundColour
   .darken(0.8)
@@ -308,6 +308,7 @@ const fontFamilies = {
     cfgMap: fontsConfig,
     spacing: m(0.5, 'rem'),
     offsetToFlushTop: m(-0.3, 'rem'),
+    lineHeight: 1.4,
   }),
   ibm: makeFamilyDef({
     familyName: 'IBM Plex Sans',
@@ -324,6 +325,7 @@ const fontFamilies = {
     cfgMap: fontsConfig,
     spacing: m(0, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
+    lineHeight: 1.6,
   }),
   urbanist: makeFamilyDef({
     familyName: 'Urbanist',
@@ -337,6 +339,7 @@ const fontFamilies = {
     cfgMap: fontsConfig,
     spacing: m(0.0, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
+    lineHeight: 1.2,
   }),
 } satisfies Record<string, FontFamilyDef>;
 
@@ -365,26 +368,32 @@ export const fontVars = {
     ...defaultHeadingFont,
   },
   h1: {
+    ...defaultHeadingFont,
     size: m(45),
     ...fontWeight(defaultHeadingFont, 100),
   },
   h2: {
+    ...defaultHeadingFont,
     size: m(25),
     ...fontWeight(defaultHeadingFont, 100),
   },
   h3: {
+    ...defaultHeadingFont,
     size: m(20),
     ...fontWeight(defaultHeadingFont, 100),
   },
   h4: {
+    ...defaultHeadingFont,
     size: m(18),
     ...fontWeight(defaultHeadingFont, 100),
   },
   h5: {
+    ...defaultHeadingFont,
     size: m(16),
     ...fontWeight(defaultHeadingFont, 100),
   },
   h6: {
+    ...defaultHeadingFont,
     size: m(14),
     ...fontWeight(defaultHeadingFont, 100),
   },
@@ -481,8 +490,8 @@ export const menuVars = {
   },
   textShadow: {
     offsetX: m(2),
-    offsetY: m(4),
-    blur: m(2),
+    offsetY: m(2),
+    blur: m(4),
     color: colorVars.navBg.darken(0.5),
   },
   hover: {
@@ -576,15 +585,15 @@ export const heroVars = {
     // color: color('#ffd500'),
     linear: [
       {
-        color: color.create.rgba(255, 95, 109),
+        color: color('#160d36'),
         at: 0,
       },
       {
-        color: color.create.rgba(255, 195, 113),
+        color: color('#6f4ed1'),
         at: 100,
       },
     ] as Stop[],
-    videoOpacity: 0.75,
+    videoOpacity: 0.35,
   },
   paddings: {
     top: m(40),

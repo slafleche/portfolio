@@ -25,7 +25,7 @@ import {
 	type IMeasurement,
 } from '../helpers/measurement';
 import transforms from '../helpers/transforms';
-import { fontStyles, fontWeightStyle } from '../helpers/typography';
+import { composeFontStyles } from '../helpers/typography';
 
 if (process.env.NODE_ENV !== 'production') {
 	assertUnit(archVars.top, 'px', 'menu archVars.top');
@@ -680,8 +680,11 @@ export const localeChanger = style({
 	display: 'flex',
 	alignContent: 'center',
 	height: `${archVars.top.add(archVars.curveHeight).css()}`,
-	fontFamily: fontVars.menu.family,
-	...fontWeightStyle(fontVars.menu, 50),
+	...composeFontStyles({
+		token: fontVars.menu,
+		weightPercent: 50,
+		overrides: { size: undefined },
+	}),
 	fontSize: fontVars.menu.size.css(),
 	lineHeight: 1,
 	textDecoration: 'none',
@@ -726,7 +729,11 @@ export const navLink = style({
 	verticalAlign: 'baseline',
 	fontSize: fontVars.menu.size.css(),
 	...paddings(menuVars.padding),
-	...fontStyles(fontVars.menu),
+	...composeFontStyles({
+		token: fontVars.menu,
+		weightPercent: 50,
+		overrides: { size: undefined },
+	}),
 	lineHeight: 1,
 	textDecoration: 'none',
 	letterSpacing: '0.5px',
