@@ -119,6 +119,8 @@ export const enData = {
     'Site sources available on [GitHub](https://github.com/slafleche/portfolio)!',
 
   'systems-title': 'Ship of Theseus: The Best System',
+  'systems-title_a': 'Ship of Theseus: ',
+  'systems-title_b': 'The Best System',
   ...markdownRef('systems-content'),
   'systems-link-label': 'Systems',
 } as const;
