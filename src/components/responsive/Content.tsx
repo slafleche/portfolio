@@ -8,7 +8,7 @@ import type {
 import clsx from 'clsx';
 import { content as contentClass } from '@/styles/layout.css';
 import Heading from '../Heading';
-import * as userContentStyles from '@/styles/components/userContent.css';
+import { userContent } from '@/styles/typography.css';
 import { Markdown } from '@/components/Markdown';
 
 type BaseProps<T extends ElementType> = {
@@ -54,10 +54,7 @@ export default function Content<T extends ElementType = 'section'>({
 
   const renderedBody =
     typeof markdown === 'string' ? (
-      <Markdown
-        source={markdown}
-        className={userContentStyles.userContent}
-      />
+      <Markdown source={markdown} className={userContent} />
     ) : (
       children
     );
