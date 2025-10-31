@@ -2,16 +2,17 @@ import { useMemo } from 'react';
 import { BASE_ANCHORS, type AnchorEntry } from '../menuUtils';
 
 export function useMenuAnchors(sectionIds: readonly string[]) {
-	const anchors = useMemo<readonly AnchorEntry[]>(
-		() => BASE_ANCHORS,
-		[],
+	const sectionIdList = useMemo(
+		() => Array.from(sectionIds),
+		[sectionIds],
 	);
-	const anchorCount = anchors.length + 1; // +1 for the logo entry
-	const sectionIdList = useMemo(() => {
-		return Array.from(sectionIds);
+	const anchors = useMemo<readonly AnchorEntry[]>(() => {
+		if (sectionIdList.length === 0) return BASE_ANCHORS;
+		return sectionIdList.map((id) => ({ hrefKey: id }));
 	}, [
-		sectionIds,
+		sectionIdList,
 	]);
+	const anchorCount = anchors.length + 1; // +1 for the logo entry
 
 	return {
 		anchors,

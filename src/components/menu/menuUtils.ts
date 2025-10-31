@@ -1,7 +1,5 @@
 import { assertUnit } from '@/styles/helpers/measurement';
 import { archVars, menuVars } from '@/styles/vars';
-import type { LocaleMessagesShape } from '@/lib/locales/localeTypes';
-
 if (process.env.NODE_ENV !== 'production') {
 	assertUnit(menuVars.height, 'px', 'menuUtils menu height');
 	assertUnit(
@@ -18,10 +16,8 @@ if (process.env.NODE_ENV !== 'production') {
 	assertUnit(archVars.bumpHeight, 'px', 'menuUtils arch bumpHeight');
 }
 
-export type AnchorKey = Extract<keyof LocaleMessagesShape, `${string}-href`>;
 export type AnchorEntry = {
-	hrefKey: AnchorKey;
-	labelKey: keyof LocaleMessagesShape;
+	hrefKey: string;
 };
 
 export type LinkMetric = {
@@ -61,20 +57,16 @@ export const LOGO_CACHE_VALUE = '__logo__';
 
 export const BASE_ANCHORS: readonly AnchorEntry[] = [
 	{
-		hrefKey: 'approach-href',
-		labelKey: 'approach',
+		hrefKey: 'approach',
 	},
 	{
-		hrefKey: 'about-href',
-		labelKey: 'about',
+		hrefKey: 'about',
 	},
 	{
-		hrefKey: 'case_study-href',
-		labelKey: 'case_study',
+		hrefKey: 'case_study',
 	},
 	{
-		hrefKey: 'projects-href',
-		labelKey: 'projects',
+		hrefKey: 'projects',
 	},
 ];
 

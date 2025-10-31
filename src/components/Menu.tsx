@@ -54,6 +54,7 @@ type MenuProps = {
   rightLabel: string;
   localeChangeLabel: string;
   sections: ReadonlyArray<{ id: string; label: string }>;
+  systemsSections?: ReadonlyArray<{ id: string; label: string }>;
   localeLinks: ReadonlyArray<{ locale: Locale; label: string }>;
   bokehDebug?: MiniBokehDebugOptions;
   debugGlow?: boolean;
@@ -79,6 +80,7 @@ export default function Menu({
   rightLabel,
   localeChangeLabel,
   sections,
+  systemsSections,
   localeLinks,
   bokehDebug,
   debugGlow = false,
@@ -104,6 +106,20 @@ export default function Menu({
   const canonicalFirstSegment = firstSegment
     ? (currentLocaleSlugMap[firstSegment] ?? firstSegment)
     : firstSegment;
+  const resolvedSections = useMemo(() => {
+    if (
+      canonicalFirstSegment === 'systems' &&
+      systemsSections &&
+      systemsSections.length > 0
+    ) {
+      return systemsSections;
+    }
+    return sections;
+  }, [
+    canonicalFirstSegment,
+    sections,
+    systemsSections,
+  ]);
   const curiosityTarget = curiosityMessages?.targetHref ?? '';
   const shouldRenderCuriosity =
     Boolean(curiosityMessages) && normalizedPath !== curiosityTarget;
@@ -161,7 +177,7 @@ export default function Menu({
   const logoGlowClickSuppressRef = useRef(false);
   // no pending animation once we leave the top; we only fire when already there
 
-  const sectionIds = sections.map((section) => section.id);
+  const sectionIds = resolvedSections.map((section) => section.id);
   const {
     anchors,
     anchorCount,
@@ -960,9 +976,9 @@ export default function Menu({
                 style={getRotationStyle('left', navMetrics.width)}
               >
                 {anchors.slice(0, 2).map((entry, idx) =>
-                  renderNavLink(
+              renderNavLink(
                     entry,
-                    sections[idx],
+                    resolvedSections[idx],
                     idx + 1,
                     'left',
                     idx === 0,
@@ -981,9 +997,9 @@ export default function Menu({
                 style={getRotationStyle('right', navMetrics.width)}
               >
                 {anchors.slice(2).map((entry, idx) =>
-                  renderNavLink(
+              renderNavLink(
                     entry,
-                    sections[idx + 2],
+                    resolvedSections[idx + 2],
                     idx + 3,
                     'right',
                     idx === 1,
