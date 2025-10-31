@@ -170,13 +170,19 @@ export const cta = style({
   color: colorVars.navBg.css(),
   fontWeight: 600,
   textDecoration: 'none',
-  transition: 'transform 150ms ease, box-shadow 150ms ease',
+  transition: 'transform 150ms ease, box-shadow 150ms ease, opacity 220ms ease',
   boxShadow: `0 ${m(1).css()} ${m(4).css()} rgba(0,0,0,0.15)`,
+  opacity: 0,
+  pointerEvents: 'none',
   selectors: {
     '&:hover, &:focus-visible': {
       transform: 'translateY(-2px)',
       boxShadow: `0 ${m(2).css()} ${m(8).css()} rgba(0,0,0,0.25)`,
       outline: 'none',
+    },
+    '&[data-ready="true"]': {
+      opacity: 1,
+      pointerEvents: 'auto',
     },
   },
 });

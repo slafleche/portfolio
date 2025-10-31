@@ -122,9 +122,10 @@ export const frData = {
   'contact-github':
     'Le code du site est dispo sur [GitHub](https://github.com/slafleche/portfolio) !',
 
-  'systems-title': 'Le navire de Thésée: le meilleur système',
+  'systems-title':
+    'Vaisseau de Thésée : la structure qui survit au changement',
   'systems-title_a': 'Le navire de Thésée: ',
-  'systems-title_b': 'le meilleur système',
+  'systems-title_b': 'la structure qui survit au changement',
   ...markdownRef('systems-content'),
   'systems-link-label': 'Systèmes',
 } as const;

@@ -2,9 +2,11 @@
 
 import {
   Children,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
+  useState,
   type CSSProperties,
   type ReactElement,
   type ReactNode,
@@ -24,6 +26,7 @@ type Props = {
   children: ReactNode;
   debugStage?: 'initial' | 'waypoint' | 'focus' | 'reveal';
   animate?: boolean;
+  onReveal?: () => void;
 };
 
 const CHANNELS: ProjectorChannel[] = [
@@ -37,17 +40,28 @@ export default function HeroHeading({
   children,
   debugStage,
   animate = true,
+  onReveal,
 }: Props) {
   const masterRef = useRef<HTMLHeadingElement | null>(null);
   const ghostRef = useRef<HTMLSpanElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
   const shouldAnimate = animate && !prefersReducedMotion;
+  const [staticReady, setStaticReady] = useState<boolean>(shouldAnimate);
 
   if (shouldAnimate) {
     console.log('[HeroHeading] render', {
       childrenCount: Children.count(children),
     });
   }
+
+  const onRevealRef = useRef(onReveal);
+  useEffect(() => {
+    onRevealRef.current = onReveal;
+  }, [onReveal]);
+
+  const notifyReveal = useCallback(() => {
+    onRevealRef.current?.();
+  }, []);
 
   const initialChannelStyles = useMemo(() => {
     if (!shouldAnimate) {
@@ -128,6 +142,37 @@ export default function HeroHeading({
   ]);
 
   useEffect(() => {
+    if (shouldAnimate) return;
+
+    let cancelled = false;
+    setStaticReady(false);
+
+    const { fonts, timeoutMs } = collectWaitForFonts(fontVars.hero);
+    const finalize = () => {
+      if (!cancelled) {
+        setStaticReady(true);
+        notifyReveal();
+      }
+    };
+
+    if (fonts.length > 0) {
+      waitForFonts(fonts, { timeoutMs })
+        .then(finalize)
+        .catch(finalize);
+    } else {
+      finalize();
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    shouldAnimate,
+    contentSignature,
+    notifyReveal,
+  ]);
+
+  useEffect(() => {
     if (!shouldAnimate) return;
 
     const master = masterRef.current;
@@ -142,6 +187,19 @@ export default function HeroHeading({
 
     let cancelled = false;
     let playHandle: ReturnType<typeof playProjectorText> | null = null;
+
+    const attachRevealListener = (
+      handle: ReturnType<typeof playProjectorText> | null,
+    ) => {
+      if (!handle) return;
+      void handle
+        .then(() => undefined, () => undefined)
+        .finally(() => {
+          if (!cancelled) {
+            notifyReveal();
+          }
+        });
+    };
 
     const start = async () => {
       const { fonts, timeoutMs } = collectWaitForFonts(fontVars.hero);
@@ -159,6 +217,8 @@ export default function HeroHeading({
         (window as typeof window & { __heroDebug?: true }).__heroDebug =
           true;
       }
+
+      attachRevealListener(playHandle);
     };
 
     start().catch(() => {
@@ -167,6 +227,7 @@ export default function HeroHeading({
         prefersReducedMotion,
         debugFreezeStage: debugStage,
       });
+      attachRevealListener(playHandle);
     });
 
     return () => {
@@ -177,6 +238,7 @@ export default function HeroHeading({
     contentSignature,
     prefersReducedMotion,
     debugStage,
+    notifyReveal,
     shouldAnimate,
   ]);
 
@@ -191,10 +253,12 @@ export default function HeroHeading({
       <div className={revealStyles.container} data-hero-text="heroText">
         <h1
           data-text={label}
+          data-static-ready={staticReady ? 'true' : 'false'}
           className={clsx(
             heroStyles.heading,
             revealStyles.layer,
             revealStyles.master,
+            revealStyles.staticHeading,
           )}
         >
           {children}

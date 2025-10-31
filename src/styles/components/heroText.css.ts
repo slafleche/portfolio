@@ -76,3 +76,13 @@ export const master = style({
   display: 'block',
   textShadow: `${projectorVars.textShadow.offsetX.css()} ${projectorVars.textShadow.offsetY.css()} ${projectorVars.textShadow.blur.css()} ${projectorVars.textShadow.color.css()}`,
 });
+
+export const staticHeading = style({
+  opacity: 0,
+  transition: 'opacity 280ms ease',
+  selectors: {
+    '&[data-static-ready="true"]': {
+      opacity: 1,
+    },
+  },
+});
