@@ -1,4 +1,4 @@
-import { markdownRef } from './markdownRefs';
+import { markdownRefs } from './markdownRefs';
 
 export const frData = {
   label: 'Français',
@@ -134,7 +134,16 @@ export const frData = {
   'systems-express-href': 'systems-exprimer',
   'systems-integrate': 'Intégrer',
   'systems-integrate-href': 'systems-integrer',
-  ...markdownRef('systems-content'),
+  'systems-resilience': 'Résilience',
+  'systems-resilience-href': 'systems-resilience',
+  ...markdownRefs(
+    'systems-intro',
+    'systems-process-content',
+    'systems-describe-content',
+    'systems-express-content',
+    'systems-integrate-content',
+    'systems-resilience-content',
+  ),
   'systems-link-label': 'Systèmes',
 } as const;
 
