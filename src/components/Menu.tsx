@@ -877,6 +877,7 @@ export default function Menu({
                       stroke="rgba(255,255,255,0.35)"
                       strokeWidth={1}
                       strokeDasharray="4 4"
+                      vectorEffect="non-scaling-stroke"
                     />
                   </svg>
                 ) : null}

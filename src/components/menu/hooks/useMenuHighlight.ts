@@ -29,6 +29,12 @@ type HighlightStyles = {
 	innerStyle: CSSProperties;
 };
 
+const snapToDevicePixel = (value: number, dpr: number): number => {
+	if (!Number.isFinite(value)) return value;
+	const ratio = dpr > 0 ? dpr : 1;
+	return Math.round(value * ratio) / ratio;
+};
+
 if (process.env.NODE_ENV !== 'production') {
 	assertUnit(menuVars.height, 'px', 'useMenuHighlight menu height');
 	assertUnit(
@@ -420,18 +426,23 @@ const measure = useCallback(() => {
 		if (!navEl) return;
 
 		const navRect = navEl.getBoundingClientRect();
-		const width = navRect.width;
-		if (!width) return;
+		const dpr =
+			typeof window !== 'undefined' && Number.isFinite(window.devicePixelRatio)
+				? window.devicePixelRatio || 1
+				: 1;
+		const navWidth = snapToDevicePixel(navRect.width, dpr);
+		const navHeight = snapToDevicePixel(navRect.height, dpr);
+		if (!navWidth) return;
 		navMetricsRef.current = {
-			width,
-			height: navRect.height,
+			width: navWidth,
+			height: navHeight,
 		};
 		setNavMetrics((prev) =>
-			prev.width === width && prev.height === navRect.height
+			prev.width === navWidth && prev.height === navHeight
 				? prev
 				: {
-						width,
-						height: navRect.height,
+						width: navWidth,
+						height: navHeight,
 					},
 		);
 		const metrics: Array<LinkMetric | null> = linkRefs.current.map(
@@ -441,16 +452,24 @@ const measure = useCallback(() => {
 		linkRefs.current.forEach((el, index) => {
 			if (!el) return;
 			const rect = el.getBoundingClientRect();
-			const centerX = rect.left + rect.width / 2 - navRect.left;
-			const centerY = rect.top + rect.height / 2 - navRect.top;
+			const centerX = snapToDevicePixel(
+				rect.left + rect.width / 2 - navRect.left,
+				dpr,
+			);
+			const centerY = snapToDevicePixel(
+				rect.top + rect.height / 2 - navRect.top,
+				dpr,
+			);
+			const width = snapToDevicePixel(rect.width, dpr);
+			const height = snapToDevicePixel(rect.height, dpr);
 			const archBase =
-				computeArchY(width, centerX) + menuVars.yOffset.value;
+				computeArchY(navWidth, centerX) + menuVars.yOffset.value;
 			metrics[index] = {
 				centerX,
 				centerY,
-				width: rect.width,
-				height: rect.height,
-				archY: archBase,
+				width,
+				height,
+				archY: snapToDevicePixel(archBase, dpr),
 				highlightWidth: 0,
 				highlightHeight: 0,
 				left: 0,
@@ -477,14 +496,20 @@ const measure = useCallback(() => {
 		const widthPaddingValue = menuVars.padding.horizontal.value;
 
 		definedMetrics.forEach((metric) => {
-			const archY = metric.archY + adjustment;
-		const highlightWidth = Math.max(
-			metric.width,
-			metric.width + widthPaddingValue,
+			const archY = snapToDevicePixel(metric.archY + adjustment, dpr);
+		const highlightWidth = snapToDevicePixel(
+			Math.max(metric.width, metric.width + widthPaddingValue),
+			dpr,
 		);
-		const highlightHeight = highlightHeightValue;
-		const left = metric.centerX - highlightWidth / 2;
-		const top = archY - highlightHeight / 2;
+		const highlightHeight = snapToDevicePixel(
+			highlightHeightValue,
+			dpr,
+		);
+		const left = snapToDevicePixel(
+			metric.centerX - highlightWidth / 2,
+			dpr,
+		);
+		const top = snapToDevicePixel(archY - highlightHeight / 2, dpr);
 			metric.archY = archY;
 			metric.highlightWidth = highlightWidth;
 			metric.highlightHeight = highlightHeight;
@@ -504,16 +529,17 @@ const measure = useCallback(() => {
 		}
 
 	if (showArchPath) {
-		const sampleCount = Math.max(24, Math.round(width / 20));
+		const sampleCount = Math.max(24, Math.round(navWidth / 20));
 		let path = '';
 		for (let i = 0; i < sampleCount; i += 1) {
-			const x = (width * i) / (sampleCount - 1);
-			const y = computeArchY(width, x) + menuVars.yOffset.value;
+			const x = (navWidth * i) / (sampleCount - 1);
+			const y =
+				computeArchY(navWidth, x) + menuVars.yOffset.value;
 			path += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
 		}
 		setDebugArch({
 			path: path.trim(),
-			width,
+			width: navWidth,
 			height: archVars.top.value + archVars.curveHeight.value,
 		});
 	} else {
@@ -526,6 +552,128 @@ const measure = useCallback(() => {
 	debugActive,
 	updateHighlightFromMetric,
 	highlightEnabled,
+]);
+
+	const resetTimingAndMetrics = useCallback(() => {
+		if (animationFrameRef.current) {
+			cancelAnimationFrame(animationFrameRef.current);
+			animationFrameRef.current = null;
+		}
+		if (miniBokehTimerRef.current) {
+			clearTimeout(miniBokehTimerRef.current);
+			miniBokehTimerRef.current = null;
+		}
+		lastMetricRef.current = null;
+		linkMetricsRef.current = [];
+		setLinkMetrics([]);
+		setTransitionDisabled(true);
+	}, [
+		setLinkMetrics,
+	]);
+
+	useEffect(() => {
+		if (typeof window === 'undefined' || typeof document === 'undefined') {
+			return undefined;
+		}
+		if (!highlightEnabled) return undefined;
+
+		const handleEnvironmentChange = () => {
+			resetTimingAndMetrics();
+			measure();
+		};
+
+		const handleVisibility = () => {
+			if (document.visibilityState === 'visible') {
+				handleEnvironmentChange();
+			}
+		};
+
+		window.addEventListener('resize', handleEnvironmentChange);
+		document.addEventListener('visibilitychange', handleVisibility);
+
+		let detachDprWatcher: (() => void) | null = null;
+
+		const attachDprWatcher = () => {
+			if (typeof window.matchMedia !== 'function') return;
+			const dpr = window.devicePixelRatio || 1;
+			const query = `(resolution: ${dpr}dppx)`;
+			const media = window.matchMedia(query);
+			const handler = () => {
+				if (detachDprWatcher) {
+					detachDprWatcher();
+					detachDprWatcher = null;
+				}
+				attachDprWatcher();
+				handleEnvironmentChange();
+			};
+			if (typeof media.addEventListener === 'function') {
+				media.addEventListener('change', handler);
+				detachDprWatcher = () => media.removeEventListener('change', handler);
+			} else if (typeof media.addListener === 'function') {
+				media.addListener(handler);
+				detachDprWatcher = () => media.removeListener(handler);
+			} else {
+				detachDprWatcher = null;
+			}
+		};
+
+		attachDprWatcher();
+
+		return () => {
+			window.removeEventListener('resize', handleEnvironmentChange);
+			document.removeEventListener('visibilitychange', handleVisibility);
+			if (detachDprWatcher) {
+				detachDprWatcher();
+			}
+		};
+	}, [
+	measure,
+	resetTimingAndMetrics,
+	highlightEnabled,
+]);
+
+useEffect(() => {
+	if (typeof document === 'undefined') return undefined;
+	const maybeFontSet = (document as Document & {
+		fonts?: FontFaceSet;
+	}).fonts;
+	if (!maybeFontSet) return undefined;
+	const fontSet = maybeFontSet;
+	let cancelled = false;
+
+	const handleFontsChange = () => {
+		if (cancelled) return;
+		resetTimingAndMetrics();
+		measure();
+	};
+
+	if (typeof fontSet.ready?.then === 'function') {
+		void fontSet.ready.then(() => handleFontsChange());
+	}
+
+	const listener = () => {
+		handleFontsChange();
+	};
+
+	if (typeof fontSet.addEventListener === 'function') {
+		fontSet.addEventListener('loadingdone', listener);
+		fontSet.addEventListener('loading', listener);
+	} else if ('onloadingdone' in fontSet) {
+		fontSet.onloadingdone = listener;
+	}
+
+	return () => {
+		cancelled = true;
+		if (typeof fontSet.removeEventListener === 'function') {
+			fontSet.removeEventListener('loadingdone', listener);
+			fontSet.removeEventListener('loading', listener);
+		} else if ('onloadingdone' in fontSet) {
+			fontSet.onloadingdone = null;
+		}
+	};
+}, [
+	measure,
+	resetTimingAndMetrics,
 ]);
 
 useEffect(() => {
@@ -544,15 +692,20 @@ useEffect(() => {
 		measure,
 	]);
 
-	useEffect(() => {
-		const navEl = navRef.current;
-		if (!navEl || typeof ResizeObserver === 'undefined') return;
-		const observer = new ResizeObserver(() => measure());
-		observer.observe(navEl);
-		return () => observer.disconnect();
-	}, [
-		measure,
-	]);
+useEffect(() => {
+	const navEl = navRef.current;
+	if (!navEl || typeof ResizeObserver === 'undefined') return;
+	const observer = new ResizeObserver(() => measure());
+	const elements: Element[] = [navEl];
+	linkRefs.current.forEach((el) => {
+		if (el) elements.push(el);
+	});
+	elements.forEach((el) => observer.observe(el));
+	return () => observer.disconnect();
+}, [
+	measure,
+	anchorCount,
+]);
 
 const activate = useCallback(
 	(index: number) => {
@@ -564,26 +717,48 @@ const activate = useCallback(
 			const linkEl = linkRefs.current[index];
 			if (navEl && linkEl) {
 				const navRect = navEl.getBoundingClientRect();
-				const width = navRect.width;
+				const dpr =
+					typeof window !== 'undefined' &&
+					Number.isFinite(window.devicePixelRatio)
+						? window.devicePixelRatio || 1
+						: 1;
+				const navWidth = snapToDevicePixel(navRect.width, dpr);
 				const rect = linkEl.getBoundingClientRect();
-				const centerX = rect.left + rect.width / 2 - navRect.left;
-				const centerY = rect.top + rect.height / 2 - navRect.top;
+				const centerX = snapToDevicePixel(
+					rect.left + rect.width / 2 - navRect.left,
+					dpr,
+				);
+				const centerY = snapToDevicePixel(
+					rect.top + rect.height / 2 - navRect.top,
+					dpr,
+				);
+				const width = snapToDevicePixel(rect.width, dpr);
+				const height = snapToDevicePixel(rect.height, dpr);
 				const computedArch =
-					computeArchY(width, centerX) + menuVars.yOffset.value;
+					computeArchY(navWidth, centerX) + menuVars.yOffset.value;
 				const adjustment = centerY - computedArch;
-				const archY = computedArch + adjustment;
-		const highlightWidth = Math.max(
-			rect.width,
-			rect.width + menuVars.padding.horizontal.value,
+				const archY = snapToDevicePixel(
+					computedArch + adjustment,
+					dpr,
+				);
+		const highlightWidth = snapToDevicePixel(
+			Math.max(width, width + menuVars.padding.horizontal.value),
+			dpr,
 		);
-		const highlightHeight = menuVars.height.value;
-		const left = centerX - highlightWidth / 2;
-		const top = archY - highlightHeight / 2;
+		const highlightHeight = snapToDevicePixel(
+			menuVars.height.value,
+			dpr,
+		);
+		const left = snapToDevicePixel(
+			centerX - highlightWidth / 2,
+			dpr,
+		);
+		const top = snapToDevicePixel(archY - highlightHeight / 2, dpr);
 				metric = {
 					centerX,
 					centerY,
-					width: rect.width,
-					height: rect.height,
+					width,
+					height,
 					archY,
 					highlightWidth,
 					highlightHeight,
