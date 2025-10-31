@@ -1,6 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { composeFontStyles } from '../helpers/typography';
-import { fontVars } from '../vars';
+import { colorVars, fontVars } from '../vars';
 
 /**
  * For user content, we wrap arbitrary HTML with this class and style
@@ -8,38 +8,33 @@ import { fontVars } from '../vars';
  */
 export const userContent = style({});
 
-// child elements
-globalStyle(`${userContent} h1`, {
-	...composeFontStyles({ token: fontVars.h1 }),
-	margin: 0,
-});
+const headingSelectors = (tag: HeadingTag) =>
+	[
+		`.${userContent} ${tag}`,
+		`[data-ui="content"] ${tag}`,
+		`${tag}[data-ui="heading"]`,
+	].join(', ');
 
-globalStyle(`${userContent} h2`, {
-	...composeFontStyles({ token: fontVars.h2 }),
-	margin: 0,
-});
+type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+type HeadingTokenKey = Extract<HeadingTag, keyof typeof fontVars>;
 
-globalStyle(`${userContent} h3`, {
-	...composeFontStyles({ token: fontVars.h3 }),
-	margin: 0,
-});
+const applyHeadingStyles = (tag: HeadingTag, tokenKey: HeadingTokenKey) => {
+	globalStyle(headingSelectors(tag), {
+		...composeFontStyles({ token: fontVars.heading }),
+		...composeFontStyles({ token: fontVars[tokenKey] }),
+		margin: 0,
+		color: colorVars.bodyFg.css(),
+	});
+};
 
-globalStyle(`${userContent} h4`, {
-	...composeFontStyles({ token: fontVars.h4 }),
-	margin: 0,
-});
+applyHeadingStyles('h1', 'h1');
+applyHeadingStyles('h2', 'h2');
+applyHeadingStyles('h3', 'h3');
+applyHeadingStyles('h4', 'h4');
+applyHeadingStyles('h5', 'h5');
+applyHeadingStyles('h6', 'h6');
 
-globalStyle(`${userContent} h5`, {
-	...composeFontStyles({ token: fontVars.h5 }),
-	margin: 0,
-});
-
-globalStyle(`${userContent} h6`, {
-	...composeFontStyles({ token: fontVars.h6 }),
-	margin: 0,
-});
-
-globalStyle(`${userContent} p`, {
+globalStyle(`.${userContent} p`, {
 	...composeFontStyles({ token: fontVars.body }),
 	margin: 0,
 });
