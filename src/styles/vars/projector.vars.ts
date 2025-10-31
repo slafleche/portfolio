@@ -51,6 +51,9 @@ export const projectorCalibrationDurations = {
 } as const;
 
 export const projectorVars = {
+  cta: {
+    delay: m(500, 'ms'),
+  },
   colors: {
     blue: color('#34f1ff').alpha(0.7),
     green: color('#9cff9f').alpha(0.8),

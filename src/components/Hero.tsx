@@ -1,3 +1,6 @@
+'use client';
+
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 import * as layoutStyles from '@/styles/layout.css';
@@ -6,6 +9,14 @@ import VideoByName from './VideoByName';
 import HeroHeading from './HeroHeading.client';
 import { toTrimmedOrNull } from '@/lib/stringUtils';
 import SendIcon from '@/components/icons/SendIcon';
+import {
+  collectWaitForFonts,
+  waitForFonts,
+} from '@/lib/fontLoading';
+import {
+  fontVars,
+  projectorVars,
+} from '@/styles/vars';
 
 type HeroCopy = {
   videoTitle: string;
@@ -36,16 +47,110 @@ export default function Hero({
   overlayClassName,
   headingAnimated = true,
 }: Props) {
-  const headingLabel = toTrimmedOrNull(
-    `${copy.headingFirstLine} ${copy.headingLastLine}`,
-  );
-  if (!headingLabel) return null;
+  const [
+    ctaReady,
+    setCtaReady,
+  ] = useState(false);
+  const [
+    waitingForReveal,
+    setWaitingForReveal,
+  ] = useState(false);
 
+  const headingLabel = useMemo(
+    () =>
+      toTrimmedOrNull(
+        `${copy.headingFirstLine} ${copy.headingLastLine}`,
+      ),
+    [copy.headingFirstLine, copy.headingLastLine],
+  );
   const showVideo = withVideo;
   const showCta = Boolean(ctaHref && copy.ctaLabel);
 
+  const headingKey = useMemo(
+    () =>
+      [
+        headingLabel ?? '',
+        copy.ctaLabel,
+        headingAnimated ? 'animated' : 'static',
+      ].join('|'),
+    [headingAnimated, headingLabel, copy.ctaLabel],
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    let timer: number | null = null;
+    setCtaReady(false);
+    setWaitingForReveal(true);
+
+    const revealAfter = async () => {
+      const { fonts, timeoutMs } = collectWaitForFonts(fontVars.hero);
+      if (fonts.length > 0) {
+        try {
+          await waitForFonts(fonts, { timeoutMs });
+        } catch {
+          // ignore timeout; proceed anyway
+        }
+      }
+      if (cancelled) return;
+
+      const calibration =
+        projectorVars.timing.calibration.totalCalibrationTime;
+      const revealOffset =
+        projectorVars.timing.textReveal.offsetFromCalibrationEnd;
+      const revealDuration =
+        projectorVars.timing.textReveal.duration;
+      const totalDelay = headingAnimated
+        ? calibration.add(revealOffset).add(revealDuration).add(projectorVars.cta.delay)
+        : projectorVars.cta.delay;
+      const delayMs = totalDelay.value;
+
+      if (typeof window !== 'undefined') {
+        timer = window.setTimeout(() => {
+          if (!cancelled) {
+            setCtaReady(true);
+            setWaitingForReveal(false);
+          }
+        }, delayMs);
+      } else {
+        setCtaReady(true);
+        setWaitingForReveal(false);
+      }
+    };
+
+    revealAfter().catch(() => {
+      if (!cancelled) {
+        setCtaReady(true);
+        setWaitingForReveal(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      if (timer !== null) {
+        window.clearTimeout(timer);
+      }
+    };
+  }, [
+    headingAnimated,
+    headingKey,
+  ]);
+
+  const handleHeadingReveal = useCallback(() => {
+    if (!headingAnimated || !waitingForReveal) return;
+    setCtaReady(true);
+    setWaitingForReveal(false);
+  }, [headingAnimated, waitingForReveal]);
+
+  const ctaVisible = showCta && ctaReady;
+
+  if (!headingLabel) return null;
+
   return (
-    <section id={id} className={clsx(s.root, className)}>
+    <section
+      id={id}
+      className={clsx(s.root, className)}
+      data-heading-animated={headingAnimated ? 'true' : 'false'}
+    >
       {showVideo ? (
         <VideoByName
           name="hero"
@@ -84,6 +189,7 @@ export default function Hero({
             <HeroHeading
               label={headingLabel}
               animate={headingAnimated}
+              onReveal={handleHeadingReveal}
               // debugStage="initial"
             >
               <span
@@ -103,7 +209,13 @@ export default function Hero({
               </span>
             </HeroHeading>
             {showCta ? (
-              <Link className={s.cta} href={ctaHref!}>
+              <Link
+                className={s.cta}
+                href={ctaHref!}
+                data-ready={ctaVisible ? 'true' : 'false'}
+                aria-hidden={ctaVisible ? undefined : 'true'}
+                tabIndex={ctaVisible ? undefined : -1}
+              >
                 <span>{copy.ctaLabel}</span>
                 <SendIcon className={s.ctaIcon} aria-hidden />
               </Link>
