@@ -36,6 +36,9 @@ export type FontFamilyDef = {
 	};
 	offsetToFlushTop: IMeasurement;
 	spacing?: IMeasurement;
+	lineHeight?: CSS.Property.LineHeight;
+	css?: Partial<CSS.Properties>;
+	axisDefaults?: Record<string, number | string>;
 };
 
 export type FontStyles = {
@@ -55,6 +58,8 @@ export type FontStyles = {
 		| string
 		| { value: number; unit?: string }
 		| undefined;
+	offsetToFlushTop?: IMeasurement;
+	css?: Partial<CSS.Properties>;
 	color?: CssLike | Color | CSS.Property.Color;
 	waitForFonts?: string[];
 	waitForFontsTimeoutMs?: number;

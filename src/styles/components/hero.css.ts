@@ -6,7 +6,7 @@ import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
 import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
-import { fontStyles, fontWeightStyle } from '../helpers/typography';
+import { composeFontStyles } from '../helpers/typography';
 import {
   backgroundImageDecl,
   buildLinear,
@@ -50,6 +50,7 @@ export const video = style({
   pointerEvents: 'none',
   objectFit: 'cover',
   mixBlendMode: 'screen',
+
 });
 
 export const contentWrap = style({
@@ -140,8 +141,14 @@ export const bridge = style({
 export const paragraph = style({
   position: 'relative',
   textAlign: 'center',
+  ...composeFontStyles({
+    token: fontVars.hero,
+    weightPercent: 0,
+    overrides: {
+      size: undefined,
+    },
+  }),
   fontSize: m(26).css(),
-  ...fontWeightStyle(fontVars.hero, 0),
   lineHeight: 1,
   textShadow: `2px 2px 5px ${colorVars.black.css()}`,
   ...margins({
@@ -324,7 +331,7 @@ export const heading = style({
   position: 'relative',
   margin: 0,
   textAlign: 'center',
-  ...fontStyles(fontVars.hero),
+  ...composeFontStyles({ token: fontVars.hero }),
   fontSize: 'clamp(32px, 7vw, 80px)',
   marginTop: fontVars.hero.offsetToFlushTop?.css(),
   // selectors: {

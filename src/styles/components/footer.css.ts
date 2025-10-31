@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { m } from '@/styles/helpers/measurement';
 import { colorVars, fontVars } from '@/styles/vars';
+import { composeFontStyles } from '@/styles/helpers/typography';
 
 export const root = style({
 	marginTop: m(20).css(),
@@ -17,8 +18,11 @@ export const root = style({
 });
 
 export const heading = style({
-	fontFamily: fontVars.hero.family,
-	fontWeight: 700,
+	...composeFontStyles({
+		token: fontVars.hero,
+		weightPercent: 100,
+		overrides: { size: undefined },
+	}),
 	fontSize: m(24).css(),
 	margin: 0,
 });

@@ -77,6 +77,116 @@ export function weightRangeFromConfig(weights: string | string[]): {
 	return { low, high };
 }
 
+const AXIS_WEIGHT_KEY = 'wght';
+const AXIS_ITALIC_KEY = 'ital';
+const AXIS_WIDTH_KEY = 'wdth';
+
+const average = (a: number, b: number) => (a + b) / 2;
+
+function extractAxisDefault(token: string): number | string | undefined {
+	const trimmed = token.trim();
+	if (!trimmed) return undefined;
+
+	const rangeMatch =
+		trimmed.match(/^(-?\d+(?:\.\d+)?)\.\.(-?\d+(?:\.\d+)?)$/);
+	if (rangeMatch) {
+		const low = Number(rangeMatch[1]);
+		const high = Number(rangeMatch[2]);
+		if (Number.isFinite(low) && Number.isFinite(high)) {
+			return average(low, high);
+		}
+	}
+
+	const numeric = Number(trimmed);
+	if (Number.isFinite(numeric)) {
+		return numeric;
+	}
+
+	const looseMatch = trimmed.match(/-?\d+(?:\.\d+)?/);
+	if (looseMatch) {
+		const loose = Number(looseMatch[0]);
+		if (Number.isFinite(loose)) {
+			return loose;
+		}
+	}
+
+	return trimmed;
+}
+
+function deriveAxisDefaults(
+	familyName: string | undefined,
+	cfgMap: FontsConfig | undefined,
+): {
+	css?: FontFamilyDef['css'];
+	axisDefaults?: FontFamilyDef['axisDefaults'];
+} {
+	if (!familyName || !cfgMap) return {};
+	const cfg = cfgMap[familyName];
+	if (!cfg || !cfg.axes) return {};
+
+	const axisDefaults: Record<string, number | string> = {};
+	const css: NonNullable<FontFamilyDef['css']> = {};
+	const variationEntries: string[] = [];
+
+	for (const [
+		axisName,
+		rawValue,
+	] of Object.entries(cfg.axes)) {
+		const tokens = toArray(rawValue).filter(Boolean);
+		if (tokens.length === 0) continue;
+
+		const defaultValue = extractAxisDefault(tokens[0]);
+		if (defaultValue === undefined) continue;
+
+		axisDefaults[axisName] = defaultValue;
+
+		if (axisName === AXIS_WEIGHT_KEY) {
+			continue;
+		}
+
+		if (axisName === AXIS_ITALIC_KEY) {
+			const numeric =
+				typeof defaultValue === 'number'
+					? defaultValue
+					: Number(defaultValue);
+			if (Number.isFinite(numeric)) {
+				css.fontStyle = numeric >= 0.5 ? 'italic' : 'normal';
+			}
+			continue;
+		}
+
+		if (axisName === AXIS_WIDTH_KEY) {
+			const numeric =
+				typeof defaultValue === 'number'
+					? defaultValue
+					: Number(defaultValue);
+			if (Number.isFinite(numeric)) {
+				css.fontStretch = `${numeric}%`;
+			}
+		}
+
+		const formatted =
+			typeof defaultValue === 'number'
+				? defaultValue.toString()
+				: String(defaultValue);
+		variationEntries.push(`"${axisName}" ${formatted}`);
+	}
+
+	if (variationEntries.length > 0) {
+		const existing =
+			typeof css.fontVariationSettings === 'string'
+				? `${css.fontVariationSettings}, ${variationEntries.join(', ')}`
+				: variationEntries.join(', ');
+		css.fontVariationSettings = existing;
+	}
+
+	return {
+		css: Object.keys(css).length > 0 ? css : undefined,
+		axisDefaults:
+			Object.keys(axisDefaults).length > 0 ? axisDefaults : undefined,
+	};
+}
+
 /**
  * Build a FontFamilyDef using fonts.config.json so you don’t
  * hand-copy weight ranges.
@@ -97,6 +207,9 @@ type MakeFamilyDefArgs = {
 		low: number;
 		high: number;
 	};
+	lineHeight?: FontFamilyDef['lineHeight'];
+	css?: FontFamilyDef['css'];
+	axisDefaults?: FontFamilyDef['axisDefaults'];
 };
 
 export function makeFamilyDef({
@@ -106,6 +219,9 @@ export function makeFamilyDef({
 	spacing,
 	offsetToFlushTop,
 	weights: explicitWeights,
+	lineHeight,
+	css,
+	axisDefaults,
 }: MakeFamilyDefArgs): FontFamilyDef {
 	const effectiveWeights =
 		explicitWeights ??
@@ -126,11 +242,29 @@ export function makeFamilyDef({
 		);
 	}
 
+	const derivedAxis = deriveAxisDefaults(familyName, cfgMap);
+
+	const mergedCss = {
+		...(derivedAxis.css ?? {}),
+		...(css ?? {}),
+	};
+
+	const mergedAxisDefaults = {
+		...(derivedAxis.axisDefaults ?? {}),
+		...(axisDefaults ?? {}),
+	};
+
 	return {
 		family: familyParts.join(', '),
 		weights: effectiveWeights,
 		spacing,
 		offsetToFlushTop,
+		lineHeight,
+		css: Object.keys(mergedCss).length > 0 ? mergedCss : undefined,
+		axisDefaults:
+			Object.keys(mergedAxisDefaults).length > 0
+				? mergedAxisDefaults
+				: undefined,
 	};
 }
 
