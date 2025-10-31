@@ -26,7 +26,7 @@ export const markdownRefs = <Keys extends readonly MarkdownMessageKey[]>(
 		{ [K in Keys[number]]: MarkdownPlaceholder<K> }
 	> = {};
 	for (const key of keys) {
-		entries[key] = createPlaceholder(key);
+		entries[key as Keys[number]] = createPlaceholder(key);
 	}
 	return entries as {
 		[K in Keys[number]]: MarkdownPlaceholder<K>;
