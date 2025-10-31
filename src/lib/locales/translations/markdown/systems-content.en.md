@@ -145,8 +145,7 @@ scale and stay stable when swapped.
 
 ````ts
 style({
-  fontFamily: fontVars.hero.family,
-  fontWeight: fontWeightStyle(fontVars.hero, 0), // 0–100 mapped to available weights
+  ...composeFontStyles({ token: fontVars.hero, weightPercent: 0 }),
 })
 ---
 
