@@ -23,6 +23,7 @@ type Props = {
   label: string; // for accessibility
   children: ReactNode;
   debugStage?: 'initial' | 'waypoint' | 'focus' | 'reveal';
+  animate?: boolean;
 };
 
 const CHANNELS: ProjectorChannel[] = [
@@ -35,15 +36,30 @@ export default function HeroHeading({
   label,
   children,
   debugStage,
+  animate = true,
 }: Props) {
   const masterRef = useRef<HTMLHeadingElement | null>(null);
   const ghostRef = useRef<HTMLSpanElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
-  console.log('[HeroHeading] render', {
-    childrenCount: Children.count(children),
-  });
+  const shouldAnimate = animate && !prefersReducedMotion;
+
+  if (shouldAnimate) {
+    console.log('[HeroHeading] render', {
+      childrenCount: Children.count(children),
+    });
+  }
 
   const initialChannelStyles = useMemo(() => {
+    if (!shouldAnimate) {
+      return CHANNELS.reduce(
+        (acc, channel) => {
+          acc[channel] = {};
+          return acc;
+        },
+        {} as Record<ProjectorChannel, CSSProperties>,
+      );
+    }
+
     const formatPx = (value: number) => `${value.toFixed(3)}px`;
 
     return CHANNELS.reduce(
@@ -67,7 +83,9 @@ export default function HeroHeading({
       },
       {} as Record<ProjectorChannel, CSSProperties>,
     );
-  }, []);
+  }, [
+    shouldAnimate,
+  ]);
 
   const masterInitialStyle = useMemo(
     () => ({
@@ -110,6 +128,8 @@ export default function HeroHeading({
   ]);
 
   useEffect(() => {
+    if (!shouldAnimate) return;
+
     const master = masterRef.current;
     const ghost = ghostRef.current;
     if (!master || !ghost) return;
@@ -157,6 +177,7 @@ export default function HeroHeading({
     contentSignature,
     prefersReducedMotion,
     debugStage,
+    shouldAnimate,
   ]);
 
   const channelClassMap: Record<ProjectorChannel, string> = {
@@ -164,6 +185,23 @@ export default function HeroHeading({
     green: revealStyles.channelGreen,
     red: revealStyles.channelRed,
   };
+
+  if (!shouldAnimate) {
+    return (
+      <div className={revealStyles.container} data-hero-text="heroText">
+        <h1
+          data-text={label}
+          className={clsx(
+            heroStyles.heading,
+            revealStyles.layer,
+            revealStyles.master,
+          )}
+        >
+          {children}
+        </h1>
+      </div>
+    );
+  }
 
   return (
     <div className={revealStyles.container} data-hero-text="heroText">

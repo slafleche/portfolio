@@ -1,17 +1,17 @@
+import Link from 'next/link';
 import clsx from 'clsx';
 import * as layoutStyles from '@/styles/layout.css';
 import * as s from '@/styles/components/hero.css';
 import VideoByName from './VideoByName';
-import { Markdown } from '@/components/Markdown';
 import HeroHeading from './HeroHeading.client';
 import { toTrimmedOrNull } from '@/lib/stringUtils';
+import SendIcon from '@/components/icons/SendIcon';
 
 type HeroCopy = {
   videoTitle: string;
   videoLabel: string;
   headingFirstLine: string;
   headingLastLine: string;
-  subtitle: string;
   consoleDescription: string;
   videoErrorMessage: string;
   ctaLabel?: string;
@@ -22,37 +22,56 @@ type Props = {
   className?: string;
   copy: HeroCopy;
   ctaHref?: string;
+  withVideo?: boolean;
+  overlayClassName?: string;
+  headingAnimated?: boolean;
 };
 
-export default function Hero({ id, className, copy }: Props) {
+export default function Hero({
+  id,
+  className,
+  copy,
+  ctaHref,
+  withVideo = true,
+  overlayClassName,
+  headingAnimated = true,
+}: Props) {
   const headingLabel = toTrimmedOrNull(
     `${copy.headingFirstLine} ${copy.headingLastLine}`,
   );
   if (!headingLabel) return null;
 
+  const showVideo = withVideo;
+  const showCta = Boolean(ctaHref && copy.ctaLabel);
+
   return (
     <section id={id} className={clsx(s.root, className)}>
-      <VideoByName
-        name="hero"
-        title={copy.videoTitle}
-        label={copy.videoLabel}
-        kind="hero"
-        className={s.video}
-        contentWrapClassName={s.contentWrap}
-        visualItemClassName={s.visualContent}
-        backgroundClassName={s.videoBg}
-        autoPlay
-        muted
-        loop
-        playsInline
-        aria-hidden
-        role="presentation"
-        errorMessage={copy.videoErrorMessage}
-        fallbackLabel={copy.videoLabel}
-      />
+      {showVideo ? (
+        <VideoByName
+          name="hero"
+          title={copy.videoTitle}
+          label={copy.videoLabel}
+          kind="hero"
+          className={s.video}
+          contentWrapClassName={s.contentWrap}
+          visualItemClassName={s.visualContent}
+          backgroundClassName={s.videoBg}
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden
+          role="presentation"
+          errorMessage={copy.videoErrorMessage}
+          fallbackLabel={copy.videoLabel}
+        />
+      ) : null}
 
       {/* Banding-fix overlays (over video, under content) */}
-      <div className={s.overlays} aria-hidden>
+      <div
+        className={clsx(s.overlays, overlayClassName)}
+        aria-hidden
+      >
         <div className={s.grain} />
         <div className={s.wash} />
         <div className={s.centerSoften} />
@@ -64,6 +83,7 @@ export default function Hero({ id, className, copy }: Props) {
           <div className={s.bridge}>
             <HeroHeading
               label={headingLabel}
+              animate={headingAnimated}
               // debugStage="initial"
             >
               <span
@@ -82,10 +102,12 @@ export default function Hero({ id, className, copy }: Props) {
                 {copy.headingLastLine}
               </span>
             </HeroHeading>
-            <Markdown
-              className={s.paragraph}
-              source={copy.subtitle}
-            />
+            {showCta ? (
+              <Link className={s.cta} href={ctaHref!}>
+                <span>{copy.ctaLabel}</span>
+                <SendIcon className={s.ctaIcon} aria-hidden />
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>

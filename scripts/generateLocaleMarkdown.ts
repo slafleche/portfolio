@@ -95,14 +95,40 @@ function buildFileContents(
 		completeMessages[locale] = ordered;
 	}
 
-	const serializedMessages = JSON.stringify(
-		completeMessages,
-		null,
-		2,
-	);
 	const serializedKeys = JSON.stringify(sortedKeys, null, 2);
+	const serializedMessages = serializeMarkdownMessages(
+		completeMessages,
+	);
 
 	return `${BANNER}import type { MarkdownContent } from '../markdownTypes';\n\nexport const MARKDOWN_MESSAGE_KEYS = ${serializedKeys} as const;\n\nexport type MarkdownMessageKey = (typeof MARKDOWN_MESSAGE_KEYS)[number];\n\ntype LocaleKey = ${localeUnion};\n\nexport const MARKDOWN_MESSAGES = ${serializedMessages} as const satisfies Record<LocaleKey, Record<MarkdownMessageKey, MarkdownContent>>;\n`;
+}
+
+function serializeMarkdownMessages(
+	messages: Record<string, Record<string, string>>,
+) {
+	const lines: string[] = ['{'];
+
+	for (const locale of AVAILABLE_LOCALES) {
+		const localeMessages = messages[locale] ?? {};
+		const entries = Object.entries(localeMessages);
+
+		if (entries.length === 0) {
+			lines.push(`  ${JSON.stringify(locale)}: {},`);
+			continue;
+		}
+
+		lines.push(`  ${JSON.stringify(locale)}: {`);
+		for (const [key, value] of entries) {
+			const serializedValue = JSON.stringify(value);
+			lines.push(
+				`    ${JSON.stringify(key)}: ${serializedValue} as MarkdownContent,`,
+			);
+		}
+		lines.push('  },');
+	}
+
+	lines.push('}');
+	return lines.join('\n');
 }
 
 async function main() {
