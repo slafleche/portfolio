@@ -25,7 +25,39 @@ export default async function SystemsPage({
   const contactCopy = buildContactCopy(translator);
   const systemsLink = buildSystemsLink(LOCALE, translator);
   const systemsTitle = translator('systems-title');
-  const systemsMarkdown = translator('systems-content');
+  const systemsIntro = translator('systems-intro');
+  const systemsProcessSection = {
+    id: translator('systems-process-href'),
+    title: translator('systems-process'),
+    markdown: translator('systems-process-content'),
+  };
+  const systemsDescribeSection = {
+    id: translator('systems-describe-href'),
+    title: translator('systems-describe'),
+    markdown: translator('systems-describe-content'),
+  };
+  const systemsExpressSection = {
+    id: translator('systems-express-href'),
+    title: translator('systems-express'),
+    markdown: translator('systems-express-content'),
+  };
+  const systemsIntegrateSection = {
+    id: translator('systems-integrate-href'),
+    title: translator('systems-integrate'),
+    markdown: translator('systems-integrate-content'),
+  };
+  const systemsResilienceSection = {
+    id: translator('systems-resilience-href'),
+    title: translator('systems-resilience'),
+    markdown: translator('systems-resilience-content'),
+  };
+  const systemsSections = [
+    systemsProcessSection,
+    systemsDescribeSection,
+    systemsExpressSection,
+    systemsIntegrateSection,
+    systemsResilienceSection,
+  ];
   const systemsTitleFirstLine = translator('systems-title_a');
   const systemsTitleLastLine = translator('systems-title_b');
 
@@ -48,7 +80,15 @@ export default async function SystemsPage({
             withVideo={false}
             headingAnimated={false}
           />
-          <Content title={systemsTitle} markdown={systemsMarkdown} />
+          <Content title={systemsTitle} markdown={systemsIntro} />
+          {systemsSections.map((section) => (
+            <Content
+              key={section.id}
+              id={section.id}
+              title={section.title}
+              markdown={section.markdown}
+            />
+          ))}
         </main>
         <Footer
           contact={contactCopy}
