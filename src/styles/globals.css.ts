@@ -57,7 +57,3 @@ globalStyle('h1, h2, h3, h4, h5, h6', {
 globalStyle("*, *:after, *:before, input[type='search']", {
   boxSizing: 'border-box',
 });
-
-globalStyle('strong', {
-  fontWeight: 'bolder',
-});
