@@ -2,6 +2,7 @@ import type * as CSS from 'csstype';
 import type { FontFamilyDef, FontStyles } from './types';
 import { hasCssMethod } from './measurement';
 
+
 export type FontCSS = Partial<
   Pick<
     CSS.Properties,
@@ -91,10 +92,7 @@ export function fontWeightStyle(
   };
 }
 
-export type FontStyleLayer =
-  | FontStyles
-  | null
-  | undefined;
+export type FontStyleLayer = FontStyles | null | undefined;
 
 export type ComposeFontStyleOptions = {
   family?: FontFamilyDef | null;
@@ -107,9 +105,7 @@ export type ComposeFontStyleOptions = {
 const validNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
 
-const familyToFontStyles = (
-  family: FontFamilyDef,
-): FontStyles => {
+const familyToFontStyles = (family: FontFamilyDef): FontStyles => {
   const styles: FontStyles = {
     fontFamily: family.family,
   };
@@ -135,10 +131,7 @@ const familyToFontStyles = (
   return styles;
 };
 
-const addLayer = (
-  target: FontStyles,
-  layer: FontStyleLayer,
-) => {
+const addLayer = (target: FontStyles, layer: FontStyleLayer) => {
   if (!layer) return;
   const { css, ...rest } = layer;
   Object.assign(target, rest);
