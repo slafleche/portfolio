@@ -1,6 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { colorVars, fontVars } from './vars';
-import { composeFontStyles } from './helpers/typography';
+import { composeFontStyles } from './helpers/typography.helpers';
 
 export const userContent = style({});
 
@@ -66,5 +66,4 @@ globalStyle('hr', {
   border: 'none',
   width: '100%',
 });
-
 

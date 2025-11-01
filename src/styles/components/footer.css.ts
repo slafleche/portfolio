@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { m } from '@/styles/helpers/measurement';
 import { colorVars, fontVars } from '@/styles/vars';
-import { composeFontStyles } from '@/styles/helpers/typography';
+import { composeFontStyles } from '@/styles/helpers/typography.helpers';
 
 export const root = style({
 	marginTop: m(20).css(),

@@ -1,13 +1,8 @@
 import { color } from '@/styles/helpers/colorWrap';
 import type { CardGradientPack } from '../helpers/cardGradient';
 import * as CSS from 'csstype';
-import { fontWeight } from '../helpers/typography';
-import type { FontFamilyDef, FontStyles } from '../helpers/types';
 import { m, mPercent } from '../helpers/measurement';
 export type ColorKeys = keyof typeof colors;
-import fontsConfig, {
-  makeFamilyDef,
-} from '@/styles/helpers/fontConfig';
 import type { Stop } from '../helpers/gradients';
 
 export type {
@@ -18,6 +13,9 @@ export type {
   BorderRadiusInput,
   IBorder,
 } from '../helpers/types';
+
+export { fontFamilies } from '../../tokens/fontFamilies.tokens';
+export { fontVars } from '../../tokens/fontVars.tokens';
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
@@ -292,120 +290,6 @@ export const colorVars = {
 };
 
 // Intentionally don't export font delarations, use font instead.
-const fontFamilies = {
-  system: makeFamilyDef({
-    fallbacks: [
-      'Segoe UI',
-      'SF Pro Text',
-      'Helvetica Neue',
-      'Avenir Next',
-      'Tahoma',
-      'Verdana',
-      'Helvetica',
-      'Arial',
-      'sans-serif',
-    ],
-    cfgMap: fontsConfig,
-    spacing: m(0.5, 'rem'),
-    offsetToFlushTop: m(-0.3, 'rem'),
-    lineHeight: 1.4,
-  }),
-  ibm: makeFamilyDef({
-    familyName: 'IBM Plex Sans',
-    fallbacks: [
-      'Arial Rounded MT Bold',
-      '-apple-system',
-      'BlinkMacSystemFont',
-      'Segoe UI',
-      'Roboto',
-      'Helvetica Neue',
-      'Arial',
-      'sans-serif',
-    ],
-    cfgMap: fontsConfig,
-    spacing: m(0, 'rem'),
-    offsetToFlushTop: m(0, 'rem'),
-    lineHeight: 1.6,
-  }),
-  urbanist: makeFamilyDef({
-    familyName: 'Urbanist',
-    fallbacks: [
-      'Segoe UI',
-      'Roboto',
-      'Helvetica Neue',
-      'Arial',
-      'sans-serif',
-    ],
-    cfgMap: fontsConfig,
-    spacing: m(0.0, 'rem'),
-    offsetToFlushTop: m(0, 'rem'),
-    lineHeight: 1.2,
-  }),
-} satisfies Record<string, FontFamilyDef>;
-
-const defaultHeadingFont = fontFamilies.urbanist;
-const defaultBodyFont = fontFamilies.ibm;
-
-export const fontVars = {
-  menu: {
-    size: m(16),
-    ...fontFamilies.urbanist,
-    waitForFonts: [
-      'Urbanist',
-    ],
-  },
-  hero: {
-    ...defaultHeadingFont,
-    ...fontWeight(defaultHeadingFont, 20),
-    lineHeight: 1.1,
-    size: m(45),
-    waitForFonts: [
-      'Outfit',
-    ],
-    waitForFontsTimeoutMs: 1500,
-  },
-  heading: {
-    ...defaultHeadingFont,
-  },
-  h1: {
-    ...defaultHeadingFont,
-    size: m(45),
-    ...fontWeight(defaultHeadingFont, 100),
-  },
-  h2: {
-    ...defaultHeadingFont,
-    size: m(25),
-    ...fontWeight(defaultHeadingFont, 100),
-  },
-  h3: {
-    ...defaultHeadingFont,
-    size: m(20),
-    ...fontWeight(defaultHeadingFont, 100),
-  },
-  h4: {
-    ...defaultHeadingFont,
-    size: m(18),
-    ...fontWeight(defaultHeadingFont, 100),
-  },
-  h5: {
-    ...defaultHeadingFont,
-    size: m(16),
-    ...fontWeight(defaultHeadingFont, 100),
-  },
-  h6: {
-    ...defaultHeadingFont,
-    size: m(14),
-    ...fontWeight(defaultHeadingFont, 100),
-  },
-  body: {
-    size: m(16),
-    color: colorVars.bodyFg,
-    lineHeight: 1,
-    ...defaultBodyFont,
-    ...fontWeight(defaultBodyFont, 0),
-  },
-} satisfies Record<string, FontStyles>;
-
 export const borderVars = {
   color: colorVars.border,
   style: 'solid' as string,
@@ -598,6 +482,9 @@ export const heroVars = {
   paddings: {
     top: m(40),
     bottom: m(40),
+  },
+  fontLoading: {
+    waitForFontsTimeoutMs: 1500,
   },
 };
 

@@ -18,7 +18,7 @@ import { playProjectorText } from '@/lib/projectorText';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { projectorVars } from '@/styles/vars/projector.vars';
 import type { ProjectorChannel } from '@/styles/vars/projector.vars';
-import { fontVars } from '@/styles/vars';
+import { fontVars, heroVars } from '@/styles/vars';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
 
 type Props = {
@@ -147,7 +147,10 @@ export default function HeroHeading({
     let cancelled = false;
     setStaticReady(false);
 
-    const { fonts, timeoutMs } = collectWaitForFonts(fontVars.hero);
+    const { fonts, timeoutMs } = collectWaitForFonts(
+      fontVars.hero,
+      heroVars.fontLoading,
+    );
     const finalize = () => {
       if (!cancelled) {
         setStaticReady(true);
@@ -202,7 +205,10 @@ export default function HeroHeading({
     };
 
     const start = async () => {
-      const { fonts, timeoutMs } = collectWaitForFonts(fontVars.hero);
+      const { fonts, timeoutMs } = collectWaitForFonts(
+        fontVars.hero,
+        heroVars.fontLoading,
+      );
       if (fonts.length > 0) {
         await waitForFonts(fonts, { timeoutMs });
         if (cancelled) return;
