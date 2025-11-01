@@ -16,6 +16,7 @@ export type {
 
 export { fontFamilies } from '../../tokens/fontFamilies.tokens';
 export { fontVars } from '../../tokens/fontVars.tokens';
+export { textStyleVars } from '../../tokens/textStyles.tokens';
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
