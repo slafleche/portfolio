@@ -16,6 +16,7 @@ import {
 import {
   fontVars,
   projectorVars,
+  heroVars,
 } from '@/styles/vars';
 
 type HeroCopy = {
@@ -83,7 +84,10 @@ export default function Hero({
     setWaitingForReveal(true);
 
     const revealAfter = async () => {
-      const { fonts, timeoutMs } = collectWaitForFonts(fontVars.hero);
+      const { fonts, timeoutMs } = collectWaitForFonts(
+        fontVars.hero,
+        heroVars.fontLoading,
+      );
       if (fonts.length > 0) {
         try {
           await waitForFonts(fonts, { timeoutMs });

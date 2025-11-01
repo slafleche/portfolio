@@ -4,7 +4,7 @@ import {
   ReducedMotion,
   reducedMotion,
 } from './helpers/accessibility';
-import { composeFontStyles } from './helpers/typography';
+import { composeFontStyles } from './helpers/typography.helpers';
 import './utilities.css';
 
 globalStyle('body', {
@@ -23,7 +23,7 @@ globalStyle('body', {
 globalStyle('html, body', {
   margin: 0,
   padding: 0,
-  color: fontVars.body.color.css(),
+  color: colorVars.bodyFg.css(),
 
   fontSize: fontVars.body.size.css(),
 

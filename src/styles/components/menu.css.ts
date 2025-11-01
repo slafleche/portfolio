@@ -25,7 +25,7 @@ import {
 	type IMeasurement,
 } from '../helpers/measurement';
 import transforms from '../helpers/transforms';
-import { composeFontStyles } from '../helpers/typography';
+import { composeFontStyles } from '../helpers/typography.helpers';
 
 if (process.env.NODE_ENV !== 'production') {
 	assertUnit(archVars.top, 'px', 'menu archVars.top');

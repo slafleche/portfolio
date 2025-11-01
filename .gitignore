@@ -79,6 +79,7 @@ src/lib/locales/generated/
 # -----------------------
 .DS_Store
 *.pem
+TODO.*.md
 
 # -----------------------
 # Debug logs
