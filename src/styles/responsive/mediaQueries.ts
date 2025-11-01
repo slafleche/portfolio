@@ -29,14 +29,14 @@ const globalMediaQueries = {
       .css(),
   } as IMediaQueryProps,
 
-  compact: {
-    maxWidth: layoutVars.compact.contentWidth.css(),
-    minWidth: layoutVars.compressed.contentWidth.add(1).css(),
-  } as IMediaQueryProps,
+  // compact: {
+  //   maxWidth: layoutVars.compact.contentWidth.css(),
+  //   minWidth: layoutVars.compressed.contentWidth.add(1).css(),
+  // } as IMediaQueryProps,
 
-  compressed: {
-    maxWidth: layoutVars.compressed.contentWidth.css(),
-  } as IMediaQueryProps,
+  // compressed: {
+  //   maxWidth: layoutVars.compressed.contentWidth.css(),
+  // } as IMediaQueryProps,
 };
 
 // Example use:
@@ -105,19 +105,19 @@ export const globalMediaQueryStyles = (
     });
   }
 
-  if (styles.compact) {
-    mediaQueries.push({
-      props: globalMediaQueries.compact,
-      styles: styles.compact,
-    });
-  }
+  // if (styles.compact) {
+  //   mediaQueries.push({
+  //     props: globalMediaQueries.compact,
+  //     styles: styles.compact,
+  //   });
+  // }
 
-  if (styles.compressed) {
-    mediaQueries.push({
-      props: globalMediaQueries.compressed,
-      styles: styles.compressed,
-    });
-  }
+  // if (styles.compressed) {
+  //   mediaQueries.push({
+  //     props: globalMediaQueries.compressed,
+  //     styles: styles.compressed,
+  //   });
+  // }
 
   return mediaQueryStyle(mediaQueries, debug);
 };

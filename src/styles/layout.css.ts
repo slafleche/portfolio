@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { globalMediaQueryStyles } from './responsive/mediaQueries';
+// import { globalMediaQueryStyles } from './responsive/mediaQueries';
 import { paddings } from './helpers/spacing';
 import { layoutVars } from './vars/layout.vars';
 
@@ -11,18 +11,18 @@ export const content = style({
   ...paddings({
     horizontal: layoutVars.contentPadding,
   }),
-  ...globalMediaQueryStyles({
-    compact: {
-      ...paddings({
-        horizontal: layoutVars.compact.contentPadding,
-      }),
-    },
-    compressed: {
-      ...paddings({
-        horizontal: layoutVars.compressed.contentPadding,
-      }),
-    },
-  }),
+  // ...globalMediaQueryStyles({
+  //   compact: {
+  //     ...paddings({
+  //       horizontal: layoutVars.compact.contentPadding,
+  //     }),
+  //   },
+  //   compressed: {
+  //     ...paddings({
+  //       horizontal: layoutVars.compressed.contentPadding,
+  //     }),
+  //   },
+  // }),
 });
 
 export const title = style({});
