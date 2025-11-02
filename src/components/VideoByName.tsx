@@ -1,32 +1,12 @@
-import type { ReactElement, VideoHTMLAttributes } from 'react';
-import type { VideoEntry } from '@/lib/videos';
+import type { ReactElement } from 'react';
 import { getVideo } from '@/lib/videos';
 import type { ImageEntry } from '@/lib/images';
 import { getImage } from '@/lib/images';
 import VideoByNameClient from './VideoByName.client';
-
-export type VideoByNameProps = VideoHTMLAttributes<HTMLVideoElement> & {
-	name: string;
-	label?: string;
-	kind?: 'hero' | 'inline';
-	priority?: boolean;
-	pauseWhenOffscreen?: boolean;
-	playbackRate?: number;
-	className?: string;
-	contentWrapClassName?: string;
-	visualItemClassName?: string;
-	backgroundClassName?: string;
-	onReady?: (video: HTMLVideoElement, meta: VideoEntry) => void;
-	errorMessage: string;
-	fallbackLabel: string;
-};
-
-export type PosterImagePayload = {
-	name: string;
-	blurDataURL: string;
-	variants: ImageEntry['variants'];
-	original: ImageEntry['original'];
-};
+import type {
+	PosterImagePayload,
+	VideoByNameProps,
+} from './VideoByName.types';
 
 function buildPosterPayload(image: ImageEntry | null): PosterImagePayload | null {
 	if (!image) return null;
