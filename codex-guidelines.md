@@ -1,0 +1,41 @@
+# Project Guidelines for Codex
+
+## Token → Helper → Module → Style Flow
+
+- **Tokens (`/tokens`)**: Store pure data (measurements, colors, fonts) without
+  `.css()` calls or imports from `styles/`.
+- **Helpers (`/styles/helpers`)**: Share generic logic (measurement math,
+  typography composition, spacing utilities). Helpers must not import component
+  tokens.
+- **Modules (`/modules`)**: Assemble tokens + helpers for a specific feature or
+  component. Modules remain CSS-free; they simply prepare structured data.
+- **Styles
+  (`/styles/**/\*.css.ts`)**: Emit selectors via vanilla-extract. This is the only layer that imports palette vars or calls `.css()`.
+
+## Workflow Expectations
+
+- Work "wizard style": talk through the plan before coding, ask for missing
+  context, wait for the “go” signal, then update the shared TODO checklist.
+  Break larger efforts into smaller wizard steps.
+- Maintain a `TODO.*.md` per large task: include a primer, mirror the wizard
+  plan as a checklist, update continuously, delete once finished.
+- Respect existing guardrails (no `.css()` in tokens, no styling logic in
+  helpers/modules).
+- Use shared utilities (`paddings`, `margins`, `borders`) instead of inlining
+  equivalent CSS when possible.
+- Tokens must never call `.css()`; measurements stay as `m(...)` objects so
+  helpers can compose them.
+- When defining spacing/border tokens, use plural keys (`paddings`, `margins`,
+  `borders`) so they can be spread directly into the helpers without touching
+  CSS.
+- Keep `data-ui` contracts intact (`data-ui="heading"` for headings,
+  `data-ui="content"` for markdown wrapper, `data-ui="link"` for reusable
+  links).
+
+## Communication
+
+- Ask for confirmation before invasive changes or restructuring—and raise
+  questions or blockers as soon as you see them.
+- Capture decisions/strategy in README/TODO files to create a shared reference.
+- Note any lint errors unrelated to the current change so they can be addressed
+  later.
