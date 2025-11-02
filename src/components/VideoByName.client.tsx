@@ -5,7 +5,7 @@ import type { VideoEntry } from '@/lib/videos';
 import type {
 	PosterImagePayload,
 	VideoByNameProps,
-} from './VideoByName';
+} from './VideoByName.types';
 
 type ClientProps = Omit<VideoByNameProps, 'name'> & {
 	video: VideoEntry;
