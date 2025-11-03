@@ -14,10 +14,34 @@ scale and stay stable when swapped.
 }
 ```
 
+**Reusable family definition (shared by tokens + CSS):**
+
 ````ts
-style({
-  ...composeFontStyles({ token: fontVars.hero, weightPercent: 0 }),
-})
+import { m } from '../styles/measurementKit';
+import fontsConfig, { makeFamilyDef } from '../styles/helpers/fontConfig';
+
+const urbanist = makeFamilyDef({
+  familyName: 'Urbanist',
+  fallbacks: ['Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  cfgMap: fontsConfig,
+  spacing: m(0, 'rem'),
+  offsetToFlushTop: m(0, 'rem'),
+  lineHeight: 1.2,
+  weights: {
+    default: 400,
+    strong: 700,
+  },
+});
+````
+
+**Using the family in CSS helpers:**
+
+````ts
+import { relativeFontWeight } from '../styles/helpers/typography.helpers';
+import { mPercent } from '../styles/measurementKit';
+import { fontFamilies } from '../tokens/fontFamilies.tokens';
+
+const heroWeight = relativeFontWeight(fontFamilies.urbanist, mPercent(20));
 ````
 
 ---
@@ -77,4 +101,3 @@ The process keeps large files out of version control and produces deterministic
 outputs that components can consume directly.  
 SVGs follow the same principle, cleaned with SVGO and formatted with Prettier
 for safe IDs and consistent diffs.
-

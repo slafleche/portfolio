@@ -677,7 +677,7 @@ export const localeChanger = style({
 	height: `${archVars.top.add(archVars.curveHeight).css()}`,
 	...composeFontStyles({
 		token: fontVars.menu,
-		weightPercent: 50,
+		weightPercent: mPercent(50),
 		overrides: { size: undefined },
 	}),
 	fontSize: fontVars.menu.size.css(),
@@ -726,7 +726,7 @@ export const navLink = style({
 	...paddings(menuVars.padding),
 	...composeFontStyles({
 		token: fontVars.menu,
-		weightPercent: 50,
+		weightPercent: mPercent(50),
 		overrides: { size: undefined },
 	}),
 	lineHeight: 1,

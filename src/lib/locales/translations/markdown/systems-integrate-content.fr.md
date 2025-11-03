@@ -15,23 +15,35 @@ claire dès le départ.
 }
 ```
 
-**Utilisation dans le CSS (partagée avec l’outil de build) :**
+**Définition réutilisable de la famille (partagée entre tokens et CSS) :**
 
-```
-const titan = makeFamilyDef({
-  familyName: 'Titan One',
-  fallbacks: ['Poppins', 'Helvetica', 'sans-serif'],
-  cfgMap: fontsConfig,                 // config validée
-  spacing: m(0.25, 'rem'),
-  offsetToFlushTop: m(-0.1, 'rem'),
-});
+````ts
+import { m } from '../styles/measurementKit';
+import fontsConfig, { makeFamilyDef } from '../styles/helpers/fontConfig';
 
-style({
-  fontFamily: titan.family,
-  fontWeight: titan.weights.low,       // extrait de "400..700"
-  letterSpacing: titan.spacing.css(),
+const urbanist = makeFamilyDef({
+  familyName: 'Urbanist',
+  fallbacks: ['Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  cfgMap: fontsConfig,
+  spacing: m(0, 'rem'),
+  offsetToFlushTop: m(0, 'rem'),
+  lineHeight: 1.2,
+  weights: {
+    default: 400,
+    strong: 700,
+  },
 });
-```
+````
+
+**Utilisation dans le CSS et les helpers :**
+
+````ts
+import { relativeFontWeight } from '../styles/helpers/typography.helpers';
+import { mPercent } from '../styles/measurementKit';
+import { fontFamilies } from '../tokens/fontFamilies.tokens';
+
+const heroWeight = relativeFontWeight(fontFamilies.urbanist, mPercent(20));
+````
 
 La même configuration alimente un générateur d’URL qui ne demande que les plages
 et styles réellement utilisés.  

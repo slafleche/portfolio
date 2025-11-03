@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { m } from '../measurementKit';
+import { m, mPercent } from '../measurementKit';
 import { composeFontStyles } from '../helpers/typography.helpers';
 import { colorVars } from '../componentTokens/global.componentTokens';
 import { fontVars } from '../../tokens/fontVars.tokens';
@@ -21,7 +21,7 @@ export const root = style({
 export const heading = style({
 	...composeFontStyles({
 		token: fontVars.hero,
-		weightPercent: 100,
+		weightPercent: mPercent(100),
 		overrides: { size: undefined },
 	}),
 	fontSize: m(24).css(),
