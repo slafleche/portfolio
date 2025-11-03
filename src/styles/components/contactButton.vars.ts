@@ -1,4 +1,4 @@
-import { m, assertUnit } from '../measurement';
+import { m, assertUnit } from '../measurementKit';
 
 /* ---------- SPIN (exit) ---------- */
 export const spinAnticDeg = m(10, 'deg'); // wrong-direction pre-rotation

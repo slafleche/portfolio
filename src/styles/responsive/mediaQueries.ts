@@ -3,7 +3,7 @@ import type {
   StyleRule,
 } from '@vanilla-extract/css';
 // import * as CSS from 'csstype';
-// import { m, parseStringMeasurement } from '../helpers/measurement';
+// import { m, parseStringMeasurement } from '../measurementKit';
 import { layoutVars } from '../componentTokens/layout.componentTokens';
 
 export interface IMediaQueryProps {

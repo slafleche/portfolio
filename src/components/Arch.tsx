@@ -14,7 +14,7 @@ import { createDomId } from '../lib/dom';
 import { archGlassVars } from '@/styles/helpers/arch';
 import { shadowTotalY } from '../styles/helpers/shadow';
 import { noiseStyle } from '../styles/helpers/noiseSVG';
-import { assertUnit } from '@/styles/measurement';
+import { assertUnit } from '../styles/measurementKit';
 import { archVars } from '../styles/componentTokens/global.componentTokens';
 
 if (process.env.NODE_ENV !== 'production') {

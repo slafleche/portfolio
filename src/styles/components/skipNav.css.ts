@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { colorVars } from '../componentTokens/global.componentTokens';
-import { m } from '../measurement';
+import { m } from '../measurementKit';
 
 export const link = style({
 	position: 'fixed',

@@ -1,6 +1,6 @@
 import type * as CSS from 'csstype';
 import { toCssMeasurement } from './style';
-import { hasCssMethod } from './measurement';
+import { hasCssMethod } from '../measurementKit';
 
 type AngleInput =
   | number

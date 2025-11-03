@@ -1,4 +1,4 @@
-const brandSet = new WeakSet<object>();
+const measurementRegistry = new WeakSet<object>();
 
 export interface IMeasurement {
   readonly value: number;
@@ -44,7 +44,7 @@ export const assertMatchingUnits = (
 };
 
 export const isMeasurement = (x: unknown): x is IMeasurement =>
-  typeof x === 'object' && x !== null && brandSet.has(x);
+  typeof x === 'object' && x !== null && measurementRegistry.has(x);
 
 const deltaToNumber = (
   base: IMeasurement,
@@ -175,7 +175,7 @@ const createMeasurement = (
     },
   };
 
-  brandSet.add(measurement);
+  measurementRegistry.add(measurement);
   return Object.freeze(measurement);
 };
 

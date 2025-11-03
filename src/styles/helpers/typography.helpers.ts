@@ -5,7 +5,7 @@ import {
   hasCssMethod,
   isPercentMeasurement,
   type PercentMeasurement,
-} from '../measurement';
+} from '../measurementKit';
 
 export type FontCSS = Partial<
   Pick<

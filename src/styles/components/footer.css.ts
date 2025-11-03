@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { m } from '../measurement';
+import { m } from '../measurementKit';
 import { composeFontStyles } from '../helpers/typography.helpers';
 import { colorVars } from '../componentTokens/global.componentTokens';
 import { fontVars } from '../../tokens/fontVars.tokens';
