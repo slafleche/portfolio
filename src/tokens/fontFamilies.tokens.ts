@@ -21,6 +21,12 @@ export const fontFamilies = {
     spacing: m(0.5, 'rem'),
     offsetToFlushTop: m(-0.3, 'rem'),
     lineHeight: 1.4,
+    weights: {
+      low: 400,
+      default: 400,
+      strong: 700,
+      high: 700,
+    },
   }),
   ibm: makeFamilyDef({
     familyName: 'IBM Plex Sans',
@@ -38,6 +44,10 @@ export const fontFamilies = {
     spacing: m(0, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
     lineHeight: 1.6,
+    weights: {
+      default: 400,
+      strong: 600,
+    },
   }),
   urbanist: makeFamilyDef({
     familyName: 'Urbanist',
@@ -52,5 +62,9 @@ export const fontFamilies = {
     spacing: m(0, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
     lineHeight: 1.2,
+    weights: {
+      default: 400,
+      strong: 700,
+    },
   }),
 } satisfies Record<string, FontFamilyDef>;
