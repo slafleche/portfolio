@@ -192,7 +192,11 @@ export const m = <Unit extends string>(
 ): IMeasurement & UnitBrand<Unit> =>
   createMeasurement(value, unit.toLowerCase() as Unit);
 
-type UnitHelper<Unit extends string = string> = ((value: number) => IMeasurement) & {
+type BrandedMeasurement<Unit extends string> = IMeasurement & UnitBrand<Unit>;
+
+type UnitHelper<Unit extends string = string> = ((
+  value: number,
+) => BrandedMeasurement<Unit>) & {
   unit: Unit;
 };
 
