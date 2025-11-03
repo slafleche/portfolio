@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { SkipNavLink } from '@/components/SkipNavLink';
 import * as s from '@/styles/components/menu.css';
 import type { Locale } from '@/data/locales';
-import { menuVars, fontVars } from '@/styles/vars';
 import transforms from '@/styles/helpers/transforms';
 import clsx from 'clsx';
 import Arch from './Arch';
@@ -42,6 +41,8 @@ import {
 import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
+import { fontVars } from '../tokens/fontVars.tokens';
+import { menuVars } from '../styles/componentTokens/global.componentTokens';
 
 type FocusDebugOptions = {
   lockTo?: 'logo' | number;
@@ -126,7 +127,9 @@ export default function Menu({
   const normalizedRoot = useMemo(() => {
     if (root === '/') return '/';
     return root.replace(/\/+$/, '');
-  }, [root]);
+  }, [
+    root,
+  ]);
   const normalizedLogoRedirects = useMemo(() => {
     if (!logoRedirectPaths || logoRedirectPaths.length === 0) {
       return [];
@@ -140,16 +143,20 @@ export default function Menu({
       .map((path) => normalizePath(path))
       .filter((path): path is string => Boolean(path));
     if (!currentLocale) return fromProp;
-    const override = canonicalToLocalizedSlugs[
-      currentLocale as Locale
-    ];
+    const override =
+      canonicalToLocalizedSlugs[currentLocale as Locale];
     if (!override?.systems) return fromProp;
     const localized = normalizePath(
       normalizedRoot === '/'
         ? `/${override.systems}`
         : `${normalizedRoot}/${override.systems}`,
     );
-    return localized ? [...fromProp, localized] : fromProp;
+    return localized
+      ? [
+          ...fromProp,
+          localized,
+        ]
+      : fromProp;
   }, [
     logoRedirectPaths,
     currentLocale,
@@ -204,7 +211,10 @@ export default function Menu({
     decorReady,
     setDecorReady,
   ] = useState(false);
-  const [fontsReady, setFontsReady] = useState(() => {
+  const [
+    fontsReady,
+    setFontsReady,
+  ] = useState(() => {
     const { fonts } = collectWaitForFonts(fontVars.menu);
     return fonts.length === 0;
   });
@@ -226,7 +236,9 @@ export default function Menu({
 
   useEffect(() => {
     setDecorReady(prefersReducedMotion === false);
-  }, [prefersReducedMotion]);
+  }, [
+    prefersReducedMotion,
+  ]);
 
   useEffect(() => {
     const { fonts, timeoutMs } = collectWaitForFonts(fontVars.menu);
@@ -414,8 +426,7 @@ export default function Menu({
       const { pathname } = window.location;
       const isRootPath =
         pathname === normalizedRoot ||
-        (normalizedRoot !== '/' &&
-          pathname === `${normalizedRoot}/`);
+        (normalizedRoot !== '/' && pathname === `${normalizedRoot}/`);
       if (!isRootPath) return;
       logoGlowHoldIntentRef.current = true;
       logoGlowHoldActiveRef.current = false;
@@ -433,7 +444,11 @@ export default function Menu({
         queueLogoGlow('hold');
       }, LOGO_GLOW_HOLD_DELAY);
     },
-    [clearLogoGlowHoldTimer, normalizedRoot, queueLogoGlow],
+    [
+      clearLogoGlowHoldTimer,
+      normalizedRoot,
+      queueLogoGlow,
+    ],
   );
 
   const handleLogoPointerUp = useCallback(
@@ -796,6 +811,7 @@ export default function Menu({
           ref={(el) => {
             linkRefs.current[index] = el;
           }}
+          data-ui="link"
           data-side={side}
           data-active={isActive}
           data-outer={isOuter}
@@ -977,7 +993,7 @@ export default function Menu({
                 style={getRotationStyle('left', navMetrics.width)}
               >
                 {anchors.slice(0, 2).map((entry, idx) =>
-              renderNavLink(
+                  renderNavLink(
                     entry,
                     resolvedSections[idx],
                     idx + 1,
@@ -998,7 +1014,7 @@ export default function Menu({
                 style={getRotationStyle('right', navMetrics.width)}
               >
                 {anchors.slice(2).map((entry, idx) =>
-              renderNavLink(
+                  renderNavLink(
                     entry,
                     resolvedSections[idx + 2],
                     idx + 3,

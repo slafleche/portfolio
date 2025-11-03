@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { m } from '@/styles/helpers/measurement';
+import { m } from '../helpers/measurement';
 
 export const root = style({
 	display: 'grid',

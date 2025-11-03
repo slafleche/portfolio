@@ -1,148 +1,172 @@
-import { m } from '@/styles/helpers/measurement';
-import { colorVars } from '@/styles/vars';
+import { m } from '../styles/helpers/measurement';
+import type * as CSS from 'csstype';
+import type { SpacingProps } from '../styles/helpers/spacing';
+import { colorVars } from '../styles/componentTokens/global.componentTokens';
 
 const blockSpacing = m(16);
-const compactSpacing = m(8);
+// const compactSpacing = m(8);
 const listIndent = m(24);
 const codeBackground = colorVars.bodyFg.alpha(0.08);
 const codeBorder = colorVars.bodyFg.alpha(0.12);
 
 const codeFontStack =
-	'"SFMono-Regular", "Roboto Mono", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace';
+  '"SFMono-Regular", "Roboto Mono", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace';
 
 export const textStyleVars = {
-	paragraph: {
-		marginBottom: blockSpacing,
-	},
-	blockquote: {
-		marginBottom: blockSpacing,
-		padding: {
-			left: m(16),
-		},
-		border: {
-			width: m(3),
-			color: colorVars.border,
-		},
-		color: colorVars.bodyFg.alpha(0.85),
-	},
-	list: {
-		unordered: {
-			marginBottom: blockSpacing,
-			paddingLeft: listIndent,
-		},
-		ordered: {
-			marginBottom: blockSpacing,
-			paddingLeft: listIndent,
-		},
-		item: {
-			marginBottom: compactSpacing,
-		},
-	},
-	code: {
-		inline: {
-			fontFamily: codeFontStack,
-			backgroundColor: codeBackground,
-			borderRadius: m(4),
-			padding: {
-				vertical: m(2),
-				horizontal: m(4),
-			},
-			border: {
-				width: m(1),
-				color: codeBorder,
-			},
-		},
-		block: {
-			backgroundColor: codeBackground,
-			fontFamily: codeFontStack,
-			padding: m(16),
-			border: {
-				width: m(1),
-				color: codeBorder,
-				radius: m(6),
-			},
-			marginBottom: blockSpacing,
-		},
-	},
-	link: {
-		default: {
-			color: colorVars.brand,
-			textDecoration: 'underline' as const,
-			underlineOffset: m(3),
-		},
-		hover: {
-			color: colorVars.brand.brighten(0.1),
-			textDecorationThickness: m(0.75),
-		},
-		focusVisible: {
-			outlineColor: colorVars.brand,
-			outlineOffset: m(2),
-			outlineWidth: m(2),
-			outlineStyle: 'solid' as const,
-		},
-		active: {
-			color: colorVars.brand.darken(0.1),
-		},
-		visited: {
-			color: colorVars.brand.mix(colorVars.contrast, 0.25),
-		},
-	},
-	emphasis: {
-		em: {
-			fontStyle: 'italic',
-		},
-		strong: {
-			fontWeight: 650,
-		},
-		del: {
-			textDecoration: 'line-through',
-		},
-	},
-	image: {
-		display: 'block' as const,
-		marginBottom: blockSpacing,
-		borderRadius: m(8),
-	},
-	horizontalRule: {
-		border: {
-			width: m(1),
-			color: colorVars.border,
-		},
-		marginBottom: blockSpacing,
-	},
-	break: {
-		height: compactSpacing,
-	},
-	table: {
-		table: {
-			width: '100%',
-			borderCollapse: 'collapse' as const,
-			marginBottom: blockSpacing,
-		},
-		head: {
-			backgroundColor: colorVars.bodyFg.alpha(0.04),
-		},
-		body: {},
-		row: {
-			borderBottom: {
-				width: m(1),
-				color: colorVars.border.alpha(0.6),
-			},
-		},
-		headerCell: {
-			textAlign: 'left' as const,
-			padding: {
-				vertical: m(8),
-				horizontal: m(12),
-			},
-			fontWeight: 650,
-		},
-		cell: {
-			padding: {
-				vertical: m(8),
-				horizontal: m(12),
-			},
-			verticalAlign: 'top' as const,
-		},
-	},
+  paragraph: {
+    margins: {
+      bottom: blockSpacing,
+    } as SpacingProps,
+  },
+  blockquote: {
+    color: colorVars.bodyFg.alpha(0.85),
+    margins: {
+      bottom: blockSpacing,
+    } as SpacingProps,
+    paddings: {
+      left: m(16),
+    } as SpacingProps,
+    borders: {
+      width: m(3),
+      color: colorVars.border,
+    },
+  },
+  list: {
+    unordered: {
+      margins: {
+        bottom: blockSpacing,
+      },
+      paddings: {
+        left: listIndent,
+      },
+    },
+    ordered: {
+      margins: {
+        bottom: blockSpacing,
+      },
+      paddings: {
+        left: listIndent,
+      },
+    },
+    item: {
+      margins: {
+        bottom: blockSpacing,
+      },
+    },
+  },
+  code: {
+    inline: {
+      fontFamily: codeFontStack,
+      backgroundColor: codeBackground,
+      borders: {
+        radius: m(4),
+        width: m(1),
+        color: codeBorder,
+      },
+      paddings: {
+        vertical: m(2),
+        horizontal: m(4),
+      },
+    },
+    block: {
+      backgroundColor: codeBackground,
+      fontFamily: codeFontStack,
+      paddings: {
+        all: m(16),
+      },
+      borders: {
+        bottom: {
+          width: m(1),
+          color: codeBorder,
+          radius: m(6),
+        },
+      },
+      margins: {
+        bottom: blockSpacing,
+      },
+    },
+  },
+  link: {
+    default: {
+      color: colorVars.brand,
+      textDecoration: 'underline' as CSS.Property.TextDecoration,
+      underlineOffset: m(3),
+    },
+    hover: {
+      color: colorVars.brand.brighten(0.1),
+      textDecorationThickness: m(0.75),
+    },
+    focusVisible: {
+      outlines: {
+        color: colorVars.brand,
+        offset: m(2),
+        width: m(2),
+        style: 'solid' as CSS.Property.OutlineStyle,
+      },
+    },
+    active: {
+      color: colorVars.brand.darken(0.1),
+    },
+    visited: {
+      color: colorVars.brand.mix(colorVars.contrast, 0.25),
+    },
+  },
+  em: {
+    fontStyle: 'italic' as CSS.Property.FontStyle,
+  },
+  strong: {
+    fontWeight: 80, // percentage relative to min-max of font
+  },
+  del: {
+    textDecoration: 'line-through' as CSS.Property.TextDecoration,
+  },
+  image: {
+    display: 'block' as CSS.Property.Display,
+    marginBottom: blockSpacing,
+    borderRadius: m(8),
+  },
+  horizontalRule: {
+    borders: {
+      width: m(1),
+      color: colorVars.border,
+    },
+    margins: {
+      bottom: blockSpacing,
+    },
+  },
+  break: {
+    height: m(1, 'rem'),
+  },
+  table: {
+    table: {
+      width: '100%',
+      borderCollapse: 'collapse' as CSS.Property.BorderCollapse,
+      marginBottom: blockSpacing,
+    },
+    head: {
+      backgroundColor: colorVars.bodyFg.alpha(0.04),
+    },
+    body: {},
+    row: {
+      borderBottom: {
+        width: m(1),
+        color: colorVars.border.alpha(0.6),
+      },
+    },
+    headerCell: {
+      textAlign: 'left' as CSS.Property.TextAlign,
+      padding: {
+        vertical: m(8),
+        horizontal: m(12),
+      },
+      fontWeight: 650,
+    },
+    cell: {
+      padding: {
+        vertical: m(8),
+        horizontal: m(12),
+      },
+      verticalAlign: 'top' as CSS.Property.VerticalAlign,
+    },
+  },
 } as const;

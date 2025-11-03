@@ -4,7 +4,7 @@ import {
   assertUnit,
   m,
 } from '../helpers/measurement';
-import { dropShadowVars } from './global.vars';
+import { dropShadowVars } from './global.componentTokens';
 
 export type ProjectorChannel = 'blue' | 'green' | 'red';
 export type ProjectorStage = 'initial' | 'waypoint' | 'focus';

@@ -11,11 +11,11 @@ import {
 	colors,
 	colorVars,
 	dropShadowVars,
-	fontVars,
 	logoVars,
 	menuVars,
 	themeColours,
-} from '../vars';
+} from '../componentTokens/global.componentTokens';
+import { fontVars } from '../../tokens/fontVars.tokens';
 
 import { paddings } from '../helpers/spacing';
 import {

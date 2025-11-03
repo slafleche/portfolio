@@ -1,9 +1,8 @@
-import { color } from '@/styles/helpers/colorWrap';
+import { color } from '../helpers/colorWrap';
 import type { CardGradientPack } from '../helpers/cardGradient';
-import * as CSS from 'csstype';
+import type * as CSS from 'csstype';
 import { m, mPercent } from '../helpers/measurement';
 export type ColorKeys = keyof typeof colors;
-import type { Stop } from '../helpers/gradients';
 
 export type {
   BorderMeasurementInput,
@@ -14,9 +13,7 @@ export type {
   IBorder,
 } from '../helpers/types';
 
-export { fontFamilies } from '../../tokens/fontFamilies.tokens';
-export { fontVars } from '../../tokens/fontVars.tokens';
-export { textStyleVars } from '../../tokens/textStyles.tokens';
+
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
@@ -462,30 +459,6 @@ export const chevronVars = {
   highlight: baseColor,
   container: {
     height: m(120),
-  },
-};
-
-export const heroVars = {
-  background: {
-    // color: color('#ffd500'),
-    linear: [
-      {
-        color: color('#160d36'),
-        at: 0,
-      },
-      {
-        color: color('#6f4ed1'),
-        at: 100,
-      },
-    ] as Stop[],
-    videoOpacity: 0.35,
-  },
-  paddings: {
-    top: m(40),
-    bottom: m(40),
-  },
-  fontLoading: {
-    waitForFontsTimeoutMs: 1500,
   },
 };
 

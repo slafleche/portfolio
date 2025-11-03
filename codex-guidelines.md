@@ -19,6 +19,9 @@
   Break larger efforts into smaller wizard steps.
 - Maintain a `TODO.*.md` per large task: include a primer, mirror the wizard
   plan as a checklist, update continuously, delete once finished.
+- When refactoring, keep each slice small (one file, or the pieces of a single
+  split): finish import updates, confirm the result, and land the change before
+  starting the next slice.
 - Respect existing guardrails (no `.css()` in tokens, no styling logic in
   helpers/modules).
 - Use shared utilities (`paddings`, `margins`, `borders`) instead of inlining
@@ -28,8 +31,7 @@
 - When defining spacing/border tokens, use plural keys (`paddings`, `margins`,
   `borders`) so they can be spread directly into the helpers without touching
   CSS.
-- Keep `data-ui` contracts intact (`data-ui="heading"` for headings,
-  `data-ui="content"` for markdown wrapper, `data-ui="link"` for reusable
+- Keep `data-ui` contracts intact (`data-ui="heading"` for headings, `data-ui="link"` for reusable
   links).
 
 ## Communication

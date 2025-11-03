@@ -1,14 +1,20 @@
 import { isMeasurement } from './measurement';
 import type { AxisValues, MeasurementLike } from './types';
 
-type SpacingValue = MeasurementLike | number | string | null | undefined;
+type SpacingValue =
+  | MeasurementLike
+  | number
+  | string
+  | null
+  | undefined;
 export type SpacingProps = AxisValues<SpacingValue>;
 
 // number → px, IMeasurement → .css(), string passthrough
 const toCssLen = (v: SpacingValue): string | undefined => {
   if (v == null) return undefined;
   if (typeof v === 'string') return v;
-  if (typeof v === 'number') return Number.isFinite(v) ? `${v}px` : undefined;
+  if (typeof v === 'number')
+    return Number.isFinite(v) ? `${v}px` : undefined;
   if (isMeasurement(v)) return v.css();
   return undefined;
 };
@@ -35,10 +41,14 @@ const spacing = (props?: SpacingProps): string => {
   const base = resolve(props?.all, '0');
 
   const verticalBase =
-    props?.vertical !== undefined ? resolve(props.vertical, base) : base;
+    props?.vertical !== undefined
+      ? resolve(props.vertical, base)
+      : base;
 
   const horizontalBase =
-    props?.horizontal !== undefined ? resolve(props.horizontal, base) : base;
+    props?.horizontal !== undefined
+      ? resolve(props.horizontal, base)
+      : base;
 
   const topSpacing = resolve(props?.top, verticalBase);
   const rightSpacing = resolve(props?.right, horizontalBase);
@@ -66,10 +76,10 @@ const spacing = (props?: SpacingProps): string => {
   return `${topSpacing} ${rightSpacing} ${bottomSpacing} ${leftSpacing}`;
 };
 
-export const paddings = (props?: SpacingProps) => ({
+export const paddings = (props: SpacingProps) => ({
   padding: spacing(props),
 });
 
-export const margins = (props?: SpacingProps) => ({
+export const margins = (props: SpacingProps) => ({
   margin: spacing(props),
 });

@@ -16,10 +16,13 @@ import * as heroStyles from '@/styles/components/hero.css';
 import * as revealStyles from '@/styles/components/heroText.css';
 import { playProjectorText } from '@/lib/projectorText';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
-import { projectorVars } from '@/styles/vars/projector.vars';
-import type { ProjectorChannel } from '@/styles/vars/projector.vars';
-import { fontVars, heroVars } from '@/styles/vars';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
+import { fontVars } from '../tokens/fontVars.tokens';
+import { heroVars } from '../styles/componentTokens/hero.componentTokens';
+import {
+  projectorVars,
+  type ProjectorChannel,
+} from '../styles/componentTokens/projector.componentTokens';
 
 type Props = {
   label: string; // for accessibility
@@ -46,7 +49,10 @@ export default function HeroHeading({
   const ghostRef = useRef<HTMLSpanElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
   const shouldAnimate = animate && !prefersReducedMotion;
-  const [staticReady, setStaticReady] = useState<boolean>(shouldAnimate);
+  const [
+    staticReady,
+    setStaticReady,
+  ] = useState<boolean>(shouldAnimate);
 
   if (shouldAnimate) {
     console.log('[HeroHeading] render', {
@@ -57,7 +63,9 @@ export default function HeroHeading({
   const onRevealRef = useRef(onReveal);
   useEffect(() => {
     onRevealRef.current = onReveal;
-  }, [onReveal]);
+  }, [
+    onReveal,
+  ]);
 
   const notifyReveal = useCallback(() => {
     onRevealRef.current?.();
@@ -189,14 +197,18 @@ export default function HeroHeading({
     });
 
     let cancelled = false;
-    let playHandle: ReturnType<typeof playProjectorText> | null = null;
+    let playHandle: ReturnType<typeof playProjectorText> | null =
+      null;
 
     const attachRevealListener = (
       handle: ReturnType<typeof playProjectorText> | null,
     ) => {
       if (!handle) return;
       void handle
-        .then(() => undefined, () => undefined)
+        .then(
+          () => undefined,
+          () => undefined,
+        )
         .finally(() => {
           if (!cancelled) {
             notifyReveal();
@@ -220,8 +232,9 @@ export default function HeroHeading({
       });
 
       if (typeof window !== 'undefined') {
-        (window as typeof window & { __heroDebug?: true }).__heroDebug =
-          true;
+        (
+          window as typeof window & { __heroDebug?: true }
+        ).__heroDebug = true;
       }
 
       attachRevealListener(playHandle);
@@ -256,7 +269,10 @@ export default function HeroHeading({
 
   if (!shouldAnimate) {
     return (
-      <div className={revealStyles.container} data-hero-text="heroText">
+      <div
+        className={revealStyles.container}
+        data-hero-text="heroText"
+      >
         <h1
           data-text={label}
           data-static-ready={staticReady ? 'true' : 'false'}

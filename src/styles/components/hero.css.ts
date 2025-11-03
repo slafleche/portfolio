@@ -1,17 +1,20 @@
 import { style, globalStyle } from '@vanilla-extract/css';
+import { colorVars } from '../componentTokens/global.componentTokens';
+import { fontVars } from '../../tokens/fontVars.tokens';
+import { heroVars } from '../componentTokens/hero.componentTokens';
 import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
-import { colorVars, fontVars, heroVars } from '../vars';
 import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
 import transforms from '../helpers/transforms';
 import { m } from '../helpers/measurement';
 import { margins, paddings } from '../helpers/spacing';
 import { composeFontStyles } from '../helpers/typography.helpers';
+
 import {
   backgroundImageDecl,
   buildLinear,
 } from '../helpers/gradients';
-import { projectorVars } from '../vars/projector.vars';
+import { projectorVars } from '../componentTokens/projector.componentTokens';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -50,7 +53,6 @@ export const video = style({
   pointerEvents: 'none',
   objectFit: 'cover',
   mixBlendMode: 'screen',
-
 });
 
 export const contentWrap = style({
@@ -170,7 +172,8 @@ export const cta = style({
   color: colorVars.navBg.css(),
   fontWeight: 600,
   textDecoration: 'none',
-  transition: 'transform 150ms ease, box-shadow 150ms ease, opacity 220ms ease',
+  transition:
+    'transform 150ms ease, box-shadow 150ms ease, opacity 220ms ease',
   boxShadow: `0 ${m(1).css()} ${m(4).css()} rgba(0,0,0,0.15)`,
   opacity: 0,
   pointerEvents: 'none',

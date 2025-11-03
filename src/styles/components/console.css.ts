@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { colorVars, consoleVars } from '../vars';
+import { colorVars, consoleVars } from '../componentTokens/global.componentTokens';
 import { m } from '../helpers/measurement';
 import { paddings } from '../helpers/spacing';
 import { globalBoxShadow } from '../helpers/shadow';
