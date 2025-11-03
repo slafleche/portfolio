@@ -51,9 +51,10 @@ export type FontStyles = {
     | string
     | { value: number; unit?: string }
     | undefined;
-  fontWeight?: CSS.Property.FontWeight;
-  weight?: CSS.Property.FontWeight;
-  semiBold?: CSS.Property.FontWeight;
+  weights?: {
+    default: CSS.Property.FontWeight;
+    strong: CSS.Property.FontWeight;
+  };
   lineHeight?: CSS.Property.LineHeight;
   spacing?:
     | CssLike

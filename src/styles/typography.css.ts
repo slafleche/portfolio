@@ -35,17 +35,17 @@ globalStyle('blockquote', {
   ...borders(textStyleVars.blockquote.borders),
 });
 
-globalStyle('ul', {
+globalStyle(`.${userContent} ul, ul[data-ui="list-unordered"]`, {
   ...margins(textStyleVars.list.unordered.margins),
   ...paddings(textStyleVars.list.unordered.paddings),
 });
 
-globalStyle('ol', {
+globalStyle(`.${userContent} ol, ol[data-ui="list-ordered"]`, {
   ...margins(textStyleVars.list.ordered.margins),
   ...paddings(textStyleVars.list.ordered.paddings),
 });
 
-globalStyle('li', {
+globalStyle(`.${userContent} li, li[data-ui="list-item"]`, {
   ...margins(textStyleVars.list.item.margins),
 });
 
@@ -78,14 +78,15 @@ const linkRules = textStyleVars.link;
 
 globalStyle(`.${userContent} a, a[data-ui="link"]`, {
   color: linkRules.default.color.css(),
-  textDecoration: linkRules.default.textDecoration,
+  textDecoration: 'none',
   textUnderlineOffset: linkRules.default.underlineOffset.css(),
 });
 
 globalStyle(`.${userContent} a:hover, a[data-ui="link"]:hover`, {
-  color: linkRules.hover.color.css(),
+  textDecoration: 'underline',
   textDecorationThickness:
     linkRules.hover.textDecorationThickness.css(),
+  color: linkRules.hover.color.css(),
 });
 
 globalStyle(
@@ -101,10 +102,12 @@ globalStyle(
 
 globalStyle(`.${userContent} a:active, a[data-ui="link"]:active`, {
   color: linkRules.active.color.css(),
+  textDecoration: 'underline',
 });
 
 globalStyle(`.${userContent} a:visited, a[data-ui="link"]:visited`, {
   color: linkRules.visited.color.css(),
+  textDecoration: 'underline',
 });
 
 globalStyle('em', {
@@ -112,8 +115,7 @@ globalStyle('em', {
 });
 
 globalStyle('strong', {
-  // ...relativeFontSize(),
-  fontWeight: textStyleVars.strong.fontWeight,
+  fontWeight: fontVars.body.weights.strong,
 });
 
 globalStyle('del', {
