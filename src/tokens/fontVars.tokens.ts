@@ -3,20 +3,20 @@ import type { FontStyles } from '../styles/helpers/types';
 import { relativeFontWeight } from '../styles/helpers/typography.helpers';
 import { m, mPercent } from '../styles/measurementKit';
 
-const defaultHeadingFont = fontFamilies.urbanist;
-const defaultBodyFont = fontFamilies.ibm;
+const headingFamily = fontFamilies.urbanist;
+const bodyFamily = fontFamilies.ibm;
 
 export const fontVars = {
   menu: {
+    familyDef: headingFamily,
     size: m(16),
-    ...fontFamilies.urbanist,
     waitForFonts: [
       'Urbanist',
     ],
   },
   hero: {
-    ...defaultHeadingFont,
-    fontWeight: relativeFontWeight(defaultHeadingFont, mPercent(20)),
+    familyDef: headingFamily,
+    fontWeight: relativeFontWeight(headingFamily, mPercent(20)),
     lineHeight: 1.1,
     size: m(45),
     waitForFonts: [
@@ -24,46 +24,46 @@ export const fontVars = {
     ],
   },
   heading: {
-    ...defaultHeadingFont,
+    familyDef: headingFamily,
   },
   h1: {
-    ...defaultHeadingFont,
+    familyDef: headingFamily,
     size: m(45),
-    fontWeight: relativeFontWeight(defaultHeadingFont, mPercent(100)),
+    fontWeight: relativeFontWeight(headingFamily, mPercent(100)),
   },
   h2: {
-    ...defaultHeadingFont,
+    familyDef: headingFamily,
     size: m(26),
-    fontWeight: relativeFontWeight(defaultHeadingFont, mPercent(100)),
+    fontWeight: relativeFontWeight(headingFamily, mPercent(100)),
   },
   h3: {
-    ...defaultHeadingFont,
+    familyDef: headingFamily,
     size: m(23),
-    fontWeight: relativeFontWeight(defaultHeadingFont, mPercent(100)),
+    fontWeight: relativeFontWeight(headingFamily, mPercent(100)),
   },
   h4: {
-    ...defaultHeadingFont,
+    familyDef: headingFamily,
     size: m(20),
-    fontWeight: relativeFontWeight(defaultHeadingFont, mPercent(100)),
+    fontWeight: relativeFontWeight(headingFamily, mPercent(100)),
   },
   h5: {
-    ...defaultHeadingFont,
+    familyDef: headingFamily,
     size: m(18),
-    fontWeight: relativeFontWeight(defaultHeadingFont, mPercent(100)),
+    fontWeight: relativeFontWeight(headingFamily, mPercent(100)),
   },
   h6: {
-    ...defaultHeadingFont,
+    familyDef: headingFamily,
     size: m(17),
-    fontWeight: relativeFontWeight(defaultHeadingFont, mPercent(100)),
+    fontWeight: relativeFontWeight(headingFamily, mPercent(100)),
   },
   body: {
+    familyDef: bodyFamily,
     size: m(16),
     lineHeight: 1,
-    ...defaultBodyFont,
-    fontWeight: relativeFontWeight(defaultBodyFont, mPercent(0)),
+    fontWeight: relativeFontWeight(bodyFamily, mPercent(0)),
     weights: {
-      default: relativeFontWeight(defaultBodyFont, mPercent(0)),
-      strong: defaultBodyFont.weights.strong,
+      default: relativeFontWeight(bodyFamily, mPercent(0)),
+      strong: bodyFamily.weights.strong,
     },
   },
 } satisfies Record<string, FontStyles>;

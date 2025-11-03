@@ -178,18 +178,6 @@ const addLayer = (target: FontStyles, layer: FontStyleLayer) => {
   }
 };
 
-const isFontFamilyDef = (value: unknown): value is FontFamilyDef => {
-  if (!value || typeof value !== 'object') return false;
-  const candidate = value as Partial<FontFamilyDef>;
-  return (
-    typeof candidate.family === 'string' &&
-    typeof candidate.weights === 'object' &&
-    candidate.weights !== null &&
-    typeof candidate.weights.low === 'number' &&
-    typeof candidate.weights.high === 'number'
-  );
-};
-
 export function composeFontStyles({
   family,
   token,
@@ -199,10 +187,7 @@ export function composeFontStyles({
 }: ComposeFontStyleOptions): FontCSS {
   const merged: FontStyles = {};
 
-  let resolvedFamily = family ?? null;
-  if (!resolvedFamily && token && isFontFamilyDef(token)) {
-    resolvedFamily = token;
-  }
+  const resolvedFamily = family ?? token?.familyDef ?? null;
 
   if (resolvedFamily) {
     addLayer(merged, familyToFontStyles(resolvedFamily));
@@ -220,8 +205,14 @@ export function composeFontStyles({
     addLayer(merged, layers);
   }
 
-  if (resolvedFamily && isPercentMeasurement(weightPercent)) {
-    addLayer(merged, fontWeightStyle(resolvedFamily, weightPercent));
+  if (weightPercent != null) {
+    if (!resolvedFamily) {
+      if (process.env.NODE_ENV !== 'production') {
+        throw new Error('composeFontStyles: family data is required when using weightPercent. Provide `family` or set `familyDef` on your token.');
+      }
+    } else if (isPercentMeasurement(weightPercent)) {
+      addLayer(merged, fontWeightStyle(resolvedFamily, weightPercent));
+    }
   }
 
   if (overrides) {
