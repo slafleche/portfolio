@@ -1,7 +1,7 @@
 import { fontFamilies } from './fontFamilies.tokens';
 import type { FontStyles } from '../styles/helpers/types';
 import { relativeFontWeight } from '../styles/helpers/typography.helpers';
-import { m } from '../styles/measurement';
+import { m } from '../styles/measurementKit';
 
 const defaultHeadingFont = fontFamilies.urbanist;
 const defaultBodyFont = fontFamilies.ibm;

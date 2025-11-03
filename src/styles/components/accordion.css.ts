@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { m } from '../measurement';
+import { m } from '../measurementKit';
 import { colorVars } from '../componentTokens/global.componentTokens';
 
 export const root = style({

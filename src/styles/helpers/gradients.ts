@@ -3,8 +3,8 @@ import {
   type ColorWrapper,
   type CuloriOKLCH,
 } from './colorWrap';
-import type { IMeasurement } from './measurement';
-import { hasCssMethod } from './measurement';
+import type { IMeasurement } from '../measurementKit';
+import { hasCssMethod } from '../measurementKit';
 import {
   buildCurve,
   easing,

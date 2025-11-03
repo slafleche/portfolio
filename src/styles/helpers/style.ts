@@ -1,7 +1,7 @@
 // helpers/style.ts
 import type { ColorWrapper } from './colorWrap';
 import type { Color as ChromaColor } from 'chroma-js';
-import { isMeasurement, hasCssMethod } from './measurement';
+import { isMeasurement, hasCssMethod } from '../measurementKit';
 import type { MeasurementLike } from './types';
 
 export type CssColorish =

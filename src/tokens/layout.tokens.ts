@@ -1,4 +1,4 @@
-import { m } from '../styles/measurement';
+import { m } from '../styles/measurementKit';
 
 const contentPadding = m(40);
 // const compactContentPadding = m(26);

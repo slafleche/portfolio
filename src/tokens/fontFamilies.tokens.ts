@@ -1,5 +1,5 @@
 import type { FontFamilyDef } from '../styles/helpers/types';
-import { m } from '../styles/measurement';
+import { m } from '../styles/measurementKit';
 import fontsConfig, {
   makeFamilyDef,
 } from '../styles/helpers/fontConfig';

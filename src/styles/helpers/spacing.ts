@@ -1,4 +1,4 @@
-import { isMeasurement } from './measurement';
+import { isMeasurement } from '../measurementKit';
 import type { AxisValues, MeasurementLike } from './types';
 
 type SpacingValue =

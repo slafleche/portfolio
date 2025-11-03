@@ -1,5 +1,5 @@
 import { color } from './colorWrap';
-import { m, mPercent } from './measurement';
+import { m, mPercent } from '../measurementKit';
 import type * as CSS from 'csstype';
 import { noiseStyle, type NoiseSvgOptions } from './noiseSVG';
 import { colorVars } from '../componentTokens/global.componentTokens';

@@ -5,7 +5,7 @@ import type {
   BorderWidthInput,
   BorderRadiusInput,
 } from '../componentTokens/global.componentTokens';
-import { isMeasurement, hasCssMethod } from './measurement';
+import { isMeasurement, hasCssMethod } from '../measurementKit';
 import type {
   AxisValues,
   CompassCorners,
