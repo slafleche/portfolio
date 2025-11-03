@@ -197,19 +197,45 @@ function deriveAxisDefaults(
  *   export `fontsConfig`)
  * @param spacing IMeasurement only (e.g., m(0.3, 'rem'))
  */
+type WeightConfig = {
+	low?: number;
+	default: number;
+	strong: number;
+	high?: number;
+};
+
 type MakeFamilyDefArgs = {
 	familyName?: string;
 	fallbacks: string[];
 	cfgMap?: FontsConfig;
 	spacing: IMeasurement;
 	offsetToFlushTop: IMeasurement;
-	weights?: {
-		low: number;
-		high: number;
-	};
+	weights: WeightConfig;
 	lineHeight?: FontFamilyDef['lineHeight'];
 	css?: FontFamilyDef['css'];
 	axisDefaults?: FontFamilyDef['axisDefaults'];
+};
+
+const assertWeightOrder = (
+	{ low, default: normal, strong, high }: Required<WeightConfig>,
+	familyName?: string,
+) => {
+	const label = familyName ? ` "${familyName}"` : '';
+	if (!(low <= normal)) {
+		throw new Error(
+			`makeFamilyDef${label}: expected low (${low}) ≤ default (${normal}).`,
+		);
+	}
+	if (!(normal < strong)) {
+		throw new Error(
+			`makeFamilyDef${label}: expected default (${normal}) < strong (${strong}).`,
+		);
+	}
+	if (!(strong <= high)) {
+		throw new Error(
+			`makeFamilyDef${label}: expected strong (${strong}) ≤ high (${high}).`,
+		);
+	}
 };
 
 export function makeFamilyDef({
@@ -218,16 +244,61 @@ export function makeFamilyDef({
 	cfgMap,
 	spacing,
 	offsetToFlushTop,
-	weights: explicitWeights,
+	weights,
 	lineHeight,
 	css,
 	axisDefaults,
 }: MakeFamilyDefArgs): FontFamilyDef {
-	const effectiveWeights =
-		explicitWeights ??
-		(familyName && cfgMap && cfgMap[familyName]
-			? weightRangeFromConfig(cfgMap[familyName].weights)
-			: { low: 400, high: 700 });
+	let resolvedLow = weights.low;
+	let resolvedHigh = weights.high;
+
+	const getConfigEntry = () => {
+		if (!familyName || !cfgMap) return undefined;
+		const direct = cfgMap[familyName];
+		if (direct) return direct;
+		const plusKey = familyName.replace(/\s+/g, '+');
+		if (plusKey !== familyName) {
+			const plusMatch = cfgMap[plusKey];
+			if (plusMatch) return plusMatch;
+		}
+		return undefined;
+	};
+
+	const source = getConfigEntry();
+
+	if (source?.weights) {
+		const range = weightRangeFromConfig(source.weights);
+
+		if (resolvedLow !== undefined && resolvedLow !== range.low) {
+			throw new Error(
+				`makeFamilyDef${familyName ? ` \"${familyName}\"` : ''}: weight low (${resolvedLow}) conflicts with fonts.config.json range (${range.low}).`,
+			);
+		}
+
+		if (resolvedHigh !== undefined && resolvedHigh !== range.high) {
+			throw new Error(
+				`makeFamilyDef${familyName ? ` \"${familyName}\"` : ''}: weight high (${resolvedHigh}) conflicts with fonts.config.json range (${range.high}).`,
+			);
+		}
+
+		if (resolvedLow === undefined) resolvedLow = range.low;
+		if (resolvedHigh === undefined) resolvedHigh = range.high;
+	}
+
+	if (resolvedLow === undefined || resolvedHigh === undefined) {
+		throw new Error(
+			`makeFamilyDef${familyName ? ` "${familyName}"` : ''}: low/high weights must be provided directly or via fonts.config.json range.`,
+		);
+	}
+
+	const finalWeights: Required<WeightConfig> = {
+		low: resolvedLow,
+		default: weights.default,
+		strong: weights.strong,
+		high: resolvedHigh,
+	};
+
+	assertWeightOrder(finalWeights, familyName);
 
 	const familyParts = familyName
 		? [
@@ -256,7 +327,7 @@ export function makeFamilyDef({
 
 	return {
 		family: familyParts.join(', '),
-		weights: effectiveWeights,
+		weights: finalWeights,
 		spacing,
 		offsetToFlushTop,
 		lineHeight,

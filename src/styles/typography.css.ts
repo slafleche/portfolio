@@ -2,21 +2,24 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { composeFontStyles } from './helpers/typography.helpers';
 import { paddings, margins } from './helpers/spacing';
 import borders from './helpers/borders';
+import { focusOutline } from './helpers/focusOutline';
 import { colorVars } from './componentTokens/global.componentTokens';
 import { fontVars } from '../tokens/fontVars.tokens';
 import { textStyleVars } from '../tokens/textStyles.tokens';
 
 export const userContent = style({});
 
-for (let i = 1; i <= 6; i++) {
-  // .userContent h${i} is for markdown or other user generated content
-  // h${i}[data-ui="heading"] is for headings that explicitly want text
-  // styles, without conflicting with component styles
-  globalStyle(`.${userContent} h${i}, h${i}[data-ui="heading"]`, {
-    color: colorVars.bodyFg.css(),
-    ...composeFontStyles({ token: fontVars.body }),
-    ...margins(textStyleVars.paragraph.margins),
-  });
+for (let level = 1; level <= 6; level++) {
+  globalStyle(
+    `.${userContent} h${level}, h${level}[data-ui="heading"]`,
+    {
+      color: colorVars.bodyFg.css(),
+      ...composeFontStyles({
+        token: fontVars[`h${level}` as keyof typeof fontVars],
+      }),
+      ...margins(textStyleVars.paragraph.margins),
+    },
+  );
 }
 
 globalStyle(`.${userContent} p, p[data-ui="paragraph"]`, {
@@ -26,7 +29,7 @@ globalStyle(`.${userContent} p, p[data-ui="paragraph"]`, {
 });
 
 globalStyle('blockquote', {
-  color: textStyleVars.blockquote.color.css(),
+  // color: textStyleVars.blockquote.color.css(),
   ...margins(textStyleVars.blockquote.margins),
   ...paddings(textStyleVars.blockquote.paddings),
   // ...borders(textStyleVars.blockquote.borders),
@@ -48,7 +51,7 @@ globalStyle('li', {
 
 globalStyle(`code`, {
   fontFamily: textStyleVars.code.inline.fontFamily,
-  backgroundColor: textStyleVars.code.inline.backgroundColor.css(),
+  // backgroundColor: textStyleVars.code.inline.backgroundColor.css(),
   // ...borders(textStyleVars.code.inline.borders),
   ...paddings(textStyleVars.code.inline.paddings),
 });
@@ -59,7 +62,7 @@ globalStyle('pre', {
   whiteSpace: 'pre-wrap',
   wordBreak: 'break-word',
   fontFamily: codeBlock.fontFamily,
-  backgroundColor: codeBlock.backgroundColor.css(),
+  // backgroundColor: codeBlock.backgroundColor.css(),
   ...margins(codeBlock.margins),
   ...paddings(codeBlock.paddings),
   ...borders(codeBlock.borders),
@@ -72,36 +75,37 @@ globalStyle('pre code', {
 });
 
 const linkRules = textStyleVars.link;
+
+globalStyle(`.${userContent} a, a[data-ui="link"]`, {
+  color: linkRules.default.color.css(),
+  textDecoration: linkRules.default.textDecoration,
+  textUnderlineOffset: linkRules.default.underlineOffset.css(),
+});
+
+globalStyle(`.${userContent} a:hover, a[data-ui="link"]:hover`, {
+  color: linkRules.hover.color.css(),
+  textDecorationThickness:
+    linkRules.hover.textDecorationThickness.css(),
+});
+
 globalStyle(
-  [
-    'a[data-ui="link"]', // Regular link, but opts in to text styles to not confuse links in components
-    `.${userContent} a`, // Links inside user content (i.e. markdown, or other sources)
-  ].join(', '),
+  `.${userContent} a:focus-visible, a[data-ui="link"]:focus-visible`,
   {
-    color: linkRules.default.color.css(),
-    textDecoration: linkRules.default.textDecoration,
-    textUnderlineOffset: linkRules.default.underlineOffset.css(),
-    // selectors: {
-    //   '&:hover': {
-    //     color: linkRules.hover.color.css(),
-    //     textDecorationThickness:
-    //       linkRules.hover.textDecorationThickness.css(),
-    //   },
-    //   '&:focus-visible': {
-    //     outlineColor: linkRules.focusVisible.outlineColor.css(),
-    //     outlineOffset: linkRules.focusVisible.outlineOffset.css(),
-    //     outlineStyle: linkRules.focusVisible.outlineStyle,
-    //     outlineWidth: linkRules.focusVisible.outlineWidth.css(),
-    //   },
-    //   '&:active': {
-    //     color: linkRules.active.color.css(),
-    //   },
-    //   '&:visited': {
-    //     color: linkRules.visited.color.css(),
-    //   },
-    // },
+    ...focusOutline({
+      color: linkRules.focusVisible.outlines.color,
+      width: linkRules.focusVisible.outlines.width,
+      offset: linkRules.focusVisible.outlines.offset,
+    }),
   },
 );
+
+globalStyle(`.${userContent} a:active, a[data-ui="link"]:active`, {
+  color: linkRules.active.color.css(),
+});
+
+globalStyle(`.${userContent} a:visited, a[data-ui="link"]:visited`, {
+  color: linkRules.visited.color.css(),
+});
 
 globalStyle('em', {
   fontStyle: textStyleVars.em.fontStyle,
