@@ -6,7 +6,7 @@ import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
 import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
 import transforms from '../helpers/transforms';
-import { m } from '../measurementKit';
+import { m, mPercent } from '../measurementKit';
 import { margins, paddings } from '../helpers/spacing';
 import { composeFontStyles } from '../helpers/typography.helpers';
 
@@ -145,7 +145,7 @@ export const paragraph = style({
   textAlign: 'center',
   ...composeFontStyles({
     token: fontVars.hero,
-    weightPercent: 0,
+    weightPercent: mPercent(0),
     overrides: {
       size: undefined,
     },

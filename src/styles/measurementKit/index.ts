@@ -1,5 +1,7 @@
 const measurementRegistry = new WeakSet<object>();
 
+type UnitBrand<Unit extends string> = { readonly __unitBrand: Unit };
+
 export interface IMeasurement {
   readonly value: number;
   readonly unit: string;
@@ -55,13 +57,13 @@ const deltaToNumber = (
   return delta.value;
 };
 
-const createMeasurement = (
+const createMeasurement = <Unit extends string>(
   value: number,
-  unit: string,
-): IMeasurement => {
-  const normalizedUnit = unit.toLowerCase();
+  unit: Unit,
+): IMeasurement & UnitBrand<Unit> => {
+  const normalizedUnit = unit.toLowerCase() as Unit;
 
-  const measurement: IMeasurement = {
+  const measurement = {
     value,
     unit: normalizedUnit,
     css: () => `${measurement.value}${measurement.unit}`,
@@ -97,24 +99,24 @@ const createMeasurement = (
     add: (delta) =>
       createMeasurement(
         measurement.value + deltaToNumber(measurement, delta),
-        measurement.unit,
+        normalizedUnit,
       ),
     subtract: (delta) =>
       createMeasurement(
         measurement.value - deltaToNumber(measurement, delta),
-        measurement.unit,
+        normalizedUnit,
       ),
     multiply: (factor) => {
       if (factor === 1) return measurement;
-      if (factor === 0) return createMeasurement(0, measurement.unit);
+      if (factor === 0) return createMeasurement(0, normalizedUnit);
       if (factor === -1)
         return createMeasurement(
           -measurement.value,
-          measurement.unit,
+          normalizedUnit,
         );
       return createMeasurement(
         measurement.value * factor,
-        measurement.unit,
+        normalizedUnit,
       );
     },
     divide: (divisor) => {
@@ -123,12 +125,12 @@ const createMeasurement = (
       const result = measurement.value / divisor;
       if (!Number.isFinite(result))
         throw new Error('Non-finite result');
-      return createMeasurement(result, measurement.unit);
+      return createMeasurement(result, normalizedUnit);
     },
     double: () =>
-      createMeasurement(measurement.value * 2, measurement.unit),
+      createMeasurement(measurement.value * 2, normalizedUnit),
     half: () =>
-      createMeasurement(measurement.value / 2, measurement.unit),
+      createMeasurement(measurement.value / 2, normalizedUnit),
     negation: (shouldNegate = true) =>
       shouldNegate
         ? createMeasurement(-measurement.value, measurement.unit)
@@ -136,7 +138,7 @@ const createMeasurement = (
     absolute: () =>
       createMeasurement(
         Math.abs(measurement.value),
-        measurement.unit,
+        normalizedUnit,
       ),
     round: (precision = 0) => {
       const next =
@@ -173,7 +175,12 @@ const createMeasurement = (
         ? measurement
         : createMeasurement(v, u);
     },
-  };
+  } as IMeasurement & UnitBrand<Unit>;
+
+  Object.defineProperty(measurement, '__unitBrand', {
+    value: normalizedUnit,
+    enumerable: false,
+  });
 
   measurementRegistry.add(measurement);
   return Object.freeze(measurement);
