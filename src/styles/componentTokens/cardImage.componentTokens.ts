@@ -1,4 +1,4 @@
-import { dropShadowVars, colorVars } from './global.vars';
+import { dropShadowVars, colorVars } from './global.componentTokens';
 import { m, mPercent } from '../helpers/measurement';
 
 export const cardImageVars = {

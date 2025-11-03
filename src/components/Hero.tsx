@@ -9,15 +9,10 @@ import VideoByName from './VideoByName';
 import HeroHeading from './HeroHeading.client';
 import { toTrimmedOrNull } from '@/lib/stringUtils';
 import SendIcon from '@/components/icons/SendIcon';
-import {
-  collectWaitForFonts,
-  waitForFonts,
-} from '@/lib/fontLoading';
-import {
-  fontVars,
-  projectorVars,
-  heroVars,
-} from '@/styles/vars';
+import { collectWaitForFonts, waitForFonts } from '@/lib/fontLoading';
+import { fontVars } from '../tokens/fontVars.tokens';
+import { heroVars } from '../styles/componentTokens/hero.componentTokens';
+import { projectorVars } from '../styles/componentTokens/projector.componentTokens';
 
 type HeroCopy = {
   videoTitle: string;
@@ -62,7 +57,10 @@ export default function Hero({
       toTrimmedOrNull(
         `${copy.headingFirstLine} ${copy.headingLastLine}`,
       ),
-    [copy.headingFirstLine, copy.headingLastLine],
+    [
+      copy.headingFirstLine,
+      copy.headingLastLine,
+    ],
   );
   const showVideo = withVideo;
   const showCta = Boolean(ctaHref && copy.ctaLabel);
@@ -74,7 +72,11 @@ export default function Hero({
         copy.ctaLabel,
         headingAnimated ? 'animated' : 'static',
       ].join('|'),
-    [headingAnimated, headingLabel, copy.ctaLabel],
+    [
+      headingAnimated,
+      headingLabel,
+      copy.ctaLabel,
+    ],
   );
 
   useEffect(() => {
@@ -101,10 +103,12 @@ export default function Hero({
         projectorVars.timing.calibration.totalCalibrationTime;
       const revealOffset =
         projectorVars.timing.textReveal.offsetFromCalibrationEnd;
-      const revealDuration =
-        projectorVars.timing.textReveal.duration;
+      const revealDuration = projectorVars.timing.textReveal.duration;
       const totalDelay = headingAnimated
-        ? calibration.add(revealOffset).add(revealDuration).add(projectorVars.cta.delay)
+        ? calibration
+            .add(revealOffset)
+            .add(revealDuration)
+            .add(projectorVars.cta.delay)
         : projectorVars.cta.delay;
       const delayMs = totalDelay.value;
 
@@ -143,7 +147,10 @@ export default function Hero({
     if (!headingAnimated || !waitingForReveal) return;
     setCtaReady(true);
     setWaitingForReveal(false);
-  }, [headingAnimated, waitingForReveal]);
+  }, [
+    headingAnimated,
+    waitingForReveal,
+  ]);
 
   const ctaVisible = showCta && ctaReady;
 
@@ -177,10 +184,7 @@ export default function Hero({
       ) : null}
 
       {/* Banding-fix overlays (over video, under content) */}
-      <div
-        className={clsx(s.overlays, overlayClassName)}
-        aria-hidden
-      >
+      <div className={clsx(s.overlays, overlayClassName)} aria-hidden>
         <div className={s.grain} />
         <div className={s.wash} />
         <div className={s.centerSoften} />

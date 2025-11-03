@@ -1,7 +1,7 @@
 import {
-  projectorVars,
   projectorChannels,
-} from '@/styles/vars/projector.vars';
+  projectorVars,
+} from '../styles/componentTokens/projector.componentTokens';
 
 type Tier = 'desktop';
 

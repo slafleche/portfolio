@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { assertUnit } from '../helpers/measurement';
-import { chevronVars, colorVars } from '../vars';
+import { chevronVars, colorVars } from '../componentTokens/global.componentTokens';
 // import borders from '../helpers/borders';
 import { globalBoxShadow } from '../helpers/shadow';
 

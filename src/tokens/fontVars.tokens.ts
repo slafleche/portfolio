@@ -1,7 +1,7 @@
 import { fontFamilies } from './fontFamilies.tokens';
-import type { FontStyles } from '@/styles/helpers/types';
-import { fontWeight } from '@/styles/helpers/typography.helpers';
-import { m } from '@/styles/helpers/measurement';
+import type { FontStyles } from '../styles/helpers/types';
+import { fontWeight } from '../styles/helpers/typography.helpers';
+import { m } from '../styles/helpers/measurement';
 
 const defaultHeadingFont = fontFamilies.urbanist;
 const defaultBodyFont = fontFamilies.ibm;
@@ -33,27 +33,27 @@ export const fontVars = {
 	},
 	h2: {
 		...defaultHeadingFont,
-		size: m(25),
+		size: m(26),
 		...fontWeight(defaultHeadingFont, 100),
 	},
 	h3: {
 		...defaultHeadingFont,
-		size: m(20),
+		size: m(23),
 		...fontWeight(defaultHeadingFont, 100),
 	},
 	h4: {
 		...defaultHeadingFont,
-		size: m(18),
+		size: m(20),
 		...fontWeight(defaultHeadingFont, 100),
 	},
 	h5: {
 		...defaultHeadingFont,
-		size: m(16),
+		size: m(18),
 		...fontWeight(defaultHeadingFont, 100),
 	},
 	h6: {
 		...defaultHeadingFont,
-		size: m(14),
+		size: m(17),
 		...fontWeight(defaultHeadingFont, 100),
 	},
 	body: {

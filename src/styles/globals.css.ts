@@ -1,5 +1,6 @@
 import { globalStyle } from '@vanilla-extract/css';
-import { archVars, colorVars, fontVars, spacingVars } from './vars';
+import { archVars, colorVars, spacingVars } from './componentTokens/global.componentTokens';
+import { fontVars } from '../tokens/fontVars.tokens';
 import {
   ReducedMotion,
   reducedMotion,

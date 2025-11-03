@@ -1,7 +1,7 @@
-import { color } from '@/styles/helpers/colorWrap';
+import { color } from './colorWrap';
 import type * as CSS from 'csstype';
 import { m } from './measurement';
-import { colorVars } from '../vars';
+import { colorVars } from '../componentTokens/global.componentTokens';
 import { glassNoise } from './glassy';
 
 /**

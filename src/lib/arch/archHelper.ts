@@ -1,5 +1,5 @@
 import type { IMeasurement } from '@/styles/helpers/measurement';
-import { menuVars } from '../../styles/vars';
+import { menuVars } from '../../styles/componentTokens/global.componentTokens';
 import transforms from '../../styles/helpers/transforms';
 
 export interface IArch {

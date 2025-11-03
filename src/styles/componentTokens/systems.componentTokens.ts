@@ -1,4 +1,4 @@
-import { color } from '@/styles/helpers/colorWrap';
+import { color } from '../helpers/colorWrap';
 import type { CardGradientPack } from '../helpers/cardGradient';
 
 export const systemsHeroGradient: CardGradientPack = {

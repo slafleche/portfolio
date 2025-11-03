@@ -1,5 +1,5 @@
 import { globalStyle } from '@vanilla-extract/css';
-import * as CSS from 'csstype';
+import type * as CSS from 'csstype';
 
 globalStyle('*[data-visible="hidden"]', {
 	visibility: 'hidden !important' as CSS.Property.Visibility,
@@ -21,11 +21,11 @@ globalStyle('*[data-interaction="none"]', {
 	pointerEvents: 'none !important' as CSS.Property.PointerEvents,
 });
 
-globalStyle('a[data-ui="link"]', {
-	textDecoration: 'none',
-	color: 'inherit',
-});
+// globalStyle('a[data-ui="link"]', {
+// 	textDecoration: 'none',
+// 	color: 'inherit',
+// });
 
-globalStyle('a[data-ui="link"]:visited', {
-	color: 'inherit',
-});
+// globalStyle('a[data-ui="link"]:visited', {
+// 	color: 'inherit',
+// });

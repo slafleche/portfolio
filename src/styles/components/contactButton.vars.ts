@@ -1,4 +1,4 @@
-import { m, assertUnit } from '@/styles/helpers/measurement';
+import { m, assertUnit } from '../helpers/measurement';
 
 /* ---------- SPIN (exit) ---------- */
 export const spinAnticDeg = m(10, 'deg'); // wrong-direction pre-rotation

@@ -1,104 +1,108 @@
 import { keyframes, style } from '@vanilla-extract/css';
 import { absolutePosition } from '../helpers/positioning';
-import { mixWithAlpha } from '@/styles/helpers/colorWrap';
-import { colorVars, dropShadowVars, glowVars } from '../vars';
+import { mixWithAlpha } from '../helpers/colorWrap';
 import { createArchGlassBackground } from '../helpers/arch';
 import { noiseBg } from '../helpers/noiseSVG';
+import {
+  colorVars,
+  dropShadowVars,
+  glowVars,
+} from '../componentTokens/global.componentTokens';
 
 export const root = style({
-	position: 'relative',
-	overflow: 'visible',
-	display: 'block',
+  position: 'relative',
+  overflow: 'visible',
+  display: 'block',
 });
 
 export const svg = style({
-	overflow: 'visible',
-	position: 'relative',
-	zIndex: 1, // keep rim stroke above the glass layer
+  overflow: 'visible',
+  position: 'relative',
+  zIndex: 1, // keep rim stroke above the glass layer
 });
 
 export const shadow = style({
-	...absolutePosition.topLeft(),
-	// Give extra room so the blurred, offset shadow doesn’t clip
-	width: `100%`,
-	height: `100%`,
-	pointerEvents: 'none',
-	filter: `blur(${dropShadowVars.blur.css()})`,
+  ...absolutePosition.topLeft(),
+  // Give extra room so the blurred, offset shadow doesn’t clip
+  width: `100%`,
+  height: `100%`,
+  pointerEvents: 'none',
+  filter: `blur(${dropShadowVars.blur.css()})`,
 });
 
 const shadowAlpha = dropShadowVars.color.alpha();
 const glowBaseColor = mixWithAlpha(
-	dropShadowVars.color,
-	colorVars.contrast,
-	glowVars.mix.base,
-	shadowAlpha,
+  dropShadowVars.color,
+  colorVars.contrast,
+  glowVars.mix.base,
+  shadowAlpha,
 );
 const glowFillColor = mixWithAlpha(
-	dropShadowVars.color,
-	colorVars.contrast,
-	glowVars.mix.fill,
-	shadowAlpha,
+  dropShadowVars.color,
+  colorVars.contrast,
+  glowVars.mix.fill,
+  shadowAlpha,
 );
 const gentleGlowFilter = `drop-shadow(0 0 ${glowVars.blur.primary}px ${glowBaseColor.css()}) drop-shadow(0 0 ${glowVars.blur.secondary}px ${glowFillColor.css()})`;
 
 const logoGlow = keyframes({
-	'0%': {
-		filter: gentleGlowFilter,
-		fill: glowFillColor.css(),
-	},
-	'30%': {
-		filter: `drop-shadow(0 0 ${glowVars.blur.primary}px ${glowBaseColor.css()}) drop-shadow(0 0 ${glowVars.blur.secondary}px ${glowFillColor.css()})`,
-		fill: glowFillColor.css(),
-	},
-	'50%': {
-		filter: `drop-shadow(0 0 10px ${glowBaseColor.css()}) drop-shadow(0 0 22px ${glowFillColor.css()})`,
-		fill: mixWithAlpha(
-			dropShadowVars.color,
-			colorVars.contrast,
-			glowVars.mix.sustain,
-			shadowAlpha,
-		).css(),
-	},
-	'100%': {
-		filter: `drop-shadow(0 0 0 ${dropShadowVars.color.css()})`,
-		fill: dropShadowVars.color.css(),
-	},
+  '0%': {
+    filter: gentleGlowFilter,
+    fill: glowFillColor.css(),
+  },
+  '30%': {
+    filter: `drop-shadow(0 0 ${glowVars.blur.primary}px ${glowBaseColor.css()}) drop-shadow(0 0 ${glowVars.blur.secondary}px ${glowFillColor.css()})`,
+    fill: glowFillColor.css(),
+  },
+  '50%': {
+    filter: `drop-shadow(0 0 10px ${glowBaseColor.css()}) drop-shadow(0 0 22px ${glowFillColor.css()})`,
+    fill: mixWithAlpha(
+      dropShadowVars.color,
+      colorVars.contrast,
+      glowVars.mix.sustain,
+      shadowAlpha,
+    ).css(),
+  },
+  '100%': {
+    filter: `drop-shadow(0 0 0 ${dropShadowVars.color.css()})`,
+    fill: dropShadowVars.color.css(),
+  },
 });
 
 export const shadowPath = style({
-	fill: dropShadowVars.color.css(),
-	willChange: 'filter, fill',
-	selectors: {
-		'[data-logo-glow="pulse"] &': {
-			animation: `${logoGlow} 800ms ease-out`,
-		},
-		'[data-logo-glow="hold"] &': {
-			animation: 'none',
-			filter: gentleGlowFilter,
-			fill: glowFillColor.css(),
-		},
-		'[data-glow-debug="true"] &': {
-			animation: 'none',
-			filter: gentleGlowFilter,
-			fill: glowFillColor.css(),
-		},
-	},
-	'@media': {
-		'(prefers-reduced-motion: reduce)': {
-			selectors: {
-				'[data-logo-glow="pulse"] &': {
-					animation: 'none',
-					filter: gentleGlowFilter,
-					fill: glowFillColor.css(),
-				},
-				'[data-logo-glow="hold"] &': {
-					animation: 'none',
-					filter: gentleGlowFilter,
-					fill: glowFillColor.css(),
-				},
-			},
-		},
-	},
+  fill: dropShadowVars.color.css(),
+  willChange: 'filter, fill',
+  selectors: {
+    '[data-logo-glow="pulse"] &': {
+      animation: `${logoGlow} 800ms ease-out`,
+    },
+    '[data-logo-glow="hold"] &': {
+      animation: 'none',
+      filter: gentleGlowFilter,
+      fill: glowFillColor.css(),
+    },
+    '[data-glow-debug="true"] &': {
+      animation: 'none',
+      filter: gentleGlowFilter,
+      fill: glowFillColor.css(),
+    },
+  },
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      selectors: {
+        '[data-logo-glow="pulse"] &': {
+          animation: 'none',
+          filter: gentleGlowFilter,
+          fill: glowFillColor.css(),
+        },
+        '[data-logo-glow="hold"] &': {
+          animation: 'none',
+          filter: gentleGlowFilter,
+          fill: glowFillColor.css(),
+        },
+      },
+    },
+  },
 });
 
 const baseGlass = createArchGlassBackground();
@@ -114,26 +118,26 @@ const archOverlayGradient = `linear-gradient(180deg,
  * url(#clipPathId).
  */
 export const surface = style({
-	position: 'absolute',
-	inset: 0,
-	zIndex: 0,
-	borderRadius: 0,
-	pointerEvents: 'none', // keep clicks for the UI above
+  position: 'absolute',
+  inset: 0,
+  zIndex: 0,
+  borderRadius: 0,
+  pointerEvents: 'none', // keep clicks for the UI above
 
-	// same layering you had before (overlay + glow + base)
-	background: [
-		archOverlayGradient,
-		baseGlass.background,
-	].join(', '),
+  // same layering you had before (overlay + glow + base)
+  background: [
+    archOverlayGradient,
+    baseGlass.background,
+  ].join(', '),
 
-	// blur needs a non-zero alpha base in Safari (our baseGlass.background already includes a color layer)
-	backdropFilter: baseGlass.backdropFilter,
-	WebkitBackdropFilter: baseGlass.WebkitBackdropFilter,
+  // blur needs a non-zero alpha base in Safari (our baseGlass.background already includes a color layer)
+  backdropFilter: baseGlass.backdropFilter,
+  WebkitBackdropFilter: baseGlass.WebkitBackdropFilter,
 });
 
 export const grain = style({
-	...absolutePosition.fullSize(),
-	inset: 0,
-	borderRadius: 0,
-	...noiseBg(),
+  ...absolutePosition.fullSize(),
+  inset: 0,
+  borderRadius: 0,
+  ...noiseBg(),
 });
