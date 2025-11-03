@@ -1,4 +1,4 @@
-import { m } from '../styles/helpers/measurement';
+import { m } from '../styles/measurement';
 import type * as CSS from 'csstype';
 import type { SpacingProps } from '../styles/helpers/spacing';
 import { colorVars } from '../styles/componentTokens/global.componentTokens';

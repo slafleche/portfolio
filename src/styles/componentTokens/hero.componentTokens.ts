@@ -1,5 +1,5 @@
 import { color } from '../helpers/colorWrap';
-import { m } from '../helpers/measurement';
+import { m } from '../measurement';
 import type { Stop } from '../helpers/gradients';
 
 export const heroVars = {
