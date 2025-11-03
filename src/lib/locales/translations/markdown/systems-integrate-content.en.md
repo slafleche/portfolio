@@ -32,16 +32,31 @@ const urbanist = makeFamilyDef({
     strong: 700,
   },
 });
-````
+```` 
 
-**Using the family in CSS helpers:**
+**Reference the family once in your tokens (no spreads):**
 
 ````ts
-import { relativeFontWeight } from '../styles/helpers/typography.helpers';
-import { mPercent } from '../styles/measurementKit';
 import { fontFamilies } from '../tokens/fontFamilies.tokens';
+import { mPercent } from '../styles/measurementKit';
 
-const heroWeight = relativeFontWeight(fontFamilies.urbanist, mPercent(20));
+export const fontVars = {
+  hero: {
+    familyDef: fontFamilies.urbanist,
+    size: m(45),
+    lineHeight: 1.1,
+    fontWeight: relativeFontWeight(fontFamilies.urbanist, mPercent(20)),
+  },
+} as const;
+````
+
+**Compose the final styles via helpers:**
+
+````ts
+import { composeFontStyles } from '../styles/helpers/typography.helpers';
+import { fontVars } from '../tokens/fontVars.tokens';
+
+const heroHeading = composeFontStyles(fontVars.hero);
 ````
 
 ---
