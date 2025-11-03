@@ -811,7 +811,6 @@ export default function Menu({
           ref={(el) => {
             linkRefs.current[index] = el;
           }}
-          data-ui="link"
           data-side={side}
           data-active={isActive}
           data-outer={isOuter}

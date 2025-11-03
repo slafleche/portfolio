@@ -2,7 +2,6 @@ import type * as CSS from 'csstype';
 import type { FontFamilyDef, FontStyles } from './types';
 import { hasCssMethod } from './measurement';
 
-
 export type FontCSS = Partial<
   Pick<
     CSS.Properties,
@@ -60,15 +59,11 @@ const normalizeWeight = (weightPercentage: number) => {
 export function fontWeight(
   family: FontFamilyDef,
   percent: number,
-): {
-  fontWeight: CSS.Property.FontWeight;
-} {
+): CSS.Property.FontWeight {
   const { high, low } = family.weights;
   const normalized = normalizeWeight(percent);
   const value = low + (high - low) * normalized;
-  return {
-    fontWeight: value as CSS.Property.FontWeight,
-  };
+  return value as CSS.Property.FontWeight;
 }
 
 export function computeFontWeight(
