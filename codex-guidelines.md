@@ -41,3 +41,9 @@
 - Capture decisions/strategy in README/TODO files to create a shared reference.
 - Note any lint errors unrelated to the current change so they can be addressed
   later.
+
+## Refactor Strategy
+
+- Keep the existing path working while you build the replacement. Stand up the new code alongside the old, copy what you need, and evolve the copy in place.
+- Map every consumer of the legacy code and migrate them in tiny, verified batches. After each batch, run the usual checks before touching the next group.
+- Only remove the legacy version once every reference has been swapped over and validated. This prevents long-lived breakages and keeps the repo shippable throughout the refactor.
