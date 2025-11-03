@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { assertUnit } from '../helpers/measurement';
+import { assertUnit } from '../measurement';
 import { chevronVars, colorVars } from '../componentTokens/global.componentTokens';
 // import borders from '../helpers/borders';
 import { globalBoxShadow } from '../helpers/shadow';

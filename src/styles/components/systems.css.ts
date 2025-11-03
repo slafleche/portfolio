@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { makeCardGradient } from '../helpers/cardGradient';
 import { systemsHeroGradient } from '../componentTokens/systems.componentTokens';
-import { m } from '../helpers/measurement';
+import { m } from '../measurement';
 
 export const heroOverlay = style(
   makeCardGradient(systemsHeroGradient, {
