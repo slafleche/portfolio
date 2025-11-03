@@ -29,10 +29,10 @@ globalStyle(`.${userContent} p, p[data-ui="paragraph"]`, {
 });
 
 globalStyle('blockquote', {
-  // color: textStyleVars.blockquote.color.css(),
+  color: textStyleVars.blockquote.color.css(),
   ...margins(textStyleVars.blockquote.margins),
   ...paddings(textStyleVars.blockquote.paddings),
-  // ...borders(textStyleVars.blockquote.borders),
+  ...borders(textStyleVars.blockquote.borders),
 });
 
 globalStyle('ul', {
@@ -51,8 +51,8 @@ globalStyle('li', {
 
 globalStyle(`code`, {
   fontFamily: textStyleVars.code.inline.fontFamily,
-  // backgroundColor: textStyleVars.code.inline.backgroundColor.css(),
-  // ...borders(textStyleVars.code.inline.borders),
+  backgroundColor: textStyleVars.code.inline.backgroundColor.css(),
+  ...borders(textStyleVars.code.inline.borders),
   ...paddings(textStyleVars.code.inline.paddings),
 });
 
@@ -62,7 +62,7 @@ globalStyle('pre', {
   whiteSpace: 'pre-wrap',
   wordBreak: 'break-word',
   fontFamily: codeBlock.fontFamily,
-  // backgroundColor: codeBlock.backgroundColor.css(),
+  backgroundColor: codeBlock.backgroundColor.css(),
   ...margins(codeBlock.margins),
   ...paddings(codeBlock.paddings),
   ...borders(codeBlock.borders),
@@ -131,6 +131,6 @@ globalStyle('img', {
 globalStyle('hr', {
   border: 'none',
   width: '100%',
-  // ...borders(textStyleVars.borders),
-  // ...margins(textStyleVars.margins),
+  ...borders(textStyleVars.horizontalRule.borders),
+  ...margins(textStyleVars.horizontalRule.margins),
 });
