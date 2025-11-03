@@ -1,6 +1,6 @@
 import { style, globalStyle } from '@vanilla-extract/css';
 import { colorVars } from '../componentTokens/global.componentTokens';
-import { m } from '../helpers/measurement';
+import { m } from '../measurement';
 import { projectorVars } from '../componentTokens/projector.componentTokens';
 
 export const container = style({
