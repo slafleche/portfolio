@@ -201,80 +201,190 @@ const makeUnitHelper = <Unit extends string>(unit: Unit): UnitHelper<Unit> => {
   return helper;
 };
 
-export const mPercent = makeUnitHelper('%');
+type UnitCategory =
+  | 'percent'
+  | 'length-absolute'
+  | 'length-font-relative'
+  | 'length-viewport'
+  | 'length-viewport-small'
+  | 'length-viewport-large'
+  | 'length-viewport-dynamic'
+  | 'length-container'
+  | 'angle'
+  | 'time'
+  | 'frequency'
+  | 'resolution'
+  | 'flex';
 
-export const mPx = makeUnitHelper('px');
-export const mCm = makeUnitHelper('cm');
-export const mMm = makeUnitHelper('mm');
-export const mQ = makeUnitHelper('q');
-export const mIn = makeUnitHelper('in');
-export const mPc = makeUnitHelper('pc');
-export const mPt = makeUnitHelper('pt');
+type UnitDefinition = {
+  unit: string;
+  category: UnitCategory;
+  description?: string;
+};
 
-export const mEm = makeUnitHelper('em');
-export const mRem = makeUnitHelper('rem');
-export const mEx = makeUnitHelper('ex');
-export const mRex = makeUnitHelper('rex');
-export const mCh = makeUnitHelper('ch');
-export const mRch = makeUnitHelper('rch');
-export const mCap = makeUnitHelper('cap');
-export const mRcap = makeUnitHelper('rcap');
-export const mIc = makeUnitHelper('ic');
-export const mRic = makeUnitHelper('ric');
-export const mLh = makeUnitHelper('lh');
-export const mRlh = makeUnitHelper('rlh');
+const UNIT_DEFINITIONS = {
+  mPercent: { unit: '%', category: 'percent' },
 
-export const mVw = makeUnitHelper('vw');
-export const mVh = makeUnitHelper('vh');
-export const mVi = makeUnitHelper('vi');
-export const mVb = makeUnitHelper('vb');
-export const mVmin = makeUnitHelper('vmin');
-export const mVmax = makeUnitHelper('vmax');
+  mPx: { unit: 'px', category: 'length-absolute' },
+  mCm: { unit: 'cm', category: 'length-absolute' },
+  mMm: { unit: 'mm', category: 'length-absolute' },
+  mQ: { unit: 'q', category: 'length-absolute' },
+  mIn: { unit: 'in', category: 'length-absolute' },
+  mPc: { unit: 'pc', category: 'length-absolute' },
+  mPt: { unit: 'pt', category: 'length-absolute' },
 
-export const mSvw = makeUnitHelper('svw');
-export const mSvh = makeUnitHelper('svh');
-export const mSvi = makeUnitHelper('svi');
-export const mSvb = makeUnitHelper('svb');
-export const mSvmin = makeUnitHelper('svmin');
-export const mSvmax = makeUnitHelper('svmax');
+  mEm: { unit: 'em', category: 'length-font-relative' },
+  mRem: { unit: 'rem', category: 'length-font-relative' },
+  mEx: { unit: 'ex', category: 'length-font-relative' },
+  mRex: { unit: 'rex', category: 'length-font-relative' },
+  mCh: { unit: 'ch', category: 'length-font-relative' },
+  mRch: { unit: 'rch', category: 'length-font-relative' },
+  mCap: { unit: 'cap', category: 'length-font-relative' },
+  mRcap: { unit: 'rcap', category: 'length-font-relative' },
+  mIc: { unit: 'ic', category: 'length-font-relative' },
+  mRic: { unit: 'ric', category: 'length-font-relative' },
+  mLh: { unit: 'lh', category: 'length-font-relative' },
+  mRlh: { unit: 'rlh', category: 'length-font-relative' },
 
-export const mLvw = makeUnitHelper('lvw');
-export const mLvh = makeUnitHelper('lvh');
-export const mLvi = makeUnitHelper('lvi');
-export const mLvb = makeUnitHelper('lvb');
-export const mLvmin = makeUnitHelper('lvmin');
-export const mLvmax = makeUnitHelper('lvmax');
+  mVw: { unit: 'vw', category: 'length-viewport' },
+  mVh: { unit: 'vh', category: 'length-viewport' },
+  mVi: { unit: 'vi', category: 'length-viewport' },
+  mVb: { unit: 'vb', category: 'length-viewport' },
+  mVmin: { unit: 'vmin', category: 'length-viewport' },
+  mVmax: { unit: 'vmax', category: 'length-viewport' },
 
-export const mDvw = makeUnitHelper('dvw');
-export const mDvh = makeUnitHelper('dvh');
-export const mDvi = makeUnitHelper('dvi');
-export const mDvb = makeUnitHelper('dvb');
-export const mDvmin = makeUnitHelper('dvmin');
-export const mDvmax = makeUnitHelper('dvmax');
+  mSvw: { unit: 'svw', category: 'length-viewport-small' },
+  mSvh: { unit: 'svh', category: 'length-viewport-small' },
+  mSvi: { unit: 'svi', category: 'length-viewport-small' },
+  mSvb: { unit: 'svb', category: 'length-viewport-small' },
+  mSvmin: { unit: 'svmin', category: 'length-viewport-small' },
+  mSvmax: { unit: 'svmax', category: 'length-viewport-small' },
 
-export const mCqw = makeUnitHelper('cqw');
-export const mCqh = makeUnitHelper('cqh');
-export const mCqi = makeUnitHelper('cqi');
-export const mCqb = makeUnitHelper('cqb');
-export const mCqmin = makeUnitHelper('cqmin');
-export const mCqmax = makeUnitHelper('cqmax');
+  mLvw: { unit: 'lvw', category: 'length-viewport-large' },
+  mLvh: { unit: 'lvh', category: 'length-viewport-large' },
+  mLvi: { unit: 'lvi', category: 'length-viewport-large' },
+  mLvb: { unit: 'lvb', category: 'length-viewport-large' },
+  mLvmin: { unit: 'lvmin', category: 'length-viewport-large' },
+  mLvmax: { unit: 'lvmax', category: 'length-viewport-large' },
 
-export const mDeg = makeUnitHelper('deg');
-export const mRad = makeUnitHelper('rad');
-export const mGrad = makeUnitHelper('grad');
-export const mTurn = makeUnitHelper('turn');
+  mDvw: { unit: 'dvw', category: 'length-viewport-dynamic' },
+  mDvh: { unit: 'dvh', category: 'length-viewport-dynamic' },
+  mDvi: { unit: 'dvi', category: 'length-viewport-dynamic' },
+  mDvb: { unit: 'dvb', category: 'length-viewport-dynamic' },
+  mDvmin: { unit: 'dvmin', category: 'length-viewport-dynamic' },
+  mDvmax: { unit: 'dvmax', category: 'length-viewport-dynamic' },
 
-export const mS = makeUnitHelper('s');
-export const mMs = makeUnitHelper('ms');
+  mCqw: { unit: 'cqw', category: 'length-container' },
+  mCqh: { unit: 'cqh', category: 'length-container' },
+  mCqi: { unit: 'cqi', category: 'length-container' },
+  mCqb: { unit: 'cqb', category: 'length-container' },
+  mCqmin: { unit: 'cqmin', category: 'length-container' },
+  mCqmax: { unit: 'cqmax', category: 'length-container' },
 
-export const mHz = makeUnitHelper('hz');
-export const mKhz = makeUnitHelper('khz');
+  mDeg: { unit: 'deg', category: 'angle' },
+  mRad: { unit: 'rad', category: 'angle' },
+  mGrad: { unit: 'grad', category: 'angle' },
+  mTurn: { unit: 'turn', category: 'angle' },
 
-export const mDpi = makeUnitHelper('dpi');
-export const mDpcm = makeUnitHelper('dpcm');
-export const mDppx = makeUnitHelper('dppx');
+  mS: { unit: 's', category: 'time' },
+  mMs: { unit: 'ms', category: 'time' },
 
-export const mFr = makeUnitHelper('fr');
+  mHz: { unit: 'hz', category: 'frequency' },
+  mKhz: { unit: 'khz', category: 'frequency' },
+
+  mDpi: { unit: 'dpi', category: 'resolution' },
+  mDpcm: { unit: 'dpcm', category: 'resolution' },
+  mDppx: { unit: 'dppx', category: 'resolution' },
+
+  mFr: { unit: 'fr', category: 'flex' },
+} as const satisfies Record<string, UnitDefinition>;
+
+type UnitDefinitionRecord = typeof UNIT_DEFINITIONS;
+type UnitHelperName = keyof UnitDefinitionRecord;
+
+const makeUnitHelperFromDefinition = <Name extends UnitHelperName>(
+  name: Name,
+): UnitHelper<UnitDefinitionRecord[Name]['unit']> =>
+  makeUnitHelper(UNIT_DEFINITIONS[name].unit);
+
+export const measurementUnitMetadata = UNIT_DEFINITIONS;
+export type MeasurementUnitDefinition = UnitDefinition;
+export type MeasurementUnitCategory = UnitCategory;
+
+export const mPercent = makeUnitHelperFromDefinition('mPercent');
+
+export const mPx = makeUnitHelperFromDefinition('mPx');
+export const mCm = makeUnitHelperFromDefinition('mCm');
+export const mMm = makeUnitHelperFromDefinition('mMm');
+export const mQ = makeUnitHelperFromDefinition('mQ');
+export const mIn = makeUnitHelperFromDefinition('mIn');
+export const mPc = makeUnitHelperFromDefinition('mPc');
+export const mPt = makeUnitHelperFromDefinition('mPt');
+
+export const mEm = makeUnitHelperFromDefinition('mEm');
+export const mRem = makeUnitHelperFromDefinition('mRem');
+export const mEx = makeUnitHelperFromDefinition('mEx');
+export const mRex = makeUnitHelperFromDefinition('mRex');
+export const mCh = makeUnitHelperFromDefinition('mCh');
+export const mRch = makeUnitHelperFromDefinition('mRch');
+export const mCap = makeUnitHelperFromDefinition('mCap');
+export const mRcap = makeUnitHelperFromDefinition('mRcap');
+export const mIc = makeUnitHelperFromDefinition('mIc');
+export const mRic = makeUnitHelperFromDefinition('mRic');
+export const mLh = makeUnitHelperFromDefinition('mLh');
+export const mRlh = makeUnitHelperFromDefinition('mRlh');
+
+export const mVw = makeUnitHelperFromDefinition('mVw');
+export const mVh = makeUnitHelperFromDefinition('mVh');
+export const mVi = makeUnitHelperFromDefinition('mVi');
+export const mVb = makeUnitHelperFromDefinition('mVb');
+export const mVmin = makeUnitHelperFromDefinition('mVmin');
+export const mVmax = makeUnitHelperFromDefinition('mVmax');
+
+export const mSvw = makeUnitHelperFromDefinition('mSvw');
+export const mSvh = makeUnitHelperFromDefinition('mSvh');
+export const mSvi = makeUnitHelperFromDefinition('mSvi');
+export const mSvb = makeUnitHelperFromDefinition('mSvb');
+export const mSvmin = makeUnitHelperFromDefinition('mSvmin');
+export const mSvmax = makeUnitHelperFromDefinition('mSvmax');
+
+export const mLvw = makeUnitHelperFromDefinition('mLvw');
+export const mLvh = makeUnitHelperFromDefinition('mLvh');
+export const mLvi = makeUnitHelperFromDefinition('mLvi');
+export const mLvb = makeUnitHelperFromDefinition('mLvb');
+export const mLvmin = makeUnitHelperFromDefinition('mLvmin');
+export const mLvmax = makeUnitHelperFromDefinition('mLvmax');
+
+export const mDvw = makeUnitHelperFromDefinition('mDvw');
+export const mDvh = makeUnitHelperFromDefinition('mDvh');
+export const mDvi = makeUnitHelperFromDefinition('mDvi');
+export const mDvb = makeUnitHelperFromDefinition('mDvb');
+export const mDvmin = makeUnitHelperFromDefinition('mDvmin');
+export const mDvmax = makeUnitHelperFromDefinition('mDvmax');
+
+export const mCqw = makeUnitHelperFromDefinition('mCqw');
+export const mCqh = makeUnitHelperFromDefinition('mCqh');
+export const mCqi = makeUnitHelperFromDefinition('mCqi');
+export const mCqb = makeUnitHelperFromDefinition('mCqb');
+export const mCqmin = makeUnitHelperFromDefinition('mCqmin');
+export const mCqmax = makeUnitHelperFromDefinition('mCqmax');
+
+export const mDeg = makeUnitHelperFromDefinition('mDeg');
+export const mRad = makeUnitHelperFromDefinition('mRad');
+export const mGrad = makeUnitHelperFromDefinition('mGrad');
+export const mTurn = makeUnitHelperFromDefinition('mTurn');
+
+export const mS = makeUnitHelperFromDefinition('mS');
+export const mMs = makeUnitHelperFromDefinition('mMs');
+
+export const mHz = makeUnitHelperFromDefinition('mHz');
+export const mKhz = makeUnitHelperFromDefinition('mKhz');
+
+export const mDpi = makeUnitHelperFromDefinition('mDpi');
+export const mDpcm = makeUnitHelperFromDefinition('mDpcm');
+export const mDppx = makeUnitHelperFromDefinition('mDppx');
+
+export const mFr = makeUnitHelperFromDefinition('mFr');
 
 type MeasurementOf<T extends UnitHelper> = ReturnType<T>;
 
