@@ -1,6 +1,11 @@
 import type * as CSS from 'csstype';
 import type { FontFamilyDef, FontStyles } from './types';
-import { hasCssMethod } from './measurement';
+import {
+  assertPercentMeasurement,
+  hasCssMethod,
+  isPercentMeasurement,
+  type PercentMeasurement,
+} from '../measurement';
 
 export type FontCSS = Partial<
   Pick<
@@ -18,6 +23,48 @@ export type FontCSS = Partial<
     | 'fontOpticalSizing'
   >
 >;
+
+const isFontWeightValue = (
+  value: unknown,
+): value is CSS.Property.FontWeight =>
+  typeof value === 'string' || typeof value === 'number';
+
+const resolveFontWeight = (
+  vars: FontStyles,
+): CSS.Property.FontWeight | undefined => {
+  if (isFontWeightValue(vars.fontWeight)) {
+    return vars.fontWeight;
+  }
+
+  if (isFontWeightValue(vars.weight)) {
+    return vars.weight;
+  }
+
+  const defaultWeight = vars.weights?.default;
+  if (isFontWeightValue(defaultWeight)) {
+    return defaultWeight;
+  }
+
+  if (
+    vars.fontWeight !== undefined ||
+    vars.weight !== undefined ||
+    defaultWeight !== undefined
+  ) {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(
+        'fontStyles: unsupported font weight type. Supply a string/number weight.',
+      );
+    }
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    throw new Error(
+      'fontStyles: missing font weight. Provide `fontWeight`, `weight`, or `weights.default` on your token.',
+    );
+  }
+
+  return undefined;
+};
 
 /** Normalize your FontStyles tokens into CSS-ready properties only */
 export function fontStyles(vars: FontStyles): FontCSS {
@@ -39,8 +86,9 @@ export function fontStyles(vars: FontStyles): FontCSS {
   }
 
   // weight (either field may exist)
-  if (vars.fontWeight) out.fontWeight = vars.fontWeight;
-  if (vars.weight) out.fontWeight = vars.weight;
+  const normalizedWeight = resolveFontWeight(vars);
+  if (normalizedWeight !== undefined)
+    out.fontWeight = normalizedWeight;
 
   if (vars.css && typeof vars.css === 'object') {
     Object.assign(out, vars.css);
@@ -49,36 +97,31 @@ export function fontStyles(vars: FontStyles): FontCSS {
   return out;
 }
 
-const normalizeWeight = (weightPercentage: number) => {
-  if (weightPercentage < 0 || weightPercentage > 100) {
-    throw new Error(`Bad value for font weight: ${weightPercentage}`);
-  }
-  return weightPercentage / 100;
-};
-
-export function fontWeight(
+export function relativeFontWeight(
   family: FontFamilyDef,
-  percent: number,
+  percent: PercentMeasurement,
 ): CSS.Property.FontWeight {
+  assertPercentMeasurement(percent, 'relativeFontWeight');
   const { high, low } = family.weights;
-  const normalized = normalizeWeight(percent);
+  const normalized = percent.toPercentDecimal();
   const value = low + (high - low) * normalized;
   return value as CSS.Property.FontWeight;
 }
 
 export function computeFontWeight(
   family: FontFamilyDef,
-  percent: number,
+  percent: PercentMeasurement,
 ): CSS.Property.FontWeight {
+  assertPercentMeasurement(percent, 'computeFontWeight');
   const { high, low } = family.weights;
-  const normalized = normalizeWeight(percent);
+  const normalized = percent.toPercentDecimal();
   const value = low + (high - low) * normalized;
   return value as CSS.Property.FontWeight;
 }
 
 export function fontWeightStyle(
   family: FontFamilyDef,
-  percent: number,
+  percent: PercentMeasurement,
 ): {
   fontWeight: CSS.Property.FontWeight;
 } {
@@ -92,13 +135,10 @@ export type FontStyleLayer = FontStyles | null | undefined;
 export type ComposeFontStyleOptions = {
   family?: FontFamilyDef | null;
   token?: FontStyles | null;
-  weightPercent?: number | null;
+  weightPercent?: PercentMeasurement | null;
   overrides?: FontStyles | null;
   layers?: FontStyleLayer | FontStyleLayer[];
 };
-
-const validNumber = (value: unknown): value is number =>
-  typeof value === 'number' && Number.isFinite(value);
 
 const familyToFontStyles = (family: FontFamilyDef): FontStyles => {
   const styles: FontStyles = {
@@ -180,7 +220,7 @@ export function composeFontStyles({
     addLayer(merged, layers);
   }
 
-  if (resolvedFamily && validNumber(weightPercent)) {
+  if (resolvedFamily && isPercentMeasurement(weightPercent)) {
     addLayer(merged, fontWeightStyle(resolvedFamily, weightPercent));
   }
 

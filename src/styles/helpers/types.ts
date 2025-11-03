@@ -46,6 +46,8 @@ export type FontFamilyDef = {
 export type FontStyles = {
   family?: CSS.Property.FontFamily;
   fontFamily?: CSS.Property.FontFamily;
+  fontWeight?: CSS.Property.FontWeight;
+  weight?: CSS.Property.FontWeight;
   size?:
     | CssLike
     | string
