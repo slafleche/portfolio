@@ -186,8 +186,11 @@ const createMeasurement = <Unit extends string>(
   return Object.freeze(measurement);
 };
 
-export const m = (value: number, unit: string = 'px'): IMeasurement =>
-  createMeasurement(value, unit.toLowerCase());
+export const m = <Unit extends string>(
+  value: number,
+  unit: Unit = 'px' as Unit,
+): IMeasurement & UnitBrand<Unit> =>
+  createMeasurement(value, unit.toLowerCase() as Unit);
 
 type UnitHelper<Unit extends string = string> = ((value: number) => IMeasurement) & {
   unit: Unit;
