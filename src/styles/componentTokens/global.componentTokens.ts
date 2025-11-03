@@ -1,7 +1,7 @@
 import { color } from '../helpers/colorWrap';
 import type { CardGradientPack } from '../helpers/cardGradient';
 import type * as CSS from 'csstype';
-import { m, mPercent } from '../helpers/measurement';
+import { m, mPercent } from '../measurement';
 export type ColorKeys = keyof typeof colors;
 
 export type {
