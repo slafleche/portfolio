@@ -135,31 +135,83 @@ const resolveVariantWeights = (
       return Number.isFinite(parsed) ? parsed : undefined;
     };
 
+    const clamp = (value: number): number => {
+      return Math.min(family.weights.high, Math.max(family.weights.low, value));
+    };
+
     const baseNumber = toNumber(base);
     const strongNumber = toNumber(strong);
+    let adjustedBase = baseNumber ?? base;
+    let adjustedStrong = strongNumber ?? strong;
+
+    if (baseNumber !== undefined) {
+      if (baseNumber < family.weights.low || baseNumber > family.weights.high) {
+        const message = `fontVariants: default font weight for "${family.family}" (${baseNumber}) should stay within [${family.weights.low}, ${family.weights.high}].`;
+        if (process.env.NODE_ENV !== 'production') {
+          throw new Error(message);
+        }
+        console.warn(message);
+        const clamped = clamp(baseNumber);
+        if (clamped !== baseNumber) {
+          adjustedBase = clamped as CSS.Property.FontWeight;
+        }
+      }
+    }
+
+    if (strongNumber !== undefined) {
+      if (
+        strongNumber < family.weights.low ||
+        strongNumber > family.weights.high
+      ) {
+        const message = `fontVariants: strong font weight for "${family.family}" (${strongNumber}) should stay within [${family.weights.low}, ${family.weights.high}].`;
+        if (process.env.NODE_ENV !== 'production') {
+          throw new Error(message);
+        }
+        console.warn(message);
+        const clamped = clamp(strongNumber);
+        if (clamped !== strongNumber) {
+          adjustedStrong = clamped as CSS.Property.FontWeight;
+        }
+      }
+    }
+
+    const resolvedBase =
+      (typeof adjustedBase === 'number'
+        ? adjustedBase
+        : baseNumber) ?? family.weights.default;
+    const resolvedStrong =
+      (typeof adjustedStrong === 'number'
+        ? adjustedStrong
+        : strongNumber) ?? family.weights.strong;
+
     if (
-      baseNumber !== undefined &&
-      strongNumber !== undefined &&
-      baseNumber >= strongNumber
+      typeof resolvedBase === 'number' &&
+      typeof resolvedStrong === 'number' &&
+      resolvedBase >= resolvedStrong
     ) {
-      const message = `fontVariants: expected default font weight < strong font weight for family "${family.family}" but received ${base} vs ${strong}.`;
+      const message = `fontVariants: expected default font weight < strong font weight for family "${family.family}" but received ${resolvedBase} vs ${resolvedStrong}.`;
       if (process.env.NODE_ENV !== 'production') {
         throw new Error(message);
       }
+      console.warn(message);
 
       const fallbackStrong = Math.min(
         1000,
-        Math.max(baseNumber + 1, family.weights.strong),
+        Math.max(resolvedBase + 1, family.weights.strong),
       );
       return {
-        default: base,
+        default: resolvedBase as CSS.Property.FontWeight,
         strong: fallbackStrong as CSS.Property.FontWeight,
       };
     }
 
     return {
-      default: base,
-      strong,
+      default: (typeof resolvedBase === 'number'
+        ? resolvedBase
+        : base) as CSS.Property.FontWeight,
+      strong: (typeof resolvedStrong === 'number'
+        ? resolvedStrong
+        : strong) as CSS.Property.FontWeight,
     };
   };
 
