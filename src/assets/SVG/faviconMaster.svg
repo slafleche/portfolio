@@ -1,0 +1,28 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="512"
+  height="512"
+  viewBox="0 0 512 512"
+>
+  <rect width="512" height="512" rx="128" fill="#251A38" />
+  <circle
+    cx="256"
+    cy="256"
+    r="160"
+    fill="url(#brand)"
+  />
+  <defs>
+    <radialGradient
+      id="brand"
+      cx="50%"
+      cy="50%"
+      r="70%"
+      fx="35%"
+      fy="35%"
+    >
+      <stop offset="0%" stop-color="#F27E8C" />
+      <stop offset="50%" stop-color="#FF549A" />
+      <stop offset="100%" stop-color="#5E48D4" />
+    </radialGradient>
+  </defs>
+</svg>

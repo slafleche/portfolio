@@ -67,7 +67,7 @@
   "packageManager": "yarn@4.9.4",
   "scripts": {
     "fresh": "yarn install && yarn setup",
-    "setup": "yarn copy:html && yarn fonts && yarn format:visual",
+    "setup": "yarn copy:html && yarn fonts && yarn format:visual && yarn favicons",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",
     "copy:html": "yarn tsc --noEmit && yarn locales:markdown && tsx scripts/generateCopyHtml.ts",
     "fonts:chars": "tsx scripts/generateFontTexts.ts",
@@ -86,9 +86,10 @@
     "format:img": "node scripts/generateImages.mjs",
     "format:video": "node scripts/generateVideos.mjs",
     "format:visual": "yarn format:video && yarn format:img",
-    "format:assets": "MINIFY=1 yarn fonts && yarn format:visual",
+    "format:assets": "MINIFY=1 yarn fonts && yarn format:visual && yarn favicons",
     "svg:clean": "yarn svgo && yarn format:svg",
     "svgo": "node scripts/optimizeSvgs.mjs --write",
+    "favicons": "node --import tsx scripts/generateFavicons.ts",
     "upgrade:latest": "yarn up \"*@latest\" \"@*/*@latest\" && yarn dedupe"
   }
 }
