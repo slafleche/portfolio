@@ -22,7 +22,7 @@ import {
   type HighlightState,
   type LinkMetric,
 } from '../menuUtils';
-import { archVars, menuVars } from '../../../styles/componentTokens/global.componentTokens';
+import { archVars, menuVars } from '../../../styles/componentTokens/componentTokens.global';
 
 type HighlightStyles = {
   containerStyle: CSSProperties;

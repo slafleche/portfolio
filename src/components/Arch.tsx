@@ -15,7 +15,7 @@ import { archGlassVars } from '@/styles/helpers/arch';
 import { shadowTotalY } from '../styles/helpers/shadow';
 import { noiseStyle } from '../styles/helpers/noiseSVG';
 import { assertUnit } from '../styles/measurementKit';
-import { archVars } from '../styles/componentTokens/global.componentTokens';
+import { archVars } from '../styles/componentTokens/componentTokens.global';
 
 if (process.env.NODE_ENV !== 'production') {
   assertUnit(archVars.top, 'px', 'Arch top');

@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { m } from '../measurementKit';
-import { colorVars } from '../componentTokens/global.componentTokens';
+import { colorVars } from '../componentTokens/componentTokens.global';
 
 export const root = style({
   display: 'flex',

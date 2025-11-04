@@ -11,8 +11,8 @@ import { toTrimmedOrNull } from '@/lib/stringUtils';
 import SendIcon from '@/components/icons/SendIcon';
 import { collectWaitForFonts, waitForFonts } from '@/lib/fontLoading';
 import { fontVariants } from '../tokens/fontVariants.tokens';
-import { heroVars } from '../styles/componentTokens/hero.componentTokens';
-import { projectorVars } from '../styles/componentTokens/projector.componentTokens';
+import { heroVars } from '../styles/componentTokens/componentTokens.hero';
+import { projectorVars } from '../styles/componentTokens/componentTokens.projector';
 
 type HeroCopy = {
   videoTitle: string;

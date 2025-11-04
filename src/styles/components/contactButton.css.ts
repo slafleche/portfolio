@@ -1,6 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 import { m, measurementHypotenuse } from '../measurementKit';
-import { colorVars, themeColours } from '../componentTokens/global.componentTokens';
+import { colorVars, themeColours } from '../componentTokens/componentTokens.global';
 import { globalBoxShadow } from '../helpers/shadow';
 import { focusOutline } from '../helpers/focusOutline';
 import { absolutePosition } from '../helpers/positioning';

@@ -1,6 +1,6 @@
 import type { ColorWrapper } from './colorWrap';
 import { m, type IMeasurement } from '../measurementKit';
-import { dropShadowVars, colorVars } from '../componentTokens/global.componentTokens';
+import { dropShadowVars, colorVars } from '../componentTokens/componentTokens.global';
 export interface IBoxShadow {
   x?: IMeasurement;
   y?: IMeasurement;

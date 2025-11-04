@@ -4,7 +4,7 @@ import type {
 } from '@vanilla-extract/css';
 // import * as CSS from 'csstype';
 // import { m, parseStringMeasurement } from '../measurementKit';
-import { layoutVars } from '../componentTokens/layout.componentTokens';
+import { layoutVars } from '../componentTokens/componentTokens.layout';
 
 export interface IMediaQueryProps {
   type?: 'all' | 'print' | 'screen';

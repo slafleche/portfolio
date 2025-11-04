@@ -4,7 +4,7 @@ import {
 	composeFontVariantStyles,
 	fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import { colorVars } from '../componentTokens/global.componentTokens';
+import { colorVars } from '../componentTokens/componentTokens.global';
 
 export const root = style({
 	marginTop: m(20).css(),

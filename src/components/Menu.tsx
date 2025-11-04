@@ -42,7 +42,7 @@ import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
 import { fontVariants } from '../tokens/fontVariants.tokens';
-import { menuVars } from '../styles/componentTokens/global.componentTokens';
+import { menuVars } from '../styles/componentTokens/componentTokens.global';
 
 type FocusDebugOptions = {
   lockTo?: 'logo' | number;

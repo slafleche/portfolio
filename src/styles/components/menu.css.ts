@@ -14,7 +14,7 @@ import {
 	logoVars,
 	menuVars,
 	themeColours,
-} from '../componentTokens/global.componentTokens';
+} from '../componentTokens/componentTokens.global';
 import {
 	composeFontVariantStyles,
 	fontVariants,

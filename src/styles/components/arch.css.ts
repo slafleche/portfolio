@@ -7,7 +7,7 @@ import {
   colorVars,
   dropShadowVars,
   glowVars,
-} from '../componentTokens/global.componentTokens';
+} from '../componentTokens/componentTokens.global';
 
 export const root = style({
   position: 'relative',

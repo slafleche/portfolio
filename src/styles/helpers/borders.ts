@@ -1,10 +1,10 @@
 import type * as CSS from 'csstype';
-import { borderVars, colorVars } from '../componentTokens/global.componentTokens';
+import { borderVars, colorVars } from '../componentTokens/componentTokens.global';
 import type {
   IBorder,
   BorderWidthInput,
   BorderRadiusInput,
-} from '../componentTokens/global.componentTokens';
+} from '../componentTokens/componentTokens.global';
 import { isMeasurement, hasCssMethod } from '../measurementKit';
 import type {
   AxisValues,
