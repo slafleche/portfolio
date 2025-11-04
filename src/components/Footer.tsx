@@ -38,18 +38,31 @@ export default function Footer({
       </Heading>
       <Markdown className={s.content} source={contact.content} />
 
+      {/* Just a simple wrapper for links, since we have multiple elements to position */}
       <div className={s.links}>
         {/* Placeholder email for now */}
         <GlassyLink
           href={sharedStrings.mailtoEmail}
           label={contact.emailLabel}
+          className={s.glassLink}
         >
+          <div className={s.glassLinkShine} aria-hidden="true" />
           <ContactIcon className={s.contactIcon} />
         </GlassyLink>
-        <GlassyLink href={sharedStrings.linkedInUrl} label="LinkedIn">
+        <GlassyLink
+          href={sharedStrings.linkedInUrl}
+          label="LinkedIn"
+          className={s.glassLink}
+        >
+          <div className={s.glassLinkShine} aria-hidden="true" />
           <SocialLinkedInIcon className={s.linkedInIcon} />
         </GlassyLink>
-        <GlassyLink href={sharedStrings.githubUrl} label="GitHub">
+        <GlassyLink
+          href={sharedStrings.githubUrl}
+          label="GitHub"
+          className={s.glassLink}
+        >
+          <div className={s.glassLinkShine} aria-hidden="true" />
           <SocialGitHubIcon className={s.gitHubIcon} />
         </GlassyLink>
       </div>
@@ -60,6 +73,7 @@ export default function Footer({
         openLinksInNewTab
       /> */}
 
+      {/* Leave for now, i'll be refactoring this link later */}
       {systemsLink ? (
         <Link href={systemsLink.href}>{systemsLink.label}</Link>
       ) : null}
