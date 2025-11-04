@@ -44,6 +44,8 @@
 		"typescript",
 		"typescriptreact"
 	],
+	"javascript.preferences.jsxAttributeCompletionStyle": "braces",
+	"typescript.preferences.jsxAttributeCompletionStyle": "braces",
 	"json.schemas": [
 		{
 			"fileMatch": [
