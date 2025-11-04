@@ -1,15 +1,18 @@
 import * as s from '@/styles/components/card.css.ts';
-import type { ReactNode } from 'react';
+import type {
+	ComponentPropsWithoutRef,
+	ReactNode,
+} from 'react';
 import Heading, { type IHeadingDepth } from './Heading';
 import clsx from 'clsx';
 import * as glassFrameStyles from '@/styles/helpers/glassFrame.css';
 
-type Props = IHeadingDepth & {
-	title?: ReactNode;
-	children?: ReactNode;
-	className?: string;
-	type?: string;
-};
+type Props = IHeadingDepth &
+	ComponentPropsWithoutRef<'div'> & {
+		title?: ReactNode;
+		children?: ReactNode;
+		type?: string;
+	};
 
 export default function Card({
 	title,
@@ -17,12 +20,17 @@ export default function Card({
 	className,
 	type,
 	children,
+	...rest
 }: Props) {
 	const gradientClass =
 		type === 'right' ? s.cardGradientB : s.cardGradientA;
 
 	return (
-		<div className={clsx(s.root, className)} data-type={type}>
+		<div
+			className={clsx(s.root, className)}
+			data-type={type}
+			{...rest}
+		>
 			<div className={clsx(glassFrameStyles.frame, s.frame)}>
 				<div
 					className={clsx(s.gradient, gradientClass)}
