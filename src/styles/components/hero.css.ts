@@ -9,8 +9,8 @@ import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
 import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
 import transforms from '../helpers/transforms';
-import { m, mPercent } from '../measurementKit';
-import { margins, paddings } from '../helpers/spacing';
+import { m } from '../measurementKit';
+import { paddings } from '../helpers/spacing';
 
 import {
   backgroundImageDecl,
@@ -142,27 +142,27 @@ export const bridge = style({
   alignItems: 'center',
 });
 
-export const paragraph = style({
-  position: 'relative',
-  textAlign: 'center',
-  ...composeFontVariantStyles(fontVariants.hero, {
-    options: {
-      weightPercents: {
-        default: mPercent(0),
-      },
-    },
-    overrides: {
-      size: undefined,
-    },
-  }),
-  fontSize: m(26).css(),
-  lineHeight: 1,
-  textShadow: `2px 2px 5px ${colorVars.black.css()}`,
-  ...margins({
-    all: 0,
-    top: m(30),
-  }),
-});
+// export const paragraph = style({
+//   position: 'relative',
+//   textAlign: 'center',
+//   ...composeFontVariantStyles(fontVariants.hero, {
+//     options: {
+//       weightPercents: {
+//         default: mPercent(0),
+//       },
+//     },
+//     overrides: {
+//       size: undefined,
+//     },
+//   }),
+//   fontSize: m(26).css(),
+//   lineHeight: 1,
+//   textShadow: `2px 2px 5px ${colorVars.black.css()}`,
+//   ...margins({
+//     all: 0,
+//     top: m(30),
+//   }),
+// });
 
 export const cta = style({
   marginTop: m(16).css(),
