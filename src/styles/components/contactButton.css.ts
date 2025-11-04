@@ -1,6 +1,9 @@
 import { keyframes, style } from '@vanilla-extract/css';
-import { m, measurementHypotenuse } from '../measurementKit';
-import { colorVars, themeColours } from '../componentTokens/componentTokens.global';
+import { m } from '../measurementKit';
+import {
+  colorVars,
+  themeColours,
+} from '../componentTokens/componentTokens.global';
 import { globalBoxShadow } from '../helpers/shadow';
 import { focusOutline } from '../helpers/focusOutline';
 import { absolutePosition } from '../helpers/positioning';
@@ -51,6 +54,7 @@ import {
   kSquash,
   kSquashY,
 } from './contactButton.vars';
+import { measureHypotenuse } from '../helpers/utils';
 
 /* EASING */
 const SNAP = 'cubic-bezier(0.45, 0, 0.2, 1)';
@@ -72,7 +76,7 @@ export const root = style({
 
 export const rail = style({
   ...absolutePosition.bottomLeft(),
-  width: measurementHypotenuse(containerSizePx).css(),
+  width: measureHypotenuse(containerSizePx).css(),
   height: buttonSizePx.css(),
   transformOrigin: `0 50%`,
   transform: `translateY(50%) rotate(${rotNeg45Deg.css()})`,
