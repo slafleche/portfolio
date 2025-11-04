@@ -1,12 +1,9 @@
-const measurementRegistry = new WeakSet<object>();
-
 type UnitBrand<Unit extends string> = { readonly __unitBrand: Unit };
 export interface IMeasurement {
-  readonly value: number;
-  readonly unit: string;
   css: () => string;
-  valueOf: () => number;
+  toString: () => string;
   getUnit: () => string;
+  getValue: () => number;
   isUnit: (unit: string) => boolean;
   assertUnit: (unit: string, context?: string) => void;
   assert: (
@@ -36,16 +33,15 @@ export const assertMatchingUnits = (
   right: IMeasurement,
   context: string,
 ): void => {
-  if (left.unit !== right.unit) {
+  const leftUnit = left.getUnit();
+  const rightUnit = right.getUnit();
+  if (leftUnit !== rightUnit) {
     const where = context ? `${context}: ` : '';
     throw new Error(
-      `${where}measurement unit mismatch: ${left.unit} vs ${right.unit}`,
+      `${where}measurement unit mismatch: ${leftUnit} vs ${rightUnit}`,
     );
   }
 };
-
-export const isMeasurement = (x: unknown): x is IMeasurement =>
-  typeof x === 'object' && x !== null && measurementRegistry.has(x);
 
 const deltaToNumber = (
   base: IMeasurement,
@@ -53,133 +49,161 @@ const deltaToNumber = (
 ): number => {
   if (typeof delta === 'number') return delta;
   assertMatchingUnits(base, delta, 'deltaToNumber');
-  return delta.value;
+  return delta.getValue();
 };
+
+class Measurement<Unit extends string>
+  implements IMeasurement, UnitBrand<Unit>
+{
+  readonly __unitBrand!: Unit;
+  #value: number;
+  #unit: Unit;
+
+  constructor(value: number, unit: Unit) {
+    const normalizedUnit = unit.toLowerCase() as Unit;
+    this.#value = value;
+    this.#unit = normalizedUnit;
+    Object.defineProperty(this, '__unitBrand', {
+      value: normalizedUnit,
+      enumerable: false,
+      configurable: false,
+      writable: false,
+    });
+  }
+
+  css(): string {
+    return `${this.#value}${this.#unit}`;
+  }
+
+  toString(): string {
+    return this.css();
+  }
+
+  getUnit(): Unit {
+    return this.#unit;
+  }
+
+  getValue(): number {
+    return this.#value;
+  }
+
+  isUnit(expected: string): boolean {
+    return this.#unit === expected.toLowerCase();
+  }
+
+  assertUnit(expected: string, context?: string): void {
+    if (!this.isUnit(expected)) {
+      const location = context ? `${context}: ` : '';
+      throw new Error(
+        `${location}Expected unit "${expected}", received "${this.#unit}".`,
+      );
+    }
+  }
+
+  assert(
+    predicate: (measurement: IMeasurement) => boolean,
+    message: string,
+  ): void {
+    if (!predicate(this)) {
+      throw new Error(message);
+    }
+  }
+
+  equals(other: IMeasurement): boolean {
+    assertMatchingUnits(this, other, 'equals');
+    return this.#value === other.getValue();
+  }
+
+  compare(other: IMeasurement): number {
+    assertMatchingUnits(this, other, 'compare');
+    const otherValue = other.getValue();
+    if (this.#value === otherValue) return 0;
+    return this.#value < otherValue ? -1 : 1;
+  }
+
+  add(delta: DeltaInput): Measurement<Unit> {
+    const next = this.#value + deltaToNumber(this, delta);
+    return this.#clone(next);
+  }
+
+  subtract(delta: DeltaInput): Measurement<Unit> {
+    const next = this.#value - deltaToNumber(this, delta);
+    return this.#clone(next);
+  }
+
+  multiply(factor: number): Measurement<Unit> {
+    if (factor === 1) return this;
+    if (factor === 0) return new Measurement(0, this.#unit);
+    if (factor === -1) return new Measurement(-this.#value, this.#unit);
+    return this.#clone(this.#value * factor);
+  }
+
+  divide(divisor: number): Measurement<Unit> {
+    if (divisor === 1) return this;
+    if (divisor === 0) {
+      throw new Error(`Cannot divide ${this.css()} by zero`);
+    }
+    const result = this.#value / divisor;
+    if (!Number.isFinite(result)) {
+      throw new Error('Non-finite result');
+    }
+    return this.#clone(result);
+  }
+
+  double(): Measurement<Unit> {
+    return this.#clone(this.#value * 2);
+  }
+
+  half(): Measurement<Unit> {
+    return this.#clone(this.#value / 2);
+  }
+
+  negation(shouldNegate = true): Measurement<Unit> {
+    return shouldNegate ? this.#clone(-this.#value) : this;
+  }
+
+  absolute(): Measurement<Unit> {
+    return this.#clone(Math.abs(this.#value));
+  }
+
+  round(precision = 0): Measurement<Unit> {
+    const next =
+      precision === 0
+        ? Math.round(this.#value)
+        : Number(this.#value.toFixed(precision));
+    return this.#clone(next);
+  }
+
+  floor(): Measurement<Unit> {
+    return this.#clone(Math.floor(this.#value));
+  }
+
+  ceil(): Measurement<Unit> {
+    return this.#clone(Math.ceil(this.#value));
+  }
+
+  clamp(min: IMeasurement, max: IMeasurement): Measurement<Unit> {
+    assertMatchingUnits(this, min, 'clamp(min)');
+    assertMatchingUnits(this, max, 'clamp(max)');
+    const minValue = min.getValue();
+    const maxValue = max.getValue();
+    const clamped = Math.min(maxValue, Math.max(minValue, this.#value));
+    return this.#clone(clamped);
+  }
+
+  #clone(nextValue: number): Measurement<Unit> {
+    if (nextValue === this.#value) return this;
+    return new Measurement(nextValue, this.#unit);
+  }
+}
 
 const createMeasurement = <Unit extends string>(
   value: number,
   unit: Unit,
-): IMeasurement & UnitBrand<Unit> => {
-  const normalizedUnit = unit.toLowerCase() as Unit;
-  const measurement = {
-    css: () => `${measurement.value}${measurement.unit}`,
-    toString: () => `${measurement.value}${measurement.unit}`,
-    value, // make private somehow
-    unit: normalizedUnit, // make private somehow
-    valueOf: () => measurement.value,
-    getUnit: () => measurement.unit,
-    isUnit: (expected: string) =>
-      measurement.unit === expected.toLowerCase(),
-    assertUnit: (expected: string, context?: string) => {
-      if (!measurement.isUnit(expected)) {
-        const location = context ? `${context}: ` : '';
-        throw new Error(
-          `${location}Expected unit "${expected}", received "${measurement.unit}".`,
-        );
-      }
-    },
-    assert: (
-      predicate: (measurement: IMeasurement) => boolean,
-      message: string,
-    ) => {
-      if (!predicate(measurement)) {
-        throw new Error(message);
-      }
-    },
-    equals: (other: IMeasurement) => {
-      assertMatchingUnits(measurement, other, 'equals');
-      return measurement.value === other.value;
-    },
-    compare: (other: IMeasurement) => {
-      assertMatchingUnits(measurement, other, 'compare');
-      if (measurement.value === other.value) return 0;
-      return measurement.value < other.value ? -1 : 1;
-    },
-    add: (delta: DeltaInput) =>
-      createMeasurement(
-        measurement.value + deltaToNumber(measurement, delta),
-        normalizedUnit,
-      ),
-    subtract: (delta: DeltaInput) =>
-      createMeasurement(
-        measurement.value - deltaToNumber(measurement, delta),
-        normalizedUnit,
-      ),
-    multiply: (factor: number) => {
-      if (factor === 1) return measurement;
-      if (factor === 0) return createMeasurement(0, normalizedUnit);
-      if (factor === -1)
-        return createMeasurement(-measurement.value, normalizedUnit);
-      return createMeasurement(
-        measurement.value * factor,
-        normalizedUnit,
-      );
-    },
-    divide: (divisor: number) => {
-      if (divisor === 1) return measurement;
-      if (divisor === 0) {
-        throw new Error(`Cannot divide ${measurement.css()} by zero`);
-      }
-      const result = measurement.value / divisor;
-      if (!Number.isFinite(result))
-        throw new Error('Non-finite result');
-      return createMeasurement(result, normalizedUnit);
-    },
-    double: () =>
-      createMeasurement(measurement.value * 2, normalizedUnit),
-    half: () =>
-      createMeasurement(measurement.value / 2, normalizedUnit),
-    negation: (shouldNegate = true) =>
-      shouldNegate
-        ? createMeasurement(-measurement.value, measurement.unit)
-        : measurement,
-    absolute: () =>
-      createMeasurement(Math.abs(measurement.value), normalizedUnit),
-    round: (precision = 0) => {
-      const next =
-        precision === 0
-          ? Math.round(measurement.value)
-          : Number(measurement.value.toFixed(precision));
-      return next === measurement.value
-        ? measurement
-        : createMeasurement(next, measurement.unit);
-    },
-    floor: () => {
-      const next = Math.floor(measurement.value);
-      return next === measurement.value
-        ? measurement
-        : createMeasurement(next, measurement.unit);
-    },
-    ceil: () => {
-      const next = Math.ceil(measurement.value);
-      return next === measurement.value
-        ? measurement
-        : createMeasurement(next, measurement.unit);
-    },
-    clamp: (min: IMeasurement, max: IMeasurement) => {
-      assertMatchingUnits(measurement, min, 'clamp(min)');
-      assertMatchingUnits(measurement, max, 'clamp(max)');
-      const u = measurement.unit;
-      const v =
-        measurement.value < min.value
-          ? min.value
-          : measurement.value > max.value
-            ? max.value
-            : measurement.value;
-      return v === measurement.value
-        ? measurement
-        : createMeasurement(v, u);
-    },
-  } as unknown as IMeasurement & UnitBrand<Unit>;
+): Measurement<Unit> => new Measurement(value, unit);
 
-  Object.defineProperty(measurement, '__unitBrand', {
-    value: normalizedUnit,
-    enumerable: false,
-  });
-
-  measurementRegistry.add(measurement);
-  return Object.freeze(measurement);
-};
+export const isMeasurement = (x: unknown): x is IMeasurement =>
+  x instanceof Measurement;
 
 export const m = <Unit extends string>(
   value: number,
@@ -200,10 +224,11 @@ const makeUnitHelper = <Unit extends string>(
   unit: Unit,
 ): UnitHelper<Unit> => {
   const normalizedUnit = unit.toLowerCase() as Unit;
-  const helper = ((value: number) =>
-    createMeasurement(value, normalizedUnit)) as UnitHelper<Unit>;
-  helper.unit = normalizedUnit;
-  return helper;
+  const factory = (value: number) =>
+    createMeasurement(value, normalizedUnit);
+  return Object.assign(factory, {
+    unit: normalizedUnit,
+  }) as UnitHelper<Unit>;
 };
 
 type UnitCategory =
@@ -517,14 +542,18 @@ export const negation = (
 
 export const measurementMin = (a: IMeasurement, b: IMeasurement) => {
   assertMatchingUnits(a, b, 'measurementMin');
-  const winner = a.value < b.value ? a : b;
-  return a === winner ? a : m(winner.value, winner.unit);
+  const winner = a.getValue() < b.getValue() ? a : b;
+  return a === winner
+    ? a
+    : m(winner.getValue(), winner.getUnit());
 };
 
 export const measurementMax = (a: IMeasurement, b: IMeasurement) => {
   assertMatchingUnits(a, b, 'measurementMax');
-  const winner = a.value > b.value ? a : b;
-  return a === winner ? a : m(winner.value, winner.unit);
+  const winner = a.getValue() > b.getValue() ? a : b;
+  return a === winner
+    ? a
+    : m(winner.getValue(), winner.getUnit());
 };
 
 export const hasCssMethod = (
@@ -550,7 +579,7 @@ export const measurementHypotenuse = (
 ): IMeasurement => {
   if (!b) b = a;
   assertMatchingUnits(a, b, 'measurementHypotenuse');
-  return m(Math.hypot(a.value, b.value), a.unit);
+  return m(Math.hypot(a.getValue(), b.getValue()), a.getUnit());
 };
 
 export const assertCondition = (
