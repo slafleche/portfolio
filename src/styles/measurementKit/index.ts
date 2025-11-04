@@ -517,6 +517,22 @@ export const hasCssMethod = (
   );
 };
 
+export const measurementMin = <Unit extends string>(
+  a: IMeasurement<Unit>,
+  b: IMeasurement<Unit>,
+): IMeasurement<Unit> => {
+  assertMatchingUnits(a, b, 'measurementMin');
+  return a.getValue() <= b.getValue() ? a : b;
+};
+
+export const measurementMax = <Unit extends string>(
+  a: IMeasurement<Unit>,
+  b: IMeasurement<Unit>,
+): IMeasurement<Unit> => {
+  assertMatchingUnits(a, b, 'measurementMax');
+  return a.getValue() >= b.getValue() ? a : b;
+};
+
 export const assertUnit = <Unit extends string>(
   measurement: IMeasurement<Unit>,
   expectedUnit: string,
