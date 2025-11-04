@@ -31,8 +31,8 @@
 - When defining spacing/border tokens, use plural keys (`paddings`, `margins`,
   `borders`) so they can be spread directly into the helpers without touching
   CSS.
-- Keep `data-ui` contracts intact (`data-ui="heading"` for headings, `data-ui="link"` for reusable
-  links).
+- Keep `data-ui` contracts intact (`data-ui="heading"` for headings,
+  `data-ui="link"` for reusable links).
 
 ## Communication
 
@@ -44,6 +44,13 @@
 
 ## Refactor Strategy
 
-- Keep the existing path working while you build the replacement. Stand up the new code alongside the old, copy what you need, and evolve the copy in place.
-- Map every consumer of the legacy code and migrate them in tiny, verified batches. After each batch, run the usual checks before touching the next group.
-- Only remove the legacy version once every reference has been swapped over and validated. This prevents long-lived breakages and keeps the repo shippable throughout the refactor.
+- Keep the existing path working while you build the replacement. Stand up the
+  new code alongside the old, copy what you need, and evolve the copy in place.
+- Map every consumer of the legacy code and migrate them in tiny, verified
+  batches. After each batch, run the usual checks before touching the next
+  group.
+- Only remove the legacy version once every reference has been swapped over and
+  validated. This prevents long-lived breakages and keeps the repo shippable
+  throughout the refactor.
+- If you plan to change a file name, better to do it first, commit and then do
+  edits and both at the same time for better difs
