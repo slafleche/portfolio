@@ -17,6 +17,7 @@ import Footer from '../../src/components/Footer';
 import ContactButton from '@/components/ContactButton';
 import * as layoutStyles from '@/styles/layout.css';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
+import { sharedStrings } from '../../src/lib/sharedStrings';
 
 export default async function HomePage({
   params,
@@ -108,7 +109,7 @@ export default async function HomePage({
         {heroCopy.ctaLabel ? (
           <ContactButton
             watchId="hero"
-            href={`#${contact.href}`}
+            href={sharedStrings.mailtoEmail}
             label={heroCopy.ctaLabel}
           />
         ) : null}

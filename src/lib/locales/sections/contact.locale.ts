@@ -4,22 +4,22 @@ import type { Translator } from './helpers.locale';
 type MessageKey = keyof Messages;
 
 export const CONTACT_KEYS = {
-	title: 'contact',
-	href: 'contact-href',
-	content: 'contact-content',
-	github: 'contact-github',
+  title: 'contact',
+  content: 'contact-content',
+  emailLabel: 'contact-email-label',
+  href: 'contact-href',
 } as const satisfies Record<string, MessageKey>;
 
 export type ContactCopy = {
-	title: string;
-	href: string;
-	content: string;
-	github: string;
+  title: string;
+  content: string;
+  emailLabel: string;
+  href: string;
 };
 
 export const buildContactCopy = (t: Translator): ContactCopy => ({
-	title: t(CONTACT_KEYS.title),
-	href: t(CONTACT_KEYS.href),
-	content: t(CONTACT_KEYS.content),
-	github: t(CONTACT_KEYS.github),
+  title: t(CONTACT_KEYS.title),
+  content: t(CONTACT_KEYS.content),
+  emailLabel: t(CONTACT_KEYS.emailLabel),
+  href: t(CONTACT_KEYS.href),
 });

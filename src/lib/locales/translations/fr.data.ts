@@ -117,10 +117,8 @@ export const frData = {
 
   contact: 'contact',
   'contact-href': 'contact',
-  'contact-content':
-    'Envie de collaborer ? Contactez-moi sur [LinkedIn](https://www.linkedin.com/in/slafleche)',
-  'contact-github':
-    'Le code du site est dispo sur [GitHub](https://github.com/slafleche/portfolio) !',
+  'contact-content': 'Envie de collaborer ?',
+  'contact-email-label': 'Envoyez-moi un email !',
 
   'systems-title':
     'Vaisseau de Thésée : la structure qui survit au changement',

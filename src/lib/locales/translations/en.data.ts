@@ -113,10 +113,8 @@ export const enData = {
   },
   contact: 'Contact',
   'contact-href': 'contact',
-  'contact-content':
-    "Think we'd work well together? Contact me on [LinkedIn!](https://www.linkedin.com/in/slafleche)",
-  'contact-github':
-    'Site sources available on [GitHub](https://github.com/slafleche/portfolio)!',
+  'contact-content': "Think we'd work well together?",
+  'contact-email-label': 'Shoot me an email!',
 
   'systems-title': 'Ship of Theseus: Structure that endures',
   'systems-title_a': 'Ship of Theseus: ',
