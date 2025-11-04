@@ -1,38 +1,43 @@
 type UnitBrand<Unit extends string> = { readonly __unitBrand: Unit };
-export interface IMeasurement {
+export interface IMeasurement<Unit extends string = string> {
   css: () => string;
   toString: () => string;
-  getUnit: () => string;
+  getUnit: () => Unit;
   getValue: () => number;
   isUnit: (unit: string) => boolean;
   assertUnit: (unit: string, context?: string) => void;
   assert: (
-    predicate: (measurement: IMeasurement) => boolean,
+    predicate: (measurement: IMeasurement<Unit>) => boolean,
     message: string,
   ) => void;
-  equals: (other: IMeasurement) => boolean;
-  compare: (other: IMeasurement) => number;
-  add: (delta: DeltaInput) => IMeasurement;
-  subtract: (delta: DeltaInput) => IMeasurement;
-  multiply: (factor: number) => IMeasurement;
-  divide: (divisor: number) => IMeasurement;
-  double: () => IMeasurement;
-  half: () => IMeasurement;
-  negation: (shouldNegate?: boolean) => IMeasurement;
-  absolute: () => IMeasurement;
-  round: (precision?: number) => IMeasurement;
-  floor: () => IMeasurement;
-  ceil: () => IMeasurement;
-  clamp: (min: IMeasurement, max: IMeasurement) => IMeasurement;
+  equals: (other: IMeasurement<string>) => boolean;
+  compare: (other: IMeasurement<string>) => number;
+  add: (delta: DeltaInput) => IMeasurement<Unit>;
+  subtract: (delta: DeltaInput) => IMeasurement<Unit>;
+  multiply: (factor: number) => IMeasurement<Unit>;
+  divide: (divisor: number) => IMeasurement<Unit>;
+  double: () => IMeasurement<Unit>;
+  half: () => IMeasurement<Unit>;
+  negation: (shouldNegate?: boolean) => IMeasurement<Unit>;
+  absolute: () => IMeasurement<Unit>;
+  round: (precision?: number) => IMeasurement<Unit>;
+  floor: () => IMeasurement<Unit>;
+  ceil: () => IMeasurement<Unit>;
+  clamp: (min: IMeasurement<string>, max: IMeasurement<string>) => IMeasurement<Unit>;
 }
 
-type DeltaInput = number | IMeasurement;
+type DeltaInput = number | IMeasurement<string>;
 
-export const assertMatchingUnits = (
-  left: IMeasurement,
-  right: IMeasurement,
+export function assertMatchingUnits<Unit extends string>(
+  left: IMeasurement<Unit>,
+  right: IMeasurement<Unit>,
   context: string,
-): void => {
+): void;
+export function assertMatchingUnits(
+  left: IMeasurement<string>,
+  right: IMeasurement<string>,
+  context: string,
+): void {
   const leftUnit = left.getUnit();
   const rightUnit = right.getUnit();
   if (leftUnit !== rightUnit) {
@@ -41,10 +46,10 @@ export const assertMatchingUnits = (
       `${where}measurement unit mismatch: ${leftUnit} vs ${rightUnit}`,
     );
   }
-};
+}
 
 const deltaToNumber = (
-  base: IMeasurement,
+  base: IMeasurement<string>,
   delta: DeltaInput,
 ): number => {
   if (typeof delta === 'number') return delta;
@@ -53,7 +58,7 @@ const deltaToNumber = (
 };
 
 class Measurement<Unit extends string>
-  implements IMeasurement, UnitBrand<Unit>
+  implements IMeasurement<Unit>, UnitBrand<Unit>
 {
   readonly __unitBrand!: Unit;
   #value: number;
@@ -101,7 +106,7 @@ class Measurement<Unit extends string>
   }
 
   assert(
-    predicate: (measurement: IMeasurement) => boolean,
+    predicate: (measurement: IMeasurement<Unit>) => boolean,
     message: string,
   ): void {
     if (!predicate(this)) {
@@ -109,13 +114,13 @@ class Measurement<Unit extends string>
     }
   }
 
-  equals(other: IMeasurement): boolean {
-    assertMatchingUnits(this, other, 'equals');
+  equals(other: IMeasurement<string>): boolean {
+    assertMatchingUnits(this, other as IMeasurement<Unit>, 'equals');
     return this.#value === other.getValue();
   }
 
-  compare(other: IMeasurement): number {
-    assertMatchingUnits(this, other, 'compare');
+  compare(other: IMeasurement<string>): number {
+    assertMatchingUnits(this, other as IMeasurement<Unit>, 'compare');
     const otherValue = other.getValue();
     if (this.#value === otherValue) return 0;
     return this.#value < otherValue ? -1 : 1;
@@ -182,9 +187,12 @@ class Measurement<Unit extends string>
     return this.#clone(Math.ceil(this.#value));
   }
 
-  clamp(min: IMeasurement, max: IMeasurement): Measurement<Unit> {
-    assertMatchingUnits(this, min, 'clamp(min)');
-    assertMatchingUnits(this, max, 'clamp(max)');
+  clamp(
+    min: IMeasurement<string>,
+    max: IMeasurement<string>,
+  ): Measurement<Unit> {
+    assertMatchingUnits(this, min as IMeasurement<Unit>, 'clamp(min)');
+    assertMatchingUnits(this, max as IMeasurement<Unit>, 'clamp(max)');
     const minValue = min.getValue();
     const maxValue = max.getValue();
     const clamped = Math.min(maxValue, Math.max(minValue, this.#value));
@@ -202,16 +210,16 @@ const createMeasurement = <Unit extends string>(
   unit: Unit,
 ): Measurement<Unit> => new Measurement(value, unit);
 
-export const isMeasurement = (x: unknown): x is IMeasurement =>
+export const isMeasurement = (x: unknown): x is IMeasurement<string> =>
   x instanceof Measurement;
 
 export const m = <Unit extends string>(
   value: number,
   unit: Unit = 'px' as Unit,
-): IMeasurement & UnitBrand<Lowercase<Unit>> =>
+): IMeasurement<Lowercase<Unit>> & UnitBrand<Lowercase<Unit>> =>
   createMeasurement(value, unit.toLowerCase() as Lowercase<Unit>);
 
-type BrandedMeasurement<Unit extends string> = IMeasurement &
+type BrandedMeasurement<Unit extends string> = IMeasurement<Unit> &
   UnitBrand<Unit>;
 
 type UnitHelper<Unit extends string = string> = ((
@@ -532,28 +540,38 @@ export const assertPercentMeasurement: (
   context?: string,
 ) => asserts value is PercentMeasurement = makeUnitAssert(mPercent);
 
-export const double = (measurement: IMeasurement) =>
+export const double = <Unit extends string>(
+  measurement: IMeasurement<Unit>,
+) =>
   measurement.double();
-export const half = (measurement: IMeasurement) => measurement.half();
-export const negation = (
-  measurement: IMeasurement,
+export const half = <Unit extends string>(
+  measurement: IMeasurement<Unit>,
+) => measurement.half();
+export const negation = <Unit extends string>(
+  measurement: IMeasurement<Unit>,
   shouldNegate = true,
 ) => measurement.negation(shouldNegate);
 
-export const measurementMin = (a: IMeasurement, b: IMeasurement) => {
+export const measurementMin = <Unit extends string>(
+  a: IMeasurement<Unit>,
+  b: IMeasurement<Unit>,
+) => {
   assertMatchingUnits(a, b, 'measurementMin');
   const winner = a.getValue() < b.getValue() ? a : b;
   return a === winner
     ? a
-    : m(winner.getValue(), winner.getUnit());
+    : createMeasurement(winner.getValue(), winner.getUnit());
 };
 
-export const measurementMax = (a: IMeasurement, b: IMeasurement) => {
+export const measurementMax = <Unit extends string>(
+  a: IMeasurement<Unit>,
+  b: IMeasurement<Unit>,
+) => {
   assertMatchingUnits(a, b, 'measurementMax');
   const winner = a.getValue() > b.getValue() ? a : b;
   return a === winner
     ? a
-    : m(winner.getValue(), winner.getUnit());
+    : createMeasurement(winner.getValue(), winner.getUnit());
 };
 
 export const hasCssMethod = (
@@ -567,19 +585,22 @@ export const hasCssMethod = (
   );
 };
 
-export const assertUnit = (
-  measurement: IMeasurement,
+export const assertUnit = <Unit extends string>(
+  measurement: IMeasurement<Unit>,
   expectedUnit: string,
   context?: string,
 ) => measurement.assertUnit(expectedUnit, context);
 
-export const measurementHypotenuse = (
-  a: IMeasurement,
-  b?: IMeasurement,
-): IMeasurement => {
+export const measurementHypotenuse = <Unit extends string>(
+  a: IMeasurement<Unit>,
+  b?: IMeasurement<Unit>,
+): IMeasurement<Unit> => {
   if (!b) b = a;
   assertMatchingUnits(a, b, 'measurementHypotenuse');
-  return m(Math.hypot(a.getValue(), b.getValue()), a.getUnit());
+  return createMeasurement(
+    Math.hypot(a.getValue(), b.getValue()),
+    a.getUnit(),
+  );
 };
 
 export const assertCondition = (
