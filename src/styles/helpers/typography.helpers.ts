@@ -3,9 +3,9 @@ import type { FontFamilyDef, FontStyles } from './types';
 import {
   assertPercentMeasurement,
   hasCssMethod,
-  isPercentMeasurement,
   type PercentMeasurement,
 } from '../measurementKit';
+import { percentToDecimal } from '../../lib/math';
 
 export type FontCSS = Partial<
   Pick<
@@ -103,7 +103,7 @@ export function relativeFontWeight(
 ): CSS.Property.FontWeight {
   assertPercentMeasurement(percent, 'relativeFontWeight');
   const { high, low } = family.weights;
-  const normalized = percent.toPercentDecimal();
+  const normalized = percentToDecimal(percent);
   const value = low + (high - low) * normalized;
   return value as CSS.Property.FontWeight;
 }
@@ -114,7 +114,7 @@ export function computeFontWeight(
 ): CSS.Property.FontWeight {
   assertPercentMeasurement(percent, 'computeFontWeight');
   const { high, low } = family.weights;
-  const normalized = percent.toPercentDecimal();
+  const normalized = percentToDecimal(percent);
   const value = low + (high - low) * normalized;
   return value as CSS.Property.FontWeight;
 }

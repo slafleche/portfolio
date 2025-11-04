@@ -1,4 +1,4 @@
-# Project Guidelines for Codex
+# Project Guidelines
 
 ## Token → Helper → Module → Style Flow
 
