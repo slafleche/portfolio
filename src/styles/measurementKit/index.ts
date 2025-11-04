@@ -153,7 +153,11 @@ class Measurement<Unit extends string>
 
   compare(other: IMeasurement<string>, strict = true): number {
     if (strict) {
-      assertMatchingUnits(this, other as IMeasurement<Unit>, 'compare(strict)');
+      assertMatchingUnits(
+        this,
+        other as IMeasurement<Unit>,
+        'compare(strict)',
+      );
     } else if (this.#unit !== other.getUnit()) {
       return this.#unit < other.getUnit() ? -1 : 1;
     }
@@ -501,39 +505,6 @@ export const assertPercentMeasurement: (
   value: unknown,
   context?: string,
 ) => asserts value is PercentMeasurement = makeUnitAssert(mPercent);
-
-export const double = <Unit extends string>(
-  measurement: IMeasurement<Unit>,
-) => measurement.double();
-export const half = <Unit extends string>(
-  measurement: IMeasurement<Unit>,
-) => measurement.half();
-export const negation = <Unit extends string>(
-  measurement: IMeasurement<Unit>,
-  shouldNegate = true,
-) => measurement.negation(shouldNegate);
-
-export const measurementMin = <Unit extends string>(
-  a: IMeasurement<Unit>,
-  b: IMeasurement<Unit>,
-) => {
-  assertMatchingUnits(a, b, 'measurementMin');
-  const winner = a.getValue() < b.getValue() ? a : b;
-  return a === winner
-    ? a
-    : createMeasurement(winner.getValue(), winner.getUnit());
-};
-
-export const measurementMax = <Unit extends string>(
-  a: IMeasurement<Unit>,
-  b: IMeasurement<Unit>,
-) => {
-  assertMatchingUnits(a, b, 'measurementMax');
-  const winner = a.getValue() > b.getValue() ? a : b;
-  return a === winner
-    ? a
-    : createMeasurement(winner.getValue(), winner.getUnit());
-};
 
 export const hasCssMethod = (
   x: unknown,
