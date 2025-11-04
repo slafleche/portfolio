@@ -17,7 +17,7 @@ import * as revealStyles from '@/styles/components/heroText.css';
 import { playProjectorText } from '@/lib/projectorText';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
-import { fontVars } from '../tokens/fontVars.tokens';
+import { fontVariants } from '../tokens/fontVariants.tokens';
 import { heroVars } from '../styles/componentTokens/hero.componentTokens';
 import {
   projectorVars,
@@ -156,7 +156,7 @@ export default function HeroHeading({
     setStaticReady(false);
 
     const { fonts, timeoutMs } = collectWaitForFonts(
-      fontVars.hero,
+      fontVariants.hero,
       heroVars.fontLoading,
     );
     const finalize = () => {
@@ -218,7 +218,7 @@ export default function HeroHeading({
 
     const start = async () => {
       const { fonts, timeoutMs } = collectWaitForFonts(
-        fontVars.hero,
+        fontVariants.hero,
         heroVars.fontLoading,
       );
       if (fonts.length > 0) {

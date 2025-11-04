@@ -1,8 +1,10 @@
 import { style } from '@vanilla-extract/css';
 import { m, mPercent } from '../measurementKit';
-import { composeFontStyles } from '../helpers/typography.helpers';
+import {
+	composeFontVariantStyles,
+	fontVariants,
+} from '../../tokens/fontVariants.tokens';
 import { colorVars } from '../componentTokens/global.componentTokens';
-import { fontVars } from '../../tokens/fontVars.tokens';
 
 export const root = style({
 	marginTop: m(20).css(),
@@ -19,9 +21,12 @@ export const root = style({
 });
 
 export const heading = style({
-	...composeFontStyles({
-		token: fontVars.hero,
-		weightPercent: mPercent(100),
+	...composeFontVariantStyles(fontVariants.hero, {
+		options: {
+			weightPercents: {
+				default: mPercent(100),
+			},
+		},
 		overrides: { size: undefined },
 	}),
 	fontSize: m(24).css(),
