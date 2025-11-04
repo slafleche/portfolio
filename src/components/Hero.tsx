@@ -13,6 +13,8 @@ import { collectWaitForFonts, waitForFonts } from '@/lib/fontLoading';
 import { fontVariants } from '../tokens/fontVariants.tokens';
 import { heroVars } from '../styles/componentTokens/componentTokens.hero';
 import { projectorVars } from '../styles/componentTokens/componentTokens.projector';
+import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
+import ImageByName from './ImageByName';
 
 type HeroCopy = {
   videoTitle: string;
@@ -43,6 +45,9 @@ export default function Hero({
   overlayClassName,
   headingAnimated = true,
 }: Props) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const isHeadingAnimated =
+    headingAnimated && !prefersReducedMotion;
   const [
     ctaReady,
     setCtaReady,
@@ -62,7 +67,8 @@ export default function Hero({
       copy.headingLastLine,
     ],
   );
-  const showVideo = withVideo;
+  const showVideo = withVideo && !prefersReducedMotion;
+  const showPoster = withVideo && prefersReducedMotion;
   const showCta = Boolean(ctaHref && copy.ctaLabel);
 
   const headingKey = useMemo(
@@ -70,10 +76,10 @@ export default function Hero({
       [
         headingLabel ?? '',
         copy.ctaLabel,
-        headingAnimated ? 'animated' : 'static',
+        isHeadingAnimated ? 'animated' : 'static',
       ].join('|'),
     [
-      headingAnimated,
+      isHeadingAnimated,
       headingLabel,
       copy.ctaLabel,
     ],
@@ -82,6 +88,17 @@ export default function Hero({
   useEffect(() => {
     let cancelled = false;
     let timer: number | null = null;
+    if (prefersReducedMotion) {
+      setCtaReady(true);
+      setWaitingForReveal(false);
+      return () => {
+        cancelled = true;
+        if (timer !== null) {
+          window.clearTimeout(timer);
+        }
+      };
+    }
+
     setCtaReady(false);
     setWaitingForReveal(true);
 
@@ -104,7 +121,7 @@ export default function Hero({
       const revealOffset =
         projectorVars.timing.textReveal.offsetFromCalibrationEnd;
       const revealDuration = projectorVars.timing.textReveal.duration;
-      const totalDelay = headingAnimated
+      const totalDelay = isHeadingAnimated
         ? calibration
             .add(revealOffset)
             .add(revealDuration)
@@ -139,16 +156,17 @@ export default function Hero({
       }
     };
   }, [
-    headingAnimated,
+    isHeadingAnimated,
     headingKey,
+    prefersReducedMotion,
   ]);
 
   const handleHeadingReveal = useCallback(() => {
-    if (!headingAnimated || !waitingForReveal) return;
+    if (!isHeadingAnimated || !waitingForReveal) return;
     setCtaReady(true);
     setWaitingForReveal(false);
   }, [
-    headingAnimated,
+    isHeadingAnimated,
     waitingForReveal,
   ]);
 
@@ -160,7 +178,7 @@ export default function Hero({
     <section
       id={id}
       className={clsx(s.root, className)}
-      data-heading-animated={headingAnimated ? 'true' : 'false'}
+      data-heading-animated={isHeadingAnimated ? 'true' : 'false'}
     >
       {showVideo ? (
         <VideoByName
@@ -182,6 +200,20 @@ export default function Hero({
           fallbackLabel={copy.videoLabel}
         />
       ) : null}
+      {showPoster ? (
+        <div className={s.video} aria-hidden>
+          <div className={s.videoBg} />
+          <div className={s.contentWrap}>
+            <ImageByName
+              name="video-hero"
+              alt=""
+              kind="lg"
+              className={s.visualContent}
+              priority
+            />
+          </div>
+        </div>
+      ) : null}
 
       {/* Banding-fix overlays (over video, under content) */}
       <div className={clsx(s.overlays, overlayClassName)} aria-hidden>
@@ -196,7 +228,7 @@ export default function Hero({
           <div className={s.bridge}>
             <HeroHeading
               label={headingLabel}
-              animate={headingAnimated}
+              animate={isHeadingAnimated}
               onReveal={handleHeadingReveal}
               // debugStage="initial"
             >
