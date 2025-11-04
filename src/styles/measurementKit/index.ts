@@ -495,7 +495,10 @@ export type DppxMeasurement = MeasurementOf<typeof mDppx>;
 export type FrMeasurement = MeasurementOf<typeof mFr>;
 
 export const isPercentMeasurement = makeUnitGuard(mPercent);
-export const assertPercentMeasurement = makeUnitAssert(mPercent);
+export const assertPercentMeasurement: (
+  value: unknown,
+  context?: string,
+) => asserts value is PercentMeasurement = makeUnitAssert(mPercent);
 
 export const double = (measurement: IMeasurement) =>
   measurement.double();
