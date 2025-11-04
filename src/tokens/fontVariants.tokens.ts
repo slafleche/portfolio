@@ -119,9 +119,55 @@ const resolveVariantWeights = (
       ? computeFontWeight(family, weightPercents.strong)
       : family.weights.strong;
 
+  const enforceWeightOrder = (
+    base: CSS.Property.FontWeight,
+    strong: CSS.Property.FontWeight,
+  ): {
+    default: CSS.Property.FontWeight;
+    strong: CSS.Property.FontWeight;
+  } => {
+    const toNumber = (value: CSS.Property.FontWeight): number | undefined => {
+      if (typeof value === 'number') return value;
+      const normalized = value.toString().trim().toLowerCase();
+      if (normalized === 'normal') return 400;
+      if (normalized === 'bold') return 700;
+      const parsed = Number(normalized);
+      return Number.isFinite(parsed) ? parsed : undefined;
+    };
+
+    const baseNumber = toNumber(base);
+    const strongNumber = toNumber(strong);
+    if (
+      baseNumber !== undefined &&
+      strongNumber !== undefined &&
+      baseNumber >= strongNumber
+    ) {
+      const message = `fontVariants: expected default font weight < strong font weight for family "${family.family}" but received ${base} vs ${strong}.`;
+      if (process.env.NODE_ENV !== 'production') {
+        throw new Error(message);
+      }
+
+      const fallbackStrong = Math.min(
+        1000,
+        Math.max(baseNumber + 1, family.weights.strong),
+      );
+      return {
+        default: base,
+        strong: fallbackStrong as CSS.Property.FontWeight,
+      };
+    }
+
+    return {
+      default: base,
+      strong,
+    };
+  };
+
+  const ordered = enforceWeightOrder(defaultWeight, strongWeight);
+
   return {
-    default: defaultWeight,
-    strong: strongWeight,
+    default: ordered.default,
+    strong: ordered.strong,
   };
 };
 
