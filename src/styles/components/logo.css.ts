@@ -1,5 +1,5 @@
 import { keyframes, style, globalStyle } from '@vanilla-extract/css';
-import { logoVars } from '../componentTokens/global.componentTokens';
+import { logoVars } from '../componentTokens/componentTokens.global';
 import { absolutePosition } from '../helpers/positioning';
 
 export const root = style({

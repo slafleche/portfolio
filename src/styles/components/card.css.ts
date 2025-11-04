@@ -1,6 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { makeCardGradient } from '../helpers/cardGradient';
-import { colorVars, gradients } from '../componentTokens/global.componentTokens';
+import { colorVars, gradients } from '../componentTokens/componentTokens.global';
 import { m } from '../measurementKit';
 import { paddings } from '../helpers/spacing';
 import { absolutePosition } from '../helpers/positioning';

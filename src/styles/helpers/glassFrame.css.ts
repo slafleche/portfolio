@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { glassVars } from './glassy';
 import { globalBoxShadow } from './shadow';
-import { colorVars } from '../componentTokens/global.componentTokens';
+import { colorVars } from '../componentTokens/componentTokens.global';
 
 export const frame = style({
   // position: 'relative',

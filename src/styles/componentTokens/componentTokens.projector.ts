@@ -1,6 +1,6 @@
 import { color } from '../helpers/colorWrap';
 import { assertCondition, assertUnit, m } from '../measurementKit';
-import { dropShadowVars } from './global.componentTokens';
+import { dropShadowVars } from './componentTokens.global';
 
 export type ProjectorChannel = 'blue' | 'green' | 'red';
 export type ProjectorStage = 'initial' | 'waypoint' | 'focus';

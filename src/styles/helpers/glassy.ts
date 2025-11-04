@@ -2,7 +2,7 @@ import { color } from './colorWrap';
 import { m, mPercent } from '../measurementKit';
 import type * as CSS from 'csstype';
 import { noiseStyle, type NoiseSvgOptions } from './noiseSVG';
-import { colorVars } from '../componentTokens/global.componentTokens';
+import { colorVars } from '../componentTokens/componentTokens.global';
 
 const defaultNoiseId = `glassy-noise-${Math.random().toString(36).slice(2, 10)}`;
 

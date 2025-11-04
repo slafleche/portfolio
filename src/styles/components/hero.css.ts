@@ -1,10 +1,10 @@
 import { style, globalStyle } from '@vanilla-extract/css';
-import { colorVars } from '../componentTokens/global.componentTokens';
+import { colorVars } from '../componentTokens/componentTokens.global';
 import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import { heroVars } from '../componentTokens/hero.componentTokens';
+import { heroVars } from '../componentTokens/componentTokens.hero';
 import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
 import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
@@ -16,7 +16,7 @@ import {
   backgroundImageDecl,
   buildLinear,
 } from '../helpers/gradients';
-import { projectorVars } from '../componentTokens/projector.componentTokens';
+import { projectorVars } from '../componentTokens/componentTokens.projector';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
