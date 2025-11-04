@@ -12,6 +12,8 @@ export interface IMeasurement<Unit extends string = string> {
   toString: () => string;
   getUnit: () => Unit;
   getValue: () => number;
+  valueOf: () => number;
+  [Symbol.toPrimitive]: (hint: string) => string | number;
   isUnit: (unit: string) => boolean;
   assertUnit: (unit: string, context?: string) => void;
   assert: (
@@ -101,6 +103,15 @@ class Measurement<Unit extends string>
 
   getValue(): number {
     return this.#value;
+  }
+
+  valueOf(): number {
+    return this.#value;
+  }
+
+  [Symbol.toPrimitive](hint: string): string | number {
+    if (hint === 'number' || hint === 'default') return this.#value;
+    return this.css();
   }
 
   isUnit(expected: string): boolean {
