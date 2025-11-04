@@ -191,6 +191,10 @@ export function composeFontStyles({
 
   if (resolvedFamily) {
     addLayer(merged, familyToFontStyles(resolvedFamily));
+  } else if (process.env.NODE_ENV !== 'production') {
+    throw new Error(
+      'composeFontStyles: missing canonical family data. Pass `family` or set `familyDef` on your token.',
+    );
   }
 
   if (token) {
