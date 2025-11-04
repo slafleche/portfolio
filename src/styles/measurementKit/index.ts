@@ -1,12 +1,10 @@
 const measurementRegistry = new WeakSet<object>();
 
 type UnitBrand<Unit extends string> = { readonly __unitBrand: Unit };
-
 export interface IMeasurement {
   readonly value: number;
   readonly unit: string;
   css: () => string;
-  toString: () => string;
   valueOf: () => number;
   getUnit: () => string;
   isUnit: (unit: string) => boolean;
@@ -15,7 +13,8 @@ export interface IMeasurement {
     predicate: (measurement: IMeasurement) => boolean,
     message: string,
   ) => void;
-  toPercentDecimal: () => number;
+  equals: (other: IMeasurement) => boolean;
+  compare: (other: IMeasurement) => number;
   add: (delta: DeltaInput) => IMeasurement;
   subtract: (delta: DeltaInput) => IMeasurement;
   multiply: (factor: number) => IMeasurement;
@@ -62,12 +61,11 @@ const createMeasurement = <Unit extends string>(
   unit: Unit,
 ): IMeasurement & UnitBrand<Unit> => {
   const normalizedUnit = unit.toLowerCase() as Unit;
-
   const measurement = {
-    value,
-    unit: normalizedUnit,
     css: () => `${measurement.value}${measurement.unit}`,
     toString: () => `${measurement.value}${measurement.unit}`,
+    value, // make private somehow
+    unit: normalizedUnit, // make private somehow
     valueOf: () => measurement.value,
     getUnit: () => measurement.unit,
     isUnit: (expected: string) =>
@@ -88,13 +86,14 @@ const createMeasurement = <Unit extends string>(
         throw new Error(message);
       }
     },
-    toPercentDecimal: () => {
-      if (!measurement.isUnit('%')) {
-        throw new Error(
-          `Cannot convert measurement with unit "${measurement.unit}" to percent decimal.`,
-        );
-      }
-      return measurement.value / 100;
+    equals: (other: IMeasurement) => {
+      assertMatchingUnits(measurement, other, 'equals');
+      return measurement.value === other.value;
+    },
+    compare: (other: IMeasurement) => {
+      assertMatchingUnits(measurement, other, 'compare');
+      if (measurement.value === other.value) return 0;
+      return measurement.value < other.value ? -1 : 1;
     },
     add: (delta: DeltaInput) =>
       createMeasurement(
@@ -118,7 +117,9 @@ const createMeasurement = <Unit extends string>(
     },
     divide: (divisor: number) => {
       if (divisor === 1) return measurement;
-      if (divisor === 0) throw new Error('Divide by zero');
+      if (divisor === 0) {
+        throw new Error(`Cannot divide ${measurement.css()} by zero`);
+      }
       const result = measurement.value / divisor;
       if (!Number.isFinite(result))
         throw new Error('Non-finite result');
@@ -183,8 +184,8 @@ const createMeasurement = <Unit extends string>(
 export const m = <Unit extends string>(
   value: number,
   unit: Unit = 'px' as Unit,
-): IMeasurement & UnitBrand<Unit> =>
-  createMeasurement(value, unit.toLowerCase() as Unit);
+): IMeasurement & UnitBrand<Lowercase<Unit>> =>
+  createMeasurement(value, unit.toLowerCase() as Lowercase<Unit>);
 
 type BrandedMeasurement<Unit extends string> = IMeasurement &
   UnitBrand<Unit>;
