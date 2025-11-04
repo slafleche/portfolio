@@ -1,9 +1,6 @@
 import { m, mPercent } from '../../styles/measurementKit';
 import { fontFamilies } from '../fontFamilies.tokens';
-import {
-  defineFontVariant,
-  type FontVariantMap,
-} from './core';
+import { defineFontVariant, type FontVariantMap } from './core';
 
 const SOURCE_PATH = 'src/tokens/fontVariants/body.ts';
 
@@ -14,7 +11,6 @@ export const bodyVariants = {
     config: {
       overrides: {
         size: m(16),
-        lineHeight: 1,
       },
       options: {
         weightPercents: {
