@@ -28,7 +28,9 @@ const toFocusTime = m(100, 'ms');
 
 if (process.env.NODE_ENV !== 'production') {
   assertCondition(() => {
-    return toWayPointTime.value > 0 && toFocusTime.value > 0;
+    return (
+      toWayPointTime.getValue() > 0 && toFocusTime.getValue() > 0
+    );
   }, "Calculating 'calibration' times requires positive durations.");
   assertUnit(toWayPointTime, 'ms', 'toWayPointTime - needs to be ms');
   assertUnit(toFocusTime, 'ms', 'toFocusTime - needs to be ms');

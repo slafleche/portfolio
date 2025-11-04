@@ -1,4 +1,4 @@
-import type { IMeasurement } from '../styles/measurementKit';
+import type { IMeasurement } from '../../styles/measurementKit';
 import { menuVars } from '../../styles/componentTokens/global.componentTokens';
 import transforms from '../../styles/helpers/transforms';
 
@@ -58,9 +58,9 @@ export function generateArchPaths(p: IProps) {
 
 	// --- Geometry base
 	const W = Math.max(200, p.width);
-	const top = Math.max(0, p.top.value);
-	const curveHeight = Math.max(10, p.curveHeight.value);
-	const ry = Math.max(curveHeight + 4, p.ry.value);
+	const top = Math.max(0, p.top.getValue());
+	const curveHeight = Math.max(10, p.curveHeight.getValue());
+	const ry = Math.max(curveHeight + 4, p.ry.getValue());
 	const H = top + curveHeight;
 
 	const cx = W / 2;
@@ -68,7 +68,7 @@ export function generateArchPaths(p: IProps) {
 	const rx = rxFrom(W, curveHeight, ry);
 
 	// --- Bump geometry
-	const bumpWidthValue = p.bumpWidth.value;
+	const bumpWidthValue = p.bumpWidth.getValue();
 	const half = Math.max(
 		12,
 		Math.min(bumpWidthValue / 2, rx - 6, W / 2 - 6),
@@ -82,7 +82,7 @@ export function generateArchPaths(p: IProps) {
 	const yW = Math.min(yEllipse(cx, cy, rx, ry, W), H - 1e-3);
 
 	const maxDepth = H - yA - 1.0;
-	const depth = clamp(p.bumpHeight.value, 0, maxDepth);
+	const depth = clamp(p.bumpHeight.getValue(), 0, maxDepth);
 	const tipY = yA + depth;
 
 	const tR0 = tangentAtX(cx, cy, rx, ry, xR);
@@ -114,7 +114,7 @@ export function generateArchPaths(p: IProps) {
 		),
 	);
 
-	const tspanRaw = p.bumpTipWidth.value;
+	const tspanRaw = p.bumpTipWidth.getValue();
 	const tspanClamped = Math.max(8, Math.min(tspanRaw, half - 6));
 	const c2x = cx + tspanClamped,
 		c2y = tipY;

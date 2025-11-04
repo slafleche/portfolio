@@ -92,12 +92,12 @@ export default function HeroHeading({
         const blurValue =
           typeof blurMeasurement === 'number'
             ? blurMeasurement
-            : blurMeasurement.value;
+            : blurMeasurement.getValue();
 
         acc[channel] = {
           transform: `translate3d(${formatPx(
-            initial.translateX.value,
-          )}, ${formatPx(initial.translateY.value)}, 0) scale(${initial.scale})`,
+            initial.translateX.getValue(),
+          )}, ${formatPx(initial.translateY.getValue())}, 0) scale(${initial.scale})`,
           filter: `blur(${formatPx(blurValue)})`,
         };
 

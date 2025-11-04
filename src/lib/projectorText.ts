@@ -2,6 +2,7 @@ import {
   projectorChannels,
   projectorVars,
 } from '../styles/componentTokens/projector.componentTokens';
+import type { IMeasurement } from '../styles/measurementKit';
 
 type Tier = 'desktop';
 
@@ -41,19 +42,23 @@ const activeAnimations = new WeakMap<HTMLElement, () => void>();
 const getStageTimings = () => {
   const calibration = projectorVars.timing.calibration;
 
-  const initialHoldEnd = calibration.initialHoldTime.value;
+  const initialHoldEnd = calibration.initialHoldTime.getValue();
   const toWayPointEnd =
-    initialHoldEnd + calibration.toWayPointTime.value;
+    initialHoldEnd + calibration.toWayPointTime.getValue();
   const waypointHoldEnd =
-    toWayPointEnd + calibration.waypointHoldTime.value;
-  const toFocusEnd = waypointHoldEnd + calibration.toFocusTime.value;
+    toWayPointEnd + calibration.waypointHoldTime.getValue();
+  const toFocusEnd =
+    waypointHoldEnd + calibration.toFocusTime.getValue();
 
-  const totalCalibration = calibration.totalCalibrationTime.value;
+  const totalCalibration =
+    calibration.totalCalibrationTime.getValue();
 
   const revealTiming = projectorVars.timing.textReveal;
   const revealStart =
-    totalCalibration + revealTiming.offsetFromCalibrationEnd.value;
-  const revealEnd = revealStart + revealTiming.duration.value;
+    totalCalibration +
+    revealTiming.offsetFromCalibrationEnd.getValue();
+  const revealEnd =
+    revealStart + revealTiming.duration.getValue();
 
   const totalDuration = Math.max(toFocusEnd, revealEnd);
 
@@ -125,7 +130,7 @@ const sampleStage = (
 type BlurPoint = { time: number; value: number };
 
 const createBlurSeries = (
-  blurCurve: Record<number, { value: number } | number>,
+  blurCurve: Record<number, IMeasurement | number>,
   totalCalibration: number,
 ): BlurPoint[] => {
   return Object.entries(blurCurve)
@@ -137,7 +142,7 @@ const createBlurSeries = (
         const measurement =
           typeof measurementOrNumber === 'number'
             ? measurementOrNumber
-            : measurementOrNumber.value;
+            : measurementOrNumber.getValue();
         return {
           time: (Number(percent) / 100) * totalCalibration,
           value: measurement,
@@ -232,12 +237,12 @@ export function playProjectorText(
   >((acc, channel) => {
     const states = projectorVars.states[channel];
     const toStage = (stage: {
-      translateX: { value: number };
-      translateY: { value: number };
+      translateX: IMeasurement;
+      translateY: IMeasurement;
       scale: number;
     }): InterpolatedStage => ({
-      x: stage.translateX.value,
-      y: stage.translateY.value,
+      x: stage.translateX.getValue(),
+      y: stage.translateY.getValue(),
       scale: stage.scale,
     });
 

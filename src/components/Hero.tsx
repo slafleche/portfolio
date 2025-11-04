@@ -110,7 +110,7 @@ export default function Hero({
             .add(revealDuration)
             .add(projectorVars.cta.delay)
         : projectorVars.cta.delay;
-      const delayMs = totalDelay.value;
+      const delayMs = totalDelay.getValue();
 
       if (typeof window !== 'undefined') {
         timer = window.setTimeout(() => {

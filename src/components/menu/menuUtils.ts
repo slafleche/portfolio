@@ -101,11 +101,11 @@ export const computeArchY = (
   x: number,
   includeBump = false,
 ) => {
-  const top = archVars.top.value;
-  const curveHeight = archVars.curveHeight.value;
-  const ry = archVars.ry.value;
-  const bumpWidth = archVars.bumpWidth.value;
-  const bumpHeight = archVars.bumpHeight.value;
+  const top = archVars.top.getValue();
+  const curveHeight = archVars.curveHeight.getValue();
+  const ry = archVars.ry.getValue();
+  const bumpWidth = archVars.bumpWidth.getValue();
+  const bumpHeight = archVars.bumpHeight.getValue();
   const cx = width / 2;
   const cy = top + ry;
   const rx = rxFrom(width, curveHeight, ry);
@@ -136,13 +136,16 @@ export const computeCenteredHighlight = (navMetrics: {
   const fallbackWidth = navWidth
     ? Math.min(
         navWidth,
-        menuVars.height.value + menuVars.padding.vertical.value,
+        menuVars.height.getValue() +
+          menuVars.padding.vertical.getValue(),
       )
-    : menuVars.height.value + menuVars.padding.vertical.value;
-  const highlightHeight = menuVars.height.value;
+    : menuVars.height.getValue() +
+      menuVars.padding.vertical.getValue();
+  const highlightHeight = menuVars.height.getValue();
   const centerX = navWidth ? navWidth / 2 : fallbackWidth / 2;
   const centerY = navWidth
-    ? computeArchY(navWidth, centerX) + menuVars.yOffset.value
+    ? computeArchY(navWidth, centerX) +
+      menuVars.yOffset.getValue()
     : highlightHeight / 2;
   const left = centerX - fallbackWidth / 2;
   const top = Math.max(0, centerY - highlightHeight / 2);

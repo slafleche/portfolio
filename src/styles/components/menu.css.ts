@@ -92,10 +92,10 @@ export const root = style({
 		transforms.translate3d(
 			0,
 			-(
-				archVars.top.value +
-				archVars.curveHeight.value +
-				dropShadowVars.offsetY.value +
-				dropShadowVars.blur.value
+				archVars.top.getValue() +
+				archVars.curveHeight.getValue() +
+				dropShadowVars.offsetY.getValue() +
+				dropShadowVars.blur.getValue()
 			) * 1.5,
 			0,
 		),
@@ -545,7 +545,7 @@ export const logoItem = style({
 	display: 'flex',
 	justifyContent: 'center',
 	alignItems: 'center',
-	top: archVars.top.half().add(logoVars.offsetY.value).css(),
+	top: archVars.top.half().add(logoVars.offsetY).css(),
 	left: '50%',
 	zIndex: 1,
 	transform: transforms.value(transforms.translate('-50%', '-50%')),

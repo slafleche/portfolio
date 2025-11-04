@@ -60,7 +60,7 @@ export const shadowTotalY = (
   const unit = y.getUnit();
   y.assertUnit(unit, 'shadowTotalY offsetY');
   blur.assertUnit(unit, 'shadowTotalY blur');
-  return m((y.value ?? 0) + 2 * (blur.value ?? 0), unit);
+  return m(y.getValue() + 2 * blur.getValue(), unit);
 };
 
 // Convenience: total horizontal span needed for the shadow (offsetX + 2 * blur)
@@ -72,5 +72,5 @@ export const shadowTotalX = (
   const unit = x.getUnit();
   x.assertUnit(unit, 'shadowTotalX offsetX');
   blur.assertUnit(unit, 'shadowTotalX blur');
-  return m((x.value ?? 0) + 2 * (blur.value ?? 0), unit);
+  return m(x.getValue() + 2 * blur.getValue(), unit);
 };

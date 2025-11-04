@@ -32,10 +32,10 @@ export const link = style({
 	justifyContent: 'center',
 	borderRadius: '50%',
 	width: chevronVars.width
-		.add(chevronVars.padding.double().value)
+		.add(chevronVars.padding.double())
 		.css(),
 	height: chevronVars.width
-		.add(chevronVars.padding.double().value)
+		.add(chevronVars.padding.double())
 		.css(),
 	transition: 'background 0.3s ease-in',
 	boxShadow: globalBoxShadow(),

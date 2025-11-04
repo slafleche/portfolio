@@ -27,8 +27,10 @@ export const textStyleVars = {
       left: m(16),
     } as SpacingProps,
     borders: {
-      width: m(3),
-      color: colorVars.border,
+      all: {
+        width: m(3),
+        color: colorVars.border,
+      },
     },
   },
   list: {
@@ -59,9 +61,13 @@ export const textStyleVars = {
       fontFamily: codeFontStack,
       backgroundColor: codeBackground,
       borders: {
-        radius: m(4),
-        width: m(1),
-        color: codeBorder,
+        all: {
+          width: m(1),
+          color: codeBorder,
+        },
+        radius: {
+          all: m(4),
+        },
       },
       paddings: {
         vertical: m(2),
@@ -127,8 +133,10 @@ export const textStyleVars = {
   },
   horizontalRule: {
     borders: {
-      width: m(1),
-      color: colorVars.border,
+      all: {
+        width: m(1),
+        color: colorVars.border,
+      },
     },
     margins: {
       bottom: blockSpacing,

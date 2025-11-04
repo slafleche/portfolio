@@ -7,5 +7,5 @@ export const percentToDecimal = (
   measurement: PercentMeasurement,
 ): number => {
   assertPercentMeasurement(measurement, 'percentToDecimal');
-  return measurement.value / 100;
+  return measurement.getValue() / 100;
 };
