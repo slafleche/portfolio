@@ -12,6 +12,8 @@ import type { FontFamilyDef } from '../styles/helpers/types';
 import { fontFamilies } from './fontFamilies.tokens';
 import { m, mPercent } from '../styles/measurementKit';
 
+const MODULE_PATH = 'src/tokens/fontVariants.tokens.ts';
+
 export type FontVariantDefinition = {
   family: FontFamilyDef;
   config?: ComposeFontStylesConfig;
@@ -27,6 +29,7 @@ type DefineFontVariantOptions = {
   config?: ComposeFontStylesConfig;
   waitForFonts?: readonly string[];
   waitForFontsTimeoutMs?: number;
+  label?: string;
 };
 
 const mergeWeightPercents = (
@@ -106,8 +109,10 @@ const combineConfig = (
 const resolveVariantWeights = (
   family: FontFamilyDef,
   config?: ComposeFontStylesConfig,
+  label?: string,
 ): FontVariantDefinition['weights'] => {
   const weightPercents = config?.options?.weightPercents;
+  const hasStrongOverride = weightPercents?.strong != null;
 
   const defaultWeight =
     weightPercents?.default != null
@@ -126,7 +131,9 @@ const resolveVariantWeights = (
     default: CSS.Property.FontWeight;
     strong: CSS.Property.FontWeight;
   } => {
-    const toNumber = (value: CSS.Property.FontWeight): number | undefined => {
+    const toNumber = (
+      value: CSS.Property.FontWeight,
+    ): number | undefined => {
       if (typeof value === 'number') return value;
       const normalized = value.toString().trim().toLowerCase();
       if (normalized === 'normal') return 400;
@@ -136,7 +143,10 @@ const resolveVariantWeights = (
     };
 
     const clamp = (value: number): number => {
-      return Math.min(family.weights.high, Math.max(family.weights.low, value));
+      return Math.min(
+        family.weights.high,
+        Math.max(family.weights.low, value),
+      );
     };
 
     const baseNumber = toNumber(base);
@@ -145,7 +155,10 @@ const resolveVariantWeights = (
     let adjustedStrong = strongNumber ?? strong;
 
     if (baseNumber !== undefined) {
-      if (baseNumber < family.weights.low || baseNumber > family.weights.high) {
+      if (
+        baseNumber < family.weights.low ||
+        baseNumber > family.weights.high
+      ) {
         const message = `fontVariants: default font weight for "${family.family}" (${baseNumber}) should stay within [${family.weights.low}, ${family.weights.high}].`;
         if (process.env.NODE_ENV !== 'production') {
           throw new Error(message);
@@ -187,16 +200,15 @@ const resolveVariantWeights = (
     if (
       typeof resolvedBase === 'number' &&
       typeof resolvedStrong === 'number' &&
+      hasStrongOverride &&
       resolvedBase >= resolvedStrong
     ) {
-      const message = `fontVariants: expected default font weight < strong font weight for family "${family.family}" but received ${resolvedBase} vs ${resolvedStrong}.`;
-      if (process.env.NODE_ENV !== 'production') {
-        throw new Error(message);
-      }
-      console.warn(message);
+      const variantLabel = label ? `.${label}` : '';
+      const message = `[fontVariants${variantLabel}] Expected weights.default (${resolvedBase}) < weights.strong (${resolvedStrong}). (${MODULE_PATH})`;
+      console.error(message);
 
       const fallbackStrong = Math.min(
-        1000,
+        family.weights.high,
         Math.max(resolvedBase + 1, family.weights.strong),
       );
       return {
@@ -227,14 +239,15 @@ const defineFontVariant = (
   family: FontFamilyDef,
   options: DefineFontVariantOptions = {},
 ): FontVariantDefinition => {
-  const { config, waitForFonts, waitForFontsTimeoutMs } = options;
+  const { config, waitForFonts, waitForFontsTimeoutMs, label } =
+    options;
 
   return {
     family,
     config,
     waitForFonts,
     waitForFontsTimeoutMs,
-    weights: resolveVariantWeights(family, config),
+    weights: resolveVariantWeights(family, config, label),
   };
 };
 
@@ -248,6 +261,7 @@ export const fontVariants = {
     waitForFonts: [
       'Urbanist',
     ],
+    label: 'menu',
   }),
   hero: defineFontVariant(fontFamilies.urbanist, {
     config: {
@@ -256,14 +270,13 @@ export const fontVariants = {
         lineHeight: 1.1,
       },
       options: {
-        weightPercents: {
-          default: mPercent(20),
-        },
+        weightPercents: {},
       },
     },
     waitForFonts: [
       'Outfit',
     ],
+    label: 'hero',
   }),
   heading: defineFontVariant(fontFamilies.urbanist),
   h1: defineFontVariant(fontFamilies.urbanist, {
@@ -277,6 +290,7 @@ export const fontVariants = {
         },
       },
     },
+    label: 'heading-h1',
   }),
   h2: defineFontVariant(fontFamilies.urbanist, {
     config: {
@@ -289,6 +303,7 @@ export const fontVariants = {
         },
       },
     },
+    label: 'heading-h2',
   }),
   h3: defineFontVariant(fontFamilies.urbanist, {
     config: {
@@ -301,6 +316,7 @@ export const fontVariants = {
         },
       },
     },
+    label: 'heading-h3',
   }),
   h4: defineFontVariant(fontFamilies.urbanist, {
     config: {
@@ -313,6 +329,7 @@ export const fontVariants = {
         },
       },
     },
+    label: 'heading-h4',
   }),
   h5: defineFontVariant(fontFamilies.urbanist, {
     config: {
@@ -325,6 +342,7 @@ export const fontVariants = {
         },
       },
     },
+    label: 'heading-h5',
   }),
   h6: defineFontVariant(fontFamilies.urbanist, {
     config: {
@@ -337,6 +355,7 @@ export const fontVariants = {
         },
       },
     },
+    label: 'heading-h6',
   }),
   body: defineFontVariant(fontFamilies.ibm, {
     config: {
@@ -351,6 +370,7 @@ export const fontVariants = {
         },
       },
     },
+    label: 'body',
   }),
 } as const satisfies Record<string, FontVariantDefinition>;
 
