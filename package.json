@@ -69,7 +69,7 @@
     "fresh": "yarn install && yarn setup",
     "setup": "yarn copy:html && yarn fonts && yarn format:visual",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",
-    "copy:html": "yarn locales:markdown && tsx scripts/generateCopyHtml.ts",
+    "copy:html": "yarn tsc --noEmit && yarn locales:markdown && tsx scripts/generateCopyHtml.ts",
     "fonts:chars": "tsx scripts/generateFontTexts.ts",
     "fonts:urls": "tsx scripts/generateFontUrls.ts",
     "fonts": "yarn fonts:chars && yarn fonts:urls",
