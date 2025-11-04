@@ -33,7 +33,11 @@ export default function Footer({
     >
       {/* Put gradient on overlay */}
       <div className={s.overlay}></div>
-      <Heading id={headingId} className={s.heading}>
+      <Heading
+        data-visible="sc-only"
+        id={headingId}
+        className={s.heading}
+      >
         {contact.title}
       </Heading>
       <Markdown className={s.content} source={contact.content} />
@@ -66,12 +70,6 @@ export default function Footer({
           <SocialGitHubIcon className={s.gitHubIcon} />
         </GlassyLink>
       </div>
-      {/* Needs to be reworked */}
-      {/* <Markdown
-        className={s.links}
-        source={contact.github}
-        openLinksInNewTab
-      /> */}
 
       {/* Leave for now, i'll be refactoring this link later */}
       {systemsLink ? (
