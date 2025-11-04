@@ -96,30 +96,27 @@ const createMeasurement = <Unit extends string>(
       }
       return measurement.value / 100;
     },
-    add: (delta) =>
+    add: (delta: DeltaInput) =>
       createMeasurement(
         measurement.value + deltaToNumber(measurement, delta),
         normalizedUnit,
       ),
-    subtract: (delta) =>
+    subtract: (delta: DeltaInput) =>
       createMeasurement(
         measurement.value - deltaToNumber(measurement, delta),
         normalizedUnit,
       ),
-    multiply: (factor) => {
+    multiply: (factor: number) => {
       if (factor === 1) return measurement;
       if (factor === 0) return createMeasurement(0, normalizedUnit);
       if (factor === -1)
-        return createMeasurement(
-          -measurement.value,
-          normalizedUnit,
-        );
+        return createMeasurement(-measurement.value, normalizedUnit);
       return createMeasurement(
         measurement.value * factor,
         normalizedUnit,
       );
     },
-    divide: (divisor) => {
+    divide: (divisor: number) => {
       if (divisor === 1) return measurement;
       if (divisor === 0) throw new Error('Divide by zero');
       const result = measurement.value / divisor;
@@ -136,10 +133,7 @@ const createMeasurement = <Unit extends string>(
         ? createMeasurement(-measurement.value, measurement.unit)
         : measurement,
     absolute: () =>
-      createMeasurement(
-        Math.abs(measurement.value),
-        normalizedUnit,
-      ),
+      createMeasurement(Math.abs(measurement.value), normalizedUnit),
     round: (precision = 0) => {
       const next =
         precision === 0
@@ -161,7 +155,7 @@ const createMeasurement = <Unit extends string>(
         ? measurement
         : createMeasurement(next, measurement.unit);
     },
-    clamp: (min, max) => {
+    clamp: (min: IMeasurement, max: IMeasurement) => {
       assertMatchingUnits(measurement, min, 'clamp(min)');
       assertMatchingUnits(measurement, max, 'clamp(max)');
       const u = measurement.unit;
@@ -175,7 +169,7 @@ const createMeasurement = <Unit extends string>(
         ? measurement
         : createMeasurement(v, u);
     },
-  } as IMeasurement & UnitBrand<Unit>;
+  } as unknown as IMeasurement & UnitBrand<Unit>;
 
   Object.defineProperty(measurement, '__unitBrand', {
     value: normalizedUnit,
@@ -192,7 +186,8 @@ export const m = <Unit extends string>(
 ): IMeasurement & UnitBrand<Unit> =>
   createMeasurement(value, unit.toLowerCase() as Unit);
 
-type BrandedMeasurement<Unit extends string> = IMeasurement & UnitBrand<Unit>;
+type BrandedMeasurement<Unit extends string> = IMeasurement &
+  UnitBrand<Unit>;
 
 type UnitHelper<Unit extends string = string> = ((
   value: number,
@@ -200,7 +195,9 @@ type UnitHelper<Unit extends string = string> = ((
   unit: Unit;
 };
 
-const makeUnitHelper = <Unit extends string>(unit: Unit): UnitHelper<Unit> => {
+const makeUnitHelper = <Unit extends string>(
+  unit: Unit,
+): UnitHelper<Unit> => {
   const normalizedUnit = unit.toLowerCase() as Unit;
   const helper = ((value: number) =>
     createMeasurement(value, normalizedUnit)) as UnitHelper<Unit>;
@@ -395,21 +392,30 @@ export const mFr = makeUnitHelperFromDefinition('mFr');
 
 type MeasurementOf<T extends UnitHelper> = ReturnType<T>;
 
-type UnitGuard<T extends UnitHelper> = (value: unknown) => value is MeasurementOf<T>;
+type UnitGuard<T extends UnitHelper> = (
+  value: unknown,
+) => value is MeasurementOf<T>;
 
 type UnitAssertion<T extends UnitHelper> = (
   value: unknown,
   context?: string,
 ) => asserts value is MeasurementOf<T>;
 
-const makeUnitGuard = <T extends UnitHelper>(helper: T): UnitGuard<T> => {
+const makeUnitGuard = <T extends UnitHelper>(
+  helper: T,
+): UnitGuard<T> => {
   return (value: unknown): value is MeasurementOf<T> =>
     isMeasurement(value) && value.isUnit(helper.unit);
 };
 
-const makeUnitAssert = <T extends UnitHelper>(helper: T): UnitAssertion<T> => {
+const makeUnitAssert = <T extends UnitHelper>(
+  helper: T,
+): UnitAssertion<T> => {
   const guard = makeUnitGuard(helper);
-  return (value: unknown, context?: string): asserts value is MeasurementOf<T> => {
+  return (
+    value: unknown,
+    context?: string,
+  ): asserts value is MeasurementOf<T> => {
     if (!guard(value)) {
       const location = context ? `${context}: ` : '';
       throw new Error(
