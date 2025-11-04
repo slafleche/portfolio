@@ -40,7 +40,7 @@ export default function GlassyLink({
 			target={target}
 			rel={safeRel}
 		>
-			<span aria-hidden="true">{children}</span>
+			{children}
 		</Link>
 	);
 }
