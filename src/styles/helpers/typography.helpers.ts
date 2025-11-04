@@ -7,6 +7,14 @@ import {
 } from '../measurementKit';
 import { percentToDecimal } from '../../lib/math';
 
+const typographyWarning = (message: string): void => {
+  const prefixed = `[Typography] ${message}`;
+  if (process.env.NODE_ENV !== 'production') {
+    throw new Error(prefixed);
+  }
+  console.warn(prefixed);
+};
+
 export type FontCSS = Partial<
   Pick<
     CSS.Properties,
@@ -50,18 +58,14 @@ const resolveFontWeight = (
     vars.weight !== undefined ||
     defaultWeight !== undefined
   ) {
-    if (process.env.NODE_ENV !== 'production') {
-      throw new Error(
-        'fontStyles: unsupported font weight type. Supply a string/number weight.',
-      );
-    }
-  }
-
-  if (process.env.NODE_ENV !== 'production') {
-    throw new Error(
-      'fontStyles: missing font weight. Provide `fontWeight`, `weight`, or `weights.default` on your token.',
+    typographyWarning(
+      'fontStyles: unsupported font weight type. Supply a string/number weight.',
     );
   }
+
+  typographyWarning(
+    'fontStyles: missing font weight. Provide `fontWeight`, `weight`, or `weights.default` on your token.',
+  );
 
   return undefined;
 };
