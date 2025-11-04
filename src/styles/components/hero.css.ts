@@ -1,6 +1,9 @@
 import { style, globalStyle } from '@vanilla-extract/css';
 import { colorVars } from '../componentTokens/global.componentTokens';
-import { fontVars } from '../../tokens/fontVars.tokens';
+import {
+  composeFontVariantStyles,
+  fontVariants,
+} from '../../tokens/fontVariants.tokens';
 import { heroVars } from '../componentTokens/hero.componentTokens';
 import { fullSizeOfParent } from '../helpers/positioning';
 import { noiseBg } from '../helpers/noiseSVG';
@@ -8,7 +11,6 @@ import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
 import transforms from '../helpers/transforms';
 import { m, mPercent } from '../measurementKit';
 import { margins, paddings } from '../helpers/spacing';
-import { composeFontStyles } from '../helpers/typography.helpers';
 
 import {
   backgroundImageDecl,
@@ -143,9 +145,12 @@ export const bridge = style({
 export const paragraph = style({
   position: 'relative',
   textAlign: 'center',
-  ...composeFontStyles({
-    token: fontVars.hero,
-    weightPercent: mPercent(0),
+  ...composeFontVariantStyles(fontVariants.hero, {
+    options: {
+      weightPercents: {
+        default: mPercent(0),
+      },
+    },
     overrides: {
       size: undefined,
     },
@@ -340,9 +345,9 @@ export const heading = style({
   position: 'relative',
   margin: 0,
   textAlign: 'center',
-  ...composeFontStyles({ token: fontVars.hero }),
+  ...composeFontVariantStyles(fontVariants.hero),
   fontSize: 'clamp(32px, 7vw, 80px)',
-  marginTop: fontVars.hero.offsetToFlushTop?.css(),
+  marginTop: fontVariants.hero.family.offsetToFlushTop?.css(),
   // selectors: {
   // 	'&::after': {
   // 		content: '',

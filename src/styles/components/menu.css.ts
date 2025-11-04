@@ -15,12 +15,14 @@ import {
 	menuVars,
 	themeColours,
 } from '../componentTokens/global.componentTokens';
-import { fontVars } from '../../tokens/fontVars.tokens';
+import {
+	composeFontVariantStyles,
+	fontVariants,
+} from '../../tokens/fontVariants.tokens';
 
 import { paddings } from '../helpers/spacing';
 import { assertUnit, m, mPercent, type IMeasurement } from '../measurementKit';
 import transforms from '../helpers/transforms';
-import { composeFontStyles } from '../helpers/typography.helpers';
 
 if (process.env.NODE_ENV !== 'production') {
 	assertUnit(archVars.top, 'px', 'menu archVars.top');
@@ -675,12 +677,13 @@ export const localeChanger = style({
 	display: 'flex',
 	alignContent: 'center',
 	height: `${archVars.top.add(archVars.curveHeight).css()}`,
-	...composeFontStyles({
-		token: fontVars.menu,
-		weightPercent: mPercent(50),
-		overrides: { size: undefined },
+	...composeFontVariantStyles(fontVariants.menu, {
+		options: {
+			weightPercents: {
+				default: mPercent(50),
+			},
+		},
 	}),
-	fontSize: fontVars.menu.size.css(),
 	lineHeight: 1,
 	textDecoration: 'none',
 	zIndex: 1,
@@ -722,12 +725,13 @@ export const navLink = style({
 	gridTemplateAreas: 'stack',
 	alignItems: 'start',
 	verticalAlign: 'baseline',
-	fontSize: fontVars.menu.size.css(),
 	...paddings(menuVars.padding),
-	...composeFontStyles({
-		token: fontVars.menu,
-		weightPercent: mPercent(50),
-		overrides: { size: undefined },
+	...composeFontVariantStyles(fontVariants.menu, {
+		options: {
+			weightPercents: {
+				default: mPercent(50),
+			},
+		},
 	}),
 	lineHeight: 1,
 	textDecoration: 'none',

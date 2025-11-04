@@ -1,11 +1,13 @@
 import { globalStyle } from '@vanilla-extract/css';
 import { documentSurface } from '../modules/globals/document.module';
-import { fontVars } from '../tokens/fontVars.tokens';
+import {
+  composeFontVariantStyles,
+  fontVariants,
+} from '../tokens/fontVariants.tokens';
 import {
   ReducedMotion,
   reducedMotion,
 } from './helpers/accessibility';
-import { composeFontStyles } from './helpers/typography.helpers';
 import './utilities.css';
 
 const {
@@ -14,6 +16,9 @@ const {
   },
   layout: { arch, scrollPaddingOffset },
 } = documentSurface;
+
+const bodyFontStyles = composeFontVariantStyles(fontVariants.body);
+const headingFontStyles = composeFontVariantStyles(fontVariants.heading);
 
 globalStyle('body', {
   minHeight: '100vh',
@@ -30,8 +35,7 @@ globalStyle('html, body', {
   margin: 0,
   padding: 0,
   color: bodyFg.css(),
-  fontSize: fontVars.body.size.css(),
-  ...composeFontStyles({ token: fontVars.body }),
+  ...bodyFontStyles,
   fontOpticalSizing: 'auto',
   fontStyle: 'normal',
   overscrollBehavior: 'none',
@@ -206,7 +210,7 @@ globalStyle('h1, h2, h3, h4, h5, h6', {
   padding: 0,
   border: 0,
   position: 'relative',
-  ...composeFontStyles({ token: fontVars.heading }),
+  ...headingFontStyles,
 });
 
 globalStyle("*, *:after, *:before, input[type='search']", {

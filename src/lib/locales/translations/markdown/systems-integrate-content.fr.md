@@ -38,16 +38,23 @@ const urbanist = makeFamilyDef({
 **Référence unique à la famille dans vos tokens (sans duplication) :**
 
 ````ts
-import { mPercent } from '../styles/measurementKit';
 import { fontFamilies } from '../tokens/fontFamilies.tokens';
-import { relativeFontWeight } from '../styles/helpers/typography.helpers';
+import { m, mPercent } from '../styles/measurementKit';
 
-export const fontVars = {
+export const fontVariants = {
   hero: {
-    familyDef: fontFamilies.urbanist,
-    size: m(45),
-    lineHeight: 1.1,
-    fontWeight: relativeFontWeight(fontFamilies.urbanist, mPercent(20)),
+    family: fontFamilies.urbanist,
+    config: {
+      overrides: {
+        size: m(45),
+        lineHeight: 1.1,
+      },
+      options: {
+        weightPercents: {
+          default: mPercent(20),
+        },
+      },
+    },
   },
 } as const;
 ````
@@ -55,10 +62,9 @@ export const fontVars = {
 **Composition finale via les helpers :**
 
 ````ts
-import { composeFontStyles } from '../styles/helpers/typography.helpers';
-import { fontVars } from '../tokens/fontVars.tokens';
+import { composeFontVariantStyles } from '../tokens/fontVariants.tokens';
 
-const heroHeading = composeFontStyles(fontVars.hero);
+const heroHeading = composeFontVariantStyles(fontVariants.hero);
 ````
 
 La même configuration alimente un générateur d’URL qui ne demande que les plages

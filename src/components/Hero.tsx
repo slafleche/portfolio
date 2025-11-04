@@ -10,7 +10,7 @@ import HeroHeading from './HeroHeading.client';
 import { toTrimmedOrNull } from '@/lib/stringUtils';
 import SendIcon from '@/components/icons/SendIcon';
 import { collectWaitForFonts, waitForFonts } from '@/lib/fontLoading';
-import { fontVars } from '../tokens/fontVars.tokens';
+import { fontVariants } from '../tokens/fontVariants.tokens';
 import { heroVars } from '../styles/componentTokens/hero.componentTokens';
 import { projectorVars } from '../styles/componentTokens/projector.componentTokens';
 
@@ -87,7 +87,7 @@ export default function Hero({
 
     const revealAfter = async () => {
       const { fonts, timeoutMs } = collectWaitForFonts(
-        fontVars.hero,
+        fontVariants.hero,
         heroVars.fontLoading,
       );
       if (fonts.length > 0) {

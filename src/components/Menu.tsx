@@ -41,7 +41,7 @@ import {
 import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
-import { fontVars } from '../tokens/fontVars.tokens';
+import { fontVariants } from '../tokens/fontVariants.tokens';
 import { menuVars } from '../styles/componentTokens/global.componentTokens';
 
 type FocusDebugOptions = {
@@ -215,7 +215,7 @@ export default function Menu({
     fontsReady,
     setFontsReady,
   ] = useState(() => {
-    const { fonts } = collectWaitForFonts(fontVars.menu);
+    const { fonts } = collectWaitForFonts(fontVariants.menu);
     return fonts.length === 0;
   });
 
@@ -241,7 +241,7 @@ export default function Menu({
   ]);
 
   useEffect(() => {
-    const { fonts, timeoutMs } = collectWaitForFonts(fontVars.menu);
+    const { fonts, timeoutMs } = collectWaitForFonts(fontVariants.menu);
     if (fonts.length === 0) {
       setFontsReady(true);
       return;

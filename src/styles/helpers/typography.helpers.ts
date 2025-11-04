@@ -132,17 +132,30 @@ export function fontWeightStyle(
 
 export type FontStyleLayer = FontStyles | null | undefined;
 
-export type ComposeFontStyleOptions = {
-  family?: FontFamilyDef | null;
-  token?: FontStyles | null;
-  weightPercent?: PercentMeasurement | null;
-  overrides?: FontStyles | null;
+export type FontWeightPercentOptions = {
+  default?: PercentMeasurement | null;
+  strong?: PercentMeasurement | null;
+};
+
+export type ComposeFontStylesOptions = {
+  weightPercents?: FontWeightPercentOptions | null;
+};
+
+export type ComposeFontStylesConfig = {
+  options?: ComposeFontStylesOptions | null;
+  overrides?: FontStyleLayer;
   layers?: FontStyleLayer | FontStyleLayer[];
 };
 
 const familyToFontStyles = (family: FontFamilyDef): FontStyles => {
   const styles: FontStyles = {
+    familyDef: family,
     fontFamily: family.family,
+    fontWeight: family.weights.default,
+    weights: {
+      default: family.weights.default,
+      strong: family.weights.strong,
+    },
   };
 
   if (family.spacing) {
@@ -178,28 +191,37 @@ const addLayer = (target: FontStyles, layer: FontStyleLayer) => {
   }
 };
 
-export function composeFontStyles({
-  family,
-  token,
-  weightPercent,
-  overrides,
-  layers,
-}: ComposeFontStyleOptions): FontCSS {
-  const merged: FontStyles = {};
+const applyWeightPercents = (
+  family: FontFamilyDef,
+  merged: FontStyles,
+  weights?: FontWeightPercentOptions | null,
+) => {
+  if (!weights) return;
+  const nextWeights = {
+    default: merged.weights?.default ?? family.weights.default,
+    strong: merged.weights?.strong ?? family.weights.strong,
+  };
 
-  const resolvedFamily = family ?? token?.familyDef ?? null;
-
-  if (resolvedFamily) {
-    addLayer(merged, familyToFontStyles(resolvedFamily));
-  } else if (process.env.NODE_ENV !== 'production') {
-    throw new Error(
-      'composeFontStyles: missing canonical family data. Pass `family` or set `familyDef` on your token.',
-    );
+  if (weights.default) {
+    const computed = computeFontWeight(family, weights.default);
+    merged.fontWeight = computed;
+    nextWeights.default = computed;
   }
 
-  if (token) {
-    addLayer(merged, token);
+  if (weights.strong) {
+    const computed = computeFontWeight(family, weights.strong);
+    nextWeights.strong = computed;
   }
+
+  merged.weights = nextWeights;
+};
+
+export function composeFontStyles(
+  family: FontFamilyDef,
+  config: ComposeFontStylesConfig = {},
+): FontCSS {
+  const merged: FontStyles = familyToFontStyles(family);
+  const { overrides, layers, options } = config;
 
   if (Array.isArray(layers)) {
     for (const layer of layers) {
@@ -209,15 +231,11 @@ export function composeFontStyles({
     addLayer(merged, layers);
   }
 
-  if (weightPercent != null) {
-    if (!resolvedFamily) {
-      if (process.env.NODE_ENV !== 'production') {
-        throw new Error('composeFontStyles: family data is required when using weightPercent. Provide `family` or set `familyDef` on your token.');
-      }
-    } else if (isPercentMeasurement(weightPercent)) {
-      addLayer(merged, fontWeightStyle(resolvedFamily, weightPercent));
-    }
-  }
+  applyWeightPercents(
+    family,
+    merged,
+    options?.weightPercents ?? null,
+  );
 
   if (overrides) {
     addLayer(merged, overrides);
