@@ -44,3 +44,9 @@ export const links = style({
 	textAlign: 'center',
 	margin: 0,
 });
+
+export const overlay = style({});
+
+export const contactIcon = style({});
+export const linkedInIcon = style({});
+export const gitHubIcon = style({});
