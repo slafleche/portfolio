@@ -69,7 +69,7 @@ export const iconLagOutDistancePx = m(3, 'px');
 export const iconLagOutDurationMs = shuttleExitDurationMs;
 
 /* ---------- Visual polish ---------- */
-export const radiusCirclePct = m(50, '%');
+export const buttonRadius = m(50, '%');
 export const hoverTransitionMs = m(220, 'ms');
 export const gradientFadeMs = m(200, 'ms');
 
@@ -135,7 +135,7 @@ if (process.env.NODE_ENV !== 'production') {
   assertUnit(iconScaleExitMs, 'ms', 'iconScaleExitMs');
 
   // %
-  assertUnit(radiusCirclePct, '%', 'radiusCirclePct');
+  assertUnit(buttonRadius, '%', 'radiusCirclePct');
   assertUnit(exitAnticPct, '%', 'exitAnticPct');
   assertUnit(exitHoldPct, '%', 'exitHoldPct');
   assertUnit(spinAnticHoldPct, '%', 'spinAnticHoldPct');
