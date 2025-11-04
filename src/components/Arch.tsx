@@ -52,12 +52,13 @@ function Arch({
   const ws = Math.max(1, windowSize ?? 0);
   const archTop = archVars.top;
   const archCurveHeight = archVars.curveHeight;
-  const fullHeight = archTop.value + archCurveHeight.value;
+  const fullHeight =
+    archTop.getValue() + archCurveHeight.getValue();
   const shadowYOffset = shadowTotalY();
   if (process.env.NODE_ENV !== 'production') {
     assertUnit(shadowYOffset, 'px', 'Arch shadowTotalY');
   }
-  const shadowHeight = shadowYOffset.value;
+  const shadowHeight = shadowYOffset.getValue();
 
   const archPathId = `${baseId}-arch`;
   const bottomPathId = `${baseId}-archBottom`;

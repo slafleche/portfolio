@@ -99,7 +99,7 @@ export type LinearDirectionInput =
 const measurementValue = (
   value: MeasurementValue,
 ): number | undefined =>
-  typeof value === 'number' ? value : value.value;
+  typeof value === 'number' ? value : value.getValue();
 
 const resolveCoordinateAngle = (
   input: Extract<

@@ -469,7 +469,8 @@ export function useMenuHighlight({
       const width = snapToDevicePixel(rect.width, dpr);
       const height = snapToDevicePixel(rect.height, dpr);
       const archBase =
-        computeArchY(navWidth, centerX) + menuVars.yOffset.value;
+        computeArchY(navWidth, centerX) +
+        menuVars.yOffset.getValue();
       metrics[index] = {
         centerX,
         centerY,
@@ -498,8 +499,9 @@ export function useMenuHighlight({
         0,
       ) / definedMetrics.length;
 
-    const highlightHeightValue = menuVars.height.value;
-    const widthPaddingValue = menuVars.padding.horizontal.value;
+    const highlightHeightValue = menuVars.height.getValue();
+    const widthPaddingValue =
+      menuVars.padding.horizontal.getValue();
 
     definedMetrics.forEach((metric) => {
       const archY = snapToDevicePixel(metric.archY + adjustment, dpr);
@@ -539,13 +541,16 @@ export function useMenuHighlight({
       let path = '';
       for (let i = 0; i < sampleCount; i += 1) {
         const x = (navWidth * i) / (sampleCount - 1);
-        const y = computeArchY(navWidth, x) + menuVars.yOffset.value;
+        const y =
+          computeArchY(navWidth, x) +
+          menuVars.yOffset.getValue();
         path += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
       }
       setDebugArch({
         path: path.trim(),
         width: navWidth,
-        height: archVars.top.value + archVars.curveHeight.value,
+        height:
+          archVars.top.getValue() + archVars.curveHeight.getValue(),
       });
     } else {
       setDebugArch(null);
@@ -751,7 +756,8 @@ export function useMenuHighlight({
           const width = snapToDevicePixel(rect.width, dpr);
           const height = snapToDevicePixel(rect.height, dpr);
           const computedArch =
-            computeArchY(navWidth, centerX) + menuVars.yOffset.value;
+            computeArchY(navWidth, centerX) +
+            menuVars.yOffset.getValue();
           const adjustment = centerY - computedArch;
           const archY = snapToDevicePixel(
             computedArch + adjustment,
@@ -760,12 +766,12 @@ export function useMenuHighlight({
           const highlightWidth = snapToDevicePixel(
             Math.max(
               width,
-              width + menuVars.padding.horizontal.value,
+              width + menuVars.padding.horizontal.getValue(),
             ),
             dpr,
           );
           const highlightHeight = snapToDevicePixel(
-            menuVars.height.value,
+            menuVars.height.getValue(),
             dpr,
           );
           const left = snapToDevicePixel(
