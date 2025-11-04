@@ -40,6 +40,11 @@ export const ghost = style({
   mixBlendMode: 'screen',
   transformOrigin: '50% 50%',
   isolation: 'isolate',
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      display: 'none !important',
+    },
+  },
 });
 
 export const channel = style({
@@ -49,6 +54,11 @@ export const channel = style({
   pointerEvents: 'none',
   transformOrigin: '50% 50%',
   mixBlendMode: 'screen',
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      display: 'none !important',
+    },
+  },
 });
 
 globalStyle(`.${channel} [data-text]`, {
