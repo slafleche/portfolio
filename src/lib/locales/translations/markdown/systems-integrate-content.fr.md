@@ -11,7 +11,7 @@ claire dès le départ.
 # src/data/fonts.config.json
 {
   "Comfortaa": { "weights": ["300..700"], "ital": true },
-  "Titan One": { "weights": ["400", "700"] }
+  "Urbanist": { "weights": ["400", "700"] }
 }
 ```
 

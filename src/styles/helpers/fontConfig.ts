@@ -191,7 +191,7 @@ function deriveAxisDefaults(
  * Build a FontFamilyDef using fonts.config.json so you don’t
  * hand-copy weight ranges.
  *
- * @param familyName E.g. "Titan One"
+ * @param familyName E.g. "Urbanist"
  * @param fallbacks E.g. ['Poppins','Helvetica','Arial','sans-serif']
  * @param cfgMap Parsed + validated FontsConfig (use the default
  *   export `fontsConfig`)

@@ -10,7 +10,7 @@ scale and stay stable when swapped.
 ```
 # src/data/fonts.config.json
 {
-  "Titan One": { "weights": ["400", "700"], "ital": true }
+  "Urbanist": { "weights": ["400", "700"], "ital": true }
 }
 ```
 
