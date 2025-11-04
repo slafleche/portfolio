@@ -110,7 +110,7 @@ class Measurement<Unit extends string>
   }
 
   [Symbol.toPrimitive](hint: string): string | number {
-    if (hint === 'number' || hint === 'default') return this.#value;
+    if (hint === 'number') return this.#value;
     return this.css();
   }
 
