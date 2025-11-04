@@ -31,7 +31,10 @@ export interface IMeasurement<Unit extends string = string> {
   round: (precision?: number) => IMeasurement<Unit>;
   floor: () => IMeasurement<Unit>;
   ceil: () => IMeasurement<Unit>;
-  clamp: (min: IMeasurement<string>, max: IMeasurement<string>) => IMeasurement<Unit>;
+  clamp: (
+    min: IMeasurement<string>,
+    max: IMeasurement<string>,
+  ) => IMeasurement<Unit>;
 }
 
 type DeltaInput = number | IMeasurement<string>;
@@ -122,16 +125,30 @@ class Measurement<Unit extends string>
     }
   }
 
-  equals(other: IMeasurement<string>): boolean {
-    assertMatchingUnits(this, other as IMeasurement<Unit>, 'equals');
+  equals(other: IMeasurement<string>, strict = false): boolean {
+    const otherUnit = other.getUnit();
+    if (this.#unit !== otherUnit) {
+      if (strict) {
+        assertMatchingUnits(
+          this,
+          other as IMeasurement<Unit>,
+          'equals(strict)',
+        );
+      }
+      return false;
+    }
     return this.#value === other.getValue();
   }
 
-  compare(other: IMeasurement<string>): number {
-    assertMatchingUnits(this, other as IMeasurement<Unit>, 'compare');
-    const otherValue = other.getValue();
-    if (this.#value === otherValue) return 0;
-    return this.#value < otherValue ? -1 : 1;
+  compare(other: IMeasurement<string>, strict = true): number {
+    if (strict) {
+      assertMatchingUnits(this, other as IMeasurement<Unit>, 'compare(strict)');
+    } else if (this.#unit !== other.getUnit()) {
+      return this.#unit < other.getUnit() ? -1 : 1;
+    }
+    const diff = this.#value - other.getValue();
+    if (diff === 0) return 0;
+    return diff < 0 ? -1 : 1;
   }
 
   add(delta: DeltaInput): Measurement<Unit> {
@@ -147,7 +164,8 @@ class Measurement<Unit extends string>
   multiply(factor: number): Measurement<Unit> {
     if (factor === 1) return this;
     if (factor === 0) return new Measurement(0, this.#unit);
-    if (factor === -1) return new Measurement(-this.#value, this.#unit);
+    if (factor === -1)
+      return new Measurement(-this.#value, this.#unit);
     return this.#clone(this.#value * factor);
   }
 
@@ -199,17 +217,42 @@ class Measurement<Unit extends string>
     min: IMeasurement<string>,
     max: IMeasurement<string>,
   ): Measurement<Unit> {
-    assertMatchingUnits(this, min as IMeasurement<Unit>, 'clamp(min)');
-    assertMatchingUnits(this, max as IMeasurement<Unit>, 'clamp(max)');
+    assertMatchingUnits(
+      this,
+      min as IMeasurement<Unit>,
+      'clamp(min)',
+    );
+    assertMatchingUnits(
+      this,
+      max as IMeasurement<Unit>,
+      'clamp(max)',
+    );
+
+    if (process.env.NODE_ENV !== 'production') {
+      const minValue = min.getValue();
+      const maxValue = max.getValue();
+
+      if (!Number.isFinite(minValue) || !Number.isFinite(maxValue)) {
+        throw new Error('clamp: expected finite bounds');
+      }
+      if (minValue > maxValue) {
+        throw new Error(
+          `clamp: min (${min.css()}) must be <= max (${max.css()})`,
+        );
+      }
+    }
+
     const minValue = min.getValue();
     const maxValue = max.getValue();
-    const clamped = Math.min(maxValue, Math.max(minValue, this.#value));
+    const clamped = Math.min(
+      maxValue,
+      Math.max(minValue, this.#value),
+    );
     return this.#clone(clamped);
   }
 
-  #clone(nextValue: number): Measurement<Unit> {
-    if (nextValue === this.#value) return this;
-    return new Measurement(nextValue, this.#unit);
+  #clone(value: number): Measurement<Unit> {
+    return new Measurement(value, this.#unit);
   }
 }
 
@@ -218,8 +261,9 @@ const createMeasurement = <Unit extends string>(
   unit: Unit,
 ): Measurement<Unit> => new Measurement(value, unit);
 
-export const isMeasurement = (x: unknown): x is IMeasurement<string> =>
-  x instanceof Measurement;
+export const isMeasurement = (
+  x: unknown,
+): x is IMeasurement<string> => x instanceof Measurement;
 
 export const m = <Unit extends string>(
   value: number,
@@ -449,8 +493,7 @@ export const assertPercentMeasurement: (
 
 export const double = <Unit extends string>(
   measurement: IMeasurement<Unit>,
-) =>
-  measurement.double();
+) => measurement.double();
 export const half = <Unit extends string>(
   measurement: IMeasurement<Unit>,
 ) => measurement.half();
@@ -497,18 +540,6 @@ export const assertUnit = <Unit extends string>(
   expectedUnit: string,
   context?: string,
 ) => measurement.assertUnit(expectedUnit, context);
-
-export const measurementHypotenuse = <Unit extends string>(
-  a: IMeasurement<Unit>,
-  b?: IMeasurement<Unit>,
-): IMeasurement<Unit> => {
-  if (!b) b = a;
-  assertMatchingUnits(a, b, 'measurementHypotenuse');
-  return createMeasurement(
-    Math.hypot(a.getValue(), b.getValue()),
-    a.getUnit(),
-  );
-};
 
 export const assertCondition = (
   condition: boolean | (() => boolean),
