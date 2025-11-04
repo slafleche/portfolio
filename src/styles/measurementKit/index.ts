@@ -136,7 +136,7 @@ class Measurement<Unit extends string>
     }
   }
 
-  equals(other: IMeasurement<string>, strict = false): boolean {
+  equals(other: IMeasurement<string>, strict = true): boolean {
     const otherUnit = other.getUnit();
     if (this.#unit !== otherUnit) {
       if (strict) {
