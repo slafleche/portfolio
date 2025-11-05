@@ -16,13 +16,19 @@ scale and stay stable when swapped.
 
 **Reusable family definition (shared by tokens + CSS):**
 
-````ts
+```ts
 import { m } from '../styles/measurementKit';
 import fontsConfig, { makeFamilyDef } from '../styles/helpers/fontConfig';
 
 const urbanist = makeFamilyDef({
   familyName: 'Urbanist',
-  fallbacks: ['Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  fallbacks: [
+    'Segoe UI',
+    'Roboto',
+    'Helvetica Neue',
+    'Arial',
+    'sans-serif',
+  ],
   cfgMap: fontsConfig,
   spacing: m(0, 'rem'),
   offsetToFlushTop: m(0, 'rem'),
@@ -32,11 +38,11 @@ const urbanist = makeFamilyDef({
     strong: 700,
   },
 });
-```` 
+```
 
 **Reference the family once in your tokens (no spreads):**
 
-````ts
+```ts
 import { fontFamilies } from '../tokens/fontFamilies.tokens';
 import { m, mPercent } from '../styles/measurementKit';
 
@@ -56,23 +62,24 @@ export const fontVariants = {
     },
   },
 } as const;
-````
+```
 
 **Compose the final styles via helpers:**
 
-````ts
+```ts
 import { composeFontVariantStyles } from '../tokens/fontVariants.tokens';
 
 const heroHeading = composeFontVariantStyles(fontVariants.hero);
-````
+```
 
 ---
 
 ### Localization
 
-Each section loads only the copy it needs.
-Bundles map directly to UI sections, so payloads stay small and ownership is obvious.
-A single translator is created per locale and used to compose plain data objects for components — no runtime i18n layer, no `t()` calls in the UI.
+Each section loads only the copy it needs. Bundles map directly to UI sections,
+so payloads stay small and ownership is obvious. A single translator is created
+per locale and used to compose plain data objects for components — no runtime
+i18n layer, no `t()` calls in the UI.
 
 ```ts
 const t = await loadTranslator(locale);
@@ -109,8 +116,8 @@ src/data/generated/videos.manifest.gen.json
   "hero": {
     "width": 3840,
     "height": 2160,
-    "masterUrl": "/videos/hero/master.m3u8",
-    "posterUrl": "/videos/hero/poster.png"
+    "masterUrl": "/videos/vid-hero-<hash>/master.m3u8",
+    "posterUrl": "/videos/vid-hero-<hash>/poster.png"
   }
 }
 ```

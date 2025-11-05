@@ -4,4 +4,3 @@
 > Cette page montre comment cette idée façonne la construction des systèmes,  
 > où la structure, le processus et l’intention demeurent cohérents même lorsque
 > les pièces évoluent.
-

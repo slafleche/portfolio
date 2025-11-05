@@ -10,4 +10,3 @@ Every system moves through the same loop:
 
 Each pass refines the system until it holds.  
 It can run again when the context changes.
-

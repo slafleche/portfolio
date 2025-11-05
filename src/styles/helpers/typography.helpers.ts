@@ -1,8 +1,8 @@
 import type * as CSS from 'csstype';
 import type { FontFamilyDef, FontStyles } from './types';
 import {
-  assertPercentMeasurement,
   hasCssMethod,
+  isPercentMeasurement,
   type PercentMeasurement,
 } from '../measurementKit';
 import { percentToDecimal } from '../../lib/math';
@@ -105,7 +105,11 @@ export function relativeFontWeight(
   family: FontFamilyDef,
   percent: PercentMeasurement,
 ): CSS.Property.FontWeight {
-  assertPercentMeasurement(percent, 'relativeFontWeight');
+  if (!isPercentMeasurement(percent)) {
+    throw new TypeError(
+      '[Typography] relativeFontWeight expected a PercentMeasurement.',
+    );
+  }
   const { high, low } = family.weights;
   const normalized = percentToDecimal(percent);
   const value = low + (high - low) * normalized;
@@ -116,7 +120,11 @@ export function computeFontWeight(
   family: FontFamilyDef,
   percent: PercentMeasurement,
 ): CSS.Property.FontWeight {
-  assertPercentMeasurement(percent, 'computeFontWeight');
+  if (!isPercentMeasurement(percent)) {
+    throw new TypeError(
+      '[Typography] computeFontWeight expected a PercentMeasurement.',
+    );
+  }
   const { high, low } = family.weights;
   const normalized = percentToDecimal(percent);
   const value = low + (high - low) * normalized;

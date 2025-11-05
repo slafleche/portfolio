@@ -14,8 +14,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /* Config -------------------------------------------------------------- */
 const SRC_MAP_PATH = 'src/assets/videos/videoSources.json'; // { "hero": "<url>", ... }
 const OUT_ROOT = 'public/videos'; // derived assets (gitignored)
+const PUBLIC_ROOT = '/videos';
 const MANIFEST_PATH = 'src/data/generated/videos.manifest.gen.json';
 const TEMP_ROOT = 'tmp/videos';
+const VIDEO_CACHE_PREFIX = 'vid';
+const VIDEO_CACHE_HASH_LENGTH = 8;
 
 // 100vh fullscreen hero ladder — 24fps, 2s segments
 const LADDER = [
@@ -252,6 +255,7 @@ async function downloadToTemp(name, rawUrl) {
 	return {
 		file,
 		hash,
+		shortHash: hash.slice(0, VIDEO_CACHE_HASH_LENGTH),
 		bytes: buf.length,
 	};
 }
@@ -314,8 +318,29 @@ function buildFilterAndMaps(speed = 1) {
 	};
 }
 
-async function buildHLS(srcPath, name, speed = 1) {
-	const outDir = path.join(OUT_ROOT, name);
+async function removeHashedVideoDirs(name) {
+	const prefix = `${VIDEO_CACHE_PREFIX}-${name}-`;
+	let entries = [];
+	try {
+		entries = await fs.readdir(OUT_ROOT);
+	} catch (error) {
+		if (error.code === 'ENOENT') return;
+		throw error;
+	}
+	await Promise.all(
+		entries
+			.filter((entry) => entry.startsWith(prefix))
+			.map((entry) =>
+				fs.rm(path.join(OUT_ROOT, entry), {
+					recursive: true,
+					force: true,
+				}),
+			),
+	);
+}
+
+async function buildHLS(srcPath, { name, slug, speed = 1 }) {
+	const outDir = path.join(OUT_ROOT, slug);
 	await fs.mkdir(outDir, {
 		recursive: true,
 	});
@@ -447,21 +472,25 @@ async function buildHLS(srcPath, name, speed = 1) {
 		poster,
 	]);
 
+	const basePath = `${PUBLIC_ROOT}/${slug}`;
+
 	return {
 		name,
+		dirName: slug,
+		basePath,
 		width,
 		height,
 		aspect: height ? width / height : 0,
 		duration,
 		hasAudio: false,
 		speed,
-		masterUrl: `/videos/${name}/master.m3u8`,
-		posterUrl: `/videos/${name}/poster.png`,
+		masterUrl: `${basePath}/master.m3u8`,
+		posterUrl: `${basePath}/poster.png`,
 		variants: LADDER.map((r, i) => ({
 			rung: i,
 			height: r.h,
 			bandwidthKbps: r.vK,
-			playlistUrl: `/videos/${name}/out_${i}/index.m3u8`,
+			playlistUrl: `${basePath}/out_${i}/index.m3u8`,
 		})),
 	};
 }
@@ -546,11 +575,12 @@ function parseTargets(argv) {
 	} of entries) {
 		console.log(`\n▶ ${name}${speed !== 1 ? `  (speed ×${speed.toFixed(2)})` : ''}`);
 		try {
-			const { file, hash, bytes } = await downloadToTemp(
+			const { file, hash, shortHash, bytes } = await downloadToTemp(
 				name,
 				src,
 			);
 			const prev = manifest[name];
+			const slug = `${VIDEO_CACHE_PREFIX}-${name}-${shortHash}`;
 
 			if (
 				partialBuild &&
@@ -562,16 +592,16 @@ function parseTargets(argv) {
 				);
 				continue;
 			}
-			await fs
-				.rm(path.join(OUT_ROOT, name), {
-					recursive: true,
-					force: true,
-				})
-				.catch(() => {});
+		await removeHashedVideoDirs(name);
 
-			const info = await buildHLS(file, name, speed);
+		const info = await buildHLS(file, {
+			name,
+			slug,
+				speed,
+			});
 			manifest[name] = {
 				...info,
+				hash: shortHash,
 				sourceHash: hash,
 				sourceSize: bytes,
 			};

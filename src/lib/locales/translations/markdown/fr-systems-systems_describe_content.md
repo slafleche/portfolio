@@ -56,4 +56,3 @@ Les entrailles du wrapper peuvent changer — bibliothèques, formules, math —
 le contrat reste.  
 Cette stabilité rend la gestion des couleurs composable, testable et sûre à
 faire évoluer.
-

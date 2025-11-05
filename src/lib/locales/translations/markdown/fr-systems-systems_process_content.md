@@ -11,4 +11,3 @@ codifier, prouver.**
 Cette boucle s’applique aussi bien à une seule valeur CSS qu’à un flux de
 travail complet.  
 Elle sécurise le changement et permet à l’identité de survivre au remplacement.
-

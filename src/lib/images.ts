@@ -6,6 +6,9 @@ export type Variant = {
 };
 export type ImageEntry = {
 	name: string;
+	hash?: string;
+	basePath?: string;
+	dirName?: string;
 	width: number;
 	height: number;
 	aspect: number;
