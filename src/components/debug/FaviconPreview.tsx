@@ -26,6 +26,7 @@ type IconDescriptor = {
 type FaviconPreviewData = {
   svg: BasicIcon;
   ico: BasicIcon;
+  icoVariants: readonly SizedIcon[];
   pngVariants: readonly SizedIcon[];
   appleTouch: SizedIcon;
   androidIcons: readonly (SizedIcon & { sizes: string })[];
@@ -150,7 +151,7 @@ export default function FavIconPreview({
         : 'rgba(255,255,255,0.98)',
       maskChip: theme === 'dark'
         ? 'rgba(255,255,255,0.1)'
-        : 'rgba(24,16,48,0.15)',
+        : 'rgba(24,16,48,0.28)',
       cardBg: theme === 'dark'
         ? 'rgba(255,255,255,0.05)'
         : 'rgba(255,255,255,0.94)',
@@ -182,9 +183,37 @@ export default function FavIconPreview({
 
   const swatchStyle: CSSProperties = {
     borderRadius: '0.75rem',
-    overflow: 'hidden',
     border: `1px solid ${previewColors.border}`,
+    background: theme === 'dark' ? '#0a071c' : '#ffffff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
   };
+
+  const variantsFlowStyle: CSSProperties = {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '1.5rem',
+    alignItems: 'flex-start',
+  };
+
+  const getSwatchPadding = (size: number) => {
+    const clamped = Math.max(6, Math.min(24, Math.round(size * 0.08)));
+    return `${clamped}px`;
+  };
+
+  const icoSizeSummary = useMemo(() => {
+    if (!data.icoVariants.length) {
+      return '';
+    }
+
+    return data.icoVariants
+      .map((item) => item.size)
+      .sort((a, b) => a - b)
+      .map((size) => `${size}px`)
+      .join(' / ');
+  }, [data.icoVariants]);
 
   const maskSvgSource = data.devMaskSvgPath ?? data.maskIcon.src;
   const maskDisplayColor = toColor(data.themeColors.maskIcon, '#ffffff');
@@ -200,16 +229,16 @@ export default function FavIconPreview({
     >
       <div
         aria-hidden
-        style={{
-          width: '96px',
-          height: '96px',
-          borderRadius: '50%',
-          backgroundColor: theme === 'dark' ? '#0d0a17' : '#f8f6ff',
-          boxShadow: `0 0 0 1px ${previewColors.border}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
+          style={{
+            width: '96px',
+            height: '96px',
+            borderRadius: '50%',
+            backgroundColor: theme === 'dark' ? '#0d0a17' : '#dcd5ff',
+            boxShadow: `0 0 0 1px ${previewColors.border}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
         }}
       >
         <div
@@ -280,6 +309,71 @@ export default function FavIconPreview({
         >
           Simulates adaptive / round icons
         </div>
+      </div>
+    </div>
+  );
+
+  const IcoPreview = () => (
+    <div style={cardStyle}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+          gap: '1.25rem',
+          flexWrap: 'wrap',
+          width: '100%',
+        }}
+      >
+        {data.icoVariants.map((icon) => (
+          <div
+            key={icon.hash}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.25rem',
+            }}
+          >
+            <img
+              src={icon.src}
+              width={icon.size}
+              height={icon.size}
+              alt={`${icon.size}×${icon.size} ICO layer`}
+              style={{
+                display: 'block',
+                imageRendering:
+                  icon.size <= 64 ? 'pixelated' : 'auto',
+              }}
+            />
+            <span
+              style={{
+                fontSize: '0.75rem',
+                color: previewColors.subtle,
+              }}
+            >
+              {icon.size}px
+            </span>
+          </div>
+        ))}
+      </div>
+      <div style={{ fontWeight: 600 }}>ICO container</div>
+      <div
+        style={{
+          fontSize: '0.75rem',
+          color: previewColors.subtle,
+        }}
+      >
+        Layers: {icoSizeSummary || 'none'}
+      </div>
+      <div
+        style={{
+          fontSize: '0.75rem',
+          color: previewColors.subtle,
+          wordBreak: 'break-all',
+        }}
+      >
+        {data.ico.fileName}
       </div>
     </div>
   );
@@ -672,32 +766,7 @@ export default function FavIconPreview({
             </div>
           </div>
 
-          <div style={cardStyle}>
-            <img
-              src={data.ico.src}
-              width={96}
-              height={96}
-              alt="Favicon ICO"
-              style={{
-                borderRadius: '20px',
-                imageRendering: 'pixelated',
-              }}
-            />
-            <div>
-              <div style={{ fontWeight: 600 }}>
-                ICO (16/32/48)
-              </div>
-              <div
-                style={{
-                  fontSize: '0.75rem',
-                  color: previewColors.subtle,
-                  wordBreak: 'break-all',
-                }}
-              >
-                {data.ico.fileName}
-              </div>
-            </div>
-          </div>
+          <IcoPreview />
 
           <div style={cardStyle}>
             <img
@@ -774,41 +843,51 @@ export default function FavIconPreview({
           </p>
         </div>
 
-        <div style={gridStyle}>
-          {data.pngVariants.map((icon) => (
-            <div key={icon.hash} style={cardStyle}>
-              <div style={swatchStyle}>
-                <img
-                  src={icon.src}
-                  width={icon.size}
-                  height={icon.size}
-                  alt={`${icon.size}×${icon.size} PNG`}
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    padding: '1.5rem',
-                    background: theme === 'dark' ? '#0a071c' : '#ffffff',
-                  }}
-                />
-              </div>
-              <div>
-                <div style={{ fontWeight: 600 }}>
-                  {icon.size}×{icon.size}
+        <div style={variantsFlowStyle}>
+          {data.pngVariants.map((icon) => {
+            const padding = getSwatchPadding(icon.size);
+            return (
+              <div
+                key={icon.hash}
+                style={{
+                  ...cardStyle,
+                  alignItems: 'center',
+                  width: 'fit-content',
+                  maxWidth: '100%',
+                  padding: '0.75rem',
+                  gap: '0.75rem',
+                }}
+              >
+                <div style={{ ...swatchStyle, padding }}>
+                  <img
+                    src={icon.src}
+                    width={icon.size}
+                    height={icon.size}
+                    alt={`${icon.size}×${icon.size} PNG`}
+                    style={{
+                      display: 'block',
+                      imageRendering:
+                        icon.size <= 64 ? 'pixelated' : 'auto',
+                    }}
+                  />
                 </div>
-                <div
-                  style={{
-                    fontSize: '0.75rem',
-                    color: previewColors.subtle,
-                    wordBreak: 'break-all',
-                  }}
-                >
-                  {icon.fileName}
+                <div>
+                  <div style={{ fontWeight: 600 }}>
+                    {icon.size}×{icon.size}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: previewColors.subtle,
+                      wordBreak: 'break-all',
+                    }}
+                  >
+                    {icon.fileName}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

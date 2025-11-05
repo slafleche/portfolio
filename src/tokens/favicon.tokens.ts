@@ -50,7 +50,7 @@ export const faviconThemeColors: FaviconThemeColors = {
   dark: '#251A38',
   background: '#251A38',
   maskIcon: '#FFFFFF',
-  msTile: '#251A38',
+  msTile: '#a478efff',
 };
 
 export const faviconAppConfig: FaviconAppConfig = {
