@@ -15,6 +15,12 @@ export const enData = {
 
   'scroll-cue': 'Scroll to content',
 
+  'manifest-name': 'Portfolio — Stéphane L.',
+  'manifest-short-name': 'Stéphane L.',
+  'manifest-description':
+    'Personal portfolio progressive web app.',
+  'manifest-categories': ['portfolio', 'personal'],
+
   'hero-title': 'Blue–magenta gradient rotation background',
   'hero-alt':
     'Slowly rotating diagonal gradient blending cool blue and soft magenta tones with subtle light bands',

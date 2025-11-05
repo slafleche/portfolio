@@ -15,6 +15,12 @@ export const frData = {
 
   'scroll-cue': 'Défiler vers le contenu',
 
+  'manifest-name': 'Portfolio — Stéphane L.',
+  'manifest-short-name': 'Stéphane L.',
+  'manifest-description':
+    'Application web progressive du portfolio personnel.',
+  'manifest-categories': ['portfolio', 'personnel'],
+
   'hero-title': 'Fond dégradé bleu et magenta en rotation',
   'hero-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',

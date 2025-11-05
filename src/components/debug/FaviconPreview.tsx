@@ -52,6 +52,19 @@ type FaviconPreviewData = {
     fileName: string;
     hash: string;
   };
+  defaultManifest: {
+    locale: string;
+    src: string;
+    fileName: string;
+    hash: string;
+  };
+  manifestMeta: {
+    name: string;
+    shortName: string;
+    description: string;
+    categories: readonly string[];
+    lang: string;
+  };
   themeColors: {
     light: string;
     dark: string;
@@ -73,8 +86,9 @@ type FaviconPreviewData = {
 type FaviconPreviewProps = {
   locale: string;
   data: FaviconPreviewData;
+  assetsReady: boolean;
+  missingAssets?: readonly string[];
 };
-
 const themeOptions = ['light', 'dark'] as const;
 
 const cardStyle: CSSProperties = {
@@ -100,6 +114,8 @@ const gridStyle: CSSProperties = {
 export default function FaviconPreview({
   data,
   locale,
+  assetsReady,
+  missingAssets = [],
 }: FaviconPreviewProps) {
   const [theme, setTheme] =
     useState<(typeof themeOptions)[number]>('light');
@@ -176,6 +192,35 @@ export default function FaviconPreview({
         transition: 'background 240ms ease, color 240ms ease',
       }}
     >
+      {!assetsReady ? (
+        <div
+          style={{
+            padding: '1.2rem 1.5rem',
+            borderRadius: '1rem',
+            border: '1px solid rgba(240,90,120,0.55)',
+            background:
+              theme === 'dark'
+                ? 'rgba(255,90,90,0.12)'
+                : 'rgba(255,90,120,0.18)',
+            color: theme === 'dark' ? '#ffd4e0' : '#721929',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+          }}
+        >
+          <strong>Favicons not generated.</strong>
+          <span>
+            Run <code>yarn favicons</code> to build hashed assets before
+            using this preview.
+          </span>
+          {missingAssets.length ? (
+            <span style={{ fontSize: '0.8rem' }}>
+              Missing files:{' '}
+              <code>{missingAssets.join(', ')}</code>
+            </span>
+          ) : null}
+        </div>
+      ) : null}
       <header
         style={{
           display: 'flex',
@@ -515,12 +560,21 @@ export default function FaviconPreview({
             }}
           >
             <li>
-              <strong>manifest</strong>{' '}
+              <strong>manifest[{data.manifestMeta.lang}]</strong>{' '}
               <a
                 href={data.webManifest.src}
                 style={{ color: previewColors.subtle }}
               >
                 {data.webManifest.fileName}
+              </a>
+            </li>
+            <li>
+              <strong>default manifest</strong>{' '}
+              <a
+                href={data.defaultManifest.src}
+                style={{ color: previewColors.subtle }}
+              >
+                {data.defaultManifest.fileName}
               </a>
             </li>
             {data.browserConfig ? (
@@ -534,6 +588,20 @@ export default function FaviconPreview({
                 </a>
               </li>
             ) : null}
+            <li>
+              <strong>name</strong>{' '}
+              <code>{data.manifestMeta.name}</code>
+            </li>
+            <li>
+              <strong>short_name</strong>{' '}
+              <code>{data.manifestMeta.shortName}</code>
+            </li>
+            <li>
+              <strong>categories</strong>{' '}
+              <code>
+                {data.manifestMeta.categories.join(', ') || '—'}
+              </code>
+            </li>
             <li>
               <strong>theme-color (light)</strong>{' '}
               <code>{data.metaTags.themeColorLight}</code>
@@ -559,6 +627,19 @@ export default function FaviconPreview({
                 </a>
               </li>
             ) : null}
+            <li>
+              <strong>description</strong>
+              <div
+                style={{
+                  marginTop: '0.25rem',
+                  color: previewColors.subtle,
+                  fontSize: '0.85rem',
+                  lineHeight: 1.5,
+                }}
+              >
+                {data.manifestMeta.description}
+              </div>
+            </li>
           </ul>
         </div>
       </section>

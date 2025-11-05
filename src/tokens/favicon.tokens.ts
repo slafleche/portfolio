@@ -16,18 +16,6 @@ export type FaviconThemeColors = {
   msTileColor: string;
 };
 
-export type FaviconManifestTokens = {
-  name: string;
-  shortName: string;
-  description: string;
-  startUrl: string;
-  scope: string;
-  display: 'browser' | 'minimal-ui' | 'standalone' | 'fullscreen';
-  orientation: 'any' | 'portrait' | 'landscape';
-  lang: string;
-  categories: string[];
-};
-
 export type FaviconCacheTokens = {
   prefix: string;
   hashLength: number;
@@ -36,6 +24,13 @@ export type FaviconCacheTokens = {
 export type FaviconOptions = {
   generateMaskable: boolean;
   generateBrowserConfig: boolean;
+};
+
+export type FaviconAppConfig = {
+  startUrl: string;
+  scope: string;
+  display: 'browser' | 'minimal-ui' | 'standalone' | 'fullscreen';
+  orientation: 'any' | 'portrait' | 'landscape';
 };
 
 export const faviconSourceSvg = 'src/assets/SVG/faviconMaster.svg';
@@ -58,16 +53,11 @@ export const faviconThemeColors: FaviconThemeColors = {
   msTileColor: '#251A38',
 };
 
-export const faviconManifestTokens: FaviconManifestTokens = {
-  name: 'Portfolio',
-  shortName: 'Portfolio',
-  description: 'Personal portfolio progressive web app.',
+export const faviconAppConfig: FaviconAppConfig = {
   startUrl: '/',
   scope: '/',
   display: 'standalone',
   orientation: 'portrait',
-  lang: 'en',
-  categories: ['portfolio', 'personal'],
 };
 
 export const faviconCacheTokens: FaviconCacheTokens = {
@@ -84,7 +74,7 @@ export const faviconTokens = {
   sourceSvg: faviconSourceSvg,
   assetPlan: faviconAssetPlan,
   themeColors: faviconThemeColors,
-  manifest: faviconManifestTokens,
+  appConfig: faviconAppConfig,
   cache: faviconCacheTokens,
   options: faviconOptions,
 } as const;
