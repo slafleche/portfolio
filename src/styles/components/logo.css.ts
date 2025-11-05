@@ -9,6 +9,7 @@ export const root = style({
 export const svg = style({
   width: logoVars.width.css(),
   height: 'auto',
+  transform: `translateX(-1px)`, // judge it to look visually centered
 });
 
 export const shadow = style({
