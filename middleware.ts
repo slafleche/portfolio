@@ -37,6 +37,14 @@ export function middleware(request: NextRequest) {
 		const locale = seg;
 		const segments = pathname.split('/').filter(Boolean).slice(1);
 		const [firstSegment, ...restSegments] = segments;
+
+		if (
+			process.env.NODE_ENV === 'production' &&
+			firstSegment === 'debug'
+		) {
+			return new NextResponse(null, { status: 404 });
+		}
+
 		const localizedMaps = localizedToCanonicalSlugs[locale];
 		if (localizedMaps && firstSegment) {
 			const canonicalFirst = localizedMaps[firstSegment];

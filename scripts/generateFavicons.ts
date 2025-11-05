@@ -6,14 +6,23 @@ import {
 	faviconTokens,
 	faviconAssetPlan,
 	faviconThemeColors,
-	faviconManifestTokens,
 	faviconCacheTokens,
 	faviconOptions,
+	faviconAppConfig,
 } from '../src/tokens/favicon.tokens';
 import {
 	writeHashedFile,
 	type HashedWriteResult,
 } from './lib/cacheBusting';
+import {
+	AVAILABLE_LOCALES,
+	type Locale,
+	type Messages,
+} from '../src/lib/locales/translations/index';
+import {
+	DEFAULT_LOCALE,
+	loadMessages,
+} from '../src/lib/locales/locale';
 
 const OUT_ROOT = path.resolve('public', 'favicons');
 const TEMP_ROOT = path.resolve('tmp', 'favicons.gen');
@@ -33,6 +42,84 @@ type IcoCandidate = {
 	size: number;
 	buffer: Buffer;
 };
+
+type ManifestLocaleEntry = {
+	locale: Locale;
+	name: string;
+	shortName: string;
+	description: string;
+	categories: readonly string[];
+};
+
+const MANIFEST_NAME_KEY = 'manifest-name';
+const MANIFEST_SHORT_NAME_KEY = 'manifest-short-name';
+const MANIFEST_DESCRIPTION_KEY = 'manifest-description';
+const MANIFEST_CATEGORIES_KEY = 'manifest-categories';
+
+const ensureString = (
+	value: unknown,
+	key: string,
+	locale: Locale,
+): string => {
+	if (typeof value === 'string' && value.trim()) {
+		return value;
+	}
+	throw new Error(
+		`Locale "${locale}" is missing a valid "${key}" string for favicons manifest.`,
+	);
+};
+
+const ensureStringArray = (
+	value: unknown,
+	key: string,
+	locale: Locale,
+): readonly string[] => {
+	if (Array.isArray(value) && value.every((item) => typeof item === 'string')) {
+		return value;
+	}
+	throw new Error(
+		`Locale "${locale}" is missing a valid "${key}" string array for favicons manifest.`,
+	);
+};
+
+async function loadManifestLocaleEntries(): Promise<
+	Readonly<Record<Locale, ManifestLocaleEntry>>
+> {
+	const entries: Record<Locale, ManifestLocaleEntry> = {} as Record<
+		Locale,
+		ManifestLocaleEntry
+	>;
+
+	for (const locale of AVAILABLE_LOCALES) {
+		const messages: Messages = await loadMessages(locale);
+		const name = ensureString(messages[MANIFEST_NAME_KEY], MANIFEST_NAME_KEY, locale);
+		const shortName = ensureString(
+			messages[MANIFEST_SHORT_NAME_KEY],
+			MANIFEST_SHORT_NAME_KEY,
+			locale,
+		);
+		const description = ensureString(
+			messages[MANIFEST_DESCRIPTION_KEY],
+			MANIFEST_DESCRIPTION_KEY,
+			locale,
+		);
+		const categories = ensureStringArray(
+			messages[MANIFEST_CATEGORIES_KEY],
+			MANIFEST_CATEGORIES_KEY,
+			locale,
+		);
+
+		entries[locale] = {
+			locale,
+			name,
+			shortName,
+			description,
+			categories,
+		};
+	}
+
+	return entries;
+}
 
 async function resetDir(dir: string) {
 	await fs
@@ -273,7 +360,7 @@ async function main() {
 		});
 	}
 
-	console.log('→ Favicons: compiling web manifest');
+	console.log('→ Favicons: compiling web manifests');
 	const manifestIcons = new Map<number, HashedWriteResult>();
 	for (const size of faviconAssetPlan.androidChromeSizes) {
 		const match = pngResults.find((item) => item.size === size);
@@ -285,50 +372,79 @@ async function main() {
 		manifestIcons.set(size, match);
 	}
 
-	const manifestPayload: Record<string, unknown> = {
-		name: faviconManifestTokens.name,
-		short_name: faviconManifestTokens.shortName,
-		description: faviconManifestTokens.description,
-		start_url: faviconManifestTokens.startUrl,
-		scope: faviconManifestTokens.scope,
-		display: faviconManifestTokens.display,
-		orientation: faviconManifestTokens.orientation,
-		lang: faviconManifestTokens.lang,
-		background_color: faviconThemeColors.backgroundColor,
-		theme_color: faviconThemeColors.darkThemeColor,
-		icons: [
-			...Array.from(manifestIcons.entries()).map(([size, info]) => ({
-				src: info.urlPath,
-				type: 'image/png',
-				sizes: `${size}x${size}`,
-				purpose: 'any',
-			})),
-			...(maskableResult
-				? [
-						{
-							src: maskableResult.urlPath,
-							type: 'image/png',
-							sizes: `${faviconAssetPlan.maskableSize}x${faviconAssetPlan.maskableSize}`,
-							purpose: 'any maskable',
-						},
-					]
-				: []),
-		],
-	};
+	const manifestLocaleEntries = await loadManifestLocaleEntries();
+	const webManifestResults: Record<Locale, HashedWriteResult> = {} as Record<
+		Locale,
+		HashedWriteResult
+	>;
+	let defaultWebManifestResult: HashedWriteResult | null = null;
 
-	const webManifestBuffer = Buffer.from(
-		`${JSON.stringify(manifestPayload, null, 2)}\n`,
-	);
+	for (const locale of AVAILABLE_LOCALES) {
+		const localeEntry = manifestLocaleEntries[locale];
+		const manifestPayload: Record<string, unknown> = {
+			name: localeEntry.name,
+			short_name: localeEntry.shortName,
+			description: localeEntry.description,
+			start_url: faviconAppConfig.startUrl,
+			scope: faviconAppConfig.scope,
+			display: faviconAppConfig.display,
+			orientation: faviconAppConfig.orientation,
+			lang: locale,
+			background_color: faviconThemeColors.backgroundColor,
+			theme_color: faviconThemeColors.darkThemeColor,
+			categories: localeEntry.categories,
+			icons: [
+				...Array.from(manifestIcons.entries()).map(([size, info]) => ({
+					src: info.urlPath,
+					type: 'image/png',
+					sizes: `${size}x${size}`,
+					purpose: 'any',
+				})),
+				...(maskableResult
+					? [
+							{
+								src: maskableResult.urlPath,
+								type: 'image/png',
+								sizes: `${faviconAssetPlan.maskableSize}x${faviconAssetPlan.maskableSize}`,
+								purpose: 'any maskable',
+							},
+						]
+					: []),
+			],
+		};
 
-	const webManifestResult = await writeHashedFile({
-		outDir: OUT_ROOT,
-		logicalName: 'site',
-		ext: '.webmanifest',
-		buffer: webManifestBuffer,
-		hashLength: faviconCacheTokens.hashLength,
-		prefix: faviconCacheTokens.prefix,
-		publicRoot: PUBLIC_ROOT,
-	});
+		const buffer = Buffer.from(
+			`${JSON.stringify(manifestPayload, null, 2)}\n`,
+		);
+		const hashed = await writeHashedFile({
+			outDir: OUT_ROOT,
+			logicalName: `site-${locale}`,
+			ext: '.webmanifest',
+			buffer,
+			hashLength: faviconCacheTokens.hashLength,
+			prefix: faviconCacheTokens.prefix,
+			publicRoot: PUBLIC_ROOT,
+		});
+		webManifestResults[locale] = hashed;
+
+		if (locale === DEFAULT_LOCALE) {
+			defaultWebManifestResult = await writeHashedFile({
+				outDir: OUT_ROOT,
+				logicalName: 'site',
+				ext: '.webmanifest',
+				buffer,
+				hashLength: faviconCacheTokens.hashLength,
+				prefix: faviconCacheTokens.prefix,
+				publicRoot: PUBLIC_ROOT,
+			});
+		}
+	}
+
+	if (!defaultWebManifestResult) {
+		throw new Error(
+			`Default locale "${DEFAULT_LOCALE}" did not produce a web manifest.`,
+		);
+	}
 
 	console.log('→ Favicons: emitting generated manifest file');
 
@@ -363,37 +479,6 @@ async function main() {
 		sizes: `${entry.size}x${entry.size}`,
 	}));
 
-	const linkDescriptors = {
-		main: [
-			{
-				rel: 'icon' as const,
-				type: 'image/svg+xml',
-				sizes: 'any',
-				href: svgResult.urlPath,
-			},
-			...pngManifestEntries.map((item) => ({
-				rel: 'icon' as const,
-				type: 'image/png',
-				sizes: `${item.size}x${item.size}`,
-				href: item.src,
-			})),
-			{
-				rel: 'apple-touch-icon' as const,
-				sizes: `${faviconAssetPlan.appleTouchSize}x${faviconAssetPlan.appleTouchSize}`,
-				href: appleResult.urlPath,
-			},
-			{
-				rel: 'mask-icon' as const,
-				color: faviconThemeColors.maskIconColor,
-				href: maskIconResult.urlPath,
-			},
-			{
-				rel: 'manifest' as const,
-				href: webManifestResult.urlPath,
-			},
-		],
-	};
-
 	const metaTags = {
 		themeColorLight: faviconThemeColors.lightThemeColor,
 		themeColorDark: faviconThemeColors.darkThemeColor,
@@ -401,8 +486,71 @@ async function main() {
 		msApplicationConfig: browserConfigResult?.urlPath ?? null,
 	};
 
-	const manifestMeta = {
-		...faviconManifestTokens,
+	const manifestMetaByLocale = Object.fromEntries(
+		AVAILABLE_LOCALES.map((locale) => [
+			locale,
+			{
+				name: manifestLocaleEntries[locale].name,
+				shortName: manifestLocaleEntries[locale].shortName,
+				description: manifestLocaleEntries[locale].description,
+				categories: manifestLocaleEntries[locale].categories,
+				lang: locale,
+			},
+		]),
+	);
+
+	const webManifestExportMap = Object.fromEntries(
+		AVAILABLE_LOCALES.map((locale) => [
+			locale,
+			{
+				src: webManifestResults[locale].urlPath,
+				fileName: webManifestResults[locale].fileName,
+				hash: webManifestResults[locale].hash,
+			},
+		]),
+	);
+
+	const linkDescriptorsByLocale = Object.fromEntries(
+		AVAILABLE_LOCALES.map((locale) => [
+			locale,
+			{
+				main: [
+					{
+						rel: 'icon' as const,
+						type: 'image/svg+xml',
+						sizes: 'any',
+						href: svgResult.urlPath,
+					},
+					...pngManifestEntries.map((item) => ({
+						rel: 'icon' as const,
+						type: 'image/png',
+						sizes: `${item.size}x${item.size}`,
+						href: item.src,
+					})),
+					{
+						rel: 'apple-touch-icon' as const,
+						sizes: `${faviconAssetPlan.appleTouchSize}x${faviconAssetPlan.appleTouchSize}`,
+						href: appleResult.urlPath,
+					},
+					{
+						rel: 'mask-icon' as const,
+						color: faviconThemeColors.maskIconColor,
+						href: maskIconResult.urlPath,
+					},
+					{
+						rel: 'manifest' as const,
+						href: webManifestResults[locale].urlPath,
+					},
+				],
+			},
+		]),
+	);
+
+	const appConfig = {
+		startUrl: faviconAppConfig.startUrl,
+		scope: faviconAppConfig.scope,
+		display: faviconAppConfig.display,
+		orientation: faviconAppConfig.orientation,
 	};
 
 	const faviconSvg = {
@@ -499,15 +647,30 @@ export const FAVICON_BROWSERCONFIG = ${JSON.stringify(
 	2,
 )} as const;
 
-export const FAVICON_WEB_MANIFEST = ${JSON.stringify(
+export const FAVICON_MANIFEST_META_BY_LOCALE = ${JSON.stringify(
+	manifestMetaByLocale,
+	null,
+	2,
+)} as const;
+
+export const FAVICON_WEB_MANIFESTS = ${JSON.stringify(
+	webManifestExportMap,
+	null,
+	2,
+)} as const;
+
+export const FAVICON_DEFAULT_WEB_MANIFEST = ${JSON.stringify(
 	{
-		src: webManifestResult.urlPath,
-		fileName: webManifestResult.fileName,
-		hash: webManifestResult.hash,
+		locale: DEFAULT_LOCALE,
+		src: defaultWebManifestResult.urlPath,
+		fileName: defaultWebManifestResult.fileName,
+		hash: defaultWebManifestResult.hash,
 	},
 	null,
 	2,
 )} as const;
+
+export const FAVICON_APP_CONFIG = ${JSON.stringify(appConfig, null, 2)} as const;
 
 export const FAVICON_THEME_COLORS = ${JSON.stringify(
 	{
@@ -521,20 +684,14 @@ export const FAVICON_THEME_COLORS = ${JSON.stringify(
 	2,
 )} as const;
 
-export const FAVICON_MANIFEST_META = ${JSON.stringify(
-	manifestMeta,
-	null,
-	2,
-)} as const;
-
-export const FAVICON_LINK_DESCRIPTORS = ${JSON.stringify(
-	linkDescriptors,
-	null,
-	2,
-)} as const;
-
 export const FAVICON_META_TAGS = ${JSON.stringify(
 	metaTags,
+	null,
+	2,
+)} as const;
+
+export const FAVICON_LINK_DESCRIPTORS_BY_LOCALE = ${JSON.stringify(
+	linkDescriptorsByLocale,
 	null,
 	2,
 )} as const;
