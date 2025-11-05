@@ -10,6 +10,8 @@ import {
 	faviconCacheTokens,
 	faviconOptions,
 	faviconAppConfig,
+	faviconFormatManifest,
+	type FaviconBackgroundVariant,
 } from '../src/tokens/favicon.tokens';
 import {
 	writeHashedFile,
@@ -163,6 +165,47 @@ const extractSvgLayer = (
 	].join('\n');
 
 	return { svg, count: fragments.length };
+};
+
+type BackgroundVariant = FaviconBackgroundVariant;
+
+const buildSvgBackgroundVariant = (
+	source: string,
+	background: BackgroundVariant,
+) => {
+	let kept = 0;
+	let removed = 0;
+	const pattern =
+		/<([a-z0-9:._-]+)([^>]*\sdata-bg="(square|circular)"[^>]*)(?:>([\s\S]*?)<\/\1\s*>|\s*\/>)/gi;
+
+	const stripped = source.replace(
+		pattern,
+		(
+			fullMatch,
+			_tagName: string,
+			_attrs: string,
+			attrValue: BackgroundVariant,
+		) => {
+			if (attrValue !== background) {
+				removed += 1;
+				return '';
+			}
+			kept += 1;
+			return fullMatch.replace(/\s*data-bg="(?:square|circular)"/i, '');
+		},
+	);
+
+	if (!kept) {
+		throw new Error(
+			`Favicons: missing data-bg="${background}" layer in source SVG.`,
+		);
+	}
+
+	return {
+		svg: stripped,
+		kept,
+		removed,
+	};
 };
 
 type PngResult = HashedWriteResult & {
@@ -330,8 +373,7 @@ async function main() {
 	const sourceSvgPath = path.resolve(faviconTokens.sourceSvg);
 	console.log(`→ Favicons: loading source SVG "${sourceSvgPath}"`);
 
-	const svgBuffer = await fs.readFile(sourceSvgPath);
-	const svgSource = svgBuffer.toString('utf8');
+	const svgSource = await fs.readFile(sourceSvgPath, 'utf8');
 
 	const maskLayer = extractSvgLayer(svgSource, {
 		attribute: 'data-mask',
@@ -353,6 +395,25 @@ async function main() {
 	}
 
 	const tileForegroundSvg = tileForegroundLayer?.svg ?? null;
+	const formatManifest = faviconFormatManifest;
+
+	const circularBackground = buildSvgBackgroundVariant(
+		svgSource,
+		'circular',
+	);
+	const circularSvgBuffer = Buffer.from(
+		circularBackground.svg,
+		'utf8',
+	);
+
+	const squareBackground = buildSvgBackgroundVariant(
+		svgSource,
+		'square',
+	);
+	const squareSvgBuffer = Buffer.from(squareBackground.svg, 'utf8');
+
+	const backgroundBufferFor = (variant: BackgroundVariant) =>
+		variant === 'circular' ? circularSvgBuffer : squareSvgBuffer;
 
 	let generatedMaskSvgPath = '';
 	let generatedTileSvgPath = '';
@@ -394,13 +455,23 @@ async function main() {
 	}
 
 	const pngResults: PngResult[] = [];
-	const pngBufferMap = new Map<number, Buffer>();
 	const icoCandidates: IcoCandidate[] = [];
 
 	console.log('→ Favicons: generating PNG variants');
+	const generalBackgroundBuffer = backgroundBufferFor(
+		formatManifest.generalPng.meta.background,
+	);
+	if (
+		formatManifest.faviconIco.meta.background !==
+		formatManifest.generalPng.meta.background
+	) {
+		throw new Error(
+			'Favicons: faviconIco.meta.background must match generalPng.meta.background.',
+		);
+	}
 	for (const size of faviconAssetPlan.pngSizes) {
 		const logicalName = `icon-${size}`;
-		const pngBuffer = await sharp(svgBuffer)
+		const pngBuffer = await sharp(generalBackgroundBuffer)
 			.resize(size, size, {
 				fit: 'contain',
 				background: { r: 0, g: 0, b: 0, alpha: 0 },
@@ -410,8 +481,6 @@ async function main() {
 				progressive: false,
 			})
 			.toBuffer();
-
-		pngBufferMap.set(size, pngBuffer);
 
 		await stageTempFile(logicalName, '.png', pngBuffer);
 		const hashed = await writeHashedFile({
@@ -438,11 +507,14 @@ async function main() {
 	}
 
 	console.log('→ Favicons: writing favicon.svg');
+	const svgBackgroundBuffer = backgroundBufferFor(
+		formatManifest.faviconSvg.meta.background,
+	);
 	const svgResult = await writeHashedFile({
 		outDir: OUT_ROOT,
 		logicalName: faviconAssetPlan.svgOutputName.replace(/\.svg$/i, ''),
 		ext: '.svg',
-		buffer: svgBuffer,
+		buffer: svgBackgroundBuffer,
 		hashLength: faviconCacheTokens.hashLength,
 		prefix: faviconCacheTokens.prefix,
 		publicRoot: PUBLIC_ROOT,
@@ -462,7 +534,10 @@ async function main() {
 	});
 
 	console.log('→ Favicons: generating apple-touch-icon.png');
-	const appleBuffer = await sharp(svgBuffer)
+	const appleBackgroundBuffer = backgroundBufferFor(
+		formatManifest.appleTouch.meta.background,
+	);
+	const appleBuffer = await sharp(appleBackgroundBuffer)
 		.resize(faviconAssetPlan.appleTouchSize, faviconAssetPlan.appleTouchSize, {
 			fit: 'contain',
 			background: faviconThemeColors.background,
@@ -485,7 +560,10 @@ async function main() {
 	let maskableResult: HashedWriteResult | null = null;
 	if (faviconOptions.generateMaskable) {
 		console.log('→ Favicons: generating maskable icon');
-		const maskableBuffer = await sharp(svgBuffer)
+		const maskableBackgroundBuffer = backgroundBufferFor(
+			formatManifest.maskable.meta.background,
+		);
+		const maskableBuffer = await sharp(maskableBackgroundBuffer)
 			.resize(faviconAssetPlan.maskableSize, faviconAssetPlan.maskableSize, {
 				fit: 'contain',
 				background: faviconThemeColors.background,
@@ -519,7 +597,10 @@ async function main() {
 
 	console.log('→ Favicons: generating mstile asset');
 	const tileSize = faviconAssetPlan.browserConfigTileSize;
-	const tileBuffer = await sharp(svgBuffer)
+	const tileBackgroundBuffer = backgroundBufferFor(
+		formatManifest.tile.meta.background,
+	);
+	const tileBuffer = await sharp(tileBackgroundBuffer)
 		.resize(tileSize, tileSize, {
 			fit: 'contain',
 			background: faviconThemeColors.background,
@@ -566,13 +647,45 @@ async function main() {
 		});
 	}
 
+	console.log('→ Favicons: generating Android Chrome icon variants');
+	const androidResults: PngResult[] = [];
+	const androidBackgroundBuffer = backgroundBufferFor(
+		formatManifest.android.meta.background,
+	);
+	for (const size of faviconAssetPlan.androidChromeSizes) {
+		const logicalName = `icon-android-${size}`;
+		const pngBuffer = await sharp(androidBackgroundBuffer)
+			.resize(size, size, {
+				fit: 'contain',
+				background: { r: 0, g: 0, b: 0, alpha: 0 },
+			})
+			.png({
+				compressionLevel: 9,
+				progressive: false,
+			})
+			.toBuffer();
+
+		await stageTempFile(logicalName, '.png', pngBuffer);
+		const hashed = await writeHashedFile({
+			outDir: OUT_ROOT,
+			logicalName,
+			ext: '.png',
+			buffer: pngBuffer,
+			hashLength: faviconCacheTokens.hashLength,
+			prefix: faviconCacheTokens.prefix,
+			publicRoot: PUBLIC_ROOT,
+		});
+
+		androidResults.push({ ...hashed, size });
+	}
+
 	console.log('→ Favicons: compiling web manifests');
 	const manifestIcons = new Map<number, HashedWriteResult>();
 	for (const size of faviconAssetPlan.androidChromeSizes) {
-		const match = pngResults.find((item) => item.size === size);
+		const match = androidResults.find((item) => item.size === size);
 		if (!match) {
 			throw new Error(
-				`Missing PNG variant for Android Chrome size ${size}.`,
+				`Missing Android-specific PNG variant for size ${size}.`,
 			);
 		}
 		manifestIcons.set(size, match);
@@ -680,10 +793,10 @@ async function main() {
 
 	const androidManifestEntries = faviconAssetPlan.androidChromeSizes.map(
 		(size) => {
-			const item = pngResults.find((entry) => entry.size === size);
+			const item = androidResults.find((entry) => entry.size === size);
 			if (!item) {
 				throw new Error(
-					`Android Chrome icon size ${size} missing from PNG outputs.`,
+					`Android Chrome icon size ${size} missing from Android-specific outputs.`,
 				);
 			}
 			return {
