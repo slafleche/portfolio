@@ -11,7 +11,9 @@
   component. Modules remain CSS-free; they simply prepare structured data.
 - **Styles
   (`/styles/**/\*.css.ts`)**: Emit selectors via vanilla-extract. This is the only layer that imports palette vars or calls `.css()`.
-  - vanilla-extract selectors must stay `&`-scoped. If you need to target siblings or children, add elements/classes in the markup or use `globalStyle` so style blocks never reference other class names directly.
+  - vanilla-extract selectors must stay `&`-scoped. If you need to target
+    siblings or children, add elements/classes in the markup or use
+    `globalStyle` so style blocks never reference other class names directly.
 
 ## Workflow Expectations
 
