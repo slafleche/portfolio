@@ -35,3 +35,17 @@
   ```
   The hook runs `yarn lint:locales` on every commit; fix any reported issues and
   re-run `git commit`.
+
+### Favicons pipeline
+
+- Maintain the master artwork in `src/assets/SVG/faviconMaster.svg`. Tag any
+  shapes you want exported as the Safari mask with `data-mask="true"` and the
+  Windows tile foreground with `data-tile-fg="true"`. The generator will throw
+  if those annotations are missing so we catch regressions early.
+- Run `yarn favicons` whenever the master SVG or the favicon tokens change. The
+  script resets `public/favicons/`, regenerates every hashed asset, and emits a
+  TypeScript manifest under `src/data/generated/favicons.manifest.gen.ts`.
+- During development the generator also writes formatted `.gen.svg` artifacts
+  for the tagged layers so the favicons debug page can preview them—they live in
+  `public/favicons/` and are replaced on every run. The directory is fully
+  ignored by git, so only the source SVG lands in version control.

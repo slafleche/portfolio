@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import sharp from 'sharp';
 import {
 	faviconTokens,
@@ -23,6 +24,11 @@ import {
 	DEFAULT_LOCALE,
 	loadMessages,
 } from '../src/lib/locales/locale';
+import { createSectionTranslator } from '../src/lib/locales/sections/helpers.locale';
+import {
+	buildFaviconMetaBundle,
+	type FaviconMetaBundle,
+} from '../src/lib/locales/sections/favicons.locale';
 
 const OUT_ROOT = path.resolve('public', 'favicons');
 const TEMP_ROOT = path.resolve('tmp', 'favicons.gen');
@@ -33,6 +39,97 @@ const MANIFEST_TS_PATH = path.resolve(
 	'favicons.manifest.gen.ts',
 );
 const PUBLIC_ROOT = '/favicons';
+const DEV_MODE = process.env.NODE_ENV !== 'production';
+
+type ExtractSvgLayerOptions = {
+	attribute: string;
+	purpose: string;
+	require?: boolean;
+	sanitizeFill?: string;
+};
+
+type ExtractSvgLayerResult = {
+	svg: string;
+	count: number;
+};
+
+const sanitizeFillFragment = (fragment: string, desiredFill: string) => {
+	if (fragment.includes('fill=')) {
+		return fragment.replace(/fill="[^"]*"/gi, `fill="${desiredFill}"`);
+	}
+
+	const trimmed = fragment.trimEnd();
+	if (trimmed.endsWith('/>')) {
+		return fragment.replace(/\/>\s*$/u, ` fill="${desiredFill}" />`);
+	}
+
+	return fragment.replace(/>/u, ` fill="${desiredFill}">`);
+};
+
+const extractSvgLayer = (
+	source: string,
+	{
+		attribute,
+		purpose,
+		require = false,
+		sanitizeFill,
+	}: ExtractSvgLayerOptions,
+): ExtractSvgLayerResult | null => {
+	const svgMatch = source.match(/<svg[^>]*>/i);
+	if (!svgMatch) {
+		throw new Error(
+			`Favicons: unable to locate root <svg> element while preparing ${purpose}.`,
+		);
+	}
+
+	const viewBoxMatch = svgMatch[0].match(/viewBox="([^"]+)"/i);
+	const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 100 100';
+
+	const pattern = new RegExp(
+		`<([\\w:.-]+)([^>]*${attribute}="true"[^>]*)(?:>([\\s\\S]*?)</\\1\\s*>|\\s*/>)`,
+		'gi',
+	);
+
+	const attrStripPattern = new RegExp(`\\s*${attribute}="true"`, 'gi');
+	const fragments: string[] = [];
+	let match: RegExpExecArray | null;
+
+	while ((match = pattern.exec(source))) {
+		const [, tagName, attrText, inner = ''] = match;
+		const cleanedAttrs = attrText.replace(attrStripPattern, '');
+		const opening = `<${tagName}${cleanedAttrs}`;
+		const fragment =
+			inner && inner.length
+				? `${opening}>${inner}</${tagName}>`
+				: `${opening.trimEnd()} />`;
+		const normalized = sanitizeFill
+			? sanitizeFillFragment(fragment, sanitizeFill)
+			: fragment;
+		fragments.push(normalized);
+	}
+
+	if (!fragments.length) {
+		if (require) {
+			throw new Error(
+				[
+					`Favicons: expected at least one element tagged with ${attribute}="true" for ${purpose}.`,
+					'Update your source SVG to annotate the appropriate layer.',
+				].join(' '),
+			);
+		}
+		return null;
+	}
+
+	const svg = [
+		'<?xml version="1.0" encoding="UTF-8"?>',
+		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">`,
+		...fragments,
+		'</svg>',
+		'',
+	].join('\n');
+
+	return { svg, count: fragments.length };
+};
 
 type PngResult = HashedWriteResult & {
 	size: number;
@@ -49,6 +146,11 @@ type ManifestLocaleEntry = {
 	shortName: string;
 	description: string;
 	categories: readonly string[];
+};
+
+type LocaleManifestLoadResult = {
+	manifestEntries: Readonly<Record<Locale, ManifestLocaleEntry>>;
+	faviconMetaBundles: Readonly<Record<Locale, FaviconMetaBundle>>;
 };
 
 const MANIFEST_NAME_KEY = 'manifest-name';
@@ -82,16 +184,23 @@ const ensureStringArray = (
 	);
 };
 
-async function loadManifestLocaleEntries(): Promise<
-	Readonly<Record<Locale, ManifestLocaleEntry>>
-> {
-	const entries: Record<Locale, ManifestLocaleEntry> = {} as Record<
+async function loadManifestLocaleEntries(): Promise<LocaleManifestLoadResult> {
+	const manifestEntries: Record<Locale, ManifestLocaleEntry> = {} as Record<
 		Locale,
 		ManifestLocaleEntry
 	>;
+	const faviconMetaBundles: Record<Locale, FaviconMetaBundle> = {} as Record<
+		Locale,
+		FaviconMetaBundle
+	>;
+	const defaultMessages = await loadMessages(DEFAULT_LOCALE);
 
 	for (const locale of AVAILABLE_LOCALES) {
-		const messages: Messages = await loadMessages(locale);
+		const messages: Messages =
+			locale === DEFAULT_LOCALE
+				? defaultMessages
+				: await loadMessages(locale);
+
 		const name = ensureString(messages[MANIFEST_NAME_KEY], MANIFEST_NAME_KEY, locale);
 		const shortName = ensureString(
 			messages[MANIFEST_SHORT_NAME_KEY],
@@ -109,16 +218,19 @@ async function loadManifestLocaleEntries(): Promise<
 			locale,
 		);
 
-		entries[locale] = {
+		manifestEntries[locale] = {
 			locale,
 			name,
 			shortName,
 			description,
 			categories,
 		};
+
+		const translator = createSectionTranslator(messages, defaultMessages);
+		faviconMetaBundles[locale] = buildFaviconMetaBundle(translator);
 	}
 
-	return entries;
+	return { manifestEntries, faviconMetaBundles };
 }
 
 async function resetDir(dir: string) {
@@ -185,6 +297,66 @@ async function main() {
 	console.log(`→ Favicons: loading source SVG "${sourceSvgPath}"`);
 
 	const svgBuffer = await fs.readFile(sourceSvgPath);
+	const svgSource = svgBuffer.toString('utf8');
+
+	const maskLayer = extractSvgLayer(svgSource, {
+		attribute: 'data-mask',
+		purpose: 'the Safari mask icon',
+		require: true,
+		sanitizeFill: '#000',
+	});
+
+	const tileForegroundLayer = extractSvgLayer(svgSource, {
+		attribute: 'data-tile-fg',
+		purpose: 'the Windows tile foreground',
+		require: true,
+	});
+
+	const maskIconSvg = maskLayer?.svg ?? '';
+	if (!maskIconSvg) {
+		throw new Error('Favicons: failed to generate Safari mask icon markup.');
+	}
+
+	const tileForegroundSvg = tileForegroundLayer?.svg ?? null;
+
+	let generatedMaskSvgPath = '';
+	let generatedTileSvgPath = '';
+
+	if (DEV_MODE) {
+		const filesToFormat: string[] = [];
+
+		generatedMaskSvgPath = path.join(
+			OUT_ROOT,
+			'favicons-mask-icon.gen.svg',
+		);
+		await fs.writeFile(generatedMaskSvgPath, maskIconSvg, 'utf8');
+		filesToFormat.push(generatedMaskSvgPath);
+
+		if (tileForegroundSvg) {
+			generatedTileSvgPath = path.join(
+				OUT_ROOT,
+				'favicons-mstile-foreground.gen.svg',
+			);
+			await fs.writeFile(
+				generatedTileSvgPath,
+				tileForegroundSvg,
+				'utf8',
+			);
+			filesToFormat.push(generatedTileSvgPath);
+		}
+
+		if (filesToFormat.length) {
+			const formatResult = spawnSync('yarn', ['format:svg'], {
+				stdio: 'inherit',
+				cwd: process.cwd(),
+			});
+			if (formatResult.status !== 0) {
+				throw new Error(
+					'Favicons: prettier format failed while normalizing extracted SVG layers.',
+				);
+			}
+		}
+	}
 
 	const pngResults: PngResult[] = [];
 	const pngBufferMap = new Map<number, Buffer>();
@@ -279,11 +451,11 @@ async function main() {
 	if (faviconOptions.generateMaskable) {
 		console.log('→ Favicons: generating maskable icon');
 		const maskableBuffer = await sharp(svgBuffer)
-		.resize(faviconAssetPlan.maskableSize, faviconAssetPlan.maskableSize, {
-			fit: 'contain',
-			background: faviconThemeColors.background,
-		})
-		.flatten({ background: faviconThemeColors.background })
+			.resize(faviconAssetPlan.maskableSize, faviconAssetPlan.maskableSize, {
+				fit: 'contain',
+				background: faviconThemeColors.background,
+			})
+			.flatten({ background: faviconThemeColors.background })
 			.png({ compressionLevel: 9 })
 			.toBuffer();
 
@@ -300,7 +472,6 @@ async function main() {
 	}
 
 	console.log('→ Favicons: generating Safari mask-icon.svg');
-	const maskIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><circle cx="256" cy="256" r="192" fill="#000"/></svg>\n`;
 	const maskIconResult = await writeHashedFile({
 		outDir: OUT_ROOT,
 		logicalName: 'mask-icon',
@@ -372,7 +543,10 @@ async function main() {
 		manifestIcons.set(size, match);
 	}
 
-	const manifestLocaleEntries = await loadManifestLocaleEntries();
+	const {
+		manifestEntries: manifestLocaleEntries,
+		faviconMetaBundles,
+	} = await loadManifestLocaleEntries();
 	const webManifestResults: Record<Locale, HashedWriteResult> = {} as Record<
 		Locale,
 		HashedWriteResult
@@ -388,8 +562,8 @@ async function main() {
 			start_url: faviconAppConfig.startUrl,
 			scope: faviconAppConfig.scope,
 			display: faviconAppConfig.display,
-			orientation: faviconAppConfig.orientation,
-			lang: locale,
+		orientation: faviconAppConfig.orientation,
+		lang: locale,
 		background_color: faviconThemeColors.background,
 		theme_color: faviconThemeColors.dark,
 			categories: localeEntry.categories,
@@ -448,6 +622,18 @@ async function main() {
 
 	console.log('→ Favicons: emitting generated manifest file');
 
+	const toPublicPath = (absPath: string) =>
+		`/${path.relative(path.resolve('public'), absPath).replace(/\\+/g, '/')}`;
+
+	const devMaskSvgPublicPath =
+		DEV_MODE && generatedMaskSvgPath
+			? toPublicPath(generatedMaskSvgPath)
+			: null;
+	const devTileSvgPublicPath =
+		DEV_MODE && generatedTileSvgPath
+			? toPublicPath(generatedTileSvgPath)
+			: null;
+
 	const pngManifestEntries = pngResults
 		.sort((a, b) => a.size - b.size)
 		.map((item) => ({
@@ -496,6 +682,13 @@ const metaTags = {
 				categories: manifestLocaleEntries[locale].categories,
 				lang: locale,
 			},
+		]),
+	);
+
+	const faviconMetaByLocale = Object.fromEntries(
+		AVAILABLE_LOCALES.map((locale) => [
+			locale,
+			faviconMetaBundles[locale],
 		]),
 	);
 
@@ -587,7 +780,7 @@ const metaTags = {
 	color: faviconThemeColors.msTile,
 	};
 
-	const manifestTs = `// AUTO-GENERATED by scripts/generateFavicons.ts — DO NOT EDIT
+const manifestTs = `// AUTO-GENERATED by scripts/generateFavicons.ts — DO NOT EDIT
 export const FAVICON_SVG = ${JSON.stringify(faviconSvg, null, 2)} as const;
 
 export const FAVICON_ICO = ${JSON.stringify(faviconIco, null, 2)} as const;
@@ -647,8 +840,26 @@ export const FAVICON_BROWSERCONFIG = ${JSON.stringify(
 	2,
 )} as const;
 
+export const FAVICON_DEV_MASK_SVG_PATH = ${JSON.stringify(
+	devMaskSvgPublicPath,
+	null,
+	2,
+)} as const;
+
+export const FAVICON_DEV_TILE_FOREGROUND_SVG_PATH = ${JSON.stringify(
+	devTileSvgPublicPath,
+	null,
+	2,
+)} as const;
+
 export const FAVICON_MANIFEST_META_BY_LOCALE = ${JSON.stringify(
 	manifestMetaByLocale,
+	null,
+	2,
+)} as const;
+
+export const FAVICON_META_BUNDLES_BY_LOCALE = ${JSON.stringify(
+	faviconMetaByLocale,
 	null,
 	2,
 )} as const;

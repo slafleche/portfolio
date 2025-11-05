@@ -8,6 +8,7 @@ import {
   FAVICON_DEFAULT_WEB_MANIFEST,
   FAVICON_LINK_DESCRIPTORS_BY_LOCALE,
   FAVICON_MANIFEST_META_BY_LOCALE,
+  FAVICON_META_BUNDLES_BY_LOCALE,
   FAVICON_META_TAGS,
 } from '@/data/generated/favicons.manifest.gen';
 import {
@@ -34,6 +35,9 @@ export default async function RootLayout({
   const manifestMeta =
     FAVICON_MANIFEST_META_BY_LOCALE[locale] ??
     FAVICON_MANIFEST_META_BY_LOCALE[fallbackLocale];
+  const faviconMeta =
+    FAVICON_META_BUNDLES_BY_LOCALE[locale] ??
+    FAVICON_META_BUNDLES_BY_LOCALE[fallbackLocale];
 
   if (process.env.NODE_ENV !== 'production') {
     const globalTracker = globalThis as {
@@ -95,7 +99,9 @@ export default async function RootLayout({
           name="apple-mobile-web-app-title"
           content={manifestMeta.shortName}
         />
-        <meta name="description" content={manifestMeta.description} />
+        <meta name="description" content={faviconMeta.description} />
+        <meta name="keywords" content={faviconMeta.keywords} />
+        <meta name="author" content={faviconMeta.author} />
         <meta
           name="theme-color"
           content={FAVICON_META_TAGS.themeColorLight}

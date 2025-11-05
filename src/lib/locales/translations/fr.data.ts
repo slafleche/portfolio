@@ -149,6 +149,11 @@ export const frData = {
     'systems-resilience-content',
   ),
   'systems-link-label': 'Systèmes',
+  'favicon-meta-description':
+    'Métadonnées décrivant les favicons et manifestes du portfolio de Stéphane L.',
+  'favicon-meta-keywords': 'favicon, icône, manifeste, Stéphane Laflèche',
+  // Chaîne d'auteur résolue via sharedStrings.authorName (bundle localisable).
+  'favicon-meta-author': '',
 } as const;
 
 export type FrData = typeof frData;
