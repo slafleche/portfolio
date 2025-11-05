@@ -9,11 +9,11 @@ export type FaviconAssetPlan = {
 };
 
 export type FaviconThemeColors = {
-  lightThemeColor: string;
-  darkThemeColor: string;
-  backgroundColor: string;
-  maskIconColor: string;
-  msTileColor: string;
+  light: string;
+  dark: string;
+  background: string;
+  maskIcon: string;
+  msTile: string;
 };
 
 export type FaviconCacheTokens = {
@@ -46,11 +46,11 @@ export const faviconAssetPlan: FaviconAssetPlan = {
 };
 
 export const faviconThemeColors: FaviconThemeColors = {
-  lightThemeColor: '#FFFFFF',
-  darkThemeColor: '#251A38',
-  backgroundColor: '#251A38',
-  maskIconColor: '#FFFFFF',
-  msTileColor: '#251A38',
+  light: '#FFFFFF',
+  dark: '#251A38',
+  background: '#251A38',
+  maskIcon: '#FFFFFF',
+  msTile: '#251A38',
 };
 
 export const faviconAppConfig: FaviconAppConfig = {

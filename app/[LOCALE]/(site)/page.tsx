@@ -1,23 +1,26 @@
 import { SkipNavContent } from '@/components/SkipNavContent';
 import Hero from '@/components/Hero';
-import type { PageParams } from '../../src/styles/helpers/types';
-import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
-import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
-import { buildCaseStudiesCopy } from '../../src/lib/locales/sections/caseStudies.locale';
-import { buildProjectsCopy } from '../../src/lib/locales/sections/projects.locale';
-import { buildAboutCopy } from '../../src/lib/locales/sections/about.locale';
-import { buildApproachCopy } from '../../src/lib/locales/sections/approach.locale';
-import { buildContactCopy } from '../../src/lib/locales/sections/contact.locale';
-import Content from '../../src/components/responsive/Content';
+import Content from '@/components/responsive/Content';
 import CaseStudy from '@/components/CaseStudy';
 import { Grid, Column } from '@/components/Grid';
 import Card from '@/components/Card';
 import { Markdown } from '@/components/Markdown';
-import Footer from '../../src/components/Footer';
+import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
 import * as layoutStyles from '@/styles/layout.css';
+import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
+import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
+import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale';
+import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
+import { buildAboutCopy } from '@/lib/locales/sections/about.locale';
+import { buildApproachCopy } from '@/lib/locales/sections/approach.locale';
+import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import { sharedStrings } from '../../src/lib/sharedStrings';
+import { sharedStrings } from '@/lib/sharedStrings';
+
+interface PageParams {
+  LOCALE: string;
+}
 
 export default async function HomePage({
   params,
@@ -25,15 +28,15 @@ export default async function HomePage({
   params: Promise<PageParams>;
 }) {
   const { LOCALE } = await params;
-  const t = await loadTranslator(LOCALE);
+  const translator = await loadTranslator(LOCALE);
 
-  const heroCopy = buildHeroCopy(t);
-  const approach = buildApproachCopy(t);
-  const about = buildAboutCopy(t);
-  const caseStudies = buildCaseStudiesCopy(t);
-  const projects = buildProjectsCopy(t);
-  const contact = buildContactCopy(t);
-  const systemsLink = buildSystemsLink(LOCALE, t);
+  const heroCopy = buildHeroCopy(translator);
+  const approach = buildApproachCopy(translator);
+  const about = buildAboutCopy(translator);
+  const caseStudies = buildCaseStudiesCopy(translator);
+  const projects = buildProjectsCopy(translator);
+  const contact = buildContactCopy(translator);
+  const systemsLink = buildSystemsLink(LOCALE, translator);
 
   return (
     <SkipNavContent id="body">

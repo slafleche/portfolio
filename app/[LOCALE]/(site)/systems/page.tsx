@@ -7,17 +7,16 @@ import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import * as layoutStyles from '@/styles/layout.css';
-import type { PageParams } from '@/styles/helpers/types';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
 import * as systemsStyles from '@/styles/components/systems.css';
 
-type SystemsPageProps = {
-  params: Promise<PageParams>;
-};
+type SystemsPageParams = Promise<{ LOCALE: string }>;
 
 export default async function SystemsPage({
   params,
-}: SystemsPageProps) {
+}: {
+  params: SystemsPageParams;
+}) {
   const { LOCALE } = await params;
   const translator = await loadTranslator(LOCALE);
 
@@ -26,45 +25,38 @@ export default async function SystemsPage({
   const systemsLink = buildSystemsLink(LOCALE, translator);
   const systemsTitle = translator('systems-title');
   const systemsIntro = translator('systems-intro');
-  const systemsProcessSection = {
-    id: translator('systems-process-href'),
-    title: translator('systems-process'),
-    markdown: translator('systems-process-content'),
-  };
-  const systemsDescribeSection = {
-    id: translator('systems-describe-href'),
-    title: translator('systems-describe'),
-    markdown: translator('systems-describe-content'),
-  };
-  const systemsExpressSection = {
-    id: translator('systems-express-href'),
-    title: translator('systems-express'),
-    markdown: translator('systems-express-content'),
-  };
-  const systemsIntegrateSection = {
-    id: translator('systems-integrate-href'),
-    title: translator('systems-integrate'),
-    markdown: translator('systems-integrate-content'),
-  };
-  const systemsResilienceSection = {
-    id: translator('systems-resilience-href'),
-    title: translator('systems-resilience'),
-    markdown: translator('systems-resilience-content'),
-  };
   const systemsSections = [
-    systemsProcessSection,
-    systemsDescribeSection,
-    systemsExpressSection,
-    systemsIntegrateSection,
-    systemsResilienceSection,
+    {
+      id: translator('systems-process-href'),
+      title: translator('systems-process'),
+      markdown: translator('systems-process-content'),
+    },
+    {
+      id: translator('systems-describe-href'),
+      title: translator('systems-describe'),
+      markdown: translator('systems-describe-content'),
+    },
+    {
+      id: translator('systems-express-href'),
+      title: translator('systems-express'),
+      markdown: translator('systems-express-content'),
+    },
+    {
+      id: translator('systems-integrate-href'),
+      title: translator('systems-integrate'),
+      markdown: translator('systems-integrate-content'),
+    },
+    {
+      id: translator('systems-resilience-href'),
+      title: translator('systems-resilience'),
+      markdown: translator('systems-resilience-content'),
+    },
   ];
-  const systemsTitleFirstLine = translator('systems-title_a');
-  const systemsTitleLastLine = translator('systems-title_b');
 
-  const systemsHeroCopy = {
+  const heroCopy = {
     ...heroCopyBase,
-    headingFirstLine: systemsTitleFirstLine,
-    headingLastLine: systemsTitleLastLine,
+    headingFirstLine: translator('systems-title_a'),
+    headingLastLine: translator('systems-title_b'),
     ctaLabel: contactCopy.title,
   };
 
@@ -74,7 +66,7 @@ export default async function SystemsPage({
         <main className={layoutStyles.main}>
           <Hero
             id="systems-hero"
-            copy={systemsHeroCopy}
+            copy={heroCopy}
             ctaHref={`#${contactCopy.href}`}
             overlayClassName={systemsStyles.heroOverlay}
             withVideo={false}
@@ -95,11 +87,11 @@ export default async function SystemsPage({
           id={contactCopy.href}
           systemsLink={systemsLink}
         />
-        {systemsHeroCopy.ctaLabel ? (
+        {heroCopy.ctaLabel ? (
           <ContactButton
             watchId="systems-hero"
             href={`#${contactCopy.href}`}
-            label={systemsHeroCopy.ctaLabel}
+            label={heroCopy.ctaLabel}
           />
         ) : null}
       </div>
