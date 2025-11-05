@@ -52,4 +52,3 @@ UI states stay readable.
 
 The internals can change and the contract stays the same.  
 That keeps color work composable, consistent, and safe to refactor.
-

@@ -9,6 +9,9 @@ export type VideoVariant = {
 
 export type VideoEntry = {
 	name: string;
+	dirName?: string;
+	basePath?: string;
+	hash?: string;
 	width: number;
 	height: number;
 	aspect: number;

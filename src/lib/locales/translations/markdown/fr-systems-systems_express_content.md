@@ -73,4 +73,3 @@ mais en code plutôt qu’en keyframes.
 
 Les pièces peuvent changer, le rythme reste.  
 C’est ce qui donne sa cohérence au système de mouvement.
-

@@ -17,13 +17,19 @@ claire dès le départ.
 
 **Définition réutilisable de la famille (partagée entre tokens et CSS) :**
 
-````ts
+```ts
 import { m } from '../styles/measurementKit';
 import fontsConfig, { makeFamilyDef } from '../styles/helpers/fontConfig';
 
 const urbanist = makeFamilyDef({
   familyName: 'Urbanist',
-  fallbacks: ['Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+  fallbacks: [
+    'Segoe UI',
+    'Roboto',
+    'Helvetica Neue',
+    'Arial',
+    'sans-serif',
+  ],
   cfgMap: fontsConfig,
   spacing: m(0, 'rem'),
   offsetToFlushTop: m(0, 'rem'),
@@ -33,11 +39,11 @@ const urbanist = makeFamilyDef({
     strong: 700,
   },
 });
-````
+```
 
 **Référence unique à la famille dans vos tokens (sans duplication) :**
 
-````ts
+```ts
 import { fontFamilies } from '../tokens/fontFamilies.tokens';
 import { m, mPercent } from '../styles/measurementKit';
 
@@ -57,15 +63,15 @@ export const fontVariants = {
     },
   },
 } as const;
-````
+```
 
 **Composition finale via les helpers :**
 
-````ts
+```ts
 import { composeFontVariantStyles } from '../tokens/fontVariants.tokens';
 
 const heroHeading = composeFontVariantStyles(fontVariants.hero);
-````
+```
 
 La même configuration alimente un générateur d’URL qui ne demande que les plages
 et styles réellement utilisés.  
@@ -123,8 +129,8 @@ l’emploi.
   "hero": {
     "width": 3840,
     "height": 2160,
-    "masterUrl": "/videos/hero/master.m3u8",
-    "posterUrl": "/videos/hero/poster.png"
+    "masterUrl": "/videos/vid-hero-<hash>/master.m3u8",
+    "posterUrl": "/videos/vid-hero-<hash>/poster.png"
   }
 }
 ```

@@ -40,4 +40,3 @@ It may not look like much, but it’s built from about a dozen layers that work
 together to make it feel right.  
 Each layer handles a specific part: timing, easing, depth, or shape, so the
 motion stays smooth and believable.
-

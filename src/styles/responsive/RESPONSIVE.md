@@ -12,24 +12,24 @@ based on device but rather from the **design**.
 
 ```ts
 import {
-	// hooks
-	useIsFullSize,
-	useIsCompact,
-	useIsCompressed,
-	useMedia,
+  // hooks
+  useIsFullSize,
+  useIsCompact,
+  useIsCompressed,
+  useMedia,
 
-	// components
-	FullSizeOnly,
-	CompactOnly,
-	CompressedOnly,
+  // components
+  FullSizeOnly,
+  CompactOnly,
+  CompressedOnly,
 
-	// client-only predicates
-	isFullSizeClient,
-	isCompactClient,
-	isCompressedClient,
+  // client-only predicates
+  isFullSizeClient,
+  isCompactClient,
+  isCompressedClient,
 
-	// normalized query strings
-	mqStrings,
+  // normalized query strings
+  mqStrings,
 } from '@/responsive';
 ```
 
@@ -37,12 +37,12 @@ import {
 
 ```ts
 import {
-	useMediaQuery,
-	useMediaFromMap,
-	makeClientFns,
-	MatchMedia,
-	toQueryString,
-	queriesToStrings,
+  useMediaQuery,
+  useMediaFromMap,
+  makeClientFns,
+  MatchMedia,
+  toQueryString,
+  queriesToStrings,
 } from '@/responsive/mediaFactory';
 ```
 
@@ -121,8 +121,8 @@ without repeating hook calls. Useful for badges, analytics, or feature flags.
 ```tsx
 // ✅ Do (event handler)
 const onClick = () => {
-	const url = isFullSizeClient() ? '/img/hero@2x.jpg' : '/img/hero@1x.jpg';
-	download(url);
+  const url = isFullSizeClient() ? '/img/hero@2x.jpg' : '/img/hero@1x.jpg';
+  download(url);
 };
 
 // ❌ Don’t (render-time branching)
@@ -152,9 +152,9 @@ return isDesktop2 ? <DesktopLayout /> : <MobileLayout />;
 
 ```ts
 export interface IMediaQueryProps {
-	type?: 'all' | 'print' | 'screen';
-	minWidth?: string; // e.g. '1280px'
-	maxWidth?: string; // e.g. '1279px'
+  type?: 'all' | 'print' | 'screen';
+  minWidth?: string; // e.g. '1280px'
+  maxWidth?: string; // e.g. '1279px'
 }
 
 // Example keys (your file provides these):
@@ -179,7 +179,7 @@ return isFull ? <ThreeColLayout /> : <SingleColLayout />;
 
 ```tsx
 <FullSizeOnly>
-	<DesktopNav />
+  <DesktopNav />
 </FullSizeOnly>
 ```
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -15,6 +16,10 @@ const IGNORE_DIRS = new Set([
 	IMAGE_SOURCES_DIR,
 	path.join(SRC_DIR, 'imageBackup'),
 ]);
+
+const PUBLIC_ROOT = '/images';
+const IMAGE_CACHE_PREFIX = 'img';
+const IMAGE_CACHE_HASH_LENGTH = 8;
 
 const MIME_EXTENSIONS = new Map([
 	[
@@ -70,6 +75,51 @@ const VALID_EXT = new Set([
 	'.tiff',
 	'.avif',
 ]);
+
+const sharpFormatForExt = (ext) => {
+	switch (ext) {
+		case '.jpeg':
+		case '.jpg':
+			return 'jpeg';
+		case '.png':
+			return 'png';
+		case '.webp':
+			return 'webp';
+		case '.avif':
+			return 'avif';
+		case '.tif':
+		case '.tiff':
+			return 'tiff';
+		default:
+			return 'jpeg';
+	}
+};
+
+const hashBuffer = (buffer, length) => {
+	const rawHash = crypto.createHash('sha256').update(buffer).digest('hex');
+	return rawHash.slice(0, Math.max(1, length));
+};
+
+async function removeHashedImageDirs(name) {
+	const prefix = `${IMAGE_CACHE_PREFIX}-${name}-`;
+	let entries = [];
+	try {
+		entries = await fs.readdir(OUT_ROOT);
+	} catch (error) {
+		if (error.code === 'ENOENT') return;
+		throw error;
+	}
+	await Promise.all(
+		entries
+			.filter((entry) => entry.startsWith(prefix))
+			.map((entry) =>
+				fs.rm(path.join(OUT_ROOT, entry), {
+					recursive: true,
+					force: true,
+				}),
+			),
+	);
+}
 
 // --- Duplicate-name handling ---
 class DuplicateNameError extends Error {
@@ -275,16 +325,25 @@ async function processImage(
 		provenance?.origin ?? filePath,
 	);
 
-	const outDir = path.join(OUT_ROOT, name);
-	await fs.mkdir(outDir, { recursive: true });
-
 	const img = sharp(filePath).rotate();
 	const meta = await img.metadata();
 	const srcW = meta.width ?? 0;
 	const srcH = meta.height ?? 0;
 	if (!srcW || !srcH) return;
+
+	const format = sharpFormatForExt(ext);
+	const {
+		data: originalBuffer,
+	} = await img.clone().toFormat(format).toBuffer({ resolveWithObject: true });
+	const hash = hashBuffer(originalBuffer, IMAGE_CACHE_HASH_LENGTH);
+	const dirSlug = `${IMAGE_CACHE_PREFIX}-${name}-${hash}`;
+	const outDir = path.join(OUT_ROOT, dirSlug);
+
+	await removeHashedImageDirs(name);
+	await fs.mkdir(outDir, { recursive: true });
+
 	console.log(
-		`   • Generating variants for "${name}" from ${filePath} (${srcW}x${srcH})`,
+		`   • Generating variants for "${name}" (${srcW}x${srcH}) → ${dirSlug}`,
 	);
 
 	const lqipW = Math.min(24, srcW);
@@ -296,8 +355,13 @@ async function processImage(
 		.toBuffer();
 	const blurDataURL = `data:image/jpeg;base64,${lqip.toString('base64')}`;
 
+	const baseUrl = `${PUBLIC_ROOT}/${dirSlug}`;
+
 	const item = {
 		name,
+		hash,
+		basePath: baseUrl,
+		dirName: dirSlug,
 		width: srcW,
 		height: srcH,
 		aspect: srcW / srcH,
@@ -312,15 +376,15 @@ async function processImage(
 			const fileName = `${w}.${outExt}`;
 			const outPath = path.join(outDir, fileName);
 			await to(img.clone().resize({ width: w })).toFile(outPath);
-			list.push({ w, url: `/images/${name}/${fileName}` });
+			list.push({ w, url: `${baseUrl}/${fileName}` });
 		}
 		item.variants[outExt] = list;
 	}
 
 	const origFile = `orig${ext || '.jpg'}`;
-	await img.toFile(path.join(outDir, origFile));
+	await fs.writeFile(path.join(outDir, origFile), originalBuffer);
 	item.original = {
-		url: `/images/${name}/${origFile}`,
+		url: `${baseUrl}/${origFile}`,
 		width: srcW,
 		height: srcH,
 	};

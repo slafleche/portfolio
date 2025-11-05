@@ -1,1 +1,3 @@
-Collaborated with the Chief Product Officer and Founder on an early test using React. Built HTML/CSS prototypes to support his research and explore how the framework could fit into future product development.
+Collaborated with the Chief Product Officer and Founder on an early test using
+React. Built HTML/CSS prototypes to support his research and explore how the
+framework could fit into future product development.

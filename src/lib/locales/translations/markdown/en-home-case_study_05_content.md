@@ -1,1 +1,7 @@
-I helped develop a new theming architecture that translated each client's style into a set of **design tokens**, shared values interpreted by every product to its own needs. A concise set of global defaults kept everything consistent, while components could adapt granularly to those tokens. This **token-based decoupling** allowed products to evolve safely: teams could update components without breaking client themes. Even when components were replaced entirely, the design language persisted, proving the system's resilience over time.
+I helped develop a new theming architecture that translated each client's style
+into a set of **design tokens**, shared values interpreted by every product to
+its own needs. A concise set of global defaults kept everything consistent,
+while components could adapt granularly to those tokens. This **token-based
+decoupling** allowed products to evolve safely: teams could update components
+without breaking client themes. Even when components were replaced entirely, the
+design language persisted, proving the system's resilience over time.
