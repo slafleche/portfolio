@@ -1,13 +1,5 @@
-Good design systems don't happen by accident.
+Good design systems are intentional.
 
-They work best when design and development stay in sync, when someone pays
-attention to how ideas translate from one side to the other.
-
-That's the space I like to work in: turning design intent into components,
-theming systems, and patterns that hold together in code. I think about the flow
-of decisions: how color tokens, motion, and layout all connect so the final
-product feels consistent and intentional.
-
-For me, it's about building structure without friction—systems that make it
-easier for everyone to create something that looks right, feels right, and works
-right.
+I build the infrastructure—component APIs, theming systems, design tokens—that
+keeps design and code in sync. Structure that scales without friction. Systems
+that make consistency automatic, not aspirational.
