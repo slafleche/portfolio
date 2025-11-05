@@ -54,16 +54,50 @@ type ExtractSvgLayerResult = {
 };
 
 const sanitizeFillFragment = (fragment: string, desiredFill: string) => {
-	if (fragment.includes('fill=')) {
-		return fragment.replace(/fill="[^"]*"/gi, `fill="${desiredFill}"`);
+	let sanitized = fragment.replace(
+		/style="([^"]*)"/gi,
+		(_match, styleContent: string) => {
+			const declarations = styleContent
+				.split(';')
+				.map((part) => part.trim())
+				.filter(Boolean)
+				.filter(
+					(part) => !part.toLowerCase().startsWith('fill:'),
+				);
+
+			if (!declarations.length) {
+				return '';
+			}
+
+			const rebuilt = declarations
+				.map((part) => (part.endsWith(';') ? part : `${part};`))
+				.join(' ');
+
+			return `style="${rebuilt.trim()}"`;
+		},
+	);
+
+	if (sanitized.includes('fill=')) {
+		sanitized = sanitized.replace(
+			/fill="[^"]*"/gi,
+			`fill="${desiredFill}"`,
+		);
+	} else {
+		const trimmed = sanitized.trimEnd();
+		if (trimmed.endsWith('/>')) {
+			sanitized = sanitized.replace(
+				/\/>\s*$/u,
+				` fill="${desiredFill}" />`,
+			);
+		} else {
+			sanitized = sanitized.replace(
+				/>/u,
+				` fill="${desiredFill}">`,
+			);
+		}
 	}
 
-	const trimmed = fragment.trimEnd();
-	if (trimmed.endsWith('/>')) {
-		return fragment.replace(/\/>\s*$/u, ` fill="${desiredFill}" />`);
-	}
-
-	return fragment.replace(/>/u, ` fill="${desiredFill}">`);
+	return sanitized;
 };
 
 const extractSvgLayer = (
@@ -310,6 +344,7 @@ async function main() {
 		attribute: 'data-tile-fg',
 		purpose: 'the Windows tile foreground',
 		require: true,
+		sanitizeFill: '#fff',
 	});
 
 	const maskIconSvg = maskLayer?.svg ?? '';

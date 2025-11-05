@@ -19,7 +19,7 @@ import {
   FAVICON_DEV_MASK_SVG_PATH,
   FAVICON_DEV_TILE_FOREGROUND_SVG_PATH,
 } from '@/data/generated/favicons.manifest.gen';
-import { faviconThemeColors } from '@/tokens/favicon.tokens';
+import { faviconAssetPlan, faviconThemeColors } from '@/tokens/favicon.tokens';
 
 type DebugParams = Promise<{ LOCALE: string }>;
 type LocaleKey = keyof typeof FAVICON_WEB_MANIFESTS;
@@ -85,6 +85,11 @@ export default async function FaviconDebugPage({
     }),
   );
 
+  const icoSizes = new Set(faviconAssetPlan.icoSizes);
+  const icoVariants = FAVICON_PNG_VARIANTS.filter((icon) =>
+    icoSizes.has(icon.size),
+  );
+
   const data = {
     svg: {
       src: FAVICON_SVG.src,
@@ -97,6 +102,7 @@ export default async function FaviconDebugPage({
       hash: FAVICON_ICO.hash,
     },
     pngVariants: FAVICON_PNG_VARIANTS,
+    icoVariants,
     appleTouch: FAVICON_APPLE_TOUCH_ICON,
     androidIcons: FAVICON_ANDROID_ICONS,
     maskIcon: FAVICON_MASK_ICON,
