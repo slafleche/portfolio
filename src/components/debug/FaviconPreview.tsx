@@ -76,6 +76,8 @@ type FaviconPreviewData = {
   linkDescriptors: {
     main: readonly IconDescriptor[];
   };
+  devMaskSvgPath: string | null;
+  devTileForegroundSvgPath: string | null;
 };
 
 type FaviconPreviewProps = {
@@ -184,6 +186,10 @@ export default function FavIconPreview({
     border: `1px solid ${previewColors.border}`,
   };
 
+  const maskSvgSource = data.devMaskSvgPath ?? data.maskIcon.src;
+  const maskDisplayColor = toColor(data.themeColors.maskIcon, '#ffffff');
+  const tileForegroundSource = data.devTileForegroundSvgPath;
+
   const MaskIconPreview = () => (
     <div
       style={{
@@ -197,29 +203,29 @@ export default function FavIconPreview({
         style={{
           width: '96px',
           height: '96px',
-          borderRadius: '24px',
-          background:
-            theme === 'dark' ? '#0d0a17' : '#f1f0ff',
+          borderRadius: '50%',
+          backgroundColor: theme === 'dark' ? '#0d0a17' : '#f8f6ff',
+          boxShadow: `0 0 0 1px ${previewColors.border}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          border: `1px solid ${previewColors.border}`,
+          overflow: 'hidden',
         }}
       >
         <div
+          aria-hidden
           style={{
             width: '70%',
-            height: '70%',
-            backgroundColor: data.themeColors.maskIcon,
-            maskImage: `url(${data.maskIcon.src})`,
-            WebkitMaskImage: `url(${data.maskIcon.src})`,
+            aspectRatio: '1 / 1',
+            backgroundColor: maskDisplayColor,
+            maskImage: `url(${maskSvgSource})`,
+            WebkitMaskImage: `url(${maskSvgSource})`,
             maskRepeat: 'no-repeat',
             WebkitMaskRepeat: 'no-repeat',
             maskPosition: 'center',
             WebkitMaskPosition: 'center',
             maskSize: 'contain',
             WebkitMaskSize: 'contain',
-            borderRadius: '20px',
           }}
         />
       </div>
@@ -232,7 +238,7 @@ export default function FavIconPreview({
             wordBreak: 'break-all',
           }}
         >
-          {data.maskIcon.fileName}
+          {maskSvgSource}
         </div>
       </div>
     </div>
@@ -281,28 +287,82 @@ export default function FavIconPreview({
   const MsTilePreview = () => (
     <div style={cardStyle}>
       <div
-        aria-hidden
         style={{
-          width: 120,
-          height: 120,
-          borderRadius: '22px',
-          backgroundColor: data.msTile.color,
-          border: `1px solid ${previewColors.border}`,
           display: 'flex',
+          flexDirection: 'column',
+          gap: '0.5rem',
           alignItems: 'center',
-          justifyContent: 'center',
         }}
       >
-        <img
-          src={data.msTile.src}
-          alt="Windows tile preview"
+        <div
+          aria-hidden
           style={{
-            width: '80%',
-            height: '80%',
-            objectFit: 'contain',
-            borderRadius: '16px',
+            width: 120,
+            height: 120,
+            borderRadius: '18px',
+            backgroundColor: data.msTile.color,
+            border: `1px solid ${previewColors.border}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
           }}
-        />
+        >
+          {tileForegroundSource ? (
+            <img
+              src={tileForegroundSource}
+              alt="Windows tile foreground"
+              style={{
+                width: '80%',
+                height: '80%',
+                objectFit: 'contain',
+              }}
+            />
+          ) : (
+            <img
+              src={data.msTile.src}
+              alt="Windows tile PNG fallback"
+              style={{
+                width: '80%',
+                height: '80%',
+                objectFit: 'contain',
+                mixBlendMode: 'multiply',
+              }}
+            />
+          )}
+        </div>
+        <span
+          style={{ fontSize: '0.75rem', color: previewColors.subtle }}
+        >
+          {tileForegroundSource
+            ? 'Composited (color + foreground)'
+            : 'Composited preview (PNG fallback)'}
+        </span>
+        <div
+          aria-hidden
+          style={{
+            width: 120,
+            height: 120,
+            borderRadius: '18px',
+            overflow: 'hidden',
+            border: `1px solid ${previewColors.border}`,
+          }}
+        >
+          <img
+            src={data.msTile.src}
+            alt="Windows tile PNG"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+        <span
+          style={{ fontSize: '0.75rem', color: previewColors.subtle }}
+        >
+          Generated PNG
+        </span>
       </div>
       <div>
         <div style={{ fontWeight: 600 }}>Windows tile</div>

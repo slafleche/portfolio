@@ -144,6 +144,12 @@ export const enData = {
     'systems-resilience-content',
   ),
   'systems-link-label': 'Systems',
+
+  'favicon-meta-description':
+    "Metadata describing the favicon and manifest assets for Stéphane L.'s portfolio.",
+  'favicon-meta-keywords': 'favicon, icon, manifest, Stéphane Laflèche',
+  // Author metadata falls back to sharedStrings.authorName via bundle builder.
+  'favicon-meta-author': '',
 } as const;
 
 export type EnData = typeof enData;

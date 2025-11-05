@@ -8,7 +8,6 @@ import {
   FAVICON_DEFAULT_WEB_MANIFEST,
   FAVICON_ICO,
   FAVICON_LINK_DESCRIPTORS_BY_LOCALE,
-  
   FAVICON_MANIFEST_META_BY_LOCALE,
   FAVICON_MASKABLE_ICON,
   FAVICON_MASK_ICON,
@@ -17,6 +16,8 @@ import {
   FAVICON_PNG_VARIANTS,
   FAVICON_SVG,
   FAVICON_WEB_MANIFESTS,
+  FAVICON_DEV_MASK_SVG_PATH,
+  FAVICON_DEV_TILE_FOREGROUND_SVG_PATH,
 } from '@/data/generated/favicons.manifest.gen';
 import { faviconThemeColors } from '@/tokens/favicon.tokens';
 
@@ -108,6 +109,8 @@ export default async function FaviconDebugPage({
     themeColors: faviconThemeColors,
     metaTags: FAVICON_META_TAGS,
     linkDescriptors,
+    devMaskSvgPath: FAVICON_DEV_MASK_SVG_PATH,
+    devTileForegroundSvgPath: FAVICON_DEV_TILE_FOREGROUND_SVG_PATH,
   };
 
   return (
