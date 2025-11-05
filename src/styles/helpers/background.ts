@@ -177,9 +177,9 @@ export function fakeBackgroundFixed(): GlobalStyleRule {
 		display: 'block',
 		position: 'fixed',
 		top: '0px',
+		right: '0px',
+		bottom: '0px',
 		left: '0px',
-		width: '100vw',
-		height: '100vh',
 	};
 }
 

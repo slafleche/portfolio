@@ -31,6 +31,7 @@ type Props = {
   ready?: boolean;
   glow?: 'pulse' | 'hold' | null;
   debugGlow?: boolean;
+  width?: number | null;
 };
 
 function Arch({
@@ -39,6 +40,7 @@ function Arch({
   ready = false,
   glow = null,
   debugGlow = false,
+  width = null,
 }: Props) {
   const windowSize = useWindowSize().width;
   const baseId = useMemo(() => createDomId('arch'), []);
@@ -49,7 +51,13 @@ function Arch({
   useEffect(() => setMounted(true), []);
 
   // Safe numbers even before windowSize is known
-  const ws = Math.max(1, windowSize ?? 0);
+  const fallbackWidth =
+    typeof width === 'number' && width > 0
+      ? width
+      : windowSize && windowSize > 0
+        ? windowSize
+        : 0;
+  const ws = Math.max(1, fallbackWidth);
   const archTop = archVars.top;
   const archCurveHeight = archVars.curveHeight;
   const fullHeight =
