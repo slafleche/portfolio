@@ -106,7 +106,7 @@ export default function Logo({
         viewBox="-22.66156 -22.66156 200 200"
         role="img"
         aria-label={title}
-        className={clsx(s.svg, s.svgStates)}
+        className={clsx(s.core, s.svgStates)}
         data-color={isMono ? 'mono' : 'color'}
       >
         <title>{title}</title>

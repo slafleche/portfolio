@@ -4,11 +4,14 @@ import { absolutePosition } from '../helpers/positioning';
 
 export const root = style({
   position: 'relative',
+  width: logoVars.width.css(),
+  maxWidth: '100%',
 });
 
-export const svg = style({
-  width: logoVars.width.css(),
+export const core = style({
+  width: '100%',
   height: 'auto',
+  display: 'block',
   transform: `translateX(-1px)`, // judge it to look visually centered
 });
 
