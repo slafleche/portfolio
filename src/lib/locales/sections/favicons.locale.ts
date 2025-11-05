@@ -1,4 +1,3 @@
-import { sharedStrings } from '@/lib/sharedStrings';
 import type { Messages } from '@/data/locales';
 import type { Translator } from './helpers.locale';
 
@@ -12,10 +11,12 @@ export const FAVICONS_META_KEYS = {
 
 const resolveAuthor = (t: Translator) => {
 	const raw = t.raw(FAVICONS_META_KEYS.author);
-	if (typeof raw === 'string' && raw.trim().length > 0) {
-		return raw;
+	if (typeof raw !== 'string' || raw.trim().length === 0) {
+		throw new Error(
+			'[locales] Missing favicon meta author string for current locale.',
+		);
 	}
-	return sharedStrings.authorName;
+	return raw;
 };
 
 export const buildFaviconMetaBundle = (t: Translator) => ({

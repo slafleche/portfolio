@@ -12,8 +12,7 @@ import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale';
 import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
-import { buildAboutCopy } from '@/lib/locales/sections/about.locale';
-import { buildApproachCopy } from '@/lib/locales/sections/approach.locale';
+import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
 import { sharedStrings } from '@/lib/sharedStrings';
@@ -31,8 +30,18 @@ export default async function HomePage({
   const translator = await loadTranslator(LOCALE);
 
   const heroCopy = buildHeroCopy(translator);
-  const approach = buildApproachCopy(translator);
-  const about = buildAboutCopy(translator);
+  const [approach, about] = translateMarkdownSections(translator, [
+    {
+      titleKey: 'approach',
+      markdownKey: 'approach-content',
+      hrefKey: 'approach-href',
+    },
+    {
+      titleKey: 'about',
+      markdownKey: 'about-content',
+      hrefKey: 'about-href',
+    },
+  ]);
   const caseStudies = buildCaseStudiesCopy(translator);
   const projects = buildProjectsCopy(translator);
   const contact = buildContactCopy(translator);

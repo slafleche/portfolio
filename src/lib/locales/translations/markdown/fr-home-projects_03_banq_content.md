@@ -1,0 +1,1 @@
+Travail sur le système de gestion de bibliothèques d'InMedia, utilisé par la BAnQ et d'autres institutions au Canada et en France. Mise en place d'une structure plus cohérente et d'une meilleure constance dans un front-end devenu complexe au fil du temps.

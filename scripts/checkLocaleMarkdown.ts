@@ -51,11 +51,15 @@ const loadLocaleMessages = async (
 	}
 };
 
+const getSectionForKey = (key: string) =>
+	key.startsWith('systems-') ? 'systems' : 'home';
+
 const readMarkdownFor = async (
 	key: MarkdownKey,
 	locale: Locale,
 ): Promise<string | null> => {
-	const fileName = `${key}.${locale}.md`;
+	const section = getSectionForKey(key);
+	const fileName = `${locale}-${section}-${key.replace(/-/g, '_')}.md`;
 	const filePath = path.join(markdownDir, fileName);
 	try {
 		const content = await fs.readFile(filePath, 'utf8');

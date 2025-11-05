@@ -1,23 +1,49 @@
 import type { Messages } from '@/data/locales';
 import type { Translator } from './helpers.locale';
+import { translateMarkdownSections } from './markdownSections.helpers';
 
 type MessageKey = keyof Messages;
 
 export const CASE_STUDY_KEYS = {
 	title: 'case_study',
 	href: 'case_study-href',
-	list: 'case_study-list',
 } as const satisfies {
 	title: MessageKey;
 	href: Extract<MessageKey, `${string}-href`>;
-	list: Extract<MessageKey, `${string}-list`>;
 };
 
-type CaseStudyEntry = {
-	title?: string;
-	subTitle?: string;
-	content?: string;
-};
+const CASE_STUDY_DEFINITIONS = [
+	{
+		titleKey: 'case-study-01-title',
+		subTitleKey: 'case-study-01-subtitle',
+		markdownKey: 'case-study-01-content',
+	},
+	{
+		titleKey: 'case-study-02-title',
+		subTitleKey: 'case-study-02-subtitle',
+		markdownKey: 'case-study-02-content',
+	},
+	{
+		titleKey: 'case-study-03-title',
+		subTitleKey: 'case-study-03-subtitle',
+		markdownKey: 'case-study-03-content',
+	},
+	{
+		titleKey: 'case-study-04-title',
+		subTitleKey: 'case-study-04-subtitle',
+		markdownKey: 'case-study-04-content',
+	},
+	{
+		titleKey: 'case-study-05-title',
+		subTitleKey: 'case-study-05-subtitle',
+		markdownKey: 'case-study-05-content',
+	},
+	{
+		titleKey: 'case-study-06-title',
+		subTitleKey: 'case-study-06-subtitle',
+		markdownKey: 'case-study-06-content',
+	},
+] as const;
 
 export type CaseStudyListItem = {
 	title: string;
@@ -32,36 +58,15 @@ export type CaseStudiesCopy = {
 };
 
 export const buildCaseStudiesCopy = (t: Translator): CaseStudiesCopy => {
-	const rawList = t.raw(CASE_STUDY_KEYS.list);
-	if (!Array.isArray(rawList)) {
-		throw new Error(
-			`Expected "${CASE_STUDY_KEYS.list}" to be an array, received ${typeof rawList}.`,
-		);
-	}
-
-	const list: CaseStudyListItem[] = rawList.map((item, index) => {
-		const entry = item as CaseStudyEntry | undefined;
-		if (
-			!entry ||
-			typeof entry.title !== 'string' ||
-			typeof entry.content !== 'string'
-		) {
-			throw new Error(
-				`Invalid entry in "${CASE_STUDY_KEYS.list}" at index ${index}.`,
-			);
-		}
-
-		return {
-			title: entry.title,
-			subTitle:
-				typeof entry.subTitle === 'string' ? entry.subTitle : undefined,
-			content: entry.content,
-		};
-	});
-
 	return {
 		title: t(CASE_STUDY_KEYS.title),
 		href: t(CASE_STUDY_KEYS.href),
-		list,
+		list: translateMarkdownSections(t, CASE_STUDY_DEFINITIONS).map(
+			({ title, content, subTitle }) => ({
+				title,
+				content,
+				subTitle,
+			}),
+		),
 	};
 };
