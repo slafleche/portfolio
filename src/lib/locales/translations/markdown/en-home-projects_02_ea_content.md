@@ -1,0 +1,1 @@
+Worked on a theme for EA's community forums that was adopted across several properties, including many of their sports titles. The theme reduced the need for separate custom builds and simplified long-term maintenance for both teams.
