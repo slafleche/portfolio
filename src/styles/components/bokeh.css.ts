@@ -12,8 +12,6 @@ export const overlay = style({
 	mixBlendMode: 'screen',
 	opacity: 0,
 	transition: 'opacity 0.8s ease-out',
-	width: '100vw',
-	height: '100vh',
 });
 
 export const svg = style({

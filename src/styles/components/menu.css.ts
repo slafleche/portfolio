@@ -146,6 +146,8 @@ export const highlightLayer = style({
 	inset: 0,
 	pointerEvents: 'none',
 	zIndex: 0,
+	contain: 'layout paint',
+	isolation: 'isolate',
 });
 
 export const miniBokehContainer = style({

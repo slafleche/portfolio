@@ -29,6 +29,7 @@ globalStyle('body', {
 
 globalStyle('html', {
   WebkitTextSizeAdjust: '100%',
+  scrollbarGutter: 'stable',
 });
 
 globalStyle('html, body', {
@@ -49,6 +50,12 @@ globalStyle('html, body', {
 
 globalStyle('main', {
   display: 'block',
+  minHeight: '100vh',
+  '@supports': {
+    '(min-height: 100svh)': {
+      minHeight: '100svh',
+    },
+  },
 });
 
 globalStyle('a', {

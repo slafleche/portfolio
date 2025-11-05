@@ -860,6 +860,7 @@ export default function Menu({
         </SkipNavLink>
         <Arch
           ready={mounted}
+          width={navMetrics.width}
           glow={logoGlowState === 'idle' ? null : logoGlowState}
           debugGlow={debugGlow}
         >

@@ -712,6 +712,23 @@ export function useMenuHighlight({
   ]);
 
   useEffect(() => {
+    if (typeof document === 'undefined') return undefined;
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== 'visible') return;
+      measure();
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener(
+        'visibilitychange',
+        handleVisibilityChange,
+      );
+    };
+  }, [
+    measure,
+  ]);
+
+  useEffect(() => {
     const navEl = navRef.current;
     if (!navEl || typeof ResizeObserver === 'undefined') return;
     const observer = new ResizeObserver(() => measure());
