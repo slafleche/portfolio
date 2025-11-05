@@ -3,10 +3,13 @@
 import { useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 
-type SizedIcon = {
+type BasicIcon = {
   src: string;
   fileName: string;
   hash: string;
+};
+
+type SizedIcon = BasicIcon & {
   size: number;
 };
 
@@ -21,16 +24,8 @@ type IconDescriptor = {
 };
 
 type FaviconPreviewData = {
-  svg: {
-    src: string;
-    fileName: string;
-    hash: string;
-  };
-  ico: {
-    src: string;
-    fileName: string;
-    hash: string;
-  };
+  svg: BasicIcon;
+  ico: BasicIcon;
   pngVariants: readonly SizedIcon[];
   appleTouch: SizedIcon;
   androidIcons: readonly (SizedIcon & { sizes: string })[];
@@ -41,7 +36,7 @@ type FaviconPreviewData = {
     color: string;
   };
   maskableIcon: SizedMaskableIcon;
-  msTile: SizedIcon & { color: string };
+  msTile: BasicIcon & { color: string; size: number };
   browserConfig: {
     src: string;
     fileName: string;
@@ -85,57 +80,103 @@ type FaviconPreviewData = {
 
 type FaviconPreviewProps = {
   locale: string;
+  availableLocales: readonly string[];
+  fallbackLocale: string;
   data: FaviconPreviewData;
   assetsReady: boolean;
   missingAssets?: readonly string[];
 };
+
 const themeOptions = ['light', 'dark'] as const;
 
-const cardStyle: CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '0.5rem',
-  padding: '1rem',
-  borderRadius: '1rem',
-  border: '1px solid rgba(255,255,255,0.12)',
-  background: 'rgba(255,255,255,0.04)',
-  boxShadow: '0 10px 30px rgba(15, 12, 45, 0.18)',
-  textAlign: 'center',
+const toColor = (value: string | undefined, fallback: string) => {
+  if (typeof value !== 'string') return fallback;
+  const trimmed = value.trim();
+  return trimmed.length ? trimmed : fallback;
 };
 
-const gridStyle: CSSProperties = {
-  display: 'grid',
-  gap: '1.25rem',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-};
-
-export default function FaviconPreview({
+export default function FavIconPreview({
   data,
   locale,
+  availableLocales,
+  fallbackLocale,
   assetsReady,
   missingAssets = [],
 }: FaviconPreviewProps) {
-  const [theme, setTheme] =
-    useState<(typeof themeOptions)[number]>('light');
+  const [theme, setTheme] = useState<(typeof themeOptions)[number]>('light');
+  const defaultLight = toColor(data.themeColors.light, '#f7f4ff');
+  const defaultDark = toColor(data.themeColors.dark, '#0a0616');
+  const [lightInput, setLightInput] = useState(defaultLight);
+  const [darkInput, setDarkInput] = useState(defaultDark);
+
+  const lightColor = toColor(lightInput, defaultLight);
+  const darkColor = toColor(darkInput, defaultDark);
+  const alternativeLocale = useMemo(() => {
+    const others = availableLocales.filter((code) => code !== locale);
+    return others[0] ?? fallbackLocale;
+  }, [availableLocales, fallbackLocale, locale]);
+  const previewThemeColors = useMemo(
+    () => ({
+      ...data.themeColors,
+      light: lightColor,
+      dark: darkColor,
+    }),
+    [data.themeColors, lightColor, darkColor],
+  );
 
   const previewColors = useMemo(() => {
-    const bg =
-      theme === 'dark'
-        ? data.themeColors.dark
-        : data.themeColors.light;
+    const selected = theme === 'dark' ? darkColor : lightColor;
+    const fallback = theme === 'dark'
+      ? data.themeColors.background || '#0a0616'
+      : '#f7f4ff';
+    const bg = selected || fallback;
     const fg = theme === 'dark' ? '#f5f0ff' : '#211235';
     const subtle = theme === 'dark' ? '#d5cdf5' : '#4f3d80';
+
     return {
       bg,
       fg,
       subtle,
       border: theme === 'dark'
-        ? 'rgba(255,255,255,0.2)'
-        : 'rgba(24,16,48,0.12)',
+        ? 'rgba(255,255,255,0.25)'
+        : 'rgba(24,16,48,0.18)',
+      controlBg: theme === 'dark'
+        ? 'rgba(18,14,36,0.6)'
+        : 'rgba(255,255,255,0.92)',
+      inputBg: theme === 'dark'
+        ? 'rgba(12,9,30,0.85)'
+        : 'rgba(255,255,255,0.98)',
+      maskChip: theme === 'dark'
+        ? 'rgba(255,255,255,0.1)'
+        : 'rgba(24,16,48,0.15)',
+      cardBg: theme === 'dark'
+        ? 'rgba(255,255,255,0.05)'
+        : 'rgba(255,255,255,0.94)',
+      cardBorder: theme === 'dark'
+        ? '1px solid rgba(255,255,255,0.12)'
+        : '1px solid rgba(24,16,48,0.12)',
     };
-  }, [data.themeColors.dark, data.themeColors.light, theme]);
+  }, [data.themeColors.background, darkColor, lightColor, theme]);
+
+  const cardStyle: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    padding: '1rem',
+    borderRadius: '1rem',
+    border: previewColors.cardBorder,
+    background: previewColors.cardBg,
+    boxShadow: '0 10px 30px rgba(15, 12, 45, 0.12)',
+    textAlign: 'center',
+  };
+
+  const gridStyle: CSSProperties = {
+    display: 'grid',
+    gap: '1.25rem',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+  };
 
   const swatchStyle: CSSProperties = {
     borderRadius: '0.75rem',
@@ -144,24 +185,44 @@ export default function FaviconPreview({
   };
 
   const MaskIconPreview = () => (
-    <div style={cardStyle}>
+    <div
+      style={{
+        ...cardStyle,
+        background: previewColors.maskChip,
+        border: previewColors.cardBorder,
+      }}
+    >
       <div
+        aria-hidden
         style={{
           width: '96px',
           height: '96px',
           borderRadius: '24px',
-          backgroundColor: data.themeColors.maskIcon,
-          maskImage: `url(${data.maskIcon.src})`,
-          WebkitMaskImage: `url(${data.maskIcon.src})`,
-          maskRepeat: 'no-repeat',
-          WebkitMaskRepeat: 'no-repeat',
-          maskSize: 'contain',
-          WebkitMaskSize: 'contain',
-          maskPosition: 'center',
-          WebkitMaskPosition: 'center',
+          background:
+            theme === 'dark' ? '#0d0a17' : '#f1f0ff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: `1px solid ${previewColors.border}`,
         }}
-        aria-hidden
-      />
+      >
+        <div
+          style={{
+            width: '70%',
+            height: '70%',
+            backgroundColor: data.themeColors.maskIcon,
+            maskImage: `url(${data.maskIcon.src})`,
+            WebkitMaskImage: `url(${data.maskIcon.src})`,
+            maskRepeat: 'no-repeat',
+            WebkitMaskRepeat: 'no-repeat',
+            maskPosition: 'center',
+            WebkitMaskPosition: 'center',
+            maskSize: 'contain',
+            WebkitMaskSize: 'contain',
+            borderRadius: '20px',
+          }}
+        />
+      </div>
       <div>
         <div style={{ fontWeight: 600 }}>Safari mask-icon</div>
         <div
@@ -177,6 +238,86 @@ export default function FaviconPreview({
     </div>
   );
 
+  const CirclePreview = () => (
+    <div style={cardStyle}>
+      <div
+        aria-hidden
+        style={{
+          width: 120,
+          height: 120,
+          borderRadius: '50%',
+          overflow: 'hidden',
+          border: `1px solid ${previewColors.border}`,
+          background: theme === 'dark' ? '#0d0a17' : '#ffffff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <img
+          src={data.appleTouch.src}
+          alt="Circular favicon preview"
+          style={{
+            width: '110%',
+            height: '110%',
+            objectFit: 'cover',
+          }}
+        />
+      </div>
+      <div>
+        <div style={{ fontWeight: 600 }}>Circular preview</div>
+        <div
+          style={{
+            fontSize: '0.75rem',
+            color: previewColors.subtle,
+          }}
+        >
+          Simulates adaptive / round icons
+        </div>
+      </div>
+    </div>
+  );
+
+  const MsTilePreview = () => (
+    <div style={cardStyle}>
+      <div
+        aria-hidden
+        style={{
+          width: 120,
+          height: 120,
+          borderRadius: '22px',
+          backgroundColor: data.msTile.color,
+          border: `1px solid ${previewColors.border}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <img
+          src={data.msTile.src}
+          alt="Windows tile preview"
+          style={{
+            width: '80%',
+            height: '80%',
+            objectFit: 'contain',
+            borderRadius: '16px',
+          }}
+        />
+      </div>
+      <div>
+        <div style={{ fontWeight: 600 }}>Windows tile</div>
+        <div
+          style={{
+            fontSize: '0.75rem',
+            color: previewColors.subtle,
+          }}
+        >
+          Tile color {data.msTile.color}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div
       style={{
@@ -186,8 +327,8 @@ export default function FaviconPreview({
         padding: '2.5rem 6vw 4rem',
         color: previewColors.fg,
         background: theme === 'dark'
-          ? 'radial-gradient(circle at top, rgba(96,76,255,0.35), transparent 55%), #080515'
-          : 'radial-gradient(circle at top, rgba(118,91,255,0.22), transparent 55%), #f3f1ff',
+          ? `radial-gradient(circle at top, rgba(96,76,255,0.35), transparent 55%), ${previewColors.bg}`
+          : `radial-gradient(circle at top, rgba(118,91,255,0.22), transparent 55%), ${previewColors.bg}`,
         minHeight: '100vh',
         transition: 'background 240ms ease, color 240ms ease',
       }}
@@ -210,35 +351,56 @@ export default function FaviconPreview({
         >
           <strong>Favicons not generated.</strong>
           <span>
-            Run <code>yarn favicons</code> to build hashed assets before
-            using this preview.
+            Run <code>yarn favicons</code> to build hashed assets before using this preview.
           </span>
           {missingAssets.length ? (
             <span style={{ fontSize: '0.8rem' }}>
-              Missing files:{' '}
-              <code>{missingAssets.join(', ')}</code>
+              Missing files: <code>{missingAssets.join(', ')}</code>
             </span>
           ) : null}
         </div>
       ) : null}
+
       <header
         style={{
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
           maxWidth: '960px',
+          margin: '0 auto',
         }}
       >
-        <span
+        <div
           style={{
-            letterSpacing: '0.1em',
-            fontSize: '0.75rem',
-            textTransform: 'uppercase',
-            color: previewColors.subtle,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '1rem',
           }}
         >
-          {locale} · Asset Pipeline
-        </span>
+          <span
+            style={{
+              letterSpacing: '0.1em',
+              fontSize: '0.75rem',
+              textTransform: 'uppercase',
+              color: previewColors.subtle,
+            }}
+          >
+            {locale} · Asset Pipeline
+          </span>
+          {availableLocales.length > 1 ? (
+            <a
+              href={`/${alternativeLocale}/debug/favicons`}
+              style={{
+                color: previewColors.subtle,
+                fontSize: '0.8rem',
+                textDecoration: 'none',
+              }}
+            >
+              View {alternativeLocale.toUpperCase()}
+            </a>
+          ) : null}
+        </div>
         <h1
           style={{
             fontSize: '2.25rem',
@@ -257,39 +419,148 @@ export default function FaviconPreview({
             lineHeight: 1.6,
           }}
         >
-          Quick smoke-test for every generated favicon asset. Toggle a
-          simulated theme, verify the hashed filenames, and confirm Safari
-          mask / PWA manifest outputs before shipping.
+          Quick smoke-test for every generated favicon asset. Toggle a simulated theme, tweak
+          theme colors on the fly, and verify Safari mask / PWA manifest outputs before shipping.
         </p>
 
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
-          {themeOptions.map((option) => {
-            const active = option === theme;
-            return (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setTheme(option)}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
+            padding: '1rem',
+            borderRadius: '0.9rem',
+            background: previewColors.controlBg,
+            border: `1px solid ${previewColors.border}`,
+            color: previewColors.fg,
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              gap: '0.6rem',
+              alignItems: 'center',
+            }}
+          >
+            {themeOptions.map((option) => {
+              const active = option === theme;
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setTheme(option)}
+                  style={{
+                    padding: '0.6rem 1.4rem',
+                    borderRadius: '999px',
+                    border: active
+                      ? `1px solid ${previewColors.border}`
+                      : '1px solid transparent',
+                    background: active
+                      ? 'rgba(255,255,255,0.14)'
+                      : 'rgba(0,0,0,0.08)',
+                    color: active
+                      ? previewColors.fg
+                      : previewColors.subtle,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 160ms ease',
+                  }}
+                >
+                  {option === 'light' ? 'Light' : 'Dark'}
+                </button>
+              );
+            })}
+          </div>
+          <label
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem',
+              fontSize: '0.85rem',
+            }}
+          >
+            Light theme color
+            <span
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.75rem',
+                color: previewColors.subtle,
+              }}
+            >
+              <span
                 style={{
-                  padding: '0.6rem 1.4rem',
-                  borderRadius: '999px',
-                  border: active
-                    ? `1px solid ${previewColors.border}`
-                    : '1px solid transparent',
-                  background: active
-                    ? 'rgba(255,255,255,0.14)'
-                    : 'rgba(0,0,0,0.08)',
-                  backdropFilter: 'blur(8px)',
-                  color: active ? previewColors.fg : previewColors.subtle,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 160ms ease',
+                  width: '18px',
+                  height: '18px',
+                  borderRadius: '6px',
+                  border: `1px solid ${previewColors.border}`,
+                  backgroundColor: lightColor,
                 }}
-              >
-                {option === 'light' ? 'Light theme' : 'Dark theme'}
-              </button>
-            );
-          })}
+              />
+              {lightColor}
+            </span>
+            <input
+              type="color"
+              value={lightInput}
+              onChange={(event) => setLightInput(event.target.value)}
+              placeholder={defaultLight}
+              disabled={theme === 'dark'}
+              style={{
+                padding: '0.55rem 0.75rem',
+                borderRadius: '0.6rem',
+                border: `1px solid ${previewColors.border}`,
+                background: previewColors.inputBg,
+                color: previewColors.fg,
+                opacity: theme === 'dark' ? 0.5 : 1,
+              }}
+            />
+          </label>
+          <label
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem',
+              fontSize: '0.85rem',
+            }}
+          >
+            Dark theme color
+            <span
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '0.75rem',
+                color: previewColors.subtle,
+              }}
+            >
+              <span
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  borderRadius: '6px',
+                  border: `1px solid ${previewColors.border}`,
+                  backgroundColor: darkColor,
+                }}
+              />
+              {darkColor}
+            </span>
+            <input
+              type="color"
+              value={darkInput}
+              onChange={(event) => setDarkInput(event.target.value)}
+              placeholder={defaultDark}
+              disabled={theme === 'light'}
+              style={{
+                padding: '0.55rem 0.75rem',
+                borderRadius: '0.6rem',
+                border: `1px solid ${previewColors.border}`,
+                background: previewColors.inputBg,
+                color: previewColors.fg,
+                opacity: theme === 'light' ? 0.5 : 1,
+              }}
+            />
+          </label>
         </div>
       </header>
 
@@ -299,7 +570,7 @@ export default function FaviconPreview({
           borderRadius: '2rem',
           backgroundColor: previewColors.bg,
           color: previewColors.fg,
-          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.04)',
+          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1.5rem',
@@ -313,11 +584,7 @@ export default function FaviconPreview({
               color: previewColors.subtle,
             }}
           >
-            Background follows&nbsp;
-            <code>
-              theme-color[{theme}]
-            </code>
-            &nbsp;→ {previewColors.bg}
+            Background uses <code>theme-color[{theme}]</code>.
           </p>
         </div>
         <div style={gridStyle}>
@@ -330,7 +597,9 @@ export default function FaviconPreview({
               style={{ borderRadius: '32px' }}
             />
             <div>
-              <div style={{ fontWeight: 600 }}>SVG</div>
+              <div style={{ fontWeight: 600 }}>
+                SVG
+              </div>
               <div
                 style={{
                   fontSize: '0.75rem',
@@ -349,10 +618,15 @@ export default function FaviconPreview({
               width={96}
               height={96}
               alt="Favicon ICO"
-              style={{ borderRadius: '20px', imageRendering: 'pixelated' }}
+              style={{
+                borderRadius: '20px',
+                imageRendering: 'pixelated',
+              }}
             />
             <div>
-              <div style={{ fontWeight: 600 }}>ICO (16/32/48)</div>
+              <div style={{ fontWeight: 600 }}>
+                ICO (16/32/48)
+              </div>
               <div
                 style={{
                   fontSize: '0.75rem',
@@ -374,7 +648,9 @@ export default function FaviconPreview({
               style={{ borderRadius: '28px' }}
             />
             <div>
-              <div style={{ fontWeight: 600 }}>Apple touch</div>
+              <div style={{ fontWeight: 600 }}>
+                Apple touch
+              </div>
               <div
                 style={{
                   fontSize: '0.75rem',
@@ -397,7 +673,9 @@ export default function FaviconPreview({
                 style={{ borderRadius: '38%' }}
               />
               <div>
-                <div style={{ fontWeight: 600 }}>Maskable (PWA)</div>
+                <div style={{ fontWeight: 600 }}>
+                  Maskable (PWA)
+                </div>
                 <div
                   style={{
                     fontSize: '0.75rem',
@@ -412,6 +690,8 @@ export default function FaviconPreview({
           ) : null}
 
           <MaskIconPreview />
+          <CirclePreview />
+          <MsTilePreview />
         </div>
       </section>
 
@@ -449,16 +729,13 @@ export default function FaviconPreview({
                     height: '100%',
                     objectFit: 'contain',
                     padding: '1.5rem',
-                    background:
-                      theme === 'dark' ? '#0a071c' : '#fff',
+                    background: theme === 'dark' ? '#0a071c' : '#ffffff',
                   }}
                 />
               </div>
               <div>
                 <div style={{ fontWeight: 600 }}>
-                  {icon.size}
-                  ×
-                  {icon.size}
+                  {icon.size}×{icon.size}
                 </div>
                 <div
                   style={{
@@ -500,38 +777,34 @@ export default function FaviconPreview({
             style={{
               display: 'grid',
               gap: '0.75rem',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
             }}
           >
-            {Object.entries(data.themeColors).map(
-              ([key, value]) => (
-                <div key={key} style={{ display: 'flex', gap: '0.75rem' }}>
-                  <span
+            {Object.entries(previewThemeColors).map(([key, value]) => (
+              <div key={key} style={{ display: 'flex', gap: '0.75rem' }}>
+                <span
+                  style={{
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '12px',
+                    backgroundColor: value,
+                    border: `1px solid ${previewColors.border}`,
+                    flexShrink: 0,
+                  }}
+                />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontWeight: 600 }}>{key}</span>
+                  <code
                     style={{
-                      width: '42px',
-                      height: '42px',
-                      borderRadius: '12px',
-                      backgroundColor: value,
-                      border: `1px solid ${previewColors.border}`,
-                      flexShrink: 0,
+                      fontSize: '0.8rem',
+                      color: previewColors.subtle,
                     }}
-                  />
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: 600 }}>
-                      {key}
-                    </span>
-                    <code
-                      style={{
-                        fontSize: '0.8rem',
-                        color: previewColors.subtle,
-                      }}
-                    >
-                      {value}
-                    </code>
-                  </div>
+                  >
+                    {value}
+                  </code>
                 </div>
-              ),
-            )}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -561,10 +834,7 @@ export default function FaviconPreview({
           >
             <li>
               <strong>manifest[{data.manifestMeta.lang}]</strong>{' '}
-              <a
-                href={data.webManifest.src}
-                style={{ color: previewColors.subtle }}
-              >
+              <a href={data.webManifest.src} style={{ color: previewColors.subtle }}>
                 {data.webManifest.fileName}
               </a>
             </li>
@@ -580,27 +850,20 @@ export default function FaviconPreview({
             {data.browserConfig ? (
               <li>
                 <strong>browserconfig</strong>{' '}
-                <a
-                  href={data.browserConfig.src}
-                  style={{ color: previewColors.subtle }}
-                >
+                <a href={data.browserConfig.src} style={{ color: previewColors.subtle }}>
                   {data.browserConfig.fileName}
                 </a>
               </li>
             ) : null}
             <li>
-              <strong>name</strong>{' '}
-              <code>{data.manifestMeta.name}</code>
+              <strong>name</strong> <code>{data.manifestMeta.name}</code>
             </li>
             <li>
-              <strong>short_name</strong>{' '}
-              <code>{data.manifestMeta.shortName}</code>
+              <strong>short_name</strong> <code>{data.manifestMeta.shortName}</code>
             </li>
             <li>
               <strong>categories</strong>{' '}
-              <code>
-                {data.manifestMeta.categories.join(', ') || '—'}
-              </code>
+              <code>{data.manifestMeta.categories.join(', ') || '—'}</code>
             </li>
             <li>
               <strong>theme-color (light)</strong>{' '}
@@ -621,9 +884,7 @@ export default function FaviconPreview({
                   href={data.metaTags.msApplicationConfig}
                   style={{ color: previewColors.subtle }}
                 >
-                  {data.metaTags.msApplicationConfig
-                    .split('/')
-                    .pop()}
+                  {data.metaTags.msApplicationConfig.split('/').pop()}
                 </a>
               </li>
             ) : null}
@@ -660,9 +921,9 @@ export default function FaviconPreview({
         <h3 style={{ margin: 0 }}>Link descriptors</h3>
         <div
           style={{
-            display: 'grid',
+            display: 'flex',
+            flexDirection: 'column',
             gap: '0.75rem',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
           }}
         >
           {data.linkDescriptors.main.map((link) => (
@@ -685,19 +946,12 @@ export default function FaviconPreview({
                 {link.type ? ` · ${link.type}` : ''}
               </strong>
               {link.sizes ? (
-                <span style={{ color: previewColors.subtle }}>
-                  {link.sizes}
-                </span>
+                <span style={{ color: previewColors.subtle }}>{link.sizes}</span>
               ) : null}
               {link.color ? (
-                <span style={{ color: previewColors.subtle }}>
-                  {link.color}
-                </span>
+                <span style={{ color: previewColors.subtle }}>{link.color}</span>
               ) : null}
-              <a
-                href={link.href}
-                style={{ color: previewColors.subtle }}
-              >
+              <a href={link.href} style={{ color: previewColors.subtle }}>
                 {link.href}
               </a>
             </div>

@@ -2,43 +2,64 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="100mm"
-   height="100mm"
-   viewBox="0 0 100 100"
-   version="1.1"
-   id="svg1"
-   xml:space="preserve"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><defs
-     id="defs1"><linearGradient
-       id="linearGradient13">
+  width="100mm"
+  height="100mm"
+  viewBox="0 0 100 100"
+  version="1.1"
+  id="svg1"
+  xml:space="preserve"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:svg="http://www.w3.org/2000/svg"
+>
+  <defs id="defs1">
+    <linearGradient id="linearGradient13">
       <stop
-   offset="0.19293028"
-   style="stop-color: #3e43a0; stop-opacity: 1"
-   id="stop12" /><stop
-   offset="0.55271268"
-   style="stop-color:#844e9c;stop-opacity:1;"
-   id="stop14" />
+        offset="0.19293028"
+        style="stop-color: #3e43a0; stop-opacity: 1"
+        id="stop12"
+      />
       <stop
-   offset="1"
-   style="stop-color: #fe5998; stop-opacity: 1"
-   id="stop13" />
-    </linearGradient><linearGradient
-       xlink:href="#linearGradient13"
-       id="linearGradient12"
-       x1="35.015388"
-       y1="16.449614"
-       x2="58.827843"
-       y2="84.341026"
-       gradientUnits="userSpaceOnUse" /></defs><rect
-     fill="#251a38"
-     width="100"
-     height="100"
-     id="rect1"
-     x="0"
-     y="0"
-     style="stroke-width:0.181818" /><path
-     d="m 25.912009,16.37005 c -3.157739,0.05749 -6.653603,0.331822 -11.132184,1.221166 -2.978499,2.339978 -6.3810532,5.713137 -7.0707535,6.93805 -0.5443091,0.950523 -0.5755676,3.412909 0.1562218,4.680433 0.7317714,1.267522 15.4036757,27.200564 24.0888867,41.83599 3.164284,5.391556 5.087581,10.086028 11.105992,16.953269 3.515747,1.409506 8.138333,2.669895 9.543919,2.654771 1.095361,-0.0036 3.24349,-1.208309 3.97526,-2.475828 0.731771,-1.26753 15.854743,-26.939921 24.187068,-41.779461 3.087044,-5.436127 6.191229,-9.448699 9.129148,-18.094634 -0.537231,-3.749486 -1.757335,-8.382908 -2.473337,-9.592707 -0.551034,-0.946656 -2.66793,-2.204895 -4.131472,-2.204895 -1.463603,0 -31.257829,-0.260389 -48.275369,-0.05659 -3.125659,0.02234 -5.945038,-0.136837 -9.102952,-0.07933 z"
-     style="display:inline;fill:url(#linearGradient12);fill-opacity:1;stroke:none;stroke-width:0.119016;stroke-dasharray:none;stroke-opacity:1"
-     id="path2" /></svg>
+        offset="0.55271268"
+        style="stop-color: #844e9c; stop-opacity: 1"
+        id="stop14"
+      />
+      <stop
+        offset="1"
+        style="stop-color: #fe5998; stop-opacity: 1"
+        id="stop13"
+      />
+    </linearGradient>
+    <linearGradient
+      xlink:href="#linearGradient13"
+      id="linearGradient12"
+      x1="35.015388"
+      y1="16.449614"
+      x2="58.827843"
+      y2="84.341026"
+      gradientUnits="userSpaceOnUse"
+    />
+  </defs>
+  <rect
+    fill="#251a38"
+    width="100"
+    height="100"
+    id="rect1"
+    x="0"
+    y="0"
+    style="stroke-width: 0.181818"
+  />
+  <path
+    d="m 25.912009,16.37005 c -3.157739,0.05749 -6.653603,0.331822 -11.132184,1.221166 -2.978499,2.339978 -6.3810532,5.713137 -7.0707535,6.93805 -0.5443091,0.950523 -0.5755676,3.412909 0.1562218,4.680433 0.7317714,1.267522 15.4036757,27.200564 24.0888867,41.83599 3.164284,5.391556 5.087581,10.086028 11.105992,16.953269 3.515747,1.409506 8.138333,2.669895 9.543919,2.654771 1.095361,-0.0036 3.24349,-1.208309 3.97526,-2.475828 0.731771,-1.26753 15.854743,-26.939921 24.187068,-41.779461 3.087044,-5.436127 6.191229,-9.448699 9.129148,-18.094634 -0.537231,-3.749486 -1.757335,-8.382908 -2.473337,-9.592707 -0.551034,-0.946656 -2.66793,-2.204895 -4.131472,-2.204895 -1.463603,0 -31.257829,-0.260389 -48.275369,-0.05659 -3.125659,0.02234 -5.945038,-0.136837 -9.102952,-0.07933 z"
+    style="
+      display: inline;
+      fill: url(#linearGradient12);
+      fill-opacity: 1;
+      stroke: none;
+      stroke-width: 0.119016;
+      stroke-dasharray: none;
+      stroke-opacity: 1;
+    "
+    id="path2"
+  />
+</svg>

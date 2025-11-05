@@ -1,7 +1,6 @@
 import path from 'node:path';
 import { access } from 'node:fs/promises';
-import type { PageParams } from '@/styles/helpers/types';
-import { notFound } from 'next/navigation';
+import FavIconPreview from '@/components/debug/FaviconPreview';
 import {
   FAVICON_ANDROID_ICONS,
   FAVICON_APPLE_TOUCH_ICON,
@@ -9,6 +8,7 @@ import {
   FAVICON_DEFAULT_WEB_MANIFEST,
   FAVICON_ICO,
   FAVICON_LINK_DESCRIPTORS_BY_LOCALE,
+  
   FAVICON_MANIFEST_META_BY_LOCALE,
   FAVICON_MASKABLE_ICON,
   FAVICON_MASK_ICON,
@@ -16,27 +16,30 @@ import {
   FAVICON_MS_TILE,
   FAVICON_PNG_VARIANTS,
   FAVICON_SVG,
-  FAVICON_THEME_COLORS,
   FAVICON_WEB_MANIFESTS,
 } from '@/data/generated/favicons.manifest.gen';
-import { resolveLocale } from '@/lib/locales/locale';
-import type { Locale } from '@/lib/locales/translations';
-import FaviconPreview from '@/components/debug/FaviconPreview';
+import { faviconThemeColors } from '@/tokens/favicon.tokens';
+
+type DebugParams = Promise<{ LOCALE: string }>;
+type LocaleKey = keyof typeof FAVICON_WEB_MANIFESTS;
 
 export default async function FaviconDebugPage({
   params,
 }: {
-  params: Promise<PageParams>;
+  params: DebugParams;
 }) {
   const { LOCALE } = await params;
-  const locale = resolveLocale(LOCALE);
-
-  if (!locale) {
-    notFound();
-  }
-
+  const availableLocales = Object.keys(
+    FAVICON_WEB_MANIFESTS,
+  ) as LocaleKey[];
   const fallbackLocale = FAVICON_DEFAULT_WEB_MANIFEST
-    .locale as Locale;
+    .locale as LocaleKey;
+  const locale = (availableLocales.includes(
+    LOCALE as LocaleKey,
+  )
+    ? LOCALE
+    : fallbackLocale) as LocaleKey;
+
   const linkDescriptors =
     FAVICON_LINK_DESCRIPTORS_BY_LOCALE[locale] ??
     FAVICON_LINK_DESCRIPTORS_BY_LOCALE[fallbackLocale];
@@ -82,8 +85,16 @@ export default async function FaviconDebugPage({
   );
 
   const data = {
-    svg: FAVICON_SVG,
-    ico: FAVICON_ICO,
+    svg: {
+      src: FAVICON_SVG.src,
+      fileName: FAVICON_SVG.fileName,
+      hash: FAVICON_SVG.hash,
+    },
+    ico: {
+      src: FAVICON_ICO.src,
+      fileName: FAVICON_ICO.fileName,
+      hash: FAVICON_ICO.hash,
+    },
     pngVariants: FAVICON_PNG_VARIANTS,
     appleTouch: FAVICON_APPLE_TOUCH_ICON,
     androidIcons: FAVICON_ANDROID_ICONS,
@@ -94,15 +105,17 @@ export default async function FaviconDebugPage({
     webManifest,
     defaultManifest: FAVICON_DEFAULT_WEB_MANIFEST,
     manifestMeta,
-    themeColors: FAVICON_THEME_COLORS,
+    themeColors: faviconThemeColors,
     metaTags: FAVICON_META_TAGS,
     linkDescriptors,
   };
 
   return (
-    <FaviconPreview
+    <FavIconPreview
       data={data}
       locale={locale}
+      availableLocales={availableLocales}
+      fallbackLocale={fallbackLocale}
       assetsReady={missingAssets.length === 0}
       missingAssets={missingAssets}
     />
