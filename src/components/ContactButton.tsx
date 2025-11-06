@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import Link from 'next/link';
 import clsx from 'clsx';
 
 import * as s from '@/styles/components/contactButton.css';
 import SendIcon from '@/components/icons/SendIcon';
+import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 
 import {
   shuttleDurationMs,
@@ -18,7 +18,6 @@ type Phase = 'hidden' | 'entering' | 'shown' | 'exiting';
 
 type ContactButtonProps = {
   watchId: string;
-  href: string;
   label: string;
   className?: string;
   debugLog?: boolean;
@@ -26,7 +25,6 @@ type ContactButtonProps = {
 
 export default function ContactButton({
   watchId,
-  href,
   label,
   className,
   debugLog = false,
@@ -44,7 +42,7 @@ export default function ContactButton({
   const phaseRef = useRef<Phase>('hidden');
   const phaseSinceRef = useRef<number>(Date.now());
   const shuttleRef = useRef<HTMLDivElement | null>(null);
-  const linkRef = useRef<HTMLAnchorElement | null>(null);
+  const linkRef = useRef<HTMLButtonElement | null>(null);
 
   const tDebounceRef = useRef<number | null>(null);
   const scrollRafRef = useRef<number | null>(null);
@@ -340,8 +338,7 @@ export default function ContactButton({
           data-phase={phase}
         >
           <div className={s.payload}>
-            <Link
-              href={href}
+            <ContactDialogTrigger
               ref={linkRef}
               className={clsx(s.button, className)}
               aria-label={label}
@@ -373,7 +370,7 @@ export default function ContactButton({
                   </div>
                 </div>
               </div>
-            </Link>
+            </ContactDialogTrigger>
           </div>
         </div>
       </div>

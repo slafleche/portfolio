@@ -93,3 +93,19 @@ export const createGlassBackground = (): {
       `blur(${glassVars.backdropBlur.css()})` as CSS.Property.BackdropFilter,
   };
 };
+
+export const glassyActionTokens = {
+  size: m(44),
+  borderRadius: m(12),
+  borderWidth: m(0.75),
+  borderColor: colorVars.white.alpha(0.28),
+  background: colorVars.white.alpha(0.12),
+  hoverBackground: colorVars.white.alpha(0.18),
+  textColor: colorVars.white,
+  shadowRest: `0 ${m(1.5).css()} ${m(6).css()} ${colorVars.black.alpha(0.35).css()}`,
+  shadowHover: `0 ${m(2.5).css()} ${m(12).css()} ${colorVars.black.alpha(0.4).css()}`,
+  transition: 'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
+  focusRingWidth: m(1),
+  focusRingColor: colorVars.white.alpha(0.45),
+  iconSize: m(18),
+} as const;

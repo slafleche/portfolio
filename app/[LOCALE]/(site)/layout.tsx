@@ -5,6 +5,7 @@ import { resolveLocale } from '@/lib/locales/locale';
 import { ResponsiveProvider } from '@/lib/responsive/ResponsiveProvider';
 import { WindowSizeProvider } from '@/lib/responsive/WindowSizeContext';
 import Menu from '@/components/Menu';
+import { ContactDialogProvider } from '@/components/contact/ContactDialogProvider';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
@@ -61,18 +62,20 @@ export default async function SiteLayout({
   return (
     <WindowSizeProvider>
       <ResponsiveProvider>
-        <Menu
-          {...menuProps}
-          curiosityMessages={{
-            title: curiosityMessages.title,
-            test: curiosityMessages.test,
-            result: curiosityMessages.result,
-            hint: curiosityMessages.hint,
-            targetHref: curiosityTarget,
-          }}
-          logoRedirectPaths={[curiosityTarget]}
-        />
-        {children}
+        <ContactDialogProvider>
+          <Menu
+            {...menuProps}
+            curiosityMessages={{
+              title: curiosityMessages.title,
+              test: curiosityMessages.test,
+              result: curiosityMessages.result,
+              hint: curiosityMessages.hint,
+              targetHref: curiosityTarget,
+            }}
+            logoRedirectPaths={[curiosityTarget]}
+          />
+          {children}
+        </ContactDialogProvider>
       </ResponsiveProvider>
     </WindowSizeProvider>
   );
