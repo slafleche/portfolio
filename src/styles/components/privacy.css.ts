@@ -48,9 +48,7 @@ export const backLink = style({
   right: privacyTokens.backLink.offset.css(),
   width: privacyTokens.backLink.size.css(),
   height: privacyTokens.backLink.size.css(),
-  borderRadius:
-    privacyTokens.backLink.borders.intent.radius?.all.css() ?? '0',
-  ...borders(privacyTokens.backLink.borders.intent),
+  ...borders(privacyTokens.backLink.borders),
   background: privacyTokens.backLink.background.css(),
   color: privacyTokens.backLink.textColor.css(),
   display: 'inline-flex',
