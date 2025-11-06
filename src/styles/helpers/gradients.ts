@@ -29,8 +29,9 @@ export type Stop = {
 export type AngleInput = number | IMeasurement;
 
 export type LinearOpts = {
-  angle?: AngleInput;
+  angle?: LinearDirectionInput;
   stops: Stop[];
+  globalAlpha?: number;
 };
 
 export type RadialOpts = {
@@ -329,16 +330,22 @@ const angleToCss = (angle: AngleInput): string =>
 export function buildLinear({
   angle,
   stops,
-}: {
-  angle?: LinearDirectionInput;
-  stops: Stop[];
-}): Built {
+  globalAlpha,
+}: LinearOpts): Built {
   const direction = angleToCss(resolveLinearAngle(angle)); // always returns something (90° default)
+  const targetAlpha =
+    globalAlpha == null ? undefined : clamp(globalAlpha, 0, 1);
+  const withAlpha = (input: ColorInput): ColorInput => {
+    if (targetAlpha == null) return input;
+    if (isColorWrapper(input)) return input.alpha(targetAlpha);
+    if (isOKLCH(input)) return { ...input, a: targetAlpha };
+    return color(input).alpha(targetAlpha);
+  };
   const fStops = stops
-    .map((s) => `${colorFallback(s.color)} ${pct(s.at)}`)
+    .map((s) => `${colorFallback(withAlpha(s.color))} ${pct(s.at)}`)
     .join(', ');
   const mStops = stops
-    .map((s) => `${colorModern(s.color)} ${pct(s.at)}`)
+    .map((s) => `${colorModern(withAlpha(s.color))} ${pct(s.at)}`)
     .join(', ');
   return {
     fallback: `linear-gradient(${direction}, ${fStops})`,
