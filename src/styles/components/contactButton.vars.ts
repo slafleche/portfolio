@@ -1,11 +1,11 @@
 import { m, assertUnit } from '../measurementKit';
 
 /* ---------- SPIN (exit) ---------- */
-export const spinAnticDeg = m(10, 'deg'); // wrong-direction pre-rotation
+export const spinAnticDeg = m(-10, 'deg'); // wrong-direction pre-rotation
 export const spinAnticHoldPct = m(20, '%'); // hold at antic pose
-export const spinRevs = 0.5; // total revs to final (0.5=180°, 1.5=540°)
+export const spinRevs = -0.5; // total revs to final (0.5=180°, 1.5=540°); negative mirrors direction
 export const spinAccelPct = m(22, '%'); // antic→final(+overshoot) duration
-export const spinOvershootDeg = 20; // degrees past final before settle
+export const spinOvershootDeg = -20; // degrees past final before settle; negative mirrors direction
 export const spinOvershootHoldPct = m(10, '%'); // hold at overshoot (makes it visible)
 export const spinHoldPct = m(12, '%'); // hold straight at final before release
 export const iconExitTotalMs = m(700, 'ms'); // total spin timeline (increase to slow the spin)
@@ -40,9 +40,9 @@ export const shuttleExitDurationMs = shuttleDurationMs;
 export const entryOvershootPx = m(14, 'px');
 export const exitPushPx = m(22, 'px');
 
-export const rotNeg45Deg = m(-45, 'deg');
-export const rot45Deg = m(45, 'deg');
-export const gradAngle135Deg = m(135, 'deg');
+export const railRotationDeg = m(45, 'deg');
+export const railCounterRotationDeg = railRotationDeg.negation();
+export const gradAngleDiagDeg = m(45, 'deg');
 
 /* Sequencing anchors */
 export const exitAnticPct = m(12, '%'); // when spin antic pose is reached
@@ -82,16 +82,16 @@ const ENTRY_SOFT_FACTOR = 0.7;
 const EXIT_SOFT_FACTOR = 0.9;
 
 export const t3dInset = () =>
-  `translate3d(${diagonalOffsetPx.css()},0,0)`;
+  `translate3d(${diagonalOffsetPx.negation().css()},0,0)`;
 
 export const t3dOffscreen = () =>
-  `translate3d(${buttonSizePx.multiply(-2).add(diagonalOffsetPx.negation().subtract(2)).css()},0,0)`;
+  `translate3d(${buttonSizePx.multiply(-2).add(diagonalOffsetPx.negation().subtract(2)).negation().css()},0,0)`;
 
 export const t3dOvershootInSoft = () =>
-  `translate3d(calc(${diagonalOffsetPx.css()} + ${entryOvershootPx.multiply(ENTRY_SOFT_FACTOR).css()}),0,0)`;
+  `translate3d(calc(-${diagonalOffsetPx.css()} - ${entryOvershootPx.multiply(ENTRY_SOFT_FACTOR).css()}),0,0)`;
 
 export const t3dPushedOutSoft = () =>
-  `translate3d(calc(${diagonalOffsetPx.css()} + ${exitPushPx.multiply(EXIT_SOFT_FACTOR).css()}),0,0)`;
+  `translate3d(calc(-${diagonalOffsetPx.css()} - ${exitPushPx.multiply(EXIT_SOFT_FACTOR).css()}),0,0)`;
 
 /* ---------- A11y / focus ---------- */
 export const hoverBlurPx = m(10, 'px');
@@ -116,9 +116,9 @@ if (process.env.NODE_ENV !== 'production') {
   assertUnit(focusOffsetPx, 'px', 'focusOffsetPx');
 
   // deg
-  assertUnit(rotNeg45Deg, 'deg', 'rotNeg45Deg');
-  assertUnit(rot45Deg, 'deg', 'rot45Deg');
-  assertUnit(gradAngle135Deg, 'deg', 'gradAngle135Deg');
+  assertUnit(railRotationDeg, 'deg', 'railRotationDeg');
+  assertUnit(railCounterRotationDeg, 'deg', 'railCounterRotationDeg');
+  assertUnit(gradAngleDiagDeg, 'deg', 'gradAngleDiagDeg');
   assertUnit(spinAnticDeg, 'deg', 'spinAnticDeg');
 
   // ms
