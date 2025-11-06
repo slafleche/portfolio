@@ -8,11 +8,9 @@ import { focusOutline } from '../helpers/focusOutline';
 import type { ColorWrapper } from '../helpers/colorWrap';
 import {
 	archVars,
-	colors,
 	colorVars,
 	dropShadowVars,
 	logoVars,
-	menuVars,
 	themeColours,
 } from '../componentTokens/componentTokens.global';
 import {
@@ -20,6 +18,7 @@ import {
 	fontVariants,
 } from '../../tokens/fontVariants.tokens';
 
+import { menuLinkVars, menuVars } from '../componentTokens/componentTokens.menu';
 import { paddings } from '../helpers/spacing';
 import { assertUnit, m, mPercent, type IMeasurement } from '../measurementKit';
 import transforms from '../helpers/transforms';
@@ -701,7 +700,7 @@ export const localeChanger = style({
 export const localeLink = style({
 	position: 'relative',
 	top: menuVars.locale.offsetY.css(),
-	color: colors.navFg.css(),
+	color: menuLinkVars.locale.color.css(),
 	alignSelf: 'center',
 	transition: 'opacity 0.2s ease-in',
 	opacity: menuVars.locale.opacity,
@@ -717,7 +716,7 @@ export const localeLink = style({
 			textShadow: `${menuVars.textShadow.offsetX.css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
 		},
 		'&:visited': {
-			color: colors.navFg.css(),
+			color: menuLinkVars.locale.color.css(),
 		},
 	},
 });
@@ -740,7 +739,7 @@ export const navLink = style({
 	textDecoration: 'none',
 	letterSpacing: '0.5px',
 	borderRadius: '50%',
-	color: colors.navFg.css(),
+	color: menuLinkVars.nav.color.css(),
 	transition: 'all 0.45s ease',
 	backgroundRepeat: 'no-repeat',
 	backgroundSize: '100% 1.5px',
@@ -764,9 +763,9 @@ export const navLink = style({
 			cursor: 'pointer',
 		},
 		'&:visited': {
-			color: colors.navFg.css(),
+			color: menuLinkVars.nav.color.css(),
 		},
-		'&[data-ui]:focus-visible, &[data-ui][data-debug-focus="true"]': {
+		'&:focus-visible, &[data-debug-focus="true"]': {
 			outline: '2px solid currentColor',
 			outlineOffset: 2,
 			opacity: 1,
