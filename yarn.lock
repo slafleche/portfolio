@@ -2104,6 +2104,81 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-accordion@npm:^1.2.0":
+  version: 1.2.12
+  resolution: "@radix-ui/react-accordion@npm:1.2.12"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.3"
+    "@radix-ui/react-collapsible": "npm:1.1.12"
+    "@radix-ui/react-collection": "npm:1.1.7"
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-context": "npm:1.1.2"
+    "@radix-ui/react-direction": "npm:1.1.1"
+    "@radix-ui/react-id": "npm:1.1.1"
+    "@radix-ui/react-primitive": "npm:2.1.3"
+    "@radix-ui/react-use-controllable-state": "npm:1.2.2"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/c64a53ce766a1ef529cf6413ed7382598c94f78879b3a83ceda27cb1894ed6eb6e8ad61f6a550ca3c7fa813657045dadfc7328dbf1d736a37e1cf3c446db43de
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-collapsible@npm:1.1.12":
+  version: 1.1.12
+  resolution: "@radix-ui/react-collapsible@npm:1.1.12"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.3"
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-context": "npm:1.1.2"
+    "@radix-ui/react-id": "npm:1.1.1"
+    "@radix-ui/react-presence": "npm:1.1.5"
+    "@radix-ui/react-primitive": "npm:2.1.3"
+    "@radix-ui/react-use-controllable-state": "npm:1.2.2"
+    "@radix-ui/react-use-layout-effect": "npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/777cced73fbbec9cfafe6325aa5605e90f49d889af2778f4c4a6be101c07cacd69ae817d0b41cc27e3181f49392e2c06db7f32d6b084db047a51805ec70729b3
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-collection@npm:1.1.7":
+  version: 1.1.7
+  resolution: "@radix-ui/react-collection@npm:1.1.7"
+  dependencies:
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-context": "npm:1.1.2"
+    "@radix-ui/react-primitive": "npm:2.1.3"
+    "@radix-ui/react-slot": "npm:1.2.3"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/fa321a7300095508491f75414f02b243f0c3f179dc0728cfd115e2ea9f6f48f1516532b59f526d9ac81bbab63cd98a052074b4703ec0b9428fac945ebabec5fd
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-compose-refs@npm:1.1.2":
   version: 1.1.2
   resolution: "@radix-ui/react-compose-refs@npm:1.1.2"
@@ -2159,6 +2234,19 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 10c0/2f2c88e3c281acaea2fd9b96fa82132d59177d3aa5da2e7c045596fd4028e84e44ac52ac28f4f236910605dd7d9338c2858ba44a9ced2af2e3e523abbfd33014
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-direction@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@radix-ui/react-direction@npm:1.1.1"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/7a89d9291f846a3105e45f4df98d6b7a08f8d7b30acdcd253005dc9db107ee83cbbebc9e47a9af1e400bcd47697f1511ceab23a399b0da854488fc7220482ac9
   languageName: node
   linkType: hard
 
@@ -7012,6 +7100,7 @@ __metadata:
   resolution: "portfolio@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.37.0"
+    "@radix-ui/react-accordion": "npm:^1.2.0"
     "@radix-ui/react-dialog": "npm:^1.1.2"
     "@svgr/webpack": "npm:^8.1.0"
     "@types/chroma-js": "npm:^3.1.1"
