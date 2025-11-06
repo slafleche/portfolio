@@ -42,7 +42,11 @@ if (process.env.NODE_ENV !== 'production') {
     'px',
     'menu padding horizontal',
   );
-  assertUnit(menuVars.paddings.vertical, 'px', 'menu padding vertical');
+  assertUnit(
+    menuVars.paddings.vertical,
+    'px',
+    'menu padding vertical',
+  );
   assertUnit(menuVars.yOffset, 'px', 'menu yOffset');
   assertUnit(menuVars.blobDefaults.blur, 'px', 'menu hover blur');
   assertUnit(
@@ -50,11 +54,31 @@ if (process.env.NODE_ENV !== 'production') {
     'px',
     'menu hover shadow spread',
   );
-  assertUnit(menuVars.hover.shadow.blur, 'px', 'menu hover shadow blur');
-  assertUnit(menuVars.hover.text.offsetX, 'px', 'menu hover text offsetX');
-  assertUnit(menuVars.hover.text.offsetY, 'px', 'menu hover text offsetY');
-  assertUnit(menuVars.textShadow.offsetX, 'px', 'menu textShadow offsetX');
-  assertUnit(menuVars.textShadow.offsetY, 'px', 'menu textShadow offsetY');
+  assertUnit(
+    menuVars.hover.shadow.blur,
+    'px',
+    'menu hover shadow blur',
+  );
+  assertUnit(
+    menuVars.hover.text.offsetX,
+    'px',
+    'menu hover text offsetX',
+  );
+  assertUnit(
+    menuVars.hover.text.offsetY,
+    'px',
+    'menu hover text offsetY',
+  );
+  assertUnit(
+    menuVars.textShadow.offsetX,
+    'px',
+    'menu textShadow offsetX',
+  );
+  assertUnit(
+    menuVars.textShadow.offsetY,
+    'px',
+    'menu textShadow offsetY',
+  );
   assertUnit(menuVars.textShadow.blur, 'px', 'menu textShadow blur');
   assertUnit(logoVars.width, 'px', 'menu logo width');
   assertUnit(logoVars.offsetY, 'px', 'menu logo offsetY');
@@ -177,10 +201,10 @@ type BlobSlotConfig = {
 type BlobName = 'alpha' | 'beta' | 'gamma';
 
 const createBlobRule = (config: BlobSlotConfig): StyleRule => {
-  const diameter = config.size ?? menuBlobDefaults.size;
-  const opacity = config.opacity ?? menuBlobDefaults.opacity;
-  const blur = config.blur ?? menuBlobDefaults.blur;
-  const scale = config.scale ?? menuBlobDefaults.scale;
+  const diameter = config.size ?? menuVars.blobDefaults.size;
+  const opacity = config.opacity ?? menuVars.blobDefaults.opacity;
+  const blur = config.blur ?? menuVars.blobDefaults.blur;
+  const scale = config.scale ?? menuVars.blobDefaults.scale;
   const colorCss = config.color.alpha(opacity).css();
   return {
     left: config.left.css(),
@@ -202,130 +226,130 @@ const slotConfigs: Array<Record<BlobName, BlobSlotConfig>> = [
     alpha: {
       left: mPercent(26),
       top: mPercent(38),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.a,
       opacity: 0.6,
-      blur: menuBlobDefaults.blur.multiply(1.45),
+      blur: menuVars.blobDefaults.blur.multiply(1.45),
     },
     beta: {
       left: mPercent(58),
       top: mPercent(56),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.b,
       opacity: 0.52,
-      blur: menuBlobDefaults.blur.multiply(1.35),
+      blur: menuVars.blobDefaults.blur.multiply(1.35),
     },
     gamma: {
       left: mPercent(42),
       top: mPercent(70),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.d,
       opacity: 0.5,
-      blur: menuBlobDefaults.blur.multiply(1.4),
+      blur: menuVars.blobDefaults.blur.multiply(1.4),
     },
   },
   {
     alpha: {
       left: mPercent(32),
       top: mPercent(36),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.b,
       opacity: 0.58,
-      blur: menuBlobDefaults.blur.multiply(1.5),
+      blur: menuVars.blobDefaults.blur.multiply(1.5),
     },
     beta: {
       left: mPercent(66),
       top: mPercent(52),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.c,
       opacity: 0.5,
-      blur: menuBlobDefaults.blur.multiply(1.3),
+      blur: menuVars.blobDefaults.blur.multiply(1.3),
     },
     gamma: {
       left: mPercent(46),
       top: mPercent(74),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.d,
       opacity: 0.48,
-      blur: menuBlobDefaults.blur.multiply(1.35),
+      blur: menuVars.blobDefaults.blur.multiply(1.35),
     },
   },
   {
     alpha: {
       left: mPercent(22),
       top: mPercent(40),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.c,
       opacity: 0.56,
-      blur: menuBlobDefaults.blur.multiply(1.45),
+      blur: menuVars.blobDefaults.blur.multiply(1.45),
     },
     beta: {
       left: mPercent(60),
       top: mPercent(60),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.a,
       opacity: 0.54,
-      blur: menuBlobDefaults.blur.multiply(1.4),
+      blur: menuVars.blobDefaults.blur.multiply(1.4),
     },
     gamma: {
       left: mPercent(48),
       top: mPercent(76),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.d,
       opacity: 0.46,
-      blur: menuBlobDefaults.blur.multiply(1.38),
+      blur: menuVars.blobDefaults.blur.multiply(1.38),
     },
   },
   {
     alpha: {
       left: mPercent(28),
       top: mPercent(34),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.a,
       opacity: 0.6,
-      blur: menuBlobDefaults.blur.multiply(1.3),
+      blur: menuVars.blobDefaults.blur.multiply(1.3),
     },
     beta: {
       left: mPercent(64),
       top: mPercent(56),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.b,
       opacity: 0.5,
-      blur: menuBlobDefaults.blur.multiply(1.35),
+      blur: menuVars.blobDefaults.blur.multiply(1.35),
     },
     gamma: {
       left: mPercent(46),
       top: mPercent(68),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.c,
       opacity: 0.44,
-      blur: menuBlobDefaults.blur.multiply(1.3),
+      blur: menuVars.blobDefaults.blur.multiply(1.3),
     },
   },
   {
     alpha: {
       left: mPercent(24),
       top: mPercent(36),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.d,
       opacity: 0.58,
-      blur: menuBlobDefaults.blur.multiply(1.4),
+      blur: menuVars.blobDefaults.blur.multiply(1.4),
     },
     beta: {
       left: mPercent(60),
       top: mPercent(58),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.a,
       opacity: 0.52,
-      blur: menuBlobDefaults.blur.multiply(1.32),
+      blur: menuVars.blobDefaults.blur.multiply(1.32),
     },
     gamma: {
       left: mPercent(44),
       top: mPercent(74),
-      size: menuBlobDefaults.size,
+      size: menuVars.blobDefaults.size,
       color: themeColours.lights.b,
       opacity: 0.46,
-      blur: menuBlobDefaults.blur.multiply(1.36),
+      blur: menuVars.blobDefaults.blur.multiply(1.36),
     },
   },
 ];
@@ -657,7 +681,7 @@ export const logo = style({
 export const localeChanger = style({
   ...absolutePosition.topRight(
     0,
-    menuPadding.horizontal.half().css(),
+    menuVars.paddings.horizontal.half().css(),
   ),
   display: 'flex',
   alignContent: 'center',
@@ -672,9 +696,9 @@ export const localeChanger = style({
   lineHeight: 1,
   textDecoration: 'none',
   zIndex: 1,
-  menuTextShadow: `2px 2px 3px ${colorVars.navBg.css()}`,
+  textShadow: `2px 2px 3px ${colorVars.navBg.css()}`,
   transform: transforms.value(
-    transforms.skewX(menuSkew.multiply(-1.5)),
+    transforms.skewX(menuVars.skew.multiply(-1.5)),
     transforms.rotate(2),
     transforms.translateY(-2),
   ),
@@ -682,24 +706,25 @@ export const localeChanger = style({
 
 export const localeLink = style({
   position: 'relative',
-  top: menuLocaleOffsetY.css(),
-  color: menuLinkVars.locale.color.css(),
+  top: menuVars.locale.offsetY.css(),
+  color: menuVars.text.color.css(),
   alignSelf: 'center',
   transition: 'opacity 0.2s ease-in',
-  opacity: menuLocaleOpacity,
+  opacity: menuVars.locale.opacity,
   display: 'inline-grid',
   gridTemplateAreas: 'stack',
   alignItems: 'center',
   transform: transforms.value(
-    transforms.skewX(menuRotationMax).negate(),
+    transforms.skewX(menuVars.rotationMax).negate(),
   ),
   selectors: {
     '&:hover, &:focus-visible': {
       opacity: 1,
-      menuTextShadow: `${menuTextShadow.offsetX.css()} ${menuTextShadow.offsetY.css()} ${menuTextShadow.blur.css()} ${menuTextShadow.color.css()}`,
+      textShadow: `${menuVars.textShadow.offsetX.css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
+      // menuVars.textShadow: `${menuVars.textShadow.offsetX.css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
     },
     '&:visited': {
-      color: menuLinkVars.locale.color.css(),
+      color: menuVars.text.color.css(),
     },
   },
 });
@@ -710,7 +735,7 @@ export const navLink = style({
   gridTemplateAreas: 'stack',
   alignItems: 'start',
   verticalAlign: 'baseline',
-  ...paddings(menuPadding),
+  ...paddings(menuVars.paddings),
   ...composeFontVariantStyles(fontVariants.menu, {
     options: {
       weightPercents: {
@@ -722,7 +747,7 @@ export const navLink = style({
   textDecoration: 'none',
   letterSpacing: '0.5px',
   borderRadius: '50%',
-  color: menuLinkVars.nav.color.css(),
+  color: menuVars.text.color.css(),
   transition: 'all 0.45s ease',
   backgroundRepeat: 'no-repeat',
   backgroundSize: '100% 1.5px',
@@ -732,11 +757,10 @@ export const navLink = style({
   opacity: 0.7,
   selectors: {
     '&:hover': {
-      // textDecoration: 'underline',
       opacity: 1,
     },
-    // '&[data-active="true"]': { background: 'rgba(0,0,0,0.06)' }, // state via data-attr
     '&[data-active="true"]': {
+      // TODO
       // color: colorVars.contrast.css(),
       // transform: 'scale(1.2)',
       // letterSpacing: '0.1rem',
@@ -746,7 +770,8 @@ export const navLink = style({
       cursor: 'pointer',
     },
     '&:visited': {
-      color: menuLinkVars.nav.color.css(),
+      color: menuVars.text.color.css(),
+      // color: menuLinkVars.nav.color.css(),
     },
     '&:focus-visible, &[data-debug-focus="true"]': {
       outline: '2px solid currentColor',
@@ -774,34 +799,34 @@ export const fakeShadow = style({
 });
 
 globalStyle(`.${navLink}[data-side="left"] .${fakeShadow}`, {
-  textShadow: `${menuTextShadow.offsetX.css()} ${menuTextShadow.offsetY.css()} ${menuTextShadow.blur.css()} ${menuTextShadow.color.css()}`,
+  textShadow: `${menuVars.textShadow.offsetX.css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
 });
 
 globalStyle(`.${navLink}[data-side="right"] .${fakeShadow}`, {
-  textShadow: `${menuTextShadow.offsetX.negation().css()} ${menuTextShadow.offsetY.css()} ${menuTextShadow.blur.css()} ${menuTextShadow.color.css()}`,
+  textShadow: `${menuVars.textShadow.offsetX.negation().css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
 });
 
 globalStyle(`.${navLink}:hover .${fakeShadow}`, {
-  filter: `blur(${menuHoverShadow.blur.css()})`,
+  filter: `blur(${menuVars.hover.shadow.blur.css()})`,
 });
 
 globalStyle(`.${navLink}[data-side="left"]:hover .${text}`, {
   transform: transforms.value(
     transforms.translate(
-      menuHoverText.offsetX.negation(),
-      menuHoverText.offsetY,
+      menuVars.hover.text.offsetX.negation(),
+      menuVars.hover.text.offsetY,
     ),
-    transforms.scale(menuHoverText.scale),
+    transforms.scale(menuVars.hover.text.scale),
   ),
 });
 
 globalStyle(`.${navLink}[data-side="right"]:hover .${text}`, {
   transform: transforms.value(
     transforms.translate(
-      menuHoverText.offsetX,
-      menuHoverText.offsetY,
+      menuVars.hover.text.offsetX,
+      menuVars.hover.text.offsetY,
     ),
-    transforms.scale(menuHoverText.scale),
+    transforms.scale(menuVars.hover.text.scale),
   ),
 });
 
@@ -811,16 +836,16 @@ globalStyle(
   {
     transform: transforms.value(
       transforms.translate(
-        menuHoverText.offsetX,
-        menuHoverText.offsetY,
+        menuVars.hover.text.offsetX,
+        menuVars.hover.text.offsetY,
       ),
-      transforms.scale(menuHoverText.scale),
+      transforms.scale(menuVars.hover.text.scale),
     ),
   },
 );
 
 globalStyle(`.${localeLink} .${fakeShadow}`, {
-  textShadow: `${menuTextShadow.offsetX.negation().css()} ${menuTextShadow.offsetY.css()} ${menuTextShadow.blur.css()} ${menuTextShadow.color.css()}`,
+  textShadow: `${menuVars.textShadow.offsetX.negation().css()} ${menuVars.textShadow.offsetY.css()} ${menuVars.textShadow.blur.css()} ${menuVars.textShadow.color.css()}`,
 });
 
 // For subtle rotation on links

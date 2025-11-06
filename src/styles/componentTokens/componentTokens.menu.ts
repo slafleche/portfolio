@@ -12,6 +12,9 @@ export const menuVars = {
   rotationMax: m(2, 'deg'),
   skew: m(-10, 'deg'),
   verticalOffset: m(1),
+  text: {
+    color: color('#ffffff'),
+  },
   locale: {
     offsetY: m(2),
     opacity: 0.6,
@@ -79,14 +82,4 @@ export const menuVars = {
   ],
 } as const;
 
-export const menuLinkVars = {
-  nav: {
-    color: color('#ffffff'),
-  },
-  locale: {
-    color: color('#ffffff'),
-  },
-} as const;
-
 export type MenuVars = typeof menuVars;
-export type MenuLinkVars = typeof menuLinkVars;

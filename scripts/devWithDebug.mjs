@@ -2,7 +2,7 @@
 import { spawn } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { installTTYGuards } from './ttyGuard.mjs';
+import { installTTYGuards, restoreTTY } from './ttyGuard.mjs';
 
 installTTYGuards();
 
@@ -91,6 +91,11 @@ child.stderr.on('data', (chunk) => {
 });
 
 child.on('close', (code, signal) => {
+	try {
+		restoreTTY();
+	} catch {
+		// best-effort restore; ignore failures
+	}
 	if (typeof code === 'number') {
 		process.exit(code);
 	} else if (signal) {
@@ -98,4 +103,13 @@ child.on('close', (code, signal) => {
 	} else {
 		process.exit(0);
 	}
+});
+
+child.on('error', (error) => {
+	try {
+		restoreTTY();
+	} catch {
+		// ignore restore errors during crash handling
+	}
+	throw error;
 });

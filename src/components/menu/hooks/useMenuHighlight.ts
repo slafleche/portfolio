@@ -39,7 +39,7 @@ const snapToDevicePixel = (value: number, dpr: number): number => {
 if (process.env.NODE_ENV !== 'production') {
   assertUnit(menuVars.height, 'px', 'useMenuHighlight menu height');
   assertUnit(
-    menuVars.padding.horizontal,
+    menuVars.paddings.horizontal,
     'px',
     'useMenuHighlight padding horizontal',
   );
@@ -470,8 +470,7 @@ export function useMenuHighlight({
       const width = snapToDevicePixel(rect.width, dpr);
       const height = snapToDevicePixel(rect.height, dpr);
       const archBase =
-        computeArchY(navWidth, centerX) +
-        menuVars.yOffset.getValue();
+        computeArchY(navWidth, centerX) + menuVars.yOffset.getValue();
       metrics[index] = {
         centerX,
         centerY,
@@ -502,7 +501,7 @@ export function useMenuHighlight({
 
     const highlightHeightValue = menuVars.height.getValue();
     const widthPaddingValue =
-      menuVars.padding.horizontal.getValue();
+      menuVars.paddings.horizontal.getValue();
 
     definedMetrics.forEach((metric) => {
       const archY = snapToDevicePixel(metric.archY + adjustment, dpr);
@@ -784,7 +783,7 @@ export function useMenuHighlight({
           const highlightWidth = snapToDevicePixel(
             Math.max(
               width,
-              width + menuVars.padding.horizontal.getValue(),
+              width + menuVars.paddings.horizontal.getValue(),
             ),
             dpr,
           );
