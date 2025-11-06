@@ -7,6 +7,7 @@ type SlugMap = Partial<Record<Locale, Record<string, string>>>;
 export const canonicalToLocalizedSlugs: SlugMap = {
 	fr: {
 		systems: 'systemes',
+		privacy: 'confidentialite',
 	},
 } as const;
 
