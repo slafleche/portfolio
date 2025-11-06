@@ -13,9 +13,9 @@ import {
   iconSizePx,
   shuttleDurationMs,
   shuttleExitDurationMs,
-  rotNeg45Deg,
-  rot45Deg,
-  gradAngle135Deg,
+  railRotationDeg,
+  railCounterRotationDeg,
+  gradAngleDiagDeg,
   iconExitTotalMs,
   exitTranslationDelayMs,
   springDelayMs,
@@ -65,7 +65,7 @@ const ANTIC = 'cubic-bezier(0.3, 0.9, 0.2, 1)';
 /* ROOT + RAIL */
 export const root = style({
   position: 'fixed',
-  left: 0,
+  right: 0,
   bottom: 0,
   width: containerSizePx.css(),
   height: containerSizePx.css(),
@@ -75,11 +75,11 @@ export const root = style({
 });
 
 export const rail = style({
-  ...absolutePosition.bottomLeft(),
+  ...absolutePosition.bottomRight(),
   width: measureHypotenuse(containerSizePx).css(),
   height: buttonSizePx.css(),
-  transformOrigin: `0 50%`,
-  transform: `translateY(50%) rotate(${rotNeg45Deg.css()})`,
+  transformOrigin: `100% 50%`,
+  transform: `translateY(50%) rotate(${railRotationDeg.css()})`,
   pointerEvents: 'none',
 });
 
@@ -96,7 +96,7 @@ const shuttleExit = keyframes({
 });
 export const shuttle = style({
   position: 'absolute',
-  left: 0,
+  right: 0,
   top: 0,
   height: buttonSizePx.css(),
   width: buttonSizePx.css(),
@@ -126,7 +126,7 @@ export const shuttle = style({
 export const payload = style({
   width: '100%',
   height: '100%',
-  transform: `rotate(${rot45Deg.css()})`,
+  transform: `rotate(${railCounterRotationDeg.css()})`,
   transformOrigin: `50% 50%`,
   position: 'relative',
 });
@@ -134,13 +134,13 @@ export const payload = style({
 /* BUTTON — rotate-sandwich, volume preserved */
 const buttonScaleEnter = keyframes({
   '0%': {
-    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kEnter}, ${kEnterY}, 1) rotate(${rot45Deg.css()})`,
+    transform: `translateZ(0) rotate(${railRotationDeg.css()}) scale3d(${kEnter}, ${kEnterY}, 1) rotate(${railCounterRotationDeg.css()})`,
   },
   '58%': {
-    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kEnter}, ${kEnterY}, 1) rotate(${rot45Deg.css()})`,
+    transform: `translateZ(0) rotate(${railRotationDeg.css()}) scale3d(${kEnter}, ${kEnterY}, 1) rotate(${railCounterRotationDeg.css()})`,
   },
   '100%': {
-    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(1,1,1) rotate(${rot45Deg.css()})`,
+    transform: `translateZ(0) rotate(${railRotationDeg.css()}) scale3d(1,1,1) rotate(${railCounterRotationDeg.css()})`,
   },
 });
 
@@ -150,22 +150,22 @@ const SQUASH_START = exitAnticPct.add(squashStartDeltaPct).css();
 
 const buttonScaleExit = keyframes({
   '0%': {
-    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(1,1,1) rotate(${rot45Deg.css()})`,
+    transform: `translateZ(0) rotate(${railRotationDeg.css()}) scale3d(1,1,1) rotate(${railCounterRotationDeg.css()})`,
   },
   [exitAnticPct.css()]: {
-    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kAntic}, ${kAnticY}, 1) rotate(${rot45Deg.css()})`,
+    transform: `translateZ(0) rotate(${railRotationDeg.css()}) scale3d(${kAntic}, ${kAnticY}, 1) rotate(${railCounterRotationDeg.css()})`,
   },
   [SQUASH_START]: {
-    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kSquash}, ${kSquashY}, 1) rotate(${rot45Deg.css()})`,
+    transform: `translateZ(0) rotate(${railRotationDeg.css()}) scale3d(${kSquash}, ${kSquashY}, 1) rotate(${railCounterRotationDeg.css()})`,
   },
   [HOLD_END]: {
-    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kSquash}, ${kSquashY}, 1) rotate(${rot45Deg.css()})`,
+    transform: `translateZ(0) rotate(${railRotationDeg.css()}) scale3d(${kSquash}, ${kSquashY}, 1) rotate(${railCounterRotationDeg.css()})`,
   },
   '80%': {
-    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(${kAntic}, ${kAnticY}, 1) rotate(${rot45Deg.css()})`,
+    transform: `translateZ(0) rotate(${railRotationDeg.css()}) scale3d(${kAntic}, ${kAnticY}, 1) rotate(${railCounterRotationDeg.css()})`,
   },
   '100%': {
-    transform: `translateZ(0) rotate(${rotNeg45Deg.css()}) scale3d(1,1,1) rotate(${rot45Deg.css()})`,
+    transform: `translateZ(0) rotate(${railRotationDeg.css()}) scale3d(1,1,1) rotate(${railCounterRotationDeg.css()})`,
   },
 });
 
@@ -173,7 +173,7 @@ export const button = style({
   position: 'absolute',
   width: buttonSizePx.css(),
   height: buttonSizePx.css(),
-  left: 0,
+  right: 0,
   bottom: 0,
   borderRadius: buttonRadius.css(),
   display: 'inline-flex',
@@ -185,7 +185,7 @@ export const button = style({
   boxShadow: globalBoxShadow(),
   pointerEvents: 'auto',
   transition: `box-shadow ${hoverTransitionMs.css()} ease`,
-  transformOrigin: `100% 50%`,
+  transformOrigin: `0 50%`,
   willChange: 'transform',
   selectors: {
     '&:hover, &:focus-visible': {
@@ -214,7 +214,7 @@ export const gradient = style({
   position: 'absolute',
   inset: 0,
   borderRadius: buttonRadius.css(),
-  backgroundImage: `linear-gradient(${gradAngle135Deg.css()}, ${themeColours.lights.b.css()} 0%, ${themeColours.lights.d.css()} 100%)`,
+  backgroundImage: `linear-gradient(${gradAngleDiagDeg.css()}, ${themeColours.lights.b.css()} 0%, ${themeColours.lights.d.css()} 100%)`,
   opacity: 0,
   transition: `opacity ${gradientFadeMs.css()} ease`,
   zIndex: 0,
@@ -229,10 +229,10 @@ export const gradientVisible = style({
 
 const iconLagIn = keyframes({
   '0%': {
-    transform: `translate3d(${iconLagInDistancePx.negation().css()}, ${iconLagInDistancePx.css()}, 0)`,
+    transform: `translate3d(${iconLagInDistancePx.css()}, ${iconLagInDistancePx.css()}, 0)`,
   },
   '72%': {
-    transform: `translate3d(${iconLagInMicroPx.css()}, ${iconLagInMicroPx.negation().css()}, 0)`,
+    transform: `translate3d(${iconLagInMicroPx.negation().css()}, ${iconLagInMicroPx.negation().css()}, 0)`,
   },
   '100%': { transform: 'translate3d(0,0,0)' },
 });
