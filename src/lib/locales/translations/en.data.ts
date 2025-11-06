@@ -112,6 +112,7 @@ export const enData = {
   'contact-email-label': 'Shoot me an email!',
   'privacy-title': 'Privacy Policy',
   'privacy-href': 'privacy',
+  'privacy-updated': '',
   ...markdownRefs('privacy-content'),
 
   'form-heading': "Let's work together",
@@ -124,6 +125,7 @@ export const enData = {
   'form-counter-remaining': '{count} characters remaining',
   'form-privacy-text': 'We only use this to reply.',
   'form-privacy-link-label': 'Privacy policy',
+  'form-privacy-close-label': 'Back to form',
   'form-honeypot-label': 'Leave this field blank',
   'form-error-name-required': 'Please enter your name.',
   'form-error-name-too_long': 'Name is too long.',

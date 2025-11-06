@@ -90,7 +90,10 @@ type FaviconPreviewProps = {
   missingAssets?: readonly string[];
 };
 
-const themeOptions = ['light', 'dark'] as const;
+const themeOptions = [
+  'light',
+  'dark',
+] as const;
 
 const toColor = (value: string | undefined, fallback: string) => {
   if (typeof value !== 'string') return fallback;
@@ -106,32 +109,50 @@ export default function FavIconPreview({
   assetsReady,
   missingAssets = [],
 }: FaviconPreviewProps) {
-  const [theme, setTheme] = useState<(typeof themeOptions)[number]>('light');
+  const [
+    theme,
+    setTheme,
+  ] = useState<(typeof themeOptions)[number]>('light');
   const defaultLight = toColor(data.themeColors.light, '#f7f4ff');
   const defaultDark = toColor(data.themeColors.dark, '#0a0616');
-  const [lightInput, setLightInput] = useState(defaultLight);
-  const [darkInput, setDarkInput] = useState(defaultDark);
+  const [
+    lightInput,
+    setLightInput,
+  ] = useState(defaultLight);
+  const [
+    darkInput,
+    setDarkInput,
+  ] = useState(defaultDark);
 
   const lightColor = toColor(lightInput, defaultLight);
   const darkColor = toColor(darkInput, defaultDark);
   const alternativeLocale = useMemo(() => {
     const others = availableLocales.filter((code) => code !== locale);
     return others[0] ?? fallbackLocale;
-  }, [availableLocales, fallbackLocale, locale]);
+  }, [
+    availableLocales,
+    fallbackLocale,
+    locale,
+  ]);
   const previewThemeColors = useMemo(
     () => ({
       ...data.themeColors,
       light: lightColor,
       dark: darkColor,
     }),
-    [data.themeColors, lightColor, darkColor],
+    [
+      data.themeColors,
+      lightColor,
+      darkColor,
+    ],
   );
 
   const previewColors = useMemo(() => {
     const selected = theme === 'dark' ? darkColor : lightColor;
-    const fallback = theme === 'dark'
-      ? data.themeColors.background || '#0a0616'
-      : '#f7f4ff';
+    const fallback =
+      theme === 'dark'
+        ? data.themeColors.background || '#0a0616'
+        : '#f7f4ff';
     const bg = selected || fallback;
     const fg = theme === 'dark' ? '#f5f0ff' : '#211235';
     const subtle = theme === 'dark' ? '#d5cdf5' : '#4f3d80';
@@ -140,26 +161,37 @@ export default function FavIconPreview({
       bg,
       fg,
       subtle,
-      border: theme === 'dark'
-        ? 'rgba(255,255,255,0.25)'
-        : 'rgba(24,16,48,0.18)',
-      controlBg: theme === 'dark'
-        ? 'rgba(18,14,36,0.6)'
-        : 'rgba(255,255,255,0.92)',
-      inputBg: theme === 'dark'
-        ? 'rgba(12,9,30,0.85)'
-        : 'rgba(255,255,255,0.98)',
-      maskChip: theme === 'dark'
-        ? 'rgba(255,255,255,0.1)'
-        : 'rgba(24,16,48,0.28)',
-      cardBg: theme === 'dark'
-        ? 'rgba(255,255,255,0.05)'
-        : 'rgba(255,255,255,0.94)',
-      cardBorder: theme === 'dark'
-        ? '1px solid rgba(255,255,255,0.12)'
-        : '1px solid rgba(24,16,48,0.12)',
+      border:
+        theme === 'dark'
+          ? 'rgba(255,255,255,0.25)'
+          : 'rgba(24,16,48,0.18)',
+      controlBg:
+        theme === 'dark'
+          ? 'rgba(18,14,36,0.6)'
+          : 'rgba(255,255,255,0.92)',
+      inputBg:
+        theme === 'dark'
+          ? 'rgba(12,9,30,0.85)'
+          : 'rgba(255,255,255,0.98)',
+      maskChip:
+        theme === 'dark'
+          ? 'rgba(255,255,255,0.1)'
+          : 'rgba(24,16,48,0.28)',
+      cardBg:
+        theme === 'dark'
+          ? 'rgba(255,255,255,0.05)'
+          : 'rgba(255,255,255,0.94)',
+      cardBorder:
+        theme === 'dark'
+          ? '1px solid rgba(255,255,255,0.12)'
+          : '1px solid rgba(24,16,48,0.12)',
     };
-  }, [data.themeColors.background, darkColor, lightColor, theme]);
+  }, [
+    data.themeColors.background,
+    darkColor,
+    lightColor,
+    theme,
+  ]);
 
   const cardStyle: CSSProperties = {
     display: 'flex',
@@ -199,7 +231,10 @@ export default function FavIconPreview({
   };
 
   const getSwatchPadding = (size: number) => {
-    const clamped = Math.max(6, Math.min(24, Math.round(size * 0.08)));
+    const clamped = Math.max(
+      6,
+      Math.min(24, Math.round(size * 0.08)),
+    );
     return `${clamped}px`;
   };
 
@@ -213,10 +248,15 @@ export default function FavIconPreview({
       .sort((a, b) => a - b)
       .map((size) => `${size}px`)
       .join(' / ');
-  }, [data.icoVariants]);
+  }, [
+    data.icoVariants,
+  ]);
 
   const maskSvgSource = data.devMaskSvgPath ?? data.maskIcon.src;
-  const maskDisplayColor = toColor(data.themeColors.maskIcon, '#ffffff');
+  const maskDisplayColor = toColor(
+    data.themeColors.maskIcon,
+    '#ffffff',
+  );
   const tileForegroundSource = data.devTileForegroundSvgPath;
 
   const MaskIconPreview = () => (
@@ -229,16 +269,16 @@ export default function FavIconPreview({
     >
       <div
         aria-hidden
-          style={{
-            width: '96px',
-            height: '96px',
-            borderRadius: '50%',
-            backgroundColor: theme === 'dark' ? '#0d0a17' : '#dcd5ff',
-            boxShadow: `0 0 0 1px ${previewColors.border}`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden',
+        style={{
+          width: '96px',
+          height: '96px',
+          borderRadius: '50%',
+          backgroundColor: theme === 'dark' ? '#0d0a17' : '#dcd5ff',
+          boxShadow: `0 0 0 1px ${previewColors.border}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
         }}
       >
         <div
@@ -480,9 +520,10 @@ export default function FavIconPreview({
         gap: '2rem',
         padding: '2.5rem 6vw 4rem',
         color: previewColors.fg,
-        background: theme === 'dark'
-          ? `radial-gradient(circle at top, rgba(96,76,255,0.35), transparent 55%), ${previewColors.bg}`
-          : `radial-gradient(circle at top, rgba(118,91,255,0.22), transparent 55%), ${previewColors.bg}`,
+        background:
+          theme === 'dark'
+            ? `radial-gradient(circle at top, rgba(96,76,255,0.35), transparent 55%), ${previewColors.bg}`
+            : `radial-gradient(circle at top, rgba(118,91,255,0.22), transparent 55%), ${previewColors.bg}`,
         minHeight: '100vh',
         transition: 'background 240ms ease, color 240ms ease',
       }}
@@ -505,7 +546,8 @@ export default function FavIconPreview({
         >
           <strong>Favicons not generated.</strong>
           <span>
-            Run <code>yarn favicons</code> to build hashed assets before using this preview.
+            Run <code>yarn favicons</code> to build hashed assets
+            before using this preview.
           </span>
           {missingAssets.length ? (
             <span style={{ fontSize: '0.8rem' }}>
@@ -573,8 +615,9 @@ export default function FavIconPreview({
             lineHeight: 1.6,
           }}
         >
-          Quick smoke-test for every generated favicon asset. Toggle a simulated theme, tweak
-          theme colors on the fly, and verify Safari mask / PWA manifest outputs before shipping.
+          Quick smoke-test for every generated favicon asset. Toggle a
+          simulated theme, tweak theme colors on the fly, and verify
+          Safari mask / PWA manifest outputs before shipping.
         </p>
 
         <div
@@ -751,9 +794,7 @@ export default function FavIconPreview({
               style={{ borderRadius: '32px' }}
             />
             <div>
-              <div style={{ fontWeight: 600 }}>
-                SVG
-              </div>
+              <div style={{ fontWeight: 600 }}>SVG</div>
               <div
                 style={{
                   fontSize: '0.75rem',
@@ -777,9 +818,7 @@ export default function FavIconPreview({
               style={{ borderRadius: '28px' }}
             />
             <div>
-              <div style={{ fontWeight: 600 }}>
-                Apple touch
-              </div>
+              <div style={{ fontWeight: 600 }}>Apple touch</div>
               <div
                 style={{
                   fontSize: '0.75rem',
@@ -802,9 +841,7 @@ export default function FavIconPreview({
                 style={{ borderRadius: '38%' }}
               />
               <div>
-                <div style={{ fontWeight: 600 }}>
-                  Maskable (PWA)
-                </div>
+                <div style={{ fontWeight: 600 }}>Maskable (PWA)</div>
                 <div
                   style={{
                     fontSize: '0.75rem',
@@ -902,9 +939,10 @@ export default function FavIconPreview({
           style={{
             padding: '1.5rem',
             borderRadius: '1.5rem',
-            background: theme === 'dark'
-              ? 'rgba(12,9,30,0.8)'
-              : 'rgba(255,255,255,0.6)',
+            background:
+              theme === 'dark'
+                ? 'rgba(12,9,30,0.8)'
+                : 'rgba(255,255,255,0.6)',
             border: `1px solid ${previewColors.border}`,
             display: 'flex',
             flexDirection: 'column',
@@ -916,34 +954,48 @@ export default function FavIconPreview({
             style={{
               display: 'grid',
               gap: '0.75rem',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gridTemplateColumns:
+                'repeat(auto-fit, minmax(200px, 1fr))',
             }}
           >
-            {Object.entries(previewThemeColors).map(([key, value]) => (
-              <div key={key} style={{ display: 'flex', gap: '0.75rem' }}>
-                <span
-                  style={{
-                    width: '42px',
-                    height: '42px',
-                    borderRadius: '12px',
-                    backgroundColor: value,
-                    border: `1px solid ${previewColors.border}`,
-                    flexShrink: 0,
-                  }}
-                />
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontWeight: 600 }}>{key}</span>
-                  <code
+            {Object.entries(previewThemeColors).map(
+              ([
+                key,
+                value,
+              ]) => (
+                <div
+                  key={key}
+                  style={{ display: 'flex', gap: '0.75rem' }}
+                >
+                  <span
                     style={{
-                      fontSize: '0.8rem',
-                      color: previewColors.subtle,
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '12px',
+                      backgroundColor: value,
+                      border: `1px solid ${previewColors.border}`,
+                      flexShrink: 0,
+                    }}
+                  />
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
                     }}
                   >
-                    {value}
-                  </code>
+                    <span style={{ fontWeight: 600 }}>{key}</span>
+                    <code
+                      style={{
+                        fontSize: '0.8rem',
+                        color: previewColors.subtle,
+                      }}
+                    >
+                      {value}
+                    </code>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
 
@@ -951,9 +1003,10 @@ export default function FavIconPreview({
           style={{
             padding: '1.5rem',
             borderRadius: '1.5rem',
-            background: theme === 'dark'
-              ? 'rgba(12,9,30,0.8)'
-              : 'rgba(255,255,255,0.6)',
+            background:
+              theme === 'dark'
+                ? 'rgba(12,9,30,0.8)'
+                : 'rgba(255,255,255,0.6)',
             border: `1px solid ${previewColors.border}`,
             display: 'flex',
             flexDirection: 'column',
@@ -973,7 +1026,10 @@ export default function FavIconPreview({
           >
             <li>
               <strong>manifest[{data.manifestMeta.lang}]</strong>{' '}
-              <a href={data.webManifest.src} style={{ color: previewColors.subtle }}>
+              <a
+                href={data.webManifest.src}
+                style={{ color: previewColors.subtle }}
+              >
                 {data.webManifest.fileName}
               </a>
             </li>
@@ -989,20 +1045,27 @@ export default function FavIconPreview({
             {data.browserConfig ? (
               <li>
                 <strong>browserconfig</strong>{' '}
-                <a href={data.browserConfig.src} style={{ color: previewColors.subtle }}>
+                <a
+                  href={data.browserConfig.src}
+                  style={{ color: previewColors.subtle }}
+                >
                   {data.browserConfig.fileName}
                 </a>
               </li>
             ) : null}
             <li>
-              <strong>name</strong> <code>{data.manifestMeta.name}</code>
+              <strong>name</strong>{' '}
+              <code>{data.manifestMeta.name}</code>
             </li>
             <li>
-              <strong>short_name</strong> <code>{data.manifestMeta.shortName}</code>
+              <strong>short_name</strong>{' '}
+              <code>{data.manifestMeta.shortName}</code>
             </li>
             <li>
               <strong>categories</strong>{' '}
-              <code>{data.manifestMeta.categories.join(', ') || '—'}</code>
+              <code>
+                {data.manifestMeta.categories.join(', ') || '—'}
+              </code>
             </li>
             <li>
               <strong>theme-color (light)</strong>{' '}
@@ -1048,9 +1111,10 @@ export default function FavIconPreview({
         style={{
           padding: '1.5rem',
           borderRadius: '1.5rem',
-          background: theme === 'dark'
-            ? 'rgba(12,9,30,0.8)'
-            : 'rgba(255,255,255,0.6)',
+          background:
+            theme === 'dark'
+              ? 'rgba(12,9,30,0.8)'
+              : 'rgba(255,255,255,0.6)',
           border: `1px solid ${previewColors.border}`,
           display: 'flex',
           flexDirection: 'column',
@@ -1075,9 +1139,10 @@ export default function FavIconPreview({
                 padding: '0.75rem 1rem',
                 borderRadius: '1rem',
                 border: `1px dashed ${previewColors.border}`,
-                background: theme === 'dark'
-                  ? 'rgba(18,14,36,0.85)'
-                  : 'rgba(255,255,255,0.7)',
+                background:
+                  theme === 'dark'
+                    ? 'rgba(18,14,36,0.85)'
+                    : 'rgba(255,255,255,0.7)',
               }}
             >
               <strong>
@@ -1085,12 +1150,19 @@ export default function FavIconPreview({
                 {link.type ? ` · ${link.type}` : ''}
               </strong>
               {link.sizes ? (
-                <span style={{ color: previewColors.subtle }}>{link.sizes}</span>
+                <span style={{ color: previewColors.subtle }}>
+                  {link.sizes}
+                </span>
               ) : null}
               {link.color ? (
-                <span style={{ color: previewColors.subtle }}>{link.color}</span>
+                <span style={{ color: previewColors.subtle }}>
+                  {link.color}
+                </span>
               ) : null}
-              <a href={link.href} style={{ color: previewColors.subtle }}>
+              <a
+                href={link.href}
+                style={{ color: previewColors.subtle }}
+              >
                 {link.href}
               </a>
             </div>

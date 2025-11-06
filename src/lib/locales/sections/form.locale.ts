@@ -7,6 +7,7 @@ export const FORM_KEYS = {
   counterRemaining: 'form-counter-remaining',
   privacyText: 'form-privacy-text',
   privacyLinkLabel: 'form-privacy-link-label',
+  privacyCloseLabel: 'form-privacy-close-label',
   submitLabel: 'form-submit-label',
   honeypotLabel: 'form-honeypot-label',
 } as const satisfies Record<string, keyof Messages>;
@@ -85,6 +86,7 @@ export type ContactFormCopy = {
   privacy: {
     text: string;
     linkLabel: string;
+    closeLabel: string;
   };
   labels: {
     name: string;
@@ -122,6 +124,7 @@ export const buildContactFormCopy = (
   privacy: {
     text: t(FORM_KEYS.privacyText),
     linkLabel: t(FORM_KEYS.privacyLinkLabel),
+    closeLabel: t(FORM_KEYS.privacyCloseLabel),
   },
   labels: {
     name: t(FORM_LABEL_KEYS.name),

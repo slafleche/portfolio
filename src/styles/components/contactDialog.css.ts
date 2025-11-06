@@ -5,10 +5,7 @@ import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import {
-  glassVars,
-  glassyActionTokens,
-} from '../helpers/glassy';
+import { glassVars, glassyActionTokens } from '../helpers/glassy';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -100,7 +97,6 @@ export const closeButton = style({
   justifyContent: 'center',
   fontSize: glassyActionTokens.iconSize.css(),
   fontWeight: 600,
-  cursor: 'pointer',
   boxShadow: glassyActionTokens.shadowRest,
   backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
   WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,

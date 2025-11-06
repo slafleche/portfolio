@@ -183,7 +183,6 @@ export const button = style({
   backgroundColor: colorVars.white.alpha(0.95).css(),
   color: colorVars.svgColor.css(),
   textDecoration: 'none',
-  cursor: 'pointer',
   boxShadow: globalBoxShadow(),
   pointerEvents: 'auto',
   transition: `box-shadow ${hoverTransitionMs.css()} ease`,

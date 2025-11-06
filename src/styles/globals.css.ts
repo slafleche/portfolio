@@ -18,7 +18,9 @@ const {
 } = documentSurface;
 
 const bodyFontStyles = composeFontVariantStyles(fontVariants.body);
-const headingFontStyles = composeFontVariantStyles(fontVariants.heading);
+const headingFontStyles = composeFontVariantStyles(
+  fontVariants.heading,
+);
 
 globalStyle('body', {
   minHeight: '100vh',
@@ -107,8 +109,19 @@ globalStyle('button, select', {
   textTransform: 'none',
 });
 
-globalStyle('button, [type="button"], [type="reset"], [type="submit"]', {
-  WebkitAppearance: 'button',
+globalStyle(
+  'button, [type="button"], [type="reset"], [type="submit"]',
+  {
+    WebkitAppearance: 'button',
+  },
+);
+
+globalStyle('button:not(:disabled)', {
+  cursor: 'pointer',
+});
+
+globalStyle('button:disabled', {
+  cursor: 'not-allowed',
 });
 
 globalStyle(
