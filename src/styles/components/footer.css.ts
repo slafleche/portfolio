@@ -88,6 +88,7 @@ export const glassLink = style([
   {
     selectors: {
       '&:hover': {
+        cursor: 'pointer',
         transform: 'translateY(-20px)',
         boxShadow: '0 24px 36px rgba(0, 0, 0, 0.25)',
       },
