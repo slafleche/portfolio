@@ -1,7 +1,10 @@
 import { m } from '../styles/measurementKit';
 import { layoutVars } from '../styles/componentTokens/componentTokens.layout';
 import { colorVars } from '../styles/componentTokens/componentTokens.global';
-import { glassyActionTokens, glassVars } from '../styles/helpers/glassy';
+import {
+  glassyActionTokens,
+  glassVars,
+} from '../styles/helpers/glassy';
 
 const horizontalPadding = m(24);
 
@@ -31,15 +34,13 @@ export const privacyTokens = {
     offset: m(12),
     size: glassyActionTokens.size,
     borders: {
-      intent: {
-        all: {
-          width: glassyActionTokens.borderWidth,
-          color: glassyActionTokens.borderColor,
-          style: 'solid' as const,
-        },
-        radius: {
-          all: glassyActionTokens.borderRadius,
-        },
+      all: {
+        width: glassyActionTokens.borderWidth,
+        color: glassyActionTokens.borderColor,
+        style: 'solid' as const,
+      },
+      radius: {
+        all: glassyActionTokens.borderRadius,
       },
     },
     background: glassyActionTokens.background,
