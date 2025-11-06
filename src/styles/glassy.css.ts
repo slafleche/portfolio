@@ -82,9 +82,7 @@ export const grain = style({
 	height: `calc(100% - ${glassVars.border.width.double().css()})`,
 	pointerEvents: 'none',
 	borderRadius: innerRadius.css(),
-	// borderRadius: innerMostRadius,
-	backgroundImage: glassVars.noiseDataUri(),
-	...noiseBg(),
+	...noiseBg({ backgroundImage: glassVars.noiseDataUri() }),
 	zIndex: 3,
 });
 
