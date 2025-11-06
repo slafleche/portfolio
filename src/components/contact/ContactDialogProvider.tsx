@@ -1,9 +1,18 @@
 'use client';
 
-import { createContext, useContext, useMemo, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import type { ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as s from '@/styles/components/contactDialog.css';
+import ContactForm from './ContactForm';
+import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
+import { resolveLocale } from '@/lib/locales/locale';
+import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 
 type ContactDialogContextValue = {
   open: () => void;
@@ -26,12 +35,24 @@ export function useContactDialog() {
 
 type ContactDialogProviderProps = {
   children: ReactNode;
+  formCopy: ContactFormCopy;
+  locale: string;
+  privacyHref?: string;
 };
 
 export function ContactDialogProvider({
   children,
+  formCopy,
+  locale,
+  privacyHref,
 }: ContactDialogProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const resolvedLocale = resolveLocale(locale);
+  const localizedPrivacySlug =
+    canonicalToLocalizedSlugs[resolvedLocale]?.privacy ??
+    'privacy';
+  const privacyPath =
+    privacyHref ?? `/${resolvedLocale}/${localizedPrivacySlug}`;
 
   const contextValue = useMemo(
     () => ({
@@ -61,26 +82,18 @@ export function ContactDialogProvider({
                   </button>
                 </Dialog.Close>
                 <Dialog.Title className={s.heading}>
-                  Let's work together
+                  {formCopy.heading}
                 </Dialog.Title>
                 <Dialog.Description asChild>
                   <div className={s.body}>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur
-                      adipiscing elit. Sed do eiusmod tempor
-                      incididunt ut labore et dolore magna aliqua.
-                    </p>
-                    <p>
-                      Ut enim ad minim veniam, quis nostrud
-                      exercitation ullamco laboris nisi ut aliquip ex
-                      ea commodo consequat.
-                    </p>
+                    <p>{formCopy.intro}</p>
                   </div>
                 </Dialog.Description>
-                <p className={s.body}>
-                  (TODO: swap the placeholder text with the real
-                  contact details.)
-                </p>
+                <ContactForm
+                  copy={formCopy}
+                  locale={locale}
+                  privacyHref={privacyPath}
+                />
               </div>
             </div>
           </Dialog.Content>

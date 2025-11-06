@@ -18,14 +18,17 @@ export const frData = {
   'manifest-short-name': 'Stéphane L.',
   'manifest-description':
     'Application web progressive du portfolio personnel.',
-  'manifest-categories': ['portfolio', 'personnel'],
+  'manifest-categories': [
+    'portfolio',
+    'personnel',
+  ],
 
   'error-video':
     'Désolé, votre navigateur ne peut pas lire cette vidéo.',
 
   'favicon-meta-description':
     'Métadonnées décrivant les favicons et manifestes du portfolio de Stéphane L.',
-  'favicon-meta-keywords': 'favicon, icône, manifeste, Stéphane Laflèche',
+  'favicon-meta-keywords': 'favicon, icône, manifeste, Stéphane L.',
   'favicon-meta-author': 'Stéphane L.',
 
   'hero-title': 'Fond dégradé bleu et magenta en rotation',
@@ -110,6 +113,48 @@ export const frData = {
   'contact-href': 'contact',
   'contact-content': 'Envie de collaborer ?',
   'contact-email-label': 'Envoyez-moi un email !',
+
+  'privacy-title': 'Politique de confidentialité',
+  'privacy-href': 'confidentialite',
+  ...markdownRefs('privacy-content'),
+
+  'form-heading': 'Travaillons ensemble',
+  'form-intro':
+    'Partagez quelques détails et je vous répondrai rapidement.',
+  'form-name-label': 'Nom',
+  'form-email-label': 'Courriel',
+  'form-message-label': 'Message',
+  'form-submit-label': 'Envoyer le message',
+  'form-counter-remaining': '{count} caractères restants',
+  'form-privacy-text':
+    'Nous utilisons ces informations uniquement pour vous répondre.',
+  'form-privacy-link-label': 'Politique de confidentialité',
+  'form-honeypot-label': 'Laissez ce champ vide',
+  'form-error-name-required': 'Veuillez entrer votre nom.',
+  'form-error-name-too_long': 'Le nom est trop long.',
+  'form-error-email-invalid':
+    'Veuillez entrer une adresse courriel valide.',
+  'form-error-message-required':
+    "Veuillez écrire un message avant de l'envoyer.",
+  'form-error-message-too_long': 'Le message est trop long.',
+  'form-error-message-too_many_links':
+    'Veuillez retirer quelques liens (maximum deux URL).',
+  'form-error-token-missing':
+    "Veuillez confirmer que vous n'êtes pas un robot.",
+  'form-status-sending': 'Envoi du message…',
+  'form-status-success': 'Message envoyé — merci !',
+  'form-status-generic_error':
+    'Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer.',
+  'form-status-validation_error':
+    'Veuillez vérifier les champs et réessayer.',
+  'form-status-rate_limited':
+    'Trop de tentatives. Veuillez patienter une minute.',
+  'form-status-service_unavailable':
+    'Le service est indisponible. Veuillez réessayer bientôt.',
+  'form-status-not_configured':
+    "Le service de courriel n'est pas encore configuré. Réessayez plus tard.",
+  'form-status-blocked':
+    'Nous ne pouvons pas envoyer votre message pour le moment.',
 } as const;
 
 export type FrData = typeof frData;

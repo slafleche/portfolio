@@ -61,6 +61,10 @@ export const panelContent = style({
   width: 'min(64rem, 90vw)',
   margin: '0 auto',
   textAlign: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'stretch',
+  gap: m(6).css(),
 });
 
 export const heading = style({
@@ -80,9 +84,11 @@ export const body = style({
 });
 
 export const closeButton = style({
-  position: 'absolute',
+  position: 'sticky',
   top: m(6).css(),
-  right: m(6).css(),
+  marginTop: m(4).css(),
+  marginBottom: m(4).css(),
+  alignSelf: 'flex-end',
   width: glassyActionTokens.size.css(),
   height: glassyActionTokens.size.css(),
   borderRadius: glassyActionTokens.borderRadius.css(),
@@ -100,6 +106,7 @@ export const closeButton = style({
   WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
   transition: glassyActionTokens.transition,
   overflow: 'hidden',
+  zIndex: 1,
   selectors: {
     '&::after': {
       content: '',

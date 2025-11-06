@@ -1,4 +1,3 @@
-import { SkipNavContent } from '@/components/SkipNavContent';
 import Hero from '@/components/Hero';
 import Content from '@/components/responsive/Content';
 import CaseStudy from '@/components/CaseStudy';
@@ -7,6 +6,7 @@ import Card from '@/components/Card';
 import { Markdown } from '@/components/Markdown';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
+import Menu from '@/components/Menu';
 import * as layoutStyles from '@/styles/layout.css';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
@@ -15,6 +15,14 @@ import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
 import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
+import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+import {
+  buildHomeMenuSections,
+  buildSystemsMenuSections,
+} from '@/lib/locales/sections/menuSections';
+import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
+import { resolveLocale } from '@/lib/locales/locale';
 
 interface PageParams {
   LOCALE: string;
@@ -26,7 +34,8 @@ export default async function HomePage({
   params: Promise<PageParams>;
 }) {
   const { LOCALE } = await params;
-  const translator = await loadTranslator(LOCALE);
+  const locale = resolveLocale(LOCALE);
+  const translator = await loadTranslator(locale);
 
   const heroCopy = buildHeroCopy(translator);
   const [approach, about] = translateMarkdownSections(translator, [
@@ -44,16 +53,53 @@ export default async function HomePage({
   const caseStudies = buildCaseStudiesCopy(translator);
   const projects = buildProjectsCopy(translator);
   const contact = buildContactCopy(translator);
-  const systemsLink = buildSystemsLink(LOCALE, translator);
+  const systemsLink = buildSystemsLink(locale, translator);
+  const menuCopy = buildMenuCopy(translator);
+  const menuSections = buildHomeMenuSections(translator);
+  const systemsMenuSections = buildSystemsMenuSections(translator);
+
+  const curiosityMessages = {
+    title: translator('console-curiosity-title'),
+    test: translator('console-curiosity-test'),
+    result: translator('console-curiosity-result'),
+    hint: translator('console-curiosity-hint'),
+  };
+  const systemsSlug =
+    canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
+  const curiosityTarget = `/${locale}/${systemsSlug}`;
+
+  const menuProps = {
+    root: `/${locale}`,
+    skipNavLabel: menuCopy.skipNavLabel,
+    leftLabel: menuCopy.leftLabel,
+    rightLabel: menuCopy.rightLabel,
+    localeChangeLabel: menuCopy.languageLabel,
+    sections: menuSections,
+    systemsSections: systemsMenuSections,
+    localeLinks: AVAILABLE_LOCALES.filter(
+      (code) => code !== locale,
+    ).map((code) => ({
+      locale: code,
+      label: LOCALE_LABELS[code],
+    })),
+  };
 
   return (
-    <SkipNavContent id="body">
+    <>
+      <Menu
+        {...menuProps}
+        curiosityMessages={{
+          title: curiosityMessages.title,
+          test: curiosityMessages.test,
+          result: curiosityMessages.result,
+          hint: curiosityMessages.hint,
+          targetHref: curiosityTarget,
+        }}
+        logoRedirectPaths={[curiosityTarget]}
+      />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
-          <Hero
-            id="hero"
-            copy={heroCopy}
-          />
+          <Hero id="hero" copy={heroCopy} />
           <Content
             id={approach.href}
             title={approach.title}
@@ -93,7 +139,6 @@ export default async function HomePage({
                   ) : null}
                 </Card>
               </Column>
-
               <Column span={1}>
                 <Card title={projects.list[3]?.title}>
                   {projects.list[3] ? (
@@ -123,6 +168,6 @@ export default async function HomePage({
           />
         ) : null}
       </div>
-    </SkipNavContent>
+    </>
   );
 }
