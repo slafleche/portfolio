@@ -2,6 +2,9 @@
 import { spawn } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { installTTYGuards } from './ttyGuard.mjs';
+
+installTTYGuards();
 
 async function loadAvailableLocales() {
 	const localeFile = path.resolve(
