@@ -1,5 +1,6 @@
 import { assertUnit } from '@/styles/measurementKit';
-import { archVars, menuVars } from '../../styles/componentTokens/componentTokens.global';
+import { archVars } from '../../styles/componentTokens/componentTokens.global';
+import { menuVars } from '../../styles/componentTokens/componentTokens.menu';
 if (process.env.NODE_ENV !== 'production') {
   assertUnit(menuVars.height, 'px', 'menuUtils menu height');
   assertUnit(

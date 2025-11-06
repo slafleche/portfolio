@@ -42,7 +42,7 @@ import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
 import { fontVariants } from '../tokens/fontVariants.tokens';
-import { menuVars } from '../styles/componentTokens/componentTokens.global';
+import { menuVars } from '../styles/componentTokens/componentTokens.menu';
 
 type FocusDebugOptions = {
   lockTo?: 'logo' | number;
@@ -832,7 +832,6 @@ export default function Menu({
             }
           }}
           onBlur={handleBlur}
-          data-ui="link"
         >
           <span className={s.fakeShadow} aria-hidden={true}>
             {label}
@@ -963,7 +962,6 @@ export default function Menu({
                   onMouseLeave={handleLogoMouseLeave}
                   onFocus={handleLogoFocus}
                   onBlur={handleBlur}
-                  data-ui="link"
                   data-debug-focus={
                     focusDebugIndex === 0 ? 'true' : undefined
                   }
@@ -1055,7 +1053,6 @@ export default function Menu({
                   href={target}
                   className={clsx(s.link, s.localeLink)}
                   hrefLang={link.locale}
-                  data-ui="link"
                 >
                   <span className={s.fakeShadow} aria-hidden={true}>
                     {link.label}
