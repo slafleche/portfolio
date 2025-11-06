@@ -43,7 +43,7 @@ export const panel = style({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   alignItems: 'center',
   padding: `${m(14).css()} ${m(10).css()}`,
   background:

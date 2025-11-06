@@ -1,15 +1,16 @@
 import { assertUnit } from '@/styles/measurementKit';
 import { archVars } from '../../styles/componentTokens/componentTokens.global';
 import { menuVars } from '../../styles/componentTokens/componentTokens.menu';
+
 if (process.env.NODE_ENV !== 'production') {
   assertUnit(menuVars.height, 'px', 'menuUtils menu height');
   assertUnit(
-    menuVars.padding.horizontal,
+    menuVars.paddings.horizontal,
     'px',
     'menuUtils padding horizontal',
   );
   assertUnit(
-    menuVars.padding.vertical,
+    menuVars.paddings.vertical,
     'px',
     'menuUtils padding vertical',
   );
@@ -134,14 +135,12 @@ export const computeCenteredHighlight = (navMetrics: {
   height: number;
 }): HighlightBox => {
   const navWidth = navMetrics.width;
+  const paddedHeightMeasurement = menuVars.height.add(
+    menuVars.paddings.vertical,
+  );
   const fallbackWidth = navWidth
-    ? Math.min(
-        navWidth,
-        menuVars.height.getValue() +
-          menuVars.padding.vertical.getValue(),
-      )
-    : menuVars.height.getValue() +
-      menuVars.padding.vertical.getValue();
+    ? Math.min(navWidth, paddedHeightMeasurement.getValue())
+    : paddedHeightMeasurement.getValue();
   const highlightHeight = menuVars.height.getValue();
   const centerX = navWidth ? navWidth / 2 : fallbackWidth / 2;
   const centerY = navWidth

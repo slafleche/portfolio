@@ -7,6 +7,8 @@
   > ⚠ Token quick rules: use raw `m(...)`/`color(...)`, no `.css()` in tokens, and group values under helper-ready keys (`paddings`, `borders`, `fonts`).
   > ⚠ Keep tokens structured: export the typed object only. Consumers should destructure locally (or use helpers) instead of exporting individual measurements.
   > ⚠ Name collections for helpers explicitly: prefer plural keys like `paddings`, `margins`, `borders`. Avoid singular `padding`/`margin`/`border` so it’s obvious the object feeds the helpers.
+  > ⚠ When consuming tokens, use the object path (`menuVars.hover.shadow`) directly; only introduce locals when you are applying a real transformation. “Just renaming” creates noise and is treated as an anti-pattern.
+  > ⚠ Keep measurement math in measurement space: combine tokens with helpers (e.g., `menuVars.height.add(...)`) and only call `.getValue()` at the very end when a number-only API needs it.
 - **Helpers (`/styles/helpers`)**: Share generic logic (measurement math,
   typography composition, spacing utilities). Helpers must not import component
   tokens.
