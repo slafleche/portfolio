@@ -84,7 +84,7 @@ export const overlays = style({
 /** Subtle static grain to break banding */
 export const grain = style({
   ...fullSizeOfParent(),
-  ...noiseBg({ opacity: 0.25 }),
+  ...noiseBg({ opacity: 0.03 }),
 });
 
 /** Faint multi-stop wash to even flat backgrounds */
