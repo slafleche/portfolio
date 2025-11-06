@@ -25,8 +25,8 @@ export const header = style({
 	alignItems: 'center',
 	gap: m(6).css(),
 	...paddings({
-		vertical: m(10).css(),
-		horizontal: m(16).css(),
+		vertical: m(10),
+		horizontal: m(16),
 	}),
 	background: colorVars.black.alpha(0.6).css(),
 	borderBottom: `1px solid ${colorVars.white.alpha(0.06).css()}`,
@@ -62,7 +62,8 @@ export const body = style({
 	fontSize: m(16).css(),
 	lineHeight: 1.6,
 	flexGrow: 1,
-	...paddings({ all: m(18).css() }),
+	...paddings({ all: m(18) }),
+
 	backgroundColor: colorVars.black.mix(colorVars.white, 0.005).css(),
 	justifyContent: 'flex-end',
 	overflowY: 'auto',
