@@ -34,8 +34,8 @@ export const frData = {
   'hero-title': 'Fond dégradé bleu et magenta en rotation',
   'hero-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
-  'hero-title_a': 'Des systèmes techniques ;',
-  'hero-title_b': 'dictés par le design',
+  'hero-title_a': 'Systèmes de design pensés',
+  'hero-title_b': 'pour évoluer',
   'hero-console_description': 'Arrière-plan de code décoratif',
   'hero-cta': 'Prenons contact !',
 
