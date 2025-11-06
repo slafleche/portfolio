@@ -12,6 +12,7 @@
 - **Helpers (`/styles/helpers`)**: Share generic logic (measurement math,
   typography composition, spacing utilities). Helpers must not import component
   tokens.
+  > ⚠ Gradients live behind helpers (see `styles/helpers/cardGradient` etc.); don’t hand-write gradient strings in tokens or styles when a helper exists.
 - **Modules (`/modules`)**: Assemble tokens + helpers for a specific feature or
   component. Modules remain CSS-free; they simply prepare structured data.
 - **Styles

@@ -13,8 +13,6 @@ export type {
   IBorder,
 } from '../helpers/types';
 
-
-
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are
 // meant to be more abstract and used in different wayt. For example, you
@@ -292,7 +290,7 @@ export const borderVars = {
   color: colorVars.border,
   style: 'solid' as string,
   width: m(4),
-  radius: m(6),
+  radius: m(16),
 };
 
 export const archVars = {
