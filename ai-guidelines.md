@@ -4,8 +4,7 @@
 
 - **Tokens (`/tokens`)**: Store pure data (measurements, colors, fonts) without
   `.css()` calls or imports from `styles/`.
-  - Tokens hold raw measurement/color objects (e.g., `m(12)`, `color(...)`). Never call `.css()` or stringify shorthands inside tokens.
-  - Group related values under helper-shaped keys (`paddings`, `borders`, `fonts`) so the styles layer can spread them directly into the corresponding helper.
+  > ⚠ Token quick rules: use raw `m(...)`/`color(...)`, no `.css()` in tokens, and group values under helper-ready keys (`paddings`, `borders`, `fonts`).
 - **Helpers (`/styles/helpers`)**: Share generic logic (measurement math,
   typography composition, spacing utilities). Helpers must not import component
   tokens.
@@ -17,28 +16,11 @@
     siblings or children, add elements/classes in the markup or use
     `globalStyle` so style blocks never reference other class names directly.
 
-## Workflow Expectations
+## Workflow Expectations (cheat sheet)
 
-- Work "wizard style": talk through the plan before coding, ask for missing
-  context, wait for the “go” signal, then update the shared TODO checklist.
-  Break larger efforts into smaller wizard steps.
-- Maintain a `TODO.*.md` per large task: include a primer, mirror the wizard
-  plan as a checklist, update continuously, delete once finished.
-- When refactoring, keep each slice small (one file, or the pieces of a single
-  split): finish import updates, confirm the result, and land the change before
-  starting the next slice.
-- Respect existing guardrails (no `.css()` in tokens, no styling logic in
-  helpers/modules).
-- Use shared utilities (`paddings`, `margins`, `borders`) instead of inlining
-  equivalent CSS when possible.
-- Tokens must never call `.css()`; measurements stay as `m(...)` objects so
-  helpers can compose them.
-- When passing token data into helpers, supply the full intent object (e.g., `...borders(tokens.button.borders)`, `...paddings(tokens.layout.paddings)`) instead of re-creating border/margin shorthands in styles.
-- When defining spacing/border tokens, use plural keys (`paddings`, `margins`,
-  `borders`) so they can be spread directly into the helpers without touching
-  CSS.
-- Keep `data-ui` contracts intact (`data-ui="heading"` for headings,
-  `data-ui="link"` for reusable links).
+- **Always**: follow the “talk → clarify → TODO → go” cadence. Discuss context first, ask questions, capture the plan in a `TODO.*.md` primer + checklist, get the go-ahead, then execute. Keep that TODO file updated as you deliver slices.
+- **When unsure**: prefer shared helpers (`paddings`, `margins`, `borders`, typography) over hand-written CSS; ask before large structural changes; keep slices small and shippable.
+- **Never**: call `.css()` inside tokens/helpers or inline border/spacing shorthands when a helper exists; break `data-ui` contracts.
 
 ## Communication
 
@@ -48,15 +30,8 @@
 - Note any lint errors unrelated to the current change so they can be addressed
   later.
 
-## Refactor Strategy
+## Refactor Checklist
 
-- Keep the existing path working while you build the replacement. Stand up the
-  new code alongside the old, copy what you need, and evolve the copy in place.
-- Map every consumer of the legacy code and migrate them in tiny, verified
-  batches. After each batch, run the usual checks before touching the next
-  group.
-- Only remove the legacy version once every reference has been swapped over and
-  validated. This prevents long-lived breakages and keeps the repo shippable
-  throughout the refactor.
-- If you plan to change a file name, better to do it first, commit and then do
-  edits and both at the same time for better difs
+1. Build the replacement alongside the existing path; confirm it works before removal.
+2. Migrate consumers in small, verified batches, running checks after each step.
+3. Only remove legacy code once every reference is swapped and tested. Rename files in a dedicated step for clean diffs.
