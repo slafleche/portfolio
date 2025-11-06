@@ -5,6 +5,11 @@ import {
 } from '@vanilla-extract/css';
 import { formTokens } from '@/tokens/forms.tokens';
 import { m } from '../measurementKit';
+import { colorVars } from '../componentTokens/componentTokens.global';
+import {
+  glassVars,
+  glassyActionTokens,
+} from '../helpers/glassy';
 
 const controlBase: ComplexStyleRule = {
   width: '100%',
@@ -174,7 +179,6 @@ export const submitButton = style({
   background: formTokens.status.success.borderColor.css(),
   color: '#0b0b0f',
   fontWeight: 600,
-  cursor: 'pointer',
   transition:
     'transform 160ms ease, opacity 160ms ease, background 160ms ease',
   selectors: {
@@ -200,10 +204,15 @@ export const privacy = style({
 });
 
 export const privacyLink = style({
+  background: 'none',
+  border: 'none',
+  padding: 0,
+  font: 'inherit',
   color: formTokens.status.success.textColor.css(),
   textDecoration: 'underline',
   textDecorationThickness: 'from-font',
   textUnderlineOffset: 4,
+  cursor: 'pointer',
   selectors: {
     '&:hover': {
       opacity: 0.9,
@@ -211,6 +220,94 @@ export const privacyLink = style({
     '&:focus-visible': {
       outline: 'none',
       boxShadow: `0 0 0 ${formTokens.field.focusRingWidth.css()} ${formTokens.field.focusRingColor.css()}`,
+    },
+  },
+});
+
+export const privacyOverlay = style({
+  position: 'fixed',
+  inset: 0,
+  backgroundColor: colorVars.black.alpha(0.85).css(),
+  backdropFilter: `blur(${glassVars.backdropBlur.double().css()})`,
+  WebkitBackdropFilter: `blur(${glassVars.backdropBlur.double().css()})`,
+  zIndex: 1100,
+});
+
+export const privacyDialog = style({
+  position: 'fixed',
+  inset: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: `${m(8).css()} ${m(6).css()}`,
+  zIndex: 1101,
+});
+
+export const privacyPanel = style({
+  position: 'relative',
+  width: 'min(70ch, 90vw)',
+  maxHeight: '80vh',
+  padding: `${m(12).css()} ${m(11).css()}`,
+  borderRadius: formTokens.field.borderRadius.css(),
+  backgroundColor: colorVars.bodyBg.css(),
+  color: colorVars.bodyFg.css(),
+  boxShadow: `0 ${m(3).css()} ${m(12).css()} ${colorVars.black.alpha(0.35).css()}`,
+  overflowY: 'auto',
+  display: 'grid',
+  gap: formTokens.layout.fieldGap.css(),
+});
+
+export const privacyTitle = style({
+  margin: 0,
+  fontSize: '1.6rem',
+  fontWeight: 700,
+});
+
+export const privacyUpdated = style({
+  margin: 0,
+  color: colorVars.bodyFg.alpha(0.7).css(),
+  fontSize: '0.9rem',
+});
+
+export const privacyBody = style({
+  fontSize: '0.95rem',
+  lineHeight: 1.6,
+});
+
+export const privacyCloseIcon = style({
+  position: 'absolute',
+  top: m(4).css(),
+  right: m(4).css(),
+  width: glassyActionTokens.size.css(),
+  height: glassyActionTokens.size.css(),
+  borderRadius: glassyActionTokens.borderRadius.css(),
+  border: `${glassyActionTokens.borderWidth.css()} solid ${glassyActionTokens.borderColor.css()}`,
+  background: glassyActionTokens.background.css(),
+  color: glassyActionTokens.textColor.css(),
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: glassyActionTokens.iconSize.css(),
+  fontWeight: 600,
+  cursor: 'pointer',
+  boxShadow: glassyActionTokens.shadowRest,
+  backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
+  WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
+  transition: glassyActionTokens.transition,
+  selectors: {
+    '&:hover': {
+      background: glassyActionTokens.hoverBackground.css(),
+      boxShadow: glassyActionTokens.shadowHover,
+      transform: 'translateY(-1px)',
+    },
+    '&:focus-visible': {
+      outline: 'none',
+      background: glassyActionTokens.hoverBackground.css(),
+      boxShadow: `${glassyActionTokens.shadowHover}, 0 0 0 ${glassyActionTokens.focusRingWidth.css()} ${glassyActionTokens.focusRingColor.css()}`,
+    },
+    '&:active': {
+      transform: 'translateY(0)',
+      boxShadow: glassyActionTokens.shadowRest,
     },
   },
 });

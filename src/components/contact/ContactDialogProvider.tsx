@@ -11,8 +11,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as s from '@/styles/components/contactDialog.css';
 import ContactForm from './ContactForm';
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
-import { resolveLocale } from '@/lib/locales/locale';
-import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
+import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 
 type ContactDialogContextValue = {
   open: () => void;
@@ -36,23 +35,17 @@ export function useContactDialog() {
 type ContactDialogProviderProps = {
   children: ReactNode;
   formCopy: ContactFormCopy;
+  privacyCopy: PrivacyCopy;
   locale: string;
-  privacyHref?: string;
 };
 
 export function ContactDialogProvider({
   children,
   formCopy,
+  privacyCopy,
   locale,
-  privacyHref,
 }: ContactDialogProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const resolvedLocale = resolveLocale(locale);
-  const localizedPrivacySlug =
-    canonicalToLocalizedSlugs[resolvedLocale]?.privacy ??
-    'privacy';
-  const privacyPath =
-    privacyHref ?? `/${resolvedLocale}/${localizedPrivacySlug}`;
 
   const contextValue = useMemo(
     () => ({
@@ -92,7 +85,7 @@ export function ContactDialogProvider({
                 <ContactForm
                   copy={formCopy}
                   locale={locale}
-                  privacyHref={privacyPath}
+                  privacyCopy={privacyCopy}
                 />
               </div>
             </div>

@@ -9,7 +9,9 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { MouseEvent } from 'react';
 import clsx from 'clsx';
+import * as Dialog from '@radix-ui/react-dialog';
 import type {
   ContactFormCopy,
   FormStatusKey,
@@ -25,14 +27,16 @@ import {
   type ContactFormPayload,
   type ContactFormResponse,
 } from '@/modules/contactForm/mockSubmit';
-import { sharedStrings } from '@/lib/sharedStrings';
 import * as s from '@/styles/components/contactForm.css';
 import { formTokens } from '@/tokens/forms.tokens';
+import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
+import { Markdown } from '@/components/Markdown';
 
 type ContactFormProps = {
   copy: ContactFormCopy;
   actionUrl?: string;
   locale: string;
+  privacyCopy: PrivacyCopy;
   privacyHref?: string;
   onSubmitted?: (response: ContactFormResponse) => void;
 };
@@ -79,17 +83,20 @@ export default function ContactForm({
   copy,
   actionUrl = DEFAULT_ACTION_URL,
   locale,
-  privacyHref = sharedStrings.privacyPolicyUrl,
+  privacyCopy,
   onSubmitted,
 }: ContactFormProps) {
   const formId = useId();
   const [values, setValues] = useState<FormValues>(INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState<FieldErrorMap>({});
+  const [fieldErrors, setFieldErrors] = useState<FieldErrorMap>(
+    () => validateDraft(INITIAL_VALUES).errors,
+  );
   const [status, setStatus] = useState<FormStatusKey | null>(null);
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] =
     useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
   const baseMessageHeight = useRef<number | null>(null);
 
@@ -186,6 +193,12 @@ export default function ContactForm({
   const handleBlur = useCallback(() => {
     setFieldErrors(validateDraft(values).errors);
   }, [values]);
+
+  const openPrivacy = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setIsPrivacyOpen(true);
+  }, []);
+
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -292,6 +305,8 @@ export default function ContactForm({
     return Math.max(0, maxChars - values.message.length);
   }, [values.message.length]);
 
+  const hasBlockingErrors = Object.keys(fieldErrors).length > 0;
+
   const messageCounterId = `${formId}-message-counter`;
   const nameFieldId = `${formId}-name`;
   const emailFieldId = `${formId}-email`;
@@ -337,17 +352,20 @@ export default function ContactForm({
     </div>
   );
 
+  const privacyUpdated = privacyCopy.updated.trim();
+
   return (
-    <form
-      className={s.form}
-      noValidate
-      onSubmit={(event) => {
-        void handleSubmit(event);
-      }}
-      action={actionUrl}
-    >
-      {statusBanner}
-      <fieldset className={s.fieldset}>
+    <>
+      <form
+        className={s.form}
+        noValidate
+        onSubmit={(event) => {
+          void handleSubmit(event);
+        }}
+        action={actionUrl}
+      >
+        {statusBanner}
+        <fieldset className={s.fieldset}>
         <legend className={s.legend}>{copy.heading}</legend>
 
         <div className={s.fieldGroup}>
@@ -498,25 +516,59 @@ export default function ContactForm({
 
       <p className={s.privacy}>
         {copy.privacy.text}{' '}
-        <a
+        <button
+          type="button"
           className={s.privacyLink}
-          href={privacyHref}
-          target="_blank"
-          rel="noreferrer"
+          onClick={openPrivacy}
+          aria-haspopup="dialog"
         >
           {copy.privacy.linkLabel}
-        </a>
+        </button>
       </p>
 
-      <div className={s.buttonRow}>
-        <button
-          type="submit"
-          className={s.submitButton}
-          disabled={isSubmitting}
-        >
-          {copy.submitLabel}
-        </button>
-      </div>
-    </form>
+        <div className={s.buttonRow}>
+          <button
+            type="submit"
+            className={s.submitButton}
+            disabled={isSubmitting || hasBlockingErrors}
+          >
+            {copy.submitLabel}
+          </button>
+        </div>
+      </form>
+      <Dialog.Root
+        open={isPrivacyOpen}
+        onOpenChange={setIsPrivacyOpen}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className={s.privacyOverlay} />
+          <Dialog.Content className={s.privacyDialog}>
+            <div className={s.privacyPanel}>
+              <Dialog.Close asChild>
+                <button
+                  type="button"
+                  className={s.privacyCloseIcon}
+                  aria-label={copy.privacy.closeLabel}
+                >
+                  ×
+                </button>
+              </Dialog.Close>
+              <Dialog.Title className={s.privacyTitle}>
+                {privacyCopy.title}
+              </Dialog.Title>
+              {privacyUpdated ? (
+                <p className={s.privacyUpdated}>{privacyUpdated}</p>
+              ) : null}
+              <Dialog.Description asChild>
+                <Markdown
+                  source={privacyCopy.content}
+                  className={s.privacyBody}
+                />
+              </Dialog.Description>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
   );
 }

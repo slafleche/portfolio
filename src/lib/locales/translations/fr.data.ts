@@ -116,6 +116,7 @@ export const frData = {
 
   'privacy-title': 'Politique de confidentialité',
   'privacy-href': 'confidentialite',
+  'privacy-updated': '',
   ...markdownRefs('privacy-content'),
 
   'form-heading': 'Travaillons ensemble',
@@ -129,6 +130,7 @@ export const frData = {
   'form-privacy-text':
     'Nous utilisons ces informations uniquement pour vous répondre.',
   'form-privacy-link-label': 'Politique de confidentialité',
+  'form-privacy-close-label': 'Retour au formulaire',
   'form-honeypot-label': 'Laissez ce champ vide',
   'form-error-name-required': 'Veuillez entrer votre nom.',
   'form-error-name-too_long': 'Le nom est trop long.',

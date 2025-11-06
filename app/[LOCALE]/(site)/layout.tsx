@@ -8,6 +8,7 @@ import { ContactDialogProvider } from '@/components/contact/ContactDialogProvide
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildMetaCopy } from '@/lib/locales/sections/meta.locale';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
+import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { SkipNavContent } from '@/components/SkipNavContent';
 
 interface SiteLayoutProps {
@@ -24,12 +25,14 @@ export default async function SiteLayout({
   const locale = resolveLocale(requestedLocale);
   const translator = await loadTranslator(locale);
   const contactFormCopy = buildContactFormCopy(translator);
+  const privacyCopy = buildPrivacyCopy(translator);
 
   return (
     <WindowSizeProvider>
       <ResponsiveProvider>
         <ContactDialogProvider
           formCopy={contactFormCopy}
+          privacyCopy={privacyCopy}
           locale={locale}
         >
           <SkipNavContent id="body">{children}</SkipNavContent>
