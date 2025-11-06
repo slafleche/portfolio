@@ -1,3 +1,3 @@
-One of the first real tests of the new theming system. Collaborated with the
-themer assigned to their project, offering guidance and observing early pain
-points to refine how the system performed in real client work.
+Early production test of the new theming system. Collaborated with the assigned
+themer, providing guidance and identifying pain points to refine system
+performance.

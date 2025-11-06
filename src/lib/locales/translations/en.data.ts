@@ -16,15 +16,18 @@ export const enData = {
 
   'manifest-name': 'Portfolio — Stéphane L.',
   'manifest-short-name': 'Stéphane L.',
-  'manifest-description':
-    'Personal portfolio progressive web app.',
-  'manifest-categories': ['portfolio', 'personal'],
+  'manifest-description': 'Personal portfolio progressive web app.',
+  'manifest-categories': [
+    'portfolio',
+    'personal',
+  ],
 
   'error-video': 'Sorry, your browser cannot play this video',
 
   'favicon-meta-description':
     "Metadata describing the favicon and manifest assets for Stéphane L.'s portfolio.",
-  'favicon-meta-keywords': 'favicon, icon, manifest, Stéphane Laflèche',
+  'favicon-meta-keywords':
+    'favicon, icon, manifest, Stéphane Laflèche',
   'favicon-meta-author': 'Stéphane L.',
 
   'hero-title': 'Blue–magenta gradient rotation background',
@@ -52,19 +55,19 @@ export const enData = {
   case_study: 'Case Study',
   'case_study-href': 'case_study',
   'case-study-01-title': 'Theming within the system',
-  'case-study-01-subtitle': 'seeing the limits',
+  'case-study-01-subtitle': 'understanding boundaries',
   ...markdownRefs('case-study-01-content'),
   'case-study-02-title': 'Streamlining theming',
-  'case-study-02-subtitle': 'making the system easier to work with',
+  'case-study-02-subtitle': 'building reusable patterns',
   ...markdownRefs('case-study-02-content'),
   'case-study-03-title': 'Joining Research and Development',
-  'case-study-03-subtitle': 'contributing from inside the system',
+  'case-study-03-subtitle': 'shaping core functionality',
   ...markdownRefs('case-study-03-content'),
   'case-study-04-title': 'Preparing legacy systems',
-  'case-study-04-subtitle': 'setting the stage for change',
+  'case-study-04-subtitle': 'building compatibility',
   ...markdownRefs('case-study-04-content'),
   'case-study-05-title': 'New Theming System',
-  'case-study-05-subtitle': 'bridging legacy and modern platforms',
+  'case-study-05-subtitle': 'connecting products through tokens',
   ...markdownRefs('case-study-05-content'),
   'case-study-06-title': 'Lessons learned',
   'case-study-06-subtitle': 'keeping design and development aligned',

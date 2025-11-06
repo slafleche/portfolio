@@ -1,4 +1,3 @@
-L'un des premiers tests réels du nouveau système de thématisation. Collaboration
-avec le themer assigné au projet pour offrir des conseils et observer les
-premiers points de friction, afin d'affiner la performance du système en
-contexte client.
+Premier test en production du nouveau système de thématisation. Collaboration
+avec le thémeur assigné, en apportant du soutien et en identifiant les points de
+friction pour affiner les performances du système.
