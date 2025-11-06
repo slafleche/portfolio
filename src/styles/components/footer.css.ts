@@ -1,5 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import type { ComplexStyleRule } from '@vanilla-extract/css';
+import { noiseBg } from '../helpers/noiseSVG';
 
 export const root = style({
   position: 'relative',
@@ -61,6 +62,7 @@ export const overlay = style({
   background: 'rgba(255, 255, 255, 0.06)',
   backdropFilter: 'blur(5px)',
   zIndex: 0,
+  ...noiseBg({ opacity: 0.07 }),
 });
 
 const glassLinkBase: ComplexStyleRule = {
