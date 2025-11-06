@@ -32,8 +32,8 @@ export const enData = {
   'hero-title': 'Blue–magenta gradient rotation background',
   'hero-alt':
     'Slowly rotating diagonal gradient blending cool blue and soft magenta tones with subtle light bands',
-  'hero-title_a': 'Bringing technical focus',
-  'hero-title_b': 'to design systems',
+  'hero-title_a': 'Design systems built',
+  'hero-title_b': 'to evolve',
   'hero-console_description': 'Decorative code backdrop',
   'hero-cta': "Let's connect!",
 
