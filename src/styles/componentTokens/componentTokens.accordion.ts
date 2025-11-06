@@ -1,0 +1,28 @@
+import { color } from '../helpers/colorWrap';
+import { m } from '../measurementKit';
+import { colorVars } from './componentTokens.global';
+
+export const accordionSurfaceTokens = {
+  gradientAngle: m(135, 'deg'),
+  gradientStops: [
+    { color: color('#160f24'), at: 0 },
+    { color: color('#281532'), at: 100 },
+  ] as const,
+  gradientOpacity: 0.18,
+  borderRadius: m(18),
+  borderWidth: m(0.75),
+  borderColor: colorVars.white.alpha(0.18),
+  padding: {
+    x: m(6),
+    y: m(6),
+  },
+  gap: m(3),
+} as const;
+
+export const accordionItemTokens = {
+  borderRadius: m(12),
+  gap: m(2),
+  paddingX: m(4),
+  paddingY: m(4),
+  iconSize: m(44),
+} as const;

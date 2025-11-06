@@ -109,3 +109,11 @@ export const glassyActionTokens = {
   focusRingColor: colorVars.white.alpha(0.45),
   iconSize: m(18),
 } as const;
+
+export const glassyPanelTokens = {
+  borderRadius: m(18),
+  borderWidth: m(0.75),
+  borderColor: colorVars.white.alpha(0.16),
+  background: colorVars.white.alpha(0.08),
+  shadow: `0 ${m(3).css()} ${m(18).css()} ${colorVars.black.alpha(0.38).css()}`,
+} as const;

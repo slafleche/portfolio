@@ -1,18 +1,13 @@
 'use client';
 
-import {
-  useMemo,
-  useState,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-} from 'react';
+import { useMemo } from 'react';
 import type { ReactNode } from 'react';
+import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import clsx from 'clsx';
 
 import { createDomId } from '@/lib/dom';
-import * as s from '@/styles/components/accordion.css';
 import ChevronDown from '@/components/icons/ChevronDown';
+import * as s from '@/styles/components/accordion.css';
 
 type AccordionItemData = {
   id?: string;
@@ -28,167 +23,72 @@ export type AccordionProps = {
   className?: string;
 };
 
-function usePanelHeight(isOpen: boolean) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [
-    maxHeight,
-    setMaxHeight,
-  ] = useState<string>(isOpen ? 'none' : '0px');
-
-  useLayoutEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    if (!isOpen) {
-      setMaxHeight('0px');
-      return;
-    }
-
-    const setHeight = () => {
-      const scrollHeight = node.scrollHeight;
-      setMaxHeight(`${scrollHeight}px`);
-    };
-
-    setHeight();
-    if (typeof ResizeObserver === 'undefined') {
-      return;
-    }
-    const observer = new ResizeObserver(setHeight);
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [
-    isOpen,
-  ]);
-
-  useLayoutEffect(() => {
-    if (!isOpen || typeof window === 'undefined') return;
-    const timeout = window.setTimeout(() => {
-      setMaxHeight('none');
-    }, 240);
-    return () => window.clearTimeout(timeout);
-  }, [
-    isOpen,
-  ]);
-
-  return { ref, maxHeight } as const;
-}
-
-type AccordionSectionProps = {
-  item: AccordionItemData;
-  index: number;
-  baseId: string;
-  isOpen: boolean;
-  onToggle: (key: string) => void;
-};
-
-function AccordionSection({
-  item,
-  index,
-  baseId,
-  isOpen,
-  onToggle,
-}: AccordionSectionProps) {
-  const key = item.id ?? `${baseId}-item-${index}`;
-  const buttonId = `${key}-trigger`;
-  const panelId = `${key}-panel`;
-  const { ref, maxHeight } = usePanelHeight(isOpen);
-
-  return (
-    <div className={s.item} key={key}>
-      <button
-        id={buttonId}
-        className={s.trigger}
-        type="button"
-        onClick={() => onToggle(key)}
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-      >
-        <span className={s.triggerLabel}>{item.heading}</span>
-        <span className={s.triggerArrow}>→</span>
-        {item.subHeading ? (
-          <span className={s.triggerSubtitle}>{item.subHeading}</span>
-        ) : null}
-        <span
-          className={clsx(s.icon, { [s.iconOpen]: isOpen })}
-          aria-hidden
-        >
-          <ChevronDown className={s.iconSvg} />
-        </span>
-      </button>
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={buttonId}
-        className={clsx(s.panel, isOpen && s.panelOpen)}
-        style={{ maxHeight }}
-      >
-        <div ref={ref} className={s.panelInner}>
-          {item.content}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function Accordion({
   items,
   multiple = true,
   className,
 }: AccordionProps) {
   const baseId = useMemo(() => createDomId('accordion'), []);
-  const [
-    openKeys,
-    setOpenKeys,
-  ] = useState<Set<string>>(() => {
-    const initial = new Set<string>();
-    items.forEach((item, index) => {
-      if (item.defaultOpen) {
-        initial.add(item.id ?? `${baseId}-item-${index}`);
-      }
-    });
-    return initial;
-  });
 
-  const toggle = useCallback(
-    (key: string) => {
-      setOpenKeys((prev) => {
-        const next = new Set(prev);
-        const isOpen = next.has(key);
-        if (multiple) {
-          if (isOpen) {
-            next.delete(key);
-          } else {
-            next.add(key);
-          }
-        } else {
-          next.clear();
-          if (!isOpen) {
-            next.add(key);
-          }
-        }
-        return next;
-      });
-    },
-    [
-      multiple,
-    ],
+  const resolvedItems = useMemo(
+    () =>
+      items.map((item, index) => ({
+        ...item,
+        value: item.id ?? `${baseId}-item-${index}`,
+      })),
+    [items, baseId],
   );
 
+  const defaultOpenValues = useMemo(
+    () =>
+      resolvedItems
+        .filter((item) => item.defaultOpen)
+        .map((item) => item.value),
+    [resolvedItems],
+  );
+
+  const rootProps = multiple
+    ? {
+        type: 'multiple' as const,
+        defaultValue: defaultOpenValues,
+      }
+    : {
+        type: 'single' as const,
+        defaultValue: defaultOpenValues[0],
+        collapsible: true as const,
+      };
+
   return (
-    <div className={clsx(s.root, className)}>
-      {items.map((item, index) => {
-        const key = item.id ?? `${baseId}-item-${index}`;
-        return (
-          <AccordionSection
-            key={key}
-            item={item}
-            index={index}
-            baseId={baseId}
-            isOpen={openKeys.has(key)}
-            onToggle={toggle}
-          />
-        );
-      })}
-    </div>
+    <AccordionPrimitive.Root
+      {...rootProps}
+      className={clsx(s.root, className)}
+    >
+      {resolvedItems.map((item) => (
+        <AccordionPrimitive.Item
+          key={item.value}
+          value={item.value}
+          className={s.item}
+        >
+          <AccordionPrimitive.Header className={s.header}>
+            <AccordionPrimitive.Trigger className={s.trigger}>
+              <span className={s.triggerText}>
+                <span className={s.triggerLabel}>{item.heading}</span>
+                {item.subHeading ? (
+                  <span className={s.triggerSubtitle}>
+                    {item.subHeading}
+                  </span>
+                ) : null}
+              </span>
+              <span className={s.icon} aria-hidden>
+                <ChevronDown className={s.iconSvg} />
+              </span>
+            </AccordionPrimitive.Trigger>
+          </AccordionPrimitive.Header>
+          <AccordionPrimitive.Content className={s.content}>
+            <div className={s.contentInner}>{item.content}</div>
+          </AccordionPrimitive.Content>
+        </AccordionPrimitive.Item>
+      ))}
+    </AccordionPrimitive.Root>
   );
 }

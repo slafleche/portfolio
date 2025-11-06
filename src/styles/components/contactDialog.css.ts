@@ -100,7 +100,6 @@ export const closeButton = style({
   WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
   transition: glassyActionTokens.transition,
   overflow: 'hidden',
-  position: 'absolute',
   selectors: {
     '&::after': {
       content: '',
