@@ -5,6 +5,7 @@
 - **Tokens (`/tokens`)**: Store pure data (measurements, colors, fonts) without
   `.css()` calls or imports from `styles/`.
   > ⚠ Token quick rules: use raw `m(...)`/`color(...)`, no `.css()` in tokens, and group values under helper-ready keys (`paddings`, `borders`, `fonts`).
+  > ⚠ Keep tokens structured: export the typed object only. Consumers should destructure locally (or use helpers) instead of exporting individual measurements.
 - **Helpers (`/styles/helpers`)**: Share generic logic (measurement math,
   typography composition, spacing utilities). Helpers must not import component
   tokens.
