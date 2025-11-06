@@ -1,5 +1,3 @@
-While theming, I began noticing repeating friction points, duplicated styles,
-inconsistent spacing, unclear naming. Even though no one else used my work, I
-started creating small helpers and reusable snippets to make my own process
-cleaner. Those self-built tools taught me that organization and predictability
-don't just speed up development, they make the system itself easier to trust.
+Built reusable helpers and snippets to eliminate duplicated styles and
+inconsistent spacing. Learned that predictable systems aren't just
+faster—they're easier to trust.

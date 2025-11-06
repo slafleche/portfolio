@@ -1,9 +1,6 @@
-Au sein de l'équipe **Knowledge Base**, j'ai travaillé sur la fondation
-front-end qui allait soutenir la prochaine génération de produits Vanilla. J'ai
-aidé à définir la manière dont les composants étaient stylés, structurés et
-thématisés, en me concentrant sur la cohérence, les pratiques CSS-in-JS et des
-schémas évolutifs. En parallèle, j'ai contribué à adapter l'ancien code Forums
-pour qu'il puisse se connecter aux nouveaux concepts de thématisation sans
-casser l'existant. Cette phase consistait à bâtir compatibilité et résilience,
-pour préparer les systèmes historiques à coexister avec ce qui était en train
-d'arriver.
+J'ai travaillé sur la fondation front-end de la **Knowledge Base** pour la
+prochaine génération de produits Vanilla. J'ai défini le style, la structure et
+la thématisation des composants avec du CSS-in-JS et des patterns évolutifs.
+J'ai aussi adapté le code legacy des Forums pour qu'il se raccorde aux nouveaux
+principes de thématisation sans casser l'existant. L'objectif : créer une
+compatibilité durable entre les anciens et les nouveaux systèmes.

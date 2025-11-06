@@ -1,10 +1,5 @@
-J'ai intégré la **Recherche et Développement (R&D)** comme **intégrateur web**,
-en passant du stylisme au-dessus du système à la manière dont il fonctionne en
-profondeur. J'ai contribué directement au **produit principal**, ajouté de
-nouvelles fonctionnalités, corrigé des bugs et affiné le comportement front-end,
-tout en construisant le nouveau site **Vanilla.com** en autonomie et en
-collaborant sur des projets plus modestes comme une intégration Hootsuite. En
-entrant dans le code mutualisé, j'ai davantage pensé aux développeurs amenés à
-le maintenir, y compris au nouveau thémeur prenant ma place. Cette étape a
-renforcé mon attention à la clarté, à la maintenabilité et à l'expérience
-développeur.
+Je suis passé de la thématisation à la R&D comme **intégrateur web**. J'ai
+contribué aux fonctionnalités du **produit principal**, construit le nouveau
+site Vanilla.com et réalisé l'intégration avec Hootsuite. J'ai commencé à
+penser aux développeurs qui allaient maintenir mon code, ce qui a recentré mon
+travail sur la clarté, la maintenabilité et l'expérience développeur.
