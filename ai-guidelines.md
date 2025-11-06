@@ -4,6 +4,8 @@
 
 - **Tokens (`/tokens`)**: Store pure data (measurements, colors, fonts) without
   `.css()` calls or imports from `styles/`.
+  - Tokens hold raw measurement/color objects (e.g., `m(12)`, `color(...)`). Never call `.css()` or stringify shorthands inside tokens.
+  - Group related values under helper-shaped keys (`paddings`, `borders`, `fonts`) so the styles layer can spread them directly into the corresponding helper.
 - **Helpers (`/styles/helpers`)**: Share generic logic (measurement math,
   typography composition, spacing utilities). Helpers must not import component
   tokens.
@@ -31,6 +33,7 @@
   equivalent CSS when possible.
 - Tokens must never call `.css()`; measurements stay as `m(...)` objects so
   helpers can compose them.
+- When passing token data into helpers, supply the full intent object (e.g., `...borders(tokens.button.borders)`, `...paddings(tokens.layout.paddings)`) instead of re-creating border/margin shorthands in styles.
 - When defining spacing/border tokens, use plural keys (`paddings`, `margins`,
   `borders`) so they can be spread directly into the helpers without touching
   CSS.
