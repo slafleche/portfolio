@@ -67,7 +67,6 @@ export default async function SystemsPage({
           <Hero
             id="systems-hero"
             copy={heroCopy}
-            ctaHref={`#${contactCopy.href}`}
             overlayClassName={systemsStyles.heroOverlay}
             withVideo={false}
             headingAnimated={false}
@@ -90,7 +89,6 @@ export default async function SystemsPage({
         {heroCopy.ctaLabel ? (
           <ContactButton
             watchId="systems-hero"
-            href={`#${contactCopy.href}`}
             label={heroCopy.ctaLabel}
           />
         ) : null}

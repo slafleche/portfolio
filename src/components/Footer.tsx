@@ -8,6 +8,7 @@ import GlassyLink from './GlassyLink';
 import ContactIcon from './icons/SendIcon';
 import SocialLinkedInIcon from './icons/SocialLinkedInIcon';
 import SocialGitHubIcon from './icons/SocialGitHubIcon';
+import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 
 type FooterProps = {
   contact: ContactCopy;
@@ -44,15 +45,15 @@ export default function Footer({
 
       {/* Just a simple wrapper for links, since we have multiple elements to position */}
       <div className={s.links}>
-        {/* Placeholder email for now */}
-        <GlassyLink
-          href={sharedStrings.mailtoEmail}
-          label={contact.emailLabel}
+        {/* Modal trigger */}
+        <ContactDialogTrigger
           className={s.glassLink}
+          aria-label={contact.emailLabel}
+          title={contact.emailLabel}
         >
           <div className={s.glassLinkShine} aria-hidden="true" />
-          <ContactIcon className={s.contactIcon} />
-        </GlassyLink>
+          <ContactIcon className={s.contactIcon} aria-hidden />
+        </ContactDialogTrigger>
         <GlassyLink
           href={sharedStrings.linkedInUrl}
           label="LinkedIn"

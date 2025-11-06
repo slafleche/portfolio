@@ -15,7 +15,6 @@ import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
 import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import { sharedStrings } from '@/lib/sharedStrings';
 
 interface PageParams {
   LOCALE: string;
@@ -53,7 +52,6 @@ export default async function HomePage({
         <main className={layoutStyles.main}>
           <Hero
             id="hero"
-            ctaHref={`#${contact.href}`}
             copy={heroCopy}
           />
           <Content
@@ -121,7 +119,6 @@ export default async function HomePage({
         {heroCopy.ctaLabel ? (
           <ContactButton
             watchId="hero"
-            href={sharedStrings.mailtoEmail}
             label={heroCopy.ctaLabel}
           />
         ) : null}

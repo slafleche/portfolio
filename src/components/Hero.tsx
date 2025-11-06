@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import clsx from 'clsx';
 import * as layoutStyles from '@/styles/layout.css';
 import * as s from '@/styles/components/hero.css';
@@ -15,6 +14,7 @@ import { heroVars } from '../styles/componentTokens/componentTokens.hero';
 import { projectorVars } from '../styles/componentTokens/componentTokens.projector';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import ImageByName from './ImageByName';
+import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 
 type HeroCopy = {
   videoTitle: string;
@@ -30,7 +30,6 @@ type Props = {
   id?: string;
   className?: string;
   copy: HeroCopy;
-  ctaHref?: string;
   withVideo?: boolean;
   overlayClassName?: string;
   headingAnimated?: boolean;
@@ -40,7 +39,6 @@ export default function Hero({
   id,
   className,
   copy,
-  ctaHref,
   withVideo = true,
   overlayClassName,
   headingAnimated = true,
@@ -69,7 +67,7 @@ export default function Hero({
   );
   const showVideo = withVideo && !prefersReducedMotion;
   const showPoster = withVideo && prefersReducedMotion;
-  const showCta = Boolean(ctaHref && copy.ctaLabel);
+  const showCta = Boolean(copy.ctaLabel);
 
   const headingKey = useMemo(
     () =>
@@ -249,16 +247,15 @@ export default function Hero({
               </span>
             </HeroHeading>
             {showCta ? (
-              <Link
+              <ContactDialogTrigger
                 className={s.cta}
-                href={ctaHref!}
                 data-ready={ctaVisible ? 'true' : 'false'}
                 aria-hidden={ctaVisible ? undefined : 'true'}
                 tabIndex={ctaVisible ? undefined : -1}
               >
                 <span>{copy.ctaLabel}</span>
                 <SendIcon className={s.ctaIcon} aria-hidden />
-              </Link>
+              </ContactDialogTrigger>
             ) : null}
           </div>
         </div>
