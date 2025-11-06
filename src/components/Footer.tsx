@@ -58,6 +58,7 @@ export default function Footer({
           href={sharedStrings.linkedInUrl}
           label="LinkedIn"
           className={s.glassLink}
+          target="_blank"
         >
           <div className={s.glassLinkShine} aria-hidden="true" />
           <SocialLinkedInIcon className={s.linkedInIcon} />
@@ -66,6 +67,7 @@ export default function Footer({
           href={sharedStrings.githubUrl}
           label="GitHub"
           className={s.glassLink}
+          target="_blank"
         >
           <div className={s.glassLinkShine} aria-hidden="true" />
           <SocialGitHubIcon className={s.gitHubIcon} />
