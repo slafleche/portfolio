@@ -15,7 +15,7 @@ import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import { focusOutline } from '../helpers/outlines.helper';
+import { outlines } from '../helpers/outlines.helper';
 import { colorVars } from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
 import { borders } from '../helpers/borders.helper';
@@ -105,7 +105,7 @@ export const trigger = style({
     },
     '&:focus-visible': {
       backgroundColor: colorVars.white.alpha(0.08).css(),
-      ...focusOutline({
+      ...outlines({
         color: colorVars.white.alpha(0.4),
         width: m(0.75),
         offset: m(0.75),
@@ -117,7 +117,7 @@ export const trigger = style({
 export const triggerLabel = style({
   ...composeFontVariantStyles(fontVariants.h4),
   color: colorVars.white.css(),
-  letterSpacing: '0.01em',
+  letterSpacing: '0.01em'
 });
 
 export const triggerSubtitle = style({
