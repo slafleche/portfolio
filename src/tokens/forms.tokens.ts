@@ -2,12 +2,28 @@ import { colorVars } from '@/styles/componentTokens/global.componentTokens';
 import { m } from '@/styles/measurementKit';
 
 export const formTokens = {
+  label: {
+    text: {
+      color: colorVars.white.alpha(0.85),
+    },
+  },
+  message: {
+    minChars: 10,
+    maxChars: 2000,
+    minRows: 5,
+  },
   layout: {
     maxWidth: m(640),
     fieldGap: m(12),
     sectionGap: m(16),
   },
   field: {
+    text: {
+      color: colorVars.white.alpha(0.92),
+    },
+    placeholder: {
+      color: colorVars.white.alpha(0.55),
+    },
     paddings: {
       vertical: m(12),
       horizontal: m(16),
@@ -29,13 +45,13 @@ export const formTokens = {
           color: colorVars.brand.alpha(0.45),
         },
       ],
+      borders: {
+        color: colorVars.brand.alpha(0.65),
+      },
       outlines: {
         width: m(3),
         color: colorVars.brand.alpha(0.65),
       },
-    },
-    text: {
-      color: colorVars.white.alpha(0.92),
     },
     error: {
       text: {
@@ -45,19 +61,9 @@ export const formTokens = {
         color: colorVars.gradientA_secondary_end.alpha(0.8),
       },
     },
-
     backgrounds: {
       color: colorVars.white.alpha(0.06),
     },
-    placeholderColor: colorVars.white.alpha(0.55),
-  },
-  label: {
-    textColor: colorVars.white.alpha(0.85),
-  },
-  message: {
-    minChars: 10,
-    maxChars: 2000,
-    minRows: 5,
   },
   status: {
     success: {

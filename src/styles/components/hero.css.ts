@@ -218,8 +218,8 @@ export const vennContainer = style({
   position: 'relative',
   isolation: 'isolate',
   ...paddings({
-    horizontal: offset.multiply(4).css(),
-    vertical: offset.multiply(4).css(),
+    horizontal: offset.multiply(4),
+    vertical: offset.multiply(4),
   }),
 });
 

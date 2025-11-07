@@ -13,13 +13,12 @@ import {
 import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
-import type { ColorWrapper } from '../helpers/colorWrap.helper';
+import { backgrounds } from '../helpers/background.helper';
 
 const controlBase: ComplexStyleRule = {
   width: '100%',
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
-  ...backgrounds(formTokens.field.backgrounds),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -27,28 +26,19 @@ const controlBase: ComplexStyleRule = {
   boxSizing: 'border-box',
   selectors: {
     '&::placeholder': {
-      color: formTokens.field.placeholderColor.css(),
+      // color: formTokens.placeholder.color.css(),
       opacity: 1,
     },
     '&:hover': {
-      ...borders({
-        ...formTokens.field.borders,
-        ...formTokens.field.hover.borders,
-      }),
+      ...borders(formTokens.field.hover.borders),
     },
     '&:focus, &:focus-visible': {
-      ...borders({
-        ...formTokens.field.borders,
-        ...formTokens.field.hover.borders,
-      }),
+      ...borders(formTokens.field.focusVisible.borders),
       boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
     },
     '&[data-error="true"]': {
-      color: formTokens.field.error.text.color.css(),
-      ...borders({
-        ...formTokens.field.borders,
-        ...formTokens.field.error.borders,
-      }),
+      // color: formTokens.error.text.color.css(),
+      // ...borders(formTokens.error.borders),
     },
   },
 };
@@ -91,7 +81,7 @@ export const labelRow = style({
   justifyContent: 'space-between',
   alignItems: 'baseline',
   gap: formTokens.layout.fieldGap.css(),
-  color: formTokens.label.textColor.css(),
+  color: formTokens.label.text.color.css(),
   fontWeight: 600,
 });
 
@@ -132,27 +122,24 @@ export const status = style(statusBase);
 export const statusSuccess = style([
   statusBase,
   {
-    backgroundColor: formTokens.status.success.background.css(),
-    borderColor: formTokens.status.success.borderColor.css(),
-    color: formTokens.status.success.textColor.css(),
+    ...backgrounds(formTokens.status.success.backgrounds),
+    ...borders(formTokens.status.success.borders),
   },
 ]);
 
 export const statusError = style([
   statusBase,
   {
-    backgroundColor: formTokens.status.error.background.css(),
-    borderColor: formTokens.status.error.borderColor.css(),
-    color: formTokens.status.error.textColor.css(),
+    ...backgrounds(formTokens.status.error.backgrounds),
+    ...borders(formTokens.status.error.borders),
   },
 ]);
 
 export const statusGeneric = style([
   statusBase,
   {
-    backgroundColor: formTokens.status.generic.background.css(),
-    borderColor: formTokens.status.generic.borderColor.css(),
-    color: formTokens.status.generic.textColor.css(),
+    ...backgrounds(formTokens.status.generic.backgrounds),
+    ...borders(formTokens.status.generic.borders),
   },
 ]);
 
@@ -180,10 +167,10 @@ export const buttonRow = style({
 
 export const submitButton = style({
   minHeight: formTokens.button.minHeight.css(),
-  padding: `0 ${formTokens.button.paddingInline.css()}`,
-  borderRadius: formTokens.button.borderRadius.css(),
+  // padding: `0 ${formTokens.button.paddingInline.css()}`,
+  // borderRadius: formTokens.button.borderRadius.css(),
   border: 'none',
-  background: formTokens.status.success.borderColor.css(),
+  // background: formTokens.status.success.borderColor.css(),
   color: '#0b0b0f',
   fontWeight: 600,
   transition:
@@ -215,7 +202,6 @@ export const privacyLink = style({
   border: 'none',
   padding: 0,
   font: 'inherit',
-  color: formTokens.status.success.textColor.css(),
   textDecoration: 'underline',
   textDecorationThickness: 'from-font',
   textUnderlineOffset: 4,
@@ -235,8 +221,8 @@ export const privacyOverlay = style({
   position: 'fixed',
   inset: 0,
   backgroundColor: colorVars.black.alpha(0.85).css(),
-  backdropFilter: `blur(${glassVars.backdropBlur.double().css()})`,
-  WebkitBackdropFilter: `blur(${glassVars.backdropBlur.double().css()})`,
+  backdropFilter: `blur(${glassVars.blur.double().css()})`,
+  WebkitBackdropFilter: `blur(${glassVars.blur.double().css()})`,
   zIndex: 1100,
 });
 
@@ -288,7 +274,7 @@ export const privacyCloseIcon = style({
   width: glassyButtonTokens.iconSize.css(),
   height: glassyButtonTokens.iconSize.css(),
   ...borders(glassyButtonTokens.borders),
-  background: glassyButtonTokens.background.css(),
+  ...backgrounds(glassyButtonTokens.backgrounds),
   color: glassyButtonTokens.text.color.css(),
   display: 'inline-flex',
   alignItems: 'center',
@@ -297,20 +283,20 @@ export const privacyCloseIcon = style({
   fontWeight: 600,
   cursor: 'pointer',
   boxShadow: boxShadow(glassyButtonTokens.boxShadows),
-  backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
-  WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
-  transition: glassyButtonTokens.transition,
+  backdropFilter: `blur(${glassVars.blur.double().css()})`,
+  WebkitBackdropFilter: `blur(${glassVars.blur.css()})`,
+  // transition: glassyButtonTokens.transition,
   selectors: {
     '&:hover': {
-      background: glassyButtonTokens.hover.background.color.css(),
+      // background: glassyButtonTokens.hover.background.color.css(),
       boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-1px)',
     },
     '&:focus, &:focus-visible': {
       outline: 'none',
-      ...backgrounds(glasssButtonTokens.focusVisible.backgrounds),
-      background:
-        glassyButtonTokens.focusVisible.background.color.css(),
+      // ...backgrounds(glasssButtonTokens.focusVisible.backgrounds),
+      // background:
+      // glassyButtonTokens.focusVisible.background.color.css(),
       boxShadow: boxShadow(
         glassyButtonTokens.focusVisible.boxShadows,
       ),
