@@ -3,7 +3,7 @@ import type { GlobalStyleRule } from '@vanilla-extract/css';
 import { getImage } from '@/lib/images';
 import type { ColorWrapper } from './colorWrap.helper';
 
-export interface IBackground {
+export interface IBackgrounds {
   color?: ColorWrapper;
   attachment?: CSS.Property.BackgroundAttachment;
   position?: CSS.Property.Position;
@@ -130,7 +130,7 @@ export const getBackgroundImage = (
 };
 
 /* Typed helper you can safely spread into globalStyle(...) */
-export const backgrounds = (props: IBackground): GlobalStyleRule => {
+export const backgrounds = (props: IBackgrounds): GlobalStyleRule => {
   const styles: GlobalStyleRule = {
     backgroundPosition: props.position ?? '50% 50%',
     backgroundRepeat: props.repeat ?? 'no-repeat',
