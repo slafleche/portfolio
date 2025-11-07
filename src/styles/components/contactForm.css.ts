@@ -35,7 +35,7 @@ const controlBase: ComplexStyleRule = {
         ...formTokens.field.hover.borders,
       }),
     },
-    '&:focus-visible': {
+    '&:focus, &:focus-visible': {
       ...borders({
         ...formTokens.field.borders,
         ...formTokens.field.hover.borders,
@@ -191,7 +191,7 @@ export const submitButton = style({
     '&:hover': {
       transform: 'translateY(-1px)',
     },
-    '&:focus-visible': {
+    '&:focus, &:focus-visible': {
       outline: 'none',
       boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
     },
@@ -223,7 +223,7 @@ export const privacyLink = style({
     '&:hover': {
       opacity: 0.9,
     },
-    '&:focus-visible': {
+    '&:focus, &:focus-visible': {
       outline: 'none',
       boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
     },
@@ -305,7 +305,7 @@ export const privacyCloseIcon = style({
       boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-1px)',
     },
-    '&:focus-visible': {
+    '&:focus, &:focus-visible': {
       outline: 'none',
       background:
         glassyButtonTokens.focusVisible.background.color.css(),
