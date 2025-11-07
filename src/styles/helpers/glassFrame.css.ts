@@ -1,9 +1,10 @@
 import { style } from '@vanilla-extract/css';
 import { glassVars } from '../../tokens/glassy.tokens';
-import { boxShadow } from './shadow';
+
 import { colorVars } from '../componentTokens/global.componentTokens';
-import { borders } from './borders';
-import { paddings } from './spacing';
+import { paddings } from './spacing.helper';
+import borders from './borders.helper';
+import { boxShadow } from './shadow.helper';
 
 export const frame = style({
   // position: 'relative',
