@@ -2,14 +2,14 @@ import {
   color,
   type ColorWrapper,
   type CuloriOKLCH,
-} from './colorWrap';
+} from './colorWrap.helper';
 import type { IMeasurement } from '../measurementKit';
 import { hasCssMethod } from '../measurementKit';
 import {
   buildCurve,
   easing,
   type EasingFunction,
-} from './easingCurves';
+} from './easingCurves.helper';
 
 /** OKLCH tuple (percents for L, chroma as 0..~0.4, hue in degrees) */
 export type OKLCH = {

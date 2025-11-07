@@ -1,4 +1,4 @@
-import type { ColorWrapper } from './colorWrap';
+import type { ColorWrapper } from './colorWrap.helper';
 import { m, type IMeasurement } from '../measurementKit';
 import {
   dropShadowVars,

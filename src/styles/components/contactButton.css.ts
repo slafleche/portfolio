@@ -5,7 +5,7 @@ import {
   themeColours,
 } from '../componentTokens/global.componentTokens';
 import { boxShadow } from '../helpers/shadow.helper';
-import { focusOutline } from '../helpers/focusOutline.helper';
+import { focusOutline } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 
 import {

@@ -4,7 +4,7 @@ import {
   absolutePosition,
   flexPosition,
 } from '../helpers/positioning.helper';
-import { focusOutline } from '../helpers/focusOutline.helper';
+import { focusOutline } from '../helpers/outlines.helper';
 import type { ColorWrapper } from '../helpers/colorWrap.helper';
 import {
   archVars,
