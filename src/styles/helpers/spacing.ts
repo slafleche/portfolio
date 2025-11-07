@@ -8,6 +8,7 @@ type SpacingValue =
   | null
   | undefined;
 export type SpacingProps = AxisValues<SpacingValue>;
+type SpacingInput = SpacingProps | SpacingValue;
 
 // number → px, IMeasurement → .css(), string passthrough
 const toCssLen = (v: SpacingValue): string | undefined => {
@@ -37,7 +38,36 @@ const resolve = (value: SpacingValue, fallback: string): string => {
   return fallback;
 };
 
-const spacing = (props?: SpacingProps): string => {
+const normalize = (input?: SpacingInput): SpacingProps | undefined => {
+  if (input === undefined || input === null) return undefined;
+
+  if (
+    typeof input === 'string' ||
+    typeof input === 'number' ||
+    isMeasurement(input)
+  ) {
+    return { all: input };
+  }
+
+  if (typeof input === 'object') {
+    const intent = { ...input } as SpacingProps;
+    if (
+      'width' in intent ||
+      'color' in intent ||
+      'style' in intent
+    ) {
+      throw new Error(
+        '[spacing] Unexpected border shorthand properties on spacing intent.',
+      );
+    }
+    return intent;
+  }
+
+  return undefined;
+};
+
+const spacing = (input?: SpacingInput): string => {
+  const props = normalize(input);
   const base = resolve(props?.all, '0');
 
   const verticalBase =
@@ -76,10 +106,10 @@ const spacing = (props?: SpacingProps): string => {
   return `${topSpacing} ${rightSpacing} ${bottomSpacing} ${leftSpacing}`;
 };
 
-export const paddings = (props: SpacingProps) => ({
+export const paddings = (props?: SpacingInput) => ({
   padding: spacing(props),
 });
 
-export const margins = (props: SpacingProps) => ({
+export const margins = (props?: SpacingInput) => ({
   margin: spacing(props),
 });
