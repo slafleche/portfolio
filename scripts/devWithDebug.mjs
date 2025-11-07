@@ -165,6 +165,13 @@ if (interactive && hasTTY) {
 const localesPromise = loadAvailableLocales();
 let bannerPrinted = false;
 let stdoutBuffer = '';
+let stderrBuffer = '';
+
+const NOISY_WARNING_PATTERNS = [
+  /\[webpack\.cache\.PackFileCacheStrategy]/,
+  /while serializing webpack\/lib\/cache\/PackFileCacheStrategy/i,
+  /No serializer registered for (?:SimpleWebpackError|PostCSSSyntaxError)/,
+];
 
 child.stdout.on('data', async (chunk) => {
   const text = chunk.toString();
@@ -192,7 +199,47 @@ child.stdout.on('data', async (chunk) => {
   }
 });
 
-child.stderr.on('data', (chunk) => process.stderr.write(chunk));
+const formatVEVirtualCssLine = (line) => {
+  const trimmed = line.trimStart();
+  const marker = '⨯ ./node_modules/@vanilla-extract/webpack-plugin/vanilla.virtual.css?';
+  if (!trimmed.startsWith(marker)) return line;
+  const queryStart = line.indexOf('?');
+  if (queryStart === -1) return line;
+  const colonIndex = line.indexOf(':', queryStart);
+  const query = line.slice(queryStart + 1, colonIndex === -1 ? undefined : colonIndex);
+  try {
+    const params = new URLSearchParams(query);
+    const fileName = params.get('fileName')
+      ? decodeURIComponent(params.get('fileName'))
+      : null;
+    const source = params.get('source') ? 'virtual css' : null;
+    const prefix = line.slice(0, line.indexOf('⨯'));
+    const summary =
+      `${prefix}✖ vanilla-extract error in ${fileName ?? 'unknown file'}` +
+      (source ? ` (${source})` : '');
+    return summary;
+  } catch {
+    return line;
+  }
+};
+
+child.stderr.on('data', (chunk) => {
+  stderrBuffer += chunk.toString();
+  const lines = stderrBuffer.split(/\r?\n/);
+  stderrBuffer = lines.pop() ?? '';
+  const filtered = lines.filter(
+    (line) =>
+      line.trim().length === 0 ||
+      !NOISY_WARNING_PATTERNS.some((pattern) => pattern.test(line)),
+  ).map(formatVEVirtualCssLine);
+  const output = filtered.join('\n').trimEnd();
+  if (output) process.stderr.write(output + '\n');
+});
+child.stderr.on('close', () => {
+  if (stderrBuffer.trim().length) {
+    process.stderr.write(stderrBuffer);
+  }
+});
 
 /* ------------------------------- Exit paths -------------------------------- */
 
