@@ -69,8 +69,8 @@ export const root = style({
   ...borders(accordionSurfaceTokens.borders),
   ...backgroundImageDecl(surfaceGradient),
   ...backgrounds(glassyPanelTokens.backgrounds),
-  backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
-  WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
+  backdropFilter: `blur(${glassVars.blur.css()})`,
+  WebkitBackdropFilter: `blur(${glassVars.blur.css()})`,
 });
 
 export const item = style({

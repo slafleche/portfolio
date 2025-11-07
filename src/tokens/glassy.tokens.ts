@@ -136,8 +136,6 @@ export const glassyButtonTokens = {
   },
 } as const;
 
-// 'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
-
 export const glassyPanelTokens = {
   backgrounds: {
     color: colorVars.white.alpha(0.08),
