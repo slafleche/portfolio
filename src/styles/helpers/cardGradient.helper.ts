@@ -1,5 +1,6 @@
 import { color, type ColorWrapper } from './colorWrap.helper';
 import type { Property } from 'csstype';
+import { mPercent } from '../measurementKit/units/percent';
 import {
 	buildLinear,
 	resolveGradientSpotStops,
@@ -155,7 +156,7 @@ function radialStopsAlphaFade(
 		const B = anchors[i + 1];
 		out.push({
 			color: A.color,
-			at: A.p,
+			at: mPercent(A.p),
 		});
 		const mids = interiorPercents(A.p, B.p, extrasPerSpan);
 		for (let j = 0; j < mids.length; j++) {
@@ -177,7 +178,7 @@ function radialStopsAlphaFade(
 			}
 			out.push({
 				color: midColor,
-				at: mids[j],
+				at: mPercent(mids[j]),
 			});
 		}
 	}
@@ -185,7 +186,7 @@ function radialStopsAlphaFade(
 	const last = anchors.at(-1)!;
 	out.push({
 		color: last.color,
-		at: last.p,
+		at: mPercent(last.p),
 	});
 	return out;
 }
@@ -197,7 +198,7 @@ function linearStopsLab(
 	if (slices.length < 2) {
 		return slices.map(({ color, at }) => ({
 			color: ensureAlpha(color),
-			at,
+			at: mPercent(at),
 		}));
 	}
 
@@ -216,7 +217,7 @@ function linearStopsLab(
 		const end = next.at;
 		out.push({
 			color: current.color,
-			at: start,
+			at: mPercent(start),
 		});
 		const mids = interiorPercents(start, end, extrasPerSpan);
 		const scale = color
@@ -244,14 +245,15 @@ function linearStopsLab(
 			}
 			out.push({
 				color: ensureAlpha(mid),
-				at: mids[j],
+				at: mPercent(mids[j]),
 			});
 		}
 	}
 
+	const last = ordered.at(-1)!;
 	out.push({
-		color: ensureAlpha(ordered.at(-1)!.color),
-		at: ordered.at(-1)!.at,
+		color: ensureAlpha(last.color),
+		at: mPercent(last.at),
 	});
 	return out;
 }
@@ -270,12 +272,10 @@ export function makeCardGradient(
 		 * 0–100). Individual spots can override via `spot.softenL`.
 		 */
 		softenL?: number;
-		/**
-		 * Linear gradient direction. Accepts an angle (number or
-		 * measurement), a CSS angle string like `"45deg"`, or start/end
-		 * percentage coordinates. When omitted defaults to 90 (equivalent
-		 * to `"to right"` in CSS).
-		 */
+			/**
+			 * Linear gradient direction. Accepts an MK angle measurement or
+			 * start/end percentage coordinates. Defaults to 90deg (to right).
+			 */
 		linearDirection?: LinearDirectionInput;
 		/**
 		 * Fallback angle when blend modes are unavailable. Defaults to
@@ -303,10 +303,10 @@ export function makeCardGradient(
 		includeSpots = true,
 	} = options;
 
-	const linearAngle = resolveLinearAngle(linearDirection) ?? 90;
-	const fallbackAngle =
-		resolveLinearAngle(linearFallbackDirection ?? linearDirection) ??
-		90;
+	const linearAngle = resolveLinearAngle(linearDirection);
+	const fallbackAngle = resolveLinearAngle(
+		linearFallbackDirection ?? linearDirection,
+	);
 
 	const linearSlices = Array.isArray(gradient.linear)
 		? gradient.linear

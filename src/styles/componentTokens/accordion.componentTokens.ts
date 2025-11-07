@@ -1,12 +1,13 @@
 import { color } from '../helpers/colorWrap.helper';
 import { m } from '../measurementKit';
+import { mPercent } from '../measurementKit/units/percent';
 import { colorVars } from './global.componentTokens';
 
 export const accordionSurfaceTokens = {
   gradientAngle: m(135, 'deg'),
   gradientStops: [
-    { color: color('#160f24'), at: 0 },
-    { color: color('#281532'), at: 100 },
+    { color: color('#160f24'), at: mPercent(0) },
+    { color: color('#281532'), at: mPercent(100) },
   ] as const,
   gradientOpacity: 0.18,
   borders: {

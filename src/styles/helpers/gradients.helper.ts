@@ -3,8 +3,12 @@ import {
   type ColorWrapper,
   type CuloriOKLCH,
 } from './colorWrap.helper';
-import type { IMeasurement } from '../measurementKit';
-import { hasCssMethod } from '../measurementKit';
+import { m, type IMeasurement } from '../measurementKit';
+import type { DegMeasurement } from '../measurementKit/units/angle';
+import {
+  mPercent,
+  type PercentMeasurement,
+} from '../measurementKit/units/percent';
 import {
   buildCurve,
   easing,
@@ -22,11 +26,9 @@ export type ColorInput = OKLCH | string | ColorWrapper; // supports wrapped them
 
 export type Stop = {
   color: ColorInput;
-  /** Position as %, 0..100 (number OR string "40%" accepted) */
-  at: number | string;
+  /** Percent position (MeasurementKit percent unit). */
+  at: PercentMeasurement;
 };
-
-export type AngleInput = number | IMeasurement;
 
 export type LinearOpts = {
   angle?: LinearDirectionInput;
@@ -53,9 +55,6 @@ export type Built = {
   fallback: string;
   modern: string;
 };
-
-const pct = (p: number | string) =>
-  typeof p === 'number' ? `${p}%` : p;
 
 type MeasurementValue = number | IMeasurement;
 
@@ -90,12 +89,14 @@ export type DirectionPoint = {
   y: MeasurementValue;
 };
 
+type DirectionVector = {
+  from: DirectionPoint;
+  to: DirectionPoint;
+};
+
 export type LinearDirectionInput =
-  | AngleInput
-  | {
-      from: DirectionPoint;
-      to: DirectionPoint;
-    };
+  | DegMeasurement
+  | DirectionVector;
 
 const measurementValue = (
   value: MeasurementValue,
@@ -124,18 +125,26 @@ const resolveCoordinateAngle = (
   return ((angle % 360) + 360) % 360;
 };
 
+const DEFAULT_LINEAR_ANGLE = m(90, 'deg');
+
+const isDirectionVector = (
+  input: LinearDirectionInput,
+): input is DirectionVector =>
+  typeof input === 'object' &&
+  input !== null &&
+  'from' in input &&
+  'to' in input;
+
 export function resolveLinearAngle(
   input?: LinearDirectionInput,
-): AngleInput {
-  if (input == null) return 90; // default
-  if (typeof input === 'number') return input;
-  if (hasCssMethod(input)) return input;
-  if ('from' in input && 'to' in input) {
+): DegMeasurement {
+  if (input == null) return DEFAULT_LINEAR_ANGLE;
+  if (isDirectionVector(input)) {
     const result = resolveCoordinateAngle(input);
     if (result == null) throw new Error('Invalid coordinate angle');
-    return result;
+    return m(result, 'deg');
   }
-  throw new Error('Invalid linear angle input');
+  return input;
 }
 
 function isColorWrapper(value: unknown): value is ColorWrapper {
@@ -323,10 +332,8 @@ function colorModern(c: ColorInput): string {
   return colorFallback(c);
 }
 
-const angleToCss = (angle: AngleInput): string =>
-  typeof angle === 'number' ? `${angle}deg` : angle.css();
+const angleToCss = (angle: DegMeasurement): string => angle.css();
 
-// accept number | IMeasurement | { from, to }
 export function buildLinear({
   angle,
   stops,
@@ -342,10 +349,16 @@ export function buildLinear({
     return color(input).alpha(targetAlpha);
   };
   const fStops = stops
-    .map((s) => `${colorFallback(withAlpha(s.color))} ${pct(s.at)}`)
+    .map(
+      (s) =>
+        `${colorFallback(withAlpha(s.color))} ${s.at.css()}`,
+    )
     .join(', ');
   const mStops = stops
-    .map((s) => `${colorModern(withAlpha(s.color))} ${pct(s.at)}`)
+    .map(
+      (s) =>
+        `${colorModern(withAlpha(s.color))} ${s.at.css()}`,
+    )
     .join(', ');
   return {
     fallback: `linear-gradient(${direction}, ${fStops})`,
@@ -361,10 +374,10 @@ export function buildRadial({
 }: RadialOpts): Built {
   const header = `${shape} ${size} at ${at}`;
   const fStops = stops
-    .map((s) => `${colorFallback(s.color)} ${pct(s.at)}`)
+    .map((s) => `${colorFallback(s.color)} ${s.at.css()}`)
     .join(', ');
   const mStops = stops
-    .map((s) => `${colorModern(s.color)} ${pct(s.at)}`)
+    .map((s) => `${colorModern(s.color)} ${s.at.css()}`)
     .join(', ');
   return {
     fallback: `radial-gradient(${header}, ${fStops})`,
@@ -453,10 +466,10 @@ export function stopsFromColors(
   return colors.map((c, i) => {
     const pos = (i / n) * 100;
     if (isOKLCH(c) && alpha != null)
-      return { color: { ...c, a: alpha }, at: pos };
+      return { color: { ...c, a: alpha }, at: mPercent(pos) };
     if (isColorWrapper(c) && alpha != null)
-      return { color: c.alpha(alpha), at: pos };
-    return { color: c, at: pos };
+      return { color: c.alpha(alpha), at: mPercent(pos) };
+    return { color: c, at: mPercent(pos) };
   });
 }
 

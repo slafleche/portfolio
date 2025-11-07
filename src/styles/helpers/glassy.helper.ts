@@ -1,7 +1,12 @@
 import { glassVars } from '@/tokens/glassy.tokens';
 import type * as CSS from 'csstype';
 import { noiseStyle, type NoiseSvgOptions } from './noiseSVG.helper';
-import { buildLinear } from './gradients.helper';
+import { buildLinear, type Built } from './gradients.helper';
+import type { IBackgrounds } from './background.helper';
+import { m } from '../measurementKit';
+import { mPercent } from '../measurementKit/units/percent';
+
+type GradientBuild = Built['modern'];
 
 const defaultNoiseId = `${glassVars.noise.idPrefix}${Math.random()
   .toString(36)
@@ -13,12 +18,12 @@ export const glassNoise = (
 ) => noiseStyle(id, props);
 
 export const createGlassBackground = (): {
-  background: CSS.Property.Background<string>;
+  backgrounds?: IBackgrounds;
+  gradients: GradientBuild[];
   backgroundLayers: {
     overlay: string;
     glow: string;
   };
-  backgroundColor: CSS.Property.BackgroundColor;
   backdropFilter: CSS.Property.BackdropFilter;
   WebkitBackdropFilter: CSS.Property.BackdropFilter;
 } => {
@@ -29,7 +34,7 @@ export const createGlassBackground = (): {
         color: glassVars.overlay.color.alpha(
           glassVars.overlay.topAlpha,
         ),
-        at: 0,
+        at: mPercent(0),
       },
       {
         color: glassVars.overlay.color.alpha(0),
@@ -39,41 +44,43 @@ export const createGlassBackground = (): {
         color: glassVars.overlay.color.alpha(
           glassVars.overlay.bottomAlpha,
         ),
-        at: 100,
+        at: mPercent(100),
       },
     ],
   }).modern;
 
   const glowGradient = buildLinear({
-    angle: 135,
+    angle: m(135, 'deg'),
     stops: [
       {
         color: glassVars.surfaceGlowPrimaryTint.alpha(
           glassVars.surfaceGlow.primaryTintAlpha,
         ),
-        at: 0,
+        at: mPercent(0),
       },
       {
         color: glassVars.surfaceGlowSecondaryTint.alpha(
           glassVars.surfaceGlow.secondaryTintAlpha,
         ),
-        at: 100,
+        at: mPercent(100),
       },
     ],
   }).modern;
 
   return {
+    backgrounds: {
+      color: glassVars.backgrounds.color,
+    },
     backgroundLayers: {
       overlay: overlayGradient,
       glow: glowGradient,
     },
-    background: [
+    gradients: [
       overlayGradient,
       glowGradient,
-    ].join(', '),
-    backgroundColor: glassVars.backgroundColor.css(),
-    backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
+    ],
+    backdropFilter: `blur(${glassVars.blur.css()})`,
     WebkitBackdropFilter:
-      `blur(${glassVars.backdropBlur.css()})` as CSS.Property.BackdropFilter,
+      `blur(${glassVars.blur.css()})` as CSS.Property.BackdropFilter,
   };
 };

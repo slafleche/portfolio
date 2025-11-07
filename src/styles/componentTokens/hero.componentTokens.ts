@@ -1,5 +1,6 @@
 import { color } from '../helpers/colorWrap.helper';
 import { m } from '../measurementKit';
+import { mPercent } from '../measurementKit/units/percent';
 import type { Stop } from '../helpers/gradients.helper';
 
 export const heroVars = {
@@ -7,11 +8,11 @@ export const heroVars = {
 		linear: [
 			{
 				color: color('#160d36'),
-				at: 0,
+				at: mPercent(0),
 			},
 			{
 				color: color('#6f4ed1'),
-				at: 100,
+				at: mPercent(100),
 			},
 		] as Stop[],
 		videoOpacity: 0.35,
