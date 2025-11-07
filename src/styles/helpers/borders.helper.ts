@@ -7,6 +7,7 @@ import type {
   IBorder,
   BorderWidthInput,
   BorderRadiusInput,
+  BorderMeasurementInput,
 } from '../componentTokens/global.componentTokens';
 import { isMeasurement, hasCssMethod } from '../measurementKit';
 import type {
@@ -14,8 +15,7 @@ import type {
   CompassCorners,
   CompassRegion,
   CornerPosition,
-  MeasurementLike,
-} from './types';
+} from './types.helper';
 
 /**
  * Public UX: Border({ bottom: true, bottom: { width: m(6) }, radius:
@@ -64,16 +64,12 @@ interface FinalBorderCSS {
    Utilities
 -------------------------- */
 
-// number → px, IMeasurement → .css(), string passthrough
+// IMeasurement → .css()
 const toCssLen = (
-  v: MeasurementLike | number | null | undefined,
+  v: BorderMeasurementInput,
 ): string | undefined => {
   if (v == null) return undefined;
-  if (typeof v === 'string') return v;
-  if (typeof v === 'number')
-    return Number.isFinite(v) ? `${v}px` : undefined;
-  if (isMeasurement(v)) return v.css();
-  return undefined;
+  return v.css();
 };
 
 const fallbackWidth = (): string => toCssLen(borderVars.width) ?? '0';
@@ -102,40 +98,22 @@ const compressSides = (
 const asWidth = (
   v: BorderWidthInput | undefined,
 ): string | undefined => {
-  if (
-    v &&
-    typeof v === 'object' &&
-    !Array.isArray(v) &&
-    !('value' in v) &&
-    !(typeof (v as { css?: unknown }).css === 'function')
-  ) {
-    // config object — no direct shorthand
-    return undefined;
-  }
-  return (
-    toCssLen(
-      v as unknown as MeasurementLike | number | null | undefined,
-    ) ?? undefined
-  );
+  if (v == null) return undefined;
+  if (isMeasurement(v)) return v.css();
+  return undefined;
 };
 
 const asRadius = (
   v: BorderRadiusInput | undefined,
 ): string | undefined => {
-  if (
-    v &&
-    typeof v === 'object' &&
-    !Array.isArray(v) &&
-    !('value' in v) &&
-    !(typeof (v as { css?: unknown }).css === 'function')
-  ) {
-    return undefined;
+  if (v == null) return undefined;
+  if (Array.isArray(v)) {
+    const entries = v.filter(isMeasurement);
+    if (entries.length === 0) return undefined;
+    return entries.map((entry) => entry.css()).join(' ');
   }
-  return (
-    toCssLen(
-      v as unknown as MeasurementLike | number | null | undefined,
-    ) ?? undefined
-  );
+  if (isMeasurement(v)) return v.css();
+  return undefined;
 };
 
 /* --------------------------

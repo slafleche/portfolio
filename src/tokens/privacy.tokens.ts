@@ -31,26 +31,26 @@ export const privacyTokens = {
     offset: m(12),
     size: glassVars.action.size,
     borders: {
-      width: glassVars.borderWidth,
-      color: glassVars.borderColor,
-      radius: glassVars.borderRadius,
+      width: glassVars.borders.width,
+      color: glassVars.borders.color,
+      radius: glassVars.borders.radius,
     },
     background: glassVars.action.background,
     hover: {
-      background: glassVars.action.hoverBackground,
+      background: glassVars.action.hover.background,
     },
     text: {
-      color: glassVars.action.textColor,
+      color: glassVars.action.text.color,
     },
     iconSize: glassVars.action.iconSize,
     shadow: {
-      rest: glassVars.action.shadowRest,
-      hover: glassVars.action.shadowHover,
+      rest: glassVars.action.shadow.rest,
+      hover: glassVars.action.shadow.hover,
     },
     focus: {
       outlines: {
         width: glassVars.action.focusRingWidth,
-        color: glassVars.action.focusRingColor,
+        color: glassVars.action.focus.RingColor,
       },
     },
     transition: glassVars.action.transition,

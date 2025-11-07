@@ -22,6 +22,16 @@ export type CompassCorners<T> = Partial<
   Record<'all' | CompassRegion | CornerPosition, T>
 >;
 
+export type SpacingKeyword =
+  | 'auto'
+  | 'inherit'
+  | 'initial'
+  | 'unset'
+  | 'revert'
+  | 'revert-layer';
+
+export type SpacingValue = IMeasurement | SpacingKeyword;
+
 export type FontFamilyDef = {
   family: CSS.Property.FontFamily;
   weights: {
@@ -78,7 +88,7 @@ export type FontStyles = {
  */
 export type FontConfig = {
   texts?: string[];
-  keys?: string[]; // <— new
+  keys?: string[];
   weights: string | string[];
   ital?: boolean;
   subsets?: string[];
@@ -120,9 +130,11 @@ export interface BorderRadiusConfig {
 }
 
 export type BorderRadiusInput =
-  | BorderMeasurementInput
-  | BorderMeasurementInput[]
-  | BorderRadiusConfig;
+  | IMeasurement
+  | ReadonlyArray<IMeasurement>
+  | BorderRadiusConfig
+  | null
+  | undefined;
 
 export interface IBorder {
   color?: CSS.Property.BorderColor | CssLike | Color;

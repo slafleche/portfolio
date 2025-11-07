@@ -1,5 +1,5 @@
 // One-stop helpers for font weights + family defs + loading/validating fonts.config.json.
-import type { FontFamilyDef } from './types';
+import type { FontFamilyDef } from './types.helper';
 
 // ---- Types expected from your JSON config ----
 export type FontCfgInput = {
