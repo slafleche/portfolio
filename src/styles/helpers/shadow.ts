@@ -9,20 +9,32 @@ export interface IBoxShadow {
   y?: IMeasurement;
   blur?: IMeasurement;
   spread?: IMeasurement;
+  alpha?: number;
   inset?: boolean;
   color?: ColorWrapper;
 }
 
 // Will default to global set of default value
-export const globalBoxShadow = (props: IBoxShadow = {}) => {
+const formatBoxShadow = (props: IBoxShadow = {}) => {
   const {
     x = dropShadowVars.offsetX,
     y = dropShadowVars.offsetY,
     blur = dropShadowVars.blur,
     color = dropShadowVars.color,
+    alpha = dropShadowVars.alpha,
     inset = false,
   } = props || {};
-  return `${x.css()} ${y.css()} ${blur.css()} 0 ${color.css()}${inset ? ' inset' : ''}`;
+  const finalColor = alpha || alpha !== 1 ? color.alpha(alpha) : color;
+  return `${x.css()} ${y.css()} ${blur.css()} 0 ${finalColor.css()}${inset ? ' inset' : ''}`;
+};
+
+export const boxShadow = (
+  input: IBoxShadow | IBoxShadow[] = {},
+) => {
+  if (Array.isArray(input)) {
+    return input.map((entry) => formatBoxShadow(entry)).join(', ');
+  }
+  return formatBoxShadow(input);
 };
 
 // CSS filter: drop-shadow() helper, using global defaults

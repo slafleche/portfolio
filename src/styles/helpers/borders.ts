@@ -1,5 +1,8 @@
 import type * as CSS from 'csstype';
-import { borderVars, colorVars } from '../componentTokens/componentTokens.global';
+import {
+  borderVars,
+  colorVars,
+} from '../componentTokens/componentTokens.global';
 import type {
   IBorder,
   BorderWidthInput,
@@ -386,14 +389,138 @@ const resolveRadiusCompass = (
    Main: border()
 -------------------------- */
 
-const resolve = (intent?: BorderIntent): FinalBorderCSS => {
+type BorderOptions = {
+  allowRadiusOnly?: boolean;
+};
+
+const hasRadiusIntent = (intent?: BorderIntent): boolean => {
+  if (!intent) return false;
+  const radius = intent.radius;
+  if (radius === undefined || radius === null || radius === 0)
+    return false;
+  if (typeof radius === 'object') {
+    return Object.keys(radius).length > 0;
+  }
+  return true;
+};
+
+const edgeKeys: Array<Exclude<keyof BorderIntent, 'radius'>> = [
+  'all',
+  'vertical',
+  'horizontal',
+  'top',
+  'right',
+  'bottom',
+  'left',
+];
+
+const hasEdgeIntent = (intent?: BorderIntent): boolean => {
+  if (!intent) return false;
+  return edgeKeys.some((key) => {
+    const value = intent[key];
+    return value !== undefined && value !== false;
+  });
+};
+
+// Here's the main resolver function
+type BorderShortcut = Partial<IBorder> & {
+  radius?:
+    | BorderRadiusInput
+    | Partial<Record<'all' | CompassRegion | CornerPosition, BorderRadiusInput>>;
+};
+
+type BorderInput = BorderIntent | BorderRadiusInput | BorderShortcut;
+
+const normalizeIntent = (
+  input?: BorderInput,
+): BorderIntent | undefined => {
+  if (input === undefined || input === null) return undefined;
+  if (
+    typeof input === 'string' ||
+    typeof input === 'number' ||
+    isMeasurement(input)
+  ) {
+    return {
+      radius: {
+        all: input,
+      },
+    };
+  }
+
+  const {
+    width,
+    color,
+    style,
+    radius,
+    ...rest
+  } = input as BorderShortcut & BorderIntent;
+
+  const intent = rest as BorderIntent;
+
+  if (width !== undefined || color !== undefined || style !== undefined) {
+    const shorthandAll: IBorder = {};
+    if (width !== undefined) shorthandAll.width = width;
+    if (color !== undefined) shorthandAll.color = color;
+    if (style !== undefined) shorthandAll.style = style;
+
+    const existingAll =
+      intent.all && intent.all !== true && typeof intent.all === 'object'
+        ? intent.all
+        : undefined;
+
+    intent.all = {
+      ...shorthandAll,
+      ...(existingAll ?? {}),
+    };
+  }
+
+  if (radius !== undefined) {
+    if (isRadiusCompass(radius)) {
+      intent.radius = radius;
+    } else if (
+      typeof radius === 'string' ||
+      typeof radius === 'number' ||
+      isMeasurement(radius)
+    ) {
+      intent.radius = {
+        all: radius,
+      };
+    } else {
+      intent.radius = radius as BorderIntent['radius'];
+    }
+  }
+
+  return intent;
+};
+
+const resolve = (
+  input?: BorderInput,
+  options?: BorderOptions,
+): FinalBorderCSS => {
+  const intent = normalizeIntent(input);
   if (intent && 'all' in intent && intent.all === false) {
     // prefer borders.none()
   }
 
   const { t, r, b, l } = resolveIntentToEdges(intent ?? {});
   const anyActive = t.active || r.active || b.active || l.active;
-  if (!anyActive) return {};
+
+  const radiusOnly =
+    options?.allowRadiusOnly &&
+    hasRadiusIntent(intent) &&
+    !hasEdgeIntent(intent);
+
+  if (!anyActive && !radiusOnly) return {};
+
+  if (!anyActive && radiusOnly) {
+    const radiusVal = resolveRadiusCompass(intent?.radius, {
+      t,
+      r,
+      b,
+      l,
+    });
+    return radiusVal ? { borderRadius: radiusVal } : {};
+  }
 
   const widths = [
     t.width!,
@@ -464,7 +591,8 @@ const resolve = (intent?: BorderIntent): FinalBorderCSS => {
 -------------------------- */
 
 export const borders = Object.assign(
-  (intent?: BorderIntent): FinalBorderCSS => resolve(intent),
+  (intent?: BorderInput, options?: BorderOptions): FinalBorderCSS =>
+    resolve(intent, options),
   {
     none(): FinalBorderCSS {
       return { border: 'none' };
