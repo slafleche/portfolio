@@ -33,6 +33,20 @@
   but never pass raw numbers or strings—the helper will throw unless the value
   is a MeasurementKit instance or one of the approved spacing keywords.
 
+### Token Structure
+
+- Group reusable measurements/colors into pluralized helper bundles (e.g.,
+  `paddings`, `borders`, `boxShadows`) so styles can spread them straight into
+  the helpers without rebuilding shorthands by hand.
+- When a component needs state-specific overrides (hover, focus, active, etc.),
+  nest each state under its own key and reuse the same bundle names inside —
+  `hover.boxShadows`, `focus.borders`, `active.backgrounds`, etc. Every override
+  mirrors the base shape so swapping states never requires learning a new
+  token layout.
+- Avoid leaking scalar shorthands (`paddingInline`, `shadowColor`, …) out of the
+  token layer. Keep measurements grouped until the helper emits CSS in the style
+  layer.
+
 ### Setup
 
 - Run `yarn fresh` after cloning. This installs dependencies and runs the full

@@ -6,17 +6,20 @@ import {
 import { formTokens } from '@/tokens/forms.tokens';
 import { m } from '../measurementKit';
 import { colorVars } from '../componentTokens/global.componentTokens';
-import { glassVars } from '../../tokens/glassy.tokens';
-import borders from '../helpers/borders.helper';
 import {
-  boxShadow,
-} from '../helpers/shadow.helper';
+  glassVars,
+  glassyButtonTokens,
+} from '../../tokens/glassy.tokens';
+import borders from '../helpers/borders.helper';
+import { boxShadow } from '../helpers/shadow.helper';
+import { paddings } from '../helpers/spacing.helper';
 
 const controlBase: ComplexStyleRule = {
   width: '100%',
-  padding: `${formTokens.field.paddingBlock.css()} ${formTokens.field.paddingInline.css()}`,
+  ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
   backgroundColor: formTokens.field.background.css(),
+  color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
   font: 'inherit',
@@ -111,17 +114,15 @@ export const textarea = style([
 ]);
 
 export const errorText = style({
-  color: formTokens.field.errorTextColor.css(),
+  color: formTokens.field.error.text.color.css(),
   fontSize: '0.85rem',
 });
 
 const statusBase: ComplexStyleRule = {
-  borderRadius: formTokens.field.borderRadius.css(),
-  padding: `${formTokens.field.paddingBlock.css()} ${formTokens.field.paddingInline.css()}`,
-  borderWidth: formTokens.field.borderWidth.css(),
-  borderStyle: 'solid',
   display: 'flex',
   alignItems: 'center',
+  ...borders(formTokens.field.borders),
+  ...paddings(formTokens.field.paddings),
   gap: formTokens.layout.fieldGap.css(),
 };
 
@@ -192,7 +193,7 @@ export const submitButton = style({
     },
     '&:focus-visible': {
       outline: 'none',
-      boxShadow: `0 0 0 ${formTokens.field.focusRingWidth.css()} ${formTokens.field.focusRingColor.css()}`,
+      boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
     },
     '&:disabled': {
       opacity: 0.5,
@@ -224,7 +225,7 @@ export const privacyLink = style({
     },
     '&:focus-visible': {
       outline: 'none',
-      boxShadow: `0 0 0 ${formTokens.field.focusRingWidth.css()} ${formTokens.field.focusRingColor.css()}`,
+      boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
     },
   },
 });
@@ -283,35 +284,38 @@ export const privacyCloseIcon = style({
   position: 'absolute',
   top: m(4).css(),
   right: m(4).css(),
-  width: glassyButton.size.css(),
-  height: glassyButton.size.css(),
-  ...borders(glassyButton.borders),
-  background: glassyButton.background.css(),
-  color: glassyButton.textColor.css(),
+  width: glassyButtonTokens.iconSize.css(),
+  height: glassyButtonTokens.iconSize.css(),
+  ...borders(glassyButtonTokens.borders),
+  background: glassyButtonTokens.background.css(),
+  color: glassyButtonTokens.text.color.css(),
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: glassyButton.iconSize.css(),
+  fontSize: glassyButtonTokens.iconSize.css(),
   fontWeight: 600,
   cursor: 'pointer',
-  boxShadow: glassyButton.shadowRest,
+  boxShadow: boxShadow(glassyButtonTokens.boxShadows),
   backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
   WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
-  transition: glassyButton.transition,
+  transition: glassyButtonTokens.transition,
   selectors: {
     '&:hover': {
-      background: glassyButton.hoverBackground.css(),
-      boxShadow: glassyButton.shadowHover,
+      background: glassyButtonTokens.hover.background.color.css(),
+      boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-1px)',
     },
     '&:focus-visible': {
       outline: 'none',
-      background: glassyButton.hoverBackground.css(),
-      boxShadow: `${glassyButton.shadowHover}, 0 0 0 ${glassyButton.focusRingWidth.css()} ${glassyButton.focusRingColor.css()}`,
+      background:
+        glassyButtonTokens.focusVisible.background.color.css(),
+      boxShadow: boxShadow(
+        glassyButtonTokens.focusVisible.boxShadows,
+      ),
     },
     '&:active': {
       transform: 'translateY(0)',
-      boxShadow: glassyButton.shadowRest,
+      boxShadow: boxShadow(glassyButtonTokens.boxShadows),
     },
   },
 });
