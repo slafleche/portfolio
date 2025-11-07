@@ -1,10 +1,7 @@
 import { m } from '../styles/measurementKit';
 import { layoutVars } from '../styles/componentTokens/componentTokens.layout';
 import { colorVars } from '../styles/componentTokens/componentTokens.global';
-import {
-  glassyActionTokens,
-  glassVars,
-} from '../styles/helpers/glassy';
+import { glassVars } from './glassy.tokens';
 
 const horizontalPadding = m(24);
 
@@ -22,37 +19,41 @@ export const privacyTokens = {
     gap: m(8),
   },
   title: {
-    fontSize: 'clamp(2.25rem, 5vw, 3rem)',
-    fontWeight: 700,
+    // fontSize: 'clamp(2.25rem, 5vw, 3rem)',
+    // fontWeight: 700,
     color: colorVars.white,
   },
   updated: {
     color: colorVars.white.alpha(0.65),
-    fontSize: '0.95rem',
+    // fontSize: '0.95rem',
   },
   backLink: {
     offset: m(12),
-    size: glassyActionTokens.size,
+    size: glassVars.action.size,
     borders: {
-      all: {
-        width: glassyActionTokens.borderWidth,
-        color: glassyActionTokens.borderColor,
-        style: 'solid' as const,
-      },
-      radius: {
-        all: glassyActionTokens.borderRadius,
+      width: glassVars.borderWidth,
+      color: glassVars.borderColor,
+      radius: glassVars.borderRadius,
+    },
+    background: glassVars.action.background,
+    hover: {
+      background: glassVars.action.hoverBackground,
+    },
+    text: {
+      color: glassVars.action.textColor,
+    },
+    iconSize: glassVars.action.iconSize,
+    shadow: {
+      rest: glassVars.action.shadowRest,
+      hover: glassVars.action.shadowHover,
+    },
+    focus: {
+      outlines: {
+        width: glassVars.action.focusRingWidth,
+        color: glassVars.action.focusRingColor,
       },
     },
-    background: glassyActionTokens.background,
-    hoverBackground: glassyActionTokens.hoverBackground,
-    textColor: glassyActionTokens.textColor,
-    iconSize: glassyActionTokens.iconSize,
-    fontWeight: 600,
-    shadowRest: glassyActionTokens.shadowRest,
-    shadowHover: glassyActionTokens.shadowHover,
-    focusRingWidth: glassyActionTokens.focusRingWidth,
-    focusRingColor: glassyActionTokens.focusRingColor,
-    transition: glassyActionTokens.transition,
+    transition: glassVars.action.transition,
     backdropBlur: glassVars.backdropBlur,
     sheen:
       'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.65) 45%, rgba(255,255,255,0) 100%)',

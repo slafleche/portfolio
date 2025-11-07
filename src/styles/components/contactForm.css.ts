@@ -6,10 +6,8 @@ import {
 import { formTokens } from '@/tokens/forms.tokens';
 import { m } from '../measurementKit';
 import { colorVars } from '../componentTokens/componentTokens.global';
-import {
-  glassVars,
-  glassyActionTokens,
-} from '../helpers/glassy';
+import { glassVars, glassyButton } from '../../tokens/glassy.tokens';
+import borders from '../helpers/borders';
 
 const controlBase: ComplexStyleRule = {
   width: '100%',
@@ -124,8 +122,7 @@ export const status = style(statusBase);
 export const statusSuccess = style([
   statusBase,
   {
-    backgroundColor:
-      formTokens.status.success.background.css(),
+    backgroundColor: formTokens.status.success.background.css(),
     borderColor: formTokens.status.success.borderColor.css(),
     color: formTokens.status.success.textColor.css(),
   },
@@ -248,7 +245,7 @@ export const privacyPanel = style({
   width: 'min(70ch, 90vw)',
   maxHeight: '80vh',
   padding: `${m(12).css()} ${m(11).css()}`,
-  borderRadius: formTokens.field.borderRadius.css(),
+  ...borders(formTokens.field.borders),
   backgroundColor: colorVars.bodyBg.css(),
   color: colorVars.bodyFg.css(),
   boxShadow: `0 ${m(3).css()} ${m(12).css()} ${colorVars.black.alpha(0.35).css()}`,
@@ -278,36 +275,35 @@ export const privacyCloseIcon = style({
   position: 'absolute',
   top: m(4).css(),
   right: m(4).css(),
-  width: glassyActionTokens.size.css(),
-  height: glassyActionTokens.size.css(),
-  borderRadius: glassyActionTokens.borderRadius.css(),
-  border: `${glassyActionTokens.borderWidth.css()} solid ${glassyActionTokens.borderColor.css()}`,
-  background: glassyActionTokens.background.css(),
-  color: glassyActionTokens.textColor.css(),
+  width: glassyButton.size.css(),
+  height: glassyButton.size.css(),
+  ...borders(glassyButton.borders),
+  background: glassyButton.background.css(),
+  color: glassyButton.textColor.css(),
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: glassyActionTokens.iconSize.css(),
+  fontSize: glassyButton.iconSize.css(),
   fontWeight: 600,
   cursor: 'pointer',
-  boxShadow: glassyActionTokens.shadowRest,
+  boxShadow: glassyButton.shadowRest,
   backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
   WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
-  transition: glassyActionTokens.transition,
+  transition: glassyButton.transition,
   selectors: {
     '&:hover': {
-      background: glassyActionTokens.hoverBackground.css(),
-      boxShadow: glassyActionTokens.shadowHover,
+      background: glassyButton.hoverBackground.css(),
+      boxShadow: glassyButton.shadowHover,
       transform: 'translateY(-1px)',
     },
     '&:focus-visible': {
       outline: 'none',
-      background: glassyActionTokens.hoverBackground.css(),
-      boxShadow: `${glassyActionTokens.shadowHover}, 0 0 0 ${glassyActionTokens.focusRingWidth.css()} ${glassyActionTokens.focusRingColor.css()}`,
+      background: glassyButton.hoverBackground.css(),
+      boxShadow: `${glassyButton.shadowHover}, 0 0 0 ${glassyButton.focusRingWidth.css()} ${glassyButton.focusRingColor.css()}`,
     },
     '&:active': {
       transform: 'translateY(0)',
-      boxShadow: glassyActionTokens.shadowRest,
+      boxShadow: glassyButton.shadowRest,
     },
   },
 });
@@ -325,9 +321,9 @@ export const visuallyHidden = style({
 });
 
 globalStyle(`${input}[data-error="true"]::placeholder`, {
-  color: formTokens.field.errorTextColor.css(),
+  color: formTokens.field.error.text.color.css(),
 });
 
 globalStyle(`${textarea}[data-error="true"]::placeholder`, {
-  color: formTokens.field.errorTextColor.css(),
+  color: formTokens.field.error.text.color.css(),
 });

@@ -5,7 +5,11 @@ import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import { glassVars, glassyActionTokens } from '../helpers/glassy';
+import {
+  glassVars,
+  glassyButtonTokens,
+} from '../../tokens/glassy.tokens';
+import { boxShadow } from '../helpers/shadow';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -86,21 +90,20 @@ export const closeButton = style({
   marginTop: m(4).css(),
   marginBottom: m(4).css(),
   alignSelf: 'flex-end',
-  width: glassyActionTokens.size.css(),
-  height: glassyActionTokens.size.css(),
-  borderRadius: glassyActionTokens.borderRadius.css(),
-  border: `${glassyActionTokens.borderWidth.css()} solid ${glassyActionTokens.borderColor.css()}`,
-  background: glassyActionTokens.background.css(),
-  color: glassyActionTokens.textColor.css(),
+  // width: glassyButtonTokens.size.css(),
+  // height: glassyButtonTokens.size.css(),
+  // ...borders(glassyButtonTokens.borders),
+  background: glassyButtonTokens.background.css(),
+  color: glassyButtonTokens.text.color.css(),
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: glassyActionTokens.iconSize.css(),
+  fontSize: glassyButtonTokens.iconSize.css(),
   fontWeight: 600,
-  boxShadow: glassyActionTokens.shadowRest,
+  boxShadow: boxShadow(glassyButtonTokens.shadow.rest.boxShadows),
   backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
   WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
-  transition: glassyActionTokens.transition,
+  transition: glassyButtonTokens.transition,
   overflow: 'hidden',
   zIndex: 1,
   selectors: {
@@ -115,19 +118,24 @@ export const closeButton = style({
       transition: 'opacity 180ms ease',
     },
     '&:hover': {
-      background: glassyActionTokens.hoverBackground.css(),
-      boxShadow: glassyActionTokens.shadowHover,
+      background:
+        glassyButtonTokens.shadow.hover.backgrounds.color.css(),
+      boxShadow: boxShadow(
+        glassyButtonTokens.shadow.hover.boxShadows,
+      ),
       transform: 'translateY(-2px)',
     },
     '&:focus-visible': {
       outline: 'none',
-      background: glassyActionTokens.hoverBackground.css(),
-      boxShadow: `${glassyActionTokens.shadowHover}, 0 0 0 ${glassyActionTokens.focusRingWidth.css()} ${glassyActionTokens.focusRingColor.css()}`,
+      background:
+        glassyButtonTokens.shadow.hover.backgrounds.color.css(),
+        boxShadow: boxShadow()
+      boxShadow: `${glassyButtonTokens.shadow.hover.boxShadows}, 0 0 0 ${glassyButtonTokens.focusRingWidth.css()} ${glassyButtonTokens.focusRingColor.css()}`,
       transform: 'translateY(-2px)',
     },
     '&:active': {
       transform: 'translateY(0)',
-      boxShadow: glassyActionTokens.shadowRest,
+      boxShadow: glassyButtonTokens.shadowRest,
     },
     '&:hover::after, &:focus-visible::after': {
       opacity: 1,

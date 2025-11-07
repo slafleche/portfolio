@@ -128,8 +128,8 @@ globalStyle('img', {
   display: textStyleVars.image.display,
   maxWidth: '100%',
   height: 'auto',
-  ...margins({ bottom: textStyleVars.image.marginBottom }),
-  borderRadius: textStyleVars.image.borderRadius.css(),
+  ...margins(textStyleVars.image.margins),
+  ...borders(textStyleVars.image.borders),
 });
 
 globalStyle('hr', {
