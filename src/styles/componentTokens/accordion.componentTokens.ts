@@ -14,9 +14,9 @@ export const accordionSurfaceTokens = {
     width: m(0.75),
     color: colorVars.white.alpha(0.18),
   },
-  padding: {
-    x: m(6),
-    y: m(6),
+  paddings: {
+    horizontal: m(6),
+    vertical: m(6),
   },
   gap: m(3),
 } as const;
