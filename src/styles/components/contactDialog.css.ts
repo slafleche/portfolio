@@ -10,6 +10,7 @@ import {
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
 import { boxShadow } from '../helpers/shadow';
+import borders from '../helpers/borders';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -90,9 +91,9 @@ export const closeButton = style({
   marginTop: m(4).css(),
   marginBottom: m(4).css(),
   alignSelf: 'flex-end',
-  // width: glassyButtonTokens.size.css(),
-  // height: glassyButtonTokens.size.css(),
-  // ...borders(glassyButtonTokens.borders),
+  width: glassyButtonTokens.size.css(),
+  height: glassyButtonTokens.size.css(),
+  ...borders(glassyButtonTokens.borders),
   background: glassyButtonTokens.background.css(),
   color: glassyButtonTokens.text.color.css(),
   display: 'inline-flex',
@@ -129,13 +130,11 @@ export const closeButton = style({
       outline: 'none',
       background:
         glassyButtonTokens.shadow.hover.backgrounds.color.css(),
-        boxShadow: boxShadow()
-      boxShadow: `${glassyButtonTokens.shadow.hover.boxShadows}, 0 0 0 ${glassyButtonTokens.focusRingWidth.css()} ${glassyButtonTokens.focusRingColor.css()}`,
       transform: 'translateY(-2px)',
     },
     '&:active': {
       transform: 'translateY(0)',
-      boxShadow: glassyButtonTokens.shadowRest,
+      boxShadow: boxShadow(glassyButtonTokens.shadow.rest.boxShadows),
     },
     '&:hover::after, &:focus-visible::after': {
       opacity: 1,

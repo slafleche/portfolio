@@ -6,7 +6,7 @@ import {
 import { formTokens } from '@/tokens/forms.tokens';
 import { m } from '../measurementKit';
 import { colorVars } from '../componentTokens/componentTokens.global';
-import { glassVars, glassyButton } from '../../tokens/glassy.tokens';
+import { glassVars } from '../../tokens/glassy.tokens';
 import borders from '../helpers/borders';
 
 const controlBase: ComplexStyleRule = {
