@@ -19,7 +19,7 @@ claire dès le départ.
 
 ```ts
 import { m } from '../styles/measurementKit';
-import fontsConfig, { makeFamilyDef } from '../styles/helpers/fontConfig';
+import fontsConfig, { makeFamilyDef } from '../styles/helpers/fontConfig.helper';
 
 const urbanist = makeFamilyDef({
   familyName: 'Urbanist',

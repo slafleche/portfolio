@@ -1,7 +1,7 @@
 import { fontVariants } from '../../tokens/fontVariants.tokens';
 import { textStyleVars } from '../../tokens/textStyles.tokens';
-import { color } from '../helpers/colorWrap';
-import type { CardGradientPack } from '../helpers/cardGradient';
+import { color } from '../helpers/colorWrap.helper';
+import type { CardGradientPack } from '../helpers/cardGradient.helper';
 
 const footerGradient: CardGradientPack = {
 	linear: [

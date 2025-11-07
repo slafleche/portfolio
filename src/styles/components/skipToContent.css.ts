@@ -3,9 +3,9 @@ import { assertUnit } from '../measurementKit';
 import {
   chevronVars,
   colorVars,
-} from '../componentTokens/componentTokens.global';
-// import borders from '../helpers/borders';
-import { boxShadow } from '../helpers/shadow';
+} from '../componentTokens/global.componentTokens';
+// import borders from '../helpers/borders.helper';
+import { boxShadow } from '../helpers/shadow.helper';
 
 if (process.env.NODE_ENV !== 'production') {
   assertUnit(chevronVars.width, 'px', 'skipToContent chevron width');

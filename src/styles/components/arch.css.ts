@@ -1,13 +1,13 @@
 import { keyframes, style } from '@vanilla-extract/css';
-import { absolutePosition } from '../helpers/positioning';
-import { mixWithAlpha } from '../helpers/colorWrap';
-import { createArchGlassBackground } from '../helpers/arch';
-import { noiseBg } from '../helpers/noiseSVG';
+import { absolutePosition } from '../helpers/positioning.helper';
+import { mixWithAlpha } from '../helpers/colorWrap.helper';
+import { createArchGlassBackground } from '../helpers/arch.helper';
+import { noiseBg } from '../helpers/noiseSVG.helper';
 import {
   colorVars,
   dropShadowVars,
   glowVars,
-} from '../componentTokens/componentTokens.global';
+} from '../componentTokens/global.componentTokens';
 
 export const root = style({
   position: 'relative',

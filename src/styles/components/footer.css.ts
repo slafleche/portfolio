@@ -1,6 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import type { ComplexStyleRule } from '@vanilla-extract/css';
-import { noiseBg } from '../helpers/noiseSVG';
+import { noiseBg } from '../helpers/noiseSVG.helper';
 
 export const root = style({
   position: 'relative',

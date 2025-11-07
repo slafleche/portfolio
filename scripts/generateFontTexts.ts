@@ -242,7 +242,7 @@ async function main() {
 
 	const header = `// AUTO-GENERATED — DO NOT EDIT
 // Built from src/data/fonts.config.json and locale TypeScript definitions.
-import type { FontConfig } from '../../styles/helpers/types';
+import type { FontConfig } from '../../styles/helpers/types.helper';
 
 const minimalFontText: Record<string, FontConfig> = `;
 

@@ -1,6 +1,6 @@
-import { color } from '../styles/helpers/colorWrap';
+import { color } from '../styles/helpers/colorWrap.helper';
 import { m, mPercent } from '../styles/measurementKit';
-import { colorVars } from '../styles/componentTokens/componentTokens.global';
+import { colorVars } from '../styles/componentTokens/global.componentTokens';
 
 /**
  * Shared glass tokens (data only). Helper layer is responsible for

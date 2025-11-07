@@ -1,6 +1,6 @@
 import { m } from '../styles/measurementKit';
-import { layoutVars } from '../styles/componentTokens/componentTokens.layout';
-import { colorVars } from '../styles/componentTokens/componentTokens.global';
+import { layoutVars } from '../styles/componentTokens/layout.componentTokens';
+import { colorVars } from '../styles/componentTokens/global.componentTokens';
 import { glassVars } from './glassy.tokens';
 
 const horizontalPadding = m(24);

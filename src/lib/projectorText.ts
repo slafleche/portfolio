@@ -1,7 +1,7 @@
 import {
   projectorChannels,
   projectorVars,
-} from '../styles/componentTokens/componentTokens.projector';
+} from '../styles/componentTokens/projector.componentTokens';
 import type { IMeasurement } from '../styles/measurementKit';
 
 type Tier = 'desktop';

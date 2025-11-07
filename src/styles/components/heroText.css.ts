@@ -1,7 +1,7 @@
 import { style, globalStyle } from '@vanilla-extract/css';
-import { colorVars } from '../componentTokens/componentTokens.global';
+import { colorVars } from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
-import { projectorVars } from '../componentTokens/componentTokens.projector';
+import { projectorVars } from '../componentTokens/projector.componentTokens';
 
 export const container = style({
   position: 'relative',

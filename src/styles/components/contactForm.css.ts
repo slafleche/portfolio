@@ -5,19 +5,15 @@ import {
 } from '@vanilla-extract/css';
 import { formTokens } from '@/tokens/forms.tokens';
 import { m } from '../measurementKit';
-import { colorVars } from '../componentTokens/componentTokens.global';
+import { colorVars } from '../componentTokens/global.componentTokens';
 import { glassVars } from '../../tokens/glassy.tokens';
-import borders from '../helpers/borders';
+import borders from '../helpers/borders.helper';
 
 const controlBase: ComplexStyleRule = {
   width: '100%',
   padding: `${formTokens.field.paddingBlock.css()} ${formTokens.field.paddingInline.css()}`,
-  borderRadius: formTokens.field.borderRadius.css(),
-  borderWidth: formTokens.field.borderWidth.css(),
-  borderStyle: 'solid',
-  borderColor: formTokens.field.borderColor.css(),
+  ...borders(formTokens.field.borders),
   backgroundColor: formTokens.field.background.css(),
-  color: formTokens.field.textColor.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
   font: 'inherit',
@@ -28,7 +24,7 @@ const controlBase: ComplexStyleRule = {
       opacity: 1,
     },
     '&:hover': {
-      borderColor: formTokens.field.hoverBorderColor.css(),
+      borderColor: formTokens.field.hover.bordersorderColor.css(),
     },
     '&:focus-visible': {
       borderColor: formTokens.field.focusRingColor.css(),

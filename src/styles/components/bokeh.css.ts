@@ -3,7 +3,7 @@ import { style, keyframes } from '@vanilla-extract/css';
 import {
 	ReducedMotion,
 	reducedMotion,
-} from '../helpers/accessibility';
+} from '../helpers/accessibility.helper';
 
 export const overlay = style({
 	position: 'fixed',

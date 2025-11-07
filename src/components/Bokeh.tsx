@@ -11,8 +11,8 @@ import * as s from '@/styles/components/bokeh.css';
 import { createDomId } from '../lib/dom';
 import clsx from 'clsx';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
-import type { ColorWrapper } from '@/styles/helpers/colorWrap';
-import { bokehVars } from '../styles/componentTokens/componentTokens.global';
+import type { ColorWrapper } from '@/styles/helpers/colorWrap.helper';
+import { bokehVars } from '../styles/componentTokens/global.componentTokens';
 
 // A simple, deterministic layout for ~10 circles.
 // You can tweak cx, cy, r as you like.

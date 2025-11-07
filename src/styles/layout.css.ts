@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 // import { globalMediaQueryStyles } from './responsive/mediaQueries';
-import { paddings } from './helpers/spacing';
-import { layoutVars } from './componentTokens/componentTokens.layout';
+import { paddings } from './helpers/spacing.helper';
+import { layoutVars } from './componentTokens/layout.componentTokens';
 
 export const content = style({
   position: 'relative',

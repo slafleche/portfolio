@@ -3,30 +3,30 @@ import type { StyleRule } from '@vanilla-extract/css';
 import {
   absolutePosition,
   flexPosition,
-} from '../helpers/positioning';
-import { focusOutline } from '../helpers/focusOutline';
-import type { ColorWrapper } from '../helpers/colorWrap';
+} from '../helpers/positioning.helper';
+import { focusOutline } from '../helpers/focusOutline.helper';
+import type { ColorWrapper } from '../helpers/colorWrap.helper';
 import {
   archVars,
   colorVars,
   dropShadowVars,
   logoVars,
   themeColours,
-} from '../componentTokens/componentTokens.global';
+} from '../componentTokens/global.componentTokens';
 import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
 
-import { paddings } from '../helpers/spacing';
+import { paddings } from '../helpers/spacing.helper';
 import {
   assertUnit,
   m,
   mPercent,
   type IMeasurement,
 } from '../measurementKit';
-import transforms from '../helpers/transforms';
-import { menuVars } from '../componentTokens/componentTokens.menu';
+import transforms from '../helpers/transforms.helper';
+import { menuVars } from '../componentTokens/menu.componentTokens';
 
 if (process.env.NODE_ENV !== 'production') {
   assertUnit(archVars.top, 'px', 'menu archVars.top');

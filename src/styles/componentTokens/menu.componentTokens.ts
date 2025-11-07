@@ -1,10 +1,10 @@
-import { color } from '../helpers/colorWrap';
+import { color } from '../helpers/colorWrap.helper';
 import { m, mPercent } from '../measurementKit';
 import {
   archVars,
   colorVars,
   themeColours,
-} from './componentTokens.global';
+} from './global.componentTokens';
 
 export const menuVars = {
   height: archVars.top,

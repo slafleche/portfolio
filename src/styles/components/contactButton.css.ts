@@ -3,10 +3,10 @@ import { m } from '../measurementKit';
 import {
   colorVars,
   themeColours,
-} from '../componentTokens/componentTokens.global';
-import { boxShadow } from '../helpers/shadow';
-import { focusOutline } from '../helpers/focusOutline';
-import { absolutePosition } from '../helpers/positioning';
+} from '../componentTokens/global.componentTokens';
+import { boxShadow } from '../helpers/shadow.helper';
+import { focusOutline } from '../helpers/focusOutline.helper';
+import { absolutePosition } from '../helpers/positioning.helper';
 
 import {
   buttonSizePx,
@@ -54,7 +54,7 @@ import {
   kSquash,
   kSquashY,
 } from './contactButton.vars';
-import { measureHypotenuse } from '../helpers/utils';
+import { measureHypotenuse } from '../helpers/utils.helper';
 
 /* EASING */
 const SNAP = 'cubic-bezier(0.45, 0, 0.2, 1)';

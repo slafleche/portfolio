@@ -7,7 +7,7 @@ import {
 import {
   ReducedMotion,
   reducedMotion,
-} from './helpers/accessibility';
+} from './helpers/accessibility.helper';
 import './utilities.css';
 
 const {

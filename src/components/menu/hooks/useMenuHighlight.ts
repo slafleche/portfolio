@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import transforms from '@/styles/helpers/transforms';
+import transforms from '@/styles/helpers/transforms.helper';
 import { assertUnit } from '@/styles/measurementKit';
 import type { CSSProperties } from 'react';
 import {
@@ -22,8 +22,8 @@ import {
   type HighlightState,
   type LinkMetric,
 } from '../menuUtils';
-import { archVars } from '../../../styles/componentTokens/componentTokens.global';
-import { menuVars } from '../../../styles/componentTokens/componentTokens.menu';
+import { archVars } from '../../../styles/componentTokens/global.componentTokens';
+import { menuVars } from '../../../styles/componentTokens/menu.componentTokens';
 
 type HighlightStyles = {
   containerStyle: CSSProperties;
