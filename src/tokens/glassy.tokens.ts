@@ -16,6 +16,9 @@ export const glassVars = {
     radius: m(40),
     width: m(2),
   },
+  paddings: {
+    all: m(2),
+  },
   innerBorderHighlight: {
     radialStrength: 0.5,
     opacity: 1,

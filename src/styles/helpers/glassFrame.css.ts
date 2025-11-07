@@ -18,7 +18,7 @@ export const surfaceBorder = style({
   left: 0,
   height: '100%',
   width: '100%',
-  ...paddings(glassVars.borders.width),
+  ...paddings(glassVars.paddings),
   ...borders(glassVars.borders, { allowRadiusOnly: true }),
   pointerEvents: 'none',
   WebkitMask:
@@ -40,7 +40,7 @@ export const surfaceBorder = style({
 export const rim = style({
   position: 'absolute',
   inset: 0,
-  ...paddings(glassVars.borders.width),
+  ...paddings(glassVars.paddings),
   ...borders(glassVars.borders, { allowRadiusOnly: true }),
   pointerEvents: 'none',
   WebkitMask:
