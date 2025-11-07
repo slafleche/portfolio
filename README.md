@@ -16,8 +16,11 @@
 ### Helper Conventions
 
 - Require MeasurementKit values for anything that represents a scalar (lengths,
-  angles, etc.). Helpers should only accept strings when CSS requires symbolic
-  keywords (e.g., `auto`, `inherit`).
+  angles, timings). Use MK’s APIs (`add`, `subtract`, `multiply`, `divide`,
+  `round`, `floor`, `ceil`, `clamp`, etc.) instead of CSS math functions
+  (`calc`, `min`, `max`, `clamp`). Emit once you reach the style layer and rely
+  on the shared helpers—`paddings`, `margins`, `borders`, `boxShadow`, etc.—to
+  turn structured data into CSS.
 - When you need those symbolic values, define a dedicated type in
   `src/styles/helpers/types.helper.ts` instead of falling back to loose unions.
   `SpacingKeyword` is the reference example: it extracts the string-only portion
