@@ -22,5 +22,16 @@ export function getFontVariant<Key extends FontVariantKey>(
   return fontVariants[key];
 }
 
+type ComposeVariantConfig = Parameters<
+  typeof composeFontVariantStyles
+>[1];
+
+export function fontVariantStyles<Key extends FontVariantKey>(
+  key: Key,
+  extraConfig?: ComposeVariantConfig,
+) {
+  return composeFontVariantStyles(fontVariants[key], extraConfig);
+}
+
 export { composeFontVariantStyles };
 export type { FontVariantDefinition };

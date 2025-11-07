@@ -11,10 +11,7 @@ import {
   accordionSurfaceTokens,
   accordionItemTokens,
 } from '../componentTokens/accordion.componentTokens';
-import {
-  composeFontVariantStyles,
-  fontVariants,
-} from '../../tokens/fontVariants.tokens';
+import { fontVariantStyles } from '../../tokens/fontVariants.tokens';
 import { outlines } from '../helpers/outlines.helper';
 import { colorVars } from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
@@ -115,13 +112,13 @@ export const trigger = style({
 });
 
 export const triggerLabel = style({
-  ...composeFontVariantStyles(fontVariants.h4),
+  ...fontVariantStyles('h4'),
   color: colorVars.white.css(),
   letterSpacing: '0.01em'
 });
 
 export const triggerSubtitle = style({
-  ...composeFontVariantStyles(fontVariants.body),
+  ...fontVariantStyles('body'),
   color: colorVars.white.alpha(0.72).css(),
   marginTop: m(1).css(),
 });
