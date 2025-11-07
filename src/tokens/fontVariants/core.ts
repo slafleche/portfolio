@@ -3,12 +3,12 @@ import type {
   ComposeFontStylesConfig,
   FontStyleLayer,
   FontWeightPercentOptions,
-} from '../../styles/helpers/typography.helpers';
+} from '../../styles/helpers/typography.helper';
 import {
   composeFontStyles,
   computeFontWeight,
-} from '../../styles/helpers/typography.helpers';
-import type { FontFamilyDef } from '../../styles/helpers/types';
+} from '../../styles/helpers/typography.helper';
+import type { FontFamilyDef } from '../../styles/helpers/types.helper';
 
 export type FontVariantDefinition = {
   family: FontFamilyDef;

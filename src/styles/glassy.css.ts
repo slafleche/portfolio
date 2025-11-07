@@ -1,10 +1,10 @@
 import { style } from '@vanilla-extract/css';
-import { createGlassBackground, glassNoise } from './helpers/glassy';
+import { createGlassBackground, glassNoise } from './helpers/glassy.helper';
 import { glassVars } from '../tokens/glassy.tokens';
-import { globalDropShadowFilter } from './helpers/shadow';
-import { noiseBg } from './helpers/noiseSVG';
-import { borderVars } from './componentTokens/componentTokens.global';
-import borders from './helpers/borders';
+import { globalDropShadowFilter } from './helpers/shadow.helper';
+import { noiseBg } from './helpers/noiseSVG.helper';
+import { borderVars } from './componentTokens/global.componentTokens';
+import borders from './helpers/borders.helper';
 
 const glassBackground = createGlassBackground();
 const innerRadius = glassVars.border.radius.subtract(

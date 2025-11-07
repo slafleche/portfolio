@@ -1,8 +1,8 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { paddings, margins } from './helpers/spacing';
-import borders from './helpers/borders';
-import { focusOutline } from './helpers/focusOutline';
-import { colorVars } from './componentTokens/componentTokens.global';
+import { paddings, margins } from './helpers/spacing.helper';
+import borders from './helpers/borders.helper';
+import { focusOutline } from './helpers/focusOutline.helper';
+import { colorVars } from './componentTokens/global.componentTokens';
 import {
   composeFontVariantStyles,
   fontVariants,

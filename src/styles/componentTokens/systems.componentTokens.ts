@@ -1,5 +1,5 @@
-import { color } from '../helpers/colorWrap';
-import type { CardGradientPack } from '../helpers/cardGradient';
+import { color } from '../helpers/colorWrap.helper';
+import type { CardGradientPack } from '../helpers/cardGradient.helper';
 
 export const systemsHeroGradient: CardGradientPack = {
   linear: [
@@ -48,4 +48,4 @@ export const systemsHeroGradient: CardGradientPack = {
   ],
 };
 
-export type { CardGradientPack } from '../helpers/cardGradient';
+export type { CardGradientPack } from '../helpers/cardGradient.helper';

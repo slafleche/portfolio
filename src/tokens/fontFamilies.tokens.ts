@@ -1,8 +1,8 @@
-import type { FontFamilyDef } from '../styles/helpers/types';
+import type { FontFamilyDef } from '../styles/helpers/types.helper';
 import { m } from '../styles/measurementKit';
 import fontsConfig, {
   makeFamilyDef,
-} from '../styles/helpers/fontConfig';
+} from '../styles/helpers/fontConfig.helper';
 
 export const fontFamilies = {
   system: makeFamilyDef({

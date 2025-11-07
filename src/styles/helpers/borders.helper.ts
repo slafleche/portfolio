@@ -2,12 +2,12 @@ import type * as CSS from 'csstype';
 import {
   borderVars,
   colorVars,
-} from '../componentTokens/componentTokens.global';
+} from '../componentTokens/global.componentTokens';
 import type {
   IBorder,
   BorderWidthInput,
   BorderRadiusInput,
-} from '../componentTokens/componentTokens.global';
+} from '../componentTokens/global.componentTokens';
 import { isMeasurement, hasCssMethod } from '../measurementKit';
 import type {
   AxisValues,

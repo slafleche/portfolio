@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { glassVars } from '../../tokens/glassy.tokens';
 import { boxShadow } from './shadow';
-import { colorVars } from '../componentTokens/componentTokens.global';
+import { colorVars } from '../componentTokens/global.componentTokens';
 import { borders } from './borders';
 import { paddings } from './spacing';
 

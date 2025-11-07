@@ -1,14 +1,14 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { makeCardGradient } from '../helpers/cardGradient';
+import { makeCardGradient } from '../helpers/cardGradient.helper';
 import {
   colorVars,
   gradients,
-} from '../componentTokens/componentTokens.global';
+} from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
-import { paddings } from '../helpers/spacing';
-import { absolutePosition } from '../helpers/positioning';
+import { paddings } from '../helpers/spacing.helper';
+import { absolutePosition } from '../helpers/positioning.helper';
 import { glassVars } from '../../tokens/glassy.tokens';
-import { borders } from '../helpers/borders';
+import { borders } from '../helpers/borders.helper';
 
 export const root = style({
   position: 'relative',

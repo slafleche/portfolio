@@ -3,7 +3,7 @@ import { m, type IMeasurement } from '../measurementKit';
 import {
   dropShadowVars,
   colorVars,
-} from '../componentTokens/componentTokens.global';
+} from '../componentTokens/global.componentTokens';
 export interface IBoxShadow {
   x?: IMeasurement;
   y?: IMeasurement;

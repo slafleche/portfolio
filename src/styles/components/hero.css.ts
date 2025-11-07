@@ -1,22 +1,22 @@
 import { style, globalStyle } from '@vanilla-extract/css';
-import { colorVars } from '../componentTokens/componentTokens.global';
+import { colorVars } from '../componentTokens/global.componentTokens';
 import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import { heroVars } from '../componentTokens/componentTokens.hero';
-import { fullSizeOfParent } from '../helpers/positioning';
-import { noiseBg } from '../helpers/noiseSVG';
+import { heroVars } from '../componentTokens/hero.componentTokens';
+import { fullSizeOfParent } from '../helpers/positioning.helper';
+import { noiseBg } from '../helpers/noiseSVG.helper';
 import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
-import transforms from '../helpers/transforms';
+import transforms from '../helpers/transforms.helper';
 import { m } from '../measurementKit';
-import { paddings } from '../helpers/spacing';
+import { paddings } from '../helpers/spacing.helper';
 
 import {
   backgroundImageDecl,
   buildLinear,
-} from '../helpers/gradients';
-import { projectorVars } from '../componentTokens/componentTokens.projector';
+} from '../helpers/gradients.helper';
+import { projectorVars } from '../componentTokens/projector.componentTokens';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS

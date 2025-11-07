@@ -1,6 +1,6 @@
-import { color } from '../helpers/colorWrap';
+import { color } from '../helpers/colorWrap.helper';
 import { m } from '../measurementKit';
-import { colorVars } from './componentTokens.global';
+import { colorVars } from './global.componentTokens';
 
 export const accordionSurfaceTokens = {
   gradientAngle: m(135, 'deg'),

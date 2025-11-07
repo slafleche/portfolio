@@ -1,6 +1,6 @@
 import { keyframes, style, globalStyle } from '@vanilla-extract/css';
-import { logoVars } from '../componentTokens/componentTokens.global';
-import { absolutePosition } from '../helpers/positioning';
+import { logoVars } from '../componentTokens/global.componentTokens';
+import { absolutePosition } from '../helpers/positioning.helper';
 
 export const root = style({
   position: 'relative',

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { SkipNavLink } from '@/components/SkipNavLink';
 import * as s from '@/styles/components/menu.css';
 import type { Locale } from '@/data/locales';
-import transforms from '@/styles/helpers/transforms';
+import transforms from '@/styles/helpers/transforms.helper';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
@@ -42,7 +42,7 @@ import type { AnchorEntry } from './menu/menuUtils';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
 import { fontVariants } from '../tokens/fontVariants.tokens';
-import { menuVars } from '../styles/componentTokens/componentTokens.menu';
+import { menuVars } from '../styles/componentTokens/menu.componentTokens';
 
 type FocusDebugOptions = {
   lockTo?: 'logo' | number;

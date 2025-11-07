@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { colorVars } from '../componentTokens/componentTokens.global';
+import { colorVars } from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
 
 export const link = style({

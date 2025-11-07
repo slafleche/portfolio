@@ -1,6 +1,6 @@
 import type { IMeasurement } from '../../styles/measurementKit';
-import { menuVars } from '../../styles/componentTokens/componentTokens.menu';
-import transforms from '../../styles/helpers/transforms';
+import { menuVars } from '../../styles/componentTokens/menu.componentTokens';
+import transforms from '../../styles/helpers/transforms.helper';
 
 export interface IArch {
 	top: IMeasurement; // Space above the top of the arch (reserved for nav items)

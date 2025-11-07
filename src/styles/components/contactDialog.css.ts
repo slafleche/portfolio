@@ -1,5 +1,5 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
-import { colorVars } from '../componentTokens/componentTokens.global';
+import { colorVars } from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
 import {
   composeFontVariantStyles,
@@ -9,8 +9,8 @@ import {
   glassVars,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
-import { boxShadow } from '../helpers/shadow';
-import borders from '../helpers/borders';
+import { boxShadow } from '../helpers/shadow.helper';
+import borders from '../helpers/borders.helper';
 
 const sheenSweep = keyframes({
   '0%': {

@@ -18,11 +18,11 @@ import { playProjectorText } from '@/lib/projectorText';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
 import { fontVariants } from '../tokens/fontVariants.tokens';
-import { heroVars } from '../styles/componentTokens/componentTokens.hero';
+import { heroVars } from '../styles/componentTokens/hero.componentTokens';
 import {
   projectorVars,
   type ProjectorChannel,
-} from '../styles/componentTokens/componentTokens.projector';
+} from '../styles/componentTokens/projector.componentTokens';
 
 type Props = {
   label: string; // for accessibility

@@ -2,7 +2,7 @@ import { style, keyframes } from '@vanilla-extract/css';
 import {
   backgroundImageDecl,
   buildLinear,
-} from '../helpers/gradients';
+} from '../helpers/gradients.helper';
 import {
   glassVars,
   glassyPanelTokens,
@@ -10,16 +10,16 @@ import {
 import {
   accordionSurfaceTokens,
   accordionItemTokens,
-} from '../componentTokens/componentTokens.accordion';
+} from '../componentTokens/accordion.componentTokens';
 import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import { focusOutline } from '../helpers/focusOutline';
-import { colorVars } from '../componentTokens/componentTokens.global';
+import { focusOutline } from '../helpers/focusOutline.helper';
+import { colorVars } from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
-import { borders } from '../helpers/borders';
-import { boxShadow } from '../helpers/shadow';
+import { borders } from '../helpers/borders.helper';
+import { boxShadow } from '../helpers/shadow.helper';
 
 const surfaceGradient = buildLinear({
   angle: accordionSurfaceTokens.gradientAngle,

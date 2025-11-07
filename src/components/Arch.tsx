@@ -11,11 +11,11 @@ import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
 import { createDomId } from '../lib/dom';
-import { archGlassVars } from '@/styles/helpers/arch';
-import { shadowTotalY } from '../styles/helpers/shadow';
-import { noiseStyle } from '../styles/helpers/noiseSVG';
+import { archGlassVars } from '@/styles/helpers/arch.helper';
+import { shadowTotalY } from '../styles/helpers/shadow.helper';
+import { noiseStyle } from '../styles/helpers/noiseSVG.helper';
 import { assertUnit } from '../styles/measurementKit';
-import { archVars } from '../styles/componentTokens/componentTokens.global';
+import { archVars } from '../styles/componentTokens/global.componentTokens';
 
 if (process.env.NODE_ENV !== 'production') {
   assertUnit(archVars.top, 'px', 'Arch top');

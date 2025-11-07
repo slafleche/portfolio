@@ -2,10 +2,10 @@ import { style } from '@vanilla-extract/css';
 import {
   colorVars,
   consoleVars,
-} from '../componentTokens/componentTokens.global';
+} from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
-import { paddings } from '../helpers/spacing';
-import { boxShadow } from '../helpers/shadow';
+import { paddings } from '../helpers/spacing.helper';
+import { boxShadow } from '../helpers/shadow.helper';
 
 const consoleFontStack = `"JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", monospace`;
 
