@@ -22,12 +22,6 @@ export type CompassCorners<T> = Partial<
   Record<'all' | CompassRegion | CornerPosition, T>
 >;
 
-export type MeasurementLike =
-  | { value: number; unit?: string }
-  | CssLike
-  | string
-  | undefined;
-
 export type FontFamilyDef = {
   family: CSS.Property.FontFamily;
   weights: {
@@ -99,9 +93,7 @@ export type PageParams = {
 export type NonEmptyString = string & { __brand: 'NonEmptyString' };
 
 export type BorderMeasurementInput =
-  | MeasurementLike
-  | number
-  | string
+  | IMeasurement
   | null
   | undefined;
 
