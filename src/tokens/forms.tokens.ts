@@ -20,23 +20,30 @@ export const formTokens = {
         color: colorVars.white.alpha(0.32),
       },
     },
+    focusVisible: {
+      shadow: [
+        {
+          blur: m(4),
+          color: colorVars.brand.alpha(0.45),
+        },
+      ],
+      outlines: {
+        width: m(3),
+        color: colorVars.brand.alpha(0.65),
+      },
+    },
     text: {
       color: colorVars.white.alpha(0.92),
     },
     error: {
       text: {
-        color: colorVars.gradientA_secondary_end
+        color: colorVars.gradientA_secondary_end,
       },
       borders: {
         color: colorVars.gradientA_secondary_end.alpha(0.8),
-      }
+      },
     },
-    focus: {
-      outlines: {
-        width: m(3),
-        color: colorVars.brand.alpha(0.65),
-      }
-    },
+
     background: colorVars.white.alpha(0.06),
     placeholderColor: colorVars.white.alpha(0.55),
   },
