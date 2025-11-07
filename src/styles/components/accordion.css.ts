@@ -30,6 +30,7 @@ const surfaceGradient = buildLinear({
   globalAlpha: accordionSurfaceTokens.gradientOpacity,
 });
 
+// Radix injects --radix-accordion-content-height at runtime for its collision-free height measurements.
 const slideDown = keyframes({
   from: {
     height: 0,
