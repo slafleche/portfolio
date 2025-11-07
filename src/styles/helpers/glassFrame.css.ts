@@ -1,13 +1,15 @@
 import { style } from '@vanilla-extract/css';
-import { glassVars } from './glassy';
-import { globalBoxShadow } from './shadow';
+import { glassVars } from '../../tokens/glassy.tokens';
+import { boxShadow } from './shadow';
 import { colorVars } from '../componentTokens/componentTokens.global';
+import { borders } from './borders';
+import { paddings } from './spacing';
 
 export const frame = style({
   // position: 'relative',
-  borderRadius: glassVars.border.radius.css(),
+  ...borders(glassVars.borders, { allowRadiusOnly: true }),
   // overflow: 'hidden',
-  boxShadow: globalBoxShadow(),
+  boxShadow: boxShadow(),
 });
 
 export const surfaceBorder = style({
@@ -16,8 +18,8 @@ export const surfaceBorder = style({
   left: 0,
   height: '100%',
   width: '100%',
-  padding: glassVars.border.width.css(),
-  borderRadius: glassVars.border.radius.css(),
+  ...paddings(glassVars.borders.width),
+  ...borders(glassVars.borders, { allowRadiusOnly: true }),
   pointerEvents: 'none',
   WebkitMask:
     'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
@@ -38,8 +40,8 @@ export const surfaceBorder = style({
 export const rim = style({
   position: 'absolute',
   inset: 0,
-  padding: glassVars.border.width.css(),
-  borderRadius: glassVars.border.radius.css(),
+  ...paddings(glassVars.borders.width),
+  ...borders(glassVars.borders, { allowRadiusOnly: true }),
   pointerEvents: 'none',
   WebkitMask:
     'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',

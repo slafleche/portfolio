@@ -1,11 +1,25 @@
 import { style, keyframes } from '@vanilla-extract/css';
-import { backgroundImageDecl, buildLinear } from '../helpers/gradients';
-import { glassVars, glassyPanelTokens } from '../helpers/glassy';
-import { accordionSurfaceTokens, accordionItemTokens } from '../componentTokens/componentTokens.accordion';
-import { composeFontVariantStyles, fontVariants } from '../../tokens/fontVariants.tokens';
+import {
+  backgroundImageDecl,
+  buildLinear,
+} from '../helpers/gradients';
+import {
+  glassVars,
+  glassyPanelTokens,
+} from '../../tokens/glassy.tokens';
+import {
+  accordionSurfaceTokens,
+  accordionItemTokens,
+} from '../componentTokens/componentTokens.accordion';
+import {
+  composeFontVariantStyles,
+  fontVariants,
+} from '../../tokens/fontVariants.tokens';
 import { focusOutline } from '../helpers/focusOutline';
 import { colorVars } from '../componentTokens/componentTokens.global';
 import { m } from '../measurementKit';
+import { borders } from '../helpers/borders';
+import { boxShadow } from '../helpers/shadow';
 
 const surfaceGradient = buildLinear({
   angle: accordionSurfaceTokens.gradientAngle,
@@ -38,11 +52,11 @@ const slideUp = keyframes({
   },
 });
 
-    // border-radius: 16px;
-    // padding: 16px;
-    // border: 1px solid var(--ring);
-    // box-shadow: 0 1px 0 hsl(0 0% 100% / .04) inset, 0 10px 30px hsl(0 0% 0% / .35);
-    // background: linear-gradient(to bottom, hsl(260 40% 10%), hsl(280 40% 14%));
+// border-radius: 16px;
+// padding: 16px;
+// border: 1px solid var(--ring);
+// box-shadow: 0 1px 0 hsl(0 0% 100% / .04) inset, 0 10px 30px hsl(0 0% 0% / .35);
+// background: linear-gradient(to bottom, hsl(260 40% 10%), hsl(280 40% 14%));
 
 export const root = style({
   position: 'relative',
@@ -50,19 +64,17 @@ export const root = style({
   flexDirection: 'column',
   gap: accordionItemTokens.gap.css(),
   padding: `${accordionSurfaceTokens.padding.y.css()} ${accordionSurfaceTokens.padding.x.css()}`,
-  borderRadius: accordionSurfaceTokens.borderRadius.css(),
-  border: `${accordionSurfaceTokens.borderWidth.css()} solid ${accordionSurfaceTokens.borderColor.css()}`,
-  boxShadow: glassyPanelTokens.shadow,
+  ...borders(accordionSurfaceTokens.borders),
+  boxShadow: boxShadow(glassyPanelTokens.shadow),
   overflow: 'hidden',
   ...backgroundImageDecl(surfaceGradient),
-  backgroundColor: glassyPanelTokens.background.css(),
+  backgroundColor: glassyPanelTokens.backgroundColor.css(),
   backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
   WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
 });
 
 export const item = style({
-  borderRadius: accordionItemTokens.borderRadius.css(),
-  border: `${glassyPanelTokens.borderWidth.css()} solid ${glassyPanelTokens.borderColor.css()}`,
+  ...borders(glassyPanelTokens.borders),
   background: 'transparent',
   boxShadow: 'none',
   overflow: 'hidden',

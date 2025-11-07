@@ -354,6 +354,7 @@ export const dropShadowVars = {
   offsetY: m(2),
   offsetX: m(2),
   blur: m(2),
+  alpha: 1,
   color: colorVars.shadow,
 };
 

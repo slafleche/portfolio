@@ -87,27 +87,51 @@ export default function ContactForm({
   onSubmitted,
 }: ContactFormProps) {
   const formId = useId();
-  const [values, setValues] = useState<FormValues>(INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState<FieldErrorMap>(
+  const [
+    values,
+    setValues,
+  ] = useState<FormValues>(INITIAL_VALUES);
+  const [
+    fieldErrors,
+    setFieldErrors,
+  ] = useState<FieldErrorMap>(
     () => validateDraft(INITIAL_VALUES).errors,
   );
-  const [status, setStatus] = useState<FormStatusKey | null>(null);
-  const [statusMessage, setStatusMessage] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hasAttemptedSubmit, setHasAttemptedSubmit] =
-    useState(false);
-  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [
+    status,
+    setStatus,
+  ] = useState<FormStatusKey | null>(null);
+  const [
+    statusMessage,
+    setStatusMessage,
+  ] = useState<string>('');
+  const [
+    isSubmitting,
+    setIsSubmitting,
+  ] = useState(false);
+  const [
+    hasAttemptedSubmit,
+    setHasAttemptedSubmit,
+  ] = useState(false);
+  const [
+    isPrivacyOpen,
+    setIsPrivacyOpen,
+  ] = useState(false);
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
   const baseMessageHeight = useRef<number | null>(null);
 
   const errorMessageMap = useMemo(
     () => buildErrorMap(copy),
-    [copy],
+    [
+      copy,
+    ],
   );
 
   const storageKey = useMemo(
     () => `${DRAFT_STORAGE_PREFIX}:${locale}`,
-    [locale],
+    [
+      locale,
+    ],
   );
 
   // Restore session draft
@@ -126,7 +150,9 @@ export default function ContactForm({
     } catch {
       // Ignore restore failures
     }
-  }, [storageKey]);
+  }, [
+    storageKey,
+  ]);
 
   // Persist draft
   useEffect(() => {
@@ -151,7 +177,12 @@ export default function ContactForm({
     } catch {
       // Ignore persistence failures
     }
-  }, [storageKey, values.email, values.message, values.name]);
+  }, [
+    storageKey,
+    values.email,
+    values.message,
+    values.name,
+  ]);
 
   const resetStatus = useCallback(() => {
     setStatus(null);
@@ -183,22 +214,32 @@ export default function ContactForm({
         return next;
       });
     },
-    [resetStatus, status],
+    [
+      resetStatus,
+      status,
+    ],
   );
 
   useLayoutEffect(() => {
     syncMessageHeight();
-  }, [syncMessageHeight, values.message]);
+  }, [
+    syncMessageHeight,
+    values.message,
+  ]);
 
   const handleBlur = useCallback(() => {
     setFieldErrors(validateDraft(values).errors);
-  }, [values]);
+  }, [
+    values,
+  ]);
 
-  const openPrivacy = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    setIsPrivacyOpen(true);
-  }, []);
-
+  const openPrivacy = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      setIsPrivacyOpen(true);
+    },
+    [],
+  );
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -291,19 +332,26 @@ export default function ContactForm({
   const getErrorMessage = useCallback(
     (key?: FieldErrorMap[keyof FieldErrorMap]) =>
       key ? errorMessageMap[key] : '',
-    [errorMessageMap],
+    [
+      errorMessageMap,
+    ],
   );
 
   const shouldShowError = useCallback(
     (field: FieldName) =>
       hasAttemptedSubmit && Boolean(fieldErrors[field]),
-    [fieldErrors, hasAttemptedSubmit],
+    [
+      fieldErrors,
+      hasAttemptedSubmit,
+    ],
   );
 
   const remainingCharacters = useMemo(() => {
     const maxChars = formTokens.message.maxChars;
     return Math.max(0, maxChars - values.message.length);
-  }, [values.message.length]);
+  }, [
+    values.message.length,
+  ]);
 
   const hasBlockingErrors = Object.keys(fieldErrors).length > 0;
 
@@ -366,171 +414,168 @@ export default function ContactForm({
       >
         {statusBanner}
         <fieldset className={s.fieldset}>
-        <legend className={s.legend}>{copy.heading}</legend>
+          <legend className={s.legend}>{copy.heading}</legend>
 
-        <div className={s.fieldGroup}>
-          <label className={s.labelRow} htmlFor={nameFieldId}>
-            <span>{copy.labels.name}</span>
-            <span aria-hidden="true" className={s.required}>
-              *
-            </span>
-          </label>
-          <input
-            id={nameFieldId}
-            name="name"
-            className={s.input}
-            value={values.name}
-            onChange={(event) =>
-              handleChange('name', event.target.value)
-            }
-            onBlur={handleBlur}
-            required
-            minLength={2}
-            maxLength={80}
-            autoComplete="name"
-            data-error={Boolean(
-              shouldShowError('name') && fieldErrors.name,
-            )}
-            aria-invalid={
-              shouldShowError('name') && fieldErrors.name
-                ? 'true'
-                : undefined
-            }
-            aria-describedby={describedBy(nameErrorId)}
-          />
-          {shouldShowError('name') && fieldErrors.name ? (
-            <p id={nameErrorId} className={s.errorText}>
-              {getErrorMessage(fieldErrors.name)}
-            </p>
-          ) : null}
-        </div>
-
-        <div className={s.fieldGroup}>
-          <label className={s.labelRow} htmlFor={emailFieldId}>
-            <span>{copy.labels.email}</span>
-            <span aria-hidden="true" className={s.required}>
-              *
-            </span>
-          </label>
-          <input
-            id={emailFieldId}
-            name="email"
-            className={s.input}
-            value={values.email}
-            onChange={(event) =>
-              handleChange('email', event.target.value)
-            }
-            onBlur={handleBlur}
-            type="email"
-            required
-            maxLength={254}
-            autoComplete="email"
-            data-error={Boolean(
-              shouldShowError('email') && fieldErrors.email,
-            )}
-            aria-invalid={
-              shouldShowError('email') && fieldErrors.email
-                ? 'true'
-                : undefined
-            }
-            aria-describedby={describedBy(emailErrorId)}
-          />
-          {shouldShowError('email') && fieldErrors.email ? (
-            <p id={emailErrorId} className={s.errorText}>
-              {getErrorMessage(fieldErrors.email)}
-            </p>
-          ) : null}
-        </div>
-
-        <div className={s.fieldGroup}>
-          <label
-            className={s.labelRow}
-            htmlFor={messageFieldId}
-          >
-            <span>{copy.labels.message}</span>
-            <span aria-hidden="true" className={s.required}>
-              *
-            </span>
-          </label>
-          <textarea
-            id={messageFieldId}
-            name="message"
-            className={s.textarea}
-            value={values.message}
-            ref={messageRef}
-            onChange={(event) =>
-              handleChange('message', event.target.value)
-            }
-            onBlur={handleBlur}
-            rows={formTokens.message.minRows}
-            maxLength={formTokens.message.maxChars}
-            data-error={Boolean(
-              shouldShowError('message') && fieldErrors.message,
-            )}
-            aria-invalid={
-              shouldShowError('message') && fieldErrors.message
-                ? 'true'
-                : undefined
-            }
-            aria-describedby={describedBy(
-              messageErrorId,
-              messageCounterId,
-            )}
-          />
-          <div className={s.helperRow}>
-            {shouldShowError('message') && fieldErrors.message ? (
-              <p id={messageErrorId} className={s.errorText}>
-                {getErrorMessage(fieldErrors.message)}
-              </p>
-            ) : (
-              <span aria-hidden="true" />
-            )}
-            <p id={messageCounterId} className={s.counter}>
-              {formatCounter(
-                copy.counterTemplate,
-                remainingCharacters,
+          <div className={s.fieldGroup}>
+            <label className={s.labelRow} htmlFor={nameFieldId}>
+              <span>{copy.labels.name}</span>
+              <span aria-hidden="true" className={s.required}>
+                *
+              </span>
+            </label>
+            <input
+              id={nameFieldId}
+              name="name"
+              className={s.input}
+              value={values.name}
+              onChange={(event) =>
+                handleChange('name', event.target.value)
+              }
+              onBlur={handleBlur}
+              required
+              minLength={2}
+              maxLength={80}
+              autoComplete="name"
+              data-error={Boolean(
+                shouldShowError('name') && fieldErrors.name,
               )}
-            </p>
+              aria-invalid={
+                shouldShowError('name') && fieldErrors.name
+                  ? 'true'
+                  : undefined
+              }
+              aria-describedby={describedBy(nameErrorId)}
+            />
+            {shouldShowError('name') && fieldErrors.name ? (
+              <p id={nameErrorId} className={s.errorText}>
+                {getErrorMessage(fieldErrors.name)}
+              </p>
+            ) : null}
           </div>
+
+          <div className={s.fieldGroup}>
+            <label className={s.labelRow} htmlFor={emailFieldId}>
+              <span>{copy.labels.email}</span>
+              <span aria-hidden="true" className={s.required}>
+                *
+              </span>
+            </label>
+            <input
+              id={emailFieldId}
+              name="email"
+              className={s.input}
+              value={values.email}
+              onChange={(event) =>
+                handleChange('email', event.target.value)
+              }
+              onBlur={handleBlur}
+              type="email"
+              required
+              maxLength={254}
+              autoComplete="email"
+              data-error={Boolean(
+                shouldShowError('email') && fieldErrors.email,
+              )}
+              aria-invalid={
+                shouldShowError('email') && fieldErrors.email
+                  ? 'true'
+                  : undefined
+              }
+              aria-describedby={describedBy(emailErrorId)}
+            />
+            {shouldShowError('email') && fieldErrors.email ? (
+              <p id={emailErrorId} className={s.errorText}>
+                {getErrorMessage(fieldErrors.email)}
+              </p>
+            ) : null}
+          </div>
+
+          <div className={s.fieldGroup}>
+            <label className={s.labelRow} htmlFor={messageFieldId}>
+              <span>{copy.labels.message}</span>
+              <span aria-hidden="true" className={s.required}>
+                *
+              </span>
+            </label>
+            <textarea
+              id={messageFieldId}
+              name="message"
+              className={s.textarea}
+              value={values.message}
+              ref={messageRef}
+              onChange={(event) =>
+                handleChange('message', event.target.value)
+              }
+              onBlur={handleBlur}
+              rows={formTokens.message.minRows}
+              maxLength={formTokens.message.maxChars}
+              data-error={Boolean(
+                shouldShowError('message') && fieldErrors.message,
+              )}
+              aria-invalid={
+                shouldShowError('message') && fieldErrors.message
+                  ? 'true'
+                  : undefined
+              }
+              aria-describedby={describedBy(
+                messageErrorId,
+                messageCounterId,
+              )}
+            />
+            <div className={s.helperRow}>
+              {shouldShowError('message') && fieldErrors.message ? (
+                <p id={messageErrorId} className={s.errorText}>
+                  {getErrorMessage(fieldErrors.message)}
+                </p>
+              ) : (
+                <span aria-hidden="true" />
+              )}
+              <p id={messageCounterId} className={s.counter}>
+                {formatCounter(
+                  copy.counterTemplate,
+                  remainingCharacters,
+                )}
+              </p>
+            </div>
+          </div>
+        </fieldset>
+
+        <div aria-hidden="true" className={s.visuallyHidden}>
+          <label htmlFor={honeypotFieldId}>
+            {copy.honeypotLabel}
+          </label>
+          <input
+            id={honeypotFieldId}
+            name="hp"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={values.hp}
+            onChange={(event) =>
+              handleChange('hp', event.target.value)
+            }
+          />
         </div>
-      </fieldset>
 
-      <div aria-hidden="true" className={s.visuallyHidden}>
-        <label htmlFor={honeypotFieldId}>
-          {copy.honeypotLabel}
-        </label>
-        <input
-          id={honeypotFieldId}
-          name="hp"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          value={values.hp}
-          onChange={(event) =>
-            handleChange('hp', event.target.value)
-          }
-        />
-      </div>
+        <input type="hidden" name="token" value={values.token} />
 
-      <input type="hidden" name="token" value={values.token} />
-
-      <p className={s.privacy}>
-        {copy.privacy.text}{' '}
-        <button
-          type="button"
-          className={s.privacyLink}
-          onClick={openPrivacy}
-          aria-haspopup="dialog"
-        >
-          {copy.privacy.linkLabel}
-        </button>
-      </p>
+        <p className={s.privacy}>
+          {copy.privacy.text}{' '}
+          <button
+            type="button"
+            className={s.privacyLink}
+            onClick={openPrivacy}
+            aria-haspopup="dialog"
+          >
+            {copy.privacy.linkLabel}
+          </button>
+        </p>
 
         <div className={s.buttonRow}>
           <button
             type="submit"
             className={s.submitButton}
-            disabled={isSubmitting || hasBlockingErrors}
+            disabled={isSubmitting}
           >
             {copy.submitLabel}
           </button>

@@ -4,7 +4,7 @@ import {
   colorVars,
   themeColours,
 } from '../componentTokens/componentTokens.global';
-import { globalBoxShadow } from '../helpers/shadow';
+import { boxShadow } from '../helpers/shadow';
 import { focusOutline } from '../helpers/focusOutline';
 import { absolutePosition } from '../helpers/positioning';
 
@@ -183,14 +183,14 @@ export const button = style({
   backgroundColor: colorVars.white.alpha(0.95).css(),
   color: colorVars.svgColor.css(),
   textDecoration: 'none',
-  boxShadow: globalBoxShadow(),
+  boxShadow: boxShadow(),
   pointerEvents: 'auto',
   transition: `box-shadow ${hoverTransitionMs.css()} ease`,
   transformOrigin: `0 50%`,
   willChange: 'transform',
   selectors: {
     '&:hover, &:focus-visible': {
-      boxShadow: globalBoxShadow({ blur: hoverBlurPx }),
+      boxShadow: boxShadow({ blur: hoverBlurPx }),
     },
     '&:focus-visible': focusOutline({
       color: themeColours.lights.b

@@ -1,11 +1,14 @@
 import { style } from '@vanilla-extract/css';
-import { createGlassBackground, glassVars } from './helpers/glassy';
+import { createGlassBackground, glassNoise } from './helpers/glassy';
+import { glassVars } from '../tokens/glassy.tokens';
 import { globalDropShadowFilter } from './helpers/shadow';
 import { noiseBg } from './helpers/noiseSVG';
+import { borderVars } from './componentTokens/componentTokens.global';
+import borders from './helpers/borders';
 
 const glassBackground = createGlassBackground();
 const innerRadius = glassVars.border.radius.subtract(
-	glassVars.border.width,
+  glassVars.border.width,
 );
 // const innerMostRadius = `calc(${glassVars.border.width.css()} - ${glassVars.border.width.double.css()})`;
 
@@ -18,82 +21,82 @@ export const surfaceLayers = glassBackground.backgroundLayers;
 export const surfaceBaseColor = glassBackground.backgroundColor;
 
 const glassSurface = style({
-	position: 'relative',
-	width: '100%',
-	height: '100%',
-	...glassBackground,
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  ...glassBackground,
 });
 
 export const bg = glassSurface;
 export const navSurface = glassSurface;
 
-export const surface = style([
-	glassSurface,
-	{
-		borderRadius: glassVars.border.radius.css(),
-		position: 'relative',
-	},
-]);
+// export const surface = style([
+// 	glassSurface,
+// 	{
+// 		borderRadius: glassVars.border.radius.css(),
+// 		position: 'relative',
+// 	},
+// ]);
 
 export const surfaceFill = style({
-	position: 'absolute',
-	left: glassVars.border.width.css(),
-	top: glassVars.border.width.css(),
-	width: `calc(100% - ${glassVars.border.width.double().css()})`,
-	height: `calc(100% - ${glassVars.border.width.double().css()})`,
-	borderRadius: innerRadius.css(),
-	background: glassBackground.background,
-	pointerEvents: 'none',
-	zIndex: 0,
+  position: 'absolute',
+  left: glassVars.border.width.css(),
+  top: glassVars.border.width.css(),
+  width: `calc(100% - ${glassVars.border.width.double().css()})`,
+  height: `calc(100% - ${glassVars.border.width.double().css()})`,
+  ...borders(innerRadius, { allowRadiusOnly: true }),
+  background: glassBackground.background,
+  pointerEvents: 'none',
+  zIndex: 0,
 });
 
 export const surfaceShine = style({
-	position: 'absolute',
-	left: glassVars.border.width.css(),
-	top: glassVars.border.width.css(),
-	width: '100%',
-	height: '100%',
-	borderRadius: innerRadius.css(),
-	background: `linear-gradient(135deg, ${glassVars.surfaceGlowPrimaryTint
-		.alpha(glassVars.surfaceGlow.primaryTintAlpha)
-		.css()}, ${glassVars.surfaceGlowSecondaryTint
-		.alpha(glassVars.surfaceGlow.secondaryTintAlpha)
-		.css()})`,
-	mixBlendMode: 'screen',
-	filter: `blur(${glassVars.surfaceGlow.blur.css()})`,
-	opacity: glassVars.surfaceGlow.opacity,
-	pointerEvents: 'none',
-	zIndex: 2,
+  position: 'absolute',
+  left: glassVars.border.width.css(),
+  top: glassVars.border.width.css(),
+  width: '100%',
+  height: '100%',
+  ...borders(innerRadius, { allowRadiusOnly: true }),
+  background: `linear-gradient(135deg, ${glassVars.surfaceGlowPrimaryTint
+    .alpha(glassVars.surfaceGlow.primaryTintAlpha)
+    .css()}, ${glassVars.surfaceGlowSecondaryTint
+    .alpha(glassVars.surfaceGlow.secondaryTintAlpha)
+    .css()})`,
+  mixBlendMode: 'screen',
+  filter: `blur(${glassVars.surfaceGlow.blur.css()})`,
+  opacity: glassVars.surfaceGlow.opacity,
+  pointerEvents: 'none',
+  zIndex: 2,
 });
 
 export const element = style({
-	position: 'relative',
-	width: '100%',
-	height: '100%',
-	borderRadius: glassVars.border.radius.css(),
-	zIndex: 4,
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  ...borders(glassVars.borders, { allowRadiusOnly: true }),
+  zIndex: 4,
 });
 
 export const grain = style({
-	position: 'absolute',
-	left: glassVars.border.width.css(),
-	top: glassVars.border.width.css(),
-	width: `calc(100% - ${glassVars.border.width.double().css()})`,
-	height: `calc(100% - ${glassVars.border.width.double().css()})`,
-	pointerEvents: 'none',
-	borderRadius: innerRadius.css(),
-	...noiseBg({ backgroundImage: glassVars.noiseDataUri() }),
-	zIndex: 3,
+  position: 'absolute',
+  left: glassVars.borders.width.css(),
+  top: glassVars.borders.width.css(),
+  width: `calc(100% - ${glassVars.borders.width.double().css()})`,
+  height: `calc(100% - ${glassVars.borders.width.double().css()})`,
+  pointerEvents: 'none',
+  ...borders(innerRadius, { allowRadiusOnly: true }),
+  ...noiseBg({ backgroundImage: glassNoise() }),
+  zIndex: 3,
 });
 
 export const stroke = style({
-	transform: `translateY(${glassVars.border.width.multiply(-0.25).css()})`,
+  transform: `translateY(${glassVars.borders.width.multiply(-0.25).css()})`,
 });
 
 export const shadow = style({
-	filter: globalDropShadowFilter(),
+  filter: globalDropShadowFilter(),
 });
 
 export const content = style({
-	position: 'relative',
+  position: 'relative',
 });

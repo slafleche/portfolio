@@ -128,15 +128,17 @@ export const textStyleVars = {
   },
   image: {
     display: 'block' as CSS.Property.Display,
-    marginBottom: blockSpacing,
-    borderRadius: m(8),
+    margins: {
+      bottom: blockSpacing,
+    },
+    borders: {
+      radius: m(8),
+    },
   },
   horizontalRule: {
     borders: {
-      all: {
-        width: m(1),
-        color: colorVars.border,
-      },
+      width: m(1),
+      color: colorVars.border,
     },
     margins: {
       bottom: blockSpacing,
@@ -156,21 +158,21 @@ export const textStyleVars = {
     },
     body: {},
     row: {
-      borderBottom: {
-        width: m(1),
+      borders: {
+        bottom: m(1),
         color: colorVars.border.alpha(0.6),
       },
     },
     headerCell: {
       textAlign: 'left' as CSS.Property.TextAlign,
-      padding: {
+      paddings: {
         vertical: m(8),
         horizontal: m(12),
       },
       fontWeight: 650,
     },
     cell: {
-      padding: {
+      paddings: {
         vertical: m(8),
         horizontal: m(12),
       },

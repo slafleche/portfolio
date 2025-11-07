@@ -10,17 +10,35 @@ export const formTokens = {
   field: {
     paddingBlock: m(12),
     paddingInline: m(16),
-    borderRadius: m(12),
-    borderWidth: m(1),
+    borders: {
+      radius: m(12),
+      width: m(1),
+      color: colorVars.white.alpha(0.18),
+    },
+    hover: {
+      borders: {
+        color: colorVars.white.alpha(0.32),
+      },
+    },
+    text: {
+      color: colorVars.white.alpha(0.92),
+    },
+    error: {
+      text: {
+        color: colorVars.gradientA_secondary_end
+      },
+      borders: {
+        color: colorVars.gradientA_secondary_end.alpha(0.8),
+      }
+    },
+    focus: {
+      outlines: {
+        width: m(3),
+        color: colorVars.brand.alpha(0.65),
+      }
+    },
     background: colorVars.white.alpha(0.06),
-    borderColor: colorVars.white.alpha(0.18),
-    textColor: colorVars.white.alpha(0.92),
     placeholderColor: colorVars.white.alpha(0.55),
-    focusRingWidth: m(3),
-    focusRingColor: colorVars.brand.alpha(0.65),
-    hoverBorderColor: colorVars.white.alpha(0.32),
-    errorBorderColor: colorVars.gradientA_secondary_end.alpha(0.8),
-    errorTextColor: colorVars.gradientA_secondary_end,
   },
   label: {
     textColor: colorVars.white.alpha(0.85),

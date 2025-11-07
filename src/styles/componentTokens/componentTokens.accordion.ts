@@ -9,9 +9,11 @@ export const accordionSurfaceTokens = {
     { color: color('#281532'), at: 100 },
   ] as const,
   gradientOpacity: 0.18,
-  borderRadius: m(18),
-  borderWidth: m(0.75),
-  borderColor: colorVars.white.alpha(0.18),
+  borders: {
+    radius: m(18),
+    width: m(0.75),
+    color: colorVars.white.alpha(0.18),
+  },
   padding: {
     x: m(6),
     y: m(6),
