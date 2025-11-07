@@ -11,6 +11,7 @@ import {
 } from '../../tokens/glassy.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import borders from '../helpers/borders.helper';
+import { backgrounds } from '../helpers/background.helper';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -94,17 +95,18 @@ export const closeButton = style({
   width: glassyButtonTokens.size.css(),
   height: glassyButtonTokens.size.css(),
   ...borders(glassyButtonTokens.borders),
-  background: glassyButtonTokens.background.css(),
+  ...backgrounds(glassyButtonTokens.backgrounds),
   color: glassyButtonTokens.text.color.css(),
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
   fontSize: glassyButtonTokens.iconSize.css(),
   fontWeight: 600,
-  boxShadow: boxShadow(glassyButtonTokens.shadow.rest.boxShadows),
-  backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
-  WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
-  transition: glassyButtonTokens.transition,
+  boxShadow: boxShadow(glassyButtonTokens.boxShadows),
+  backdropFilter: `blur(${glassVars.blur.css()})`,
+  WebkitBackdropFilter: `blur(${glassVars.blur.css()})`,
+  transition:
+    'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
   overflow: 'hidden',
   zIndex: 1,
   selectors: {
@@ -119,22 +121,18 @@ export const closeButton = style({
       transition: 'opacity 180ms ease',
     },
     '&:hover': {
-      background:
-        glassyButtonTokens.shadow.hover.backgrounds.color.css(),
-      boxShadow: boxShadow(
-        glassyButtonTokens.shadow.hover.boxShadows,
-      ),
+      ...backgrounds(glassyButtonTokens.hover.backgrounds),
+      boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-2px)',
     },
     '&:focus-visible': {
       outline: 'none',
-      background:
-        glassyButtonTokens.shadow.hover.backgrounds.color.css(),
+      ...backgrounds(glassyButtonTokens.focusVisible.backgrounds),
       transform: 'translateY(-2px)',
     },
     '&:active': {
       transform: 'translateY(0)',
-      boxShadow: boxShadow(glassyButtonTokens.shadow.rest.boxShadows),
+      boxShadow: boxShadow(glassyButtonTokens.active.boxShadows),
     },
     '&:hover::after, &:focus-visible::after': {
       opacity: 1,
