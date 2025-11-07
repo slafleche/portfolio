@@ -8,7 +8,9 @@
   > ⚠ Keep tokens structured: export the typed object only. Consumers should destructure locally (or use helpers) instead of exporting individual measurements.
   > ⚠ Name collections for helpers explicitly: prefer plural keys like `paddings`, `margins`, `borders`. Avoid singular `padding`/`margin`/`border` so it’s obvious the object feeds the helpers.
   > ⚠ When consuming tokens, use the object path (`menuVars.hover.shadow`) directly; only introduce locals when you are applying a real transformation. “Just renaming” creates noise and is treated as an anti-pattern.
-  > ⚠ Keep measurement math in measurement space: combine tokens with helpers (e.g., `menuVars.height.add(...)`) and only call `.getValue()` at the very end when a number-only API needs it.
+  > ⚠ Keep measurement math in measurement space. Combine tokens with helpers (e.g., `menuVars.height.add(...)`). **Do not coerce to a primitive inside tokens or helpers.** Perform numeric coercion **only at an adapter/emission boundary** using the **sanctioned MK coercion method** (per the current MK API). Never access internal fields directly; no implicit string coercion.
+
+
 - **Helpers (`/styles/helpers`)**: Share generic logic (measurement math,
   typography composition, spacing utilities). Helpers must not import component
   tokens.
