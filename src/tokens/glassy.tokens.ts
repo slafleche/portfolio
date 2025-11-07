@@ -39,7 +39,7 @@ export const glassVars = {
   overlay: {
     color: colorVars.black,
     topAlpha: 0.05,
-    midStop: '45%',
+    midStop: mPercent(45),
     bottomAlpha: 0.1,
     direction: m(-45, 'deg'),
   },
@@ -126,9 +126,9 @@ export const glassyButtonTokens = {
     gradients: {
       angle: m(135, 'deg'),
       stops: [
-        { color: colorVars.white.alpha(0), at: 0 },
-        { color: colorVars.white.alpha(0.65), at: 45 },
-        { color: colorVars.white.alpha(0), at: 100 },
+        { color: colorVars.white.alpha(0), at: mPercent(0) },
+        { color: colorVars.white.alpha(0.65), at: mPercent(45) },
+        { color: colorVars.white.alpha(0), at: mPercent(100) },
       ],
       inset: mPercent(-25),
       animationMs: m(520, 'ms'),

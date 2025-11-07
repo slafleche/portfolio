@@ -1,5 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 import { m } from '../measurementKit';
+import { mPercent } from '../measurementKit/units/percent';
 import {
   colorVars,
   themeColours,
@@ -215,8 +216,8 @@ export const button = style({
 const buttonGradient = buildLinear({
   angle: gradAngleDiagDeg,
   stops: [
-    { color: themeColours.lights.b, at: 0 },
-    { color: themeColours.lights.d, at: 100 },
+    { color: themeColours.lights.b, at: mPercent(0) },
+    { color: themeColours.lights.d, at: mPercent(100) },
   ],
 });
 
