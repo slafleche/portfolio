@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { SkipNavLink } from '@/components/SkipNavLink';
 import * as s from '@/styles/components/menu.css';
 import type { Locale } from '@/data/locales';
-import transforms from '@/styles/helpers/transforms.helper';
+import transforms, {
+  type TransformIntent,
+} from '@/styles/helpers/transforms.helper';
 import clsx from 'clsx';
 import Arch from './Arch';
 import Logo from './Logo';
@@ -800,6 +802,26 @@ export default function Menu({
     const skew = isOuter ? menuVars.skew : menuVars.skew.half();
     const debugFocusAttr =
       focusDebugIndex === index ? 'true' : undefined;
+    const transformIntents: TransformIntent[] = [
+      {
+        skew: {
+          x:
+            side === 'right'
+              ? skew.negation()
+              : skew,
+        },
+      },
+    ];
+    if (isOuter) {
+      transformIntents.push({
+        translate: { y: m(0) },
+      });
+      transformIntents.push({
+        rotate: {
+          value: m(0.5, 'deg').negation(side === 'left'),
+        },
+      });
+    }
     return (
       <li
         className={clsx(classes?.item, classes?.index)}
@@ -816,14 +838,7 @@ export default function Menu({
           data-outer={isOuter}
           data-debug-focus={debugFocusAttr}
           aria-current={isActive ? 'true' : undefined}
-          style={transforms(
-            transforms.skewX(skew).negate(side === 'right'),
-            transforms.translateY(0).when(isOuter),
-            transforms
-              .rotate(0.5)
-              .negate(side === 'left')
-              .when(isOuter),
-          )}
+          style={transforms(...transformIntents)}
           onMouseEnter={() => handleActivate(index)}
           onMouseLeave={hideHighlight}
           onFocus={(event) => {
