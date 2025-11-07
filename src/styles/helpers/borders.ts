@@ -435,16 +435,13 @@ const normalizeIntent = (
   input?: BorderInput,
 ): BorderIntent | undefined => {
   if (input === undefined || input === null) return undefined;
-  if (
-    typeof input === 'string' ||
-    typeof input === 'number' ||
-    isMeasurement(input)
-  ) {
-    return {
-      radius: {
-        all: input,
-      },
-    };
+  if (typeof input !== 'object') {
+    if (process.env.NODE_ENV !== 'production') {
+      throw new Error(
+        '[borders] Shorthand inputs must identify their intent (e.g., `{ radius: { all: measurement } }`).',
+      );
+    }
+    return undefined;
   }
 
   const {
@@ -477,11 +474,7 @@ const normalizeIntent = (
   if (radius !== undefined) {
     if (isRadiusCompass(radius)) {
       intent.radius = radius;
-    } else if (
-      typeof radius === 'string' ||
-      typeof radius === 'number' ||
-      isMeasurement(radius)
-    ) {
+    } else if (isMeasurement(radius)) {
       intent.radius = {
         all: radius,
       };
