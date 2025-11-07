@@ -3,6 +3,7 @@ import {
   backgroundImageDecl,
   buildLinear,
 } from '../helpers/gradients.helper';
+import { backgrounds } from '../helpers/background.helper';
 import {
   glassVars,
   glassyPanelTokens,
@@ -17,6 +18,7 @@ import { colorVars } from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
+import { paddings } from '../helpers/spacing.helper';
 
 const surfaceGradient = buildLinear({
   angle: accordionSurfaceTokens.gradientAngle,
@@ -61,12 +63,12 @@ export const root = style({
   display: 'flex',
   flexDirection: 'column',
   gap: accordionItemTokens.gap.css(),
-  padding: `${accordionSurfaceTokens.padding.y.css()} ${accordionSurfaceTokens.padding.x.css()}`,
-  ...borders(accordionSurfaceTokens.borders),
-  boxShadow: boxShadow(glassyPanelTokens.shadow),
   overflow: 'hidden',
+  boxShadow: boxShadow(glassyPanelTokens.shadow),
+  ...paddings(accordionSurfaceTokens.paddings),
+  ...borders(accordionSurfaceTokens.borders),
   ...backgroundImageDecl(surfaceGradient),
-  backgroundColor: glassyPanelTokens.backgroundColor.css(),
+  ...backgrounds(glassyPanelTokens.backgrounds),
   backdropFilter: `blur(${glassVars.backdropBlur.css()})`,
   WebkitBackdropFilter: `blur(${glassVars.backdropBlur.css()})`,
 });
@@ -114,13 +116,11 @@ export const trigger = style({
 export const triggerLabel = style({
   ...fontVariantStyles('h4'),
   color: colorVars.white.css(),
-  letterSpacing: '0.01em'
 });
 
 export const triggerSubtitle = style({
   ...fontVariantStyles('body'),
   color: colorVars.white.alpha(0.72).css(),
-  marginTop: m(1).css(),
 });
 
 export const triggerText = style({

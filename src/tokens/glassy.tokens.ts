@@ -7,6 +7,7 @@ import { colorVars } from '../styles/componentTokens/global.componentTokens';
  * turning these into CSS strings / gradients.
  */
 export const glassVars = {
+  blur: m(3),
   backgrounds: {
     color: colorVars.white.alpha(0.06),
   },
@@ -51,6 +52,8 @@ export type GlassSurfaceTokens = typeof glassVars;
 
 export const glassyButtonTokens = {
   size: m(44),
+  iconSize: m(18),
+  blur: glassVars.blur,
   backgrounds: {
     color: colorVars.white.alpha(0.12),
   },
@@ -68,6 +71,23 @@ export const glassyButtonTokens = {
     blur: m(6),
     color: colorVars.black,
     alpha: 0.35,
+  },
+  outlines: {
+    width: m(1),
+    style: 'solid',
+    color: colorVars.white.alpha(0.45),
+  },
+  hover: {
+    backgrounds: {
+      color: colorVars.white.alpha(0.16),
+    },
+    boxShadows: {
+      x: m(0),
+      y: m(2.5),
+      blur: m(12),
+      color: colorVars.black,
+      alpha: 0.4,
+    },
   },
   focus: {
     backgrounds: {
@@ -93,18 +113,6 @@ export const glassyButtonTokens = {
       alpha: 0.4,
     },
   },
-  hover: {
-    backgrounds: {
-      color: colorVars.white.alpha(0.16),
-    },
-    boxShadows: {
-      x: m(0),
-      y: m(2.5),
-      blur: m(12),
-      color: colorVars.black,
-      alpha: 0.4,
-    },
-  },
   active: {
     boxShadows: {
       x: m(0),
@@ -114,12 +122,21 @@ export const glassyButtonTokens = {
       alpha: 0.35,
     },
   },
-  transition:
-    'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
-  focusRingWidth: m(1),
-  focusRingColor: colorVars.white.alpha(0.45),
-  iconSize: m(18),
+  sheen: {
+    gradients: {
+      angle: m(135, 'deg'),
+      stops: [
+        { color: colorVars.white.alpha(0), at: 0 },
+        { color: colorVars.white.alpha(0.65), at: 45 },
+        { color: colorVars.white.alpha(0), at: 100 },
+      ],
+      inset: mPercent(-25),
+      animationMs: m(520, 'ms'),
+    },
+  },
 } as const;
+
+// 'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
 
 export const glassyPanelTokens = {
   backgrounds: {
