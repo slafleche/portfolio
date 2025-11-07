@@ -15,7 +15,7 @@ import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import { focusOutline } from '../helpers/focusOutline.helper';
+import { focusOutline } from '../helpers/outlines.helper';
 import { colorVars } from '../componentTokens/global.componentTokens';
 import { m } from '../measurementKit';
 import { borders } from '../helpers/borders.helper';

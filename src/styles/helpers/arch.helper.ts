@@ -1,4 +1,4 @@
-import { color } from './colorWrap';
+import { color } from './colorWrap.helper';
 import type * as CSS from 'csstype';
 import { m } from '../measurementKit';
 import { colorVars } from '../componentTokens/global.componentTokens';

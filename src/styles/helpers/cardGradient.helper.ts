@@ -1,4 +1,4 @@
-import { color, type ColorWrapper } from './colorWrap';
+import { color, type ColorWrapper } from './colorWrap.helper';
 import type { Property } from 'csstype';
 import {
 	buildLinear,
@@ -11,7 +11,7 @@ import {
 	type Layer,
 	type LinearDirectionInput,
 	type Stop,
-} from './gradients';
+} from './gradients.helper';
 
 type LinearGradientStop = {
 	color: ColorWrapper;
