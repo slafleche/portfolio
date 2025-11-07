@@ -1,35 +1,23 @@
 import { isMeasurement } from '../measurementKit';
 import type { AxisValues, MeasurementLike } from './types';
 
-type SpacingValue =
-  | MeasurementLike
-  | number
-  | string
-  | null
-  | undefined;
+type SpacingValue = MeasurementLike | undefined;
 export type SpacingProps = AxisValues<SpacingValue>;
-type SpacingInput = SpacingProps | SpacingValue;
+type SpacingInput = SpacingProps | MeasurementLike;
 
 // number → px, IMeasurement → .css(), string passthrough
 const toCssLen = (v: SpacingValue): string | undefined => {
   if (v == null) return undefined;
-  if (typeof v === 'string') return v;
-  if (typeof v === 'number')
-    return Number.isFinite(v) ? `${v}px` : undefined;
   if (isMeasurement(v)) return v.css();
   return undefined;
 };
 
 const resolve = (value: SpacingValue, fallback: string): string => {
-  if (value === undefined || value === null) return fallback;
+  if (value === undefined) return fallback;
   const out = toCssLen(value);
   if (typeof out === 'string') return out;
 
-  const msg = `[spacing] Expected CSS length; got ${
-    typeof value === 'string' || typeof value === 'number'
-      ? `${typeof value}:${value}`
-      : Object.prototype.toString.call(value)
-  }. Pass a string/number or an IMeasurement.`;
+  const msg = '[spacing] Expected a measurement (use measurementKit helpers).';
 
   if (process.env.NODE_ENV !== 'production') {
     throw new Error(msg);
@@ -39,31 +27,20 @@ const resolve = (value: SpacingValue, fallback: string): string => {
 };
 
 const normalize = (input?: SpacingInput): SpacingProps | undefined => {
-  if (input === undefined || input === null) return undefined;
-
-  if (
-    typeof input === 'string' ||
-    typeof input === 'number' ||
-    isMeasurement(input)
-  ) {
+  if (input === undefined) return undefined;
+  if (isMeasurement(input)) {
     return { all: input };
   }
-
-  if (typeof input === 'object') {
-    const intent = { ...input } as SpacingProps;
-    if (
-      'width' in intent ||
-      'color' in intent ||
-      'style' in intent
-    ) {
-      throw new Error(
-        '[spacing] Unexpected border shorthand properties on spacing intent.',
-      );
-    }
-    return intent;
+  if (
+    typeof input !== 'object' ||
+    input === null ||
+    Array.isArray(input)
+  ) {
+    throw new Error(
+      '[spacing] Expected a spacing intent object (e.g., { all, horizontal, vertical }).',
+    );
   }
-
-  return undefined;
+  return input as SpacingProps;
 };
 
 const spacing = (input?: SpacingInput): string => {
