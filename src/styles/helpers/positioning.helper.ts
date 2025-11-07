@@ -1,6 +1,5 @@
 import type * as CSS from 'csstype';
 import { margins } from './spacing';
-
 export const absolutePosition = {
 	topRight: (
 		top: string | number = '0',

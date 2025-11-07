@@ -1,5 +1,5 @@
 import type * as CSS from 'csstype';
-import type { FontFamilyDef, FontStyles } from './types';
+import type { FontFamilyDef, FontStyles } from './types.helper';
 import {
   hasCssMethod,
   isPercentMeasurement,
