@@ -6,6 +6,11 @@ import {
 	type UnitHelperName,
 } from './unitDefinitions';
 
+type UnitSymbol = UnitDefinitionRecord[keyof UnitDefinitionRecord]['unit'];
+
+export type MeasurementString<Unit extends string = UnitSymbol> =
+	`${number}${Unit}`;
+
 type UnitBrand<Unit extends string> = { readonly __unitBrand: Unit };
 
 export interface IMeasurement<Unit extends string = string> {
