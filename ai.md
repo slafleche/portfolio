@@ -8,13 +8,15 @@
   > ⚠ Keep tokens structured: export the typed object only. Consumers should destructure locally (or use helpers) instead of exporting individual measurements.
   > ⚠ Name collections for helpers explicitly: prefer plural keys like `paddings`, `margins`, `borders`. Avoid singular `padding`/`margin`/`border` so it’s obvious the object feeds the helpers.
   > ⚠ When consuming tokens, use the object path (`menuVars.hover.shadow`) directly; only introduce locals when you are applying a real transformation. “Just renaming” creates noise and is treated as an anti-pattern.
+  > ⚠ Pluralized layout objects (`paddings`, `margins`, `borders`, `outlines`, etc.) must be passed straight into their helper—styles should not explode them into manual `border*`/`padding*`/`outline*` props. Shadow specs follow the same rule: keep the object under a plural key (e.g., `shadow.boxShadows`) and feed it directly to `boxShadow(...)`. Same idea for gradients: tokens should expose gradient packs and styles call the existing gradient helpers (no raw gradient strings).
+  > ⚠ When defining these objects, don’t mix raw CSS strings/numbers with MeasurementKit instances inside the same object—stay in measurement space until the helper emits CSS so we don’t end up with invalid combinations.
   > ⚠ Keep measurement math in measurement space. Combine tokens with helpers (e.g., `menuVars.height.add(...)`). **Do not coerce to a primitive inside tokens or helpers.** Perform numeric coercion **only at an adapter/emission boundary** using the **sanctioned MK coercion method** (per the current MK API). Never access internal fields directly; no implicit string coercion.
 
 
 - **Helpers (`/styles/helpers`)**: Share generic logic (measurement math,
   typography composition, spacing utilities). Helpers must not import component
   tokens.
-  > ⚠ Gradients live behind helpers (see `styles/helpers/cardGradient` etc.); don’t hand-write gradient strings in tokens or styles when a helper exists.
+  > ⚠ Gradients live behind helpers (see `styles/helpers/cardGradient.helper` etc.); don’t hand-write gradient strings in tokens or styles when a helper exists.
 - **Modules (`/modules`)**: Assemble tokens + helpers for a specific feature or
   component. Modules remain CSS-free; they simply prepare structured data.
 - **Styles
@@ -26,7 +28,7 @@
 ## Workflow Expectations (cheat sheet)
 
 - **Always**: follow the “talk → clarify → TODO → go” cadence. Discuss context first, ask questions, capture the plan in a `TODO.*.md` primer + checklist, get the go-ahead, then execute. Keep that TODO file updated as you deliver slices.
-- **When unsure**: prefer shared helpers (`paddings`, `margins`, `borders`, typography) over hand-written CSS; ask before large structural changes; keep slices small and shippable.
+- **When unsure**: prefer shared helpers (`paddings`, `margins`, `borders`, `boxShadow`, `focusOutline`, typography, gradient helpers) over hand-written CSS; ask before large structural changes; keep slices small and shippable.
 - **Never**: call `.css()` inside tokens/helpers or inline border/spacing shorthands when a helper exists; break `data-ui` contracts.
 
 ## Communication
