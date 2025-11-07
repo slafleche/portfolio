@@ -509,6 +509,7 @@ export default function ContactForm({
               }
               onBlur={handleBlur}
               rows={formTokens.message.minRows}
+              minLength={formTokens.message.minChars}
               maxLength={formTokens.message.maxChars}
               data-error={Boolean(
                 shouldShowError('message') && fieldErrors.message,
