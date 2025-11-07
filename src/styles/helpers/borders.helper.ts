@@ -428,7 +428,12 @@ const hasEdgeIntent = (intent?: BorderIntent): boolean => {
 type BorderShortcut = Partial<BorderLike> & {
   radius?:
     | BorderRadiusInput
-    | Partial<Record<'all' | CompassRegion | CornerPosition, BorderRadiusInput>>;
+    | Partial<
+        Record<
+          'all' | CompassRegion | CornerPosition,
+          BorderRadiusInput
+        >
+      >;
 };
 
 type BorderInput =
@@ -450,24 +455,25 @@ const normalizeIntent = (
     return undefined;
   }
 
-  const {
-    width,
-    color,
-    style,
-    radius,
-    ...rest
-  } = input as BorderShortcut & BorderIntent;
+  const { width, color, style, radius, ...rest } =
+    input as BorderShortcut & BorderIntent;
 
   const intent = rest as BorderIntent;
 
-  if (width !== undefined || color !== undefined || style !== undefined) {
+  if (
+    width !== undefined ||
+    color !== undefined ||
+    style !== undefined
+  ) {
     const shorthandAll: IBorder = {};
     if (width !== undefined) shorthandAll.width = width;
     if (color !== undefined) shorthandAll.color = color;
     if (style !== undefined) shorthandAll.style = style;
 
     const existingAll =
-      intent.all && intent.all !== true && typeof intent.all === 'object'
+      intent.all &&
+      intent.all !== true &&
+      typeof intent.all === 'object'
         ? intent.all
         : undefined;
 
