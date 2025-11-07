@@ -5,7 +5,11 @@ import {
   themeColours,
 } from '../componentTokens/global.componentTokens';
 import { boxShadow } from '../helpers/shadow.helper';
-import { focusOutline } from '../helpers/outlines.helper';
+import {
+  backgroundImageDecl,
+  buildLinear,
+} from '../helpers/gradients.helper';
+import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 
 import {
@@ -192,10 +196,8 @@ export const button = style({
     '&:hover, &:focus-visible': {
       boxShadow: boxShadow({ blur: hoverBlurPx }),
     },
-    '&:focus-visible': focusOutline({
-      color: themeColours.lights.b
-        .mix(themeColours.lights.d, 0.5)
-        .css(),
+    '&:focus-visible': outlines({
+      color: themeColours.lights.b.mix(themeColours.lights.d, 0.5),
       width: focusWidthPx,
       offset: focusOffsetPx,
     }),
@@ -210,12 +212,20 @@ export const button = style({
   },
 });
 
+const buttonGradient = buildLinear({
+  angle: gradAngleDiagDeg,
+  stops: [
+    { color: themeColours.lights.b, at: 0 },
+    { color: themeColours.lights.d, at: 100 },
+  ],
+});
+
 /* GRADIENT */
 export const gradient = style({
   position: 'absolute',
   inset: 0,
   borderRadius: buttonRadius.css(),
-  backgroundImage: `linear-gradient(${gradAngleDiagDeg.css()}, ${themeColours.lights.b.css()} 0%, ${themeColours.lights.d.css()} 100%)`,
+  ...backgroundImageDecl(buttonGradient),
   opacity: 0,
   transition: `opacity ${gradientFadeMs.css()} ease`,
   zIndex: 0,
