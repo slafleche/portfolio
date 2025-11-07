@@ -13,6 +13,18 @@
 - Accessibility in mind
 - Responsive
 
+### Helper Conventions
+
+- Require MeasurementKit values for anything that represents a scalar (lengths,
+  angles, etc.). Helpers should only accept strings when CSS requires symbolic
+  keywords (e.g., `auto`, `inherit`).
+- When you need those symbolic values, define a dedicated type in
+  `src/styles/helpers/types.helper.ts` instead of falling back to loose unions.
+  `SpacingKeyword` is the reference example: it extracts the string-only portion
+  of `CSS.Property.Margin` and allows `spacing.helper.ts` to accept `auto`
+  alongside real measurements without reopening the old `MeasurementLike`
+  escape hatch.
+
 ### Setup
 
 - Run `yarn fresh` after cloning. This installs dependencies and runs the full
