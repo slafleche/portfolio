@@ -13,12 +13,13 @@ import {
 import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
+import type { ColorWrapper } from '../helpers/colorWrap.helper';
 
 const controlBase: ComplexStyleRule = {
   width: '100%',
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
-  backgroundColor: formTokens.field.background.css(),
+  ...backgrounds(formTokens.field.backgrounds),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -307,6 +308,7 @@ export const privacyCloseIcon = style({
     },
     '&:focus, &:focus-visible': {
       outline: 'none',
+      ...backgrounds(glasssButtonTokens.focusVisible.backgrounds),
       background:
         glassyButtonTokens.focusVisible.background.color.css(),
       boxShadow: boxShadow(
