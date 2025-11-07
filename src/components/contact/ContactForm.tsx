@@ -353,8 +353,6 @@ export default function ContactForm({
     values.message.length,
   ]);
 
-  const hasBlockingErrors = Object.keys(fieldErrors).length > 0;
-
   const messageCounterId = `${formId}-message-counter`;
   const nameFieldId = `${formId}-name`;
   const emailFieldId = `${formId}-email`;
@@ -400,7 +398,10 @@ export default function ContactForm({
     </div>
   );
 
-  const privacyUpdated = privacyCopy.updated.trim();
+  const privacyUpdated =
+    typeof privacyCopy.updated === 'string'
+      ? privacyCopy.updated.trim()
+      : '';
 
   return (
     <>
