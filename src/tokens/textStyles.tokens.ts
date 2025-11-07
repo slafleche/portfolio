@@ -59,7 +59,9 @@ export const textStyleVars = {
   code: {
     inline: {
       fontFamily: codeFontStack,
-      backgroundColor: codeBackground,
+      backgrounds: {
+        color: codeBackground,
+      },
       borders: {
         all: {
           width: m(1),
@@ -75,8 +77,10 @@ export const textStyleVars = {
       },
     },
     block: {
-      backgroundColor: codeBackground,
       fontFamily: codeFontStack,
+      backgrounds: {
+        color: codeBackground,
+      },
       paddings: {
         all: m(16),
       },
@@ -154,7 +158,9 @@ export const textStyleVars = {
       marginBottom: blockSpacing,
     },
     head: {
-      backgroundColor: colorVars.bodyFg.alpha(0.04),
+      backgrounds: {
+        color: colorVars.bodyFg.alpha(0.04),
+      },
     },
     body: {},
     row: {

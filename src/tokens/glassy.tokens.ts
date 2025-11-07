@@ -7,11 +7,12 @@ import { colorVars } from '../styles/componentTokens/global.componentTokens';
  * turning these into CSS strings / gradients.
  */
 export const glassVars = {
-  backgroundColor: colorVars.white.alpha(0.06),
+  backgrounds: {
+    color: colorVars.white.alpha(0.06),
+  },
   surfaceGlowPrimaryTint: color('#0f0c18').alpha(0.5),
   surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),
   innerBorderColor: colorVars.white,
-  backdropBlur: m(5),
   borders: {
     radius: m(40),
     width: m(2),
@@ -50,7 +51,9 @@ export type GlassSurfaceTokens = typeof glassVars;
 
 export const glassyButtonTokens = {
   size: m(44),
-  background: colorVars.white.alpha(0.12),
+  backgrounds: {
+    color: colorVars.white.alpha(0.12),
+  },
   text: {
     color: colorVars.white,
   },
@@ -66,8 +69,8 @@ export const glassyButtonTokens = {
     color: colorVars.black,
     alpha: 0.35,
   },
-  hover: {
-    background: {
+  focus: {
+    backgrounds: {
       color: colorVars.white.alpha(0.16),
     },
     boxShadows: {
@@ -79,7 +82,7 @@ export const glassyButtonTokens = {
     },
   },
   focusVisible: {
-    background: {
+    backgrounds: {
       color: colorVars.white.alpha(0.16),
     },
     boxShadows: {
@@ -90,6 +93,27 @@ export const glassyButtonTokens = {
       alpha: 0.4,
     },
   },
+  hover: {
+    backgrounds: {
+      color: colorVars.white.alpha(0.16),
+    },
+    boxShadows: {
+      x: m(0),
+      y: m(2.5),
+      blur: m(12),
+      color: colorVars.black,
+      alpha: 0.4,
+    },
+  },
+  active: {
+    boxShadows: {
+      x: m(0),
+      y: m(1.5),
+      blur: m(6),
+      color: colorVars.black,
+      alpha: 0.35,
+    },
+  },
   transition:
     'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
   focusRingWidth: m(1),
@@ -98,7 +122,9 @@ export const glassyButtonTokens = {
 } as const;
 
 export const glassyPanelTokens = {
-  backgroundColor: colorVars.white.alpha(0.08),
+  backgrounds: {
+    color: colorVars.white.alpha(0.08),
+  },
   borders: {
     radius: m(18),
     width: m(0.75),

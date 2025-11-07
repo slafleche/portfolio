@@ -46,7 +46,9 @@ export const formTokens = {
       },
     },
 
-    background: colorVars.white.alpha(0.06),
+    backgrounds: {
+      color: colorVars.white.alpha(0.06),
+    },
     placeholderColor: colorVars.white.alpha(0.55),
   },
   label: {
@@ -59,19 +61,28 @@ export const formTokens = {
   },
   status: {
     success: {
-      background: colorVars.brand.alpha(0.16),
-      borderColor: colorVars.brand.alpha(0.45),
-      textColor: colorVars.white,
+      backgrounds: {
+        color: colorVars.brand.alpha(0.16),
+      },
+      borders: {
+        color: colorVars.brand.alpha(0.45),
+      },
     },
     error: {
-      background: colorVars.gradientA_secondary_middle.alpha(0.18),
-      borderColor: colorVars.gradientA_secondary_end.alpha(0.55),
-      textColor: colorVars.white,
+      backgrounds: {
+        color: colorVars.gradientA_secondary_middle.alpha(0.18),
+      },
+      borders: {
+        color: colorVars.gradientA_secondary_end.alpha(0.55),
+      },
     },
     generic: {
-      background: colorVars.shadow.alpha(0.3),
-      borderColor: colorVars.white.alpha(0.35),
-      textColor: colorVars.white,
+      backgrounds: {
+        color: colorVars.shadow.alpha(0.3),
+      },
+      borders: {
+        color: colorVars.gradientA_secondary_end.alpha(0.35),
+      },
     },
   },
   button: {

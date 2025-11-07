@@ -1,14 +1,16 @@
 import { style } from '@vanilla-extract/css';
-import { createGlassBackground, glassNoise } from './helpers/glassy.helper';
+import {
+  createGlassBackground,
+  glassNoise,
+} from './helpers/glassy.helper';
 import { glassVars } from '../tokens/glassy.tokens';
 import { globalDropShadowFilter } from './helpers/shadow.helper';
 import { noiseBg } from './helpers/noiseSVG.helper';
-import { borderVars } from './componentTokens/global.componentTokens';
 import borders from './helpers/borders.helper';
 
 const glassBackground = createGlassBackground();
-const innerRadius = glassVars.border.radius.subtract(
-  glassVars.border.width,
+const innerRadius = glassVars.borders.radius.subtract(
+  glassVars.borders.width,
 );
 // const innerMostRadius = `calc(${glassVars.border.width.css()} - ${glassVars.border.width.double.css()})`;
 
@@ -30,20 +32,12 @@ const glassSurface = style({
 export const bg = glassSurface;
 export const navSurface = glassSurface;
 
-// export const surface = style([
-// 	glassSurface,
-// 	{
-// 		borderRadius: glassVars.border.radius.css(),
-// 		position: 'relative',
-// 	},
-// ]);
-
 export const surfaceFill = style({
   position: 'absolute',
-  left: glassVars.border.width.css(),
-  top: glassVars.border.width.css(),
-  width: `calc(100% - ${glassVars.border.width.double().css()})`,
-  height: `calc(100% - ${glassVars.border.width.double().css()})`,
+  left: glassVars.borders.width.css(),
+  top: glassVars.borders.width.css(),
+  width: `calc(100% - ${glassVars.borders.width.double().css()})`,
+  height: `calc(100% - ${glassVars.borders.width.double().css()})`,
   ...borders(innerRadius, { allowRadiusOnly: true }),
   background: glassBackground.background,
   pointerEvents: 'none',
@@ -52,8 +46,8 @@ export const surfaceFill = style({
 
 export const surfaceShine = style({
   position: 'absolute',
-  left: glassVars.border.width.css(),
-  top: glassVars.border.width.css(),
+  left: glassVars.borders.width.css(),
+  top: glassVars.borders.width.css(),
   width: '100%',
   height: '100%',
   ...borders(innerRadius, { allowRadiusOnly: true }),
