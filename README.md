@@ -27,6 +27,10 @@
   of `CSS.Property.Margin` and allows `spacing.helper.ts` to accept `auto`
   alongside real measurements without reopening the old `MeasurementLike`
   escape hatch.
+- Spacing helpers now require explicit intent objects: wrap even scalar values
+  in `{ all: ... }` (or `{ horizontal: ..., vertical: ... }`) before calling
+  `paddings(...)` / `margins(...)`. This keeps typing strict and avoids
+  “stringly-typed” shorthands drifting back in.
 
 ### Setup
 
