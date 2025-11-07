@@ -23,7 +23,9 @@ import type {
  * borders.none/top/right/bottom/left/vertical/horizontal/all
  */
 
-type EdgeSpec = boolean | IBorder;
+type BorderLike = IBorder | Readonly<IBorder>;
+
+type EdgeSpec = boolean | BorderLike;
 type RadiusSpec = CompassCorners<BorderRadiusInput>;
 
 const isRadiusCompass = (
@@ -423,13 +425,17 @@ const hasEdgeIntent = (intent?: BorderIntent): boolean => {
 };
 
 // Here's the main resolver function
-type BorderShortcut = Partial<IBorder> & {
+type BorderShortcut = Partial<BorderLike> & {
   radius?:
     | BorderRadiusInput
     | Partial<Record<'all' | CompassRegion | CornerPosition, BorderRadiusInput>>;
 };
 
-type BorderInput = BorderIntent | BorderRadiusInput | BorderShortcut;
+type BorderInput =
+  | BorderIntent
+  | BorderRadiusInput
+  | BorderShortcut
+  | BorderLike;
 
 const normalizeIntent = (
   input?: BorderInput,
@@ -590,25 +596,25 @@ export const borders = Object.assign(
     none(): FinalBorderCSS {
       return { border: 'none' };
     },
-    top(overrides?: IBorder): FinalBorderCSS {
+    top(overrides?: BorderLike): FinalBorderCSS {
       return resolve({ top: overrides ?? true });
     },
-    right(overrides?: IBorder): FinalBorderCSS {
+    right(overrides?: BorderLike): FinalBorderCSS {
       return resolve({ right: overrides ?? true });
     },
-    bottom(overrides?: IBorder): FinalBorderCSS {
+    bottom(overrides?: BorderLike): FinalBorderCSS {
       return resolve({ bottom: overrides ?? true });
     },
-    left(overrides?: IBorder): FinalBorderCSS {
+    left(overrides?: BorderLike): FinalBorderCSS {
       return resolve({ left: overrides ?? true });
     },
-    vertical(overrides?: IBorder): FinalBorderCSS {
+    vertical(overrides?: BorderLike): FinalBorderCSS {
       return resolve({ vertical: overrides ?? true });
     },
-    horizontal(overrides?: IBorder): FinalBorderCSS {
+    horizontal(overrides?: BorderLike): FinalBorderCSS {
       return resolve({ horizontal: overrides ?? true });
     },
-    all(overrides?: IBorder): FinalBorderCSS {
+    all(overrides?: BorderLike): FinalBorderCSS {
       return resolve({ all: overrides ?? true });
     },
   },
