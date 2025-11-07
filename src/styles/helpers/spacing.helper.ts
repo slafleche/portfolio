@@ -11,7 +11,7 @@ const SPACING_KEYWORDS = new Set<SpacingKeyword>([
 ]);
 
 export type SpacingProps = AxisValues<SpacingValue>;
-type SpacingInput = SpacingProps | SpacingValue | undefined;
+export type SpacingInput = SpacingProps | undefined;
 
 const isSpacingKeyword = (value: unknown): value is SpacingKeyword =>
   typeof value === 'string' && SPACING_KEYWORDS.has(value as SpacingKeyword);
@@ -41,23 +41,27 @@ const resolve = (value: SpacingValue | undefined, fallback: string): string => {
   return fallback;
 };
 
-const normalize = (input?: SpacingInput): SpacingProps | undefined => {
+const normalize = (
+  input?: SpacingInput | SpacingValue,
+): SpacingProps | undefined => {
   if (input === undefined) return undefined;
-  if (isMeasurement(input)) {
-    return { all: input };
+
+  if (isMeasurement(input) || isSpacingKeyword(input)) {
+    throw new Error(
+      '[spacing] Pass standalone measurements/keywords via a spacing intent object (e.g., { all: m(8) } or { all: "auto" }).',
+    );
   }
-  if (isSpacingKeyword(input)) {
-    return { all: input };
-  }
+
   if (
     typeof input !== 'object' ||
     input === null ||
     Array.isArray(input)
   ) {
     throw new Error(
-      '[spacing] Expected a spacing intent object (e.g., { all, horizontal, vertical }) or approved keyword.',
+      '[spacing] Expected a spacing intent object (e.g., { all, horizontal, vertical }).',
     );
   }
+
   return input as SpacingProps;
 };
 
