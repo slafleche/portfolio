@@ -8,8 +8,10 @@ export const formTokens = {
     sectionGap: m(16),
   },
   field: {
-    paddingBlock: m(12),
-    paddingInline: m(16),
+    paddings: {
+      vertical: m(12),
+      horizontal: m(16),
+    },
     borders: {
       radius: m(12),
       width: m(1),
@@ -74,8 +76,12 @@ export const formTokens = {
   },
   button: {
     minHeight: m(48),
-    paddingInline: m(24),
-    borderRadius: m(28),
+    paddings: {
+      horizontal: m(24),
+    },
+    borders: {
+      radius: m(28),
+    },
   },
   privacy: {
     textColor: colorVars.white.alpha(0.7),

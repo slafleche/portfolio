@@ -50,36 +50,44 @@ export type GlassSurfaceTokens = typeof glassVars;
 
 export const glassyButtonTokens = {
   size: m(44),
+  background: colorVars.white.alpha(0.12),
+  text: {
+    color: colorVars.white,
+  },
   borders: {
     radius: m(12),
     width: m(0.75),
     color: colorVars.white.alpha(0.28),
   },
-  background: colorVars.white.alpha(0.12),
-  text: {
-    color: colorVars.white,
+  boxShadows: {
+    x: m(0),
+    y: m(1.5),
+    blur: m(6),
+    color: colorVars.black,
+    alpha: 0.35,
   },
-  shadow: {
-    rest: {
-      boxShadows: {
-        x: m(0),
-        y: m(1.5),
-        blur: m(6),
-        color: colorVars.black,
-        alpha: 0.35,
-      },
+  hover: {
+    background: {
+      color: colorVars.white.alpha(0.16),
     },
-    hover: {
-      backgrounds: {
-        color: colorVars.white.alpha(0.16),
-      },
-      boxShadows: {
-        x: m(0),
-        y: m(2.5),
-        blur: m(12),
-        color: colorVars.black,
-        alpha: 0.4,
-      },
+    boxShadows: {
+      x: m(0),
+      y: m(2.5),
+      blur: m(12),
+      color: colorVars.black,
+      alpha: 0.4,
+    },
+  },
+  focusVisible: {
+    background: {
+      color: colorVars.white.alpha(0.16),
+    },
+    boxShadows: {
+      x: m(0),
+      y: m(2.5),
+      blur: m(12),
+      color: colorVars.black,
+      alpha: 0.4,
     },
   },
   transition:
