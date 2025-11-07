@@ -3,7 +3,7 @@ import type { ColorWrapper } from './colorWrap.helper';
 import type { IMeasurement } from '../measurementKit';
 import { outlinesTokens } from '../../tokens/outlines.tokens';
 
-export type FocusOutlineOptions = {
+export type OutlinesValues = {
   color?: ColorWrapper;
   width?: IMeasurement;
   offset?: IMeasurement;
@@ -24,7 +24,7 @@ export const outlines = ({
   width = defaultWidth,
   offset = defaultOffset,
   style = defaultStyle,
-}: FocusOutlineOptions = {}) => ({
+}: OutlinesValues = {}) => ({
   outline: `${width.css()} ${style} ${outlineColor.css()}`,
   outlineOffset: offset.css(),
 });

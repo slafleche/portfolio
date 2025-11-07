@@ -1,7 +1,7 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { paddings, margins } from './helpers/spacing.helper';
 import borders from './helpers/borders.helper';
-import { focusOutline } from './helpers/outlines.helper';
+import { outlines } from './helpers/outlines.helper';
 import { colorVars } from './componentTokens/global.componentTokens';
 import {
   composeFontVariantStyles,
@@ -94,7 +94,7 @@ globalStyle(`.${userContent} a:hover, a[data-ui="link"]:hover`, {
 globalStyle(
   `.${userContent} a:focus-visible, a[data-ui="link"]:focus-visible`,
   {
-    ...focusOutline({
+    ...outlines({
       color: linkRules.focusVisible.outlines.color,
       width: linkRules.focusVisible.outlines.width,
       offset: linkRules.focusVisible.outlines.offset,

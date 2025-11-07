@@ -4,7 +4,7 @@ import {
   absolutePosition,
   flexPosition,
 } from '../helpers/positioning.helper';
-import { focusOutline } from '../helpers/outlines.helper';
+import { outlines } from '../helpers/outlines.helper';
 import type { ColorWrapper } from '../helpers/colorWrap.helper';
 import {
   archVars,
@@ -568,7 +568,7 @@ export const logoLink = style({
   position: 'relative',
   cursor: 'pointer',
   selectors: {
-    '&:focus-visible, &[data-debug-focus="true"]': focusOutline({
+    '&:focus-visible, &[data-debug-focus="true"]': outlines({
       width: logoHoverOutlineWidth,
       offset: logoHoverOutlineOffset,
       color: logoHoverOutlineColor,
