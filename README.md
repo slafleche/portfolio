@@ -27,10 +27,11 @@
   of `CSS.Property.Margin` and allows `spacing.helper.ts` to accept `auto`
   alongside real measurements without reopening the old `MeasurementLike`
   escape hatch.
-- Spacing helpers now require explicit intent objects: wrap even scalar values
-  in `{ all: ... }` (or `{ horizontal: ..., vertical: ... }`) before calling
-  `paddings(...)` / `margins(...)`. This keeps typing strict and avoids
-  “stringly-typed” shorthands drifting back in.
+- Spacing helpers accept either structured intent objects or shorthand
+  MeasurementKit/spacing keyword values. Use `{ all: ... }`,
+  `{ horizontal: ..., vertical: ... }`, etc., whenever you need axis overrides,
+  but never pass raw numbers or strings—the helper will throw unless the value
+  is a MeasurementKit instance or one of the approved spacing keywords.
 
 ### Setup
 
