@@ -92,25 +92,25 @@ export const root = style({
   left: 0,
   width: '100%',
   zIndex: 100,
-  transform: transforms.value(
-    transforms.translate3d(
-      0,
-      -(
-        archVars.top.getValue() +
-        archVars.curveHeight.getValue() +
-        dropShadowVars.offsetY.getValue() +
-        dropShadowVars.blur.getValue()
-      ) * 1.5,
-      0,
-    ),
-  ),
+  transform: transforms.value({
+    translate: {
+      y: archVars.top
+        .add(archVars.curveHeight)
+        .add(dropShadowVars.offsetY)
+        .add(dropShadowVars.blur)
+        .multiply(1.5)
+        .negation(),
+    },
+  }),
   transition: 'transform 0.8s cubic-bezier(0.69, 0.42, 0.01, 1) 0.3s',
   willChange: 'transform',
   backfaceVisibility: 'hidden',
 
   selectors: {
     '&[data-mounted="true"]': {
-      transform: transforms.value(transforms.translate3d(0, 0, 0)),
+      transform: transforms.value({
+        translate: { y: m(0) },
+      }),
     },
   },
 });
@@ -422,41 +422,56 @@ const logoHoverOutlineOffset = logoOutline?.offset ?? m(6);
 const logoHoverOutlineColor =
   logoOutline?.color ?? colorVars.contrast.alpha(0.6);
 
+const rotateIntent = (degrees: number) => ({
+  rotate: { value: m(degrees, 'deg') },
+});
+
+const scaleIntent = (value: number) => ({
+  scale: { value },
+});
+
+const translatePercentIntent = (x: number, y?: number) => ({
+  translate: {
+    x: mPercent(x),
+    y: y === undefined ? undefined : mPercent(y),
+  },
+});
+
 const logoHoverRotate = keyframes({
   '0%': {
     transform: transforms.value(
-      transforms.rotate(0),
-      transforms.scale(1),
+      rotateIntent(0),
+      scaleIntent(1),
     ),
   },
   '20%': {
     transform: transforms.value(
-      transforms.rotate(-16),
-      transforms.scale(1),
+      rotateIntent(-16),
+      scaleIntent(1),
     ),
   },
   '40%': {
     transform: transforms.value(
-      transforms.rotate(-16),
-      transforms.scale(1),
+      rotateIntent(-16),
+      scaleIntent(1),
     ),
   },
   '55%': {
     transform: transforms.value(
-      transforms.rotate(138),
-      transforms.scale(focusScale * 1.015),
+      rotateIntent(138),
+      scaleIntent(focusScale * 1.015),
     ),
   },
   '85%': {
     transform: transforms.value(
-      transforms.rotate(118),
-      transforms.scale(focusScale * 0.992),
+      rotateIntent(118),
+      scaleIntent(focusScale * 0.992),
     ),
   },
   '100%': {
     transform: transforms.value(
-      transforms.rotate(120),
-      transforms.scale(focusScale),
+      rotateIntent(120),
+      scaleIntent(focusScale),
     ),
   },
 });
@@ -466,26 +481,26 @@ const logoHoverExitDuration = 560;
 const logoHoverRotateReverse = keyframes({
   '0%': {
     transform: transforms.value(
-      transforms.rotate(120),
-      transforms.scale(focusScale),
+      rotateIntent(120),
+      scaleIntent(focusScale),
     ),
   },
   '40%': {
     transform: transforms.value(
-      transforms.rotate(130),
-      transforms.scale(focusScale * 1.05),
+      rotateIntent(130),
+      scaleIntent(focusScale * 1.05),
     ),
   },
   '74%': {
     transform: transforms.value(
-      transforms.rotate(-10),
-      transforms.scale(1),
+      rotateIntent(-10),
+      scaleIntent(1),
     ),
   },
   '100%': {
     transform: transforms.value(
-      transforms.rotate(0),
-      transforms.scale(1),
+      rotateIntent(0),
+      scaleIntent(1),
     ),
   },
 });
@@ -556,7 +571,9 @@ export const logoItem = style({
   top: archVars.top.half().add(logoVars.offsetY).css(),
   left: '50%',
   zIndex: 1,
-  transform: transforms.value(transforms.translate('-50%', '-50%')),
+  transform: transforms.value(
+    translatePercentIntent(-50, -50),
+  ),
   width: logoHitboxPadding.multiply(2).css(),
   height: logoHitboxPadding.multiply(2).css(),
 });
@@ -622,8 +639,8 @@ export const logoWrap = style({
   justifyContent: 'center',
   margin: '0 auto',
   transform: transforms.value(
-    transforms.rotate(0),
-    transforms.scale(1),
+    rotateIntent(0),
+    scaleIntent(1),
   ),
   clipPath: 'circle(50% at 50% 50%)',
   transformOrigin: 'center',
@@ -641,8 +658,8 @@ export const logoWrap = style({
       {
         animation: 'none',
         transform: transforms.value(
-          transforms.rotate(0),
-          transforms.scale(focusScale),
+          rotateIntent(0),
+          scaleIntent(focusScale),
         ),
       },
   },
@@ -652,15 +669,15 @@ export const logoWrap = style({
         '[data-logo-anim="enter"] &': {
           animation: 'none',
           transform: transforms.value(
-            transforms.rotate(0),
-            transforms.scale(focusScale),
+            rotateIntent(0),
+            scaleIntent(focusScale),
           ),
         },
         '[data-logo-anim="exit"] &': {
           animation: 'none',
           transform: transforms.value(
-            transforms.rotate(0),
-            transforms.scale(1),
+            rotateIntent(0),
+            scaleIntent(1),
           ),
         },
       },
@@ -680,8 +697,8 @@ export const logo = style({
 
 export const localeChanger = style({
   ...absolutePosition.topRight(
-    0,
-    menuVars.paddings.horizontal.half().css(),
+    m(0),
+    menuVars.paddings.horizontal.half(),
   ),
   display: 'flex',
   alignContent: 'center',
@@ -698,9 +715,17 @@ export const localeChanger = style({
   zIndex: 1,
   textShadow: `2px 2px 3px ${colorVars.navBg.css()}`,
   transform: transforms.value(
-    transforms.skewX(menuVars.skew.multiply(-1.5)),
-    transforms.rotate(2),
-    transforms.translateY(-2),
+    {
+      skew: {
+        x: menuVars.skew.multiply(-1.5),
+      },
+    },
+    {
+      rotate: { value: m(2, 'deg') },
+    },
+    {
+      translate: { y: m(-2) },
+    },
   ),
 });
 
@@ -714,9 +739,11 @@ export const localeLink = style({
   display: 'inline-grid',
   gridTemplateAreas: 'stack',
   alignItems: 'center',
-  transform: transforms.value(
-    transforms.skewX(menuVars.rotationMax).negate(),
-  ),
+  transform: transforms.value({
+    skew: {
+      x: menuVars.rotationMax.negation(),
+    },
+  }),
   selectors: {
     '&:hover, &:focus-visible': {
       opacity: 1,
@@ -812,21 +839,25 @@ globalStyle(`.${navLink}:hover .${fakeShadow}`, {
 
 globalStyle(`.${navLink}[data-side="left"]:hover .${text}`, {
   transform: transforms.value(
-    transforms.translate(
-      menuVars.hover.text.offsetX.negation(),
-      menuVars.hover.text.offsetY,
-    ),
-    transforms.scale(menuVars.hover.text.scale),
+    {
+      translate: {
+        x: menuVars.hover.text.offsetX.negation(),
+        y: menuVars.hover.text.offsetY,
+      },
+    },
+    scaleIntent(menuVars.hover.text.scale),
   ),
 });
 
 globalStyle(`.${navLink}[data-side="right"]:hover .${text}`, {
   transform: transforms.value(
-    transforms.translate(
-      menuVars.hover.text.offsetX,
-      menuVars.hover.text.offsetY,
-    ),
-    transforms.scale(menuVars.hover.text.scale),
+    {
+      translate: {
+        x: menuVars.hover.text.offsetX,
+        y: menuVars.hover.text.offsetY,
+      },
+    },
+    scaleIntent(menuVars.hover.text.scale),
   ),
 });
 
@@ -835,11 +866,13 @@ globalStyle(
 	.${localeLink}:focus-visible .${text}`,
   {
     transform: transforms.value(
-      transforms.translate(
-        menuVars.hover.text.offsetX,
-        menuVars.hover.text.offsetY,
-      ),
-      transforms.scale(menuVars.hover.text.scale),
+      {
+        translate: {
+          x: menuVars.hover.text.offsetX,
+          y: menuVars.hover.text.offsetY,
+        },
+      },
+      scaleIntent(menuVars.hover.text.scale),
     ),
   },
 );

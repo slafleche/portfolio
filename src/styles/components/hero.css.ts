@@ -8,7 +8,6 @@ import { heroVars } from '../componentTokens/hero.componentTokens';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { noiseBg } from '../helpers/noiseSVG.helper';
 import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
-import transforms from '../helpers/transforms.helper';
 import { m } from '../measurementKit';
 import { paddings } from '../helpers/spacing.helper';
 
@@ -223,37 +222,24 @@ export const vennContainer = style({
   }),
 });
 
-const consoleTransforms = [
-  transforms.translate(
-    offset.multiply(2).negation(),
-    offset.double().negation(),
-  ),
-  transforms.rotate(consoleRotation),
-];
-
-const designTransforms = [
-  transforms.translate(offset.double(), offset.double()),
-  transforms.rotate(designRotation),
-];
-
 export const consolePanel = style({
   position: 'relative',
 });
 
-export const console = style({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: `calc(100% + ${offset.multiply(1.5).css()})`,
-  transform: transforms.value(...consoleTransforms),
-  transformOrigin: '50% 50%',
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  pointerEvents: 'auto',
-  zIndex: 0,
-  minHeight: '55vh',
-  selectors: {
+// export const console = style({
+//   position: 'absolute',
+//   top: 0,
+//   left: 0,
+//   width: `calc(100% + ${offset.multiply(1.5).css()})`,
+//   transform: transforms.value(...consoleTransforms),
+//   transformOrigin: '50% 50%',
+//   display: 'flex',
+//   flexDirection: 'column',
+//   overflow: 'hidden',
+//   pointerEvents: 'auto',
+//   zIndex: 0,
+//   minHeight: '55vh',
+//   selectors: {
     // '&:after': {
     // 	content: '""',
     // 	position: 'absolute',
@@ -264,14 +250,14 @@ export const console = style({
     // 	filter: 'blur(10px)',
     // 	pointerEvents: 'none',
     // },
-  },
-});
+//   },
+// });
 
-export const designPanel = style({
-  transform: transforms.value(...designTransforms),
-  position: 'relative',
-  zIndex: 1,
-  selectors: {
+// export const designPanel = style({
+//   transform: transforms.value(...designTransforms),
+//   position: 'relative',
+//   zIndex: 1,
+//   selectors: {
     // '&:after': {
     // 	content: '""',
     // 	position: 'absolute',
@@ -282,14 +268,14 @@ export const designPanel = style({
     // 	filter: 'blur(12px)',
     // 	pointerEvents: 'none',
     // },
-  },
-});
+//   },
+// });
 
-export const vennContents = style({
-  transform: transforms.value(
-    transforms.rotate(designRotation.negation()),
-  ),
-});
+// export const vennContents = style({
+//   transform: transforms.value(
+//     transforms.rotate(designRotation.negation()),
+//   ),
+// });
 
 // export const vennMiddle = style({
 // 	padding: offset.multiply(2).css(),

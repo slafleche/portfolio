@@ -1,4 +1,4 @@
-import type { IMeasurement } from '../../styles/measurementKit';
+import { m, type IMeasurement } from '../../styles/measurementKit';
 import { menuVars } from '../../styles/componentTokens/menu.componentTokens';
 import transforms from '../../styles/helpers/transforms.helper';
 
@@ -215,11 +215,18 @@ export function getRotationStyle(
 		k = menuVars.rotation.k,
 	} = opts;
 
-	const zeroRotation = transforms.rotate(0).when(width <= 0);
-	const magnitude = min + (max - min) * Math.exp(-width / k);
-	const activeRotation = transforms
-		.rotate(magnitude)
-		.negate(direction === 'left')
-		.when(width > 0);
-	return transforms.style(zeroRotation, activeRotation);
+	const intents = [];
+	if (width <= 0) {
+		intents.push({
+			rotate: { value: m(0, 'deg') },
+		});
+	} else {
+		const magnitude = min + (max - min) * Math.exp(-width / k);
+		intents.push({
+			rotate: {
+				value: m(magnitude, 'deg').negation(direction === 'left'),
+			},
+		});
+	}
+	return transforms.style(...intents);
 }

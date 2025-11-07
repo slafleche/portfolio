@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import transforms from '@/styles/helpers/transforms.helper';
-import { assertUnit } from '@/styles/measurementKit';
+import { assertUnit, m } from '@/styles/measurementKit';
 import type { CSSProperties } from 'react';
 import {
   BASE_ANCHORS,
@@ -887,9 +887,12 @@ export function useMenuHighlight({
 
     const deltaX = targetBox.left - containerBase.left;
     const deltaY = targetBox.top - containerBase.top;
-    const transformValue = transforms.value(
-      transforms.translate3d(deltaX, deltaY, 0),
-    );
+    const transformValue = transforms.value({
+      translate: {
+        x: m(deltaX),
+        y: m(deltaY),
+      },
+    });
 
     const innerStyle: CSSProperties = {
       width: `${targetBox.width}px`,
