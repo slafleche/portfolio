@@ -28,10 +28,19 @@ const formatBoxShadow = (props: IBoxShadow = {}) => {
   return `${x.css()} ${y.css()} ${blur.css()} 0 ${finalColor.css()}${inset ? ' inset' : ''}`;
 };
 
+export type IBoxShadowTokens =
+  | IBoxShadow
+  | ReadonlyArray<IBoxShadow>;
+
+const isBoxShadowList = (
+  input: IBoxShadowTokens,
+): input is ReadonlyArray<IBoxShadow> =>
+  Array.isArray(input);
+
 export const boxShadow = (
-  input: IBoxShadow | IBoxShadow[] = {},
+  input: IBoxShadowTokens = {},
 ) => {
-  if (Array.isArray(input)) {
+  if (isBoxShadowList(input)) {
     return input.map((entry) => formatBoxShadow(entry)).join(', ');
   }
   return formatBoxShadow(input);

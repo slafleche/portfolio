@@ -8,6 +8,9 @@ import { m } from '../measurementKit';
 import { colorVars } from '../componentTokens/global.componentTokens';
 import { glassVars } from '../../tokens/glassy.tokens';
 import borders from '../helpers/borders.helper';
+import {
+  boxShadow,
+} from '../helpers/shadow.helper';
 
 const controlBase: ComplexStyleRule = {
   width: '100%',
@@ -24,15 +27,24 @@ const controlBase: ComplexStyleRule = {
       opacity: 1,
     },
     '&:hover': {
-      borderColor: formTokens.field.hover.bordersorderColor.css(),
+      ...borders({
+        ...formTokens.field.borders,
+        ...formTokens.field.hover.borders,
+      }),
     },
     '&:focus-visible': {
-      borderColor: formTokens.field.focusRingColor.css(),
-      boxShadow: `0 0 0 ${formTokens.field.focusRingWidth.css()} ${formTokens.field.focusRingColor.css()}`,
+      ...borders({
+        ...formTokens.field.borders,
+        ...formTokens.field.hover.borders,
+      }),
+      boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
     },
     '&[data-error="true"]': {
-      borderColor: formTokens.field.errorBorderColor.css(),
-      color: formTokens.field.errorTextColor.css(),
+      color: formTokens.field.error.text.color.css(),
+      ...borders({
+        ...formTokens.field.borders,
+        ...formTokens.field.error.borders,
+      }),
     },
   },
 };
