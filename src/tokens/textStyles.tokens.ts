@@ -1,5 +1,5 @@
 import { m } from '../styles/measurementKit';
-import type { CSS } from '@/styles/helpers/types.helper';
+import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { SpacingProps } from '../styles/helpers/spacing.helper';
 import { colorVars } from '../styles/componentTokens/global.componentTokens';
 
@@ -99,7 +99,8 @@ export const textStyleVars = {
   link: {
     default: {
       color: colorVars.brand,
-      textDecoration: 'underline' as CSS.Property.TextDecoration,
+      textDecoration:
+        'underline' as CSS_TYPES.Property.TextDecoration,
       underlineOffset: m(3),
     },
     hover: {
@@ -111,7 +112,7 @@ export const textStyleVars = {
         color: colorVars.brand,
         offset: m(2),
         width: m(2),
-        style: 'solid' as CSS.Property.OutlineStyle,
+        style: 'solid' as CSS_TYPES.Property.OutlineStyle,
       },
     },
     active: {
@@ -122,16 +123,17 @@ export const textStyleVars = {
     },
   },
   em: {
-    fontStyle: 'italic' as CSS.Property.FontStyle,
+    fontStyle: 'italic' as CSS_TYPES.Property.FontStyle,
   },
   strong: {
     fontWeight: 80, // percentage relative to min-max of font
   },
   del: {
-    textDecoration: 'line-through' as CSS.Property.TextDecoration,
+    textDecoration:
+      'line-through' as CSS_TYPES.Property.TextDecoration,
   },
   image: {
-    display: 'block' as CSS.Property.Display,
+    display: 'block' as CSS_TYPES.Property.Display,
     margins: {
       bottom: blockSpacing,
     },
@@ -154,7 +156,7 @@ export const textStyleVars = {
   table: {
     table: {
       width: '100%',
-      borderCollapse: 'collapse' as CSS.Property.BorderCollapse,
+      borderCollapse: 'collapse' as CSS_TYPES.Property.BorderCollapse,
       marginBottom: blockSpacing,
     },
     head: {
@@ -170,7 +172,7 @@ export const textStyleVars = {
       },
     },
     headerCell: {
-      textAlign: 'left' as CSS.Property.TextAlign,
+      textAlign: 'left' as CSS_TYPES.Property.TextAlign,
       paddings: {
         vertical: m(8),
         horizontal: m(12),
@@ -182,7 +184,7 @@ export const textStyleVars = {
         vertical: m(8),
         horizontal: m(12),
       },
-      verticalAlign: 'top' as CSS.Property.VerticalAlign,
+      verticalAlign: 'top' as CSS_TYPES.Property.VerticalAlign,
     },
   },
 } as const;

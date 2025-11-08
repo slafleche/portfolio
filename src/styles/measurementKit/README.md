@@ -130,7 +130,7 @@ exported `MeasurementString` type:
 import type { MeasurementString } from '@/styles/measurementKit';
 
 type SpacingKeyword = Exclude<
-  Extract<CSS.Property.Margin, string>,
+  Extract<CSS_TYPES.Property.Margin, string>,
   MeasurementString
 >;
 ```

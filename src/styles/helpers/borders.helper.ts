@@ -1,4 +1,7 @@
-import type { CSS } from '@/styles/helpers/types.helper';
+import type {
+  CompassCorners,
+  CSS_TYPES,
+} from '@/styles/helpers/types.helper';
 import {
   borderVars,
   colorVars,
@@ -10,12 +13,6 @@ import type {
   BorderMeasurementInput,
 } from '../componentTokens/global.componentTokens';
 import { isMeasurement, hasCssMethod } from '../measurementKit';
-import type {
-  AxisValues,
-  CompassCorners,
-  CompassRegion,
-  CornerPosition,
-} from './types.helper';
 
 /**
  * Public UX: Border({ bottom: true, bottom: { width: m(6) }, radius:
@@ -37,25 +34,25 @@ export interface BorderIntent extends AxisValues<EdgeSpec> {
 }
 
 interface FinalBorderCSS {
-  borderColor?: CSS.Property.BorderColor;
-  borderStyle?: CSS.Property.BorderStyle;
-  borderWidth?: CSS.Property.BorderWidth;
-  borderRadius?: CSS.Property.BorderRadius;
+  borderColor?: CSS_TYPES.Property.BorderColor;
+  borderStyle?: CSS_TYPES.Property.BorderStyle;
+  borderWidth?: CSS_TYPES.Property.BorderWidth;
+  borderRadius?: CSS_TYPES.Property.BorderRadius;
 
-  borderTopColor?: CSS.Property.BorderTopColor;
-  borderRightColor?: CSS.Property.BorderRightColor;
-  borderBottomColor?: CSS.Property.BorderBottomColor;
-  borderLeftColor?: CSS.Property.BorderLeftColor;
+  borderTopColor?: CSS_TYPES.Property.BorderTopColor;
+  borderRightColor?: CSS_TYPES.Property.BorderRightColor;
+  borderBottomColor?: CSS_TYPES.Property.BorderBottomColor;
+  borderLeftColor?: CSS_TYPES.Property.BorderLeftColor;
 
-  borderTopStyle?: CSS.Property.BorderTopStyle;
-  borderRightStyle?: CSS.Property.BorderRightStyle;
-  borderBottomStyle?: CSS.Property.BorderBottomStyle;
-  borderLeftStyle?: CSS.Property.BorderLeftStyle;
+  borderTopStyle?: CSS_TYPES.Property.BorderTopStyle;
+  borderRightStyle?: CSS_TYPES.Property.BorderRightStyle;
+  borderBottomStyle?: CSS_TYPES.Property.BorderBottomStyle;
+  borderLeftStyle?: CSS_TYPES.Property.BorderLeftStyle;
 
-  borderTopWidth?: CSS.Property.BorderTopWidth;
-  borderRightWidth?: CSS.Property.BorderRightWidth;
-  borderBottomWidth?: CSS.Property.BorderBottomWidth;
-  borderLeftWidth?: CSS.Property.BorderLeftWidth;
+  borderTopWidth?: CSS_TYPES.Property.BorderTopWidth;
+  borderRightWidth?: CSS_TYPES.Property.BorderRightWidth;
+  borderBottomWidth?: CSS_TYPES.Property.BorderBottomWidth;
+  borderLeftWidth?: CSS_TYPES.Property.BorderLeftWidth;
 
   border?: 'none';
 }
@@ -65,9 +62,7 @@ interface FinalBorderCSS {
 -------------------------- */
 
 // IMeasurement → .css()
-const toCssLen = (
-  v: BorderMeasurementInput,
-): string | undefined => {
+const toCssLen = (v: BorderMeasurementInput): string | undefined => {
   if (v == null) return undefined;
   return v.css();
 };
@@ -75,8 +70,8 @@ const toCssLen = (
 const fallbackWidth = (): string => toCssLen(borderVars.width) ?? '0';
 const fallbackRadius = (): string =>
   toCssLen(borderVars.radius) ?? '0';
-const fallbackStyle = (): CSS.Property.BorderStyle =>
-  (borderVars.style as CSS.Property.BorderStyle) ?? 'solid';
+const fallbackStyle = (): CSS_TYPES.Property.BorderStyle =>
+  (borderVars.style as CSS_TYPES.Property.BorderStyle) ?? 'solid';
 const fallbackColor = (): string =>
   colorVars.border.css() ?? 'transparent';
 
@@ -123,7 +118,7 @@ const asRadius = (
 type EdgeState = {
   active: boolean;
   width?: string;
-  style?: CSS.Property.BorderStyle;
+  style?: CSS_TYPES.Property.BorderStyle;
   color?: string;
   _wExp?: boolean;
   _sExp?: boolean;
@@ -153,7 +148,7 @@ const applyEdgeSpec = (
 
   if ('style' in spec && spec.style !== undefined) {
     next.style = (
-      spec as { style?: CSS.Property.BorderStyle }
+      spec as { style?: CSS_TYPES.Property.BorderStyle }
     ).style!;
     next._sExp = true;
   }
@@ -540,11 +535,14 @@ const resolve = (
   if (styleAllEq) {
     css.borderStyle = styles[0];
   } else {
-    css.borderTopStyle = styles[0] as CSS.Property.BorderTopStyle;
-    css.borderRightStyle = styles[1] as CSS.Property.BorderRightStyle;
+    css.borderTopStyle =
+      styles[0] as CSS_TYPES.Property.BorderTopStyle;
+    css.borderRightStyle =
+      styles[1] as CSS_TYPES.Property.BorderRightStyle;
     css.borderBottomStyle =
-      styles[2] as CSS.Property.BorderBottomStyle;
-    css.borderLeftStyle = styles[3] as CSS.Property.BorderLeftStyle;
+      styles[2] as CSS_TYPES.Property.BorderBottomStyle;
+    css.borderLeftStyle =
+      styles[3] as CSS_TYPES.Property.BorderLeftStyle;
   }
 
   if (colorAllEq) {

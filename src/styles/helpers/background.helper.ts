@@ -1,17 +1,17 @@
-import type { CSS } from '@/styles/helpers/types.helper';
+import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { GlobalStyleRule } from '@vanilla-extract/css';
 import { getImage } from '@/lib/images';
 import type { ColorWrapper } from './colorWrap.helper';
 
 export interface IBackgrounds {
   color?: ColorWrapper;
-  attachment?: CSS.Property.BackgroundAttachment;
-  position?: CSS.Property.Position;
-  repeat?: CSS.Property.BackgroundRepeat;
-  size?: CSS.Property.BackgroundSize;
-  image?: CSS.Property.BackgroundImage;
-  fallbackImage?: CSS.Property.BackgroundImage;
-  opacity?: CSS.Property.Opacity;
+  attachment?: CSS_TYPES.Property.BackgroundAttachment;
+  position?: CSS_TYPES.Property.Position;
+  repeat?: CSS_TYPES.Property.BackgroundRepeat;
+  size?: CSS_TYPES.Property.BackgroundSize;
+  image?: CSS_TYPES.Property.BackgroundImage;
+  fallbackImage?: CSS_TYPES.Property.BackgroundImage;
+  opacity?: CSS_TYPES.Property.Opacity;
 }
 
 type Variant = {
@@ -122,7 +122,7 @@ export function backgroundImageForStep(
 /* ----------------------------- misc utilities ---------------------------- */
 
 export const getBackgroundImage = (
-  image?: CSS.Property.BackgroundImage,
+  image?: CSS_TYPES.Property.BackgroundImage,
 ) => {
   if (!image) return undefined;
   if (image.startsWith('linear-gradient(')) return image;
@@ -143,7 +143,7 @@ export const backgrounds = (props: IBackgrounds): GlobalStyleRule => {
   if (props.size) styles.backgroundSize = props.size;
   if (props.color)
     styles.backgroundColor =
-      props.color.css() as CSS.Property.BackgroundColor;
+      props.color.css() as CSS_TYPES.Property.BackgroundColor;
   if (props.attachment)
     styles.backgroundAttachment = props.attachment;
   if (props.opacity !== undefined) styles.opacity = props.opacity;
@@ -153,7 +153,7 @@ export const backgrounds = (props: IBackgrounds): GlobalStyleRule => {
 /* This one likely isn’t used with globalStyle; keep as a plain object shape. */
 export const objectFitWithFallback = () => {
   return {
-    position: 'absolute' as CSS.Property.Position,
+    position: 'absolute' as CSS_TYPES.Property.Position,
     top: 0,
     right: 0,
     bottom: 0,
@@ -164,7 +164,7 @@ export const objectFitWithFallback = () => {
     $nest: {
       '@supports (object-fit: cover)': {
         position: 'relative !important',
-        objectFit: 'cover' as CSS.Property.ObjectFit,
+        objectFit: 'cover' as CSS_TYPES.Property.ObjectFit,
         objectPosition: 'center',
         height: '100% !important',
       },
@@ -185,7 +185,7 @@ export function fakeBackgroundFixed(): GlobalStyleRule {
 }
 
 export function centeredBackground(
-  image: CSS.Property.BackgroundImage,
+  image: CSS_TYPES.Property.BackgroundImage,
 ): GlobalStyleRule {
   return {
     backgroundSize: 'cover',

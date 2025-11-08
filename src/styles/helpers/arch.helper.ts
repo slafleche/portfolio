@@ -1,27 +1,24 @@
-import { color } from './colorWrap.helper';
-import type * as CSS from 'csstype';
-import { m } from '../measurementKit';
-import { colorVars } from '../componentTokens/global.componentTokens';
-import { archTokens } from '../../tokens/arch.tokens';
+import { archGlassVars } from '../../tokens/arch.tokens';
+import type { CSS_TYPES } from './types.helper';
 
 export const createArchGlassBackground = (): {
-  background: CSS.Property.Background<string>;
-  backdropFilter: CSS.Property.BackdropFilter;
-  WebkitBackdropFilter: CSS.Property.BackdropFilter;
+  background: CSS_TYPES.Property.Background<string>;
+  backdropFilter: CSS_TYPES.Property.BackdropFilter;
+  WebkitBackdropFilter: CSS_TYPES.Property.BackdropFilter;
 } => {
   // Ensure a tiny alpha so Safari renders backdrop-filter
-  const baseAlpha = archTokens.backgroundColor.value().alpha(); // getter -> number
-  const ensuredBg = archTokens.backgroundColor.alpha(
+  const baseAlpha = archGlassVars.backgroundColor.value().alpha(); // getter -> number
+  const ensuredBg = archGlassVars.backgroundColor.alpha(
     Math.max(baseAlpha || 0, 0.01),
   );
 
-  const overlay = `linear-gradient(${archTokens.overlay.direction.css()}, ${archTokens.overlay.color
-    .alpha(archTokens.overlay.topAlpha)
-    .css()} 0%, ${archTokens.overlay.color.alpha(0).css()} ${
-    archTokens.overlay.midStop
-  }, ${archTokens.overlay.color.alpha(archTokens.overlay.bottomAlpha).css()} 100%)`;
+  const overlay = `linear-gradient(${archGlassVars.overlay.direction.css()}, ${archGlassVars.overlay.color
+    .alpha(archGlassVars.overlay.topAlpha)
+    .css()} 0%, ${archGlassVars.overlay.color.alpha(0).css()} ${
+    archGlassVars.overlay.midStop
+  }, ${archGlassVars.overlay.color.alpha(archGlassVars.overlay.bottomAlpha).css()} 100%)`;
 
-  const glow = `linear-gradient(180deg, ${archTokens.surfaceGlowPrimaryTint.css()}, ${archTokens.surfaceGlowSecondaryTint.css()})`;
+  const glow = `linear-gradient(180deg, ${archGlassVars.surfaceGlowPrimaryTint.css()}, ${archGlassVars.surfaceGlowSecondaryTint.css()})`;
 
   return {
     background: [
@@ -29,8 +26,8 @@ export const createArchGlassBackground = (): {
       glow,
       ensuredBg.css(),
     ].join(', '),
-    backdropFilter: `blur(${archTokens.backdropBlur.css()})`,
+    backdropFilter: `blur(${archGlassVars.backdropBlur.css()})`,
     WebkitBackdropFilter:
-      `blur(${archTokens.backdropBlur.css()})` as CSS.Property.BackdropFilter,
+      `blur(${archGlassVars.backdropBlur.css()})` as CSS_TYPES.Property.BackdropFilter,
   };
 };

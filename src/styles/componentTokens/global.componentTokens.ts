@@ -1,6 +1,6 @@
 import { color } from '../helpers/colorWrap.helper';
 import type { CardGradientPack } from '../helpers/cardGradient.helper';
-import type { CSS } from '@/styles/helpers/types.helper';
+import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import { m } from '../measurementKit';
 export type ColorKeys = keyof typeof colors;
 
@@ -158,7 +158,7 @@ export const bokehVars = {
     // gradients[0].spots[2].color,
   ],
   opacity: 0.2,
-  blendMode: 'screen' as CSS.Property.MixBlendMode,
+  blendMode: 'screen' as CSS_TYPES.Property.MixBlendMode,
   blur: 50,
   blurScale: 1,
   sizeScale: 0.7,

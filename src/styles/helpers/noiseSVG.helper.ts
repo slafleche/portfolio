@@ -1,6 +1,6 @@
 import { m } from '../measurementKit';
 import type { IMeasurement } from '../measurementKit';
-import type { CSS } from '@/styles/helpers/types.helper';
+import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 export interface NoiseSvgOptions {
   opacity?: number;
   baseFrequency?: number;
@@ -33,11 +33,11 @@ export function noiseStyle(id: string, props?: NoiseSvgOptions) {
 }
 
 export function noiseBg(props?: {
-  backgroundImage?: CSS.Property.BackgroundImage | null;
-  backgroundRepeat?: CSS.Property.BackgroundRepeat;
-  backgroundSize?: CSS.Property.BackgroundSize;
-  mixBlendMode?: CSS.Property.MixBlendMode;
-  opacity?: CSS.Property.Opacity;
+  backgroundImage?: CSS_TYPES.Property.BackgroundImage | null;
+  backgroundRepeat?: CSS_TYPES.Property.BackgroundRepeat;
+  backgroundSize?: CSS_TYPES.Property.BackgroundSize;
+  mixBlendMode?: CSS_TYPES.Property.MixBlendMode;
+  opacity?: CSS_TYPES.Property.Opacity;
   noiseId?: string;
   noiseOptions?: NoiseSvgOptions;
 }) {
@@ -51,11 +51,11 @@ export function noiseBg(props?: {
     noiseOptions,
   } = props || {};
   const style: {
-    backgroundRepeat: CSS.Property.BackgroundRepeat;
-    backgroundSize: CSS.Property.BackgroundSize;
-    mixBlendMode: CSS.Property.MixBlendMode;
-    opacity: CSS.Property.Opacity;
-    backgroundImage?: CSS.Property.BackgroundImage;
+    backgroundRepeat: CSS_TYPES.Property.BackgroundRepeat;
+    backgroundSize: CSS_TYPES.Property.BackgroundSize;
+    mixBlendMode: CSS_TYPES.Property.MixBlendMode;
+    opacity: CSS_TYPES.Property.Opacity;
+    backgroundImage?: CSS_TYPES.Property.BackgroundImage;
   } = {
     backgroundRepeat,
     backgroundSize,
@@ -64,7 +64,11 @@ export function noiseBg(props?: {
   };
   if (backgroundImage !== null) {
     style.backgroundImage =
-      backgroundImage ?? (noiseStyle(noiseId, noiseOptions) as CSS.Property.BackgroundImage);
+      backgroundImage ??
+      (noiseStyle(
+        noiseId,
+        noiseOptions,
+      ) as CSS_TYPES.Property.BackgroundImage);
   }
   return style;
 }
