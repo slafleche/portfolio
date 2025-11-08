@@ -19,6 +19,7 @@ const controlBase: ComplexStyleRule = {
   width: '100%',
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
+  ...backgrounds(formTokens.field.backgrounds),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -26,7 +27,7 @@ const controlBase: ComplexStyleRule = {
   boxSizing: 'border-box',
   selectors: {
     '&::placeholder': {
-      // color: formTokens.placeholder.color.css(),
+      color: formTokens.field.placeholder.color.css(),
       opacity: 1,
     },
     '&:hover': {
@@ -37,8 +38,8 @@ const controlBase: ComplexStyleRule = {
       boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
     },
     '&[data-error="true"]': {
-      // color: formTokens.error.text.color.css(),
-      // ...borders(formTokens.error.borders),
+      color: formTokens.field.error.text.color.css(),
+      ...borders(formTokens.field.error.borders),
     },
   },
 };
@@ -148,7 +149,7 @@ export const statusText = style({
 });
 
 export const counter = style({
-  color: formTokens.counter.textColor.css(),
+  color: formTokens.counter.text.color.css(),
   fontSize: '0.85rem',
 });
 
@@ -167,33 +168,43 @@ export const buttonRow = style({
 
 export const submitButton = style({
   minHeight: formTokens.button.minHeight.css(),
-  // padding: `0 ${formTokens.button.paddingInline.css()}`,
-  // borderRadius: formTokens.button.borderRadius.css(),
+  padding: `0 ${formTokens.button.paddings.horizontal.css()}`,
   border: 'none',
-  // background: formTokens.status.success.borderColor.css(),
-  color: '#0b0b0f',
+  ...borders(glassyButtonTokens.borders),
+  ...backgrounds(glassyButtonTokens.backgrounds),
+  color: glassyButtonTokens.text.color.css(),
   fontWeight: 600,
+  boxShadow: boxShadow(glassyButtonTokens.boxShadows),
+  backdropFilter: `blur(${glassVars.blur.css()})`,
+  WebkitBackdropFilter: `blur(${glassVars.blur.css()})`,
   transition:
-    'transform 160ms ease, opacity 160ms ease, background 160ms ease',
+    'transform 160ms ease, opacity 160ms ease, background 160ms ease, box-shadow 160ms ease',
   selectors: {
     '&:hover': {
+      ...backgrounds(glassyButtonTokens.hover.backgrounds),
+      boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-1px)',
     },
     '&:focus, &:focus-visible': {
       outline: 'none',
-      boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
+      ...backgrounds(glassyButtonTokens.focusVisible.backgrounds),
+      boxShadow: boxShadow(glassyButtonTokens.focusVisible.boxShadows),
     },
     '&:disabled': {
       opacity: 0.5,
       cursor: 'not-allowed',
       transform: 'none',
     },
+    '&:active': {
+      boxShadow: boxShadow(glassyButtonTokens.active.boxShadows),
+      transform: 'translateY(0)',
+    },
   },
 });
 
 export const privacy = style({
   fontSize: '0.9rem',
-  color: formTokens.privacy.textColor.css(),
+  color: formTokens.privacy.text.color.css(),
   textAlign: 'left',
 });
 
@@ -202,6 +213,7 @@ export const privacyLink = style({
   border: 'none',
   padding: 0,
   font: 'inherit',
+  color: formTokens.privacy.text.color.css(),
   textDecoration: 'underline',
   textDecorationThickness: 'from-font',
   textUnderlineOffset: 4,
