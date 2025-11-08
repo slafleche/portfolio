@@ -11,11 +11,12 @@ import * as s from '@/styles/components/arch.css';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { generateArchPaths } from '../lib/arch/archHelper';
 import { createDomId } from '../lib/dom';
-import { archGlassVars } from '@/styles/helpers/arch.helper';
+
 import { shadowTotalY } from '../styles/helpers/shadow.helper';
 import { noiseStyle } from '../styles/helpers/noiseSVG.helper';
 import { assertUnit } from '../styles/measurementKit';
 import { archVars } from '../styles/componentTokens/global.componentTokens';
+import { archGlassVars } from '../tokens/arch.tokens';
 
 if (process.env.NODE_ENV !== 'production') {
   assertUnit(archVars.top, 'px', 'Arch top');
@@ -60,8 +61,7 @@ function Arch({
   const ws = Math.max(1, fallbackWidth);
   const archTop = archVars.top;
   const archCurveHeight = archVars.curveHeight;
-  const fullHeight =
-    archTop.getValue() + archCurveHeight.getValue();
+  const fullHeight = archTop.getValue() + archCurveHeight.getValue();
   const shadowYOffset = shadowTotalY();
   if (process.env.NODE_ENV !== 'production') {
     assertUnit(shadowYOffset, 'px', 'Arch shadowTotalY');

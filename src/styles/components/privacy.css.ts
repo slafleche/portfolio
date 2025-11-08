@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css';
 import { paddings } from '../helpers/spacing.helper';
-import borders from '../helpers/borders.helper';
 import { privacyTokens } from '../../tokens/privacy.tokens';
 
 export const container = style({

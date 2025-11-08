@@ -22,11 +22,18 @@ const innerRadius = glassVars.borders.radius.subtract(
 export const surfaceLayers = glassBackground.backgroundLayers;
 export const surfaceBaseColor = glassBackground.backgroundColor;
 
+const baseSurfaceBackground = {
+  backgroundColor: glassBackground.backgroundColor,
+  backgroundImage: glassBackground.backgroundImage,
+} as const;
+
 const glassSurface = style({
   position: 'relative',
   width: '100%',
   height: '100%',
-  ...glassBackground,
+  ...baseSurfaceBackground,
+  backdropFilter: glassBackground.backdropFilter,
+  WebkitBackdropFilter: glassBackground.WebkitBackdropFilter,
 });
 
 export const bg = glassSurface;
@@ -39,7 +46,7 @@ export const surfaceFill = style({
   width: `calc(100% - ${glassVars.borders.width.double().css()})`,
   height: `calc(100% - ${glassVars.borders.width.double().css()})`,
   ...borders(innerRadius, { allowRadiusOnly: true }),
-  background: glassBackground.background,
+  ...baseSurfaceBackground,
   pointerEvents: 'none',
   zIndex: 0,
 });

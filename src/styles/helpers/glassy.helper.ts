@@ -66,18 +66,18 @@ export const createGlassBackground = (): {
 
   const backgroundColor =
     glassVars.backgrounds.color.css() as CSS_TYPES.Property.BackgroundColor;
+  const backgroundImage = [
+    overlayGradient,
+    glowGradient,
+  ].join(', ') as CSS_TYPES.Property.BackgroundImage;
+
   return {
-    backgrounds: {
-      color: glassVars.backgrounds.color,
-    },
     backgroundLayers: {
       overlay: overlayGradient,
       glow: glowGradient,
     },
-    gradients: [
-      overlayGradient,
-      glowGradient,
-    ],
+    backgroundColor,
+    backgroundImage,
     backdropFilter: `blur(${glassVars.blur.css()})`,
     WebkitBackdropFilter:
       `blur(${glassVars.blur.css()})` as CSS_TYPES.Property.BackdropFilter,
