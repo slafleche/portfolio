@@ -12,7 +12,7 @@ import { m } from '../measurementKit';
 import { paddings } from '../helpers/spacing.helper';
 
 import {
-  backgroundImageDecl,
+  backgroundImageDecl, 
   buildLinear,
 } from '../helpers/gradients.helper';
 import { projectorVars } from '../componentTokens/projector.componentTokens';
@@ -210,8 +210,6 @@ export const ctaIcon = style({
 
 // Shared offsets for hero overlap framing.
 const offset = m(20);
-const designRotation = m(5, 'deg');
-const consoleRotation = m(-2, 'deg');
 
 export const vennContainer = style({
   position: 'relative',
@@ -300,10 +298,7 @@ export const panelContents = style({
 });
 
 export const heroSurface = style({
-  background: [
-    surfaceLayers.overlay,
-    surfaceLayers.glow,
-  ].join(', '),
+  background: [surfaceLayers.overlay, surfaceLayers.glow].join(', '),
   backgroundColor: surfaceBaseColor,
 });
 

@@ -1,6 +1,7 @@
 import { color } from '@/styles/helpers/colorWrap.helper';
 import { colorVars } from '@/styles/componentTokens/global.componentTokens';
 import { m } from '@/styles/measurementKit';
+import { glassNoise } from '../styles/helpers/glassy.helper';
 
 /**
  * Arch-specific glass settings derived from the shared glass

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { spawn, spawnSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
+import { URLSearchParams } from 'node:url';
 import path from 'node:path';
 import readline from 'node:readline';
 
