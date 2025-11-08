@@ -1,6 +1,8 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { paddings, margins } from './helpers/spacing.helper';
 import borders from './helpers/borders.helper';
+import { backgrounds } from './helpers/background.helper';
+import { color } from './helpers/colorWrap.helper';
 import { outlines } from './helpers/outlines.helper';
 import { colorVars } from './componentTokens/global.componentTokens';
 import {
@@ -53,9 +55,9 @@ globalStyle(`.${userContent} li, li[data-ui="list-item"]`, {
 
 globalStyle(`code`, {
   fontFamily: textStyleVars.code.inline.fontFamily,
-  backgroundColor: textStyleVars.code.inline.backgroundColor.css(),
   ...borders(textStyleVars.code.inline.borders),
   ...paddings(textStyleVars.code.inline.paddings),
+  ...backgrounds(textStyleVars.code.inline.backgrounds),
 });
 
 const codeBlock = textStyleVars.code.block;
@@ -64,15 +66,15 @@ globalStyle('pre', {
   whiteSpace: 'pre-wrap',
   wordBreak: 'break-word',
   fontFamily: codeBlock.fontFamily,
-  backgroundColor: codeBlock.backgroundColor.css(),
   ...margins(codeBlock.margins),
   ...paddings(codeBlock.paddings),
   ...borders(codeBlock.borders),
+  ...backgrounds(codeBlock.backgrounds),
 });
 
 globalStyle('pre code', {
   fontFamily: codeBlock.fontFamily,
-  backgroundColor: 'transparent',
+  backgroundColor: color('transparent').css(),
   padding: 0,
 });
 
