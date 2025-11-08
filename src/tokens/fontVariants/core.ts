@@ -1,4 +1,3 @@
-import type * as CSS from 'csstype';
 import type {
   ComposeFontStylesConfig,
   FontStyleLayer,
@@ -8,7 +7,10 @@ import {
   composeFontStyles,
   computeFontWeight,
 } from '../../styles/helpers/typography.helper';
-import type { FontFamilyDef } from '../../styles/helpers/types.helper';
+import type {
+  FontFamilyDef,
+  CSS,
+} from '../../styles/helpers/types.helper';
 
 export type FontVariantDefinition = {
   family: FontFamilyDef;

@@ -1,4 +1,4 @@
-import type * as CSS from 'csstype';
+import type { CSS } from '@/styles/helpers/types.helper';
 import { margins } from './spacing.helper';
 import { m, type IMeasurement } from '../measurementKit';
 export const absolutePosition = {

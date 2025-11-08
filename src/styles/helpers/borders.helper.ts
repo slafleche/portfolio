@@ -1,4 +1,4 @@
-import type * as CSS from 'csstype';
+import type { CSS } from '@/styles/helpers/types.helper';
 import {
   borderVars,
   colorVars,

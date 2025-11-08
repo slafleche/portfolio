@@ -1,5 +1,5 @@
 import { globalStyle } from '@vanilla-extract/css';
-import type * as CSS from 'csstype';
+import type { CSS } from '@/styles/helpers/types.helper';
 
 globalStyle('*[data-visible="hidden"]', {
   visibility: 'hidden !important' as CSS.Property.Visibility,

@@ -1,6 +1,8 @@
-import type * as CSS from 'csstype';
+import type * as CSSCore from 'csstype';
 import type { IMeasurement } from '../measurementKit';
 import type { Color } from './colorWrap.helper';
+export type { CSSCore as CSS };
+
 // Many tokens in .ts are objects (e.g., chroma colors, measurement objects)
 // that expose a `.css()` method to produce a CSS string on demand.
 export type CssLike = {
