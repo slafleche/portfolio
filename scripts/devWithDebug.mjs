@@ -173,9 +173,26 @@ const NOISY_WARNING_PATTERNS = [
   /No serializer registered for (?:SimpleWebpackError|PostCSSSyntaxError)/,
 ];
 
+const HTTP_LOG_RE = /^(GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD)\s+\/\S+/m;
+const RELOAD_MARKERS = [
+  'Fast Refresh had to perform a full reload due to a runtime error.',
+  'Fast Refresh had to perform a full reload.',
+];
+
+const logSeparator = (label) => {
+  const timestamp = new Date().toLocaleTimeString('en-US', {
+    hour12: false,
+  });
+  const bar = '─'.repeat(18);
+  process.stdout.write(`\n${bar} ${label} @ ${timestamp} ${bar}\n\n`);
+};
+
 child.stdout.on('data', async (chunk) => {
   const text = chunk.toString();
   process.stdout.write(chunk);
+  if (RELOAD_MARKERS.some((phrase) => text.includes(phrase))) {
+    logSeparator('fast refresh');
+  }
   if (bannerPrinted) return;
 
   stdoutBuffer += text;
@@ -233,7 +250,10 @@ child.stderr.on('data', (chunk) => {
       !NOISY_WARNING_PATTERNS.some((pattern) => pattern.test(line)),
   ).map(formatVEVirtualCssLine);
   const output = filtered.join('\n').trimEnd();
-  if (output) process.stderr.write(output + '\n');
+  if (output) {
+    process.stderr.write(output + '\n');
+    logSeparator('stderr');
+  }
 });
 child.stderr.on('close', () => {
   if (stderrBuffer.trim().length) {
