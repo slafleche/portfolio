@@ -101,10 +101,14 @@ export const formTokens = {
     },
   },
   privacy: {
-    textColor: colorVars.white.alpha(0.7),
+    text: {
+      color: colorVars.white.alpha(0.7),
+    },
   },
   counter: {
-    textColor: colorVars.white.alpha(0.65),
+    text: {
+      color: colorVars.white.alpha(0.65),
+    },
   },
 } as const;
 
