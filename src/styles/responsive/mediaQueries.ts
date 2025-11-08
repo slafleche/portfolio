@@ -2,8 +2,6 @@ import type {
   ComplexStyleRule,
   StyleRule,
 } from '@vanilla-extract/css';
-// import { m, parseStringMeasurement } from '../measurementKit';
-// import { layoutVars } from '../componentTokens/layout.componentTokens';
 
 export interface IMediaQueryProps {
   type?: 'all' | 'print' | 'screen';

@@ -1,7 +1,7 @@
 import type * as CSSCore from 'csstype';
+export * as CSS_TYPES from 'csstype';
 import type { IMeasurement } from '../measurementKit';
 import type { Color } from './colorWrap.helper';
-export type { CSSCore as CSS };
 
 // Many tokens in .ts are objects (e.g., chroma colors, measurement objects)
 // that expose a `.css()` method to produce a CSS string on demand.
@@ -35,7 +35,7 @@ export type SpacingKeyword =
 export type SpacingValue = IMeasurement | SpacingKeyword;
 
 export type FontFamilyDef = {
-  family: CSS.Property.FontFamily;
+  family: CSSCore.Property.FontFamily;
   weights: {
     low: number;
     high: number;
@@ -44,35 +44,35 @@ export type FontFamilyDef = {
   };
   offsetToFlushTop: IMeasurement;
   spacing?: IMeasurement;
-  lineHeight?: CSS.Property.LineHeight;
-  css?: Partial<CSS.Properties>;
+  lineHeight?: CSSCore.Property.LineHeight;
+  css?: Partial<CSSCore.Properties>;
   axisDefaults?: Record<string, number | string>;
 };
 
 export type FontStyles = {
   familyDef?: FontFamilyDef | null;
-  family?: CSS.Property.FontFamily;
-  fontFamily?: CSS.Property.FontFamily;
-  fontWeight?: CSS.Property.FontWeight;
-  weight?: CSS.Property.FontWeight;
+  family?: CSSCore.Property.FontFamily;
+  fontFamily?: CSSCore.Property.FontFamily;
+  fontWeight?: CSSCore.Property.FontWeight;
+  weight?: CSSCore.Property.FontWeight;
   size?:
     | CssLike
     | string
     | { value: number; unit?: string }
     | undefined;
   weights?: {
-    default: CSS.Property.FontWeight;
-    strong: CSS.Property.FontWeight;
+    default: CSSCore.Property.FontWeight;
+    strong: CSSCore.Property.FontWeight;
   };
-  lineHeight?: CSS.Property.LineHeight;
+  lineHeight?: CSSCore.Property.LineHeight;
   spacing?:
     | CssLike
     | string
     | { value: number; unit?: string }
     | undefined;
   offsetToFlushTop?: IMeasurement;
-  css?: Partial<CSS.Properties>;
-  color?: CssLike | Color | CSS.Property.Color;
+  css?: Partial<CSSCore.Properties>;
+  color?: CssLike | Color | CSSCore.Property.Color;
   waitForFonts?: string[];
   waitForFontsTimeoutMs?: number;
 };
@@ -104,10 +104,7 @@ export type PageParams = {
 
 export type NonEmptyString = string & { __brand: 'NonEmptyString' };
 
-export type BorderMeasurementInput =
-  | IMeasurement
-  | null
-  | undefined;
+export type BorderMeasurementInput = IMeasurement | null | undefined;
 
 export interface BorderWidthConfig {
   all?: BorderMeasurementInput;
@@ -139,8 +136,8 @@ export type BorderRadiusInput =
   | undefined;
 
 export interface IBorder {
-  color?: CSS.Property.BorderColor | CssLike | Color;
+  color?: CSSCore.Property.BorderColor | CssLike | Color;
   width?: BorderWidthInput;
-  style?: CSS.Property.BorderStyle;
+  style?: CSSCore.Property.BorderStyle;
   radius?: BorderRadiusInput;
 }

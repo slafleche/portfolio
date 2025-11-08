@@ -1,4 +1,8 @@
-import type { CSS , FontFamilyDef, FontStyles } from '@/styles/helpers/types.helper';
+import type {
+  CSS_TYPES,
+  FontFamilyDef,
+  FontStyles,
+} from '@/styles/helpers/types.helper';
 import {
   hasCssMethod,
   isPercentMeasurement,
@@ -16,7 +20,7 @@ const typographyWarning = (message: string): void => {
 
 export type FontCSS = Partial<
   Pick<
-    CSS.Properties,
+    CSS_TYPES.Properties,
     | 'fontFamily'
     | 'fontSize'
     | 'fontWeight'
@@ -33,12 +37,12 @@ export type FontCSS = Partial<
 
 const isFontWeightValue = (
   value: unknown,
-): value is CSS.Property.FontWeight =>
+): value is CSS_TYPES.Property.FontWeight =>
   typeof value === 'string' || typeof value === 'number';
 
 const resolveFontWeight = (
   vars: FontStyles,
-): CSS.Property.FontWeight | undefined => {
+): CSS_TYPES.Property.FontWeight | undefined => {
   if (isFontWeightValue(vars.fontWeight)) {
     return vars.fontWeight;
   }
@@ -103,7 +107,7 @@ export function fontStyles(vars: FontStyles): FontCSS {
 export function relativeFontWeight(
   family: FontFamilyDef,
   percent: PercentMeasurement,
-): CSS.Property.FontWeight {
+): CSS_TYPES.Property.FontWeight {
   if (!isPercentMeasurement(percent)) {
     throw new TypeError(
       '[Typography] relativeFontWeight expected a PercentMeasurement.',
@@ -112,13 +116,13 @@ export function relativeFontWeight(
   const { high, low } = family.weights;
   const normalized = percentToDecimal(percent);
   const value = low + (high - low) * normalized;
-  return value as CSS.Property.FontWeight;
+  return value as CSS_TYPES.Property.FontWeight;
 }
 
 export function computeFontWeight(
   family: FontFamilyDef,
   percent: PercentMeasurement,
-): CSS.Property.FontWeight {
+): CSS_TYPES.Property.FontWeight {
   if (!isPercentMeasurement(percent)) {
     throw new TypeError(
       '[Typography] computeFontWeight expected a PercentMeasurement.',
@@ -127,14 +131,14 @@ export function computeFontWeight(
   const { high, low } = family.weights;
   const normalized = percentToDecimal(percent);
   const value = low + (high - low) * normalized;
-  return value as CSS.Property.FontWeight;
+  return value as CSS_TYPES.Property.FontWeight;
 }
 
 export function fontWeightStyle(
   family: FontFamilyDef,
   percent: PercentMeasurement,
 ): {
-  fontWeight: CSS.Property.FontWeight;
+  fontWeight: CSS_TYPES.Property.FontWeight;
 } {
   return {
     fontWeight: computeFontWeight(family, percent),

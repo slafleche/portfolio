@@ -24,9 +24,9 @@
 - When you need those symbolic values, define a dedicated type in
   `src/styles/helpers/types.helper.ts` instead of falling back to loose unions.
   `SpacingKeyword` is the reference example: it extracts the string-only portion
-  of `CSS.Property.Margin` and allows `spacing.helper.ts` to accept `auto`
-  alongside real measurements without reopening the old `MeasurementLike`
-  escape hatch.
+  of `CSS_TYPES.Property.Margin` and allows `spacing.helper.ts` to accept `auto`
+  alongside real measurements without reopening the old `MeasurementLike` escape
+  hatch.
 - Spacing helpers accept either structured intent objects or shorthand
   MeasurementKit/spacing keyword values. Use `{ all: ... }`,
   `{ horizontal: ..., vertical: ... }`, etc., whenever you need axis overrides,
@@ -41,8 +41,8 @@
 - When a component needs state-specific overrides (hover, focus, active, etc.),
   nest each state under its own key and reuse the same bundle names inside —
   `hover.boxShadows`, `focus.borders`, `active.backgrounds`, etc. Every override
-  mirrors the base shape so swapping states never requires learning a new
-  token layout.
+  mirrors the base shape so swapping states never requires learning a new token
+  layout.
 - Avoid leaking scalar shorthands (`paddingInline`, `shadowColor`, …) out of the
   token layer. Keep measurements grouped until the helper emits CSS in the style
   layer.

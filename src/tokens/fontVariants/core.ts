@@ -16,8 +16,8 @@ export type FontVariantDefinition = {
   family: FontFamilyDef;
   config?: ComposeFontStylesConfig;
   weights: {
-    default: CSS.Property.FontWeight;
-    strong: CSS.Property.FontWeight;
+    default: CSS_TYPES.Property.FontWeight;
+    strong: CSS_TYPES.Property.FontWeight;
   };
   waitForFonts?: readonly string[];
   waitForFontsTimeoutMs?: number;
@@ -127,14 +127,14 @@ const resolveVariantWeights = (
       : family.weights.strong;
 
   const enforceWeightOrder = (
-    base: CSS.Property.FontWeight,
-    strong: CSS.Property.FontWeight,
+    base: CSS_TYPES.Property.FontWeight,
+    strong: CSS_TYPES.Property.FontWeight,
   ): {
-    default: CSS.Property.FontWeight;
-    strong: CSS.Property.FontWeight;
+    default: CSS_TYPES.Property.FontWeight;
+    strong: CSS_TYPES.Property.FontWeight;
   } => {
     const toNumber = (
-      value: CSS.Property.FontWeight,
+      value: CSS_TYPES.Property.FontWeight,
     ): number | undefined => {
       if (typeof value === 'number') return value;
       const normalized = value.toString().trim().toLowerCase();
@@ -168,7 +168,7 @@ const resolveVariantWeights = (
         console.warn(message);
         const clamped = clamp(baseNumber);
         if (clamped !== baseNumber) {
-          adjustedBase = clamped as CSS.Property.FontWeight;
+          adjustedBase = clamped as CSS_TYPES.Property.FontWeight;
         }
       }
     }
@@ -185,7 +185,7 @@ const resolveVariantWeights = (
         console.warn(message);
         const clamped = clamp(strongNumber);
         if (clamped !== strongNumber) {
-          adjustedStrong = clamped as CSS.Property.FontWeight;
+          adjustedStrong = clamped as CSS_TYPES.Property.FontWeight;
         }
       }
     }
@@ -214,18 +214,18 @@ const resolveVariantWeights = (
         Math.max(resolvedBase + 1, family.weights.strong),
       );
       return {
-        default: resolvedBase as CSS.Property.FontWeight,
-        strong: fallbackStrong as CSS.Property.FontWeight,
+        default: resolvedBase as CSS_TYPES.Property.FontWeight,
+        strong: fallbackStrong as CSS_TYPES.Property.FontWeight,
       };
     }
 
     return {
       default: (typeof resolvedBase === 'number'
         ? resolvedBase
-        : base) as CSS.Property.FontWeight,
+        : base) as CSS_TYPES.Property.FontWeight,
       strong: (typeof resolvedStrong === 'number'
         ? resolvedStrong
-        : strong) as CSS.Property.FontWeight,
+        : strong) as CSS_TYPES.Property.FontWeight,
     };
   };
 

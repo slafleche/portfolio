@@ -1,4 +1,4 @@
-import type { CSS } from '@/styles/helpers/types.helper';
+import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import { margins } from './spacing.helper';
 import { m, type IMeasurement } from '../measurementKit';
 export const absolutePosition = {
@@ -7,14 +7,14 @@ export const absolutePosition = {
     right: IMeasurement = m(0),
   ) => {
     return {
-      position: 'absolute' as CSS.Property.Position,
+      position: 'absolute' as CSS_TYPES.Property.Position,
       top: top.css(),
       right,
     };
   },
   topLeft: (top: IMeasurement = m(0), left: IMeasurement = m(0)) => {
     return {
-      position: 'absolute' as CSS.Property.Position,
+      position: 'absolute' as CSS_TYPES.Property.Position,
       top: top.css(),
       left: left.css(),
     };
@@ -24,7 +24,7 @@ export const absolutePosition = {
     right: IMeasurement = m(0),
   ) => {
     return {
-      position: 'absolute' as CSS.Property.Position,
+      position: 'absolute' as CSS_TYPES.Property.Position,
       bottom: bottom.css(),
       right: right.css(),
     };
@@ -34,7 +34,7 @@ export const absolutePosition = {
     left: IMeasurement = m(0),
   ) => {
     return {
-      position: 'absolute' as CSS.Property.Position,
+      position: 'absolute' as CSS_TYPES.Property.Position,
       bottom: bottom.css(),
       left: left.css(),
     };
@@ -139,58 +139,65 @@ export const absolutePosition = {
 export const flexPosition = {
   center: (wrap = false) => {
     return {
-      display: 'flex' as CSS.Property.Display,
-      alignItems: 'center' as CSS.Property.AlignItems,
-      justifyContent: 'center' as CSS.Property.JustifyContent,
-      flexWrap: (wrap ? 'wrap' : 'nowrap') as CSS.Property.FlexWrap,
+      display: 'flex' as CSS_TYPES.Property.Display,
+      alignItems: 'center' as CSS_TYPES.Property.AlignItems,
+      justifyContent: 'center' as CSS_TYPES.Property.JustifyContent,
+      flexWrap: (wrap
+        ? 'wrap'
+        : 'nowrap') as CSS_TYPES.Property.FlexWrap,
     };
   },
 
   middleLeft: (wrap = false) => {
     return {
-      display: 'flex' as CSS.Property.Display,
-      alignItems: 'center' as CSS.Property.AlignItems,
-      justifyContent: 'flex-start' as CSS.Property.JustifyContent,
-      flexWrap: wrap ? 'wrap' : ('nowrap' as CSS.Property.FlexWrap),
+      display: 'flex' as CSS_TYPES.Property.Display,
+      alignItems: 'center' as CSS_TYPES.Property.AlignItems,
+      justifyContent:
+        'flex-start' as CSS_TYPES.Property.JustifyContent,
+      flexWrap: wrap
+        ? 'wrap'
+        : ('nowrap' as CSS_TYPES.Property.FlexWrap),
     };
   },
 
   middleRight: (wrap = false) => {
     return {
-      display: 'flex' as CSS.Property.Display,
-      alignItems: 'center' as CSS.Property.AlignItems,
-      justifyContent: 'flex-end' as CSS.Property.JustifyContent,
-      flexWrap: wrap ? 'wrap' : ('nowrap' as CSS.Property.FlexWrap),
+      display: 'flex' as CSS_TYPES.Property.Display,
+      alignItems: 'center' as CSS_TYPES.Property.AlignItems,
+      justifyContent: 'flex-end' as CSS_TYPES.Property.JustifyContent,
+      flexWrap: wrap
+        ? 'wrap'
+        : ('nowrap' as CSS_TYPES.Property.FlexWrap),
     };
   },
 };
 
 export function flexMiddle() {
   return {
-    display: 'flex' as CSS.Property.Flex,
-    width: '100%' as CSS.Property.Width,
-    height: '100%' as CSS.Property.Height,
-    justifyContent: 'center' as CSS.Property.JustifyContent,
-    alignItems: 'center' as CSS.Property.AlignItems,
+    display: 'flex' as CSS_TYPES.Property.Flex,
+    width: '100%' as CSS_TYPES.Property.Width,
+    height: '100%' as CSS_TYPES.Property.Height,
+    justifyContent: 'center' as CSS_TYPES.Property.JustifyContent,
+    alignItems: 'center' as CSS_TYPES.Property.AlignItems,
   };
 }
 
 export function fullSizeOfParent() {
   return {
-    position: 'absolute' as CSS.Property.Position,
-    display: 'block' as CSS.Property.Display,
-    top: 0 as CSS.Property.Top,
-    left: 0 as CSS.Property.Left,
-    width: '100%' as CSS.Property.Width,
-    height: '100%' as CSS.Property.Height,
+    position: 'absolute' as CSS_TYPES.Property.Position,
+    display: 'block' as CSS_TYPES.Property.Display,
+    top: 0 as CSS_TYPES.Property.Top,
+    left: 0 as CSS_TYPES.Property.Left,
+    width: '100%' as CSS_TYPES.Property.Width,
+    height: '100%' as CSS_TYPES.Property.Height,
   };
 }
 
 export function inheritHeight() {
   return {
-    display: 'flex' as CSS.Property.Display,
-    flexDirection: 'column' as CSS.Property.FlexDirection,
-    flexGrow: 1 as CSS.Property.FlexGrow,
-    position: 'relative' as CSS.Property.Position,
+    display: 'flex' as CSS_TYPES.Property.Display,
+    flexDirection: 'column' as CSS_TYPES.Property.FlexDirection,
+    flexGrow: 1 as CSS_TYPES.Property.FlexGrow,
+    position: 'relative' as CSS_TYPES.Property.Position,
   };
 }

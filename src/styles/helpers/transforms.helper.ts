@@ -1,4 +1,4 @@
-import type { CSS } from '@/styles/helpers/types.helper';
+import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { IMeasurement } from '../measurementKit';
 
 type LengthValue = IMeasurement | null | undefined;
@@ -61,9 +61,7 @@ const appendTranslate = (
   const z = toCssLength(intent.z);
 
   if (z) {
-    parts.push(
-      `translate3d(${x ?? '0'}, ${y ?? '0'}, ${z})`,
-    );
+    parts.push(`translate3d(${x ?? '0'}, ${y ?? '0'}, ${z})`);
     return;
   }
 
@@ -118,10 +116,7 @@ const appendSkew = (parts: string[], intent?: SkewIntent) => {
   if (skewY) parts.push(`skewY(${skewY})`);
 };
 
-const appendPerspective = (
-  parts: string[],
-  value?: LengthValue,
-) => {
+const appendPerspective = (parts: string[], value?: LengthValue) => {
   const css = toCssLength(value);
   if (css) parts.push(`perspective(${css})`);
 };
@@ -131,7 +126,11 @@ const appendCustom = (
   custom?: string | Array<string | undefined | null>,
 ) => {
   if (!custom) return;
-  const list = Array.isArray(custom) ? custom : [custom];
+  const list = Array.isArray(custom)
+    ? custom
+    : [
+        custom,
+      ];
   list
     .filter(
       (entry): entry is string =>
@@ -158,7 +157,7 @@ const buildTransformParts = (
 
 export const transformValue = (
   ...intents: Array<TransformIntent | null | undefined>
-): CSS.Property.Transform | undefined => {
+): CSS_TYPES.Property.Transform | undefined => {
   const parts = buildTransformParts(intents);
   return parts.length ? parts.join(' ') : undefined;
 };
@@ -172,7 +171,7 @@ export const transformStyle = (
 
 type TransformComposer = {
   (...intents: Array<TransformIntent | null | undefined>): {
-    transform?: CSS.Property.Transform;
+    transform?: CSS_TYPES.Property.Transform;
   };
   value: typeof transformValue;
   style: typeof transformStyle;
