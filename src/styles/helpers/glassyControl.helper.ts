@@ -1,7 +1,6 @@
 import type { ComplexStyleRule } from '@vanilla-extract/css';
 import { m, mMs, mPercent } from '../measurementKit';
-import { glassyButton, glassVars } from '../../tokens/glassy.tokens';
-import borders from './borders';
+import { glassVars } from '../../tokens/glassy.tokens';
 
 type CssConvertible = {
   css: () => string;
@@ -26,17 +25,12 @@ const defaultGlassyControlTokens = {
     size: glassyButton.size,
     background: glassyButton.background,
     hoverBackground: glassyButton.hoverBackground,
-    textColor: glassyButton.textColor,
+    text: {
+      color: glassyButton.text.color,
+    },
     iconSize: glassyButton.iconSize,
     borders: {
-      all: {
-        width: glassyButton.borderWidth,
-        color: glassyButton.borderColor,
-        style: 'solid' as const,
-      },
-      radius: {
-        all: glassyButton.borderRadius,
-      },
+      ...glassyButton.borders,
     },
   },
   elevation: {
