@@ -4,7 +4,7 @@ import type {
 } from '@vanilla-extract/css';
 // import * as CSS from 'csstype';
 // import { m, parseStringMeasurement } from '../measurementKit';
-import { layoutVars } from '../componentTokens/layout.componentTokens';
+// import { layoutVars } from '../componentTokens/layout.componentTokens';
 
 export interface IMediaQueryProps {
   type?: 'all' | 'print' | 'screen';
@@ -24,9 +24,9 @@ export type IMediaQueries = IMediaQuery[];
 // Example: const isFullSize = useMediaQuery(globalMediaQueries.fullSize);
 const globalMediaQueries = {
   fullSize: {
-    minWidth: layoutVars.contentWidth
-      .add(layoutVars.contentPadding.double())
-      .css(),
+    // minWidth: layoutVars.contentWidth
+    //   .add(layoutVars.contentPadding.double())
+    //   .css(),
   } as IMediaQueryProps,
 
   // compact: {
