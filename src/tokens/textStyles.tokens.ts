@@ -1,5 +1,5 @@
 import { m } from '../styles/measurementKit';
-import type * as CSS from 'csstype';
+import type { CSS } from '@/styles/helpers/types.helper';
 import type { SpacingProps } from '../styles/helpers/spacing.helper';
 import { colorVars } from '../styles/componentTokens/global.componentTokens';
 

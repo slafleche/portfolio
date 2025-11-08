@@ -1,4 +1,4 @@
-import type * as CSS from 'csstype';
+import type { CSS } from '@/styles/helpers/types.helper';
 import { color } from '../styles/helpers/colorWrap.helper';
 import { m } from '../styles/measurementKit';
 

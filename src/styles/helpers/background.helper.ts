@@ -1,4 +1,4 @@
-import type * as CSS from 'csstype';
+import type { CSS } from '@/styles/helpers/types.helper';
 import type { GlobalStyleRule } from '@vanilla-extract/css';
 import { getImage } from '@/lib/images';
 import type { ColorWrapper } from './colorWrap.helper';

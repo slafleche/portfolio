@@ -1,12 +1,9 @@
 import { glassVars } from '@/tokens/glassy.tokens';
-import type * as CSS from 'csstype';
+import type { CSS } from '@/styles/helpers/types.helper';
 import { noiseStyle, type NoiseSvgOptions } from './noiseSVG.helper';
-import { buildLinear, type Built } from './gradients.helper';
-import type { IBackgrounds } from './background.helper';
+import { buildLinear } from './gradients.helper';
 import { m } from '../measurementKit';
 import { mPercent } from '../measurementKit/units/percent';
-
-type GradientBuild = Built['modern'];
 
 const defaultNoiseId = `${glassVars.noise.idPrefix}${Math.random()
   .toString(36)

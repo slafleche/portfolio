@@ -1,6 +1,6 @@
 import { color } from '../helpers/colorWrap.helper';
 import type { CardGradientPack } from '../helpers/cardGradient.helper';
-import type * as CSS from 'csstype';
+import type { CSS } from '@/styles/helpers/types.helper';
 import { m } from '../measurementKit';
 export type ColorKeys = keyof typeof colors;
 

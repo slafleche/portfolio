@@ -1,6 +1,6 @@
 import { m } from '../measurementKit';
 import type { IMeasurement } from '../measurementKit';
-import type * as CSS from 'csstype';
+import type { CSS } from '@/styles/helpers/types.helper';
 export interface NoiseSvgOptions {
   opacity?: number;
   baseFrequency?: number;
