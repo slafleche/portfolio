@@ -56,9 +56,7 @@ export default async function PrivacyPage({
                 {privacyCopy.title}
               </h1>
               {updatedText ? (
-                <p className={privacyStyles.updated}>
-                  {updatedText}
-                </p>
+                <p className={privacyStyles.updated}>{updatedText}</p>
               ) : null}
             </header>
             <Markdown
@@ -72,10 +70,7 @@ export default async function PrivacyPage({
           id={contactCopy.href}
           systemsLink={systemsLink}
         />
-        <ContactButton
-          watchId={titleId}
-          label={contactCopy.title}
-        />
+        <ContactButton watchId={titleId} label={contactCopy.title} />
       </div>
     </>
   );

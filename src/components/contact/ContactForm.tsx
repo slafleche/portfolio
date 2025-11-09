@@ -591,15 +591,6 @@ export default function ContactForm({
           <Dialog.Overlay className={s.privacyOverlay} />
           <Dialog.Content className={s.privacyDialog}>
             <div className={s.privacyPanel}>
-              <Dialog.Close asChild>
-                <button
-                  type="button"
-                  className={s.privacyCloseIcon}
-                  aria-label={copy.privacy.closeLabel}
-                >
-                  ×
-                </button>
-              </Dialog.Close>
               <Dialog.Title className={s.privacyTitle}>
                 {privacyCopy.title}
               </Dialog.Title>
@@ -612,6 +603,15 @@ export default function ContactForm({
                   className={s.privacyBody}
                 />
               </Dialog.Description>
+              <Dialog.Close asChild>
+                <button
+                  type="button"
+                  className={s.privacyCloseIcon}
+                  aria-label={copy.privacy.closeLabel}
+                >
+                  ×
+                </button>
+              </Dialog.Close>
             </div>
           </Dialog.Content>
         </Dialog.Portal>
