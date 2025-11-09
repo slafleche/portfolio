@@ -38,21 +38,22 @@ export const updated = style({
 
 // const sheenGradient = privacyTokens.backLink.sheen;
 
-// export const backLink = style({
-//   position: 'absolute',
-//   top: privacyTokens.backLink.offset.css(),
-//   right: privacyTokens.backLink.offset.css(),
-//   width: privacyTokens.backLink.size.css(),
-//   height: privacyTokens.backLink.size.css(),
-//   ...borders(privacyTokens.backLink.borders),
-//   color: privacyTokens.backLink.text.color.css(),
-//   display: 'inline-flex',
-//   alignItems: 'center',
-//   justifyContent: 'center',
-//   fontSize: privacyTokens.backLink.iconSize.css(),
-//   backdropFilter: `blur(${privacyTokens.backLink.backdropBlur.css()})`,
-//   WebkitBackdropFilter: `blur(${privacyTokens.backLink.backdropBlur.css()})`,
-//   transition: privacyTokens.backLink.transition,
-//   textDecoration: 'none',
-//   overflow: 'hidden',
-// });
+export const backLink = style({
+  position: 'absolute',
+  top: privacyTokens.backLink.offset.css(),
+  right: privacyTokens.backLink.offset.css(),
+  width: privacyTokens.backLink.size.css(),
+  height: privacyTokens.backLink.size.css(),
+  zIndex: 1,
+  //   ...borders(privacyTokens.backLink.borders),
+  //   color: privacyTokens.backLink.text.color.css(),
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  //   fontSize: privacyTokens.backLink.iconSize.css(),
+  //   backdropFilter: `blur(${privacyTokens.backLink.backdropBlur.css()})`,
+  //   WebkitBackdropFilter: `blur(${privacyTokens.backLink.backdropBlur.css()})`,
+  //   transition: privacyTokens.backLink.transition,
+  textDecoration: 'none',
+  overflow: 'hidden',
+});

@@ -1,5 +1,8 @@
 import type {
+  AxisValues,
   CompassCorners,
+  CompassRegion,
+  CornerPosition,
   CSS_TYPES,
 } from '@/styles/helpers/types.helper';
 import {

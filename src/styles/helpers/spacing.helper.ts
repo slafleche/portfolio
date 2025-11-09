@@ -54,7 +54,7 @@ const normalize = (input?: SpacingInput): SpacingProps | undefined => {
     );
   }
 
-  return input as SpacingProps;
+  return input;
 };
 
 const spacing = (input?: SpacingInput): string => {
