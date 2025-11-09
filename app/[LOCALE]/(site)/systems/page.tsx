@@ -46,6 +46,11 @@ export default async function SystemsPage({
       markdown: translator('systems-describe-content'),
     },
     {
+      id: translator('systems-architecture-href'),
+      title: translator('systems-architecture'),
+      markdown: translator('systems-architecture-content'),
+    },
+    {
       id: translator('systems-express-href'),
       title: translator('systems-express'),
       markdown: translator('systems-express-content'),
@@ -59,6 +64,11 @@ export default async function SystemsPage({
       id: translator('systems-resilience-href'),
       title: translator('systems-resilience'),
       markdown: translator('systems-resilience-content'),
+    },
+    {
+      id: translator('systems-ai-href'),
+      title: translator('systems-ai'),
+      markdown: translator('systems-ai-content'),
     },
   ];
 
