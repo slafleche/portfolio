@@ -18,9 +18,9 @@ scale and stay stable when swapped.
 
 ```ts
 import { m } from '../styles/measurementKit';
-import fontsConfig, { makeFamilyDef } from '../styles/helpers/fontConfig.helper';
+import fontsConfig, { defineFontFamily } from '../styles/helpers/fontConfig.helper';
 
-const urbanist = makeFamilyDef({
+const urbanist = defineFontFamily({
   familyName: 'Urbanist',
   fallbacks: [
     'Segoe UI',

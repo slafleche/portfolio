@@ -1,11 +1,11 @@
 import type { FontFamilyDef } from '../styles/helpers/types.helper';
 import { m } from '../styles/measurementKit';
 import fontsConfig, {
-  makeFamilyDef,
+  defineFontFamily,
 } from '../styles/helpers/fontConfig.helper';
 
 export const fontFamilies = {
-  system: makeFamilyDef({
+  system: defineFontFamily({
     fallbacks: [
       'Segoe UI',
       'SF Pro Text',
@@ -28,7 +28,7 @@ export const fontFamilies = {
       high: 700,
     },
   }),
-  ibm: makeFamilyDef({
+  ibm: defineFontFamily({
     familyName: 'IBM Plex Sans',
     fallbacks: [
       'Arial Rounded MT Bold',
@@ -49,7 +49,7 @@ export const fontFamilies = {
       strong: 600,
     },
   }),
-  urbanist: makeFamilyDef({
+  urbanist: defineFontFamily({
     familyName: 'Urbanist',
     fallbacks: [
       'Segoe UI',

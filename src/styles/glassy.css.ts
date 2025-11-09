@@ -38,6 +38,7 @@ const glassSurface = style({
 
 export const bg = glassSurface;
 export const navSurface = glassSurface;
+export const surface = glassSurface;
 
 export const surfaceFill = style({
   position: 'absolute',
