@@ -45,12 +45,19 @@ export default async function RootLayout({
     };
     if (!globalTracker.__debugRoutesLogged) {
       globalTracker.__debugRoutesLogged = true;
-      const debugRoutes = AVAILABLE_LOCALES.map(
+      const faviconsRoutes = AVAILABLE_LOCALES.map(
         (loc) => `/${loc}/debug/favicons`,
+      );
+      const formElementsRoutes = AVAILABLE_LOCALES.map(
+        (loc) => `/${loc}/debug/formelements`,
       );
       console.info(
         '[debug] Favicons preview available:',
-        debugRoutes.join(', '),
+        faviconsRoutes.join(', '),
+      );
+      console.info(
+        '[debug] Form elements playground available:',
+        formElementsRoutes.join(', '),
       );
     }
   }
