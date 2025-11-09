@@ -1,9 +1,8 @@
 # Project Guidelines
 
 ⚠️ **Whenever you load this file in a new chat, also load `ai.yaml`
-(machine-readable rules) and, if you need extra detail, `docs/ai-rules.md`.
-Those files contain the canonical constraints enforced by tooling.** This doc
-only carries the narrative/context.
+(machine-readable rules). Those files contain the canonical constraints enforced
+by tooling.** This doc only carries the narrative/context.
 
 ## Token → Helper → Module → Style (Narrative)
 
@@ -28,6 +27,7 @@ only carries the narrative/context.
 - Confirm invasive changes.
 - Capture decisions in README/TODO files.
 - Surface unrelated lint errors so we can plan follow-ups.
+- If a user message (non-code text) contains a `?`, reply using text-only responses—no code blocks or other non-text output.
 
 ## YAML Schema & Tooling Reference
 
