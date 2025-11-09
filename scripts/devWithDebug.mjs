@@ -201,11 +201,14 @@ child.stdout.on('data', async (chunk) => {
     const locales = await localesPromise.catch(() => []);
     if (locales.length) {
       console.log('info  - Debug routes (local):');
+      const debugPages = ['favicons', 'formelements'];
       for (const locale of locales) {
-        const pathname = `/${locale}/debug/favicons`;
-        const url = `http://localhost:3000${pathname}`;
-        const hyperlink = `\u001b]8;;${url}\u0007${pathname}\u001b]8;;\u0007`;
-        console.log(`         ${hyperlink}  ${url}`);
+        for (const page of debugPages) {
+          const pathname = `/${locale}/debug/${page}`;
+          const url = `http://localhost:3000${pathname}`;
+          const hyperlink = `\u001b]8;;${url}\u0007${pathname}\u001b]8;;\u0007`;
+          console.log(`         ${hyperlink}  ${url}`);
+        }
       }
     } else {
       console.log('info  - Debug routes: none');
