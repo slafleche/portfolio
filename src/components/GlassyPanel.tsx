@@ -1,12 +1,12 @@
-import clsx from 'clsx';
+import clsx, { type ClassValue } from 'clsx';
 import type { PropsWithChildren } from 'react';
 import * as glassSurfaceStyles from '@/styles/glassy.css';
 import * as glassFrameStyles from '@/styles/helpers/glassFrame.css';
 
 export type GlassyPanelProps = PropsWithChildren<{
 	className?: string;
-	surfaceClassName?: string;
-	contentClassName?: string;
+	surfaceClassName?: ClassValue;
+	contentClassName?: ClassValue;
 	type?: string;
 }>;
 

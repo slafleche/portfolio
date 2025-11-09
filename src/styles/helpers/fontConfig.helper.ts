@@ -207,7 +207,7 @@ type WeightConfig = {
   high?: number;
 };
 
-type MakeFamilyDefArgs = {
+type FontFamilyArgs = {
   familyName?: string;
   fallbacks: string[];
   cfgMap?: FontsConfig;
@@ -226,22 +226,22 @@ const assertWeightOrder = (
   const label = familyName ? ` "${familyName}"` : '';
   if (!(low <= normal)) {
     throw new Error(
-      `makeFamilyDef${label}: expected low (${low}) ≤ default (${normal}).`,
+      `defineFontFamily${label}: expected low (${low}) ≤ default (${normal}).`,
     );
   }
   if (!(normal < strong)) {
     throw new Error(
-      `makeFamilyDef${label}: expected default (${normal}) < strong (${strong}).`,
+      `defineFontFamily${label}: expected default (${normal}) < strong (${strong}).`,
     );
   }
   if (!(strong <= high)) {
     throw new Error(
-      `makeFamilyDef${label}: expected strong (${strong}) ≤ high (${high}). Hint: "strong" weight should be bolder than "default" weight.`,
+      `defineFontFamily${label}: expected strong (${strong}) ≤ high (${high}). Hint: "strong" weight should be bolder than "default" weight.`,
     );
   }
 };
 
-export function makeFamilyDef({
+export function defineFontFamily({
   familyName,
   fallbacks,
   cfgMap,
@@ -251,7 +251,7 @@ export function makeFamilyDef({
   lineHeight,
   css,
   axisDefaults,
-}: MakeFamilyDefArgs): FontFamilyDef {
+}: FontFamilyArgs): FontFamilyDef {
   let resolvedLow = weights.low;
   let resolvedHigh = weights.high;
 
@@ -274,13 +274,13 @@ export function makeFamilyDef({
 
     if (resolvedLow !== undefined && resolvedLow !== range.low) {
       throw new Error(
-        `makeFamilyDef${familyName ? ` \"${familyName}\"` : ''}: weight low (${resolvedLow}) conflicts with fonts.config.json range (${range.low}).`,
+        `defineFontFamily${familyName ? ` \"${familyName}\"` : ''}: weight low (${resolvedLow}) conflicts with fonts.config.json range (${range.low}).`,
       );
     }
 
     if (resolvedHigh !== undefined && resolvedHigh !== range.high) {
       throw new Error(
-        `makeFamilyDef${familyName ? ` \"${familyName}\"` : ''}: weight high (${resolvedHigh}) conflicts with fonts.config.json range (${range.high}).`,
+        `defineFontFamily${familyName ? ` \"${familyName}\"` : ''}: weight high (${resolvedHigh}) conflicts with fonts.config.json range (${range.high}).`,
       );
     }
 
@@ -290,7 +290,7 @@ export function makeFamilyDef({
 
   if (resolvedLow === undefined || resolvedHigh === undefined) {
     throw new Error(
-      `makeFamilyDef${familyName ? ` "${familyName}"` : ''}: low/high weights must be provided directly or via fonts.config.json range.`,
+      `defineFontFamily${familyName ? ` "${familyName}"` : ''}: low/high weights must be provided directly or via fonts.config.json range.`,
     );
   }
 
@@ -312,7 +312,7 @@ export function makeFamilyDef({
 
   if (familyParts.length === 0) {
     throw new Error(
-      'makeFamilyDef requires at least one fallback font family',
+      'defineFontFamily requires at least one fallback font family',
     );
   }
 

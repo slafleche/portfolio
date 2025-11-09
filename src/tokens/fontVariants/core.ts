@@ -9,7 +9,7 @@ import {
 } from '../../styles/helpers/typography.helper';
 import type {
   FontFamilyDef,
-  CSS,
+  CSS_TYPES,
 } from '../../styles/helpers/types.helper';
 
 export type FontVariantDefinition = {
