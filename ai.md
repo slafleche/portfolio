@@ -28,6 +28,7 @@
 ## Workflow Expectations (cheat sheet)
 
 - **Always**: follow the “talk → clarify → TODO → go” cadence. Discuss context first, ask questions, capture the plan in a `TODO.*.md` primer + checklist, get the go-ahead, then execute. Keep that TODO file updated as you deliver slices.
+- **Structure TODOs**: every `TODO.*.md` must start with a short Primer (goal, constraints, risks), followed by the raw checklist. Once the full list is captured, reorganize it under ordered `### Step N — title` sections so it reflects the execution sequence. Update steps as the plan evolves instead of dumping a flat list.
 - **When unsure**: prefer shared helpers (`paddings`, `margins`, `borders`, `boxShadow`, `focusOutline`, typography, gradient helpers) over hand-written CSS; ask before large structural changes; keep slices small and shippable.
 - **Never**: call `.css()` inside tokens/helpers or inline border/spacing shorthands when a helper exists; break `data-ui` contracts.
 
