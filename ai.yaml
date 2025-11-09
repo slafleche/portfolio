@@ -1,0 +1,51 @@
+version: 1.0
+reference: ai.md
+
+layers:
+  tokens:
+    path: 'src/tokens'
+    allowed_imports: []
+    rules:
+      no_css_alias: true
+      measurement_math_only: true
+  helpers:
+    path: 'src/styles/helpers'
+    allowed_imports:
+      - '../**/tokens/**'
+    rules:
+      required_helpers:
+        - paddings
+        - margins
+        - borders
+        - backgrounds
+        - boxShadow
+      forbidden_properties:
+        - padding
+        - margin
+        - border
+        - borderRadius
+        - background
+        - backgroundColor
+  modules:
+    path: 'src/modules'
+    allowed_imports:
+      - '../styles/helpers/**'
+      - '../tokens/**'
+    rules: {}
+  styles:
+    path: 'src/styles/components'
+    allowed_imports:
+      - '../helpers/**'
+      - '../../tokens/**'
+    rules:
+      use_helpers: true
+
+workflow:
+  talk_clarify_todo_go: true
+  structured_todos:
+    primer_required: true
+    steps_required: true
+  pause_before_coding_checklist:
+    - tokens_consumed_directly
+    - helpers_in_use
+    - no_realiasing

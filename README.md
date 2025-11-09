@@ -47,6 +47,21 @@
   token layer. Keep measurements grouped until the helper emits CSS in the style
   layer.
 
+### Linting & Guardrails
+
+- `ai.yaml` is the machine-readable source of truth for all hard rules (layering,
+  helper usage, TODO cadence). ESLint loads modular configs from
+  `eslint/rules/**` so enforcing another layer is as simple as adding a file to
+  that folder.
+- `lint-staged` now runs `node scripts/checkLintRules.mjs` after prettier/eslint
+  to catch disallowed imports or raw background/border/padding/margin props in
+  staged files. Fix violations before committing.
+- Keep `ai.md` for narrative context, but treat `ai.yaml` + the automated checks
+  as canonical—if you change the rules, update the YAML and the lint scripts in
+  the same slice.
+- For details on the YAML schema and how ESLint consumes it, see
+  `docs/ai-rules.md`.
+
 ### Setup
 
 - Run `yarn fresh` after cloning. This installs dependencies and runs the full
