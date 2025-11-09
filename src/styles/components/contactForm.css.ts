@@ -30,12 +30,19 @@ const controlBase: ComplexStyleRule = {
       color: formTokens.field.placeholder.color.css(),
       opacity: 1,
     },
-    '&:hover': {
+    '&:hover, &[data-debug="hover"]': {
       ...borders(formTokens.field.hover.borders),
     },
-    '&:focus, &:focus-visible': {
+    '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]': {
       ...borders(formTokens.field.focusVisible.borders),
       boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
+    },
+    '&:disabled, &[data-debug="disabled"]': {
+      opacity: 0.55,
+      cursor: 'not-allowed',
+    },
+    '&[data-debug="readonly"]': {
+      opacity: 0.85,
     },
     '&[data-error="true"]': {
       color: formTokens.field.error.text.color.css(),
@@ -180,22 +187,22 @@ export const submitButton = style({
   transition:
     'transform 160ms ease, opacity 160ms ease, background 160ms ease, box-shadow 160ms ease',
   selectors: {
-    '&:hover': {
+    '&:hover, &[data-debug="hover"]': {
       ...backgrounds(glassyButtonTokens.hover.backgrounds),
       boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-1px)',
     },
-    '&:focus, &:focus-visible': {
+    '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]': {
       outline: 'none',
       ...backgrounds(glassyButtonTokens.focusVisible.backgrounds),
       boxShadow: boxShadow(glassyButtonTokens.focusVisible.boxShadows),
     },
-    '&:disabled': {
+    '&:disabled, &[data-debug="disabled"]': {
       opacity: 0.5,
       cursor: 'not-allowed',
       transform: 'none',
     },
-    '&:active': {
+    '&:active, &[data-debug="active"]': {
       boxShadow: boxShadow(glassyButtonTokens.active.boxShadows),
       transform: 'translateY(0)',
     },
