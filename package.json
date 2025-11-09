@@ -63,7 +63,8 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs}": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --fix",
+      "node scripts/checkLintRules.mjs"
     ]
   },
   "packageManager": "yarn@4.9.4",

@@ -12,6 +12,8 @@ import tseslint from 'typescript-eslint';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const tsconfigPath = path.join(__dirname, 'tsconfig.json');
+const customRuleConfigs =
+	(await import('./eslint/rules.mjs')).default ?? [];
 
 const importFlatConfig =
 	(importPluginFlatRecommended?.default ?? importPluginFlatRecommended) ?? {};
@@ -190,5 +192,6 @@ export default [
 			'react/jsx-no-comment-textnodes': 'off',
 		},
 	},
+	...customRuleConfigs,
 	eslintConfigPrettier,
 ];
