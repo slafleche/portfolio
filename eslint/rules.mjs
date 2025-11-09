@@ -13,14 +13,14 @@ const config = yaml.parse(raw);
 const layers = config.layers ?? {};
 
 const buildImportRule = (layerName, layerConfig) => {
-  const allowed = layerConfig.allowed_imports ?? [];
-  if (!allowed.length) return null;
+  const forbidden = layerConfig.forbidden_imports ?? [];
+  if (!forbidden.length) return null;
   return [
     'error',
     {
-      patterns: allowed.map((pattern) => ({
-        group: [pattern.startsWith('.') ? pattern : pattern],
-        message: `${layerName} limited to allowed imports`,
+      patterns: forbidden.map((pattern) => ({
+        group: [pattern],
+        message: `${layerName} restricted import`,
       })),
     },
   ];

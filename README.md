@@ -59,8 +59,6 @@
 - Keep `ai.md` for narrative context, but treat `ai.yaml` + the automated checks
   as canonical—if you change the rules, update the YAML and the lint scripts in
   the same slice.
-- For details on the YAML schema and how ESLint consumes it, see
-  `docs/ai-rules.md`.
 
 ### Setup
 

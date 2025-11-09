@@ -5,6 +5,9 @@ layers:
   tokens:
     path: 'src/tokens'
     allowed_imports: []
+    forbidden_imports:
+      - '../modules/**'
+      - '../app/**'
     rules:
       no_css_alias: true
       measurement_math_only: true
@@ -12,6 +15,10 @@ layers:
     path: 'src/styles/helpers'
     allowed_imports:
       - '../**/tokens/**'
+    forbidden_imports:
+      - '../styles/components/**'
+      - '../modules/**'
+      - '../app/**'
     rules:
       required_helpers:
         - paddings
@@ -31,12 +38,18 @@ layers:
     allowed_imports:
       - '../styles/helpers/**'
       - '../tokens/**'
+    forbidden_imports:
+      - '../styles/components/**'
+      - '../app/**'
     rules: {}
   styles:
     path: 'src/styles/components'
     allowed_imports:
       - '../helpers/**'
       - '../../tokens/**'
+    forbidden_imports:
+      - '../modules/**'
+      - '../../app/**'
     rules:
       use_helpers: true
 
