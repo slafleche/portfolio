@@ -2,10 +2,11 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'yaml';
+import forbiddenPropertyRule from './forbiddenPropertyRule.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
-const yamlPath = path.join(rootDir, 'ai.yaml');
+const yamlPath = path.join(rootDir, 'rules.yaml');
 
 const raw = readFileSync(yamlPath, 'utf-8');
 const config = yaml.parse(raw);
@@ -26,14 +27,64 @@ const buildImportRule = (layerName, layerConfig) => {
   ];
 };
 
-const layerConfigs = Object.entries(layers).map(([layerName, layerConfig]) => {
+const customPlugin = {
+  custom: {
+    rules: {
+      'forbidden-property': forbiddenPropertyRule,
+    },
+  },
+};
+
+const buildForbiddenPropertyConfigs = (layerName, layerConfig) => {
+  const entries = layerConfig.rules?.forbidden_properties ?? [];
+  if (!entries.length) return [];
+  return entries
+    .map((entry) => {
+      const normalized =
+        typeof entry === 'string' ? { name: entry } : entry;
+      const { name, message, allow_in: allowIn = [] } = normalized;
+      if (!name) return null;
+      const ruleMessage =
+        message ?? `${layerName} restricted property "${name}"`;
+      const allowPatterns = Array.isArray(allowIn)
+        ? allowIn.filter(Boolean)
+        : [allowIn].filter(Boolean);
+      return {
+        files: [`${layerConfig.path}/**/*.{ts,tsx}`],
+        plugins: customPlugin,
+        rules: {
+          'custom/forbidden-property': [
+            'error',
+            {
+              property: name,
+              message: ruleMessage,
+              allowPatterns,
+              rootDir,
+            },
+          ],
+        },
+      };
+    })
+    .filter(Boolean);
+};
+
+const layerConfigs = [];
+
+Object.entries(layers).forEach(([layerName, layerConfig]) => {
   const files = [`${layerConfig.path}/**/*.{ts,tsx}`];
   const importRule = buildImportRule(layerName, layerConfig);
   const rules = {};
   if (importRule) {
     rules['no-restricted-imports'] = importRule;
   }
-  return { files, rules };
+  layerConfigs.push({ files, rules });
+  const propertyConfigs = buildForbiddenPropertyConfigs(
+    layerName,
+    layerConfig,
+  );
+  if (propertyConfigs?.length) {
+    layerConfigs.push(...propertyConfigs);
+  }
 });
 
 export default layerConfigs;
