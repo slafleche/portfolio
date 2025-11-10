@@ -57,7 +57,7 @@ const getCurrentUrl = () => {
   return `${pathname}${search}${hash}`;
 };
 
-type ContactDialogContextValue = {
+export type ContactDialogContextValue = {
   open: () => void;
   close: () => void;
   isOpen: boolean;
@@ -66,7 +66,7 @@ type ContactDialogContextValue = {
   isPrivacyOpen: boolean;
 };
 
-const ContactDialogContext =
+export const ContactDialogContext =
   createContext<ContactDialogContextValue | null>(null);
 
 export function useContactDialog() {

@@ -33,6 +33,31 @@ import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { Markdown } from '@/components/Markdown';
 import { useContactDialog } from '@/components/contact/ContactDialogProvider';
 
+type DebugFieldKey = Exclude<FieldName, 'token'>;
+
+export type ContactFormDebugFieldState = {
+  readOnly?: boolean;
+  disabled?: boolean;
+  dataDebug?: string;
+};
+
+export type ContactFormDebugState = {
+  values?: Partial<FormValues>;
+  fieldErrors?: FieldErrorMap;
+  inlineErrors?: Partial<Record<DebugFieldKey, string>>;
+  status?: FormStatusKey | null;
+  statusMessage?: string;
+  isSubmitting?: boolean;
+  hasAttemptedSubmit?: boolean;
+  fieldStates?: Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>;
+  button?: {
+    label?: string;
+    disabled?: boolean;
+    dataDebug?: string;
+    ariaBusy?: boolean;
+  };
+};
+
 type ContactFormProps = {
   copy: ContactFormCopy;
   actionUrl?: string;
@@ -40,6 +65,7 @@ type ContactFormProps = {
   privacyCopy: PrivacyCopy;
   privacyHref?: string;
   onSubmitted?: (response: ContactFormResponse) => void;
+  debugState?: ContactFormDebugState;
 };
 
 const DRAFT_STORAGE_PREFIX = 'contact-form-draft';
@@ -86,6 +112,7 @@ export default function ContactForm({
   locale,
   privacyCopy,
   onSubmitted,
+  debugState,
 }: ContactFormProps) {
   const formId = useId();
   const [
@@ -123,6 +150,43 @@ export default function ContactForm({
     closePrivacy,
   } = useContactDialog();
 
+  const resolvedValues: FormValues = debugState?.values
+    ? {
+        ...INITIAL_VALUES,
+        ...debugState.values,
+      }
+    : values;
+
+  const resolvedFieldErrors: FieldErrorMap =
+    debugState?.fieldErrors ?? fieldErrors;
+
+  const resolvedStatus: FormStatusKey | null =
+    debugState?.status ?? status;
+
+  const resolvedStatusMessage: string = debugState
+    ? typeof debugState.statusMessage === 'string'
+      ? debugState.statusMessage
+      : debugState.status
+        ? copy.statuses[debugState.status]
+        : ''
+    : statusMessage;
+
+  const resolvedIsSubmitting = debugState
+    ? Boolean(debugState.isSubmitting)
+    : isSubmitting;
+
+  const resolvedHasAttemptedSubmit = debugState
+    ? debugState.hasAttemptedSubmit ?? Boolean(debugState.fieldErrors)
+    : hasAttemptedSubmit;
+
+  const resolvedFieldStates =
+    debugState?.fieldStates ?? ({} as Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>);
+
+  const resolvedInlineErrors =
+    debugState?.inlineErrors ?? ({} as Partial<Record<DebugFieldKey, string>>);
+
+  const resolvedButton = debugState?.button;
+
   const errorMessageMap = useMemo(
     () => buildErrorMap(copy),
     [
@@ -139,6 +203,7 @@ export default function ContactForm({
 
   // Restore session draft
   useEffect(() => {
+    if (debugState) return;
     if (!isBrowser()) return;
     try {
       const raw = window.sessionStorage.getItem(storageKey);
@@ -153,12 +218,11 @@ export default function ContactForm({
     } catch {
       // Ignore restore failures
     }
-  }, [
-    storageKey,
-  ]);
+  }, [debugState, storageKey]);
 
   // Persist draft
   useEffect(() => {
+    if (debugState) return;
     if (!isBrowser()) return;
     const draftPayload = {
       name: values.name,
@@ -181,6 +245,7 @@ export default function ContactForm({
       // Ignore persistence failures
     }
   }, [
+    debugState,
     storageKey,
     values.email,
     values.message,
@@ -207,6 +272,7 @@ export default function ContactForm({
 
   const handleChange = useCallback(
     (field: FieldName | 'hp', value: string) => {
+      if (debugState) return;
       setValues((prev) => {
         const next = { ...prev, [field]: value };
         const validation = validateDraft(next);
@@ -218,6 +284,7 @@ export default function ContactForm({
       });
     },
     [
+      debugState,
       resetStatus,
       status,
     ],
@@ -227,12 +294,14 @@ export default function ContactForm({
     syncMessageHeight();
   }, [
     syncMessageHeight,
-    values.message,
+    resolvedValues.message,
   ]);
 
   const handleBlur = useCallback(() => {
+    if (debugState) return;
     setFieldErrors(validateDraft(values).errors);
   }, [
+    debugState,
     values,
   ]);
 
@@ -258,6 +327,7 @@ export default function ContactForm({
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+      if (debugState) return;
       if (isSubmitting) return;
       setHasAttemptedSubmit(true);
       const validation = validateDraft(values);
@@ -336,6 +406,7 @@ export default function ContactForm({
     },
     [
       copy.statuses,
+      debugState,
       isSubmitting,
       onSubmitted,
       storageKey,
@@ -353,18 +424,19 @@ export default function ContactForm({
 
   const shouldShowError = useCallback(
     (field: FieldName) =>
-      hasAttemptedSubmit && Boolean(fieldErrors[field]),
+      resolvedHasAttemptedSubmit &&
+      Boolean(resolvedFieldErrors[field]),
     [
-      fieldErrors,
-      hasAttemptedSubmit,
+      resolvedFieldErrors,
+      resolvedHasAttemptedSubmit,
     ],
   );
 
   const remainingCharacters = useMemo(() => {
     const maxChars = formTokens.message.maxChars;
-    return Math.max(0, maxChars - values.message.length);
+    return Math.max(0, maxChars - resolvedValues.message.length);
   }, [
-    values.message.length,
+    resolvedValues.message.length,
   ]);
 
   const messageCounterId = `${formId}-message-counter`;
@@ -393,10 +465,10 @@ export default function ContactForm({
     return valid.length ? valid.join(' ') : undefined;
   };
 
-  const statusClassName = status
-    ? status === 'success'
+  const statusClassName = resolvedStatus
+    ? resolvedStatus === 'success'
       ? s.statusSuccess
-      : status === 'generic' || status === 'sending'
+      : resolvedStatus === 'generic' || resolvedStatus === 'sending'
         ? s.statusGeneric
         : s.statusError
     : s.visuallyHidden;
@@ -408,7 +480,7 @@ export default function ContactForm({
       aria-live="polite"
       aria-atomic="true"
     >
-      <span className={s.statusText}>{statusMessage}</span>
+      <span className={s.statusText}>{resolvedStatusMessage}</span>
     </div>
   );
 
@@ -442,7 +514,7 @@ export default function ContactForm({
               id={nameFieldId}
               name="name"
               className={s.input}
-              value={values.name}
+              value={resolvedValues.name}
               onChange={(event) =>
                 handleChange('name', event.target.value)
               }
@@ -451,19 +523,23 @@ export default function ContactForm({
               minLength={2}
               maxLength={80}
               autoComplete="name"
+              readOnly={resolvedFieldStates.name?.readOnly ?? false}
+              disabled={resolvedFieldStates.name?.disabled ?? false}
+              data-debug={resolvedFieldStates.name?.dataDebug}
               data-error={Boolean(
-                shouldShowError('name') && fieldErrors.name,
+                shouldShowError('name') && resolvedFieldErrors.name,
               )}
               aria-invalid={
-                shouldShowError('name') && fieldErrors.name
+                shouldShowError('name') && resolvedFieldErrors.name
                   ? 'true'
                   : undefined
               }
               aria-describedby={describedBy(nameErrorId)}
             />
-            {shouldShowError('name') && fieldErrors.name ? (
+            {shouldShowError('name') && resolvedFieldErrors.name ? (
               <p id={nameErrorId} className={s.errorText}>
-                {getErrorMessage(fieldErrors.name)}
+                {resolvedInlineErrors.name ??
+                  getErrorMessage(resolvedFieldErrors.name)}
               </p>
             ) : null}
           </div>
@@ -479,7 +555,7 @@ export default function ContactForm({
               id={emailFieldId}
               name="email"
               className={s.input}
-              value={values.email}
+              value={resolvedValues.email}
               onChange={(event) =>
                 handleChange('email', event.target.value)
               }
@@ -488,19 +564,23 @@ export default function ContactForm({
               required
               maxLength={254}
               autoComplete="email"
+              readOnly={resolvedFieldStates.email?.readOnly ?? false}
+              disabled={resolvedFieldStates.email?.disabled ?? false}
+              data-debug={resolvedFieldStates.email?.dataDebug}
               data-error={Boolean(
-                shouldShowError('email') && fieldErrors.email,
+                shouldShowError('email') && resolvedFieldErrors.email,
               )}
               aria-invalid={
-                shouldShowError('email') && fieldErrors.email
+                shouldShowError('email') && resolvedFieldErrors.email
                   ? 'true'
                   : undefined
               }
               aria-describedby={describedBy(emailErrorId)}
             />
-            {shouldShowError('email') && fieldErrors.email ? (
+            {shouldShowError('email') && resolvedFieldErrors.email ? (
               <p id={emailErrorId} className={s.errorText}>
-                {getErrorMessage(fieldErrors.email)}
+                {resolvedInlineErrors.email ??
+                  getErrorMessage(resolvedFieldErrors.email)}
               </p>
             ) : null}
           </div>
@@ -516,7 +596,7 @@ export default function ContactForm({
               id={messageFieldId}
               name="message"
               className={s.textarea}
-              value={values.message}
+              value={resolvedValues.message}
               ref={messageRef}
               onChange={(event) =>
                 handleChange('message', event.target.value)
@@ -525,11 +605,16 @@ export default function ContactForm({
               rows={formTokens.message.minRows}
               minLength={formTokens.message.minChars}
               maxLength={formTokens.message.maxChars}
+              readOnly={resolvedFieldStates.message?.readOnly ?? false}
+              disabled={resolvedFieldStates.message?.disabled ?? false}
+              data-debug={resolvedFieldStates.message?.dataDebug}
               data-error={Boolean(
-                shouldShowError('message') && fieldErrors.message,
+                shouldShowError('message') &&
+                  resolvedFieldErrors.message,
               )}
               aria-invalid={
-                shouldShowError('message') && fieldErrors.message
+                shouldShowError('message') &&
+                resolvedFieldErrors.message
                   ? 'true'
                   : undefined
               }
@@ -539,9 +624,11 @@ export default function ContactForm({
               )}
             />
             <div className={s.helperRow}>
-              {shouldShowError('message') && fieldErrors.message ? (
+              {shouldShowError('message') &&
+              resolvedFieldErrors.message ? (
                 <p id={messageErrorId} className={s.errorText}>
-                  {getErrorMessage(fieldErrors.message)}
+                  {resolvedInlineErrors.message ??
+                    getErrorMessage(resolvedFieldErrors.message)}
                 </p>
               ) : (
                 <span aria-hidden="true" />
@@ -556,24 +643,28 @@ export default function ContactForm({
           </div>
         </fieldset>
 
-        <div aria-hidden="true" className={s.visuallyHidden}>
-          <label htmlFor={honeypotFieldId}>
-            {copy.honeypotLabel}
-          </label>
-          <input
-            id={honeypotFieldId}
-            name="hp"
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            value={values.hp}
-            onChange={(event) =>
-              handleChange('hp', event.target.value)
-            }
-          />
-        </div>
+      <div aria-hidden="true" className={s.visuallyHidden}>
+        <label htmlFor={honeypotFieldId}>
+          {copy.honeypotLabel}
+        </label>
+        <input
+          id={honeypotFieldId}
+          name="hp"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={resolvedValues.hp}
+          onChange={(event) =>
+            handleChange('hp', event.target.value)
+          }
+        />
+      </div>
 
-        <input type="hidden" name="token" value={values.token} />
+      <input
+        type="hidden"
+        name="token"
+        value={resolvedValues.token}
+      />
 
         <p className={s.privacy}>
           {copy.privacy.text}{' '}
@@ -588,14 +679,22 @@ export default function ContactForm({
         </p>
 
         <div className={s.buttonRow}>
-          <button
-            type="submit"
-            className={s.submitButton}
-            disabled={isSubmitting}
-          >
-            {copy.submitLabel}
-          </button>
-        </div>
+        <button
+          type="submit"
+          className={s.submitButton}
+          disabled={
+            resolvedButton?.disabled ?? resolvedIsSubmitting
+          }
+          data-debug={resolvedButton?.dataDebug}
+          aria-busy={
+            resolvedButton?.ariaBusy || resolvedIsSubmitting
+              ? 'true'
+              : undefined
+          }
+        >
+          {resolvedButton?.label ?? copy.submitLabel}
+        </button>
+      </div>
       </form>
       <Dialog.Root
         open={isPrivacyOpen}
