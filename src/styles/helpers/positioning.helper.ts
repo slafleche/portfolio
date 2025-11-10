@@ -8,15 +8,15 @@ export const absolutePosition = {
   ) => {
     return {
       position: 'absolute' as CSS_TYPES.Property.Position,
-      top: top.css(),
-      right,
+      top: top.css() as CSS_TYPES.Property.Top,
+      right: right.css() as CSS_TYPES.Property.Right,
     };
   },
   topLeft: (top: IMeasurement = m(0), left: IMeasurement = m(0)) => {
     return {
       position: 'absolute' as CSS_TYPES.Property.Position,
-      top: top.css(),
-      left: left.css(),
+      top: top.css() as CSS_TYPES.Property.Top,
+      left: left.css() as CSS_TYPES.Property.Left,
     };
   },
   bottomRight: (
@@ -25,8 +25,8 @@ export const absolutePosition = {
   ) => {
     return {
       position: 'absolute' as CSS_TYPES.Property.Position,
-      bottom: bottom.css(),
-      right: right.css(),
+      bottom: bottom.css() as CSS_TYPES.Property.Bottom,
+      right: right.css() as CSS_TYPES.Property.Right,
     };
   },
   bottomLeft: (
@@ -35,44 +35,44 @@ export const absolutePosition = {
   ) => {
     return {
       position: 'absolute' as CSS_TYPES.Property.Position,
-      bottom: bottom.css(),
-      left: left.css(),
+      bottom: bottom.css() as CSS_TYPES.Property.Bottom,
+      left: left.css() as CSS_TYPES.Property.Left,
     };
   },
   middle: (shrink: boolean = false) => {
     if (shrink) {
       return {
-        position: 'absolute',
-        display: 'inline-block',
-        top: '50%',
-        left: '50%',
-        right: 'initial',
-        bottom: 'initial',
-        transform: 'translate(-50%, -50%)',
+        position: 'absolute' as CSS_TYPES.Property.Position,
+        display: 'inline-block' as CSS_TYPES.Property.Display,
+        top: '50%' as CSS_TYPES.Property.Top,
+        left: '50%' as CSS_TYPES.Property.Left,
+        right: 'initial' as CSS_TYPES.Property.Right,
+        bottom: 'initial' as CSS_TYPES.Property.Bottom,
+        transform: 'translate(-50%, -50%)' as CSS_TYPES.Property.Transform,
       };
     } else {
       return {
-        position: 'absolute',
-        display: 'block',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        maxHeight: '100%',
-        maxWidth: '100%',
+        position: 'absolute' as CSS_TYPES.Property.Position,
+        display: 'block' as CSS_TYPES.Property.Display,
+        top: 0 as CSS_TYPES.Property.Top,
+        left: 0 as CSS_TYPES.Property.Left,
+        right: 0 as CSS_TYPES.Property.Right,
+        bottom: 0 as CSS_TYPES.Property.Bottom,
+        maxHeight: '100%' as CSS_TYPES.Property.MaxHeight,
+        maxWidth: '100%' as CSS_TYPES.Property.MaxWidth,
         ...margins({ all: 'auto' }),
       };
     }
   },
   middleLeft: (left: IMeasurement = m(0)) => {
     return {
-      position: 'absolute',
-      display: 'block',
-      top: 0,
-      left: left.css(),
-      bottom: 0,
-      maxHeight: '100%',
-      maxWidth: '100%',
+      position: 'absolute' as CSS_TYPES.Property.Position,
+      display: 'block' as CSS_TYPES.Property.Display,
+      top: 0 as CSS_TYPES.Property.Top,
+      left: left.css() as CSS_TYPES.Property.Left,
+      bottom: 0 as CSS_TYPES.Property.Bottom,
+      maxHeight: '100%' as CSS_TYPES.Property.MaxHeight,
+      maxWidth: '100%' as CSS_TYPES.Property.MaxWidth,
       ...margins({
         top: 'auto',
         bottom: 'auto',
@@ -81,13 +81,13 @@ export const absolutePosition = {
   },
   middleRight: (right: IMeasurement = m(0)) => {
     return {
-      position: 'absolute',
-      display: 'block',
-      top: 0,
-      right: right.css(),
-      bottom: 0,
-      maxHeight: '100%',
-      maxWidth: '100%',
+      position: 'absolute' as CSS_TYPES.Property.Position,
+      display: 'block' as CSS_TYPES.Property.Display,
+      top: 0 as CSS_TYPES.Property.Top,
+      right: right.css() as CSS_TYPES.Property.Right,
+      bottom: 0 as CSS_TYPES.Property.Bottom,
+      maxHeight: '100%' as CSS_TYPES.Property.MaxHeight,
+      maxWidth: '100%' as CSS_TYPES.Property.MaxWidth,
       ...margins({
         top: 'auto',
         bottom: 'auto',
@@ -96,13 +96,13 @@ export const absolutePosition = {
   },
   middleBottom: (bottom: IMeasurement = m(0)) => {
     return {
-      position: 'absolute',
-      display: 'block',
-      bottom: bottom.css(),
-      left: 0,
-      right: 0,
-      maxHeight: '100%',
-      maxWidth: '100%',
+      position: 'absolute' as CSS_TYPES.Property.Position,
+      display: 'block' as CSS_TYPES.Property.Display,
+      bottom: bottom.css() as CSS_TYPES.Property.Bottom,
+      left: 0 as CSS_TYPES.Property.Left,
+      right: 0 as CSS_TYPES.Property.Right,
+      maxHeight: '100%' as CSS_TYPES.Property.MaxHeight,
+      maxWidth: '100%' as CSS_TYPES.Property.MaxWidth,
       ...margins({
         horizontal: 'auto',
         vertical: m(0),
@@ -111,13 +111,13 @@ export const absolutePosition = {
   },
   middleTop: (top: IMeasurement = m(0)) => {
     return {
-      position: 'absolute',
-      display: 'block',
-      top: top.css(),
-      left: 0,
-      right: 0,
-      maxHeight: '100%',
-      maxWidth: '100%',
+      position: 'absolute' as CSS_TYPES.Property.Position,
+      display: 'block' as CSS_TYPES.Property.Display,
+      top: top.css() as CSS_TYPES.Property.Top,
+      left: 0 as CSS_TYPES.Property.Left,
+      right: 0 as CSS_TYPES.Property.Right,
+      maxHeight: '100%' as CSS_TYPES.Property.MaxHeight,
+      maxWidth: '100%' as CSS_TYPES.Property.MaxWidth,
       ...margins({
         horizontal: 'auto',
         vertical: m(0),
@@ -126,12 +126,12 @@ export const absolutePosition = {
   },
   fullSize: () => {
     return {
-      display: 'block',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
+      display: 'block' as CSS_TYPES.Property.Display,
+      position: 'absolute' as CSS_TYPES.Property.Position,
+      top: 0 as CSS_TYPES.Property.Top,
+      left: 0 as CSS_TYPES.Property.Left,
+      width: '100%' as CSS_TYPES.Property.Width,
+      height: '100%' as CSS_TYPES.Property.Height,
     };
   },
 };
