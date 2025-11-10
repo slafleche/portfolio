@@ -49,14 +49,15 @@
 
 ### Linting & Guardrails
 
-- `ai.yaml` is the machine-readable source of truth for all hard rules (layering,
-  helper usage, TODO cadence). ESLint loads modular configs from
-  `eslint/rules/**` so enforcing another layer is as simple as adding a file to
-  that folder.
+- `rules.yaml` is the machine-readable source of truth for all hard rules (layering,
+  helper usage, TODO cadence, forbidden properties). ESLint consumes it via
+  `eslint/rules.mjs`, and the `custom/forbidden-property` rule surfaces friendly
+  `file:line:col` errors (e.g., “Use `backdropFilters.style()`…”) instead of
+  cryptic stack traces whenever a guarded property appears outside its helper.
 - `lint-staged` now runs `node scripts/checkLintRules.mjs` after prettier/eslint
   to catch disallowed imports or raw background/border/padding/margin props in
   staged files. Fix violations before committing.
-- Keep `ai.md` for narrative context, but treat `ai.yaml` + the automated checks
+- Keep `ai.md` for narrative context, but treat `rules.yaml` + the automated checks
   as canonical—if you change the rules, update the YAML and the lint scripts in
   the same slice.
 

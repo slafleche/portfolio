@@ -33,6 +33,12 @@ layers:
         - borderRadius
         - background
         - backgroundColor
+        - name: backdropFilter
+          allow_in:
+            - 'src/styles/helpers/backdropFilter.helper.ts'
+        - name: WebkitBackdropFilter
+          allow_in:
+            - 'src/styles/helpers/backdropFilter.helper.ts'
   modules:
     path: 'src/modules'
     allowed_imports:
@@ -52,6 +58,15 @@ layers:
       - '../../app/**'
     rules:
       use_helpers: true
+      forbidden_properties:
+        - name: backdropFilter
+          message: 'Use backdropFilters.style() or registerBackdropFallback().'
+          allow_in:
+            - 'src/styles/helpers/backdropFilter.helper.ts'
+        - name: WebkitBackdropFilter
+          message: 'Use backdropFilters.style() or registerBackdropFallback().'
+          allow_in:
+            - 'src/styles/helpers/backdropFilter.helper.ts'
 
 workflow:
   talk_clarify_todo_go: true

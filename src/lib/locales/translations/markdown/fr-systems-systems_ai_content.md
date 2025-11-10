@@ -1,7 +1,7 @@
 L’IA fait partie du flux de travail, pas un raccourci. J’ai construit un système
 qui lui impose les mêmes règles qu’à moi — structuré, typé et traçable.
 
-Chaque session commence par un brief : ai.md pour le contexte et ai.yaml pour
+Chaque session commence par un brief : ai.md pour le contexte et rules.yaml pour
 les règles strictes. ESLint et lint-staged chargent directement ces fichiers et
 imposent automatiquement les frontières de couches, limites d’import et règles
 d’émission. L’IA exécute la checklist « pause-before-coding », génère un plan

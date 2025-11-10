@@ -1,7 +1,7 @@
 AI is part of the workflow, not a shortcut. I built a system that lets it
 operate under the same rules I do—structured, type-safe, and traceable.
 
-Each session starts with a brief: ai.md for context and ai.yaml for hard rules.
+Each session starts with a brief: ai.md for context and rules.yaml for hard rules.
 ESLint and lint-staged load that file directly, enforcing layer boundaries,
 import limits, and emission rules automatically. The AI runs a
 pause-before-coding checklist, generates a TODO plan with numbered steps, and
