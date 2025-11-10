@@ -9,6 +9,7 @@ import type {
   ContactFormDebugFieldState,
   ContactFormDebugState,
 } from '@/components/contact/ContactForm';
+import type { ContactFormResponse } from '@/modules/contactForm/mockSubmit';
 import {
   buildPrivacyCopy,
 } from '@/lib/locales/sections/privacy.locale';
@@ -214,6 +215,7 @@ const buildDebugState = (
 
   const fieldErrors: FieldErrorMap = {};
   const inlineErrors: Partial<Record<FieldKey, string>> = {};
+  const inlineHelpers: Partial<Record<FieldKey, string>> = {};
   const fieldStates: Partial<
     Record<FieldKey, ContactFormDebugFieldState>
   > = {};
@@ -236,6 +238,9 @@ const buildDebugState = (
         dataDebug: snapshot.dataDebug,
       };
     }
+    if (snapshot.helper) {
+      inlineHelpers[fieldKey] = snapshot.helper;
+    }
   });
 
   if (
@@ -256,12 +261,25 @@ const buildDebugState = (
   }
 
   const scenario = card.apiScenario;
+  let statusState: ContactFormDebugState['statusState'];
+  let responseSimulation: ContactFormResponse | undefined;
   if (scenario) {
     values.name = scenario.payload.name;
     values.email = scenario.payload.email;
     values.message = scenario.payload.message;
     values.hp = scenario.payload.hp;
     values.token = scenario.payload.token;
+
+    if (scenario.id === 'sending') {
+      statusState = { status: 'sending' };
+    } else {
+      const responseCode = scenario.id as ContactFormResponse['code'];
+      responseSimulation = {
+        ok: responseCode === 'success',
+        code: responseCode,
+        message: scenario.banner.body,
+      };
+    }
   }
 
   const hasErrors = Object.keys(fieldErrors).length > 0;
@@ -290,10 +308,9 @@ const buildDebugState = (
     values,
     fieldErrors,
     inlineErrors,
-    status: scenario?.status ?? null,
-    statusMessage: scenario
-      ? `${scenario.banner.title} — ${scenario.banner.body}`
-      : undefined,
+    inlineHelpers,
+    statusState,
+    responseSimulation,
     isSubmitting:
       scenario?.status === 'sending' ||
       Boolean(scenario?.cta.loading),
