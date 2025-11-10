@@ -18,6 +18,7 @@ export type DebugCardSpec = {
     global?: UiPermutationId;
     overrides?: Partial<Record<FieldKey, UiPermutationId>>;
   };
+  revealHoneypot?: boolean;
 };
 
 export const debugCardSpecs: readonly DebugCardSpec[] = [
@@ -136,6 +137,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'Pretend success while inputs stay disabled for bots.',
     apiScenarioId: 'blocked',
     ui: { global: 'disabled' },
+    revealHoneypot: true,
   },
   {
     id: 'api-blocked-focus-visible',
@@ -149,6 +151,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
         name: 'focusVisible',
       },
     },
+    revealHoneypot: true,
   },
   {
     id: 'api-generic-error',

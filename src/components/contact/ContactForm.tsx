@@ -60,6 +60,7 @@ export type ContactFormDebugState = {
     dataDebug?: string;
     ariaBusy?: boolean;
   };
+  revealHoneypot?: boolean;
 };
 
 type ContactFormProps = {
@@ -713,9 +714,28 @@ export default function ContactForm({
           </div>
         </fieldset>
 
-      <div aria-hidden="true" className={s.visuallyHidden}>
+      <div
+        aria-hidden="true"
+        className={
+          debugState?.revealHoneypot ? undefined : s.visuallyHidden
+        }
+        style={
+          debugState?.revealHoneypot
+            ? {
+                marginBottom: 12,
+                padding: '8px 12px',
+                border: '1px dotted rgba(255,214,102,0.8)',
+                backgroundColor: 'rgba(255,214,102,0.1)',
+                borderRadius: 8,
+                opacity: 0.7,
+              }
+            : undefined
+        }
+      >
         <label htmlFor={honeypotFieldId}>
-          {copy.honeypotLabel}
+          {debugState?.revealHoneypot
+            ? `${copy.honeypotLabel} (debug honeypot)`
+            : copy.honeypotLabel}
         </label>
         <input
           id={honeypotFieldId}
