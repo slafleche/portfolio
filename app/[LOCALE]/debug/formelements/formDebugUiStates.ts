@@ -1,3 +1,5 @@
+import type { FormErrorKey } from '@/lib/locales/sections/form.locale';
+
 export type FieldKey = 'name' | 'email' | 'message';
 
 export type FieldSnapshot = {
@@ -6,6 +8,7 @@ export type FieldSnapshot = {
   value?: string;
   helper?: string;
   error?: string;
+  errorKey?: FormErrorKey;
   success?: string;
   badge?: string;
   notes?: readonly string[];
@@ -203,6 +206,7 @@ export const uiPermutations: readonly UiPermutation[] = [
         label: baseFieldLabels.name,
         value: 'A',
         error: 'Name must be at least 2 characters.',
+        errorKey: 'form-error-name-required',
         helper: 'aria-describedby chains helper + error nodes.',
         dataDebug: 'invalid',
       },
@@ -210,12 +214,14 @@ export const uiPermutations: readonly UiPermutation[] = [
         label: baseFieldLabels.email,
         value: 'not-an-email',
         error: 'Enter a valid email address.',
+        errorKey: 'form-error-email-invalid',
         dataDebug: 'invalid',
       },
       message: {
         label: baseFieldLabels.message,
         value: 'Too short',
         error: 'Message must be at least 40 characters.',
+        errorKey: 'form-error-message-required',
         dataDebug: 'invalid',
       },
     },
@@ -239,6 +245,7 @@ export const uiPermutations: readonly UiPermutation[] = [
         value: 'user@blocked-domain.dev',
         error:
           'Brevo rejected this domain. Try a different address.',
+        errorKey: 'form-error-email-invalid',
         badge: 'Brevo response',
         dataDebug: 'brevo-domain-rejected',
         helper: 'Keep value so user can edit the domain.',

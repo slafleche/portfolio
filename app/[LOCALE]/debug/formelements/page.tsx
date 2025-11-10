@@ -1,13 +1,21 @@
 import type { CSSProperties } from 'react';
-import clsx from 'clsx';
 import { resolveLocale } from '@/lib/locales/locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import {
   buildContactFormCopy,
-  type ContactFormCopy,
+  type FormErrorKey,
 } from '@/lib/locales/sections/form.locale';
-import { formTokens } from '@/tokens/forms.tokens';
-import * as formStyles from '@/styles/components/contactForm.css';
+import type {
+  ContactFormDebugFieldState,
+  ContactFormDebugState,
+} from '@/components/contact/ContactForm';
+import {
+  buildPrivacyCopy,
+} from '@/lib/locales/sections/privacy.locale';
+import type {
+  ContactFormDraft,
+  FieldErrorMap,
+} from '@/modules/contactForm/validation';
 import {
   uiPermutations,
   type FieldKey,
@@ -23,6 +31,7 @@ import {
   debugCardSpecs,
   type DebugCardSpec,
 } from './formDebugSpecs';
+import ContactFormPreview from './ContactFormPreview';
 
 type FormMode = 'editable' | 'readonly' | 'disabled';
 
@@ -47,23 +56,6 @@ const uiPermutationMap = new Map(
 const apiScenarioMap = new Map(
   apiScenarios.map((scenario) => [scenario.id, scenario]),
 );
-
-const badgeStyle: CSSProperties = {
-  padding: '2px 8px',
-  borderRadius: 999,
-  fontSize: 12,
-  letterSpacing: 0.6,
-  textTransform: 'uppercase',
-  border: '1px solid rgba(245,240,255,0.18)',
-};
-
-const notesListStyle: CSSProperties = {
-  margin: '8px 0 0',
-  paddingLeft: '18px',
-  fontSize: 13,
-  lineHeight: 1.4,
-  opacity: 0.8,
-};
 
 const payloadStyle: CSSProperties = {
   backgroundColor: 'rgba(8,6,16,0.6)',
@@ -112,8 +104,19 @@ const detailListStyle: CSSProperties = {
   lineHeight: 1.5,
 };
 
-const formatCounter = (template: string, remaining: number) =>
-  template.replace('{count}', remaining.toString());
+const defaultFormValues: ContactFormDraft = {
+  name: '',
+  email: '',
+  message: '',
+  token: 'mock-turnstile-token',
+  hp: '',
+};
+
+const fallbackErrorKeys: Record<FieldKey, FormErrorKey> = {
+  name: 'form-error-name-required',
+  email: 'form-error-email-invalid',
+  message: 'form-error-message-required',
+};
 
 const cloneFieldSnapshot = (
   snapshot: FieldSnapshot,
@@ -199,225 +202,111 @@ const resolveCards = (
 ): ResolvedCard[] =>
   debugCardSpecs.map((spec) => resolveCard(spec, locale));
 
-type FieldPreviewProps = {
-  fieldKey: FieldKey;
-  snapshot: FieldSnapshot;
-  fieldId: string;
-  formMode: FormMode;
-  counterTemplate: string;
-};
-
-function FieldPreview({
-  fieldKey,
-  snapshot,
-  fieldId,
-  formMode,
-  counterTemplate,
-}: FieldPreviewProps) {
-  const isMessage = fieldKey === 'message';
-  const readOnly =
-    snapshot.readOnly ?? (formMode === 'readonly');
-  const disabled =
-    snapshot.disabled ?? (formMode === 'disabled');
-  const remainingCharacters = isMessage
-    ? Math.max(
-        0,
-        formTokens.message.maxChars -
-          (snapshot.value?.length ?? 0),
-      )
-    : null;
-
-  const commonProps = {
-    id: fieldId,
-    name: fieldKey,
-    placeholder: snapshot.placeholder,
-    defaultValue: snapshot.value,
-    readOnly,
-    disabled,
-    'data-debug': snapshot.dataDebug,
-    'data-error': snapshot.error ? 'true' : undefined,
-    'aria-invalid': snapshot.error ? true : undefined,
+const buildDebugState = (
+  card: ResolvedCard,
+): ContactFormDebugState => {
+  const values: ContactFormDraft = {
+    ...defaultFormValues,
+    name: card.fields.name.value ?? defaultFormValues.name,
+    email: card.fields.email.value ?? defaultFormValues.email,
+    message: card.fields.message.value ?? defaultFormValues.message,
   };
 
-  return (
-    <div className={formStyles.fieldGroup}>
-      <label className={formStyles.labelRow} htmlFor={fieldId}>
-        <span>{snapshot.label}</span>
-        <span aria-hidden="true" className={formStyles.required}>
-          *
-        </span>
-        {snapshot.badge ? (
-          <span style={badgeStyle}>{snapshot.badge}</span>
-        ) : null}
-      </label>
-      {isMessage ? (
-        <textarea
-          {...commonProps}
-          className={formStyles.textarea}
-          rows={formTokens.message.minRows}
-        />
-      ) : (
-        <input
-          {...commonProps}
-          type={fieldKey === 'email' ? 'email' : 'text'}
-          className={formStyles.input}
-        />
-      )}
-      {isMessage ? (
-        <div className={formStyles.helperRow}>
-          {snapshot.error ? (
-            <p className={formStyles.errorText}>
-              {snapshot.error}
-            </p>
-          ) : snapshot.helper ? (
-            <p className={formStyles.counter}>
-              {snapshot.helper}
-            </p>
-          ) : (
-            <span aria-hidden="true" />
-          )}
-          <p className={formStyles.counter}>
-            {formatCounter(
-              counterTemplate,
-              remainingCharacters ?? 0,
-            )}
-          </p>
-        </div>
-      ) : (
-        <>
-          {snapshot.helper ? (
-            <p className={formStyles.counter}>{snapshot.helper}</p>
-          ) : null}
-          {snapshot.error ? (
-            <p className={formStyles.errorText}>
-              {snapshot.error}
-            </p>
-          ) : null}
-        </>
-      )}
-      {snapshot.success ? (
-        <p className={formStyles.counter}>{snapshot.success}</p>
-      ) : null}
-      {snapshot.notes ? (
-        <ul style={notesListStyle}>
-          {snapshot.notes.map((note) => (
-            <li key={note}>{note}</li>
-          ))}
-        </ul>
-      ) : null}
-    </div>
-  );
-}
+  const fieldErrors: FieldErrorMap = {};
+  const inlineErrors: Partial<Record<FieldKey, string>> = {};
+  const fieldStates: Partial<
+    Record<FieldKey, ContactFormDebugFieldState>
+  > = {};
 
-type FormPreviewCardProps = {
-  card: ResolvedCard;
-  copy: ContactFormCopy;
+  fieldOrder.forEach((fieldKey) => {
+    const snapshot = card.fields[fieldKey];
+    if (snapshot.error) {
+      inlineErrors[fieldKey] = snapshot.error;
+      fieldErrors[fieldKey] =
+        snapshot.errorKey ?? fallbackErrorKeys[fieldKey];
+    }
+    if (
+      snapshot.readOnly ||
+      snapshot.disabled ||
+      snapshot.dataDebug
+    ) {
+      fieldStates[fieldKey] = {
+        readOnly: snapshot.readOnly ?? undefined,
+        disabled: snapshot.disabled ?? undefined,
+        dataDebug: snapshot.dataDebug,
+      };
+    }
+  });
+
+  if (
+    card.formMode === 'readonly' ||
+    card.formMode === 'disabled'
+  ) {
+    fieldOrder.forEach((fieldKey) => {
+      fieldStates[fieldKey] = {
+        readOnly:
+          fieldStates[fieldKey]?.readOnly ??
+          (card.formMode === 'readonly'),
+        disabled:
+          fieldStates[fieldKey]?.disabled ??
+          (card.formMode === 'disabled'),
+        dataDebug: fieldStates[fieldKey]?.dataDebug,
+      };
+    });
+  }
+
+  const scenario = card.apiScenario;
+  if (scenario) {
+    values.name = scenario.payload.name;
+    values.email = scenario.payload.email;
+    values.message = scenario.payload.message;
+    values.hp = scenario.payload.hp;
+    values.token = scenario.payload.token;
+  }
+
+  const hasErrors = Object.keys(fieldErrors).length > 0;
+
+  const buttonDisabled =
+    scenario?.cta.disabled ??
+    (card.formMode === 'disabled' ||
+      card.formMode === 'readonly');
+
+  const buttonDataDebug =
+    scenario?.fieldMode === 'disabled' || card.formMode === 'disabled'
+      ? 'disabled'
+      : card.formMode === 'readonly'
+        ? 'readonly'
+        : undefined;
+
+  const buttonAriaBusy =
+    scenario?.cta.loading ??
+    (scenario?.status === 'sending' ||
+      (card.formMode === 'readonly' && !scenario));
+
+  const normalizedFieldStates =
+    Object.keys(fieldStates).length > 0 ? fieldStates : undefined;
+
+  return {
+    values,
+    fieldErrors,
+    inlineErrors,
+    status: scenario?.status ?? null,
+    statusMessage: scenario
+      ? `${scenario.banner.title} — ${scenario.banner.body}`
+      : undefined,
+    isSubmitting:
+      scenario?.status === 'sending' ||
+      Boolean(scenario?.cta.loading),
+    hasAttemptedSubmit: scenario ? true : hasErrors,
+    fieldStates: normalizedFieldStates,
+    button: {
+      label: scenario?.cta.label,
+      disabled: buttonDisabled,
+      dataDebug: buttonDataDebug,
+      ariaBusy: buttonAriaBusy,
+    },
+  };
 };
-
-function FormPreviewCard({
-  card,
-  copy,
-}: FormPreviewCardProps) {
-  const statusClassName = card.apiScenario
-    ? card.apiScenario.status === 'success'
-      ? formStyles.statusSuccess
-      : card.apiScenario.status === 'generic' ||
-          card.apiScenario.status === 'sending'
-        ? formStyles.statusGeneric
-        : formStyles.statusError
-    : formStyles.visuallyHidden;
-
-  const statusMessage = card.apiScenario
-    ? `${card.apiScenario.banner.title} — ${card.apiScenario.banner.body}`
-    : 'Preview state';
-
-  const defaultCtaDisabled = card.formMode !== 'editable';
-  const ctaDisabled =
-    card.apiScenario?.cta.disabled ?? defaultCtaDisabled;
-  const ctaLabel =
-    card.apiScenario?.cta.label ?? copy.submitLabel;
-  const ctaLoading = Boolean(card.apiScenario?.cta.loading);
-
-  return (
-    <form
-      className={formStyles.form}
-      noValidate
-      aria-describedby={`${card.spec.id}-meta`}
-    >
-      <div
-        className={clsx(statusClassName)}
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <span className={formStyles.statusText}>
-          {statusMessage}
-        </span>
-      </div>
-
-      <fieldset className={formStyles.fieldset}>
-        <legend className={formStyles.legend}>
-          {copy.heading}
-        </legend>
-        {fieldOrder.map((fieldKey) => (
-          <FieldPreview
-            key={fieldKey}
-            fieldKey={fieldKey}
-            snapshot={card.fields[fieldKey]}
-            fieldId={`${card.spec.id}-${fieldKey}`}
-            formMode={card.formMode}
-            counterTemplate={copy.counterTemplate}
-          />
-        ))}
-      </fieldset>
-
-      <div aria-hidden="true" className={formStyles.visuallyHidden}>
-        <label htmlFor={`${card.spec.id}-hp`}>Company</label>
-        <input
-          id={`${card.spec.id}-hp`}
-          name="hp"
-          type="text"
-          defaultValue={card.apiScenario?.payload.hp ?? ''}
-          tabIndex={-1}
-          autoComplete="off"
-        />
-      </div>
-
-      <input
-        type="hidden"
-        name="token"
-        value={
-          card.apiScenario?.payload.token ?? 'mock-turnstile-token'
-        }
-      />
-
-      <p className={formStyles.privacy}>
-        {copy.privacy.text}{' '}
-        <button type="button" className={formStyles.privacyLink}>
-          {copy.privacy.linkLabel}
-        </button>
-      </p>
-
-      <div className={formStyles.buttonRow}>
-        <button
-          type="button"
-          className={formStyles.submitButton}
-          disabled={ctaDisabled}
-          data-debug={
-            card.formMode === 'disabled'
-              ? 'disabled'
-              : card.formMode === 'readonly'
-                ? 'readonly'
-                : undefined
-          }
-          aria-busy={ctaLoading ? 'true' : undefined}
-        >
-          {ctaLoading ? `${ctaLabel}…` : ctaLabel}
-        </button>
-      </div>
-    </form>
-  );
-}
 
 type ApiDetailsProps = {
   scenario: ApiScenario;
@@ -515,6 +404,7 @@ export default async function FormElementsDebugPage({
   const locale = resolveLocale(LOCALE);
   const translator = await loadTranslator(locale);
   const contactFormCopy = buildContactFormCopy(translator);
+  const privacyCopy = buildPrivacyCopy(translator);
   const cards = resolveCards(locale);
 
   return (
@@ -575,22 +465,34 @@ export default async function FormElementsDebugPage({
               gap: 24,
             }}
           >
-            {cards.map((card) => (
-              <article key={card.spec.id} style={cardStyle}>
-                <div>
-                  <h3 style={{ margin: '0 0 8px' }}>{card.spec.title}</h3>
-                  <p style={{ margin: 0, lineHeight: 1.5 }}>
-                    {card.spec.description}
-                  </p>
-                </div>
+            {cards.map((card) => {
+              const debugState = buildDebugState(card);
+              return (
+                <article key={card.spec.id} style={cardStyle}>
+                  <div>
+                    <h3 style={{ margin: '0 0 8px' }}>
+                      {card.spec.title}
+                    </h3>
+                    <p style={{ margin: 0, lineHeight: 1.5 }}>
+                      {card.spec.description}
+                    </p>
+                  </div>
 
-                <FormPreviewCard card={card} copy={contactFormCopy} />
+                  <ContactFormPreview
+                    copy={contactFormCopy}
+                    privacyCopy={privacyCopy}
+                    locale={locale}
+                    debugState={debugState}
+                  />
 
-                <CardMeta card={card} />
+                  <CardMeta card={card} />
 
-                {card.apiScenario ? <ApiDetails scenario={card.apiScenario} /> : null}
-              </article>
-            ))}
+                  {card.apiScenario ? (
+                    <ApiDetails scenario={card.apiScenario} />
+                  ) : null}
+                </article>
+              );
+            })}
           </div>
         </section>
       </div>
