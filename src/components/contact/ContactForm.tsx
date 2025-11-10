@@ -45,8 +45,12 @@ export type ContactFormDebugState = {
   values?: Partial<FormValues>;
   fieldErrors?: FieldErrorMap;
   inlineErrors?: Partial<Record<DebugFieldKey, string>>;
-  status?: FormStatusKey | null;
-  statusMessage?: string;
+  inlineHelpers?: Partial<Record<DebugFieldKey, string>>;
+  statusState?: {
+    status: FormStatusKey;
+    message?: string;
+  };
+  responseSimulation?: ContactFormResponse;
   isSubmitting?: boolean;
   hasAttemptedSubmit?: boolean;
   fieldStates?: Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>;
@@ -160,17 +164,6 @@ export default function ContactForm({
   const resolvedFieldErrors: FieldErrorMap =
     debugState?.fieldErrors ?? fieldErrors;
 
-  const resolvedStatus: FormStatusKey | null =
-    debugState?.status ?? status;
-
-  const resolvedStatusMessage: string = debugState
-    ? typeof debugState.statusMessage === 'string'
-      ? debugState.statusMessage
-      : debugState.status
-        ? copy.statuses[debugState.status]
-        : ''
-    : statusMessage;
-
   const resolvedIsSubmitting = debugState
     ? Boolean(debugState.isSubmitting)
     : isSubmitting;
@@ -185,19 +178,90 @@ export default function ContactForm({
   const resolvedInlineErrors =
     debugState?.inlineErrors ?? ({} as Partial<Record<DebugFieldKey, string>>);
 
-  const resolvedButton = debugState?.button;
+  const resolvedInlineHelpers =
+    debugState?.inlineHelpers ?? ({} as Partial<Record<DebugFieldKey, string>>);
 
-  const errorMessageMap = useMemo(
-    () => buildErrorMap(copy),
-    [
-      copy,
-    ],
-  );
+  const resolvedButton = debugState?.button;
 
   const storageKey = useMemo(
     () => `${DRAFT_STORAGE_PREFIX}:${locale}`,
     [
       locale,
+    ],
+  );
+
+  const storageKeyRef = useRef(storageKey);
+  useEffect(() => {
+    storageKeyRef.current = storageKey;
+  }, [storageKey]);
+
+  const applyResponse = useCallback(
+    (
+      response: ContactFormResponse,
+      options?: { preserveValues?: boolean },
+    ) => {
+      const nextStatus = serverStatusToFormStatus(response.code);
+      const nextMessage =
+        copy.statuses[nextStatus] ?? response.message;
+
+      setStatus(nextStatus);
+      setStatusMessage(nextMessage);
+
+      if (response.ok && !options?.preserveValues) {
+        setValues({ ...INITIAL_VALUES });
+        setFieldErrors({});
+        setHasAttemptedSubmit(false);
+        if (isBrowser()) {
+          window.sessionStorage.removeItem(
+            storageKeyRef.current,
+          );
+        }
+      }
+    },
+    [
+      copy.statuses,
+    ],
+  );
+
+  const debugStatusKeyRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!debugState) {
+      debugStatusKeyRef.current = null;
+      return;
+    }
+
+    if (debugState.responseSimulation) {
+      const response = debugState.responseSimulation;
+      const key = `response:${response.code}:${response.message}:${response.ok}`;
+      if (debugStatusKeyRef.current !== key) {
+        debugStatusKeyRef.current = key;
+        applyResponse(response, { preserveValues: true });
+      }
+      return;
+    }
+
+    if (debugState.statusState) {
+      const key = `state:${debugState.statusState.status}:${debugState.statusState.message ?? ''
+        }`;
+      if (debugStatusKeyRef.current !== key) {
+        debugStatusKeyRef.current = key;
+        const nextMessage =
+          debugState.statusState.message ??
+          copy.statuses[debugState.statusState.status];
+        setStatus(debugState.statusState.status);
+        setStatusMessage(nextMessage);
+      }
+      return;
+    }
+
+    debugStatusKeyRef.current = null;
+  }, [applyResponse, copy.statuses, debugState]);
+
+  const errorMessageMap = useMemo(
+    () => buildErrorMap(copy),
+    [
+      copy,
     ],
   );
 
@@ -350,20 +414,14 @@ export default function ContactForm({
 
       // Honeypot short-circuit
       if (payload.hp.trim().length > 0) {
-        setStatus('success');
-        setStatusMessage(copy.statuses.success);
-        setValues({ ...INITIAL_VALUES });
-        setFieldErrors({});
-        setHasAttemptedSubmit(false);
-        if (isBrowser()) {
-          window.sessionStorage.removeItem(storageKey);
-        }
+        const response: ContactFormResponse = {
+          ok: true,
+          code: 'success',
+          message: copy.statuses.success,
+        };
+        applyResponse(response);
         if (onSubmitted) {
-          onSubmitted({
-            ok: true,
-            code: 'success',
-            message: copy.statuses.success,
-          });
+          onSubmitted(response);
         }
         return;
       }
@@ -377,21 +435,7 @@ export default function ContactForm({
           messages: copy.statuses,
         });
 
-        const nextStatus = serverStatusToFormStatus(response.code);
-        const nextMessage =
-          copy.statuses[nextStatus] ?? response.message;
-
-        setStatus(nextStatus);
-        setStatusMessage(nextMessage);
-
-        if (response.ok) {
-          setValues({ ...INITIAL_VALUES });
-          setFieldErrors({});
-          setHasAttemptedSubmit(false);
-          if (isBrowser()) {
-            window.sessionStorage.removeItem(storageKey);
-          }
-        }
+        applyResponse(response);
 
         if (onSubmitted) {
           onSubmitted(response);
@@ -405,11 +449,11 @@ export default function ContactForm({
       }
     },
     [
+      applyResponse,
       copy.statuses,
       debugState,
       isSubmitting,
       onSubmitted,
-      storageKey,
       values,
     ],
   );
@@ -446,17 +490,26 @@ export default function ContactForm({
   const honeypotFieldId = `${formId}-hp`;
 
   const nameErrorId =
-    shouldShowError('name') && fieldErrors.name
+    shouldShowError('name') && resolvedFieldErrors.name
       ? `${nameFieldId}-error`
       : undefined;
+  const nameHelperId = resolvedInlineHelpers.name
+    ? `${nameFieldId}-helper`
+    : undefined;
   const emailErrorId =
-    shouldShowError('email') && fieldErrors.email
+    shouldShowError('email') && resolvedFieldErrors.email
       ? `${emailFieldId}-error`
       : undefined;
+  const emailHelperId = resolvedInlineHelpers.email
+    ? `${emailFieldId}-helper`
+    : undefined;
   const messageErrorId =
-    shouldShowError('message') && fieldErrors.message
+    shouldShowError('message') && resolvedFieldErrors.message
       ? `${messageFieldId}-error`
       : undefined;
+  const messageHelperId = resolvedInlineHelpers.message
+    ? `${messageFieldId}-helper`
+    : undefined;
 
   const describedBy = (
     ...ids: Array<string | undefined>
@@ -465,10 +518,10 @@ export default function ContactForm({
     return valid.length ? valid.join(' ') : undefined;
   };
 
-  const statusClassName = resolvedStatus
-    ? resolvedStatus === 'success'
+  const statusClassName = status
+    ? status === 'success'
       ? s.statusSuccess
-      : resolvedStatus === 'generic' || resolvedStatus === 'sending'
+      : status === 'generic' || status === 'sending'
         ? s.statusGeneric
         : s.statusError
     : s.visuallyHidden;
@@ -480,7 +533,7 @@ export default function ContactForm({
       aria-live="polite"
       aria-atomic="true"
     >
-      <span className={s.statusText}>{resolvedStatusMessage}</span>
+      <span className={s.statusText}>{statusMessage}</span>
     </div>
   );
 
@@ -534,12 +587,18 @@ export default function ContactForm({
                   ? 'true'
                   : undefined
               }
-              aria-describedby={describedBy(nameErrorId)}
+              aria-describedby={describedBy(nameHelperId, nameErrorId)}
             />
             {shouldShowError('name') && resolvedFieldErrors.name ? (
               <p id={nameErrorId} className={s.errorText}>
                 {resolvedInlineErrors.name ??
                   getErrorMessage(resolvedFieldErrors.name)}
+              </p>
+            ) : null}
+            {!shouldShowError('name') &&
+            resolvedInlineHelpers.name ? (
+              <p id={nameHelperId} className={s.counter}>
+                {resolvedInlineHelpers.name}
               </p>
             ) : null}
           </div>
@@ -575,12 +634,18 @@ export default function ContactForm({
                   ? 'true'
                   : undefined
               }
-              aria-describedby={describedBy(emailErrorId)}
+              aria-describedby={describedBy(emailHelperId, emailErrorId)}
             />
             {shouldShowError('email') && resolvedFieldErrors.email ? (
               <p id={emailErrorId} className={s.errorText}>
                 {resolvedInlineErrors.email ??
                   getErrorMessage(resolvedFieldErrors.email)}
+              </p>
+            ) : null}
+            {!shouldShowError('email') &&
+            resolvedInlineHelpers.email ? (
+              <p id={emailHelperId} className={s.counter}>
+                {resolvedInlineHelpers.email}
               </p>
             ) : null}
           </div>
@@ -620,6 +685,7 @@ export default function ContactForm({
               }
               aria-describedby={describedBy(
                 messageErrorId,
+                messageHelperId,
                 messageCounterId,
               )}
             />
@@ -629,6 +695,10 @@ export default function ContactForm({
                 <p id={messageErrorId} className={s.errorText}>
                   {resolvedInlineErrors.message ??
                     getErrorMessage(resolvedFieldErrors.message)}
+                </p>
+              ) : resolvedInlineHelpers.message ? (
+                <p id={messageHelperId} className={s.counter}>
+                  {resolvedInlineHelpers.message}
                 </p>
               ) : (
                 <span aria-hidden="true" />
