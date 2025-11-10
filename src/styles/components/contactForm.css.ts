@@ -14,6 +14,7 @@ import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
+import backdropFilters from '../helpers/backdropFilter.helper';
 
 const controlBase: ComplexStyleRule = {
   width: '100%',
@@ -182,8 +183,7 @@ export const submitButton = style({
   color: glassyButtonTokens.text.color.css(),
   fontWeight: 600,
   boxShadow: boxShadow(glassyButtonTokens.boxShadows),
-  backdropFilter: `blur(${glassVars.blur.css()})`,
-  WebkitBackdropFilter: `blur(${glassVars.blur.css()})`,
+  ...backdropFilters.style({ blur: glassVars.blur }),
   transition:
     'transform 160ms ease, opacity 160ms ease, background 160ms ease, box-shadow 160ms ease',
   selectors: {
@@ -240,8 +240,7 @@ export const privacyOverlay = style({
   position: 'fixed',
   inset: 0,
   backgroundColor: colorVars.black.alpha(0.85).css(),
-  backdropFilter: `blur(${glassVars.blur.double().css()})`,
-  WebkitBackdropFilter: `blur(${glassVars.blur.double().css()})`,
+  ...backdropFilters.style({ blur: glassVars.blur.double() }),
   zIndex: 1100,
 });
 
@@ -302,8 +301,7 @@ export const privacyCloseIcon = style({
   fontWeight: 600,
   cursor: 'pointer',
   boxShadow: boxShadow(glassyButtonTokens.boxShadows),
-  backdropFilter: `blur(${glassVars.blur.double().css()})`,
-  WebkitBackdropFilter: `blur(${glassVars.blur.css()})`,
+  ...backdropFilters.style({ blur: glassVars.blur.double() }),
   // transition: glassyButtonTokens.transition,
   selectors: {
     '&:hover': {

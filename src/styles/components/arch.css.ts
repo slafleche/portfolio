@@ -2,6 +2,7 @@ import { keyframes, style } from '@vanilla-extract/css';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { mixWithAlpha } from '../helpers/colorWrap.helper';
 import { createArchGlassBackground } from '../helpers/arch.helper';
+import backdropFilters from '../helpers/backdropFilter.helper';
 import { noiseBg } from '../helpers/noiseSVG.helper';
 import {
   colorVars,
@@ -131,8 +132,7 @@ export const surface = style({
   ].join(', '),
 
   // blur needs a non-zero alpha base in Safari (our baseGlass.background already includes a color layer)
-  backdropFilter: baseGlass.backdropFilter,
-  WebkitBackdropFilter: baseGlass.WebkitBackdropFilter,
+  ...backdropFilters.style(baseGlass.filterIntent),
 });
 
 export const grain = style({

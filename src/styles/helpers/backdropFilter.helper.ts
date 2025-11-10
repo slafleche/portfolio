@@ -1,6 +1,5 @@
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { IMeasurement } from '../measurementKit';
-import type { UnitDefinitionRecord } from '../measurementKit/unitDefinitions';
 import type { PercentMeasurement } from '../measurementKit/units/percent';
 import { createSupportsFallback } from './supportsFallback.helper';
 
@@ -9,16 +8,11 @@ import { createSupportsFallback } from './supportsFallback.helper';
  * `backdropFilter` and `WebkitBackdropFilter` with identical values.
  * Accepts measurementKit inputs for blur + percent-driven filters
  * (`mPercent`) alongside simple numeric knobs (e.g. brightness multipliers)
- * so presets/helpers can stay declarative.
+ * so presets/helpers can stay declarative. Blur inputs expect length-based
+ * measurements (px/rem/vh/etc.).
  */
 
-type LengthUnit = {
-  [Key in keyof UnitDefinitionRecord]: UnitDefinitionRecord[Key]['category'] extends `length-${string}`
-    ? UnitDefinitionRecord[Key]['unit']
-    : never;
-}[keyof UnitDefinitionRecord];
-
-type BlurInput = IMeasurement<LengthUnit> | null | undefined;
+type BlurInput = IMeasurement<string> | null | undefined;
 type PercentInput = PercentMeasurement | null | undefined;
 type BrightnessInput = PercentMeasurement | number | null | undefined;
 

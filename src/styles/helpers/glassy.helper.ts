@@ -1,5 +1,6 @@
 import { glassVars } from '@/tokens/glassy.tokens';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
+import type { BackdropFilterIntent } from './backdropFilter.helper';
 import { noiseStyle, type NoiseSvgOptions } from './noiseSVG.helper';
 import { buildLinear } from './gradients.helper';
 import { m } from '../measurementKit';
@@ -15,14 +16,13 @@ export const glassNoise = (
 ) => noiseStyle(id, props);
 
 export const createGlassBackground = (): {
-  backgroundColor: CSS_TYPES.Property.BackgroundColor;
-  backgroundImage: CSS_TYPES.Property.BackgroundImage;
   backgroundLayers: {
     overlay: string;
     glow: string;
   };
-  backdropFilter: CSS_TYPES.Property.BackdropFilter;
-  WebkitBackdropFilter: CSS_TYPES.Property.BackdropFilter;
+  backgroundColorValue: CSS_TYPES.Property.BackgroundColor;
+  backgroundImageValue: CSS_TYPES.Property.BackgroundImage;
+  backdropFilterIntent: BackdropFilterIntent;
 } => {
   const overlayGradient = buildLinear({
     angle: glassVars.overlay.direction,
@@ -64,9 +64,9 @@ export const createGlassBackground = (): {
     ],
   }).modern;
 
-  const backgroundColor =
+  const backgroundColorValue =
     glassVars.backgrounds.color.css() as CSS_TYPES.Property.BackgroundColor;
-  const backgroundImage = [
+  const backgroundImageValue = [
     overlayGradient,
     glowGradient,
   ].join(', ') as CSS_TYPES.Property.BackgroundImage;
@@ -76,10 +76,10 @@ export const createGlassBackground = (): {
       overlay: overlayGradient,
       glow: glowGradient,
     },
-    backgroundColor,
-    backgroundImage,
-    backdropFilter: `blur(${glassVars.blur.css()})`,
-    WebkitBackdropFilter:
-      `blur(${glassVars.blur.css()})` as CSS_TYPES.Property.BackdropFilter,
+    backgroundColorValue,
+    backgroundImageValue,
+    backdropFilterIntent: {
+      blur: glassVars.blur,
+    },
   };
 };
