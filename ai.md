@@ -1,6 +1,6 @@
 # Project Guidelines
 
-⚠️ **Whenever you load this file in a new chat, also load `ai.yaml`
+⚠️ **Whenever you load this file in a new chat, also load `rules.yaml`
 (machine-readable rules). Those files contain the canonical constraints enforced
 by tooling.** This doc only carries the narrative/context.
 
@@ -10,6 +10,11 @@ by tooling.** This doc only carries the narrative/context.
   layer.
 - Helpers: math + shared styling logic; own gradients/shadows/spacing and only
   import tokens.
+- Helper bundles: group related tokens (borders, filters, gradients, etc.) into
+  semantic objects, but do **not** emit CSS properties from helpers. Pass the
+  bundle through to the style layer and call the appropriate helper there
+  (`borders(...)`, `backdropFilters.style(...)`, etc.) so CSS stays confined to
+  the emitter layer.
 - Modules: glue tokens + helpers, stay CSS-free.
 - Styles: vanilla-extract selectors only, import helpers/tokens via the
   sanctioned layers.
@@ -31,7 +36,7 @@ by tooling.** This doc only carries the narrative/context.
 
 ## YAML Schema & Tooling Reference
 
-- `ai.yaml` is the machine-readable source of truth.
+- `rules.yaml` is the machine-readable source of truth.
 - ESLint/ lint-staged load the YAML via `eslint/rules.mjs` and
   `scripts/checkLintRules.mjs`.
 - Schema overview:
@@ -40,5 +45,5 @@ by tooling.** This doc only carries the narrative/context.
     imports automatically.
   - `workflow` defines the “talk → clarify → TODO → go” cadence and the
     pause-before-coding checklist.
-- When editing rules: update `ai.yaml`, bump its `updated` date, then run
+- When editing rules: update `rules.yaml`, bump its `updated` date, then run
   `yarn lint` to ensure the generated configs still load.
