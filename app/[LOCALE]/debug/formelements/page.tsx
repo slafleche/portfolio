@@ -322,6 +322,7 @@ const buildDebugState = (
       dataDebug: buttonDataDebug,
       ariaBusy: buttonAriaBusy,
     },
+    revealHoneypot: Boolean(card.spec.revealHoneypot),
   };
 };
 
