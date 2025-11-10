@@ -31,6 +31,7 @@ import * as s from '@/styles/components/contactForm.css';
 import { formTokens } from '@/tokens/forms.tokens';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { Markdown } from '@/components/Markdown';
+import { useContactDialog } from '@/components/contact/ContactDialogProvider';
 
 type ContactFormProps = {
   copy: ContactFormCopy;
@@ -113,12 +114,14 @@ export default function ContactForm({
     hasAttemptedSubmit,
     setHasAttemptedSubmit,
   ] = useState(false);
-  const [
-    isPrivacyOpen,
-    setIsPrivacyOpen,
-  ] = useState(false);
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
   const baseMessageHeight = useRef<number | null>(null);
+
+  const {
+    isPrivacyOpen,
+    openPrivacy,
+    closePrivacy,
+  } = useContactDialog();
 
   const errorMessageMap = useMemo(
     () => buildErrorMap(copy),
@@ -233,12 +236,23 @@ export default function ContactForm({
     values,
   ]);
 
-  const openPrivacy = useCallback(
+  const handlePrivacyLinkClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
-      setIsPrivacyOpen(true);
+      openPrivacy();
     },
-    [],
+    [openPrivacy],
+  );
+
+  const handlePrivacyOpenChange = useCallback(
+    (nextOpen: boolean) => {
+      if (nextOpen) {
+        openPrivacy();
+      } else {
+        closePrivacy();
+      }
+    },
+    [closePrivacy, openPrivacy],
   );
 
   const handleSubmit = useCallback(
@@ -566,7 +580,7 @@ export default function ContactForm({
           <button
             type="button"
             className={s.privacyLink}
-            onClick={openPrivacy}
+            onClick={handlePrivacyLinkClick}
             aria-haspopup="dialog"
           >
             {copy.privacy.linkLabel}
@@ -585,7 +599,7 @@ export default function ContactForm({
       </form>
       <Dialog.Root
         open={isPrivacyOpen}
-        onOpenChange={setIsPrivacyOpen}
+        onOpenChange={handlePrivacyOpenChange}
       >
         <Dialog.Portal>
           <Dialog.Overlay className={s.privacyOverlay} />

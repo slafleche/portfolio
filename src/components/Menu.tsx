@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { SkipNavLink } from '@/components/SkipNavLink';
+import { useContactDialog } from '@/components/contact/ContactDialogProvider';
 import * as s from '@/styles/components/menu.css';
 import type { Locale } from '@/data/locales';
 import transforms, {
@@ -46,6 +47,7 @@ import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
 import { fontVariants } from '../tokens/fontVariants.tokens';
 import { menuVars } from '../styles/componentTokens/menu.componentTokens';
 import { m } from '@/styles/measurementKit';
+import { sharedStrings } from '@/lib/sharedStrings';
 
 type FocusDebugOptions = {
   lockTo?: 'logo' | number;
@@ -76,6 +78,12 @@ type MenuProps = {
 const LOGO_GLOW_TOP_THRESHOLD = 3;
 const LOGO_GLOW_DURATION = 500;
 const LOGO_GLOW_HOLD_DELAY = 100;
+const CONTACT_HASH = sharedStrings.contactFormHash;
+const POLICY_HASH = sharedStrings.contactFormPolicyHash;
+const RESERVED_HASHES = new Set([
+  CONTACT_HASH.replace(/^#/, ''),
+  POLICY_HASH.replace(/^#/, ''),
+]);
 
 export default function Menu({
   root,
@@ -92,6 +100,10 @@ export default function Menu({
   curiosityMessages,
   logoRedirectPaths,
 }: MenuProps) {
+  const {
+    isOpen: isContactDialogOpen,
+    isPrivacyOpen,
+  } = useContactDialog();
   const pathname = usePathname();
   const normalizedPath = pathname ?? '/';
   const parts = normalizedPath.split('/').filter(Boolean);
@@ -165,6 +177,23 @@ export default function Menu({
     currentLocale,
     normalizedRoot,
   ]);
+  const reservedModalHash = useMemo(() => {
+    if (isPrivacyOpen) return POLICY_HASH;
+    if (isContactDialogOpen) return CONTACT_HASH;
+    return null;
+  }, [
+    isContactDialogOpen,
+    isPrivacyOpen,
+  ]);
+  const appendReservedModalHash = useCallback(
+    (href: string) => {
+      if (!reservedModalHash) return href;
+      if (!href) return reservedModalHash;
+      if (href.includes('#')) return href;
+      return `${href}${reservedModalHash}`;
+    },
+    [reservedModalHash],
+  );
   const logoId = 'menu-logo';
   const [
     mounted,
@@ -763,6 +792,9 @@ export default function Menu({
     if (typeof window === 'undefined') return;
     const { pathname, search, hash } = window.location;
     const currentHash = hash.replace(/^#/, '');
+    if (RESERVED_HASHES.has(currentHash)) {
+      return;
+    }
 
     if (
       !activeSection ||
@@ -1063,10 +1095,11 @@ export default function Menu({
                 ? `/${localizedSegments.join('/')}`
                 : '';
               const target = `/${link.locale}${targetPath}`;
+              const hashedTarget = appendReservedModalHash(target);
               return (
                 <Link
                   key={link.locale}
-                  href={target}
+                  href={hashedTarget}
                   className={clsx(s.link, s.localeLink)}
                   hrefLang={link.locale}
                 >
