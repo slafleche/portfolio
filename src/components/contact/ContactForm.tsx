@@ -54,12 +54,6 @@ export type ContactFormDebugState = {
   isSubmitting?: boolean;
   hasAttemptedSubmit?: boolean;
   fieldStates?: Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>;
-  button?: {
-    label?: string;
-    disabled?: boolean;
-    dataDebug?: string;
-    ariaBusy?: boolean;
-  };
   revealHoneypot?: boolean;
 };
 
@@ -181,8 +175,6 @@ export default function ContactForm({
 
   const resolvedInlineHelpers =
     debugState?.inlineHelpers ?? ({} as Partial<Record<DebugFieldKey, string>>);
-
-  const resolvedButton = debugState?.button;
 
   const storageKey = useMemo(
     () => `${DRAFT_STORAGE_PREFIX}:${locale}`,
@@ -484,6 +476,45 @@ export default function ContactForm({
     resolvedValues.message.length,
   ]);
 
+  const derivedButtonState = useMemo(() => {
+    if (resolvedIsSubmitting) {
+      return {
+        label: copy.statuses.sending,
+        disabled: true,
+        ariaBusy: true,
+        dataDebug: 'sending',
+      };
+    }
+
+    if (
+      status &&
+      (status === 'success' ||
+        status === 'blocked' ||
+        status === 'rate_limited' ||
+        status === 'not_configured')
+    ) {
+      const label =
+        status === 'success' || status === 'blocked'
+          ? copy.statuses.success
+          : status === 'rate_limited'
+            ? copy.statuses.rate_limited
+            : copy.statuses.not_configured;
+      return {
+        label,
+        disabled: true,
+        ariaBusy: false,
+        dataDebug: 'locked',
+      };
+    }
+
+    return {
+      label: copy.submitLabel,
+      disabled: false,
+      ariaBusy: false,
+      dataDebug: undefined,
+    };
+  }, [copy.statuses, copy.submitLabel, resolvedIsSubmitting, status]);
+
   const messageCounterId = `${formId}-message-counter`;
   const nameFieldId = `${formId}-name`;
   const emailFieldId = `${formId}-email`;
@@ -769,22 +800,18 @@ export default function ContactForm({
         </p>
 
         <div className={s.buttonRow}>
-        <button
-          type="submit"
-          className={s.submitButton}
-          disabled={
-            resolvedButton?.disabled ?? resolvedIsSubmitting
-          }
-          data-debug={resolvedButton?.dataDebug}
-          aria-busy={
-            resolvedButton?.ariaBusy || resolvedIsSubmitting
-              ? 'true'
-              : undefined
-          }
-        >
-          {resolvedButton?.label ?? copy.submitLabel}
-        </button>
-      </div>
+          <button
+            type="submit"
+            className={s.submitButton}
+            disabled={derivedButtonState.disabled}
+            data-debug={derivedButtonState.dataDebug}
+            aria-busy={
+              derivedButtonState.ariaBusy ? 'true' : undefined
+            }
+          >
+            {derivedButtonState.label}
+          </button>
+        </div>
       </form>
       <Dialog.Root
         open={isPrivacyOpen}

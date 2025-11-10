@@ -284,23 +284,6 @@ const buildDebugState = (
 
   const hasErrors = Object.keys(fieldErrors).length > 0;
 
-  const buttonDisabled =
-    scenario?.cta.disabled ??
-    (card.formMode === 'disabled' ||
-      card.formMode === 'readonly');
-
-  const buttonDataDebug =
-    scenario?.fieldMode === 'disabled' || card.formMode === 'disabled'
-      ? 'disabled'
-      : card.formMode === 'readonly'
-        ? 'readonly'
-        : undefined;
-
-  const buttonAriaBusy =
-    scenario?.cta.loading ??
-    (scenario?.status === 'sending' ||
-      (card.formMode === 'readonly' && !scenario));
-
   const normalizedFieldStates =
     Object.keys(fieldStates).length > 0 ? fieldStates : undefined;
 
@@ -316,12 +299,6 @@ const buildDebugState = (
       Boolean(scenario?.cta.loading),
     hasAttemptedSubmit: scenario ? true : hasErrors,
     fieldStates: normalizedFieldStates,
-    button: {
-      label: scenario?.cta.label,
-      disabled: buttonDisabled,
-      dataDebug: buttonDataDebug,
-      ariaBusy: buttonAriaBusy,
-    },
     revealHoneypot: Boolean(card.spec.revealHoneypot),
   };
 };
