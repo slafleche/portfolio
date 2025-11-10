@@ -12,6 +12,7 @@ import {
 import { boxShadow } from '../helpers/shadow.helper';
 import borders from '../helpers/borders.helper';
 import { backgrounds } from '../helpers/background.helper';
+import backdropFilters from '../helpers/backdropFilter.helper';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -29,7 +30,7 @@ export const overlay = style({
   position: 'fixed',
   inset: 0,
   backgroundColor: colorVars.navBg.alpha(0.7).css(),
-  backdropFilter: 'blur(24px)',
+  ...backdropFilters.style({ blur: m(24) }),
   zIndex: 1000,
 });
 
@@ -103,8 +104,7 @@ export const closeButton = style({
   fontSize: glassyButtonTokens.iconSize.css(),
   fontWeight: 600,
   boxShadow: boxShadow(glassyButtonTokens.boxShadows),
-  backdropFilter: `blur(${glassVars.blur.css()})`,
-  WebkitBackdropFilter: `blur(${glassVars.blur.css()})`,
+  ...backdropFilters.style({ blur: glassVars.blur }),
   transition:
     'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
   overflow: 'hidden',

@@ -7,15 +7,15 @@ import {
 import { heroVars } from '../componentTokens/hero.componentTokens';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { noiseBg } from '../helpers/noiseSVG.helper';
-import { surfaceLayers, surfaceBaseColor } from '../glassy.css';
 import { m } from '../measurementKit';
 import { paddings } from '../helpers/spacing.helper';
-
 import {
-  backgroundImageDecl, 
+  backgroundImageDecl,
   buildLinear,
 } from '../helpers/gradients.helper';
 import { projectorVars } from '../componentTokens/projector.componentTokens';
+import { glassVars } from '../../tokens/glassy.tokens';
+import { mPercent } from '../measurementKit/units/percent';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -297,9 +297,49 @@ export const panelContents = style({
   }),
 });
 
+const heroSurfaceOverlay = buildLinear({
+  angle: glassVars.overlay.direction,
+  stops: [
+    {
+      color: glassVars.overlay.color.alpha(
+        glassVars.overlay.topAlpha,
+      ),
+      at: mPercent(0),
+    },
+    {
+      color: glassVars.overlay.color.alpha(0),
+      at: glassVars.overlay.midStop,
+    },
+    {
+      color: glassVars.overlay.color.alpha(
+        glassVars.overlay.bottomAlpha,
+      ),
+      at: mPercent(100),
+    },
+  ],
+}).modern;
+
+const heroSurfaceGlow = buildLinear({
+  angle: m(135, 'deg'),
+  stops: [
+    {
+      color: glassVars.surfaceGlowPrimaryTint.alpha(
+        glassVars.surfaceGlow.primaryTintAlpha,
+      ),
+      at: mPercent(0),
+    },
+    {
+      color: glassVars.surfaceGlowSecondaryTint.alpha(
+        glassVars.surfaceGlow.secondaryTintAlpha,
+      ),
+      at: mPercent(100),
+    },
+  ],
+}).modern;
+
 export const heroSurface = style({
-  background: [surfaceLayers.overlay, surfaceLayers.glow].join(', '),
-  backgroundColor: surfaceBaseColor,
+  background: [heroSurfaceOverlay, heroSurfaceGlow].join(', '),
+  backgroundColor: glassVars.backgrounds.color.css(),
 });
 
 export const title_break = style({});

@@ -1,10 +1,10 @@
 import { archGlassVars } from '../../tokens/arch.tokens';
+import type { BackdropFilterIntent } from './backdropFilter.helper';
 import type { CSS_TYPES } from './types.helper';
 
 export const createArchGlassBackground = (): {
   background: CSS_TYPES.Property.Background<string>;
-  backdropFilter: CSS_TYPES.Property.BackdropFilter;
-  WebkitBackdropFilter: CSS_TYPES.Property.BackdropFilter;
+  filterIntent: BackdropFilterIntent;
 } => {
   // Ensure a tiny alpha so Safari renders backdrop-filter
   const baseAlpha = archGlassVars.backgroundColor.value().alpha(); // getter -> number
@@ -26,8 +26,8 @@ export const createArchGlassBackground = (): {
       glow,
       ensuredBg.css(),
     ].join(', '),
-    backdropFilter: `blur(${archGlassVars.backdropBlur.css()})`,
-    WebkitBackdropFilter:
-      `blur(${archGlassVars.backdropBlur.css()})` as CSS_TYPES.Property.BackdropFilter,
+    filterIntent: {
+      blur: archGlassVars.backdropBlur,
+    },
   };
 };

@@ -7,6 +7,7 @@ import { glassVars } from '../tokens/glassy.tokens';
 import { globalDropShadowFilter } from './helpers/shadow.helper';
 import { noiseBg } from './helpers/noiseSVG.helper';
 import borders from './helpers/borders.helper';
+import backdropFilters from './helpers/backdropFilter.helper';
 
 const glassBackground = createGlassBackground();
 const innerRadius = glassVars.borders.radius.subtract(
@@ -19,12 +20,10 @@ const innerRadius = glassVars.borders.radius.subtract(
  * replace these strings to swap in alternative themes without
  * reverse-engineering gradients.
  */
-export const surfaceLayers = glassBackground.backgroundLayers;
-export const surfaceBaseColor = glassBackground.backgroundColor;
 
 const baseSurfaceBackground = {
-  backgroundColor: glassBackground.backgroundColor,
-  backgroundImage: glassBackground.backgroundImage,
+  backgroundColor: glassBackground.backgroundColorValue,
+  backgroundImage: glassBackground.backgroundImageValue,
 } as const;
 
 const glassSurface = style({
@@ -32,8 +31,7 @@ const glassSurface = style({
   width: '100%',
   height: '100%',
   ...baseSurfaceBackground,
-  backdropFilter: glassBackground.backdropFilter,
-  WebkitBackdropFilter: glassBackground.WebkitBackdropFilter,
+  ...backdropFilters.style(glassBackground.backdropFilterIntent),
 });
 
 export const bg = glassSurface;

@@ -19,6 +19,7 @@ import { m } from '../measurementKit';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
+import backdropFilters from '../helpers/backdropFilter.helper';
 
 const surfaceGradient = buildLinear({
   angle: accordionSurfaceTokens.gradientAngle,
@@ -69,8 +70,7 @@ export const root = style({
   ...borders(accordionSurfaceTokens.borders),
   ...backgroundImageDecl(surfaceGradient),
   ...backgrounds(glassyPanelTokens.backgrounds),
-  backdropFilter: `blur(${glassVars.blur.css()})`,
-  WebkitBackdropFilter: `blur(${glassVars.blur.css()})`,
+  ...backdropFilters.style({ blur: glassVars.blur }),
 });
 
 export const item = style({
