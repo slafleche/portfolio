@@ -45,6 +45,72 @@ export const frData = {
   'console-curiosity-hint':
     "[indice] Le code montre ce que j'ai construit; curiosity() montre comment je pense.",
 
+  // Abréviations
+  'abbr-r&d': {
+    label: 'R&D',
+    definition: 'Recherche et développement',
+  },
+  'abbr-api': {
+    label: 'API',
+    definition: 'Interface de programmation applicative',
+  },
+  'abbr-ai': {
+    label: 'IA',
+    definition: 'Intelligence artificielle',
+  },
+  'abbr-ea': {
+    label: 'EA',
+    definition: 'Electronic Arts',
+  },
+  'abbr-banq': {
+    label: 'BAnQ',
+    definition: 'Bibliothèque et Archives nationales du Québec',
+  },
+  'abbr-css': {
+    label: 'CSS',
+    definition: 'Feuilles de style en cascade',
+  },
+  'abbr-html': {
+    label: 'HTML',
+    definition: 'Langage de balisage hypertexte',
+  },
+  'abbr-js': {
+    label: 'JS',
+    definition: 'JavaScript',
+  },
+  'abbr-ui': {
+    label: 'UI',
+    definition: 'Interface utilisateur',
+  },
+  'abbr-json': {
+    label: 'JSON',
+    definition: 'Notation objet JavaScript',
+  },
+  'abbr-svg': {
+    label: 'SVG',
+    definition: 'Graphiques vectoriels extensibles',
+  },
+  'abbr-svgo': {
+    label: 'SVGO',
+    definition: 'Optimiseur de Graphiques vectoriels extensibles',
+  },
+  'abbr-id': {
+    label: 'ID',
+    definition: 'Identifiant',
+  },
+  'abbr-url': {
+    label: 'URL',
+    definition: 'Localisateur uniforme de ressources',
+  },
+  'abbr-todo': {
+    label: 'TODO',
+    definition: 'À faire (note de suivi)',
+  },
+  'abbr-eslint': {
+    label: 'ESLint',
+    definition: "Outil d'analyse statique JavaScript",
+  },
+
   approach: 'Approche',
   'approach-href': 'philosophie',
   ...markdownRefs('approach-content'),
@@ -63,7 +129,7 @@ export const frData = {
   'case-study-02-subtitle':
     'éliminer les tâches de stylage répétitives',
   ...markdownRefs('case-study-02-content'),
-  'case-study-03-title': 'Passer en R&D',
+  'case-study-03-title': 'Passer en [abbr:R&D]',
   'case-study-03-subtitle':
     'contribuer au produit et à son architecture',
   ...markdownRefs('case-study-03-content'),
@@ -82,9 +148,9 @@ export const frData = {
   'projects-href': 'projets',
   'projects-01-cocacola-title': 'Brigade du Bonheur (Coca-Cola)',
   ...markdownRefs('projects-01-cocacola-content'),
-  'projects-02-ea-title': 'Electronic Arts (EA)',
+  'projects-02-ea-title': 'Electronic Arts ([abbr:EA])',
   ...markdownRefs('projects-02-ea-content'),
-  'projects-03-banq-title': 'BAnQ (via InMedia)',
+  'projects-03-banq-title': '[abbr:BAnQ] (via InMedia)',
   ...markdownRefs('projects-03-banq-content'),
   'projects-04-hootsuite-title': 'Hootsuite (collaboration interne)',
   ...markdownRefs('projects-04-hootsuite-content'),
@@ -114,7 +180,7 @@ export const frData = {
   'systems-resilience': 'Résilience',
   'systems-resilience-href': 'systems-resilience',
   ...markdownRefs('systems-resilience-content'),
-  'systems-ai': 'Assistance IA',
+  'systems-ai': 'Assistance [abbr:AI]',
   'systems-ai-href': 'systems-ia',
   ...markdownRefs('systems-ai-content'),
   'systems-link-label': 'Systèmes',
@@ -150,7 +216,7 @@ export const frData = {
     "Veuillez écrire un message avant de l'envoyer.",
   'form-error-message-too_long': 'Le message est trop long.',
   'form-error-message-too_many_links':
-    'Veuillez retirer quelques liens (maximum deux URL).',
+    'Veuillez retirer quelques liens (maximum deux [abbr:URL]).',
   'form-error-token-missing':
     "Veuillez confirmer que vous n'êtes pas un robot.",
   'form-status-sending': 'Envoi du message…',

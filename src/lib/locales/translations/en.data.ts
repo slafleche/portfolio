@@ -43,6 +43,72 @@ export const enData = {
   'console-curiosity-hint':
     '[hint] The code shows what I built; curiosity() shows how I think.',
 
+  // Abbreviations
+  'abbr-r&d': {
+    label: 'R&D',
+    definition: 'Research and Development',
+  },
+  'abbr-api': {
+    label: 'API',
+    definition: 'Application Programming Interface',
+  },
+  'abbr-ai': {
+    label: 'AI',
+    definition: 'Artificial Intelligence',
+  },
+  'abbr-ea': {
+    label: 'EA',
+    definition: 'Electronic Arts',
+  },
+  'abbr-banq': {
+    label: 'BAnQ',
+    definition: 'Bibliothèque et Archives nationales du Québec',
+  },
+  'abbr-css': {
+    label: 'CSS',
+    definition: 'Cascading Style Sheets',
+  },
+  'abbr-html': {
+    label: 'HTML',
+    definition: 'HyperText Markup Language',
+  },
+  'abbr-js': {
+    label: 'JS',
+    definition: 'JavaScript',
+  },
+  'abbr-ui': {
+    label: 'UI',
+    definition: 'User Interface',
+  },
+  'abbr-json': {
+    label: 'JSON',
+    definition: 'JavaScript Object Notation',
+  },
+  'abbr-svg': {
+    label: 'SVG',
+    definition: 'Scalable Vector Graphics',
+  },
+  'abbr-svgo': {
+    label: 'SVGO',
+    definition: 'Scalable Vector Graphics Optimizer',
+  },
+  'abbr-id': {
+    label: 'ID',
+    definition: 'Identifier',
+  },
+  'abbr-url': {
+    label: 'URL',
+    definition: 'Uniform Resource Locator',
+  },
+  'abbr-todo': {
+    label: 'TODO',
+    definition: 'To-do (work item reminder)',
+  },
+  'abbr-eslint': {
+    label: 'ESLint',
+    definition: 'JavaScript linting tool for ECMAScript code',
+  },
+
   approach: 'Approach',
   'approach-href': 'approach',
   ...markdownRefs('approach-content'),
@@ -60,7 +126,7 @@ export const enData = {
   'case-study-02-title': 'Building internal tooling',
   'case-study-02-subtitle': 'eliminating repetitive styling work',
   ...markdownRefs('case-study-02-content'),
-  'case-study-03-title': 'Moving to R&D',
+  'case-study-03-title': 'Moving to [abbr:R&D]',
   'case-study-03-subtitle': 'contributing to core product and architecture',
   ...markdownRefs('case-study-03-content'),
   'case-study-04-title': 'Adapting legacy code',
@@ -77,9 +143,9 @@ export const enData = {
   'projects-href': 'projects',
   'projects-01-cocacola-title': 'Brigade du Bonheur (Coca-Cola)',
   ...markdownRefs('projects-01-cocacola-content'),
-  'projects-02-ea-title': 'Electronic Arts (EA)',
+  'projects-02-ea-title': 'Electronic Arts ([abbr:EA])',
   ...markdownRefs('projects-02-ea-content'),
-  'projects-03-banq-title': 'BAnQ (via InMedia)',
+  'projects-03-banq-title': '[abbr:BAnQ] (via InMedia)',
   ...markdownRefs('projects-03-banq-content'),
   'projects-04-hootsuite-title': 'Hootsuite (internal collaboration)',
   ...markdownRefs('projects-04-hootsuite-content'),
@@ -108,7 +174,7 @@ export const enData = {
   'systems-resilience': 'Resilience',
   'systems-resilience-href': 'systems-resilience',
   ...markdownRefs('systems-resilience-content'),
-  'systems-ai': 'AI Assistance',
+  'systems-ai': '[abbr:AI] Assistance',
   'systems-ai-href': 'systems-ai',
   ...markdownRefs('systems-ai-content'),
   'systems-link-label': 'Systems',
@@ -141,7 +207,7 @@ export const enData = {
     'Please write a message before sending.',
   'form-error-message-too_long': 'Message is too long.',
   'form-error-message-too_many_links':
-    'Please remove extra links (limit two URLs).',
+    'Please remove extra links (limit two [abbr:URL]s).',
   'form-error-token-missing': "Please confirm you're not a bot.",
   'form-status-sending': 'Sending your message…',
   'form-status-success': 'Message sent — thank you!',

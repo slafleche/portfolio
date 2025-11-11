@@ -1,6 +1,6 @@
 ### Dégradés
 
-CSS rend les dégradés faciles à écrire mais difficiles à fiabiliser.  
+[abbr:CSS] rend les dégradés faciles à écrire mais difficiles à fiabiliser.  
 De légères variations de teinte ou de luminosité peuvent créer des bandes
 visibles.  
 J’ai construit un petit système pour les stabiliser : variables structurées,
@@ -27,7 +27,7 @@ Les mathématiques peuvent évoluer, mais le rendu garde sa cohésion.
 
 ### Forme
 
-L’arche a commencé comme une expérience, quelque chose que CSS seul n’exprimait
+L’arche a commencé comme une expérience, quelque chose que [abbr:CSS] seul n’exprimait
 pas proprement.  
 C’est devenu un test pour voir jusqu’où un système peut s’étendre tout en
 restant précis.
@@ -40,7 +40,7 @@ const path = makeArchPath({
 });
 ```
 
-La forme est basée sur du SVG mais calculée à partir de variables partagées.  
+La forme est basée sur du [abbr:SVG] mais calculée à partir de variables partagées.  
 Changer quelques nombres redessine la courbe sans briser proportion ni
 alignement.  
 Elle reste flexible dans des limites claires : une structure qui invite à la

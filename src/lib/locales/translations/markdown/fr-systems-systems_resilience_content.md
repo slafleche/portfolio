@@ -14,5 +14,5 @@ propager.
 C’est une forme tranquille de **Navire de Thésée** : les pièces évoluent, mais
 l’identité demeure. Le langage visuel reste cohérent parce que la structure rend
 le changement sûr par conception. Une architecture propre n’est pas réservée aux
-données et aux API — les styles peuvent être tout aussi disciplinés, prévisibles
+données et aux [abbr:API] — les styles peuvent être tout aussi disciplinés, prévisibles
 et maintenables quand on leur accorde le même respect.
