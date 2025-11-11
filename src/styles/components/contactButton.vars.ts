@@ -30,15 +30,15 @@ export const kAnticY = 1 / kAntic;
 export const kEnterY = 1 / kEnter;
 
 /* ---------- Core geometry/timings ---------- */
-export const offsetPx = m(26, 'px');
-export const buttonSizePx = m(66, 'px');
-export const iconSizePx = m(36, 'px');
+export const offsetPx = m(26);
+export const buttonSizePx = m(66);
+export const iconSizePx = m(36);
 
 export const shuttleDurationMs = m(700, 'ms');
 export const shuttleExitDurationMs = shuttleDurationMs;
 
-export const entryOvershootPx = m(14, 'px');
-export const exitPushPx = m(22, 'px');
+export const entryOvershootPx = m(14);
+export const exitPushPx = m(22);
 
 export const railRotationDeg = m(45, 'deg');
 export const railCounterRotationDeg = railRotationDeg.negation();
@@ -62,10 +62,10 @@ export const springDelayMs = m(80, 'ms'); // general micro spring delay
 export const exitTranslationDelayMs = m(440, 'ms'); // delay before shuttle moves on exit (syncs with spin end)
 
 /* ---------- Lag (enter only; exit lag disabled so spin reads clean) ---------- */
-export const iconLagInDistancePx = m(8, 'px');
-export const iconLagInMicroPx = m(0.8, 'px');
+export const iconLagInDistancePx = m(8);
+export const iconLagInMicroPx = m(0.8);
 export const iconLagInDurationMs = m(160, 'ms');
-export const iconLagOutDistancePx = m(3, 'px');
+export const iconLagOutDistancePx = m(3);
 export const iconLagOutDurationMs = shuttleExitDurationMs;
 
 /* ---------- Visual polish ---------- */
@@ -94,9 +94,9 @@ export const t3dPushedOutSoft = () =>
   `translate3d(calc(-${diagonalOffsetPx.css()} - ${exitPushPx.multiply(EXIT_SOFT_FACTOR).css()}),0,0)`;
 
 /* ---------- A11y / focus ---------- */
-export const hoverBlurPx = m(10, 'px');
-export const focusWidthPx = m(2, 'px');
-export const focusOffsetPx = m(2, 'px');
+export const hoverBlurPx = m(10);
+export const focusWidthPx = m(2);
+export const focusOffsetPx = m(2);
 
 /* ---------- Dev unit checks ---------- */
 if (process.env.NODE_ENV !== 'production') {

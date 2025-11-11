@@ -33,7 +33,7 @@ const preferMeasurementShorthandRule = {
 				if (
 					unitArg.type !== 'Literal' ||
 					typeof unitArg.value !== 'string' ||
-					unitArg.value.toLowerCase() !== 'px'
+					unitArg.value !== 'px'
 				) {
 					return;
 				}
