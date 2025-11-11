@@ -1,15 +1,7 @@
 import { HTML_MESSAGES } from '@/lib/locales/generated/html.gen';
 import { DEFAULT_LOCALE } from './locale';
 import type { Locale } from '@/data/locales';
-
-const escapeHtml = (value: string) =>
-	value
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#39;')
-		.replace(/\n/g, '<br />');
+import { escapeHtml } from '@/lib/stringUtils';
 
 export function getHtmlMessage(
 	locale: Locale,
@@ -24,8 +16,6 @@ export function getHtmlMessage(
 		] ?? {};
 
 	return (
-		localeHtml[key] ??
-		fallbackHtml[key] ??
-		escapeHtml(fallbackText)
+		localeHtml[key] ?? fallbackHtml[key] ?? escapeHtml(fallbackText)
 	);
 }
