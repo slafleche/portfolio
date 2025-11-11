@@ -505,7 +505,6 @@ export default async function FormElementsDebugPage({
                   <ContactFormPreview
                     copy={contactFormCopy}
                     privacyCopy={privacyCopy}
-                    locale={locale}
                     debugState={debugState}
                   />
 

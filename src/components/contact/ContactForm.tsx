@@ -64,7 +64,6 @@ export type ContactFormDebugState = {
 type ContactFormProps = {
   copy: ContactFormCopy;
   actionUrl?: string;
-  locale: string;
   privacyCopy: PrivacyCopy;
   formRef?: React.RefObject<HTMLFormElement | null> | null;
   privacyHref?: string;
@@ -113,7 +112,6 @@ const formatCounter = (template: string, remaining: number) =>
 export default function ContactForm({
   copy,
   actionUrl = DEFAULT_ACTION_URL,
-  locale,
   privacyCopy,
   formRef = null,
   onSubmitted,
@@ -182,12 +180,7 @@ export default function ContactForm({
   const resolvedInlineHelpers =
     debugState?.inlineHelpers ?? ({} as Partial<Record<DebugFieldKey, string>>);
 
-  const storageKey = useMemo(
-    () => `${DRAFT_STORAGE_PREFIX}:${locale}`,
-    [
-      locale,
-    ],
-  );
+  const storageKey = useMemo(() => DRAFT_STORAGE_PREFIX, []);
 
   const storageKeyRef = useRef(storageKey);
   useEffect(() => {

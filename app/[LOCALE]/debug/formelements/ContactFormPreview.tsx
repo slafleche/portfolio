@@ -14,7 +14,6 @@ import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 type ContactFormPreviewProps = {
   copy: ContactFormCopy;
   privacyCopy: PrivacyCopy;
-  locale: string;
   debugState: ContactFormDebugState;
 };
 
@@ -23,7 +22,6 @@ const noop = () => {};
 export default function ContactFormPreview({
   copy,
   privacyCopy,
-  locale,
   debugState,
 }: ContactFormPreviewProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -63,7 +61,6 @@ export default function ContactFormPreview({
       >
         <ContactForm
           copy={copy}
-          locale={locale}
           privacyCopy={privacyCopy}
           debugState={debugState}
           formRef={formRef}

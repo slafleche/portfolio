@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import { resolveLocale } from '@/lib/locales/locale';
 import { ResponsiveProvider } from '@/lib/responsive/ResponsiveProvider';
 import { WindowSizeProvider } from '@/lib/responsive/WindowSizeContext';
@@ -13,16 +12,15 @@ import { SkipNavContent } from '@/components/SkipNavContent';
 
 interface SiteLayoutProps {
   children: ReactNode;
+  params: Promise<{ LOCALE: string }>;
 }
 
 export default async function SiteLayout({
   children,
+  params,
 }: SiteLayoutProps) {
-  const headerList = headers();
-  const requestedLocale = headerList instanceof Headers
-    ? headerList.get('x-locale') ?? undefined
-    : undefined;
-  const locale = resolveLocale(requestedLocale);
+  const { LOCALE } = await params;
+  const locale = resolveLocale(LOCALE);
   const translator = await loadTranslator(locale);
   const contactFormCopy = buildContactFormCopy(translator);
   const privacyCopy = buildPrivacyCopy(translator);
@@ -33,7 +31,6 @@ export default async function SiteLayout({
         <ContactDialogProvider
           formCopy={contactFormCopy}
           privacyCopy={privacyCopy}
-          locale={locale}
         >
           <SkipNavContent id="body">{children}</SkipNavContent>
         </ContactDialogProvider>
@@ -42,12 +39,13 @@ export default async function SiteLayout({
   );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  const headerList = headers();
-  const requestedLocale = headerList instanceof Headers
-    ? headerList.get('x-locale') ?? undefined
-    : undefined;
-  const locale = resolveLocale(requestedLocale);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ LOCALE: string }>;
+}): Promise<Metadata> {
+  const { LOCALE } = await params;
+  const locale = resolveLocale(LOCALE);
   const translator = await loadTranslator(locale);
   const meta = buildMetaCopy(translator);
   return {
