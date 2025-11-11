@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { ReactElement } from 'react';
-import { Marked } from 'marked';
+import { Marked, Renderer } from 'marked';
 import { createLocaleAbbrExtension } from '@/lib/markdown/abbrShortcode';
 import type { AbbrLocaleEntry } from '@/lib/locales/translations/abbrRenderer';
 
@@ -14,7 +14,7 @@ type MarkdownProps = {
 };
 
 const createTargetBlankRenderer = () => {
-	const renderer = new marked.Renderer();
+	const renderer = new Renderer();
 	renderer.link = function ({ href, title, tokens }) {
 		const safeHref = href ?? '';
 		const titleAttr = title ? ` title="${title}"` : '';
