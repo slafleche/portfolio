@@ -113,6 +113,7 @@ export default async function HomePage({
           <Content id={caseStudies.href} title={caseStudies.title}>
             <CaseStudy
               id={caseStudies.href}
+              intro={caseStudies.intro}
               caseStudies={caseStudies.list}
             />
           </Content>

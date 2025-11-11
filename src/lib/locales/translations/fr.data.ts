@@ -55,6 +55,7 @@ export const frData = {
 
   case_study: 'Études de cas',
   'case_study-href': 'etudes-de-cas',
+  ...markdownRefs('case-study-00-intro'),
   'case-study-01-title': 'Débuter comme intégrateur de thèmes',
   'case-study-01-subtitle': 'découvrir les contraintes du système',
   ...markdownRefs('case-study-01-content'),
