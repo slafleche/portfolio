@@ -43,6 +43,7 @@ scripts/bash/
 # -----------------------
 src/data/*
 !src/data/.gitkeep
+!src/data/debugRoutes.json
 public/images/*
 public/favicons/*
 /src/data/generated/*

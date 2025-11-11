@@ -111,6 +111,29 @@ async function loadAvailableLocales() {
   }
 }
 
+async function loadDebugRoutes() {
+  const routesFile = path.resolve(
+    process.cwd(),
+    'src',
+    'data',
+    'debugRoutes.json',
+  );
+  try {
+    const raw = await readFile(routesFile, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (
+      !parsed ||
+      typeof parsed !== 'object' ||
+      !Array.isArray(parsed.pages)
+    ) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 /* ------------------------------- Child spawn ------------------------------- */
 
 const interactive = process.env.INTERACTIVE === '1';
@@ -164,6 +187,7 @@ if (interactive && hasTTY) {
 /* ----------------------------- Banner / locales ---------------------------- */
 
 const localesPromise = loadAvailableLocales();
+const debugRoutesPromise = loadDebugRoutes();
 let bannerPrinted = false;
 let stdoutBuffer = '';
 let stderrBuffer = '';
@@ -198,17 +222,24 @@ child.stdout.on('data', async (chunk) => {
 
   stdoutBuffer += text;
   if (stdoutBuffer.includes('Local')) {
-    const locales = await localesPromise.catch(() => []);
-    if (locales.length) {
+    const [
+      locales,
+      debugRoutes,
+    ] = await Promise.all([
+      localesPromise.catch(() => []),
+      debugRoutesPromise.catch(() => null),
+    ]);
+    if (locales.length && debugRoutes?.pages?.length) {
       console.log('info  - Debug routes (local):');
-      const debugPages = ['favicons', 'formelements'];
-      for (const locale of locales) {
-        for (const page of debugPages) {
-          const pathname = `/${locale}/debug/${page}`;
-          const url = `http://localhost:3000${pathname}`;
-          const hyperlink = `\u001b]8;;${url}\u0007${pathname}\u001b]8;;\u0007`;
-          console.log(`         ${hyperlink}  ${url}`);
-        }
+      const preferredLocale = debugRoutes.baseLocale;
+      const debugLocale = locales.includes(preferredLocale)
+        ? preferredLocale
+        : locales[0];
+      for (const page of debugRoutes.pages) {
+        const pathname = `/${debugLocale}/debug/${page}`;
+        const url = `http://localhost:3000${pathname}`;
+        const hyperlink = `\u001b]8;;${url}\u0007${pathname}\u001b]8;;\u0007`;
+        console.log(`         ${hyperlink}  ${url}`);
       }
     } else {
       console.log('info  - Debug routes: none');
