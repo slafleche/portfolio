@@ -28,15 +28,21 @@ const HASH_BY_INTENT: Record<ModalIntent, string> = {
   'contact-policy': POLICY_HASH,
 };
 
-const HASH_TO_INTENT: Record<string, ModalIntent> =
-  Object.entries(HASH_BY_INTENT).reduce(
-    (map, [intent, hash]) => {
-      if (!hash) return map;
-      map[hash.toLowerCase()] = intent as ModalIntent;
-      return map;
-    },
-    {} as Record<string, ModalIntent>,
-  );
+const HASH_TO_INTENT: Record<string, ModalIntent> = Object.entries(
+	HASH_BY_INTENT,
+).reduce((map, [intent, hash]) => {
+	if (!hash) return map;
+	map[hash.toLowerCase()] = intent as ModalIntent;
+	return map;
+}, {} as Record<string, ModalIntent>);
+
+const HASH_ALIASES: Record<string, ModalIntent> = {
+	'#contact': 'contact',
+	'#contactform': 'contact',
+	'#contactpolicy': 'contact-policy',
+};
+
+Object.assign(HASH_TO_INTENT, HASH_ALIASES);
 
 const normalizeHash = (hash?: string | null) =>
   typeof hash === 'string' ? hash.trim().toLowerCase() : '';
@@ -83,12 +89,14 @@ type ContactDialogProviderProps = {
   children: ReactNode;
   formCopy: ContactFormCopy;
   privacyCopy: PrivacyCopy;
+  locale: string;
 };
 
 export function ContactDialogProvider({
   children,
   formCopy,
   privacyCopy,
+  locale,
 }: ContactDialogProviderProps) {
   const [
     intent,
@@ -294,6 +302,7 @@ export function ContactDialogProvider({
                 <ContactForm
                   copy={formCopy}
                   privacyCopy={privacyCopy}
+                  locale={locale}
                 />
               </div>
             </div>

@@ -32,6 +32,7 @@ import { formTokens } from '@/tokens/forms.tokens';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { Markdown } from '@/components/Markdown';
 import { useContactDialog } from '@/components/contact/ContactDialogProvider';
+import { DEFAULT_LOCALE } from '@/lib/locales/locale';
 
 type DebugFieldKey = Exclude<FieldName, 'token'>;
 
@@ -59,6 +60,7 @@ export type ContactFormDebugState = {
   showSubmitOverlay?: boolean;
   scrollStatusIntoView?: boolean;
   enableTelemetryLogs?: boolean;
+  turnstileSimulation?: 'missing' | 'expired';
 };
 
 type ContactFormProps = {
@@ -69,11 +71,69 @@ type ContactFormProps = {
   privacyHref?: string;
   onSubmitted?: (response: ContactFormResponse) => void;
   debugState?: ContactFormDebugState;
+  locale?: string;
 };
 
 const DRAFT_STORAGE_PREFIX = 'contact-form-draft';
 const DEFAULT_ACTION_URL = '/api/contact';
 const DEFAULT_TOKEN = 'mock-turnstile-token';
+const TURNSTILE_SCRIPT_SRC =
+	'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+
+type TurnstileState =
+	| 'bypassed'
+	| 'loading'
+	| 'ready'
+	| 'verified'
+	| 'expired'
+	| 'error';
+
+let turnstileScriptPromise: Promise<void> | null = null;
+
+const loadTurnstileScript = () => {
+	if (typeof window === 'undefined') {
+		return Promise.reject(
+			new Error('Turnstile requires a browser environment.'),
+		);
+	}
+	if (window.turnstile) {
+		return Promise.resolve();
+	}
+	if (turnstileScriptPromise) {
+		return turnstileScriptPromise;
+	}
+	turnstileScriptPromise = new Promise<void>((resolve, reject) => {
+		const existing = document.querySelector<HTMLScriptElement>(
+			'script[data-turnstile]',
+		);
+		if (existing) {
+			existing.addEventListener('load', () => resolve(), {
+				once: true,
+			});
+			existing.addEventListener(
+			 'error',
+			 () => {
+				 turnstileScriptPromise = null;
+				 reject(new Error('Turnstile script failed to load.'));
+			 },
+			 { once: true },
+			);
+			return;
+		}
+		const script = document.createElement('script');
+		script.src = TURNSTILE_SCRIPT_SRC;
+		script.async = true;
+		script.defer = true;
+		script.dataset.turnstile = 'true';
+		script.onload = () => resolve();
+		script.onerror = () => {
+			turnstileScriptPromise = null;
+			reject(new Error('Turnstile script failed to load.'));
+		};
+		document.head.appendChild(script);
+	});
+	return turnstileScriptPromise;
+};
 
 type FormValues = ContactFormDraft;
 
@@ -84,6 +144,11 @@ const INITIAL_VALUES: FormValues = {
   token: DEFAULT_TOKEN,
   hp: '',
 };
+
+const buildInitialValues = (turnstileEnabled: boolean): FormValues => ({
+	...INITIAL_VALUES,
+	token: turnstileEnabled ? '' : INITIAL_VALUES.token,
+});
 
 const serverStatusToFormStatus = (
   code: ContactFormResponse['code'],
@@ -116,13 +181,16 @@ export default function ContactForm({
   formRef = null,
   onSubmitted,
   debugState,
+  locale = DEFAULT_LOCALE,
 }: ContactFormProps) {
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const turnstileEnabled = Boolean(turnstileSiteKey);
   const formId = useId();
   const [
     values,
     setValues,
   ] = useState<FormValues>(() => ({
-    ...INITIAL_VALUES,
+    ...buildInitialValues(turnstileEnabled),
     ...(debugState?.values ?? {}),
   }));
   const [
@@ -152,12 +220,23 @@ export default function ContactForm({
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
   const statusRef = useRef<HTMLDivElement | null>(null);
   const baseMessageHeight = useRef<number | null>(null);
+  const turnstileContainerRef = useRef<HTMLDivElement | null>(null);
+  const turnstileWidgetIdRef = useRef<string | null>(null);
+  const [turnstileStatus, setTurnstileStatus] = useState<TurnstileState>(
+    turnstileEnabled ? 'loading' : 'bypassed',
+  );
+  const debugTurnstileRef = useRef<string | null>(null);
 
   const {
     isPrivacyOpen,
     openPrivacy,
     closePrivacy,
+    isOpen,
   } = useContactDialog();
+  const shouldRenderTurnstileWidget =
+    turnstileEnabled && !debugState?.turnstileSimulation;
+  const showTurnstileSection = turnstileEnabled || Boolean(debugState);
+  const dialogWasOpenRef = useRef(isOpen);
 
 
   const resolvedFieldErrors: FieldErrorMap =
@@ -187,6 +266,121 @@ export default function ContactForm({
     storageKeyRef.current = storageKey;
   }, [storageKey]);
 
+  useEffect(() => {
+    if (!shouldRenderTurnstileWidget) {
+      return;
+    }
+    let cancelled = false;
+
+    const mountTurnstile = async () => {
+      setTurnstileStatus('loading');
+      try {
+        await loadTurnstileScript();
+        if (
+          cancelled ||
+          !turnstileContainerRef.current ||
+          typeof window === 'undefined'
+        ) {
+          setTurnstileStatus('error');
+          return;
+        }
+        const turnstileApi = window.turnstile;
+        if (!turnstileApi) {
+          setTurnstileStatus('error');
+          return;
+        }
+        const widgetId = turnstileApi.render(
+          turnstileContainerRef.current,
+          {
+            sitekey: turnstileSiteKey as string,
+            callback: (token: string) => {
+              setValues((prev) => ({ ...prev, token }));
+              setTurnstileStatus('verified');
+            },
+            'expired-callback': () => {
+              setValues((prev) => ({ ...prev, token: '' }));
+              setTurnstileStatus('expired');
+            },
+            'error-callback': () => {
+              setTurnstileStatus('error');
+            },
+          },
+        );
+        turnstileWidgetIdRef.current = widgetId;
+        setTurnstileStatus('ready');
+      } catch {
+        if (!cancelled) {
+          setTurnstileStatus('error');
+        }
+      }
+    };
+
+    void mountTurnstile();
+
+    return () => {
+      cancelled = true;
+      if (typeof window !== 'undefined') {
+        const turnstileApi = window.turnstile;
+        if (turnstileApi && turnstileWidgetIdRef.current) {
+          turnstileApi.reset(turnstileWidgetIdRef.current);
+        }
+      }
+      turnstileWidgetIdRef.current = null;
+    };
+  }, [
+    shouldRenderTurnstileWidget,
+    turnstileSiteKey,
+    setValues,
+  ]);
+
+  useEffect(() => {
+    const simulation = debugState?.turnstileSimulation ?? null;
+    if (simulation === debugTurnstileRef.current) return;
+    debugTurnstileRef.current = simulation;
+    if (!simulation) {
+      return;
+    }
+    setValues((prev) => ({ ...prev, token: '' }));
+    setTurnstileStatus(simulation === 'expired' ? 'expired' : 'ready');
+  }, [debugState?.turnstileSimulation, setValues]);
+
+  const resetFormState = useCallback(() => {
+    const nextValues = buildInitialValues(turnstileEnabled);
+    setValues(nextValues);
+    setFieldErrors(validateDraft(nextValues).errors);
+    setStatus(null);
+    setStatusMessage('');
+    setHasAttemptedSubmit(false);
+    setIsSubmitting(false);
+    if (turnstileEnabled) {
+      setTurnstileStatus(
+        debugState?.turnstileSimulation === 'expired'
+          ? 'expired'
+          : 'ready',
+      );
+      if (typeof window !== 'undefined') {
+        const turnstileApi = window.turnstile;
+        if (turnstileApi && turnstileWidgetIdRef.current) {
+          turnstileApi.reset(turnstileWidgetIdRef.current);
+        }
+      }
+    } else {
+      setTurnstileStatus('bypassed');
+    }
+    if (isBrowser()) {
+      window.sessionStorage.removeItem(storageKeyRef.current);
+    }
+  }, [turnstileEnabled, debugState?.turnstileSimulation]);
+
+  useEffect(() => {
+    if (debugState) return;
+    const wasOpen = dialogWasOpenRef.current;
+    if (wasOpen && !isOpen) {
+      resetFormState();
+    }
+    dialogWasOpenRef.current = isOpen;
+  }, [debugState, isOpen, resetFormState]);
+
   const applyResponse = useCallback(
     (
       response: ContactFormResponse,
@@ -200,18 +394,12 @@ export default function ContactForm({
       setStatusMessage(nextMessage);
 
       if (response.ok && !options?.preserveValues) {
-        setValues({ ...INITIAL_VALUES });
-        setFieldErrors({});
-        setHasAttemptedSubmit(false);
-        if (isBrowser()) {
-          window.sessionStorage.removeItem(
-            storageKeyRef.current,
-          );
-        }
+        resetFormState();
       }
     },
     [
       copy.statuses,
+      resetFormState,
     ],
   );
 
@@ -250,7 +438,37 @@ export default function ContactForm({
     [debugState?.enableTelemetryLogs],
   );
 
-  const shouldScrollStatus = debugState?.scrollStatusIntoView ?? Boolean(debugState);
+  const submitViaApi = useCallback(
+    async (
+      payload: ContactFormPayload,
+    ): Promise<ContactFormResponse> => {
+      if (typeof window === 'undefined') {
+        throw new Error(
+          'Contact form submissions require a browser environment.',
+        );
+      }
+      const target =
+        actionUrl.startsWith('http://') ||
+        actionUrl.startsWith('https://')
+          ? new URL(actionUrl)
+          : new URL(actionUrl, window.location.origin);
+      target.searchParams.set('locale', locale);
+      const response = await fetch(target.toString(), {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload),
+      });
+      const data = (await response.json()) as ContactFormResponse;
+      return data;
+    },
+    [actionUrl, locale],
+  );
+
+  const shouldScrollStatus = debugState?.scrollStatusIntoView ?? false;
 
   useEffect(() => {
     if (!shouldScrollStatus) return;
@@ -425,6 +643,18 @@ export default function ContactForm({
     [closePrivacy, openPrivacy],
   );
 
+  const handleTurnstileReset = useCallback(() => {
+    if (!shouldRenderTurnstileWidget) return;
+    setValues((prev) => ({ ...prev, token: '' }));
+    setTurnstileStatus('ready');
+    if (typeof window !== 'undefined') {
+      const turnstileApi = window.turnstile;
+      if (turnstileApi && turnstileWidgetIdRef.current) {
+        turnstileApi.reset(turnstileWidgetIdRef.current);
+      }
+    }
+  }, [setValues, shouldRenderTurnstileWidget]);
+
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -457,7 +687,9 @@ export default function ContactForm({
         name: validation.draft.name,
         email: validation.draft.email,
         message: validation.draft.message,
-        token: validation.draft.token || DEFAULT_TOKEN,
+        token:
+          validation.draft.token ||
+          (turnstileEnabled ? '' : DEFAULT_TOKEN),
         hp: validation.draft.hp,
       };
 
@@ -481,11 +713,15 @@ export default function ContactForm({
       setStatus('sending');
       setStatusMessage(copy.statuses.sending);
       logTelemetryEvent('start', payload);
+      const shouldUseMockTransport =
+        !actionUrl || actionUrl === 'mock';
 
       try {
-        const response = await mockSubmit(payload, {
-          messages: copy.statuses,
-        });
+        const response = shouldUseMockTransport
+          ? await mockSubmit(payload, {
+              messages: copy.statuses,
+            })
+          : await submitViaApi(payload);
 
         applyResponse(response);
         logTelemetryEvent(response.code, response);
@@ -513,6 +749,9 @@ export default function ContactForm({
       isSubmitting,
       onSubmitted,
       values,
+      turnstileEnabled,
+      actionUrl,
+      submitViaApi,
     ],
   );
 
@@ -523,6 +762,11 @@ export default function ContactForm({
       errorMessageMap,
     ],
   );
+
+  const tokenErrorMessage =
+    resolvedHasAttemptedSubmit && resolvedFieldErrors.token
+      ? getErrorMessage(resolvedFieldErrors.token)
+      : '';
 
   const shouldShowError = useCallback(
     (field: FieldName) =>
@@ -541,6 +785,26 @@ export default function ContactForm({
     values.message.length,
   ]);
 
+  const turnstileStatusMessage = useMemo(() => {
+    switch (turnstileStatus) {
+      case 'loading':
+        return 'Loading human verification…';
+      case 'ready':
+        return 'Complete the verification above to enable submission.';
+      case 'verified':
+        return 'Verified — you can send your message.';
+      case 'expired':
+        return 'Verification expired. Please try again.';
+      case 'error':
+        return 'Verification is unavailable. Please retry.';
+      case 'bypassed':
+      default:
+        return turnstileEnabled
+          ? null
+          : 'Human verification is disabled in this environment.';
+    }
+  }, [turnstileStatus, turnstileEnabled]);
+
   const derivedButtonState = useMemo(() => {
     if (resolvedIsSubmitting) {
       return {
@@ -548,6 +812,31 @@ export default function ContactForm({
         disabled: true,
         ariaBusy: true,
         dataDebug: 'sending',
+      };
+    }
+
+    if (
+      turnstileEnabled &&
+      !values.token &&
+      status !== 'success' &&
+      status !== 'blocked' &&
+      status !== 'rate_limited' &&
+      status !== 'not_configured'
+    ) {
+      return {
+        label: 'Verify you’re human',
+        disabled: true,
+        ariaBusy: false,
+        dataDebug: 'turnstilePending',
+      };
+    }
+
+    if (turnstileEnabled && turnstileStatus === 'error') {
+      return {
+        label: 'Verification unavailable',
+        disabled: true,
+        ariaBusy: false,
+        dataDebug: 'turnstileError',
       };
     }
 
@@ -578,7 +867,21 @@ export default function ContactForm({
       ariaBusy: false,
       dataDebug: undefined,
     };
-  }, [copy.statuses, copy.submitLabel, resolvedIsSubmitting, status]);
+  }, [
+    copy.statuses,
+    copy.submitLabel,
+    resolvedIsSubmitting,
+    status,
+    turnstileEnabled,
+    turnstileStatus,
+    values.token,
+  ]);
+
+  const canResetTurnstile =
+    shouldRenderTurnstileWidget &&
+    (turnstileStatus === 'expired' || turnstileStatus === 'error');
+
+  const shouldHideFormBody = status === 'success';
 
   const messageCounterId = `${formId}-message-counter`;
   const nameFieldId = `${formId}-name`;
@@ -655,8 +958,10 @@ export default function ContactForm({
             </div>
           ) : null}
         </div>
-        <fieldset className={s.fieldset}>
-          <legend className={s.legend}>{copy.heading}</legend>
+        {!shouldHideFormBody ? (
+          <>
+            <fieldset className={s.fieldset}>
+              <legend className={s.legend}>{copy.heading}</legend>
 
           <div className={s.fieldGroup}>
             <label className={s.labelRow} htmlFor={nameFieldId}>
@@ -817,73 +1122,107 @@ export default function ContactForm({
           </div>
         </fieldset>
 
-      <div
-        aria-hidden="true"
-        className={
-          debugState?.revealHoneypot ? undefined : s.visuallyHidden
-        }
-        style={
-          debugState?.revealHoneypot
-            ? {
-                marginBottom: 12,
-                padding: '8px 12px',
-                border: '1px dotted rgba(255,214,102,0.8)',
-                backgroundColor: 'rgba(255,214,102,0.1)',
-                borderRadius: 8,
-                opacity: 0.7,
-              }
-            : undefined
-        }
-      >
-        <label htmlFor={honeypotFieldId}>
-          {debugState?.revealHoneypot
-            ? `${copy.honeypotLabel} (debug honeypot)`
-            : copy.honeypotLabel}
-        </label>
-        <input
-          id={honeypotFieldId}
-          name="hp"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-          value={values.hp}
-          onChange={(event) =>
-            handleChange('hp', event.target.value)
+        <div
+          aria-hidden="true"
+          className={
+            debugState?.revealHoneypot ? undefined : s.visuallyHidden
           }
-        />
-      </div>
+          style={
+            debugState?.revealHoneypot
+              ? {
+                  marginBottom: 12,
+                  padding: '8px 12px',
+                  border: '1px dotted rgba(255,214,102,0.8)',
+                  backgroundColor: 'rgba(255,214,102,0.1)',
+                  borderRadius: 8,
+                  opacity: 0.7,
+                }
+              : undefined
+          }
+        >
+          <label htmlFor={honeypotFieldId}>
+            {debugState?.revealHoneypot
+              ? `${copy.honeypotLabel} (debug honeypot)`
+              : copy.honeypotLabel}
+          </label>
+          <input
+            id={honeypotFieldId}
+            name="hp"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={values.hp}
+            onChange={(event) =>
+              handleChange('hp', event.target.value)
+            }
+          />
+        </div>
 
-      <input
-        type="hidden"
-        name="token"
-        value={values.token}
-      />
+        <input
+          type="hidden"
+          name="token"
+          value={values.token}
+        />
+
+        {showTurnstileSection ? (
+          <div className={s.turnstileSection} data-state={turnstileStatus}>
+            <div
+              ref={turnstileContainerRef}
+              className={s.turnstileWidget}
+              data-rendered={shouldRenderTurnstileWidget ? 'true' : 'false'}
+            >
+              {!shouldRenderTurnstileWidget ? (
+                <span className={s.turnstilePlaceholder}>
+                  {turnstileSiteKey
+                    ? 'Human verification preview (debug).'
+                    : 'Human verification disabled in this environment.'}
+                </span>
+              ) : null}
+            </div>
+            {(tokenErrorMessage || turnstileStatusMessage) && (
+              <p className={s.turnstileStatus}>
+                {tokenErrorMessage || turnstileStatusMessage}
+                {canResetTurnstile ? (
+                  <button
+                    type="button"
+                    className={s.turnstileReset}
+                    onClick={handleTurnstileReset}
+                  >
+                    Retry
+                  </button>
+                ) : null}
+              </p>
+            )}
+          </div>
+        ) : null}
 
         <p className={s.privacy}>
           {copy.privacy.text}{' '}
-          <button
-            type="button"
-            className={s.privacyLink}
-            onClick={handlePrivacyLinkClick}
-            aria-haspopup="dialog"
-          >
-            {copy.privacy.linkLabel}
-          </button>
-        </p>
+              <button
+                type="button"
+                className={s.privacyLink}
+                onClick={handlePrivacyLinkClick}
+                aria-haspopup="dialog"
+              >
+                {copy.privacy.linkLabel}
+              </button>
+            </p>
 
-        <div className={s.buttonRow}>
-          <button
-            type="submit"
-            className={s.submitButton}
-            disabled={derivedButtonState.disabled}
-            data-debug={derivedButtonState.dataDebug}
-            aria-busy={
-              derivedButtonState.ariaBusy ? 'true' : undefined
-            }
-          >
-            {derivedButtonState.label}
-          </button>
-        </div>
+            <div className={s.buttonRow}>
+              <button
+                type="submit"
+                className={s.submitButton}
+                disabled={derivedButtonState.disabled}
+                data-debug={derivedButtonState.dataDebug}
+                aria-busy={
+                  derivedButtonState.ariaBusy ? 'true' : undefined
+                }
+              >
+                {derivedButtonState.label}
+              </button>
+            </div>
+          </>
+        ) : null}
       </form>
       <Dialog.Root
         open={isPrivacyOpen}

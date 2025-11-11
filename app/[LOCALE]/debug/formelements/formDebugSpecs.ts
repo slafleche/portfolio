@@ -22,6 +22,7 @@ export type DebugCardSpec = {
   logFocus?: boolean;
   showSubmitOverlay?: boolean;
   info?: readonly string[];
+  turnstileSimulation?: 'missing' | 'expired';
 };
 
 export const debugCardSpecs: readonly DebugCardSpec[] = [
@@ -83,6 +84,24 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'All controls show the success affordances pre-submit.',
     ui: { global: 'validEntry' },
     showSubmitOverlay: true,
+  },
+  {
+    id: 'ui-turnstile-missing',
+    title: 'UI — Turnstile pending',
+    description:
+      'Human verification required before enabling the CTA.',
+    ui: { global: 'validEntry' },
+    turnstileSimulation: 'missing',
+    info: ['Button stays disabled until Turnstile resolves.'],
+  },
+  {
+    id: 'ui-turnstile-expired',
+    title: 'UI — Turnstile expired',
+    description:
+      'Challenge expired and needs a retry, showing helper copy.',
+    ui: { global: 'validEntry' },
+    turnstileSimulation: 'expired',
+    info: ['Displays the retry affordance + warning copy.'],
   },
   {
     id: 'ui-readonly',

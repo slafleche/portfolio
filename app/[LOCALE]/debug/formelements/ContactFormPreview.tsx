@@ -15,6 +15,7 @@ type ContactFormPreviewProps = {
   copy: ContactFormCopy;
   privacyCopy: PrivacyCopy;
   debugState: ContactFormDebugState;
+  locale: string;
 };
 
 const noop = () => {};
@@ -23,6 +24,7 @@ export default function ContactFormPreview({
   copy,
   privacyCopy,
   debugState,
+  locale,
 }: ContactFormPreviewProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const overlayButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -64,6 +66,8 @@ export default function ContactFormPreview({
           privacyCopy={privacyCopy}
           debugState={debugState}
           formRef={formRef}
+          locale={locale}
+          actionUrl="mock"
         />
 
         {debugState.showSubmitOverlay ? (

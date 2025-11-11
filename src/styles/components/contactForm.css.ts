@@ -251,6 +251,49 @@ export const privacyLink = style({
   },
 });
 
+export const turnstileSection = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px',
+});
+
+export const turnstileWidget = style({
+  minHeight: '70px',
+  borderRadius: 12,
+  border: '1px solid rgba(245,240,255,0.12)',
+  backgroundColor: 'rgba(8,6,16,0.6)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+  padding: 8,
+});
+
+export const turnstilePlaceholder = style({
+  fontSize: '0.9rem',
+  color: 'rgba(245,240,255,0.75)',
+  textAlign: 'center',
+});
+
+export const turnstileStatus = style({
+  fontSize: '0.85rem',
+  color: 'rgba(245,240,255,0.75)',
+  display: 'flex',
+  gap: '8px',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+});
+
+export const turnstileReset = style({
+  background: 'none',
+  border: 'none',
+  padding: 0,
+  font: 'inherit',
+  color: colorVars.brand.alpha(0.85).css(),
+  textDecoration: 'underline',
+  cursor: 'pointer',
+});
+
 export const privacyOverlay = style({
   position: 'fixed',
   inset: 0,
