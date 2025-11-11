@@ -1,17 +1,14 @@
-import { createElement } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import type { TokenizerAndRendererExtension, Tokens } from 'marked';
 
-import { Abbr } from '@/components/Abbr';
-import { abbrSlug, escapeHtml } from '@/lib/stringUtils';
+import type {
+	AbbrLocaleEntry,
+	AbbrLookup,
+} from '@/lib/locales/translations/abbrRenderer';
+import { renderAbbreviation } from '@/lib/locales/translations/abbrRenderer';
+import { abbrSlug } from '@/lib/stringUtils';
 
 const SHORTCODE_PATTERN = /^\[abbr:([^\]]+)\]/i;
 const TOKEN_TYPE = 'abbr-shortcode';
-
-export type AbbrLocaleEntry = {
-	label?: string | null;
-	definition?: string | null;
-};
 
 type AbbrToken = Tokens.Generic & {
 	type: typeof TOKEN_TYPE;
@@ -20,8 +17,8 @@ type AbbrToken = Tokens.Generic & {
 };
 
 export type AbbrShortcodeExtensionOptions = {
-	lookup: (slug: string) => AbbrLocaleEntry | undefined;
-	onMissing?: (info: { slug: string; term: string }) => string | void;
+	lookup: AbbrLookup;
+	locale: string;
 	slugify?: (term: string) => string;
 };
 
@@ -34,8 +31,6 @@ export const createAbbrShortcodeExtension = (
 	options: AbbrShortcodeExtensionOptions,
 ): TokenizerAndRendererExtension => {
 	const slugify = options.slugify ?? abbrSlug;
-	const escapeInline = (value: string) =>
-		escapeHtml(value, { convertLineBreaks: false });
 
 	return {
 		name: TOKEN_TYPE,
@@ -62,38 +57,21 @@ export const createAbbrShortcodeExtension = (
 			if (token.type !== TOKEN_TYPE) return undefined;
 
 			const abbrToken = token as AbbrToken;
-			const entry = options.lookup(abbrToken.slug);
-
-			const replacementFromMissing = () =>
-				options.onMissing?.({
-					slug: abbrToken.slug,
-					term: abbrToken.term,
-				});
-
-			if (!entry) {
-				return (
-					replacementFromMissing() ?? escapeInline(abbrToken.term)
-				);
-			}
-
-			const definition = sanitizeValue(entry.definition);
-			if (!definition) {
-				return (
-					replacementFromMissing() ?? escapeInline(abbrToken.term)
-				);
-			}
-
-			const label = sanitizeValue(entry.label ?? undefined);
-			if (!label) {
-				return escapeInline(definition);
-			}
-
-			return renderToStaticMarkup(
-				createElement(Abbr, {
-					label,
-					definition,
-				}),
-			);
+			return renderAbbreviation({
+				locale: options.locale,
+				term: abbrToken.term,
+				lookup: options.lookup,
+				slugify,
+			});
 		},
 	};
 };
+
+export const createLocaleAbbrExtension = (
+	locale: string,
+	entries: Record<string, AbbrLocaleEntry>,
+) =>
+	createAbbrShortcodeExtension({
+		locale,
+		lookup: (slug) => entries[slug],
+	});

@@ -6,7 +6,7 @@ type MergeSections<T extends ReadonlyArray<RecordLike>> =
 				MergeSections<
 					Tail extends ReadonlyArray<RecordLike> ? Tail : []
 				>
-		: {};
+		: Record<string, never>;
 
 export function mergeLocaleSections<
 	Base extends RecordLike,

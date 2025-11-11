@@ -9,6 +9,7 @@ import {
 } from '../src/lib/locales/generated/markdown.gen';
 import type { LocaleMessagesShape } from '../src/lib/locales/localeTypes';
 import type { Locale } from '../src/lib/locales/translations';
+import { resolveAbbrShortcodes } from '../src/lib/locales/translations/resolveAbbrShortcodes';
 
 type MarkdownKey = (typeof MARKDOWN_MESSAGE_KEYS)[number];
 
@@ -101,6 +102,31 @@ const ensureGeneratedContentIsCurrent = (
 	}
 };
 
+const extractAbbreviationEntries = (messages: LocaleMessagesShape) => {
+	const entries: Record<string, unknown> = {};
+	for (const [key, value] of Object.entries(messages)) {
+		if (key.startsWith('abbr-')) {
+			entries[key] = value;
+		}
+	}
+	return entries;
+};
+
+const transformMarkdownWithAbbr = (
+	locale: Locale,
+	markdown: string,
+	abbrEntries: Record<string, unknown>,
+) => {
+	const resolved = resolveAbbrShortcodes(
+		{
+			...abbrEntries,
+			__content: markdown,
+		},
+		locale,
+	);
+	return resolved.__content as string;
+};
+
 const main = async () => {
 	process.env.NODE_ENV = 'production';
 
@@ -121,6 +147,8 @@ const main = async () => {
 	}
 
 	for (const { locale, messages } of localeMessages) {
+		const abbrEntries = extractAbbreviationEntries(messages);
+
 		for (const key of allKeys) {
 			const value = (messages as Record<string, unknown>)[key];
 
@@ -148,12 +176,6 @@ const main = async () => {
 					expected,
 				);
 
-				const generated =
-					MARKDOWN_MESSAGES[locale]?.[
-						key as MarkdownKey
-					];
-				if (generated === undefined) continue;
-
 				if (typeof value !== 'string') {
 					recordIssue({
 						locale,
@@ -163,12 +185,17 @@ const main = async () => {
 					continue;
 				}
 
-				if (value !== generated) {
+				const processedExpected = transformMarkdownWithAbbr(
+					locale,
+					expected,
+					abbrEntries,
+				);
+
+				if (value !== processedExpected) {
 					recordIssue({
 						locale,
 						key,
-						reason:
-							'message value does not match generated markdown content',
+						reason: 'message value does not match markdown content',
 					});
 				}
 			}
