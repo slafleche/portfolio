@@ -31,6 +31,7 @@ export default async function SiteLayout({
         <ContactDialogProvider
           formCopy={contactFormCopy}
           privacyCopy={privacyCopy}
+          locale={locale}
         >
           <SkipNavContent id="body">{children}</SkipNavContent>
         </ContactDialogProvider>

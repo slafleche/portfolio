@@ -42,6 +42,7 @@ type ResolvedCard = {
   fields: Record<FieldKey, FieldSnapshot>;
   formMode: FormMode;
   apiScenario?: ApiScenario;
+  turnstileSimulation?: 'missing' | 'expired';
 };
 
 const fieldOrder: readonly FieldKey[] = [
@@ -195,6 +196,7 @@ const resolveCard = (
     fields,
     formMode,
     apiScenario: scenario,
+    turnstileSimulation: spec.turnstileSimulation,
   };
 };
 
@@ -309,8 +311,9 @@ const buildDebugState = (
     revealHoneypot: Boolean(card.spec.revealHoneypot),
     logFocusEvents: Boolean(card.spec.logFocus),
     showSubmitOverlay,
-    scrollStatusIntoView: true,
+    scrollStatusIntoView: false,
     enableTelemetryLogs: true,
+    turnstileSimulation: card.turnstileSimulation,
   };
 };
 
@@ -506,6 +509,7 @@ export default async function FormElementsDebugPage({
                     copy={contactFormCopy}
                     privacyCopy={privacyCopy}
                     debugState={debugState}
+                    locale={locale}
                   />
 
                   <CardMeta card={card} />

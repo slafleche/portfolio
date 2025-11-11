@@ -97,7 +97,12 @@ const dialogValue = {
 const renderForm = () =>
   render(
     <ContactDialogContext.Provider value={dialogValue}>
-      <ContactForm copy={contactCopy} privacyCopy={privacyCopy} />
+      <ContactForm
+        copy={contactCopy}
+        privacyCopy={privacyCopy}
+        locale="en"
+        actionUrl="mock"
+      />
     </ContactDialogContext.Provider>,
   );
 
