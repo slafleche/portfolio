@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { createDomId } from '@/lib/dom';
 import ChevronDown from '@/components/icons/ChevronDown';
 import * as s from '@/styles/components/accordion.css';
+import { isLocaleRichText } from '@/lib/stringUtils';
 
 type AccordionItemData = {
   id?: string;
@@ -77,10 +78,30 @@ export function Accordion({
           <AccordionPrimitive.Header className={s.header}>
             <AccordionPrimitive.Trigger className={s.trigger}>
               <span className={s.triggerText}>
-                <span className={s.triggerLabel}>{item.heading}</span>
+                <span className={s.triggerLabel}>
+                  {typeof item.heading === 'string' &&
+                  isLocaleRichText(item.heading) ? (
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: item.heading,
+                      }}
+                    />
+                  ) : (
+                    item.heading
+                  )}
+                </span>
                 {item.subHeading ? (
                   <span className={s.triggerSubtitle}>
-                    {item.subHeading}
+                    {typeof item.subHeading === 'string' &&
+                    isLocaleRichText(item.subHeading) ? (
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: item.subHeading,
+                        }}
+                      />
+                    ) : (
+                      item.subHeading
+                    )}
                   </span>
                 ) : null}
               </span>
