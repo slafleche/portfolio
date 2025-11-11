@@ -58,6 +58,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.1",
     "undici": "^7.16.0",
+    "vitest": "^4.0.8",
     "wait-on": "^9.0.1"
   },
   "lint-staged": {
@@ -93,6 +94,8 @@
     "svg:clean": "yarn svgo && yarn format:svg",
     "svgo": "node scripts/optimizeSvgs.mjs --write",
     "favicons": "node --import tsx scripts/generateFavicons.ts",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
     "upgrade:latest": "yarn up \"*@latest\" \"@*/*@latest\" && yarn dedupe"
   }
 }
