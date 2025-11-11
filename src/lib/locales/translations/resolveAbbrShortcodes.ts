@@ -1,5 +1,6 @@
 import type { AbbrLocaleEntry } from './abbrRenderer';
 import { renderAbbreviation } from './abbrRenderer';
+import { toLocaleRichText } from '@/lib/stringUtils';
 
 type AnyRecord = Record<string, unknown>;
 
@@ -65,5 +66,24 @@ export function resolveAbbrShortcodes<
 	T extends Record<string, unknown>,
 >(data: T, locale: string): T {
 	const lookup = collectAbbreviations(data);
-	return transformValue(data, lookup, locale) as T;
+	const transformed = transformValue(data, lookup, locale) as T;
+
+	const tagRichText = (value: unknown): unknown => {
+		if (typeof value === 'string' && value.includes('<abbr')) {
+			return toLocaleRichText(value);
+		}
+		if (Array.isArray(value)) {
+			return value.map(tagRichText);
+		}
+		if (value && typeof value === 'object') {
+			const entries = Object.entries(value).map(([key, child]) => [
+				key,
+				tagRichText(child),
+			]);
+			return Object.fromEntries(entries);
+		}
+		return value;
+	};
+
+	return tagRichText(transformed) as T;
 }

@@ -61,7 +61,8 @@
   locale data (`abbr-…` entry) before using a new shortcode to avoid surprises.
 - The shortcode parser also runs across Markdown content and plain locale
   strings, so components stay “dumb”—they accept either plain strings or the
-  branded rich text emitted by the loader without reimplementing parsing logic.
+  branded `LocaleRichText` emitted by the loader without reimplementing parsing
+  logic. Headings/titles automatically render the trusted HTML when present.
 
 ### Linting & Guardrails
 

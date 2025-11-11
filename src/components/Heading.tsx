@@ -2,6 +2,7 @@ import type {
 	ComponentPropsWithoutRef,
 	ReactNode,
 } from 'react';
+import { isLocaleRichText } from '@/lib/stringUtils';
 
 export interface IHeadingDepth {
 	depth?: 2 | 3 | 4 | 5 | 6;
@@ -27,7 +28,15 @@ export default function Heading({
 			data-ui="heading"
 			{...rest}
 		>
-			{children}
+			{typeof children === 'string' && isLocaleRichText(children) ? (
+				<span
+					dangerouslySetInnerHTML={{
+						__html: children,
+					}}
+				/>
+			) : (
+				children
+			)}
 		</Tag>
 	);
 }

@@ -1,12 +1,16 @@
 import { memo } from 'react';
 import type { ReactElement } from 'react';
-import { marked } from 'marked';
+import { Marked } from 'marked';
+import { createLocaleAbbrExtension } from '@/lib/markdown/abbrShortcode';
+import type { AbbrLocaleEntry } from '@/lib/locales/translations/abbrRenderer';
 
 type MarkdownProps = {
 	id?: string;
 	source?: string | null;
 	className?: string;
 	openLinksInNewTab?: boolean;
+	locale?: string;
+	abbrEntries?: Record<string, AbbrLocaleEntry>;
 };
 
 const createTargetBlankRenderer = () => {
@@ -25,19 +29,30 @@ function MarkdownBase({
 	source,
 	className,
 	openLinksInNewTab = true,
+	locale,
+	abbrEntries,
 }: MarkdownProps): ReactElement | null {
 	if (typeof source !== 'string' || source.trim() === '') {
 		return null;
 	}
-	const html = openLinksInNewTab
-		? marked.parse(source, { renderer: createTargetBlankRenderer() })
-		: marked.parse(source);
+
+	const parser = new Marked({
+		renderer: openLinksInNewTab ? createTargetBlankRenderer() : undefined,
+	});
+
+	if (locale && abbrEntries) {
+		parser.use(createLocaleAbbrExtension(locale, abbrEntries));
+	}
+
+	const parsed = parser.parse(source);
+	const html = typeof parsed === 'string' ? parsed : '';
+
 	return (
 		<div
 			id={id}
 			className={className}
 			dangerouslySetInnerHTML={{
-				__html: typeof html === 'string' ? html : '',
+				__html: html,
 			}}
 		/>
 	);
