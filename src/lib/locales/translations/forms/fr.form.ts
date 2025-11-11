@@ -32,9 +32,9 @@ export const frFormCopy = {
 	'form-status-rate_limited':
 		'Trop de tentatives. Veuillez patienter une minute.',
 	'form-status-service_unavailable':
-		'Le service est indisponible. Veuillez réessayer bientôt.',
+		"Le service d'envoi est temporairement indisponible. Réessayez bientôt.",
 	'form-status-not_configured':
-		"Le service de courriel n'est pas encore configuré. Réessayez plus tard.",
+		"Le service d'envoi n'est pas encore configuré. Réessayez plus tard.",
 	'form-status-blocked':
 		'Nous ne pouvons pas envoyer votre message pour le moment.',
 } as const;

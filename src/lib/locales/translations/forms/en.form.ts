@@ -29,8 +29,8 @@ export const enFormCopy = {
 	'form-status-rate_limited':
 		'Too many attempts. Please wait a minute.',
 	'form-status-service_unavailable':
-		'Service is unavailable. Please try again shortly.',
+		"Email service is temporarily unavailable. We'll retry soon.",
 	'form-status-not_configured':
-		'Email service not configured yet. Try again later.',
+		"Email service isn't configured yet. Please try again later.",
 	'form-status-blocked': "We couldn't send your message right now.",
 } as const;

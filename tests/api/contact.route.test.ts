@@ -5,7 +5,10 @@ import {
 	resetContactRateLimit,
 } from '@/server/rateLimit/contactRateLimit';
 import { verifyTurnstileToken } from '@/server/turnstile/verifyTurnstileToken';
-import { deliverContactMessage } from '@/server/contact/deliverContactMessage';
+import {
+	deliverContactMessage,
+	type DeliveryResult,
+} from '@/server/contact/deliverContactMessage';
 
 vi.mock('@/server/turnstile/verifyTurnstileToken', () => ({
 	verifyTurnstileToken: vi.fn(),
@@ -17,6 +20,18 @@ vi.mock('@/server/contact/deliverContactMessage', () => ({
 
 const mockedVerify = vi.mocked(verifyTurnstileToken);
 const mockedDeliver = vi.mocked(deliverContactMessage);
+
+const buildDeliveryResult = (
+	overrides: Partial<DeliveryResult> = {},
+): DeliveryResult => ({
+	ok: true,
+	status: 202,
+	error: undefined,
+	attempts: [],
+	retries: 0,
+	retryReasons: [],
+	...overrides,
+});
 
 const buildRequest = (
 	body: Record<string, unknown>,
@@ -45,13 +60,13 @@ const validPayload = () => ({
 	hp: '',
 });
 
-describe('POST /api/contact', () => {
-	beforeEach(() => {
-		resetContactRateLimit();
-		vi.clearAllMocks();
-		mockedVerify.mockResolvedValue({ ok: true });
-		mockedDeliver.mockResolvedValue({ ok: true });
-	});
+	describe('POST /api/contact', () => {
+		beforeEach(() => {
+			resetContactRateLimit();
+			vi.clearAllMocks();
+			mockedVerify.mockResolvedValue({ ok: true });
+			mockedDeliver.mockResolvedValue(buildDeliveryResult());
+		});
 
 	it('returns localized success for valid payloads', async () => {
 		const infoSpy = vi
@@ -167,6 +182,54 @@ describe('POST /api/contact', () => {
 		expect(second.status).toBe(429);
 		expect(json.code).toBe('rate_limited');
 		expect(mockedDeliver).toHaveBeenCalledTimes(1);
+	});
+
+	it('returns service_unavailable when Brevo rejects payload', async () => {
+		mockedDeliver.mockResolvedValue(
+			buildDeliveryResult({
+				ok: false,
+				status: 500,
+				error: { message: 'down' },
+			}),
+		);
+		const response = await contactRoute(
+			buildRequest(validPayload(), { locale: 'en' }),
+		);
+		const json = await response.json();
+		expect(response.status).toBe(500);
+		expect(json.code).toBe('service_unavailable');
+	});
+
+	it('maps Brevo validation errors to validation_error code', async () => {
+		mockedDeliver.mockResolvedValue(
+			buildDeliveryResult({
+				ok: false,
+				status: 400,
+				error: { message: 'invalid' },
+			}),
+		);
+		const response = await contactRoute(
+			buildRequest(validPayload(), { locale: 'en' }),
+		);
+		const json = await response.json();
+		expect(response.status).toBe(400);
+		expect(json.code).toBe('validation_error');
+	});
+
+	it('maps Brevo not-configured response to not_configured code', async () => {
+		mockedDeliver.mockResolvedValue(
+			buildDeliveryResult({
+				ok: false,
+				status: 503,
+				error: new Error('Brevo not configured'),
+			}),
+		);
+		const response = await contactRoute(
+			buildRequest(validPayload(), { locale: 'en' }),
+		);
+		const json = await response.json();
+		expect(response.status).toBe(503);
+		expect(json.code).toBe('not_configured');
 	});
 
 	it('rejects oversized payloads with 413', async () => {
