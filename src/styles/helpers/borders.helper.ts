@@ -131,46 +131,49 @@ type EdgeState = {
 const emptyEdge = (): EdgeState => ({ active: false });
 
 const applyEdgeSpec = (
-  edge: EdgeState,
-  spec?: EdgeSpec,
+	edge: EdgeState,
+	spec?: EdgeSpec,
 ): EdgeState => {
-  if (spec === undefined || spec === false) return edge;
-  if (spec === true) return { ...edge, active: true };
+	if (spec === undefined || spec === false) return edge;
+	if (spec === true) {
+		edge.active = true;
+		return edge;
+	}
 
-  // Narrow to object before property access
-  if (typeof spec !== 'object' || spec === null) return edge;
+	// Narrow to object before property access
+	if (typeof spec !== 'object' || spec === null) return edge;
 
-  const next: EdgeState = { ...edge, active: true };
+	edge.active = true;
 
-  if ('width' in spec && spec.width !== undefined) {
-    next.width =
-      asWidth((spec as { width?: BorderWidthInput }).width) ??
-      fallbackWidth();
-    next._wExp = true;
-  }
+	if ('width' in spec && spec.width !== undefined) {
+		edge.width =
+			asWidth((spec as { width?: BorderWidthInput }).width) ??
+			fallbackWidth();
+		edge._wExp = true;
+	}
 
-  if ('style' in spec && spec.style !== undefined) {
-    next.style = (
-      spec as { style?: CSS_TYPES.Property.BorderStyle }
-    ).style!;
-    next._sExp = true;
-  }
+	if ('style' in spec && spec.style !== undefined) {
+		edge.style = (
+			spec as { style?: CSS_TYPES.Property.BorderStyle }
+		).style!;
+		edge._sExp = true;
+	}
 
-  if (
-    'color' in spec &&
-    (spec as { color?: unknown }).color !== undefined
-  ) {
-    const c = (spec as { color?: unknown }).color;
-    next.color =
-      typeof c === 'string'
-        ? c // 'transparent' / 'currentColor' etc.
-        : hasCssMethod(c)
-          ? c.css()
-          : fallbackColor(); // dev-only: you can throw here if you prefer
-    next._cExp = true;
-  }
+	if (
+		'color' in spec &&
+		(spec as { color?: unknown }).color !== undefined
+	) {
+		const c = (spec as { color?: unknown }).color;
+		edge.color =
+			typeof c === 'string'
+				? c // 'transparent' / 'currentColor' etc.
+				: hasCssMethod(c)
+					? c.css()
+					: fallbackColor(); // dev-only: you can throw here if you prefer
+		edge._cExp = true;
+	}
 
-  return next;
+	return edge;
 };
 
 const resolveIntentToEdges = (intent: BorderIntent | undefined) => {
