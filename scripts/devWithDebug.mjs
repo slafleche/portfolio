@@ -243,6 +243,11 @@ child.stdout.on('data', async (chunk) => {
       localesPromise.catch(() => []),
       debugRoutesPromise.catch(() => null),
     ]);
+    const formatLink = (pathname) => {
+      const url = `http://localhost:3000${pathname}`;
+      const hyperlink = `\u001b]8;;${url}\u0007${pathname}\u001b]8;;\u0007`;
+      return { hyperlink, url };
+    };
     if (locales.length && debugRoutes?.pages?.length) {
       console.log('info  - Debug routes (local):');
       const preferredLocale = debugRoutes.baseLocale;
@@ -251,13 +256,15 @@ child.stdout.on('data', async (chunk) => {
         : locales[0];
       for (const page of debugRoutes.pages) {
         const pathname = `/${debugLocale}/debug/${page}`;
-        const url = `http://localhost:3000${pathname}`;
-        const hyperlink = `\u001b]8;;${url}\u0007${pathname}\u001b]8;;\u0007`;
+        const { hyperlink, url } = formatLink(pathname);
         console.log(`         ${hyperlink}  ${url}`);
       }
     } else {
       console.log('info  - Debug routes: none');
     }
+    const { hyperlink, url } = formatLink('/api/contact/health');
+    console.log('info  - Contact health endpoint:');
+    console.log(`         ${hyperlink}  ${url}`);
     bannerPrinted = true;
     stdoutBuffer = '';
   } else if (stdoutBuffer.length > 1024) {
