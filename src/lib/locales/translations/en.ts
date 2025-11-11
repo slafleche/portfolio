@@ -2,10 +2,14 @@ import { MARKDOWN_MESSAGES } from '../generated/markdown.gen';
 import type { LocaleMessagesShape } from '../localeTypes';
 import { resolveMarkdownPlaceholders } from './markdownRefs';
 import { enData } from './en.data';
+import { resolveAbbrShortcodes } from './resolveAbbrShortcodes';
 
-const enResolved = resolveMarkdownPlaceholders(
-	enData,
-	MARKDOWN_MESSAGES.en,
+const enResolved = resolveAbbrShortcodes(
+	resolveMarkdownPlaceholders(
+		enData,
+		MARKDOWN_MESSAGES.en,
+		'en',
+	),
 	'en',
 );
 

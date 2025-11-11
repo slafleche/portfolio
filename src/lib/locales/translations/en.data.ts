@@ -1,6 +1,10 @@
 import { markdownRefs } from './markdownRefs';
+import { enAbbreviations } from './abbreviations/en.abbr';
+import { enCaseStudies } from './caseStudies/en.caseStudies';
+import { enFormCopy } from './forms/en.form';
+import { mergeLocaleSections } from './mergeLocaleSections';
 
-export const enData = {
+const enBaseData = {
   label: 'English',
   'abbreviated-label': 'EN',
   redirecting: 'Redirecting...',
@@ -43,72 +47,6 @@ export const enData = {
   'console-curiosity-hint':
     '[hint] The code shows what I built; curiosity() shows how I think.',
 
-  // Abbreviations
-  'abbr-r&d': {
-    label: 'R&D',
-    definition: 'Research and Development',
-  },
-  'abbr-api': {
-    label: 'API',
-    definition: 'Application Programming Interface',
-  },
-  'abbr-ai': {
-    label: 'AI',
-    definition: 'Artificial Intelligence',
-  },
-  'abbr-ea': {
-    label: 'EA',
-    definition: 'Electronic Arts',
-  },
-  'abbr-banq': {
-    label: 'BAnQ',
-    definition: 'Bibliothèque et Archives nationales du Québec',
-  },
-  'abbr-css': {
-    label: 'CSS',
-    definition: 'Cascading Style Sheets',
-  },
-  'abbr-html': {
-    label: 'HTML',
-    definition: 'HyperText Markup Language',
-  },
-  'abbr-js': {
-    label: 'JS',
-    definition: 'JavaScript',
-  },
-  'abbr-ui': {
-    label: 'UI',
-    definition: 'User Interface',
-  },
-  'abbr-json': {
-    label: 'JSON',
-    definition: 'JavaScript Object Notation',
-  },
-  'abbr-svg': {
-    label: 'SVG',
-    definition: 'Scalable Vector Graphics',
-  },
-  'abbr-svgo': {
-    label: 'SVGO',
-    definition: 'Scalable Vector Graphics Optimizer',
-  },
-  'abbr-id': {
-    label: 'ID',
-    definition: 'Identifier',
-  },
-  'abbr-url': {
-    label: 'URL',
-    definition: 'Uniform Resource Locator',
-  },
-  'abbr-todo': {
-    label: 'TODO',
-    definition: 'To-do (work item reminder)',
-  },
-  'abbr-eslint': {
-    label: 'ESLint',
-    definition: 'JavaScript linting tool for ECMAScript code',
-  },
-
   approach: 'Approach',
   'approach-href': 'approach',
   ...markdownRefs('approach-content'),
@@ -116,28 +54,6 @@ export const enData = {
   about: 'About Me',
   'about-href': 'about',
   ...markdownRefs('about-content'),
-
-  case_study: 'Case Study',
-  'case_study-href': 'case_study',
-  ...markdownRefs('case-study-00-intro'),
-  'case-study-01-title': 'Starting as a themer',
-  'case-study-01-subtitle': 'discovering system constraints',
-  ...markdownRefs('case-study-01-content'),
-  'case-study-02-title': 'Building internal tooling',
-  'case-study-02-subtitle': 'eliminating repetitive styling work',
-  ...markdownRefs('case-study-02-content'),
-  'case-study-03-title': 'Moving to [abbr:R&D]',
-  'case-study-03-subtitle': 'contributing to core product and architecture',
-  ...markdownRefs('case-study-03-content'),
-  'case-study-04-title': 'Adapting legacy code',
-  'case-study-04-subtitle': 'connecting Forums to modern theming',
-  ...markdownRefs('case-study-04-content'),
-  'case-study-05-title': 'Designing token architecture',
-  'case-study-05-subtitle': 'unifying themes across products',
-  ...markdownRefs('case-study-05-content'),
-  'case-study-06-title': 'Lessons learned',
-  'case-study-06-subtitle': 'systems that serve designers, developers, and users',
-  ...markdownRefs('case-study-06-content'),
 
   projects: 'Projects',
   'projects-href': 'projects',
@@ -187,41 +103,13 @@ export const enData = {
   'privacy-href': 'privacy',
   'privacy-updated': '',
   ...markdownRefs('privacy-content'),
-
-  'form-heading': "Let's work together",
-  'form-intro':
-    "Share a few details and I'll get back as soon as I can.",
-  'form-name-label': 'Name',
-  'form-email-label': 'Email',
-  'form-message-label': 'Message',
-  'form-submit-label': 'Send message',
-  'form-counter-remaining': '{count} characters remaining',
-  'form-privacy-text': 'We only use this to reply.',
-  'form-privacy-link-label': 'Privacy policy',
-  'form-privacy-close-label': 'Back to form',
-  'form-honeypot-label': 'Leave this field blank',
-  'form-error-name-required': 'Please enter your name.',
-  'form-error-name-too_long': 'Name is too long.',
-  'form-error-email-invalid': 'Please enter a valid email address.',
-  'form-error-message-required':
-    'Please write a message before sending.',
-  'form-error-message-too_long': 'Message is too long.',
-  'form-error-message-too_many_links':
-    'Please remove extra links (limit two [abbr:URL]s).',
-  'form-error-token-missing': "Please confirm you're not a bot.",
-  'form-status-sending': 'Sending your message…',
-  'form-status-success': 'Message sent — thank you!',
-  'form-status-generic_error':
-    "We couldn't send your message right now. Please try again.",
-  'form-status-validation_error':
-    'Please check the fields and try again.',
-  'form-status-rate_limited':
-    'Too many attempts. Please wait a minute.',
-  'form-status-service_unavailable':
-    'Service is unavailable. Please try again shortly.',
-  'form-status-not_configured':
-    'Email service not configured yet. Try again later.',
-  'form-status-blocked': "We couldn't send your message right now.",
 } as const;
+
+export const enData = mergeLocaleSections(
+  enBaseData,
+  enAbbreviations,
+  enCaseStudies,
+  enFormCopy,
+);
 
 export type EnData = typeof enData;
