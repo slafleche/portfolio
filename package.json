@@ -6,6 +6,7 @@
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-toast": "^1.2.1",
     "chroma-js": "^3.1.2",
     "clsx": "^2.1.1",
     "culori": "^4.0.2",

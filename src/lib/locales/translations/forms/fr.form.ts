@@ -18,6 +18,8 @@ export const frFormCopy = {
 		'Veuillez entrer une adresse courriel valide.',
 	'form-error-message-required':
 		"Veuillez écrire un message avant de l'envoyer.",
+	'form-error-message-too_short':
+		'Écrivez un message un peu plus long (au moins {min} caractères).',
 	'form-error-message-too_long': 'Le message est trop long.',
 	'form-error-message-too_many_links':
 		'Veuillez retirer quelques liens (maximum deux [abbr:URL]).',

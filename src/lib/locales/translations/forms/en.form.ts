@@ -16,6 +16,8 @@ export const enFormCopy = {
 	'form-error-email-invalid': 'Please enter a valid email address.',
 	'form-error-message-required':
 		'Please write a message before sending.',
+	'form-error-message-too_short':
+		'Please write a longer message (at least {min} characters).',
 	'form-error-message-too_long': 'Message is too long.',
 	'form-error-message-too_many_links':
 		'Please remove extra links (limit two [abbr:URL]s).',

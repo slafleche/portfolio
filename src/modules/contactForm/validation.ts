@@ -101,8 +101,10 @@ export function validateDraft(
   }
 
   const minMessageLength = formTokens.message.minChars;
-  if (draft.message.length < minMessageLength) {
+  if (draft.message.length === 0) {
     errors.message = 'form-error-message-required';
+  } else if (draft.message.length < minMessageLength) {
+    errors.message = 'form-error-message-too_short';
   } else if (draft.message.length > formTokens.message.maxChars) {
     errors.message = 'form-error-message-too_long';
   } else if (countUrls(draft.message) > MESSAGE_URL_LIMIT) {
