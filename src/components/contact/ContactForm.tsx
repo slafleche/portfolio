@@ -236,6 +236,8 @@ export default function ContactForm({
   const shouldRenderTurnstileWidget =
     turnstileEnabled && !debugState?.turnstileSimulation;
   const showTurnstileSection = turnstileEnabled || Boolean(debugState);
+  const shouldHideFormBody = status === 'success';
+  const shouldFocusStatus = shouldHideFormBody;
   const dialogWasOpenRef = useRef(isOpen);
 
 
@@ -265,6 +267,13 @@ export default function ContactForm({
   useEffect(() => {
     storageKeyRef.current = storageKey;
   }, [storageKey]);
+
+  useEffect(() => {
+    if (!shouldFocusStatus) return;
+    if (statusRef.current) {
+      statusRef.current.focus({ preventScroll: true });
+    }
+  }, [shouldFocusStatus]);
 
   useEffect(() => {
     if (!shouldRenderTurnstileWidget) {
@@ -881,8 +890,6 @@ export default function ContactForm({
     shouldRenderTurnstileWidget &&
     (turnstileStatus === 'expired' || turnstileStatus === 'error');
 
-  const shouldHideFormBody = status === 'success';
-
   const messageCounterId = `${formId}-message-counter`;
   const nameFieldId = `${formId}-name`;
   const emailFieldId = `${formId}-email`;
@@ -951,8 +958,9 @@ export default function ContactForm({
               ref={statusRef}
               className={clsx(statusClassName)}
               role="status"
-              aria-live="polite"
+              aria-live={status === 'success' ? 'assertive' : 'polite'}
               aria-atomic="true"
+              tabIndex={-1}
             >
               <span className={s.statusText}>{statusMessage}</span>
             </div>

@@ -105,6 +105,23 @@ export function ContactDialogProvider({
   const intentRef = useRef<ModalIntent>('none');
   const baseHistorySeededRef = useRef(false);
   const previousIntentRef = useRef<ModalIntent>('none');
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  const captureFocusAnchor = useCallback(() => {
+    if (typeof document === 'undefined') return;
+    const active = document.activeElement;
+    if (active && active instanceof HTMLElement) {
+      previousFocusRef.current = active;
+    }
+  }, []);
+
+  const restoreFocusAnchor = useCallback(() => {
+    const target = previousFocusRef.current;
+    if (target && typeof target.focus === 'function') {
+      target.focus();
+    }
+    previousFocusRef.current = null;
+  }, []);
 
   const applyIntent = useCallback(
     (
@@ -220,12 +237,14 @@ export function ContactDialogProvider({
   }, [applyIntent]);
 
   const openContact = useCallback(() => {
+    captureFocusAnchor();
     applyIntent('contact', { history: 'push' });
-  }, [applyIntent]);
+  }, [applyIntent, captureFocusAnchor]);
 
   const closeContact = useCallback(() => {
     applyIntent('none', { history: 'replace' });
-  }, [applyIntent]);
+    setTimeout(restoreFocusAnchor, 0);
+  }, [applyIntent, restoreFocusAnchor]);
 
   const openPrivacy = useCallback(() => {
     const prevIntent = intentRef.current;
