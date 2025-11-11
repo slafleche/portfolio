@@ -83,14 +83,12 @@ type ContactDialogProviderProps = {
   children: ReactNode;
   formCopy: ContactFormCopy;
   privacyCopy: PrivacyCopy;
-  locale: string;
 };
 
 export function ContactDialogProvider({
   children,
   formCopy,
   privacyCopy,
-  locale,
 }: ContactDialogProviderProps) {
   const [
     intent,
@@ -295,7 +293,6 @@ export function ContactDialogProvider({
                 </Dialog.Description>
                 <ContactForm
                   copy={formCopy}
-                  locale={locale}
                   privacyCopy={privacyCopy}
                 />
               </div>
