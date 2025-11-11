@@ -68,3 +68,13 @@ export function escapeHtml(
 
   return result;
 }
+
+export type LocaleRichText = string & {
+  readonly __localeRichText: true;
+};
+
+export const isLocaleRichText = (value: unknown): value is LocaleRichText =>
+  typeof value === 'string' && value.includes('<abbr');
+
+export const toLocaleRichText = (value: string): LocaleRichText =>
+  value as LocaleRichText;
