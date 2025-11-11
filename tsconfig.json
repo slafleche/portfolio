@@ -38,6 +38,7 @@
 	"include": [
 		"app/[LOCALE]/**/*.tsx",
 		"src/**/*",
+		"tests/**/*",
 		".next/types/**/*.ts",
 		"types/**/*.d.ts"
 	],
