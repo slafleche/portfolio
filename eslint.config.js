@@ -44,6 +44,7 @@ const tsNoProjectFiles = [
 	'middleware.ts',
 	'next-env.d.ts',
 	'scripts/**/*.ts',
+	'tests/**/*.{ts,tsx}',
 ];
 
 /** @type {import('eslint').FlatConfig.Config[]} */
