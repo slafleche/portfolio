@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import yaml from 'yaml';
 import forbiddenPropertyRule from './forbiddenPropertyRule.mjs';
+import preferMeasurementShorthandRule from './preferMeasurementShorthandRule.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
@@ -31,6 +32,7 @@ const customPlugin = {
   custom: {
     rules: {
       'forbidden-property': forbiddenPropertyRule,
+      ...preferMeasurementShorthandRule,
     },
   },
 };
@@ -85,6 +87,14 @@ Object.entries(layers).forEach(([layerName, layerConfig]) => {
   if (propertyConfigs?.length) {
     layerConfigs.push(...propertyConfigs);
   }
+});
+
+layerConfigs.push({
+  files: ['**/*.{ts,tsx}'],
+  plugins: customPlugin,
+  rules: {
+    'custom/prefer-m-shorthand': 'error',
+  },
 });
 
 export default layerConfigs;
