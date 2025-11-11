@@ -9,7 +9,7 @@ describe('backdropFilter.helper', () => {
   it('builds filter strings from multiple intents', () => {
     const value = backdropFilterValue(
       {
-        blur: m(8, 'px'),
+        blur: m(8),
         saturate: mPercent(120),
       },
       { brightness: 1.2 },

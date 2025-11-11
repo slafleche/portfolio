@@ -8,11 +8,11 @@ import { m } from '@/styles/measurementKit';
 describe('transforms.helper', () => {
   it('composes translate/rotate/scale/skew/perspective parts', () => {
     const value = transformValue({
-      translate: { x: m(10, 'px'), y: m(20, 'px') },
+      translate: { x: m(10), y: m(20) },
       rotate: { value: m(45, 'deg') },
       scale: { x: 1.2, y: 0.8 },
       skew: { x: m(5, 'deg') },
-      perspective: m(500, 'px'),
+      perspective: m(500),
     });
 
     expect(value).toBe(
@@ -22,7 +22,7 @@ describe('transforms.helper', () => {
 
   it('supports translate3d, rotate axes, scale3d via multiple intents', () => {
     const value = transformValue({
-      translate: { x: m(5, 'px'), y: m(6, 'px'), z: m(7, 'px') },
+      translate: { x: m(5), y: m(6), z: m(7) },
       rotate: { x: m(10, 'deg'), y: m(20, 'deg'), z: m(30, 'deg') },
       scale: { x: 2, y: 3, z: 4 },
     });

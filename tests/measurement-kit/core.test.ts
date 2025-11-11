@@ -21,15 +21,15 @@ describe('MeasurementKit core helpers', () => {
   });
 
   it('performs arithmetic safely within the same unit', () => {
-    const base = m(10, 'px');
+    const base = m(10);
     expect(base.add(5).css()).toBe('15px');
-    expect(base.subtract(m(2, 'px')).getValue()).toBe(8);
+    expect(base.subtract(m(2)).getValue()).toBe(8);
     expect(base.multiply(2).css()).toBe('20px');
     expect(base.divide(2).css()).toBe('5px');
   });
 
   it('throws when mixing units without conversion', () => {
-    const px = m(10, 'px');
+    const px = m(10);
     const em = m(1, 'em');
     expect(() => px.add(em)).toThrow(/measurement unit mismatch/i);
     expect(() => assertMatchingUnits(px, em, 'test')).toThrow(
@@ -38,7 +38,7 @@ describe('MeasurementKit core helpers', () => {
   });
 
   it('supports rounding helpers', () => {
-    const measurement = m(3.14159, 'px');
+    const measurement = m(3.14159);
     expect(measurement.round(2).css()).toBe('3.14px');
     expect(measurement.floor().css()).toBe('3px');
     expect(measurement.ceil().css()).toBe('4px');
@@ -47,18 +47,16 @@ describe('MeasurementKit core helpers', () => {
   });
 
   it('clamps values between given minimum and maximum', () => {
-    const value = m(15, 'px');
-    const clamped = value.clamp(m(10, 'px'), m(12, 'px'));
+    const value = m(15);
+    const clamped = value.clamp(m(10), m(12));
     expect(clamped.css()).toBe('12px');
 
-    expect(() =>
-      value.clamp(m(20, 'px'), m(12, 'px')),
-    ).toThrow(/must be <= max/);
+    expect(() => value.clamp(m(20), m(12))).toThrow(/must be <= max/);
   });
 
   it('computes min and max for matching units', () => {
-    const small = m(1, 'px');
-    const big = m(2, 'px');
+    const small = m(1);
+    const big = m(2);
     expect(measurementMin(small, big)).toBe(small);
     expect(measurementMax(small, big)).toBe(big);
   });
@@ -79,23 +77,23 @@ describe('MeasurementKit core helpers', () => {
     const guard = makeUnitGuard(mPx);
     const assertPx = makeUnitAssert(mPx);
 
-    expect(guard(m(4, 'px'))).toBe(true);
+    expect(guard(m(4))).toBe(true);
     expect(guard(m(4, 'em'))).toBe(false);
 
     expect(() => assertPx(m(1, 'em'), 'ctx')).toThrow(
       /Expected unit "px"/,
     );
 
-    expect(() => assertPx(m(2, 'px'))).not.toThrow();
+    expect(() => assertPx(m(2))).not.toThrow();
   });
 
   it('identifies Measurement instances via isMeasurement', () => {
-    expect(isMeasurement(m(1, 'px'))).toBe(true);
+    expect(isMeasurement(m(1))).toBe(true);
     expect(isMeasurement({ css: () => 'fake' })).toBe(false);
   });
 
   it('rejects division by zero', () => {
-    const measurement = m(10, 'px');
+    const measurement = m(10);
     expect(() => measurement.divide(0)).toThrow(/Cannot divide/);
   });
 });
