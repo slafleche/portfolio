@@ -47,6 +47,22 @@
   token layer. Keep measurements grouped until the helper emits CSS in the style
   layer.
 
+### Localization — Abbreviation Shortcodes
+
+- Authors can mark abbreviations inline via `[abbr:TERM]` in any locale string.
+  The locale loader resolves those tags before components render, so the UI sees
+  trusted HTML (`<abbr title="…">…</abbr>`) rather than raw shortcodes.
+- Slugs are deterministic: we lowercase the term, preserve punctuation such as
+  `&`, and prefix `abbr-`. Always reuse the canonical slug (e.g., `[abbr:AI]`
+  everywhere) even when the rendered label changes per locale; translators can
+  override `label`/`definition` inside the `abbr-*` entries.
+- Dev/CI builds throw when a slug is missing or its definition is empty; prod
+  degrades gracefully by stripping the shortcode and logging once. Add the
+  locale data (`abbr-…` entry) before using a new shortcode to avoid surprises.
+- The shortcode parser also runs across Markdown content and plain locale
+  strings, so components stay “dumb”—they accept either plain strings or the
+  branded rich text emitted by the loader without reimplementing parsing logic.
+
 ### Linting & Guardrails
 
 - `rules.yaml` is the machine-readable source of truth for all hard rules (layering,
