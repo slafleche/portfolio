@@ -53,13 +53,16 @@ const slideUp = keyframes({
   },
 });
 
+export const root = style({});
+export const intro = style({});
+
 // border-radius: 16px;
 // padding: 16px;
 // border: 1px solid var(--ring);
 // box-shadow: 0 1px 0 hsl(0 0% 100% / .04) inset, 0 10px 30px hsl(0 0% 0% / .35);
 // background: linear-gradient(to bottom, hsl(260 40% 10%), hsl(280 40% 14%));
 
-export const root = style({
+export const accordion = style({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',

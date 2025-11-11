@@ -53,6 +53,7 @@ export const enData = {
 
   case_study: 'Case Study',
   'case_study-href': 'case_study',
+  ...markdownRefs('case-study-00-intro'),
   'case-study-01-title': 'Starting as a themer',
   'case-study-01-subtitle': 'discovering system constraints',
   ...markdownRefs('case-study-01-content'),
