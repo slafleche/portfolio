@@ -287,6 +287,13 @@ const buildDebugState = (
   const normalizedFieldStates =
     Object.keys(fieldStates).length > 0 ? fieldStates : undefined;
 
+  const ctaEnabled =
+    scenario?.cta.disabled === false || (!scenario && card.formMode === 'editable');
+  const showSubmitOverlay =
+    card.spec.showSubmitOverlay !== undefined
+      ? card.spec.showSubmitOverlay
+      : ctaEnabled;
+
   return {
     values,
     fieldErrors,
@@ -301,7 +308,9 @@ const buildDebugState = (
     fieldStates: normalizedFieldStates,
     revealHoneypot: Boolean(card.spec.revealHoneypot),
     logFocusEvents: Boolean(card.spec.logFocus),
-    showSubmitOverlay: Boolean(card.spec.showSubmitOverlay),
+    showSubmitOverlay,
+    scrollStatusIntoView: true,
+    enableTelemetryLogs: true,
   };
 };
 

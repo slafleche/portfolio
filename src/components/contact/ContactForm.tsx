@@ -57,6 +57,8 @@ export type ContactFormDebugState = {
   revealHoneypot?: boolean;
   logFocusEvents?: boolean;
   showSubmitOverlay?: boolean;
+  scrollStatusIntoView?: boolean;
+  enableTelemetryLogs?: boolean;
 };
 
 type ContactFormProps = {
@@ -247,6 +249,25 @@ export default function ContactForm({
     [logFocusEvent],
   );
 
+  const logTelemetryEvent = useCallback(
+    (event: string, detail?: unknown) => {
+      if (!debugState?.enableTelemetryLogs) return;
+      console.debug(`[contact.submit] ${event}`, detail ?? null);
+    },
+    [debugState?.enableTelemetryLogs],
+  );
+
+  const shouldScrollStatus = debugState?.scrollStatusIntoView ?? Boolean(debugState);
+
+  useEffect(() => {
+    if (!shouldScrollStatus) return;
+    if (!status || !statusRef.current) return;
+    statusRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }, [shouldScrollStatus, status]);
+
   const debugStatusKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -260,6 +281,7 @@ export default function ContactForm({
       const key = `response:${response.code}:${response.message}:${response.ok}`;
       if (debugStatusKeyRef.current !== key) {
         debugStatusKeyRef.current = key;
+        logTelemetryEvent(response.code, response);
         applyResponse(response, { preserveValues: true });
       }
       return;
@@ -273,6 +295,10 @@ export default function ContactForm({
         const nextMessage =
           debugState.statusState.message ??
           copy.statuses[debugState.statusState.status];
+        logTelemetryEvent(
+          debugState.statusState.status,
+          debugState.statusState,
+        );
         setStatus(debugState.statusState.status);
         setStatusMessage(nextMessage);
       }
@@ -280,7 +306,7 @@ export default function ContactForm({
     }
 
     debugStatusKeyRef.current = null;
-  }, [applyResponse, copy.statuses, debugState]);
+  }, [applyResponse, copy.statuses, debugState, logTelemetryEvent]);
 
   const errorMessageMap = useMemo(
     () => buildErrorMap(copy),
@@ -418,6 +444,7 @@ export default function ContactForm({
         setFieldErrors(validation.errors);
         setStatus('validation_error');
         setStatusMessage(copy.statuses.validation_error);
+        logTelemetryEvent('validation_error', validation.errors);
         const firstInvalid = (
           ['name', 'email', 'message'] as FieldName[]
         ).find((field) => validation.errors[field]);
@@ -443,6 +470,7 @@ export default function ContactForm({
 
       // Honeypot short-circuit
       if (payload.hp.trim().length > 0) {
+        logTelemetryEvent('blocked', payload);
         const response: ContactFormResponse = {
           ok: true,
           code: 'success',
@@ -459,6 +487,7 @@ export default function ContactForm({
       setIsSubmitting(true);
       setStatus('sending');
       setStatusMessage(copy.statuses.sending);
+      logTelemetryEvent('start', payload);
 
       try {
         const response = await mockSubmit(payload, {
@@ -466,6 +495,7 @@ export default function ContactForm({
         });
 
         applyResponse(response);
+        logTelemetryEvent(response.code, response);
         logStatusFocus(`focus:status-${response.code}`);
 
         if (onSubmitted) {
@@ -475,12 +505,14 @@ export default function ContactForm({
         console.error('[ContactForm] submit failed', error);
         setStatus('generic');
         setStatusMessage(copy.statuses.generic);
+        logTelemetryEvent('generic_error', error);
         logStatusFocus('focus:status-generic');
       } finally {
         setIsSubmitting(false);
       }
     },
     [
+      logTelemetryEvent,
       logFocusEvent,
       logStatusFocus,
       applyResponse,
@@ -596,19 +628,7 @@ export default function ContactForm({
       : status === 'generic' || status === 'sending'
         ? s.statusGeneric
         : s.statusError
-    : s.visuallyHidden;
-
-  const statusBanner = (
-    <div
-      ref={statusRef}
-      className={clsx(statusClassName)}
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-    >
-      <span className={s.statusText}>{statusMessage}</span>
-    </div>
-  );
+    : s.status;
 
   const privacyUpdated =
     typeof privacyCopy.updated === 'string'
@@ -626,7 +646,22 @@ export default function ContactForm({
         }}
         action={actionUrl}
       >
-        {statusBanner}
+        <div
+          className={s.statusWrapper}
+          data-visible={status ? 'true' : 'false'}
+        >
+          {status ? (
+            <div
+              ref={statusRef}
+              className={clsx(statusClassName)}
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <span className={s.statusText}>{statusMessage}</span>
+            </div>
+          ) : null}
+        </div>
         <fieldset className={s.fieldset}>
           <legend className={s.legend}>{copy.heading}</legend>
 
