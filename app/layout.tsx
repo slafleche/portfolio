@@ -11,10 +11,8 @@ import {
   FAVICON_META_BUNDLES_BY_LOCALE,
   FAVICON_META_TAGS,
 } from '@/data/generated/favicons.manifest.gen';
-import {
-  AVAILABLE_LOCALES,
-  type Locale,
-} from '@/lib/locales/translations';
+import { type Locale } from '@/lib/locales/translations';
+import debugRoutes from '@/data/debugRoutes.json';
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -45,19 +43,13 @@ export default async function RootLayout({
     };
     if (!globalTracker.__debugRoutesLogged) {
       globalTracker.__debugRoutesLogged = true;
-      const faviconsRoutes = AVAILABLE_LOCALES.map(
-        (loc) => `/${loc}/debug/favicons`,
-      );
-      const formElementsRoutes = AVAILABLE_LOCALES.map(
-        (loc) => `/${loc}/debug/formelements`,
+      const debugLocale = debugRoutes.baseLocale;
+      const debugRouteList = debugRoutes.pages.map(
+        (page) => `/${debugLocale}/debug/${page}`,
       );
       console.info(
-        '[debug] Favicons preview available:',
-        faviconsRoutes.join(', '),
-      );
-      console.info(
-        '[debug] Form elements playground available:',
-        formElementsRoutes.join(', '),
+        '[debug] Debug previews available:',
+        debugRouteList.join(', '),
       );
     }
   }
