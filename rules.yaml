@@ -25,7 +25,8 @@ layers:
         - margins
         - borders
         - backgrounds
-        - boxShadow
+        - boxShadows
+        - backdropFilters
       forbidden_properties:
         - padding
         - margin
@@ -33,6 +34,9 @@ layers:
         - borderRadius
         - background
         - backgroundColor
+        - name: boxShadow
+          allow_in:
+            - 'src/styles/helpers/boxShadow.helper.ts'
         - name: backdropFilter
           allow_in:
             - 'src/styles/helpers/backdropFilter.helper.ts'
@@ -60,11 +64,15 @@ layers:
       use_helpers: true
       forbidden_properties:
         - name: backdropFilter
-          message: 'Use backdropFilters.style() or registerBackdropFallback().'
+          message:
+            'Use backdropFilters.style() or
+            registerBackdropFallback().'
           allow_in:
             - 'src/styles/helpers/backdropFilter.helper.ts'
         - name: WebkitBackdropFilter
-          message: 'Use backdropFilters.style() or registerBackdropFallback().'
+          message:
+            'Use backdropFilters.style() or
+            registerBackdropFallback().'
           allow_in:
             - 'src/styles/helpers/backdropFilter.helper.ts'
 
