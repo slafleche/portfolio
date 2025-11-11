@@ -13,8 +13,8 @@ describe('typography.helper', () => {
   it('normalizes FontStyles into CSS-ready properties', () => {
     const styles = fontStyles({
       fontFamily: 'IBM Plex Sans',
-      size: m(18, 'px'),
-      spacing: m(0.5, 'px'),
+      size: m(18),
+      spacing: m(0.5),
       lineHeight: 1.5,
       fontWeight: 600,
       css: {
@@ -52,12 +52,12 @@ describe('typography.helper', () => {
     const result = composeFontStyles(family, {
       layers: [
         {
-          size: m(20, 'px'),
+          size: m(20),
           css: { fontStyle: 'italic' },
         },
       ],
       overrides: {
-        spacing: m(1, 'px'),
+        spacing: m(1),
       },
       options: {
         weightPercents: {
