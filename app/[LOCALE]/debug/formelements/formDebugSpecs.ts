@@ -200,5 +200,6 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'Environment missing Brevo keys; disable entire form.',
     apiScenarioId: 'not_configured',
     ui: { global: 'disabled' },
+    info: ['Shows new localized copy for the not-configured state.'],
   },
 ] as const;

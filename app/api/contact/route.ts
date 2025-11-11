@@ -14,6 +14,12 @@ import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 import { verifyTurnstileToken } from '@/server/turnstile/verifyTurnstileToken';
 import { consumeContactRateLimit } from '@/server/rateLimit/contactRateLimit';
 import { deliverContactMessage } from '@/server/contact/deliverContactMessage';
+import {
+	maybeTriggerContactAlert,
+	recordBrevoAttempts,
+	recordRetryMetric,
+	recordSubmissionMetric,
+} from '@/server/contact/contactTelemetry';
 import { DEFAULT_LOCALE } from '@/lib/locales/locale';
 
 export const runtime = 'nodejs';
@@ -36,10 +42,13 @@ const getClientIp = (request: NextRequest): string | null => {
 	return candidate.split(',')[0]?.trim() ?? null;
 };
 
-const hashIp = (ip: string | null) =>
-	ip
-		? createHash('sha256').update(ip).digest('hex').slice(0, 12)
+const hashValue = (value: string | null) =>
+	value
+		? createHash('sha256').update(value).digest('hex').slice(0, 12)
 		: 'unknown';
+
+const hashIp = (ip: string | null) => hashValue(ip);
+const hashEmail = (email: string | null) => hashValue(email);
 
 const parseJsonBody = async (
 	request: NextRequest,
@@ -87,6 +96,57 @@ const buildResponse = (
 	);
 };
 
+type ResponseTelemetryOptions = Parameters<typeof buildResponse>[1] & {
+	startedAt: number;
+	ipHash: string | null;
+	logExtras?: Record<string, unknown>;
+};
+
+const respondWithTelemetry = (
+	code: FormServerResponseCode,
+	options: ResponseTelemetryOptions,
+) => {
+	const { startedAt, ipHash, logExtras, ...responseOptions } = options;
+	const resolvedOk =
+		responseOptions.okOverride ?? (code === 'success');
+	const httpStatus = responseOptions.status ?? (resolvedOk ? 200 : 400);
+	const response = buildResponse(code, responseOptions);
+	const durationMs = Date.now() - startedAt;
+	recordSubmissionMetric({
+		code,
+		durationMs,
+		submissionId: responseOptions.submissionId,
+		ipHash,
+		status: httpStatus,
+		extra: logExtras,
+	});
+	maybeTriggerContactAlert(code, {
+		submissionId: responseOptions.submissionId,
+		ipHash,
+		status: httpStatus,
+		...logExtras,
+	});
+	return response;
+};
+
+const brevoStatusToCode = (
+	status: number,
+	error?: unknown,
+): FormServerResponseCode => {
+	if (status === 400) return 'validation_error';
+	if (status === 401 || status === 403) return 'not_configured';
+	if (status === 429) return 'rate_limited';
+	if (
+		status === 503 &&
+		error instanceof Error &&
+		/not\s+configured/i.test(error.message)
+	) {
+		return 'not_configured';
+	}
+	if (status >= 500) return 'service_unavailable';
+	return 'generic_error';
+};
+
 export async function POST(request: NextRequest) {
 	const submissionId = randomUUID();
 	const startedAt = Date.now();
@@ -95,6 +155,11 @@ export async function POST(request: NextRequest) {
 	const locale = coerceLocale(request);
 	const translator = await loadTranslator(locale);
 	const copy = buildContactFormCopy(translator);
+	let brevoMeta: {
+		attempts: number;
+		retries: number;
+		status: number;
+	} | null = null;
 
 	const { rawText, body } = await parseJsonBody(request);
 	const bodyBytes = Buffer.byteLength(rawText, 'utf8');
@@ -104,10 +169,16 @@ export async function POST(request: NextRequest) {
 			ipHash,
 			bodyBytes,
 		});
-		return buildResponse('validation_error', {
+		return respondWithTelemetry('validation_error', {
 			copy,
 			submissionId,
 			status: 413,
+			startedAt,
+			ipHash,
+			logExtras: {
+				reason: 'payload-too-large',
+				bodyBytes,
+			},
 		});
 	}
 
@@ -116,10 +187,13 @@ export async function POST(request: NextRequest) {
 			submissionId,
 			ipHash,
 		});
-		return buildResponse('validation_error', {
+		return respondWithTelemetry('validation_error', {
 			copy,
 			submissionId,
 			status: 400,
+			startedAt,
+			ipHash,
+			logExtras: { reason: 'invalid-json' },
 		});
 	}
 
@@ -130,10 +204,16 @@ export async function POST(request: NextRequest) {
 			ipHash,
 			errors: validation.errors,
 		});
-		return buildResponse('validation_error', {
+		return respondWithTelemetry('validation_error', {
 			copy,
 			submissionId,
 			status: 422,
+			startedAt,
+			ipHash,
+			logExtras: {
+				reason: 'validation-error',
+				errorCount: Object.keys(validation.errors).length,
+			},
 		});
 	}
 
@@ -144,10 +224,13 @@ export async function POST(request: NextRequest) {
 			submissionId,
 			ipHash,
 		});
-		return buildResponse('success', {
+		return respondWithTelemetry('success', {
 			copy,
 			submissionId,
 			okOverride: true,
+			startedAt,
+			ipHash,
+			logExtras: { reason: 'honeypot' },
 		});
 	}
 
@@ -164,11 +247,17 @@ export async function POST(request: NextRequest) {
 		if (rate.retryAfterSeconds !== undefined) {
 			headers['retry-after'] = rate.retryAfterSeconds.toString();
 		}
-		return buildResponse('rate_limited', {
+		return respondWithTelemetry('rate_limited', {
 			copy,
 			submissionId,
 			status: 429,
 			headers,
+			startedAt,
+			ipHash,
+			logExtras: {
+				reason: 'rate-limited',
+				retryAfterSeconds: rate.retryAfterSeconds,
+			},
 		});
 	}
 
@@ -183,40 +272,94 @@ export async function POST(request: NextRequest) {
 			ipHash,
 			errorCodes: turnstile.errorCodes,
 		});
-		return buildResponse(responseCode, {
+		return respondWithTelemetry(responseCode, {
 			copy,
 			submissionId,
 			status: responseCode === 'not_configured' ? 503 : 403,
+			startedAt,
+			ipHash,
+			logExtras: {
+				reason: 'turnstile',
+				errorCodes: turnstile.errorCodes,
+			},
 		});
 	}
 
 	try {
-		await deliverContactMessage(draft);
+		const delivery = await deliverContactMessage(draft);
+		recordBrevoAttempts(delivery.attempts);
+		for (const reason of delivery.retryReasons) {
+			recordRetryMetric(reason);
+		}
+		if (!delivery.ok) {
+			const responseCode = brevoStatusToCode(
+				delivery.status,
+				delivery.error,
+			);
+			console.error('[contact][delivery-error]', {
+				submissionId,
+				ipHash,
+				status: delivery.status,
+				error: delivery.error,
+			});
+			return respondWithTelemetry(responseCode, {
+				copy,
+				submissionId,
+				status: delivery.status >= 400 ? delivery.status : 503,
+				startedAt,
+				ipHash,
+				logExtras: {
+					reason: 'brevo-delivery',
+					brevoStatus: delivery.status,
+					brevoRetries: delivery.retries,
+					brevoAttempts: delivery.attempts.length,
+				},
+			});
+		}
+		brevoMeta = {
+			attempts: delivery.attempts.length,
+			retries: delivery.retries,
+			status: delivery.status,
+		};
 	} catch (error) {
 		console.error('[contact][delivery-error]', {
 			submissionId,
 			ipHash,
 			error,
 		});
-		return buildResponse('service_unavailable', {
+		return respondWithTelemetry('service_unavailable', {
 			copy,
 			submissionId,
 			status: 503,
+			startedAt,
+			ipHash,
+			logExtras: { reason: 'delivery-exception' },
 		});
 	}
 
 	const durationMs = Date.now() - startedAt;
+	const emailHash = hashEmail(draft.email);
 	console.info('[contact][success]', {
 		submissionId,
 		ipHash,
 		durationMs,
-		email: draft.email,
+		emailHash,
 		nameLength: draft.name.length,
 		messageLength: draft.message.length,
+		brevoAttempts: brevoMeta?.attempts ?? 0,
+		brevoRetries: brevoMeta?.retries ?? 0,
 	});
 
-	return buildResponse('success', {
+	return respondWithTelemetry('success', {
 		copy,
 		submissionId,
+		startedAt,
+		ipHash,
+		logExtras: {
+			reason: 'delivered',
+			brevoAttempts: brevoMeta?.attempts ?? 0,
+			brevoRetries: brevoMeta?.retries ?? 0,
+			brevoStatus: brevoMeta?.status,
+		},
 	});
 }
