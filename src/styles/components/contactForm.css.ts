@@ -156,6 +156,21 @@ export const statusText = style({
   flex: 1,
 });
 
+export const statusWrapper = style({
+  minHeight: m(6).css(),
+  transition: 'opacity 220ms ease, transform 220ms ease',
+  opacity: 1,
+  transform: 'translateY(0)',
+  pointerEvents: 'auto',
+  selectors: {
+    '&[data-visible="false"]': {
+      opacity: 0,
+      transform: 'translateY(-8px)',
+      pointerEvents: 'none',
+    },
+  },
+});
+
 export const counter = style({
   color: formTokens.counter.text.color.css(),
   fontSize: '0.85rem',

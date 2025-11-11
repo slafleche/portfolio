@@ -36,7 +36,10 @@ export function Accordion({
         ...item,
         value: item.id ?? `${baseId}-item-${index}`,
       })),
-    [items, baseId],
+    [
+      items,
+      baseId,
+    ],
   );
 
   const defaultOpenValues = useMemo(
@@ -44,7 +47,9 @@ export function Accordion({
       resolvedItems
         .filter((item) => item.defaultOpen)
         .map((item) => item.value),
-    [resolvedItems],
+    [
+      resolvedItems,
+    ],
   );
 
   const rootProps = multiple
@@ -61,7 +66,7 @@ export function Accordion({
   return (
     <AccordionPrimitive.Root
       {...rootProps}
-      className={clsx(s.root, className)}
+      className={clsx(s.accordion, className)}
     >
       {resolvedItems.map((item) => (
         <AccordionPrimitive.Item
