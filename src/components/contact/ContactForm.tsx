@@ -55,6 +55,8 @@ export type ContactFormDebugState = {
   hasAttemptedSubmit?: boolean;
   fieldStates?: Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>;
   revealHoneypot?: boolean;
+  logFocusEvents?: boolean;
+  showSubmitOverlay?: boolean;
 };
 
 type ContactFormProps = {
@@ -62,6 +64,7 @@ type ContactFormProps = {
   actionUrl?: string;
   locale: string;
   privacyCopy: PrivacyCopy;
+  formRef?: React.RefObject<HTMLFormElement | null> | null;
   privacyHref?: string;
   onSubmitted?: (response: ContactFormResponse) => void;
   debugState?: ContactFormDebugState;
@@ -110,6 +113,7 @@ export default function ContactForm({
   actionUrl = DEFAULT_ACTION_URL,
   locale,
   privacyCopy,
+  formRef = null,
   onSubmitted,
   debugState,
 }: ContactFormProps) {
@@ -117,7 +121,10 @@ export default function ContactForm({
   const [
     values,
     setValues,
-  ] = useState<FormValues>(INITIAL_VALUES);
+  ] = useState<FormValues>(() => ({
+    ...INITIAL_VALUES,
+    ...(debugState?.values ?? {}),
+  }));
   const [
     fieldErrors,
     setFieldErrors,
@@ -140,7 +147,10 @@ export default function ContactForm({
     hasAttemptedSubmit,
     setHasAttemptedSubmit,
   ] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
+  const emailInputRef = useRef<HTMLInputElement | null>(null);
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
+  const statusRef = useRef<HTMLDivElement | null>(null);
   const baseMessageHeight = useRef<number | null>(null);
 
   const {
@@ -149,12 +159,6 @@ export default function ContactForm({
     closePrivacy,
   } = useContactDialog();
 
-  const resolvedValues: FormValues = debugState?.values
-    ? {
-        ...INITIAL_VALUES,
-        ...debugState.values,
-      }
-    : values;
 
   const resolvedFieldErrors: FieldErrorMap =
     debugState?.fieldErrors ?? fieldErrors;
@@ -214,6 +218,33 @@ export default function ContactForm({
     [
       copy.statuses,
     ],
+  );
+
+  const describeElement = useCallback(
+    (element: HTMLElement | null) =>
+      element
+        ? `${element.tagName.toLowerCase()}#${element.id || 'no-id'}`
+        : 'none',
+    [],
+  );
+
+  const logFocusEvent = useCallback(
+    (label: string, element: HTMLElement | null) => {
+      if (!debugState?.logFocusEvents) return;
+      console.debug('[ContactForm][debug][focus]', label, {
+        element,
+        descriptor: describeElement(element),
+        values,
+      });
+    },
+    [debugState?.logFocusEvents, describeElement, values],
+  );
+
+  const logStatusFocus = useCallback(
+    (label: string) => {
+      logFocusEvent(label, statusRef.current);
+    },
+    [logFocusEvent],
   );
 
   const debugStatusKeyRef = useRef<string | null>(null);
@@ -329,7 +360,6 @@ export default function ContactForm({
 
   const handleChange = useCallback(
     (field: FieldName | 'hp', value: string) => {
-      if (debugState) return;
       setValues((prev) => {
         const next = { ...prev, [field]: value };
         const validation = validateDraft(next);
@@ -341,7 +371,6 @@ export default function ContactForm({
       });
     },
     [
-      debugState,
       resetStatus,
       status,
     ],
@@ -351,16 +380,12 @@ export default function ContactForm({
     syncMessageHeight();
   }, [
     syncMessageHeight,
-    resolvedValues.message,
+    values.message,
   ]);
 
   const handleBlur = useCallback(() => {
-    if (debugState) return;
     setFieldErrors(validateDraft(values).errors);
-  }, [
-    debugState,
-    values,
-  ]);
+  }, [values]);
 
   const handlePrivacyLinkClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
@@ -384,7 +409,6 @@ export default function ContactForm({
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      if (debugState) return;
       if (isSubmitting) return;
       setHasAttemptedSubmit(true);
       const validation = validateDraft(values);
@@ -394,6 +418,18 @@ export default function ContactForm({
         setFieldErrors(validation.errors);
         setStatus('validation_error');
         setStatusMessage(copy.statuses.validation_error);
+        const firstInvalid = (
+          ['name', 'email', 'message'] as FieldName[]
+        ).find((field) => validation.errors[field]);
+        if (firstInvalid) {
+          const target =
+            firstInvalid === 'name'
+              ? nameInputRef.current
+              : firstInvalid === 'email'
+                ? emailInputRef.current
+                : messageRef.current;
+          logFocusEvent('focus:first-invalid', target);
+        }
         return;
       }
 
@@ -413,6 +449,7 @@ export default function ContactForm({
           message: copy.statuses.success,
         };
         applyResponse(response);
+        logStatusFocus('focus:status-success');
         if (onSubmitted) {
           onSubmitted(response);
         }
@@ -429,6 +466,7 @@ export default function ContactForm({
         });
 
         applyResponse(response);
+        logStatusFocus(`focus:status-${response.code}`);
 
         if (onSubmitted) {
           onSubmitted(response);
@@ -437,14 +475,16 @@ export default function ContactForm({
         console.error('[ContactForm] submit failed', error);
         setStatus('generic');
         setStatusMessage(copy.statuses.generic);
+        logStatusFocus('focus:status-generic');
       } finally {
         setIsSubmitting(false);
       }
     },
     [
+      logFocusEvent,
+      logStatusFocus,
       applyResponse,
       copy.statuses,
-      debugState,
       isSubmitting,
       onSubmitted,
       values,
@@ -471,9 +511,9 @@ export default function ContactForm({
 
   const remainingCharacters = useMemo(() => {
     const maxChars = formTokens.message.maxChars;
-    return Math.max(0, maxChars - resolvedValues.message.length);
+    return Math.max(0, maxChars - values.message.length);
   }, [
-    resolvedValues.message.length,
+    values.message.length,
   ]);
 
   const derivedButtonState = useMemo(() => {
@@ -560,6 +600,7 @@ export default function ContactForm({
 
   const statusBanner = (
     <div
+      ref={statusRef}
       className={clsx(statusClassName)}
       role="status"
       aria-live="polite"
@@ -577,6 +618,7 @@ export default function ContactForm({
   return (
     <>
       <form
+        ref={formRef}
         className={s.form}
         noValidate
         onSubmit={(event) => {
@@ -599,7 +641,8 @@ export default function ContactForm({
               id={nameFieldId}
               name="name"
               className={s.input}
-              value={resolvedValues.name}
+              ref={nameInputRef}
+              value={values.name}
               onChange={(event) =>
                 handleChange('name', event.target.value)
               }
@@ -646,7 +689,8 @@ export default function ContactForm({
               id={emailFieldId}
               name="email"
               className={s.input}
-              value={resolvedValues.email}
+              ref={emailInputRef}
+              value={values.email}
               onChange={(event) =>
                 handleChange('email', event.target.value)
               }
@@ -693,7 +737,7 @@ export default function ContactForm({
               id={messageFieldId}
               name="message"
               className={s.textarea}
-              value={resolvedValues.message}
+              value={values.message}
               ref={messageRef}
               onChange={(event) =>
                 handleChange('message', event.target.value)
@@ -774,7 +818,7 @@ export default function ContactForm({
           type="text"
           tabIndex={-1}
           autoComplete="off"
-          value={resolvedValues.hp}
+          value={values.hp}
           onChange={(event) =>
             handleChange('hp', event.target.value)
           }
@@ -784,7 +828,7 @@ export default function ContactForm({
       <input
         type="hidden"
         name="token"
-        value={resolvedValues.token}
+        value={values.token}
       />
 
         <p className={s.privacy}>

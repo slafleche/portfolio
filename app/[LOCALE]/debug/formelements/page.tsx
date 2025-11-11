@@ -300,6 +300,8 @@ const buildDebugState = (
     hasAttemptedSubmit: scenario ? true : hasErrors,
     fieldStates: normalizedFieldStates,
     revealHoneypot: Boolean(card.spec.revealHoneypot),
+    logFocusEvents: Boolean(card.spec.logFocus),
+    showSubmitOverlay: Boolean(card.spec.showSubmitOverlay),
   };
 };
 
@@ -383,6 +385,24 @@ function CardMeta({ card }: CardMetaProps) {
             {card.uiPermutation.notes.map((note) => (
               <li key={note}>{note}</li>
             ))}
+          </ul>
+        </div>
+      ) : null}
+      {(card.spec.info?.length || card.spec.logFocus) ? (
+        <div>
+          <strong>Debug info</strong>
+          <ul style={detailListStyle}>
+            {card.spec.info?.map((note) => (
+              <li key={note}>{note}</li>
+            ))}
+            {card.spec.logFocus ? (
+              <li>
+                Focus logs emit to the console as
+                {' '}
+                <code>[ContactForm][debug]</code>
+                . Use “Test submit” to trigger them.
+              </li>
+            ) : null}
           </ul>
         </div>
       ) : null}
