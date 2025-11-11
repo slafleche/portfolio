@@ -4,6 +4,7 @@ import {
   m,
   mPercent,
   mPx,
+  mCqw,
   makeUnitAssert,
   makeUnitGuard,
   measurementMax,
@@ -69,6 +70,9 @@ describe('MeasurementKit core helpers', () => {
 
     const px = mPx(4);
     expect(px.css()).toBe('4px');
+
+    const containerWidth = mCqw(25);
+    expect(containerWidth.css()).toBe('25cqw');
   });
 
   it('provides guards and assertions for unit helpers', () => {

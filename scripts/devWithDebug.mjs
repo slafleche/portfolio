@@ -87,51 +87,65 @@ function fullRestoreAndExit(exitCode = 0) {
 
 /* --------------------------------- Helpers -------------------------------- */
 
-async function loadAvailableLocales() {
-  const localeFile = path.resolve(
-    process.cwd(),
-    'src',
+export const AVAILABLE_LOCALES_PATTERN =
+	/AVAILABLE_LOCALES\s*=\s*\[\s*([\s\S]*?)\s*\]\s*as const/;
+
+export function parseAvailableLocalesSource(source) {
+	const match = source.match(AVAILABLE_LOCALES_PATTERN);
+	if (!match) return [];
+	return match[1]
+		.split(',')
+		.map((entry) => entry.replace(/['"`]/g, '').trim())
+		.filter(Boolean);
+}
+
+export async function loadAvailableLocales() {
+	const localeFile = path.resolve(
+		process.cwd(),
+		'src',
     'lib',
     'locales',
     'translations',
     'index.ts',
-  );
-  try {
-    const raw = await readFile(localeFile, 'utf8');
-    const match = raw.match(
-      /AVAILABLE_LOCALES\s*=\s*\[\s*([\s\S]*?)\s*\]\s*as const/,
-    );
-    if (!match) return [];
-    return match[1]
-      .split(',')
-      .map((e) => e.replace(/['"`]/g, '').trim())
-      .filter(Boolean);
-  } catch {
-    return [];
-  }
+	);
+	try {
+		const raw = await readFile(localeFile, 'utf8');
+		return parseAvailableLocalesSource(raw);
+	} catch {
+		return [];
+	}
 }
 
-async function loadDebugRoutes() {
-  const routesFile = path.resolve(
-    process.cwd(),
+export function parseDebugRoutesSource(raw) {
+	if (!raw || typeof raw !== 'string') return null;
+	try {
+		const parsed = JSON.parse(raw);
+		if (
+			!parsed ||
+			typeof parsed !== 'object' ||
+			!Array.isArray(parsed.pages)
+		) {
+			return null;
+		}
+		return parsed;
+	} catch {
+		return null;
+	}
+}
+
+export async function loadDebugRoutes() {
+	const routesFile = path.resolve(
+		process.cwd(),
     'src',
     'data',
     'debugRoutes.json',
-  );
-  try {
-    const raw = await readFile(routesFile, 'utf8');
-    const parsed = JSON.parse(raw);
-    if (
-      !parsed ||
-      typeof parsed !== 'object' ||
-      !Array.isArray(parsed.pages)
-    ) {
-      return null;
-    }
-    return parsed;
-  } catch {
-    return null;
-  }
+	);
+	try {
+		const raw = await readFile(routesFile, 'utf8');
+		return parseDebugRoutesSource(raw);
+	} catch {
+		return null;
+	}
 }
 
 /* ------------------------------- Child spawn ------------------------------- */
