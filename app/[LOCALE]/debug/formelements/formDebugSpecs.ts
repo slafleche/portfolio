@@ -19,6 +19,9 @@ export type DebugCardSpec = {
     overrides?: Partial<Record<FieldKey, UiPermutationId>>;
   };
   revealHoneypot?: boolean;
+  logFocus?: boolean;
+  showSubmitOverlay?: boolean;
+  info?: readonly string[];
 };
 
 export const debugCardSpecs: readonly DebugCardSpec[] = [
@@ -27,6 +30,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     title: 'UI — Default',
     description: 'Pristine fields right after the dialog opens.',
     ui: { global: 'default' },
+    showSubmitOverlay: true,
   },
   {
     id: 'ui-focus',
@@ -78,6 +82,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     description:
       'All controls show the success affordances pre-submit.',
     ui: { global: 'validEntry' },
+    showSubmitOverlay: true,
   },
   {
     id: 'ui-readonly',
@@ -99,6 +104,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     description: 'POST in flight; CTA shows loading state.',
     apiScenarioId: 'sending',
     ui: { global: 'readonlyPending' },
+    showSubmitOverlay: true,
   },
   {
     id: 'api-success',
@@ -106,6 +112,8 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     description: 'Success banner + locked CTA.',
     apiScenarioId: 'success',
     ui: { global: 'validEntry' },
+    logFocus: true,
+    showSubmitOverlay: true,
   },
   {
     id: 'api-validation-error',
@@ -114,6 +122,8 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'Server validation failed; focus returns to first error.',
     apiScenarioId: 'validation_error',
     ui: { global: 'invalid' },
+    logFocus: true,
+    showSubmitOverlay: true,
   },
   {
     id: 'api-rate-limited',
@@ -121,6 +131,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     description: 'Cooldown timer disables CTA + inputs.',
     apiScenarioId: 'rate_limited',
     ui: { global: 'readonlyPending' },
+    showSubmitOverlay: true,
   },
   {
     id: 'api-service-down',
@@ -129,6 +140,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'Outage banner plus readonly fields awaiting retry.',
     apiScenarioId: 'service_unavailable',
     ui: { global: 'readonlyPending' },
+    showSubmitOverlay: true,
   },
   {
     id: 'api-blocked',
@@ -160,6 +172,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'Unknown failure with retry CTA and editable inputs.',
     apiScenarioId: 'generic_error',
     ui: { global: 'validEntry' },
+    showSubmitOverlay: true,
   },
   {
     id: 'api-not-configured',
