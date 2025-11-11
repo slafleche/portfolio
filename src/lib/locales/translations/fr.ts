@@ -2,10 +2,14 @@ import { MARKDOWN_MESSAGES } from '../generated/markdown.gen';
 import type { LocaleMessagesShape } from '../localeTypes';
 import { resolveMarkdownPlaceholders } from './markdownRefs';
 import { frData } from './fr.data';
+import { resolveAbbrShortcodes } from './resolveAbbrShortcodes';
 
-const frResolved = resolveMarkdownPlaceholders(
-	frData,
-	MARKDOWN_MESSAGES.fr,
+const frResolved = resolveAbbrShortcodes(
+	resolveMarkdownPlaceholders(
+		frData,
+		MARKDOWN_MESSAGES.fr,
+		'fr',
+	),
 	'fr',
 );
 

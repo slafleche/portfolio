@@ -1,6 +1,10 @@
 import { markdownRefs } from './markdownRefs';
+import { frAbbreviations } from './abbreviations/fr.abbr';
+import { frCaseStudies } from './caseStudies/fr.caseStudies';
+import { frFormCopy } from './forms/fr.form';
+import { mergeLocaleSections } from './mergeLocaleSections';
 
-export const frData = {
+const frBaseData = {
   label: 'Français',
   'abbreviated-label': 'FR',
   redirecting: 'Redirection...',
@@ -45,72 +49,6 @@ export const frData = {
   'console-curiosity-hint':
     "[indice] Le code montre ce que j'ai construit; curiosity() montre comment je pense.",
 
-  // Abréviations
-  'abbr-r&d': {
-    label: 'R&D',
-    definition: 'Recherche et développement',
-  },
-  'abbr-api': {
-    label: 'API',
-    definition: 'Interface de programmation applicative',
-  },
-  'abbr-ai': {
-    label: 'IA',
-    definition: 'Intelligence artificielle',
-  },
-  'abbr-ea': {
-    label: 'EA',
-    definition: 'Electronic Arts',
-  },
-  'abbr-banq': {
-    label: 'BAnQ',
-    definition: 'Bibliothèque et Archives nationales du Québec',
-  },
-  'abbr-css': {
-    label: 'CSS',
-    definition: 'Feuilles de style en cascade',
-  },
-  'abbr-html': {
-    label: 'HTML',
-    definition: 'Langage de balisage hypertexte',
-  },
-  'abbr-js': {
-    label: 'JS',
-    definition: 'JavaScript',
-  },
-  'abbr-ui': {
-    label: 'UI',
-    definition: 'Interface utilisateur',
-  },
-  'abbr-json': {
-    label: 'JSON',
-    definition: 'Notation objet JavaScript',
-  },
-  'abbr-svg': {
-    label: 'SVG',
-    definition: 'Graphiques vectoriels extensibles',
-  },
-  'abbr-svgo': {
-    label: 'SVGO',
-    definition: 'Optimiseur de Graphiques vectoriels extensibles',
-  },
-  'abbr-id': {
-    label: 'ID',
-    definition: 'Identifiant',
-  },
-  'abbr-url': {
-    label: 'URL',
-    definition: 'Localisateur uniforme de ressources',
-  },
-  'abbr-todo': {
-    label: 'TODO',
-    definition: 'À faire (note de suivi)',
-  },
-  'abbr-eslint': {
-    label: 'ESLint',
-    definition: "Outil d'analyse statique JavaScript",
-  },
-
   approach: 'Approche',
   'approach-href': 'philosophie',
   ...markdownRefs('approach-content'),
@@ -118,31 +56,6 @@ export const frData = {
   about: 'À propos',
   'about-href': 'a-propos',
   ...markdownRefs('about-content'),
-
-  case_study: 'Études de cas',
-  'case_study-href': 'etudes-de-cas',
-  ...markdownRefs('case-study-00-intro'),
-  'case-study-01-title': 'Débuter comme intégrateur de thèmes',
-  'case-study-01-subtitle': 'découvrir les contraintes du système',
-  ...markdownRefs('case-study-01-content'),
-  'case-study-02-title': 'Construire des outils internes',
-  'case-study-02-subtitle':
-    'éliminer les tâches de stylage répétitives',
-  ...markdownRefs('case-study-02-content'),
-  'case-study-03-title': 'Passer en [abbr:R&D]',
-  'case-study-03-subtitle':
-    'contribuer au produit et à son architecture',
-  ...markdownRefs('case-study-03-content'),
-  'case-study-04-title': 'Adapter le code legacy',
-  'case-study-04-subtitle': 'connecter les forums au théming moderne',
-  ...markdownRefs('case-study-04-content'),
-  'case-study-05-title': 'Concevoir une architecture de tokens',
-  'case-study-05-subtitle': 'unifier les thèmes entre les produits',
-  ...markdownRefs('case-study-05-content'),
-  'case-study-06-title': 'Leçons retenues',
-  'case-study-06-subtitle':
-    'des systèmes au service des designers, développeurs et usagers',
-  ...markdownRefs('case-study-06-content'),
 
   projects: 'Projets',
   'projects-href': 'projets',
@@ -194,45 +107,13 @@ export const frData = {
   'privacy-href': 'confidentialite',
   'privacy-updated': '',
   ...markdownRefs('privacy-content'),
-
-  'form-heading': 'Travaillons ensemble',
-  'form-intro':
-    'Partagez quelques détails et je vous répondrai rapidement.',
-  'form-name-label': 'Nom',
-  'form-email-label': 'Courriel',
-  'form-message-label': 'Message',
-  'form-submit-label': 'Envoyer le message',
-  'form-counter-remaining': '{count} caractères restants',
-  'form-privacy-text':
-    'Nous utilisons ces informations uniquement pour vous répondre.',
-  'form-privacy-link-label': 'Politique de confidentialité',
-  'form-privacy-close-label': 'Retour au formulaire',
-  'form-honeypot-label': 'Laissez ce champ vide',
-  'form-error-name-required': 'Veuillez entrer votre nom.',
-  'form-error-name-too_long': 'Le nom est trop long.',
-  'form-error-email-invalid':
-    'Veuillez entrer une adresse courriel valide.',
-  'form-error-message-required':
-    "Veuillez écrire un message avant de l'envoyer.",
-  'form-error-message-too_long': 'Le message est trop long.',
-  'form-error-message-too_many_links':
-    'Veuillez retirer quelques liens (maximum deux [abbr:URL]).',
-  'form-error-token-missing':
-    "Veuillez confirmer que vous n'êtes pas un robot.",
-  'form-status-sending': 'Envoi du message…',
-  'form-status-success': 'Message envoyé — merci !',
-  'form-status-generic_error':
-    'Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer.',
-  'form-status-validation_error':
-    'Veuillez vérifier les champs et réessayer.',
-  'form-status-rate_limited':
-    'Trop de tentatives. Veuillez patienter une minute.',
-  'form-status-service_unavailable':
-    'Le service est indisponible. Veuillez réessayer bientôt.',
-  'form-status-not_configured':
-    "Le service de courriel n'est pas encore configuré. Réessayez plus tard.",
-  'form-status-blocked':
-    'Nous ne pouvons pas envoyer votre message pour le moment.',
 } as const;
+
+export const frData = mergeLocaleSections(
+  frBaseData,
+  frAbbreviations,
+  frCaseStudies,
+  frFormCopy,
+);
 
 export type FrData = typeof frData;
