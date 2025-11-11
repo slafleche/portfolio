@@ -1,5 +1,6 @@
 import type { Messages } from '@/data/locales';
 import type { Translator } from './helpers.locale';
+import { formTokens } from '@/tokens/forms.tokens';
 
 export const FORM_KEYS = {
   heading: 'form-heading',
@@ -28,6 +29,7 @@ export const FORM_ERROR_KEYS = {
   },
   message: {
     required: 'form-error-message-required',
+    tooShort: 'form-error-message-too_short',
     tooLong: 'form-error-message-too_long',
     tooManyLinks: 'form-error-message-too_many_links',
   },
@@ -67,6 +69,7 @@ export const FORM_ERROR_KEY_LIST = [
   FORM_ERROR_KEYS.name.tooLong,
   FORM_ERROR_KEYS.email.invalid,
   FORM_ERROR_KEYS.message.required,
+  FORM_ERROR_KEYS.message.tooShort,
   FORM_ERROR_KEYS.message.tooLong,
   FORM_ERROR_KEYS.message.tooManyLinks,
   FORM_ERROR_KEYS.token.missing,
@@ -104,6 +107,7 @@ export type ContactFormCopy = {
     };
     message: {
       required: string;
+      tooShort: string;
       tooLong: string;
       tooManyLinks: string;
     };
@@ -116,42 +120,47 @@ export type ContactFormCopy = {
 
 export const buildContactFormCopy = (
   t: Translator,
-): ContactFormCopy => ({
-  heading: t(FORM_KEYS.heading),
-  intro: t(FORM_KEYS.intro),
-  counterTemplate: t(FORM_KEYS.counterRemaining),
-  submitLabel: t(FORM_KEYS.submitLabel),
-  privacy: {
-    text: t(FORM_KEYS.privacyText),
-    linkLabel: t(FORM_KEYS.privacyLinkLabel),
-    closeLabel: t(FORM_KEYS.privacyCloseLabel),
-  },
-  labels: {
-    name: t(FORM_LABEL_KEYS.name),
-    email: t(FORM_LABEL_KEYS.email),
-    message: t(FORM_LABEL_KEYS.message),
-  },
-  honeypotLabel: t(FORM_KEYS.honeypotLabel),
-  errors: {
-    name: {
-      required: t(FORM_ERROR_KEYS.name.required),
-      tooLong: t(FORM_ERROR_KEYS.name.tooLong),
+): ContactFormCopy => {
+  const minChars = formTokens.message.minChars.toString();
+  const withMin = (value: string) => value.replace('{min}', minChars);
+  return {
+    heading: t(FORM_KEYS.heading),
+    intro: t(FORM_KEYS.intro),
+    counterTemplate: t(FORM_KEYS.counterRemaining),
+    submitLabel: t(FORM_KEYS.submitLabel),
+    privacy: {
+      text: t(FORM_KEYS.privacyText),
+      linkLabel: t(FORM_KEYS.privacyLinkLabel),
+      closeLabel: t(FORM_KEYS.privacyCloseLabel),
     },
-    email: {
-      invalid: t(FORM_ERROR_KEYS.email.invalid),
+    labels: {
+      name: t(FORM_LABEL_KEYS.name),
+      email: t(FORM_LABEL_KEYS.email),
+      message: t(FORM_LABEL_KEYS.message),
     },
-    message: {
-      required: t(FORM_ERROR_KEYS.message.required),
-      tooLong: t(FORM_ERROR_KEYS.message.tooLong),
-      tooManyLinks: t(FORM_ERROR_KEYS.message.tooManyLinks),
+    honeypotLabel: t(FORM_KEYS.honeypotLabel),
+    errors: {
+      name: {
+        required: t(FORM_ERROR_KEYS.name.required),
+        tooLong: t(FORM_ERROR_KEYS.name.tooLong),
+      },
+      email: {
+        invalid: t(FORM_ERROR_KEYS.email.invalid),
+      },
+      message: {
+        required: t(FORM_ERROR_KEYS.message.required),
+        tooShort: withMin(t(FORM_ERROR_KEYS.message.tooShort)),
+        tooLong: t(FORM_ERROR_KEYS.message.tooLong),
+        tooManyLinks: t(FORM_ERROR_KEYS.message.tooManyLinks),
+      },
+      token: {
+        missing: t(FORM_ERROR_KEYS.token.missing),
+      },
     },
-    token: {
-      missing: t(FORM_ERROR_KEYS.token.missing),
-    },
-  },
-  statuses: Object.fromEntries(
-    Object.entries(FORM_STATUS_KEYS).map(
-      ([status, key]) => [status, t(key)],
-    ),
-  ) as Record<FormStatusKey, string>,
-});
+    statuses: Object.fromEntries(
+      Object.entries(FORM_STATUS_KEYS).map(
+        ([status, key]) => [status, t(key)],
+      ),
+    ) as Record<FormStatusKey, string>,
+  };
+};

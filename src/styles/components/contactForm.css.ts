@@ -395,6 +395,79 @@ export const visuallyHidden = style({
   border: 0,
 });
 
+const toastBase: ComplexStyleRule = {
+  width: '100%',
+  maxWidth: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: formTokens.layout.fieldGap.css(),
+  ...paddings(formTokens.field.paddings),
+  ...borders(formTokens.field.borders),
+  boxShadow: `0 ${m(4).css()} ${m(14).css()} ${colorVars.black
+    .alpha(0.35)
+    .css()}`,
+  pointerEvents: 'auto',
+};
+
+export const toastRoot = style(toastBase);
+
+export const toastSuccess = style([
+  {
+    ...backgrounds(formTokens.status.success.backgrounds),
+    ...borders(formTokens.status.success.borders),
+  },
+]);
+
+export const toastError = style([
+  {
+    ...backgrounds(formTokens.status.error.backgrounds),
+    ...borders(formTokens.status.error.borders),
+  },
+]);
+
+export const toastInfo = style([
+  {
+    ...backgrounds(formTokens.status.generic.backgrounds),
+    ...borders(formTokens.status.generic.borders),
+  },
+]);
+
+export const toastTitle = style({
+  flex: 1,
+  margin: 0,
+  fontWeight: 600,
+});
+
+export const toastClose = style({
+  border: 'none',
+  background: 'transparent',
+  color: colorVars.bodyFg.css(),
+  fontSize: '1.25rem',
+  lineHeight: 1,
+  cursor: 'pointer',
+  padding: 0,
+  minWidth: glassyButtonTokens.iconSize.css(),
+  minHeight: glassyButtonTokens.iconSize.css(),
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
+export const toastViewport = style({
+  position: 'fixed',
+  bottom: m(6).css(),
+  left: '50%',
+  transform: 'translateX(-50%)',
+  width: 'min(320px, calc(100vw - 32px))',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: formTokens.layout.fieldGap.css(),
+  zIndex: 1300,
+  pointerEvents: 'none',
+  outline: 'none',
+});
+
 globalStyle(`${input}[data-error="true"]::placeholder`, {
   color: formTokens.field.error.text.color.css(),
 });

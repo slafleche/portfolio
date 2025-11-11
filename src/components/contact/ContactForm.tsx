@@ -12,6 +12,7 @@ import {
 import type { MouseEvent } from 'react';
 import clsx from 'clsx';
 import * as Dialog from '@radix-ui/react-dialog';
+import * as Toast from '@radix-ui/react-toast';
 import type {
   ContactFormCopy,
   FormStatusKey,
@@ -90,6 +91,15 @@ type TurnstileState =
 
 let turnstileScriptPromise: Promise<void> | null = null;
 
+type ToastTone = 'success' | 'info' | 'error';
+
+type ToastState = {
+	open: boolean;
+	message: string;
+	tone: ToastTone;
+	id: number;
+};
+
 const loadTurnstileScript = () => {
 	if (typeof window === 'undefined') {
 		return Promise.reject(
@@ -157,17 +167,35 @@ const serverStatusToFormStatus = (
   return code;
 };
 
+const statusToToastTone = (status: FormStatusKey): ToastTone => {
+  if (status === 'success') {
+    return 'success';
+  }
+  if (
+    status === 'validation_error' ||
+    status === 'rate_limited' ||
+    status === 'service_unavailable' ||
+    status === 'not_configured' ||
+    status === 'blocked' ||
+    status === 'generic'
+  ) {
+    return 'error';
+  }
+  return 'info';
+};
+
 const isBrowser = () => typeof window !== 'undefined';
 
-const buildErrorMap = (copy: ContactFormCopy) =>
-  ({
-    'form-error-name-required': copy.errors.name.required,
-    'form-error-name-too_long': copy.errors.name.tooLong,
-    'form-error-email-invalid': copy.errors.email.invalid,
-    'form-error-message-required': copy.errors.message.required,
-    'form-error-message-too_long': copy.errors.message.tooLong,
-    'form-error-message-too_many_links':
-      copy.errors.message.tooManyLinks,
+  const buildErrorMap = (copy: ContactFormCopy) =>
+    ({
+      'form-error-name-required': copy.errors.name.required,
+      'form-error-name-too_long': copy.errors.name.tooLong,
+      'form-error-email-invalid': copy.errors.email.invalid,
+      'form-error-message-required': copy.errors.message.required,
+      'form-error-message-too_short': copy.errors.message.tooShort,
+      'form-error-message-too_long': copy.errors.message.tooLong,
+      'form-error-message-too_many_links':
+        copy.errors.message.tooManyLinks,
     'form-error-token-missing': copy.errors.token.missing,
   }) as const;
 
@@ -215,6 +243,15 @@ export default function ContactForm({
     hasAttemptedSubmit,
     setHasAttemptedSubmit,
   ] = useState(false);
+  const [
+    toastState,
+    setToastState,
+  ] = useState<ToastState>({
+    open: false,
+    message: '',
+    tone: 'info',
+    id: 0,
+  });
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
@@ -237,7 +274,6 @@ export default function ContactForm({
     turnstileEnabled && !debugState?.turnstileSimulation;
   const showTurnstileSection = turnstileEnabled || Boolean(debugState);
   const shouldHideFormBody = status === 'success';
-  const shouldFocusStatus = shouldHideFormBody;
   const dialogWasOpenRef = useRef(isOpen);
 
 
@@ -267,13 +303,6 @@ export default function ContactForm({
   useEffect(() => {
     storageKeyRef.current = storageKey;
   }, [storageKey]);
-
-  useEffect(() => {
-    if (!shouldFocusStatus) return;
-    if (statusRef.current) {
-      statusRef.current.focus({ preventScroll: true });
-    }
-  }, [shouldFocusStatus]);
 
   useEffect(() => {
     if (!shouldRenderTurnstileWidget) {
@@ -390,6 +419,25 @@ export default function ContactForm({
     dialogWasOpenRef.current = isOpen;
   }, [debugState, isOpen, resetFormState]);
 
+  const showToast = useCallback(
+    (nextStatus: FormStatusKey, message: string) => {
+      setToastState((prev) => ({
+        open: true,
+        message,
+        tone: statusToToastTone(nextStatus),
+        id: prev.id + 1,
+      }));
+    },
+    [],
+  );
+
+  const handleToastOpenChange = useCallback((nextOpen: boolean) => {
+    setToastState((prev) => ({
+      ...prev,
+      open: nextOpen,
+    }));
+  }, []);
+
   const applyResponse = useCallback(
     (
       response: ContactFormResponse,
@@ -401,6 +449,7 @@ export default function ContactForm({
 
       setStatus(nextStatus);
       setStatusMessage(nextMessage);
+      showToast(nextStatus, nextMessage);
 
       if (response.ok && !options?.preserveValues) {
         resetFormState();
@@ -409,6 +458,7 @@ export default function ContactForm({
     [
       copy.statuses,
       resetFormState,
+      showToast,
     ],
   );
 
@@ -446,6 +496,7 @@ export default function ContactForm({
     },
     [debugState?.enableTelemetryLogs],
   );
+
 
   const submitViaApi = useCallback(
     async (
@@ -629,6 +680,11 @@ export default function ContactForm({
     values.message,
   ]);
 
+  useEffect(() => {
+    if (!isOpen || isPrivacyOpen) return;
+    nameInputRef.current?.focus({ preventScroll: true });
+  }, [isOpen, isPrivacyOpen]);
+
   const handleBlur = useCallback(() => {
     setFieldErrors(validateDraft(values).errors);
   }, [values]);
@@ -743,6 +799,7 @@ export default function ContactForm({
         console.error('[ContactForm] submit failed', error);
         setStatus('generic');
         setStatusMessage(copy.statuses.generic);
+        showToast('generic', copy.statuses.generic);
         logTelemetryEvent('generic_error', error);
         logStatusFocus('focus:status-generic');
       } finally {
@@ -761,6 +818,7 @@ export default function ContactForm({
       turnstileEnabled,
       actionUrl,
       submitViaApi,
+      showToast,
     ],
   );
 
@@ -938,8 +996,15 @@ export default function ContactForm({
       ? privacyCopy.updated.trim()
       : '';
 
+  const toastToneClass =
+    toastState.tone === 'success'
+      ? s.toastSuccess
+      : toastState.tone === 'error'
+        ? s.toastError
+        : s.toastInfo;
+
   return (
-    <>
+    <Toast.Provider duration={6000} swipeDirection="down">
       <form
         ref={formRef}
         className={s.form}
@@ -1232,6 +1297,27 @@ export default function ContactForm({
           </>
         ) : null}
       </form>
+      {toastState.message ? (
+        <Toast.Root
+          key={toastState.id}
+          className={clsx(s.toastRoot, toastToneClass)}
+          open={toastState.open}
+          onOpenChange={handleToastOpenChange}
+          aria-live="off"
+          role="presentation"
+        >
+          <Toast.Title className={s.toastTitle}>
+            {toastState.message}
+          </Toast.Title>
+          <Toast.Close
+            className={s.toastClose}
+            aria-label={copy.privacy.closeLabel}
+          >
+            ×
+          </Toast.Close>
+        </Toast.Root>
+      ) : null}
+      <Toast.Viewport className={s.toastViewport} />
       <Dialog.Root
         open={isPrivacyOpen}
         onOpenChange={handlePrivacyOpenChange}
@@ -1265,6 +1351,6 @@ export default function ContactForm({
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-    </>
+    </Toast.Provider>
   );
 }

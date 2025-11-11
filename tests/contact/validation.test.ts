@@ -40,7 +40,7 @@ describe('contactForm validation', () => {
     const result = validateDraft({
       name: 'J',
       email: 'invalid-email',
-      message: 'short',
+      message: '',
       token: '',
       hp: '',
     });
@@ -84,3 +84,14 @@ describe('contactForm validation', () => {
     expect(result.errors).toEqual({});
   });
 });
+  it('flags too-short messages separately from empty ones', () => {
+    const result = validateDraft({
+      name: 'Jane',
+      email: 'jane@example.com',
+      message: 'short',
+      token: 'token',
+      hp: '',
+    });
+    expect(result.errors.message).toBe('form-error-message-too_short');
+    expect(result.status).toBe('validation_error');
+  });
