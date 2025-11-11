@@ -20,11 +20,11 @@ at a time.
 
 ### Shape
 
-The arch shape was chosen precisely because it’s impractical in CSS.  
-It started as an early test in AI collaboration — it took work, but we ended up
+The arch shape was chosen precisely because it’s impractical in [abbr:CSS].  
+It started as an early test in [abbr:AI] collaboration — it took work, but we ended up
 with something interesting.
 
-The arch is SVG-based but calculated, not drawn, which gives it surprising
+The arch is [abbr:SVG]-based but calculated, not drawn, which gives it surprising
 flexibility.  
 Changing a few numbers reshapes the curve without breaking alignment or
 proportion.

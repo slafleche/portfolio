@@ -12,5 +12,5 @@ shift, but good structure keeps that debt from spreading.
 Like a **Ship of Theseus**: the parts evolve, but the identity holds.  
 The design language stays intact because the structure makes change safe by
 design.  
-Clean architecture isn’t just for data and APIs; styles can be just as
+Clean architecture isn’t just for data and [abbr:API]s; styles can be just as
 disciplined, predictable, and maintainable when treated with the same respect.

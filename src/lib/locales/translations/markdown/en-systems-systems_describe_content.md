@@ -1,12 +1,12 @@
 ### Measurement System
 
-CSS should be treated with the same structure and reliability as any other
+[abbr:CSS] should be treated with the same structure and reliability as any other
 code.  
 It stays flexible by default and only gets strict where math needs guarantees.
 
 A Measurement object defines the value and unit.  
 Values can be transformed with intuitive, English-style helpers, and the results
-are compiled to CSS at build time through Vanilla Extract.  
+are compiled to [abbr:CSS] at build time through Vanilla Extract.  
 Each component can set its own guardrails.
 
 ```ts
@@ -48,7 +48,7 @@ style({
 Operations return new values, so shared tokens never mutate.  
 Final output happens at `.css()`, which makes rendering predictable.  
 Shared rules enforce ranges for contrast, lightness, and alpha, so gradients and
-UI states stay readable.
+[abbr:UI] states stay readable.
 
 The internals can change and the contract stays the same.  
 That keeps color work composable, consistent, and safe to refactor.

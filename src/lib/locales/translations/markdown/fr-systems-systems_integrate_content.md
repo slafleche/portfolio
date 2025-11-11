@@ -1,6 +1,6 @@
 ### Polices
 
-La configuration des polices part d’un seul fichier partagé entre le CSS et les
+La configuration des polices part d’un seul fichier partagé entre le [abbr:CSS] et les
 requêtes Google Fonts.  
 Les graisses sont définies comme des plages ou des listes, rendant l’intention
 claire dès le départ.
@@ -15,7 +15,7 @@ claire dès le départ.
 }
 ```
 
-**Définition réutilisable de la famille (partagée entre tokens et CSS) :**
+**Définition réutilisable de la famille (partagée entre tokens et [abbr:CSS]) :**
 
 ```ts
 import { m } from '../styles/measurementKit';
@@ -73,9 +73,9 @@ import { composeFontVariantStyles } from '../tokens/fontVariants.tokens';
 const heroHeading = composeFontVariantStyles(fontVariants.hero);
 ```
 
-La même configuration alimente un générateur d’URL qui ne demande que les plages
+La même configuration alimente un générateur d’[abbr:URL] qui ne demande que les plages
 et styles réellement utilisés.  
-Cela garde la typographie cohérente entre CSS et requêtes réseau tout en
+Cela garde la typographie cohérente entre [abbr:CSS] et requêtes réseau tout en
 allégeant la charge utile.
 
 ---
@@ -83,7 +83,7 @@ allégeant la charge utile.
 ### Localisation
 
 Chaque section ne charge que le texte dont elle a besoin.  
-Les bundles correspondent directement aux sections UI, donc le chargement reste
+Les bundles correspondent directement aux sections [abbr:UI], donc le chargement reste
 léger et la responsabilité claire.  
 Un seul traducteur est créé par locale, et les builders s’en servent pour
 composer des objets de texte simples — pas de couche i18n, pas d’appels `t()`
@@ -112,7 +112,7 @@ prévisibles.
 ### Pipeline des Médias
 
 Les médias ne sont pas stockés dans le dépôt.  
-De petits fichiers JSON pointent vers les originaux distants, et des scripts
+De petits fichiers [abbr:JSON] pointent vers les originaux distants, et des scripts
 gèrent le téléchargement, l’optimisation et la génération de manifestes prêts à
 l’emploi.
 
@@ -141,5 +141,5 @@ l’emploi.
 
 Ce processus garde les fichiers lourds hors du contrôle de version et produit
 des sorties déterministes prêtes à être consommées par les composants.  
-Les SVG suivent le même principe : nettoyés avec SVGO et formatés avec Prettier
-pour des IDs sûrs et des diffs cohérents.
+Les [abbr:SVG] suivent le même principe : nettoyés avec [abbr:SVGO] et formatés avec Prettier
+pour des [abbr:ID]s sûrs et des diffs cohérents.
