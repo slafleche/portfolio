@@ -3,6 +3,7 @@ import type {
   FieldKey,
   UiPermutationId,
 } from './formDebugUiStates';
+import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
 
 // Each card in the debug gallery composes a UI permutation (focus, hover, etc.)
 // with an optional API scenario (success, rate_limited, etc.). The renderer
@@ -23,6 +24,11 @@ export type DebugCardSpec = {
   showSubmitOverlay?: boolean;
   info?: readonly string[];
   turnstileSimulation?: 'missing' | 'expired';
+  statusState?: {
+    status: FormStatusKey;
+    message?: string;
+  };
+  toastScenarioId?: ApiScenarioId;
 };
 
 export const debugCardSpecs: readonly DebugCardSpec[] = [
@@ -32,6 +38,15 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     description: 'Pristine fields right after the dialog opens.',
     ui: { global: 'default' },
     showSubmitOverlay: true,
+  },
+  {
+    id: 'ui-success-panel',
+    title: 'UI — Success panel',
+    description:
+      'Locks the success view for styling/screenshots without submitting.',
+    ui: { global: 'validEntry' },
+    statusState: { status: 'success' },
+    info: ['Forces the celebratory panel without hitting the API.'],
   },
   {
     id: 'ui-focus',
@@ -143,6 +158,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     ui: { global: 'invalid' },
     logFocus: true,
     showSubmitOverlay: true,
+    toastScenarioId: 'validation_error',
   },
   {
     id: 'api-rate-limited',
@@ -151,6 +167,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     apiScenarioId: 'rate_limited',
     ui: { global: 'readonlyPending' },
     showSubmitOverlay: true,
+    toastScenarioId: 'rate_limited',
   },
   {
     id: 'api-service-down',
@@ -160,6 +177,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     apiScenarioId: 'service_unavailable',
     ui: { global: 'readonlyPending' },
     showSubmitOverlay: true,
+    toastScenarioId: 'service_unavailable',
   },
   {
     id: 'api-blocked',
@@ -169,6 +187,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     apiScenarioId: 'blocked',
     ui: { global: 'disabled' },
     revealHoneypot: true,
+    toastScenarioId: 'blocked',
   },
   {
     id: 'api-blocked-focus-visible',
@@ -183,6 +202,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       },
     },
     revealHoneypot: true,
+    toastScenarioId: 'blocked',
   },
   {
     id: 'api-generic-error',
@@ -192,6 +212,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     apiScenarioId: 'generic_error',
     ui: { global: 'validEntry' },
     showSubmitOverlay: true,
+    toastScenarioId: 'generic_error',
   },
   {
     id: 'api-not-configured',
@@ -201,5 +222,6 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     apiScenarioId: 'not_configured',
     ui: { global: 'disabled' },
     info: ['Shows new localized copy for the not-configured state.'],
+    toastScenarioId: 'not_configured',
   },
 ] as const;

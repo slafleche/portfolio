@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { RendererThis, TokenizerThis, TokensList } from 'marked';
 import { createAbbrShortcodeExtension } from '@/lib/markdown/abbrShortcode';
 import { renderAbbreviation } from '@/lib/locales/translations/abbrRenderer';
 import { abbrSlug } from '@/lib/stringUtils';
@@ -37,7 +38,15 @@ describe('abbr renderer', () => {
       lookup,
     });
 
-    const token = extension.tokenizer?.('[abbr:AI] rocks!');
+    const tokenizerContext = {
+      lexer: {} as TokenizerThis['lexer'],
+    } as TokenizerThis;
+    const tokens = [] as unknown as TokensList;
+    const token = extension.tokenizer?.call(
+      tokenizerContext,
+      '[abbr:AI] rocks!',
+      tokens,
+    );
     expect(token).toEqual({
       type: 'abbr-shortcode',
       raw: '[abbr:AI]',
@@ -45,7 +54,13 @@ describe('abbr renderer', () => {
       slug: abbrSlug('AI'),
     });
 
-    const rendered = extension.renderer?.(token as any);
+    const rendererContext = {
+      parser: {} as RendererThis['parser'],
+    } as RendererThis;
+    const rendered = extension.renderer?.call(
+      rendererContext,
+      token as any,
+    );
     expect(rendered).toContain('<abbr');
   });
 });

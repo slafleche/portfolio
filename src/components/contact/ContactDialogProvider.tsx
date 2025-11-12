@@ -13,6 +13,7 @@ import type { ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as s from '@/styles/components/contactDialog.css';
 import ContactForm from './ContactForm';
+import type { ContactFormToastDebugScenario } from './contact.types';
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { sharedStrings } from '@/lib/sharedStrings';
@@ -90,6 +91,7 @@ type ContactDialogProviderProps = {
   formCopy: ContactFormCopy;
   privacyCopy: PrivacyCopy;
   locale: string;
+  toastDebugScenario?: ContactFormToastDebugScenario;
 };
 
 export function ContactDialogProvider({
@@ -97,6 +99,7 @@ export function ContactDialogProvider({
   formCopy,
   privacyCopy,
   locale,
+  toastDebugScenario,
 }: ContactDialogProviderProps) {
   const [
     intent,
@@ -106,6 +109,7 @@ export function ContactDialogProvider({
   const baseHistorySeededRef = useRef(false);
   const previousIntentRef = useRef<ModalIntent>('none');
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [successVisible, setSuccessVisible] = useState(false);
 
   const captureFocusAnchor = useCallback(() => {
     if (typeof document === 'undefined') return;
@@ -239,11 +243,13 @@ export function ContactDialogProvider({
   const openContact = useCallback(() => {
     captureFocusAnchor();
     applyIntent('contact', { history: 'push' });
+    setSuccessVisible(false);
   }, [applyIntent, captureFocusAnchor]);
 
   const closeContact = useCallback(() => {
     applyIntent('none', { history: 'replace' });
     setTimeout(restoreFocusAnchor, 0);
+    setSuccessVisible(false);
   }, [applyIntent, restoreFocusAnchor]);
 
   const openPrivacy = useCallback(() => {
@@ -310,18 +316,17 @@ export function ContactDialogProvider({
                     ×
                   </button>
                 </Dialog.Close>
-                <Dialog.Title className={s.heading}>
-                  {formCopy.heading}
-                </Dialog.Title>
-                <Dialog.Description asChild>
-                  <div className={s.body}>
-                    <p>{formCopy.intro}</p>
-                  </div>
-                </Dialog.Description>
+                {!successVisible ? (
+                  <Dialog.Title className={s.heading}>
+                    {formCopy.heading}
+                  </Dialog.Title>
+                ) : null}
                 <ContactForm
                   copy={formCopy}
                   privacyCopy={privacyCopy}
                   locale={locale}
+                  toastDebugScenario={toastDebugScenario}
+                  onSuccessStateChange={setSuccessVisible}
                 />
               </div>
             </div>

@@ -171,6 +171,10 @@ export const statusWrapper = style({
   },
 });
 
+export const statusSuccessStandalone = style({
+  width: '100%',
+});
+
 export const counter = style({
   color: formTokens.counter.text.color.css(),
   fontSize: '0.85rem',
@@ -457,15 +461,62 @@ export const toastClose = style({
 export const toastViewport = style({
   position: 'fixed',
   bottom: m(6).css(),
-  left: '50%',
-  transform: 'translateX(-50%)',
+  right: m(6).css(),
   width: 'min(320px, calc(100vw - 32px))',
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'flex-end',
   gap: formTokens.layout.fieldGap.css(),
   zIndex: 1300,
   pointerEvents: 'none',
   outline: 'none',
+});
+
+export const successPanel = style({
+  display: 'grid',
+  gap: formTokens.layout.fieldGap.css(),
+  justifyItems: 'center',
+  textAlign: 'center',
+  padding: `${m(24).css()} ${m(12).css()}`,
+  borderRadius: formTokens.field.borders.radius.css(),
+  ...backgrounds(formTokens.status.success.backgrounds),
+  ...borders(formTokens.status.success.borders),
+});
+
+export const successIconWrapper = style({
+  width: m(64).css(),
+  height: m(64).css(),
+  borderRadius: '50%',
+  backgroundColor: formTokens.successPanel.icon.background.css(),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
+export const successIcon = style({
+  width: m(36).css(),
+  height: m(36).css(),
+  color: formTokens.successPanel.icon.color.css(),
+});
+
+export const successCopy = style({
+  display: 'grid',
+  gap: m(8).css(),
+  maxWidth: '32ch',
+});
+
+export const successHeading = style({
+  margin: 0,
+  fontSize: '1.35rem',
+  fontWeight: 700,
+  color: colorVars.white.alpha(0.95).css(),
+});
+
+export const successBody = style({
+  margin: 0,
+  fontSize: '1rem',
+  lineHeight: 1.5,
+  color: formTokens.successPanel.body.color.css(),
 });
 
 globalStyle(`${input}[data-error="true"]::placeholder`, {

@@ -7,7 +7,9 @@ import {
 } from '@/lib/responsive/ResponsiveProvider';
 
 const { mockUseMedia } = vi.hoisted(() => ({
-  mockUseMedia: vi.fn(() => ({ fullSize: true })),
+  mockUseMedia: vi.fn<(...args: unknown[]) => { fullSize: boolean }>(
+    () => ({ fullSize: true }),
+  ),
 }));
 
 vi.mock('@/styles/responsive', () => ({

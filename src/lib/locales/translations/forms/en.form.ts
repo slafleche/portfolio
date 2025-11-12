@@ -1,7 +1,6 @@
 export const enFormCopy = {
 	'form-heading': "Let's work together",
-	'form-intro':
-		"Share a few details and I'll get back as soon as I can.",
+	'form-success-body': "I'll get back to you as soon as possible.",
 	'form-name-label': 'Name',
 	'form-email-label': 'Email',
 	'form-message-label': 'Message',
@@ -23,7 +22,7 @@ export const enFormCopy = {
 		'Please remove extra links (limit two [abbr:URL]s).',
 	'form-error-token-missing': "Please confirm you're not a bot.",
 	'form-status-sending': 'Sending your message…',
-	'form-status-success': 'Message sent — thank you!',
+	'form-status-success': 'Message sent!',
 	'form-status-generic_error':
 		"We couldn't send your message right now. Please try again.",
 	'form-status-validation_error':

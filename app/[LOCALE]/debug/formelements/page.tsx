@@ -9,6 +9,7 @@ import type {
   ContactFormDebugFieldState,
   ContactFormDebugState,
 } from '@/components/contact/ContactForm';
+import type { ContactFormToastDebugScenario } from '@/components/contact/contact.types';
 import type { ContactFormResponse } from '@/modules/contactForm/mockSubmit';
 import {
   buildPrivacyCopy,
@@ -284,6 +285,10 @@ const buildDebugState = (
     }
   }
 
+  if (card.spec.statusState) {
+    statusState = card.spec.statusState;
+  }
+
   const hasErrors = Object.keys(fieldErrors).length > 0;
 
   const normalizedFieldStates =
@@ -494,6 +499,12 @@ export default async function FormElementsDebugPage({
           >
             {cards.map((card) => {
               const debugState = buildDebugState(card);
+              const toastScenario: ContactFormToastDebugScenario | undefined =
+                card.spec.toastScenarioId &&
+                card.spec.toastScenarioId !== 'success' &&
+                card.spec.toastScenarioId !== 'sending'
+                  ? card.spec.toastScenarioId
+                  : undefined;
               return (
                 <article key={card.spec.id} style={cardStyle}>
                   <div>
@@ -510,6 +521,7 @@ export default async function FormElementsDebugPage({
                     privacyCopy={privacyCopy}
                     debugState={debugState}
                     locale={locale}
+                    toastDebugScenario={toastScenario}
                   />
 
                   <CardMeta card={card} />

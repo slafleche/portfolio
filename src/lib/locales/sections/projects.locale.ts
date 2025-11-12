@@ -1,15 +1,12 @@
-import type { Messages } from '@/data/locales';
-import type { Translator } from './helpers.locale';
+import type { MessageKey, Translator } from './helpers.locale';
 import { translateMarkdownSections } from './markdownSections.helpers';
-
-type MessageKey = keyof Messages;
 
 export const PROJECTS_KEYS = {
 	title: 'projects',
 	href: 'projects-href',
 } as const satisfies {
 	title: MessageKey;
-	href: Extract<MessageKey, `${string}-href`>;
+	href: MessageKey;
 };
 
 const PROJECT_DEFINITIONS = [

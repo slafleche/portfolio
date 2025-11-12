@@ -20,7 +20,12 @@ export type RetryReason = 'timeout' | 'server' | 'network';
 
 const submissionCounts = new Map<FormServerResponseCode, number>();
 
-const BREVO_LATENCY_BUCKETS = [
+type BrevoLatencyBucket = {
+	readonly upperBound: number;
+	count: number;
+};
+
+const BREVO_LATENCY_BUCKETS: BrevoLatencyBucket[] = [
 	{ upperBound: 100, count: 0 },
 	{ upperBound: 250, count: 0 },
 	{ upperBound: 500, count: 0 },
@@ -28,7 +33,7 @@ const BREVO_LATENCY_BUCKETS = [
 	{ upperBound: 2000, count: 0 },
 	{ upperBound: 5000, count: 0 },
 	{ upperBound: Number.POSITIVE_INFINITY, count: 0 },
-] as const;
+];
 
 const retryCounts: Record<RetryReason, number> = {
 	timeout: 0,

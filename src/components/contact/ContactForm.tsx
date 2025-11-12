@@ -28,6 +28,8 @@ import {
   type ContactFormPayload,
   type ContactFormResponse,
 } from '@/modules/contactForm/mockSubmit';
+import ContactFormSuccess from '@/components/contact/ContactFormSuccess';
+import type { ContactFormToastDebugScenario } from '@/components/contact/contact.types';
 import * as s from '@/styles/components/contactForm.css';
 import { formTokens } from '@/tokens/forms.tokens';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
@@ -73,6 +75,8 @@ type ContactFormProps = {
   onSubmitted?: (response: ContactFormResponse) => void;
   debugState?: ContactFormDebugState;
   locale?: string;
+  toastDebugScenario?: ContactFormToastDebugScenario;
+  onSuccessStateChange?: (visible: boolean) => void;
 };
 
 const DRAFT_STORAGE_PREFIX = 'contact-form-draft';
@@ -210,6 +214,8 @@ export default function ContactForm({
   onSubmitted,
   debugState,
   locale = DEFAULT_LOCALE,
+  toastDebugScenario,
+  onSuccessStateChange,
 }: ContactFormProps) {
   const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const turnstileEnabled = Boolean(turnstileSiteKey);
@@ -252,6 +258,7 @@ export default function ContactForm({
     tone: 'info',
     id: 0,
   });
+  const toastDebugKeyRef = useRef<string | null>(null);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
@@ -275,6 +282,10 @@ export default function ContactForm({
   const showTurnstileSection = turnstileEnabled || Boolean(debugState);
   const shouldHideFormBody = status === 'success';
   const dialogWasOpenRef = useRef(isOpen);
+
+  useEffect(() => {
+    onSuccessStateChange?.(shouldHideFormBody);
+  }, [onSuccessStateChange, shouldHideFormBody]);
 
 
   const resolvedFieldErrors: FieldErrorMap =
@@ -327,23 +338,22 @@ export default function ContactForm({
           setTurnstileStatus('error');
           return;
         }
-        const widgetId = turnstileApi.render(
-          turnstileContainerRef.current,
-          {
-            sitekey: turnstileSiteKey as string,
-            callback: (token: string) => {
-              setValues((prev) => ({ ...prev, token }));
-              setTurnstileStatus('verified');
-            },
-            'expired-callback': () => {
-              setValues((prev) => ({ ...prev, token: '' }));
-              setTurnstileStatus('expired');
-            },
-            'error-callback': () => {
-              setTurnstileStatus('error');
-            },
+
+        const container: HTMLElement = turnstileContainerRef.current;
+        const widgetId = turnstileApi.render(container, {
+          sitekey: turnstileSiteKey as string,
+          callback: (token: string) => {
+            setValues((prev) => ({ ...prev, token }));
+            setTurnstileStatus('verified');
           },
-        );
+          'expired-callback': () => {
+            setValues((prev) => ({ ...prev, token: '' }));
+            setTurnstileStatus('expired');
+          },
+          'error-callback': () => {
+            setTurnstileStatus('error');
+          },
+        });
         turnstileWidgetIdRef.current = widgetId;
         setTurnstileStatus('ready');
       } catch {
@@ -421,6 +431,7 @@ export default function ContactForm({
 
   const showToast = useCallback(
     (nextStatus: FormStatusKey, message: string) => {
+      if (nextStatus === 'success') return;
       setToastState((prev) => ({
         open: true,
         message,
@@ -438,6 +449,28 @@ export default function ContactForm({
     }));
   }, []);
 
+  useEffect(() => {
+    if (!toastDebugScenario) {
+      toastDebugKeyRef.current = null;
+      return;
+    }
+    const normalized =
+      typeof toastDebugScenario === 'string'
+        ? { code: toastDebugScenario }
+        : toastDebugScenario;
+    const key = `${normalized.code}:${normalized.message ?? ''}`;
+    if (toastDebugKeyRef.current === key) {
+      return;
+    }
+    toastDebugKeyRef.current = key;
+    const nextStatus = serverStatusToFormStatus(normalized.code);
+    const toastMessage =
+      normalized.message ??
+      copy.statuses[nextStatus] ??
+      copy.statuses.generic;
+    showToast(nextStatus, toastMessage);
+  }, [toastDebugScenario, copy.statuses, showToast]);
+
   const applyResponse = useCallback(
     (
       response: ContactFormResponse,
@@ -451,7 +484,18 @@ export default function ContactForm({
       setStatusMessage(nextMessage);
       showToast(nextStatus, nextMessage);
 
-      if (response.ok && !options?.preserveValues) {
+      if (
+        response.ok &&
+        response.code === 'success' &&
+        isBrowser()
+      ) {
+        window.sessionStorage.removeItem(storageKeyRef.current);
+      }
+      if (
+        response.ok &&
+        response.code !== 'success' &&
+        !options?.preserveValues
+      ) {
         resetFormState();
       }
     },
@@ -459,6 +503,7 @@ export default function ContactForm({
       copy.statuses,
       resetFormState,
       showToast,
+      storageKeyRef,
     ],
   );
 
@@ -777,6 +822,7 @@ export default function ContactForm({
       setIsSubmitting(true);
       setStatus('sending');
       setStatusMessage(copy.statuses.sending);
+      showToast('sending', copy.statuses.sending);
       logTelemetryEvent('start', payload);
       const shouldUseMockTransport =
         !actionUrl || actionUrl === 'mock';
@@ -1018,12 +1064,26 @@ export default function ContactForm({
           className={s.statusWrapper}
           data-visible={status ? 'true' : 'false'}
         >
-          {status ? (
+          {status === 'success' ? (
+            <div
+              ref={statusRef}
+              className={s.statusSuccessStandalone}
+              role="status"
+              aria-live="assertive"
+              aria-atomic="true"
+              tabIndex={-1}
+            >
+              <ContactFormSuccess
+                title={copy.statuses.success}
+                description={copy.successBody}
+              />
+            </div>
+          ) : status ? (
             <div
               ref={statusRef}
               className={clsx(statusClassName)}
               role="status"
-              aria-live={status === 'success' ? 'assertive' : 'polite'}
+              aria-live="polite"
               aria-atomic="true"
               tabIndex={-1}
             >
@@ -1271,30 +1331,30 @@ export default function ContactForm({
 
         <p className={s.privacy}>
           {copy.privacy.text}{' '}
-              <button
-                type="button"
-                className={s.privacyLink}
-                onClick={handlePrivacyLinkClick}
-                aria-haspopup="dialog"
-              >
-                {copy.privacy.linkLabel}
-              </button>
-            </p>
+          <button
+            type="button"
+            className={s.privacyLink}
+            onClick={handlePrivacyLinkClick}
+            aria-haspopup="dialog"
+          >
+            {copy.privacy.linkLabel}
+          </button>
+        </p>
 
-            <div className={s.buttonRow}>
-              <button
-                type="submit"
-                className={s.submitButton}
-                disabled={derivedButtonState.disabled}
-                data-debug={derivedButtonState.dataDebug}
-                aria-busy={
-                  derivedButtonState.ariaBusy ? 'true' : undefined
-                }
-              >
-                {derivedButtonState.label}
-              </button>
-            </div>
-          </>
+        <div className={s.buttonRow}>
+          <button
+            type="submit"
+            className={s.submitButton}
+            disabled={derivedButtonState.disabled}
+            data-debug={derivedButtonState.dataDebug}
+            aria-busy={
+              derivedButtonState.ariaBusy ? 'true' : undefined
+            }
+          >
+            {derivedButtonState.label}
+          </button>
+        </div>
+      </>
         ) : null}
       </form>
       {toastState.message ? (

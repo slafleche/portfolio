@@ -4,7 +4,7 @@ import { formTokens } from '@/tokens/forms.tokens';
 
 export const FORM_KEYS = {
   heading: 'form-heading',
-  intro: 'form-intro',
+  successBody: 'form-success-body',
   counterRemaining: 'form-counter-remaining',
   privacyText: 'form-privacy-text',
   privacyLinkLabel: 'form-privacy-link-label',
@@ -83,7 +83,7 @@ export type FormStatusKey =
 
 export type ContactFormCopy = {
   heading: string;
-  intro: string;
+  successBody: string;
   counterTemplate: string;
   submitLabel: string;
   privacy: {
@@ -125,7 +125,7 @@ export const buildContactFormCopy = (
   const withMin = (value: string) => value.replace('{min}', minChars);
   return {
     heading: t(FORM_KEYS.heading),
-    intro: t(FORM_KEYS.intro),
+    successBody: t(FORM_KEYS.successBody),
     counterTemplate: t(FORM_KEYS.counterRemaining),
     submitLabel: t(FORM_KEYS.submitLabel),
     privacy: {

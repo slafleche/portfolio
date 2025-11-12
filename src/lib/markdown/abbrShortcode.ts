@@ -1,4 +1,8 @@
-import type { TokenizerAndRendererExtension, Tokens } from 'marked';
+import type {
+	RendererExtension,
+	TokenizerExtension,
+	Tokens,
+} from 'marked';
 
 import type {
 	AbbrLocaleEntry,
@@ -27,9 +31,11 @@ const sanitizeValue = (value: string | null | undefined) => {
 	return value.trim();
 };
 
+type AbbrShortcodeExtension = TokenizerExtension & RendererExtension;
+
 export const createAbbrShortcodeExtension = (
 	options: AbbrShortcodeExtensionOptions,
-): TokenizerAndRendererExtension => {
+): AbbrShortcodeExtension => {
 	const slugify = options.slugify ?? abbrSlug;
 
 	return {
@@ -64,7 +70,7 @@ export const createAbbrShortcodeExtension = (
 				slugify,
 			});
 		},
-	};
+	} satisfies AbbrShortcodeExtension;
 };
 
 export const createLocaleAbbrExtension = (
