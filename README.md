@@ -13,6 +13,11 @@
 - Accessibility in mind
 - Responsive
 
+### Contact dialog debugging
+
+- `ContactDialogProvider` accepts an optional `toastDebugScenario` prop so you can pin a specific toast while tweaking styles (e.g., `toastDebugScenario="service_unavailable"` or `{ code: 'generic_error', message: 'Custom copy' }`). The provider threads the prop through to `ContactForm`.
+- Success scenarios never enqueue toasts; the prop only affects error/guard states so you can inspect rate-limit, validation, or outage banners without wiring up fake submissions.
+
 ### Helper Conventions
 
 - Require MeasurementKit values for anything that represents a scalar (lengths,

@@ -217,6 +217,7 @@ export const colors = {
   // Main Colours
   brand: color('#5b4199'),
   contrast: color('#88dbfc'),
+  successAccent: color('#34d399'),
   // Nav
   // navBg: color('#252136'),
   navFg: baseColours.fg,
@@ -249,6 +250,7 @@ export const colorVars = {
   // Main Colours
   brand: colors.brand,
   contrast: colors.contrast,
+  successAccent: colors.successAccent,
   // Nav
   navFg: colors.navFg,
   navBg: colors.shadow,

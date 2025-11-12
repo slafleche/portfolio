@@ -35,9 +35,9 @@ vi.mock('@/modules/contactForm/mockSubmit', () => ({
 
 const contactCopy: ContactFormCopy = {
   heading: 'Get in touch',
-  intro: 'Fill out the form',
   counterTemplate: '{count} characters left',
   submitLabel: 'Send message',
+  successBody: 'We will reply soon.',
   privacy: {
     text: 'We only use this to reply.',
     linkLabel: 'Privacy',
@@ -59,6 +59,7 @@ const contactCopy: ContactFormCopy = {
     },
     message: {
       required: 'Message required',
+      tooShort: 'Message too short',
       tooLong: 'Message too long',
       tooManyLinks: 'Too many links',
     },

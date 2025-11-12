@@ -6,7 +6,7 @@ import type { ColorWrapper } from './colorWrap.helper';
 export interface IBackgrounds {
   color?: ColorWrapper;
   attachment?: CSS_TYPES.Property.BackgroundAttachment;
-  position?: CSS_TYPES.Property.Position;
+  position?: CSS_TYPES.Property.BackgroundPosition;
   repeat?: CSS_TYPES.Property.BackgroundRepeat;
   size?: CSS_TYPES.Property.BackgroundSize;
   image?: CSS_TYPES.Property.BackgroundImage;

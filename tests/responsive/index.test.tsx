@@ -6,7 +6,9 @@ import {
   CompactOnly,
 } from '@/styles/responsive';
 
-const mockUseMediaQuery = vi.fn(() => true);
+const mockUseMediaQuery = vi.fn<
+	(...args: unknown[]) => boolean
+>(() => true);
 
 vi.mock('@/styles/responsive/mediaFactory', () => ({
   queriesToStrings: (queries: Record<string, unknown>) => queries,

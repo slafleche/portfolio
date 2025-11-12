@@ -110,6 +110,15 @@ export const formTokens = {
       color: colorVars.white.alpha(0.65),
     },
   },
+  successPanel: {
+    icon: {
+      color: colorVars.successAccent.alpha(0.9),
+      background: colorVars.successAccent.alpha(0.12),
+    },
+    body: {
+      color: colorVars.white.alpha(0.82),
+    },
+  },
 } as const;
 
 export type FormTokens = typeof formTokens;

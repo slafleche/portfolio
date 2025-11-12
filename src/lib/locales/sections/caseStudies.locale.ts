@@ -1,15 +1,12 @@
-import type { Messages } from '@/data/locales';
-import type { Translator } from './helpers.locale';
+import type { MessageKey, Translator } from './helpers.locale';
 import { translateMarkdownSections } from './markdownSections.helpers';
-
-type MessageKey = keyof Messages;
 
 export const CASE_STUDY_KEYS = {
   title: 'case_study',
   href: 'case_study-href',
 } as const satisfies {
   title: MessageKey;
-  href: Extract<MessageKey, `${string}-href`>;
+  href: MessageKey;
 };
 
 const CASE_STUDY_DEFINITIONS = [

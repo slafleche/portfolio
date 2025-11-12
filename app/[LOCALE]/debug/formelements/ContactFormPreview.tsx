@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react';
 import ContactForm, {
   type ContactFormDebugState,
 } from '@/components/contact/ContactForm';
+import type { ContactFormToastDebugScenario } from '@/components/contact/contact.types';
 import {
   ContactDialogContext,
   type ContactDialogContextValue,
@@ -16,6 +17,7 @@ type ContactFormPreviewProps = {
   privacyCopy: PrivacyCopy;
   debugState: ContactFormDebugState;
   locale: string;
+  toastDebugScenario?: ContactFormToastDebugScenario;
 };
 
 const noop = () => {};
@@ -25,6 +27,7 @@ export default function ContactFormPreview({
   privacyCopy,
   debugState,
   locale,
+  toastDebugScenario,
 }: ContactFormPreviewProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const overlayButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -68,6 +71,7 @@ export default function ContactFormPreview({
           formRef={formRef}
           locale={locale}
           actionUrl="mock"
+          toastDebugScenario={toastDebugScenario}
         />
 
         {debugState.showSubmitOverlay ? (

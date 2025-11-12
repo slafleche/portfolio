@@ -125,8 +125,8 @@ export const apiScenarios: readonly ApiScenario[] = [
     timelineStage: 'response',
     banner: {
       tone: 'success',
-      title: 'Message sent — thank you!',
-      body: 'We will reply as soon as possible.',
+      title: 'Message sent!',
+      body: 'I will reply as soon as possible.',
     },
     cta: {
       label: 'Message sent',
