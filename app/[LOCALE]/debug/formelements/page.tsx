@@ -5,7 +5,7 @@
 
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { FormLabel } from '@/components/contact/primitives/FormLabel';
-import { FormError } from '@/components/contact/primitives/FormError';
+import { FormHint } from '@/components/contact/primitives/FormHint';
 import { TextInput } from '@/components/contact/primitives/TextInput';
 import { TextareaInput } from '@/components/contact/primitives/TextareaInput';
 import { SubmitButton } from '@/components/contact/primitives/SubmitButton';
@@ -102,22 +102,36 @@ export default function ContactFormDebugPagePlaceholder() {
           </article>
 
           <article style={cardStyle}>
-            <span style={labelStyle}>FormError + TextInput</span>
+            <span style={labelStyle}>FormHint (error)</span>
             <FormLabel htmlFor="debug-email" label="Email" required />
-            <FormError
-              error="Please provide a valid email."
-              errorId="debug-email-error"
-            >
-              <TextInput
-                id="debug-email"
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                aria-describedby="debug-email-error"
-                placeholder="ada@example.com"
-                disabled
-              />
-            </FormError>
+            <TextInput
+              id="debug-email"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              aria-describedby="debug-email-error"
+              aria-invalid="true"
+              placeholder="ada@example.com"
+              disabled
+            />
+            <FormHint tone="error" id="debug-email-error">
+              Please provide a valid email.
+            </FormHint>
+          </article>
+
+          <article style={cardStyle}>
+            <span style={labelStyle}>FormHint (helper)</span>
+            <FormLabel htmlFor="debug-helper" label="Short code" required />
+            <TextInput
+              id="debug-helper"
+              value={name.slice(0, 6)}
+              onChange={(event) => setName(event.target.value)}
+              aria-describedby="debug-helper-hint"
+              placeholder="ABC123"
+            />
+            <FormHint tone="helper" id="debug-helper-hint">
+              Use up to 6 characters.
+            </FormHint>
           </article>
 
           <article style={cardStyle}>

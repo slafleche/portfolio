@@ -29,14 +29,14 @@
 		"isolatedModules": true,
 		"allowImportingTsExtensions": true,
 		"verbatimModuleSyntax": true,
-		"plugins": [
-			{
-				"name": "next"
-			}
-		]
-	},
-	"include": [
-		"app/[LOCALE]/**/*.tsx",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "app/[LOCALE]/**/*.tsx",
 		"src/**/*",
 		"tests/**/*",
 		".next/types/**/*.ts",

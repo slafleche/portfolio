@@ -34,10 +34,11 @@ const controlBase: ComplexStyleRule = {
     '&:hover, &[data-debug="hover"]': {
       ...borders(formTokens.field.hover.borders),
     },
-    '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]': {
-      ...borders(formTokens.field.focusVisible.borders),
-      boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
-    },
+    '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
+      {
+        ...borders(formTokens.field.focusVisible.borders),
+        boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
+      },
     '&:disabled, &[data-debug="disabled"]': {
       opacity: 0.55,
       cursor: 'not-allowed',
@@ -118,6 +119,16 @@ export const errorText = style({
   fontSize: '0.85rem',
 });
 
+export const counter = style({
+  color: formTokens.counter.text.color.css(),
+  fontSize: '0.85rem',
+});
+
+export const helperText = style({
+  color: formTokens.counter.text.color.css(),
+  fontSize: '0.85rem',
+});
+
 const statusBase: ComplexStyleRule = {
   display: 'flex',
   alignItems: 'center',
@@ -175,11 +186,6 @@ export const statusSuccessStandalone = style({
   width: '100%',
 });
 
-export const counter = style({
-  color: formTokens.counter.text.color.css(),
-  fontSize: '0.85rem',
-});
-
 export const helperRow = style({
   display: 'flex',
   justifyContent: 'space-between',
@@ -211,11 +217,14 @@ export const submitButton = style({
       boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-1px)',
     },
-    '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]': {
-      outline: 'none',
-      ...backgrounds(glassyButtonTokens.focusVisible.backgrounds),
-      boxShadow: boxShadow(glassyButtonTokens.focusVisible.boxShadows),
-    },
+    '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
+      {
+        outline: 'none',
+        ...backgrounds(glassyButtonTokens.focusVisible.backgrounds),
+        boxShadow: boxShadow(
+          glassyButtonTokens.focusVisible.boxShadows,
+        ),
+      },
     '&:disabled, &[data-debug="disabled"]': {
       opacity: 0.5,
       cursor: 'not-allowed',
