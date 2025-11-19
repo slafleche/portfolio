@@ -32,6 +32,8 @@ by tooling.** This doc only carries the narrative/context.
 - Confirm invasive changes.
 - Capture decisions in README/TODO files.
 - Surface unrelated lint errors so we can plan follow-ups.
+- Debug sandboxes are disposable: inline all styling/logic locally so the entire
+  file can be deleted once the feature stabilizes (no shared CSS or polish).
 - If a user message (non-code text) contains a `?`, reply using text-only responses—no code blocks or other non-text output.
 
 ## YAML Schema & Tooling Reference
