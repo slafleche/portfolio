@@ -1,0 +1,86 @@
+import type { ReactNode } from 'react';
+import clsx from 'clsx';
+import * as s from '@/styles/components/contactForm.css';
+import { FormLabel } from './FormLabel';
+
+type FieldMessage = {
+  id: string;
+  content: ReactNode;
+};
+
+type FormFieldProps = {
+  children: ReactNode;
+  className?: string;
+  htmlFor: string;
+  label: ReactNode;
+  required?: boolean;
+  error?: FieldMessage | null;
+  helper?: FieldMessage | null;
+  counter?: FieldMessage | null;
+  layout?: 'stacked' | 'split';
+};
+
+export function FormField({
+  children,
+  className,
+  htmlFor,
+  label,
+  required,
+  error,
+  helper,
+  counter,
+  layout = 'stacked',
+}: FormFieldProps) {
+  const hasError = Boolean(error?.content);
+  const hasHelper = Boolean(helper?.content);
+  const hasCounter = Boolean(counter?.content);
+  const showStackedHelper = !hasError && hasHelper;
+  const shouldRenderSplitFooter =
+    layout === 'split' && (hasError || hasHelper || hasCounter);
+  const needsPlaceholder =
+    layout === 'split' && !hasError && !hasHelper && hasCounter;
+
+  return (
+    <div className={clsx(s.fieldGroup, className)}>
+      <FormLabel
+        htmlFor={htmlFor}
+        label={label}
+        required={required}
+      />
+      {children}
+      {layout === 'stacked' ? (
+        <>
+          {hasError ? (
+            <p id={error?.id} className={s.errorText}>
+              {error?.content}
+            </p>
+          ) : null}
+          {showStackedHelper ? (
+            <p id={helper?.id} className={s.counter}>
+              {helper?.content}
+            </p>
+          ) : null}
+        </>
+      ) : shouldRenderSplitFooter ? (
+        <div className={s.helperRow}>
+          {hasError ? (
+            <p id={error?.id} className={s.errorText}>
+              {error?.content}
+            </p>
+          ) : hasHelper ? (
+            <p id={helper?.id} className={s.counter}>
+              {helper?.content}
+            </p>
+          ) : needsPlaceholder ? (
+            <span aria-hidden="true" />
+          ) : null}
+          {hasCounter ? (
+            <p id={counter?.id} className={s.counter}>
+              {counter?.content}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
