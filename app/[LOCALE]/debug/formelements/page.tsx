@@ -1,8 +1,7 @@
 'use client';
 
-// Debug sandbox: inline every bit of styling so this file can be deleted
-// wholesale later. No shared CSS, no production polish—just enough layout to
-// preview primitives in isolation.
+// Debug sandbox: inline every bit of styling so we don't share space with "real" styles.
+// No shared CSS, no production polish—just enough layout to preview primitives in isolation.
 
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { FormLabel } from '@/components/contact/primitives/FormLabel';
@@ -10,6 +9,33 @@ import { FormError } from '@/components/contact/primitives/FormError';
 import { TextInput } from '@/components/contact/primitives/TextInput';
 import { TextareaInput } from '@/components/contact/primitives/TextareaInput';
 import { SubmitButton } from '@/components/contact/primitives/SubmitButton';
+
+const rootStyle = {
+  padding: '32px 16px',
+  maxWidth: 1200,
+  margin: '0 auto',
+} as const;
+
+const gridStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+  gap: 24,
+} as const;
+
+const cardStyle = {
+  borderRadius: 8,
+  padding: 20,
+  border: '1px solid #eee',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 12,
+} as const;
+
+const labelStyle = {
+  fontSize: 13,
+  textTransform: 'uppercase',
+  color: '#fafafa',
+} as const;
 
 const useAutoResizeHandlers = () => {
   const baseHeightRef = useRef<number | null>(null);
@@ -52,51 +78,15 @@ export default function ContactFormDebugPagePlaceholder() {
   const autoResizeHandlers = useAutoResizeHandlers();
 
   return (
-    <main
-      style={{
-        padding: '32px 16px',
-        maxWidth: 720,
-        margin: '0 auto',
-      }}
-    >
-      <h1 style={{ marginBottom: 16 }}>
+    <main style={rootStyle}>
+      <h1 style={{ fontSize: '40px', marginBottom: 16 }}>
         Contact Form — Debug Playground
       </h1>
-      <p style={{ marginBottom: 32, color: '#555' }}>
-        The legacy debug UI was archived while we rebuild the form.
-        This page now showcases the emerging primitives so we can
-        validate them in isolation.
-      </p>
-
       <section style={{ marginBottom: 40 }}>
         <h2 style={{ marginBottom: 16 }}>Primitives</h2>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns:
-              'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: 24,
-          }}
-        >
-          <article
-            style={{
-              borderRadius: 8,
-              padding: 20,
-              border: '1px solid #eee',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 13,
-                textTransform: 'uppercase',
-                color: '#fff',
-              }}
-            >
-              FormLabel
-            </span>
+        <div style={gridStyle}>
+          <article style={cardStyle}>
+            <span style={labelStyle}>FormLabel</span>
             <FormLabel
               htmlFor="debug-name"
               label="Full name"
@@ -111,25 +101,8 @@ export default function ContactFormDebugPagePlaceholder() {
             />
           </article>
 
-          <article
-            style={{
-              borderRadius: 8,
-              padding: 20,
-              border: '1px solid #eee',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 13,
-                textTransform: 'uppercase',
-                color: '#fff',
-              }}
-            >
-              FormError + TextInput
-            </span>
+          <article style={cardStyle}>
+            <span style={labelStyle}>FormError + TextInput</span>
             <FormLabel htmlFor="debug-email" label="Email" required />
             <FormError
               error="Please provide a valid email."
@@ -147,24 +120,8 @@ export default function ContactFormDebugPagePlaceholder() {
             </FormError>
           </article>
 
-          <article
-            style={{
-              borderRadius: 8,
-              padding: 20,
-
-              border: '1px solid #eee',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 13,
-                textTransform: 'uppercase',
-                color: '#fff',
-              }}
-            >
+          <article style={cardStyle}>
+            <span style={labelStyle}>
               TextareaInput (auto-resize)
             </span>
             <FormLabel
@@ -182,26 +139,8 @@ export default function ContactFormDebugPagePlaceholder() {
             />
           </article>
 
-          <article
-            style={{
-              borderRadius: 8,
-              padding: 20,
-
-              border: '1px solid #eee',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 13,
-                textTransform: 'uppercase',
-                color: '#fff',
-              }}
-            >
-              TextareaInput (standard)
-            </span>
+          <article style={cardStyle}>
+            <span style={labelStyle}>TextareaInput (standard)</span>
             <FormLabel
               htmlFor="debug-message-static"
               label="Static notes"
@@ -214,25 +153,8 @@ export default function ContactFormDebugPagePlaceholder() {
             />
           </article>
 
-          <article
-            style={{
-              borderRadius: 8,
-              padding: 20,
-              border: '1px solid #eee',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 12,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 13,
-                textTransform: 'uppercase',
-                color: '#fff',
-              }}
-            >
-              SubmitButton
-            </span>
+          <article style={cardStyle}>
+            <span style={labelStyle}>SubmitButton</span>
             <SubmitButton>Send message</SubmitButton>
             <SubmitButton disabled>Disabled state</SubmitButton>
           </article>

@@ -1,9 +1,8 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import ContactForm, {
-  type ContactFormDebugState,
-} from '@/components/contact/ContactForm';
+import ContactForm from '@/components/contact/ContactForm';
+import type { ContactFormDebugState } from '@/components/contact/contactForm.types';
 import type { ContactFormToastDebugScenario } from '@/components/contact/contact.types';
 import {
   ContactDialogContext,
