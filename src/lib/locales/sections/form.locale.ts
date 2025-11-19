@@ -6,6 +6,9 @@ export const FORM_KEYS = {
   heading: 'form-heading',
   successBody: 'form-success-body',
   counterRemaining: 'form-counter-remaining',
+  messageMaxChars: 'form-message-max_chars',
+  messageUrlUsage: 'form-message-url_usage',
+  messageMaxLinks: 'form-message-max_links',
   requiredIndicator: 'form-required-indicator',
   privacyText: 'form-privacy-text',
   privacyLinkLabel: 'form-privacy-link-label',
@@ -86,6 +89,11 @@ export type ContactFormCopy = {
   heading: string;
   successBody: string;
   counterTemplate: string;
+  messages: {
+    maxChars: string;
+    urlUsage: string;
+    maxLinks: string;
+  };
   requiredIndicator: string;
   submitLabel: string;
   privacy: {
@@ -146,6 +154,11 @@ export const buildContactFormCopy = (
     heading: t(FORM_KEYS.heading),
     successBody: t(FORM_KEYS.successBody),
     counterTemplate: t(FORM_KEYS.counterRemaining),
+    messages: {
+      maxChars: t(FORM_KEYS.messageMaxChars),
+      urlUsage: t(FORM_KEYS.messageUrlUsage),
+      maxLinks: t(FORM_KEYS.messageMaxLinks),
+    },
     requiredIndicator: t(FORM_KEYS.requiredIndicator),
     submitLabel: t(FORM_KEYS.submitLabel),
     privacy: {

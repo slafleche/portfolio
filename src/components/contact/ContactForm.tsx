@@ -6,6 +6,7 @@ import * as s from '@/styles/components/forms.css';
 import { FormBlocksProvider } from './formBlocks.context';
 import { NameBlock } from './blocks/NameBlock';
 import { EmailBlock } from './blocks/EmailBlock';
+import { MessageBlock } from './blocks/MessageBlock';
 
 const DEFAULT_ACTION_URL = '/api/contact';
 
@@ -24,6 +25,9 @@ export default function ContactForm({
   const [emailValue, setEmailValue] = useState(
     debugState?.values?.email ?? '',
   );
+  const [messageValue, setMessageValue] = useState(
+    debugState?.values?.message ?? '',
+  );
 
   const handleNameChange = useCallback<
     React.ChangeEventHandler<HTMLInputElement>
@@ -35,6 +39,12 @@ export default function ContactForm({
     React.ChangeEventHandler<HTMLInputElement>
   >((event) => {
     setEmailValue(event.target.value);
+  }, []);
+
+  const handleMessageChange = useCallback<
+    React.ChangeEventHandler<HTMLTextAreaElement>
+  >((event) => {
+    setMessageValue(event.target.value);
   }, []);
 
   return (
@@ -64,6 +74,18 @@ export default function ContactForm({
           errorText={debugState?.inlineErrors?.email ?? null}
           readOnly={debugState?.fieldStates?.email?.readOnly}
           disabled={debugState?.fieldStates?.email?.disabled}
+        />
+        <MessageBlock
+          value={messageValue}
+          label={copy.labels.message}
+          requiredText={copy.requiredIndicator}
+          counterTemplate={copy.counterTemplate}
+          maxCharactersMessage={copy.messages.maxChars}
+          urlUsageTemplate={copy.messages.urlUsage}
+          maxUrlsMessage={copy.messages.maxLinks}
+          onChange={handleMessageChange}
+          helperText={debugState?.inlineHelpers?.message ?? null}
+          errorText={debugState?.inlineErrors?.message ?? null}
         />
       </form>
     </FormBlocksProvider>
