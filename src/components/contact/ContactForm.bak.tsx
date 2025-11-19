@@ -29,12 +29,12 @@ import {
   type ContactFormResponse,
 } from '@/modules/contactForm/mockSubmit';
 import ContactFormSuccess from '@/components/contact/ContactFormSuccess';
-import * as s from '@/styles/components/contactForm.css';
+import * as s from '@/styles/components/forms.css';
 import { formTokens } from '@/tokens/forms.tokens';
 import { Markdown } from '@/components/Markdown';
 import { useContactDialog } from '@/components/contact/ContactDialogProvider';
 import { DEFAULT_LOCALE } from '@/lib/locales/locale';
-import { FormLabel } from './FormLabel';
+import { FormLabel } from './primitives/FormLabel';
 import type {
   ContactFormProps,
   ContactFormDebugFieldState,
@@ -46,62 +46,62 @@ const DRAFT_STORAGE_PREFIX = 'contact-form-draft';
 const DEFAULT_ACTION_URL = '/api/contact';
 const DEFAULT_TOKEN = 'mock-turnstile-token';
 const TURNSTILE_SCRIPT_SRC =
-	'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+  'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
 let turnstileScriptPromise: Promise<void> | null = null;
 
 type ToastTone = 'success' | 'info' | 'error';
 
 type ToastState = {
-	open: boolean;
-	message: string;
-	tone: ToastTone;
-	id: number;
+  open: boolean;
+  message: string;
+  tone: ToastTone;
+  id: number;
 };
 
 const loadTurnstileScript = () => {
-	if (typeof window === 'undefined') {
-		return Promise.reject(
-			new Error('Turnstile requires a browser environment.'),
-		);
-	}
-	if (window.turnstile) {
-		return Promise.resolve();
-	}
-	if (turnstileScriptPromise) {
-		return turnstileScriptPromise;
-	}
-	turnstileScriptPromise = new Promise<void>((resolve, reject) => {
-		const existing = document.querySelector<HTMLScriptElement>(
-			'script[data-turnstile]',
-		);
-		if (existing) {
-			existing.addEventListener('load', () => resolve(), {
-				once: true,
-			});
-			existing.addEventListener(
-			 'error',
-			 () => {
-				 turnstileScriptPromise = null;
-				 reject(new Error('Turnstile script failed to load.'));
-			 },
-			 { once: true },
-			);
-			return;
-		}
-		const script = document.createElement('script');
-		script.src = TURNSTILE_SCRIPT_SRC;
-		script.async = true;
-		script.defer = true;
-		script.dataset.turnstile = 'true';
-		script.onload = () => resolve();
-		script.onerror = () => {
-			turnstileScriptPromise = null;
-			reject(new Error('Turnstile script failed to load.'));
-		};
-		document.head.appendChild(script);
-	});
-	return turnstileScriptPromise;
+  if (typeof window === 'undefined') {
+    return Promise.reject(
+      new Error('Turnstile requires a browser environment.'),
+    );
+  }
+  if (window.turnstile) {
+    return Promise.resolve();
+  }
+  if (turnstileScriptPromise) {
+    return turnstileScriptPromise;
+  }
+  turnstileScriptPromise = new Promise<void>((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>(
+      'script[data-turnstile]',
+    );
+    if (existing) {
+      existing.addEventListener('load', () => resolve(), {
+        once: true,
+      });
+      existing.addEventListener(
+        'error',
+        () => {
+          turnstileScriptPromise = null;
+          reject(new Error('Turnstile script failed to load.'));
+        },
+        { once: true },
+      );
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = TURNSTILE_SCRIPT_SRC;
+    script.async = true;
+    script.defer = true;
+    script.dataset.turnstile = 'true';
+    script.onload = () => resolve();
+    script.onerror = () => {
+      turnstileScriptPromise = null;
+      reject(new Error('Turnstile script failed to load.'));
+    };
+    document.head.appendChild(script);
+  });
+  return turnstileScriptPromise;
 };
 
 type FormValues = ContactFormDraft;
@@ -114,9 +114,11 @@ const INITIAL_VALUES: FormValues = {
   hp: '',
 };
 
-const buildInitialValues = (turnstileEnabled: boolean): FormValues => ({
-	...INITIAL_VALUES,
-	token: turnstileEnabled ? '' : INITIAL_VALUES.token,
+const buildInitialValues = (
+  turnstileEnabled: boolean,
+): FormValues => ({
+  ...INITIAL_VALUES,
+  token: turnstileEnabled ? '' : INITIAL_VALUES.token,
 });
 
 const serverStatusToFormStatus = (
@@ -145,16 +147,16 @@ const statusToToastTone = (status: FormStatusKey): ToastTone => {
 
 const isBrowser = () => typeof window !== 'undefined';
 
-  const buildErrorMap = (copy: ContactFormCopy) =>
-    ({
-      'form-error-name-required': copy.errors.name.required,
-      'form-error-name-too_long': copy.errors.name.tooLong,
-      'form-error-email-invalid': copy.errors.email.invalid,
-      'form-error-message-required': copy.errors.message.required,
-      'form-error-message-too_short': copy.errors.message.tooShort,
-      'form-error-message-too_long': copy.errors.message.tooLong,
-      'form-error-message-too_many_links':
-        copy.errors.message.tooManyLinks,
+const buildErrorMap = (copy: ContactFormCopy) =>
+  ({
+    'form-error-name-required': copy.errors.name.required,
+    'form-error-name-too_long': copy.errors.name.tooLong,
+    'form-error-email-invalid': copy.errors.email.invalid,
+    'form-error-message-required': copy.errors.message.required,
+    'form-error-message-too_short': copy.errors.message.tooShort,
+    'form-error-message-too_long': copy.errors.message.tooLong,
+    'form-error-message-too_many_links':
+      copy.errors.message.tooManyLinks,
     'form-error-token-missing': copy.errors.token.missing,
   }) as const;
 
@@ -225,20 +227,20 @@ export default function ContactForm({
   const baseMessageHeight = useRef<number | null>(null);
   const turnstileContainerRef = useRef<HTMLDivElement | null>(null);
   const turnstileWidgetIdRef = useRef<string | null>(null);
-  const [turnstileStatus, setTurnstileStatus] = useState<TurnstileState>(
+  const [
+    turnstileStatus,
+    setTurnstileStatus,
+  ] = useState<TurnstileState>(
     turnstileEnabled ? 'loading' : 'bypassed',
   );
   const debugTurnstileRef = useRef<string | null>(null);
 
-  const {
-    isPrivacyOpen,
-    openPrivacy,
-    closePrivacy,
-    isOpen,
-  } = useContactDialog();
+  const { isPrivacyOpen, openPrivacy, closePrivacy, isOpen } =
+    useContactDialog();
   const shouldRenderTurnstileWidget =
     turnstileEnabled && !debugState?.turnstileSimulation;
-  const showTurnstileSection = turnstileEnabled || Boolean(debugState);
+  const showTurnstileSection =
+    turnstileEnabled || Boolean(debugState);
   const shouldHideFormBody = status === 'success';
   const dialogWasOpenRef = useRef(isOpen);
 
@@ -255,8 +257,10 @@ export default function ContactForm({
 
   useEffect(() => {
     onSuccessStateChange?.(shouldHideFormBody);
-  }, [onSuccessStateChange, shouldHideFormBody]);
-
+  }, [
+    onSuccessStateChange,
+    shouldHideFormBody,
+  ]);
 
   const resolvedFieldErrors: FieldErrorMap =
     debugState?.fieldErrors ?? fieldErrors;
@@ -266,14 +270,19 @@ export default function ContactForm({
     : isSubmitting;
 
   const resolvedHasAttemptedSubmit = debugState
-    ? debugState.hasAttemptedSubmit ?? Boolean(debugState.fieldErrors)
+    ? (debugState.hasAttemptedSubmit ??
+      Boolean(debugState.fieldErrors))
     : hasAttemptedSubmit;
 
   const resolvedFieldStates = useMemo(
     () =>
       debugState?.fieldStates ??
-      ({} as Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>),
-    [debugState?.fieldStates],
+      ({} as Partial<
+        Record<DebugFieldKey, ContactFormDebugFieldState>
+      >),
+    [
+      debugState?.fieldStates,
+    ],
   );
 
   const liveFieldLocks = useMemo(() => {
@@ -288,14 +297,21 @@ export default function ContactForm({
       readOnly: submittingLock,
       disabled: statusLock,
     };
-  }, [resolvedIsSubmitting, status]);
+  }, [
+    resolvedIsSubmitting,
+    status,
+  ]);
 
   const computedFieldStates = useMemo(() => {
     const next: Partial<
       Record<DebugFieldKey, ContactFormDebugFieldState>
     > = {};
     (
-      ['name', 'email', 'message'] as DebugFieldKey[]
+      [
+        'name',
+        'email',
+        'message',
+      ] as DebugFieldKey[]
     ).forEach((field) => {
       const base = resolvedFieldStates[field];
       const readOnly = liveFieldLocks.readOnly || base?.readOnly;
@@ -309,20 +325,27 @@ export default function ContactForm({
       }
     });
     return next;
-  }, [liveFieldLocks, resolvedFieldStates]);
+  }, [
+    liveFieldLocks,
+    resolvedFieldStates,
+  ]);
 
   const resolvedInlineErrors =
-    debugState?.inlineErrors ?? ({} as Partial<Record<DebugFieldKey, string>>);
+    debugState?.inlineErrors ??
+    ({} as Partial<Record<DebugFieldKey, string>>);
 
   const resolvedInlineHelpers =
-    debugState?.inlineHelpers ?? ({} as Partial<Record<DebugFieldKey, string>>);
+    debugState?.inlineHelpers ??
+    ({} as Partial<Record<DebugFieldKey, string>>);
 
   const storageKey = useMemo(() => DRAFT_STORAGE_PREFIX, []);
 
   const storageKeyRef = useRef(storageKey);
   useEffect(() => {
     storageKeyRef.current = storageKey;
-  }, [storageKey]);
+  }, [
+    storageKey,
+  ]);
 
   useEffect(() => {
     if (!shouldRenderTurnstileWidget) {
@@ -398,8 +421,13 @@ export default function ContactForm({
       return;
     }
     setValues((prev) => ({ ...prev, token: '' }));
-    setTurnstileStatus(simulation === 'expired' ? 'expired' : 'ready');
-  }, [debugState?.turnstileSimulation, setValues]);
+    setTurnstileStatus(
+      simulation === 'expired' ? 'expired' : 'ready',
+    );
+  }, [
+    debugState?.turnstileSimulation,
+    setValues,
+  ]);
 
   const resetFormState = useCallback(() => {
     const nextValues = buildInitialValues(turnstileEnabled);
@@ -427,7 +455,10 @@ export default function ContactForm({
     if (isBrowser()) {
       window.sessionStorage.removeItem(storageKeyRef.current);
     }
-  }, [turnstileEnabled, debugState?.turnstileSimulation]);
+  }, [
+    turnstileEnabled,
+    debugState?.turnstileSimulation,
+  ]);
 
   useEffect(() => {
     if (debugState) return;
@@ -436,7 +467,11 @@ export default function ContactForm({
       resetFormState();
     }
     dialogWasOpenRef.current = isOpen;
-  }, [debugState, isOpen, resetFormState]);
+  }, [
+    debugState,
+    isOpen,
+    resetFormState,
+  ]);
 
   const showToast = useCallback(
     (nextStatus: FormStatusKey, message: string) => {
@@ -478,7 +513,11 @@ export default function ContactForm({
       copy.statuses[nextStatus] ??
       copy.statuses.generic;
     showToast(nextStatus, toastMessage);
-  }, [toastDebugScenario, copy.statuses, showToast]);
+  }, [
+    toastDebugScenario,
+    copy.statuses,
+    showToast,
+  ]);
 
   const applyResponse = useCallback(
     (
@@ -493,11 +532,7 @@ export default function ContactForm({
       setStatusMessage(nextMessage);
       showToast(nextStatus, nextMessage);
 
-      if (
-        response.ok &&
-        response.code === 'success' &&
-        isBrowser()
-      ) {
+      if (response.ok && response.code === 'success' && isBrowser()) {
         window.sessionStorage.removeItem(storageKeyRef.current);
       }
       if (
@@ -544,24 +579,35 @@ export default function ContactForm({
         values,
       });
     },
-    [focusLogsEnabled, describeElement, values],
+    [
+      focusLogsEnabled,
+      describeElement,
+      values,
+    ],
   );
 
   const logStatusFocus = useCallback(
     (label: string) => {
       logFocusEvent(label, statusRef.current);
     },
-    [logFocusEvent],
+    [
+      logFocusEvent,
+    ],
   );
 
   const logTelemetryEvent = useCallback(
     (event: string, detail?: unknown) => {
       if (!telemetryLogsEnabled) return;
-      console.debug('[ContactForm][debug][telemetry]', event, detail ?? null);
+      console.debug(
+        '[ContactForm][debug][telemetry]',
+        event,
+        detail ?? null,
+      );
     },
-    [telemetryLogsEnabled],
+    [
+      telemetryLogsEnabled,
+    ],
   );
-
 
   const submitViaApi = useCallback(
     async (
@@ -590,10 +636,14 @@ export default function ContactForm({
       const data = (await response.json()) as ContactFormResponse;
       return data;
     },
-    [actionUrl, locale],
+    [
+      actionUrl,
+      locale,
+    ],
   );
 
-  const shouldScrollStatus = debugState?.scrollStatusIntoView ?? false;
+  const shouldScrollStatus =
+    debugState?.scrollStatusIntoView ?? false;
 
   useEffect(() => {
     if (!shouldScrollStatus) return;
@@ -602,7 +652,10 @@ export default function ContactForm({
       behavior: 'smooth',
       block: 'start',
     });
-  }, [shouldScrollStatus, status]);
+  }, [
+    shouldScrollStatus,
+    status,
+  ]);
 
   const debugStatusKeyRef = useRef<string | null>(null);
 
@@ -624,8 +677,9 @@ export default function ContactForm({
     }
 
     if (debugState.statusState) {
-      const key = `state:${debugState.statusState.status}:${debugState.statusState.message ?? ''
-        }`;
+      const key = `state:${debugState.statusState.status}:${
+        debugState.statusState.message ?? ''
+      }`;
       if (debugStatusKeyRef.current !== key) {
         debugStatusKeyRef.current = key;
         const nextMessage =
@@ -642,7 +696,12 @@ export default function ContactForm({
     }
 
     debugStatusKeyRef.current = null;
-  }, [applyResponse, copy.statuses, debugState, logTelemetryEvent]);
+  }, [
+    applyResponse,
+    copy.statuses,
+    debugState,
+    logTelemetryEvent,
+  ]);
 
   const errorMessageMap = useMemo(
     () => buildErrorMap(copy),
@@ -668,7 +727,10 @@ export default function ContactForm({
     } catch {
       // Ignore restore failures
     }
-  }, [debugState, storageKey]);
+  }, [
+    debugState,
+    storageKey,
+  ]);
 
   // Persist draft
   useEffect(() => {
@@ -712,7 +774,9 @@ export default function ContactForm({
     if (status !== 'rate_limited') {
       setRateLimitSecondsLeft(null);
     }
-  }, [status]);
+  }, [
+    status,
+  ]);
 
   useEffect(() => {
     if (status !== 'rate_limited') return;
@@ -729,7 +793,11 @@ export default function ContactForm({
     return () => {
       window.clearTimeout(timer);
     };
-  }, [rateLimitSecondsLeft, resetStatus, status]);
+  }, [
+    rateLimitSecondsLeft,
+    resetStatus,
+    status,
+  ]);
 
   const syncMessageHeight = useCallback(() => {
     const textarea = messageRef.current;
@@ -772,18 +840,25 @@ export default function ContactForm({
   useEffect(() => {
     if (!isOpen || isPrivacyOpen) return;
     nameInputRef.current?.focus({ preventScroll: true });
-  }, [isOpen, isPrivacyOpen]);
+  }, [
+    isOpen,
+    isPrivacyOpen,
+  ]);
 
   const handleBlur = useCallback(() => {
     setFieldErrors(validateDraft(values).errors);
-  }, [values]);
+  }, [
+    values,
+  ]);
 
   const handlePrivacyLinkClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       openPrivacy();
     },
-    [openPrivacy],
+    [
+      openPrivacy,
+    ],
   );
 
   const handlePrivacyOpenChange = useCallback(
@@ -794,7 +869,10 @@ export default function ContactForm({
         closePrivacy();
       }
     },
-    [closePrivacy, openPrivacy],
+    [
+      closePrivacy,
+      openPrivacy,
+    ],
   );
 
   const handleTurnstileReset = useCallback(() => {
@@ -807,7 +885,10 @@ export default function ContactForm({
         turnstileApi.reset(turnstileWidgetIdRef.current);
       }
     }
-  }, [setValues, shouldRenderTurnstileWidget]);
+  }, [
+    setValues,
+    shouldRenderTurnstileWidget,
+  ]);
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -823,7 +904,11 @@ export default function ContactForm({
         setStatusMessage(copy.statuses.validation_error);
         logTelemetryEvent('validation_error', validation.errors);
         const firstInvalid = (
-          ['name', 'email', 'message'] as FieldName[]
+          [
+            'name',
+            'email',
+            'message',
+          ] as FieldName[]
         ).find((field) => validation.errors[field]);
         if (firstInvalid) {
           const target =
@@ -958,7 +1043,11 @@ export default function ContactForm({
       default:
         return turnstileEnabled ? null : copy.turnstile.disabled;
     }
-  }, [copy.turnstile, turnstileEnabled, turnstileStatus]);
+  }, [
+    copy.turnstile,
+    turnstileEnabled,
+    turnstileStatus,
+  ]);
 
   const rateLimitCountdownLabel = useMemo(() => {
     if (rateLimitSecondsLeft === null) return null;
@@ -1118,7 +1207,11 @@ export default function ContactForm({
       return rateLimitCountdownLabel;
     }
     return statusMessage;
-  }, [rateLimitCountdownLabel, status, statusMessage]);
+  }, [
+    rateLimitCountdownLabel,
+    status,
+    statusMessage,
+  ]);
 
   return (
     <Toast.Provider duration={6000} swipeDirection="down">
@@ -1169,262 +1262,289 @@ export default function ContactForm({
             <fieldset className={s.fieldset}>
               <legend className={s.legend}>{copy.heading}</legend>
 
-          <div className={s.fieldGroup}>
-            <FormLabel
-              htmlFor={nameFieldId}
-              label={copy.labels.name}
-              required
-            />
-            <input
-              id={nameFieldId}
-              name="name"
-              className={s.input}
-              ref={nameInputRef}
-              value={values.name}
-              onChange={(event) =>
-                handleChange('name', event.target.value)
-              }
-              onBlur={handleBlur}
-              required
-              minLength={2}
-              maxLength={80}
-              autoComplete="name"
-              readOnly={computedFieldStates.name?.readOnly ?? false}
-              disabled={computedFieldStates.name?.disabled ?? false}
-              data-debug={computedFieldStates.name?.dataDebug}
-              data-error={Boolean(
-                shouldShowError('name') && resolvedFieldErrors.name,
-              )}
-              aria-invalid={
-                shouldShowError('name') && resolvedFieldErrors.name
-                  ? 'true'
-                  : undefined
-              }
-              aria-describedby={describedBy(nameHelperId, nameErrorId)}
-            />
-            {shouldShowError('name') && resolvedFieldErrors.name ? (
-              <p id={nameErrorId} className={s.errorText}>
-                {resolvedInlineErrors.name ??
-                  getErrorMessage(resolvedFieldErrors.name)}
-              </p>
-            ) : null}
-            {!shouldShowError('name') &&
-            resolvedInlineHelpers.name ? (
-              <p id={nameHelperId} className={s.counter}>
-                {resolvedInlineHelpers.name}
-              </p>
-            ) : null}
-          </div>
-
-          <div className={s.fieldGroup}>
-            <FormLabel
-              htmlFor={emailFieldId}
-              label={copy.labels.email}
-              required
-            />
-            <input
-              id={emailFieldId}
-              name="email"
-              className={s.input}
-              ref={emailInputRef}
-              value={values.email}
-              onChange={(event) =>
-                handleChange('email', event.target.value)
-              }
-              onBlur={handleBlur}
-              type="email"
-              required
-              maxLength={254}
-              autoComplete="email"
-              readOnly={computedFieldStates.email?.readOnly ?? false}
-              disabled={computedFieldStates.email?.disabled ?? false}
-              data-debug={computedFieldStates.email?.dataDebug}
-              data-error={Boolean(
-                shouldShowError('email') && resolvedFieldErrors.email,
-              )}
-              aria-invalid={
-                shouldShowError('email') && resolvedFieldErrors.email
-                  ? 'true'
-                  : undefined
-              }
-              aria-describedby={describedBy(emailHelperId, emailErrorId)}
-            />
-            {shouldShowError('email') && resolvedFieldErrors.email ? (
-              <p id={emailErrorId} className={s.errorText}>
-                {resolvedInlineErrors.email ??
-                  getErrorMessage(resolvedFieldErrors.email)}
-              </p>
-            ) : null}
-            {!shouldShowError('email') &&
-            resolvedInlineHelpers.email ? (
-              <p id={emailHelperId} className={s.counter}>
-                {resolvedInlineHelpers.email}
-              </p>
-            ) : null}
-          </div>
-
-          <div className={s.fieldGroup}>
-            <FormLabel
-              htmlFor={messageFieldId}
-              label={copy.labels.message}
-              required
-            />
-            <textarea
-              id={messageFieldId}
-              name="message"
-              className={s.textarea}
-              value={values.message}
-              ref={messageRef}
-              onChange={(event) =>
-                handleChange('message', event.target.value)
-              }
-              onBlur={handleBlur}
-              rows={formTokens.message.minRows}
-              minLength={formTokens.message.minChars}
-              maxLength={formTokens.message.maxChars}
-              readOnly={computedFieldStates.message?.readOnly ?? false}
-              disabled={computedFieldStates.message?.disabled ?? false}
-              data-debug={computedFieldStates.message?.dataDebug}
-              data-error={Boolean(
-                shouldShowError('message') &&
-                  resolvedFieldErrors.message,
-              )}
-              aria-invalid={
-                shouldShowError('message') &&
-                resolvedFieldErrors.message
-                  ? 'true'
-                  : undefined
-              }
-              aria-describedby={describedBy(
-                messageErrorId,
-                messageHelperId,
-                messageCounterId,
-              )}
-            />
-            <div className={s.helperRow}>
-              {shouldShowError('message') &&
-              resolvedFieldErrors.message ? (
-                <p id={messageErrorId} className={s.errorText}>
-                  {resolvedInlineErrors.message ??
-                    getErrorMessage(resolvedFieldErrors.message)}
-                </p>
-              ) : resolvedInlineHelpers.message ? (
-                <p id={messageHelperId} className={s.counter}>
-                  {resolvedInlineHelpers.message}
-                </p>
-              ) : (
-                <span aria-hidden="true" />
-              )}
-              <p id={messageCounterId} className={s.counter}>
-                {formatCounter(
-                  copy.counterTemplate,
-                  remainingCharacters,
-                )}
-              </p>
-            </div>
-          </div>
-        </fieldset>
-
-        <div
-          aria-hidden="true"
-          className={
-            debugState?.revealHoneypot ? undefined : s.visuallyHidden
-          }
-          style={
-            debugState?.revealHoneypot
-              ? {
-                  marginBottom: 12,
-                  padding: '8px 12px',
-                  border: '1px dotted rgba(255,214,102,0.8)',
-                  backgroundColor: 'rgba(255,214,102,0.1)',
-                  borderRadius: 8,
-                  opacity: 0.7,
-                }
-              : undefined
-          }
-        >
-          <label htmlFor={honeypotFieldId}>
-            {debugState?.revealHoneypot
-              ? `${copy.honeypotLabel} (debug honeypot)`
-              : copy.honeypotLabel}
-          </label>
-          <input
-            id={honeypotFieldId}
-            name="hp"
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            value={values.hp}
-            onChange={(event) =>
-              handleChange('hp', event.target.value)
-            }
-          />
-        </div>
-
-        <input
-          type="hidden"
-          name="token"
-          value={values.token}
-        />
-
-        {showTurnstileSection ? (
-          <div className={s.turnstileSection} data-state={turnstileStatus}>
-            <div
-              ref={turnstileContainerRef}
-              className={s.turnstileWidget}
-              data-rendered={shouldRenderTurnstileWidget ? 'true' : 'false'}
-            >
-              {!shouldRenderTurnstileWidget ? (
-                <span className={s.turnstilePlaceholder}>
-                  {turnstileSiteKey
-                    ? copy.turnstile.preview
-                    : copy.turnstile.disabled}
-                </span>
-              ) : null}
-            </div>
-            {(tokenErrorMessage || turnstileStatusMessage) && (
-              <p className={s.turnstileStatus}>
-                {tokenErrorMessage || turnstileStatusMessage}
-                {canResetTurnstile ? (
-                  <button
-                    type="button"
-                    className={s.turnstileReset}
-                    onClick={handleTurnstileReset}
-                  >
-                    Retry
-                  </button>
+              <div className={s.fieldGroup}>
+                <FormLabel
+                  htmlFor={nameFieldId}
+                  label={copy.labels.name}
+                  required
+                />
+                <input
+                  id={nameFieldId}
+                  name="name"
+                  className={s.input}
+                  ref={nameInputRef}
+                  value={values.name}
+                  onChange={(event) =>
+                    handleChange('name', event.target.value)
+                  }
+                  onBlur={handleBlur}
+                  required
+                  minLength={2}
+                  maxLength={80}
+                  autoComplete="name"
+                  readOnly={
+                    computedFieldStates.name?.readOnly ?? false
+                  }
+                  disabled={
+                    computedFieldStates.name?.disabled ?? false
+                  }
+                  data-debug={computedFieldStates.name?.dataDebug}
+                  data-error={Boolean(
+                    shouldShowError('name') &&
+                      resolvedFieldErrors.name,
+                  )}
+                  aria-invalid={
+                    shouldShowError('name') &&
+                    resolvedFieldErrors.name
+                      ? 'true'
+                      : undefined
+                  }
+                  aria-describedby={describedBy(
+                    nameHelperId,
+                    nameErrorId,
+                  )}
+                />
+                {shouldShowError('name') &&
+                resolvedFieldErrors.name ? (
+                  <p id={nameErrorId} className={s.errorText}>
+                    {resolvedInlineErrors.name ??
+                      getErrorMessage(resolvedFieldErrors.name)}
+                  </p>
                 ) : null}
-              </p>
-            )}
-          </div>
-        ) : null}
+                {!shouldShowError('name') &&
+                resolvedInlineHelpers.name ? (
+                  <p id={nameHelperId} className={s.counter}>
+                    {resolvedInlineHelpers.name}
+                  </p>
+                ) : null}
+              </div>
 
-        <p className={s.privacy}>
-          {copy.privacy.text}{' '}
-          <button
-            type="button"
-            className={s.privacyLink}
-            onClick={handlePrivacyLinkClick}
-            aria-haspopup="dialog"
-          >
-            {copy.privacy.linkLabel}
-          </button>
-        </p>
+              <div className={s.fieldGroup}>
+                <FormLabel
+                  htmlFor={emailFieldId}
+                  label={copy.labels.email}
+                  required
+                />
+                <input
+                  id={emailFieldId}
+                  name="email"
+                  className={s.input}
+                  ref={emailInputRef}
+                  value={values.email}
+                  onChange={(event) =>
+                    handleChange('email', event.target.value)
+                  }
+                  onBlur={handleBlur}
+                  type="email"
+                  required
+                  maxLength={254}
+                  autoComplete="email"
+                  readOnly={
+                    computedFieldStates.email?.readOnly ?? false
+                  }
+                  disabled={
+                    computedFieldStates.email?.disabled ?? false
+                  }
+                  data-debug={computedFieldStates.email?.dataDebug}
+                  data-error={Boolean(
+                    shouldShowError('email') &&
+                      resolvedFieldErrors.email,
+                  )}
+                  aria-invalid={
+                    shouldShowError('email') &&
+                    resolvedFieldErrors.email
+                      ? 'true'
+                      : undefined
+                  }
+                  aria-describedby={describedBy(
+                    emailHelperId,
+                    emailErrorId,
+                  )}
+                />
+                {shouldShowError('email') &&
+                resolvedFieldErrors.email ? (
+                  <p id={emailErrorId} className={s.errorText}>
+                    {resolvedInlineErrors.email ??
+                      getErrorMessage(resolvedFieldErrors.email)}
+                  </p>
+                ) : null}
+                {!shouldShowError('email') &&
+                resolvedInlineHelpers.email ? (
+                  <p id={emailHelperId} className={s.counter}>
+                    {resolvedInlineHelpers.email}
+                  </p>
+                ) : null}
+              </div>
 
-        <div className={s.buttonRow}>
-          <button
-            type="submit"
-            className={s.submitButton}
-            disabled={derivedButtonState.disabled}
-            data-debug={derivedButtonState.dataDebug}
-            aria-busy={
-              derivedButtonState.ariaBusy ? 'true' : undefined
-            }
-          >
-            {derivedButtonState.label}
-          </button>
-        </div>
-      </>
+              <div className={s.fieldGroup}>
+                <FormLabel
+                  htmlFor={messageFieldId}
+                  label={copy.labels.message}
+                  required
+                />
+                <textarea
+                  id={messageFieldId}
+                  name="message"
+                  className={s.textarea}
+                  value={values.message}
+                  ref={messageRef}
+                  onChange={(event) =>
+                    handleChange('message', event.target.value)
+                  }
+                  onBlur={handleBlur}
+                  rows={formTokens.message.minRows}
+                  minLength={formTokens.message.minChars}
+                  maxLength={formTokens.message.maxChars}
+                  readOnly={
+                    computedFieldStates.message?.readOnly ?? false
+                  }
+                  disabled={
+                    computedFieldStates.message?.disabled ?? false
+                  }
+                  data-debug={computedFieldStates.message?.dataDebug}
+                  data-error={Boolean(
+                    shouldShowError('message') &&
+                      resolvedFieldErrors.message,
+                  )}
+                  aria-invalid={
+                    shouldShowError('message') &&
+                    resolvedFieldErrors.message
+                      ? 'true'
+                      : undefined
+                  }
+                  aria-describedby={describedBy(
+                    messageErrorId,
+                    messageHelperId,
+                    messageCounterId,
+                  )}
+                />
+                <div className={s.helperRow}>
+                  {shouldShowError('message') &&
+                  resolvedFieldErrors.message ? (
+                    <p id={messageErrorId} className={s.errorText}>
+                      {resolvedInlineErrors.message ??
+                        getErrorMessage(resolvedFieldErrors.message)}
+                    </p>
+                  ) : resolvedInlineHelpers.message ? (
+                    <p id={messageHelperId} className={s.counter}>
+                      {resolvedInlineHelpers.message}
+                    </p>
+                  ) : (
+                    <span aria-hidden="true" />
+                  )}
+                  <p id={messageCounterId} className={s.counter}>
+                    {formatCounter(
+                      copy.counterTemplate,
+                      remainingCharacters,
+                    )}
+                  </p>
+                </div>
+              </div>
+            </fieldset>
+
+            <div
+              aria-hidden="true"
+              className={
+                debugState?.revealHoneypot
+                  ? undefined
+                  : s.visuallyHidden
+              }
+              style={
+                debugState?.revealHoneypot
+                  ? {
+                      marginBottom: 12,
+                      padding: '8px 12px',
+                      border: '1px dotted rgba(255,214,102,0.8)',
+                      backgroundColor: 'rgba(255,214,102,0.1)',
+                      borderRadius: 8,
+                      opacity: 0.7,
+                    }
+                  : undefined
+              }
+            >
+              <label htmlFor={honeypotFieldId}>
+                {debugState?.revealHoneypot
+                  ? `${copy.honeypotLabel} (debug honeypot)`
+                  : copy.honeypotLabel}
+              </label>
+              <input
+                id={honeypotFieldId}
+                name="hp"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={values.hp}
+                onChange={(event) =>
+                  handleChange('hp', event.target.value)
+                }
+              />
+            </div>
+
+            <input type="hidden" name="token" value={values.token} />
+
+            {showTurnstileSection ? (
+              <div
+                className={s.turnstileSection}
+                data-state={turnstileStatus}
+              >
+                <div
+                  ref={turnstileContainerRef}
+                  className={s.turnstileWidget}
+                  data-rendered={
+                    shouldRenderTurnstileWidget ? 'true' : 'false'
+                  }
+                >
+                  {!shouldRenderTurnstileWidget ? (
+                    <span className={s.turnstilePlaceholder}>
+                      {turnstileSiteKey
+                        ? copy.turnstile.preview
+                        : copy.turnstile.disabled}
+                    </span>
+                  ) : null}
+                </div>
+                {(tokenErrorMessage || turnstileStatusMessage) && (
+                  <p className={s.turnstileStatus}>
+                    {tokenErrorMessage || turnstileStatusMessage}
+                    {canResetTurnstile ? (
+                      <button
+                        type="button"
+                        className={s.turnstileReset}
+                        onClick={handleTurnstileReset}
+                      >
+                        Retry
+                      </button>
+                    ) : null}
+                  </p>
+                )}
+              </div>
+            ) : null}
+
+            <p className={s.privacy}>
+              {copy.privacy.text}{' '}
+              <button
+                type="button"
+                className={s.privacyLink}
+                onClick={handlePrivacyLinkClick}
+                aria-haspopup="dialog"
+              >
+                {copy.privacy.linkLabel}
+              </button>
+            </p>
+
+            <div className={s.buttonRow}>
+              <button
+                type="submit"
+                className={s.submitButton}
+                disabled={derivedButtonState.disabled}
+                data-debug={derivedButtonState.dataDebug}
+                aria-busy={
+                  derivedButtonState.ariaBusy ? 'true' : undefined
+                }
+              >
+                {derivedButtonState.label}
+              </button>
+            </div>
+          </>
         ) : null}
       </form>
       {toastState.message ? (

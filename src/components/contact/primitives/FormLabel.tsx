@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import clsx from 'clsx';
-import * as s from '@/styles/components/contactForm.css';
+import * as s from '@/styles/components/forms.css';
 
 type FormLabelProps = {
   className?: string;
@@ -10,7 +10,13 @@ type FormLabelProps = {
   requiredText?: string;
 };
 
-export function FormLabel({ className, htmlFor, label, required, requiredText = 'required' }: FormLabelProps) {
+export function FormLabel({
+  className,
+  htmlFor,
+  label,
+  required,
+  requiredText = 'required',
+}: FormLabelProps) {
   return (
     <label className={clsx(s.labelRow, className)} htmlFor={htmlFor}>
       <span>{label}</span>
