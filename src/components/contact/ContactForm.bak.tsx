@@ -34,7 +34,6 @@ import { formTokens } from '@/tokens/forms.tokens';
 import { Markdown } from '@/components/Markdown';
 import { useContactDialog } from '@/components/contact/ContactDialogProvider';
 import { DEFAULT_LOCALE } from '@/lib/locales/locale';
-import { FormLabel } from './primitives/FormLabel';
 import type {
   ContactFormProps,
   ContactFormDebugFieldState,

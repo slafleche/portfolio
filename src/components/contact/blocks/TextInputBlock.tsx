@@ -54,21 +54,13 @@ export const TextInputBlock = forwardRef<
   ) => {
     const inputId = useId();
     const hintId = `${blockKey}-hint`;
-    const isRequired = required === true;
-    if (isRequired && !requiredText && process.env.NODE_ENV !== 'production') {
-      console.warn(`TextInputBlock "${blockKey}" is missing requiredText.`);
-    }
-
-    const labelProps = isRequired
-      ? { required: true as const, requiredText: requiredText! }
-      : {};
-
     return (
       <div className={clsx(s.fieldGroup, className)}>
         <FormLabel
           htmlFor={inputId}
           label={label}
-          {...labelProps}
+          required={required}
+          requiredText={requiredText}
         />
         <TextInput
           id={inputId}

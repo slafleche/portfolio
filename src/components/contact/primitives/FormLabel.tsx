@@ -2,21 +2,13 @@ import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import * as s from '@/styles/components/forms.css';
 
-type FormLabelProps =
-  | {
-      className?: string;
-      htmlFor: string;
-      label: ReactNode;
-      required?: false;
-      requiredText?: string;
-    }
-  | {
-      className?: string;
-      htmlFor: string;
-      label: ReactNode;
-      required: true;
-      requiredText: string;
-    };
+type FormLabelProps = {
+  className?: string;
+  htmlFor: string;
+  label: ReactNode;
+  required?: boolean;
+  requiredText?: string;
+};
 
 export function FormLabel({
   className,
@@ -25,6 +17,9 @@ export function FormLabel({
   required,
   requiredText,
 }: FormLabelProps) {
+  if (required && !requiredText && process.env.NODE_ENV !== 'production') {
+    console.warn(`FormLabel for "${htmlFor}" is missing requiredText.`);
+  }
   return (
     <label className={clsx(s.labelRow, className)} htmlFor={htmlFor}>
       <span>{label}</span>
