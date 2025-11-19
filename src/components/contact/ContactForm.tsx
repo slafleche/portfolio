@@ -29,69 +29,23 @@ import {
   type ContactFormResponse,
 } from '@/modules/contactForm/mockSubmit';
 import ContactFormSuccess from '@/components/contact/ContactFormSuccess';
-import type { ContactFormToastDebugScenario } from '@/components/contact/contact.types';
 import * as s from '@/styles/components/contactForm.css';
 import { formTokens } from '@/tokens/forms.tokens';
-import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { Markdown } from '@/components/Markdown';
 import { useContactDialog } from '@/components/contact/ContactDialogProvider';
 import { DEFAULT_LOCALE } from '@/lib/locales/locale';
-
-type DebugFieldKey = Exclude<FieldName, 'token'>;
-
-export type ContactFormDebugFieldState = {
-  readOnly?: boolean;
-  disabled?: boolean;
-  dataDebug?: string;
-};
-
-export type ContactFormDebugState = {
-  values?: Partial<FormValues>;
-  fieldErrors?: FieldErrorMap;
-  inlineErrors?: Partial<Record<DebugFieldKey, string>>;
-  inlineHelpers?: Partial<Record<DebugFieldKey, string>>;
-  statusState?: {
-    status: FormStatusKey;
-    message?: string;
-  };
-  responseSimulation?: ContactFormResponse;
-  isSubmitting?: boolean;
-  hasAttemptedSubmit?: boolean;
-  fieldStates?: Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>;
-  revealHoneypot?: boolean;
-  logFocusEvents?: boolean;
-  showSubmitOverlay?: boolean;
-  scrollStatusIntoView?: boolean;
-  enableTelemetryLogs?: boolean;
-  turnstileSimulation?: 'missing' | 'expired';
-};
-
-type ContactFormProps = {
-  copy: ContactFormCopy;
-  actionUrl?: string;
-  privacyCopy: PrivacyCopy;
-  formRef?: React.RefObject<HTMLFormElement | null> | null;
-  privacyHref?: string;
-  onSubmitted?: (response: ContactFormResponse) => void;
-  debugState?: ContactFormDebugState;
-  locale?: string;
-  toastDebugScenario?: ContactFormToastDebugScenario;
-  onSuccessStateChange?: (visible: boolean) => void;
-};
+import type {
+  ContactFormProps,
+  ContactFormDebugFieldState,
+  DebugFieldKey,
+  TurnstileState,
+} from './contactForm.types';
 
 const DRAFT_STORAGE_PREFIX = 'contact-form-draft';
 const DEFAULT_ACTION_URL = '/api/contact';
 const DEFAULT_TOKEN = 'mock-turnstile-token';
 const TURNSTILE_SCRIPT_SRC =
 	'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-
-type TurnstileState =
-	| 'bypassed'
-	| 'loading'
-	| 'ready'
-	| 'verified'
-	| 'expired'
-	| 'error';
 
 let turnstileScriptPromise: Promise<void> | null = null;
 
