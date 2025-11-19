@@ -6,6 +6,7 @@ export const FORM_KEYS = {
   heading: 'form-heading',
   successBody: 'form-success-body',
   counterRemaining: 'form-counter-remaining',
+  requiredIndicator: 'form-required-indicator',
   privacyText: 'form-privacy-text',
   privacyLinkLabel: 'form-privacy-link-label',
   privacyCloseLabel: 'form-privacy-close-label',
@@ -85,6 +86,7 @@ export type ContactFormCopy = {
   heading: string;
   successBody: string;
   counterTemplate: string;
+  requiredIndicator: string;
   submitLabel: string;
   privacy: {
     text: string;
@@ -144,6 +146,7 @@ export const buildContactFormCopy = (
     heading: t(FORM_KEYS.heading),
     successBody: t(FORM_KEYS.successBody),
     counterTemplate: t(FORM_KEYS.counterRemaining),
+    requiredIndicator: t(FORM_KEYS.requiredIndicator),
     submitLabel: t(FORM_KEYS.submitLabel),
     privacy: {
       text: t(FORM_KEYS.privacyText),

@@ -91,7 +91,7 @@ export default function ContactFormDebugPagePlaceholder() {
               htmlFor="debug-name"
               label="Full name"
               required
-              requiredText="required"
+              requiredText="Required field"
             />
             <TextInput
               id="debug-name"
@@ -103,7 +103,12 @@ export default function ContactFormDebugPagePlaceholder() {
 
           <article style={cardStyle}>
             <span style={labelStyle}>FormHint (error)</span>
-            <FormLabel htmlFor="debug-email" label="Email" required />
+            <FormLabel
+              htmlFor="debug-email"
+              label="Email"
+              required
+              requiredText="Required field"
+            />
             <TextInput
               id="debug-email"
               type="email"
@@ -121,7 +126,12 @@ export default function ContactFormDebugPagePlaceholder() {
 
           <article style={cardStyle}>
             <span style={labelStyle}>FormHint (helper)</span>
-            <FormLabel htmlFor="debug-helper" label="Short code" required />
+            <FormLabel
+              htmlFor="debug-helper"
+              label="Short code"
+              required
+              requiredText="Required field"
+            />
             <TextInput
               id="debug-helper"
               value={name.slice(0, 6)}
@@ -142,6 +152,7 @@ export default function ContactFormDebugPagePlaceholder() {
               htmlFor="debug-message"
               label="Message"
               required
+              requiredText="Required field"
             />
             <TextareaInput
               id="debug-message"
@@ -159,6 +170,7 @@ export default function ContactFormDebugPagePlaceholder() {
               htmlFor="debug-message-static"
               label="Static notes"
               required
+              requiredText="Required field"
             />
             <TextareaInput
               id="debug-message-static"

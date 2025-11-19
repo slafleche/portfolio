@@ -6,13 +6,12 @@ import { FormHint } from '@/components/contact/primitives/FormHint';
 import { TextInput } from '@/components/contact/primitives/TextInput';
 import * as s from '@/styles/components/forms.css';
 
-type TextInputBlockProps = {
+type BaseProps = {
   blockKey: string;
   label: string;
   value: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
-  required?: boolean;
   helperText?: string | null;
   errorText?: string | null;
   readOnly?: boolean;
@@ -23,6 +22,10 @@ type TextInputBlockProps = {
   autoComplete?: string;
   className?: string;
 };
+
+type TextInputBlockProps =
+  | (BaseProps & { required?: false; requiredText?: string })
+  | (BaseProps & { required: true; requiredText: string });
 
 export const TextInputBlock = forwardRef<
   HTMLInputElement,
@@ -42,21 +45,30 @@ export const TextInputBlock = forwardRef<
       disabled,
       maxLength,
       minLength,
-      type = 'text',
-      autoComplete,
-      className,
-    },
+  type = 'text',
+  autoComplete,
+  className,
+  requiredText,
+},
     ref,
   ) => {
     const inputId = useId();
     const hintId = `${blockKey}-hint`;
+    const isRequired = required === true;
+    if (isRequired && !requiredText && process.env.NODE_ENV !== 'production') {
+      console.warn(`TextInputBlock "${blockKey}" is missing requiredText.`);
+    }
+
+    const labelProps = isRequired
+      ? { required: true as const, requiredText: requiredText! }
+      : {};
 
     return (
       <div className={clsx(s.fieldGroup, className)}>
         <FormLabel
           htmlFor={inputId}
           label={label}
-          required={required}
+          {...labelProps}
         />
         <TextInput
           id={inputId}

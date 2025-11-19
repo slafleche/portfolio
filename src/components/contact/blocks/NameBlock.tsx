@@ -7,6 +7,7 @@ import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
 export type NameBlockProps = {
   value: string;
   label: string;
+  requiredText: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   helperText?: string | null;
@@ -23,6 +24,7 @@ export function NameBlock({
   value,
   label,
   onChange,
+  requiredText,
   onBlur,
   helperText,
   errorText,
@@ -56,6 +58,7 @@ export function NameBlock({
       value={value}
       onChange={onChange}
       onBlur={onBlur}
+      requiredText={requiredText}
       helperText={helperText}
       errorText={errorText}
       readOnly={readOnly}

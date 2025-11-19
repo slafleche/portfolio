@@ -11,6 +11,7 @@ export const frFormCopy = {
   'form-privacy-link-label': 'Politique de confidentialité',
   'form-privacy-close-label': 'Retour au formulaire',
   'form-honeypot-label': 'Laissez ce champ vide',
+  'form-required-indicator': 'Champ requis',
   'form-error-name-required': 'Veuillez entrer votre nom.',
   'form-error-name-too_long': 'Le nom est trop long.',
   'form-error-email-invalid':
@@ -42,7 +43,7 @@ export const frFormCopy = {
     'Nous ne pouvons pas envoyer votre message pour le moment.',
   'form-turnstile-loading': 'Chargement de la vérification humaine…',
   'form-turnstile-ready':
-    'Complétez la vérification ci-dessus pour activer l’envoi.',
+    "Complétez la vérification ci-dessus pour activer l'envoi.",
   'form-turnstile-verified':
     'Vérification réussie — vous pouvez envoyer votre message.',
   'form-turnstile-expired':
@@ -51,9 +52,7 @@ export const frFormCopy = {
     'La vérification est indisponible. Veuillez réessayer.',
   'form-turnstile-disabled':
     'La vérification humaine est désactivée dans cet environnement.',
-  'form-turnstile-button-pending':
-    'Confirmez que vous êtes humain',
+  'form-turnstile-button-pending': 'Confirmez que vous êtes humain',
   'form-turnstile-button-error': 'Vérification indisponible',
-  'form-turnstile-preview':
-    'Aperçu de vérification humaine (debug).',
+  'form-turnstile-preview': 'Aperçu de vérification humaine (debug).',
 } as const;
