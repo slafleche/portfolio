@@ -9,6 +9,10 @@ import { FormHint } from '@/components/contact/primitives/FormHint';
 import { TextInput } from '@/components/contact/primitives/TextInput';
 import { TextareaInput } from '@/components/contact/primitives/TextareaInput';
 import { SubmitButton } from '@/components/contact/primitives/SubmitButton';
+import { NameBlock } from '@/components/contact/blocks/NameBlock';
+import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
+import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
+import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
 
 const rootStyle = {
   padding: '32px 16px',
@@ -75,7 +79,10 @@ export default function ContactFormDebugPagePlaceholder() {
     message,
     setMessage,
   ] = useState('');
+  const requiredText = 'Required field';
   const autoResizeHandlers = useAutoResizeHandlers();
+  const noopChange: React.ChangeEventHandler<HTMLInputElement> = () => {};
+  const noopFocus = () => {};
 
   return (
     <main style={rootStyle}>
@@ -184,6 +191,82 @@ export default function ContactFormDebugPagePlaceholder() {
             <SubmitButton>Send message</SubmitButton>
             <SubmitButton disabled>Disabled state</SubmitButton>
           </article>
+        </div>
+      </section>
+
+      <section style={{ marginBottom: 40 }}>
+        <h2 style={{ marginBottom: 16 }}>Blocks</h2>
+        <div style={gridStyle}>
+          <FormBlocksProvider>
+            <article style={cardStyle}>
+              <span style={labelStyle}>NameBlock (locked)</span>
+              <NameBlock
+                label="Name"
+                requiredText={requiredText}
+                value={'A'.repeat(NAME_LIMIT.max)}
+                onChange={noopChange}
+                helperText="Maximum reached"
+                errorText={null}
+                readOnly
+                disabled
+                onFocusBefore={noopFocus}
+                onFocusAfter={noopFocus}
+              />
+            </article>
+          </FormBlocksProvider>
+
+          <FormBlocksProvider>
+            <article style={cardStyle}>
+              <span style={labelStyle}>NameBlock (interactive)</span>
+              <NameBlock
+                label="Name"
+                requiredText={requiredText}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                helperText={
+                  name.length >= NAME_LIMIT.max
+                    ? 'Maximum reached'
+                    : `${NAME_LIMIT.max - name.length} characters remaining`
+                }
+                errorText={null}
+                onFocusBefore={noopFocus}
+                onFocusAfter={noopFocus}
+              />
+            </article>
+          </FormBlocksProvider>
+
+          <FormBlocksProvider>
+            <article style={cardStyle}>
+              <span style={labelStyle}>EmailBlock (locked)</span>
+              <EmailBlock
+                label="Email"
+                requiredText={requiredText}
+                value="not-an-email"
+                onChange={noopChange}
+                helperText="We'll only use this to reply."
+                errorText="Please provide a valid email."
+                disabled
+                onFocusBefore={noopFocus}
+                onFocusAfter={noopFocus}
+              />
+            </article>
+          </FormBlocksProvider>
+
+          <FormBlocksProvider>
+            <article style={cardStyle}>
+              <span style={labelStyle}>EmailBlock (interactive)</span>
+              <EmailBlock
+                label="Email"
+                requiredText={requiredText}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                helperText="We'll only use this to reply."
+                errorText={null}
+                onFocusBefore={noopFocus}
+                onFocusAfter={noopFocus}
+              />
+            </article>
+          </FormBlocksProvider>
         </div>
       </section>
     </main>
