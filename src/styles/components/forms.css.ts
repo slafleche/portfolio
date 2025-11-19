@@ -101,14 +101,12 @@ export const required = style({
   fontSize: '0.85em',
 });
 
-export const input = style(controlBase);
-
-const textareaMinHeight = m(formTokens.message.minRows * 48).css();
+export const input = style(controlBase);;
 
 export const textarea = style([
   controlBase,
   {
-    minHeight: textareaMinHeight,
+    minHeight: formTokens.textarea.minHeight.css(),
     resize: 'none',
     overflowY: 'hidden',
   },
