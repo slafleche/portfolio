@@ -3,18 +3,13 @@ import type {
   FormErrorKey,
   FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
-
-const NAME_LIMIT = { min: 2, max: 80 };
-const EMAIL_MAX_LENGTH = 254;
-
-const EMAIL_PATTERN =
-  // Basic RFC 5322-compatible email check
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const URL_PATTERN =
-  /\b(?:https?:\/\/|www\.)[^\s/$.?#].[^\s]*/gi;
-
-export const MESSAGE_URL_LIMIT = 2;
+import {
+	NAME_LIMIT,
+	EMAIL_MAX_LENGTH,
+	EMAIL_PATTERN,
+	URL_PATTERN,
+	MESSAGE_URL_LIMIT,
+} from './validation.constants';
 
 export type RawContactFormInput = {
   name?: string | null;
