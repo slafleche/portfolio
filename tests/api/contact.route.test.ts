@@ -174,15 +174,16 @@ const validPayload = () => ({
 		);
 		expect(first.status).toBe(200);
 
-		const second = await contactRoute(
-			buildRequest(validPayload(), { locale: 'en', ip }),
-		);
-		const json = await second.json();
+	const second = await contactRoute(
+		buildRequest(validPayload(), { locale: 'en', ip }),
+	);
+	const json = await second.json();
 
-		expect(second.status).toBe(429);
-		expect(json.code).toBe('rate_limited');
-		expect(mockedDeliver).toHaveBeenCalledTimes(1);
-	});
+	expect(second.status).toBe(429);
+	expect(json.code).toBe('rate_limited');
+	expect(json.retryAfterSeconds).toBeGreaterThan(0);
+	expect(mockedDeliver).toHaveBeenCalledTimes(1);
+});
 
 	it('returns service_unavailable when Brevo rejects payload', async () => {
 		mockedDeliver.mockResolvedValue(

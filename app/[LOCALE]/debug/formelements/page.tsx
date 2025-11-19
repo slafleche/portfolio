@@ -34,6 +34,13 @@ import {
   type DebugCardSpec,
 } from './formDebugSpecs';
 import ContactFormPreview from './ContactFormPreview';
+import SubmissionTimelineSection, {
+  type TimelineStage,
+  type ResponseScenario as TimelineResponseScenario,
+  type TonePalette as TimelineTonePalette,
+  type TimelineTelemetryDescriptor,
+  type Tone as TimelineTone,
+} from './SubmissionTimelineSection';
 
 type FormMode = 'editable' | 'readonly' | 'disabled';
 
@@ -106,6 +113,206 @@ const detailListStyle: CSSProperties = {
   fontSize: 14,
   lineHeight: 1.5,
 };
+
+const timelineStages: readonly TimelineStage[] = [
+  {
+    id: 'build',
+    label: 'Build payload',
+    description:
+      'User fills the form, validation runs locally, and we craft the POST body.',
+  },
+  {
+    id: 'guards',
+    label: 'Guards & anti-abuse',
+    description:
+      'Honeypot, Turnstile, and configuration checks block bad actors before hitting Brevo.',
+  },
+  {
+    id: 'post',
+    label: 'POST /api/contact',
+    description:
+      'Form locks while we call the API route and enqueue telemetry timers.',
+  },
+  {
+    id: 'response',
+    label: 'Response & messaging',
+    description:
+      'Brevo responds, inline banners/toasts update, and focus shifts for announcements.',
+  },
+] as const;
+
+const stageIndexMap = new Map(
+  timelineStages.map((stage, index) => [stage.id, index]),
+);
+
+const timelineTonePalette: TimelineTonePalette = {
+  default: {
+    border: 'rgba(245,240,255,0.2)',
+    bg: 'rgba(245,240,255,0.05)',
+    accent: '#f5f0ff',
+    text: '#f5f0ff',
+  },
+  info: {
+    border: 'rgba(122,186,255,0.4)',
+    bg: 'rgba(16,52,92,0.45)',
+    accent: '#7abaff',
+    text: '#c5e1ff',
+  },
+  success: {
+    border: 'rgba(77,201,173,0.45)',
+    bg: 'rgba(8,48,38,0.6)',
+    accent: '#4dc9ad',
+    text: '#a8f4de',
+  },
+  warning: {
+    border: 'rgba(255,209,128,0.45)',
+    bg: 'rgba(57,36,6,0.65)',
+    accent: '#ffd180',
+    text: '#ffe8c2',
+  },
+  error: {
+    border: 'rgba(255,132,154,0.45)',
+    bg: 'rgba(60,14,24,0.65)',
+    accent: '#ff849a',
+    text: '#ffd2db',
+  },
+  muted: {
+    border: 'rgba(168,167,196,0.35)',
+    bg: 'rgba(36,32,52,0.6)',
+    accent: '#a8a7c4',
+    text: '#d6d3eb',
+  },
+};
+
+const telemetryLegend: readonly TimelineTelemetryDescriptor[] = [
+  {
+    event: 'contact.submit.start',
+    label: 'start',
+    description:
+      'Fires once validation passes and we begin POSTing to `/api/contact`.',
+    dimensions: [
+      'payload snapshot (name, email, message length)',
+      'tokenPresent',
+      'hpFilled',
+    ],
+  },
+  {
+    event: 'contact.submit.validation_error',
+    label: 'validation_error',
+    description:
+      'Client-side validation failed; includes the invalid fields map.',
+    dimensions: ['invalidFields', 'errorMap'],
+  },
+  {
+    event: 'contact.submit.blocked',
+    label: 'blocked',
+    description:
+      'Honeypot or Turnstile guard tripped; payload is logged without sending.',
+    dimensions: ['hpFilled', 'tokenPresent', 'locale'],
+  },
+  {
+    event: 'contact.submit.success',
+    label: 'success',
+    description:
+      'Brevo accepted the message; mirrors the celebratory panel and timers.',
+    dimensions: ['durationMs', 'submissionId', 'ipHash'],
+  },
+  {
+    event: 'contact.submit.rate_limited',
+    label: 'rate_limited',
+    description:
+      'Too many submissions from the same IP; CTA disables with retry info.',
+    dimensions: ['ipHash', 'cooldownSeconds'],
+  },
+  {
+    event: 'contact.submit.service_unavailable',
+    label: 'service_unavailable',
+    description:
+      'Brevo or the network failed; includes HTTP status and retry metadata.',
+    dimensions: ['status', 'retryAfterSeconds'],
+  },
+  {
+    event: 'contact.submit.generic_error',
+    label: 'generic_error',
+    description:
+      'Unexpected exception bubbled up; inspect the error message/stack.',
+    dimensions: ['error.message', 'error.stack'],
+  },
+  {
+    event: 'contact.submit.not_configured',
+    label: 'not_configured',
+    description:
+      'Environment variables are missing; exposes which secrets are absent.',
+    dimensions: ['missingEnv'],
+  },
+] as const;
+
+const toneByBannerTone: Record<string, TimelineTone> = {
+  info: 'info',
+  success: 'success',
+  warning: 'warning',
+  error: 'error',
+  muted: 'muted',
+};
+
+const scenarioEventFallback: Partial<Record<ApiScenario['id'], string>> = {
+  sending: 'contact.submit.start',
+  success: 'contact.submit.success',
+  validation_error: 'contact.submit.validation_error',
+  rate_limited: 'contact.submit.rate_limited',
+  service_unavailable: 'contact.submit.service_unavailable',
+  blocked: 'contact.submit.blocked',
+  generic_error: 'contact.submit.generic_error',
+  not_configured: 'contact.submit.not_configured',
+};
+
+const deriveCtaState = (
+  scenario: ApiScenario,
+): TimelineResponseScenario['ctaState'] => {
+  if (scenario.status === 'success') {
+    return 'success';
+  }
+  if (scenario.cta.loading) {
+    return 'busy';
+  }
+  if (scenario.status === 'validation_error' || scenario.status === 'generic') {
+    return 'error';
+  }
+  if (scenario.cta.disabled) {
+    return 'disabled';
+  }
+  return 'idle';
+};
+
+const extractTelemetryEvents = (scenario: ApiScenario): string[] => {
+  const events = scenario.telemetry
+    .filter((entry) => entry.startsWith('log event:'))
+    .map((entry) => entry.replace('log event:', '').trim());
+  if (events.length > 0) {
+    return events;
+  }
+  const fallback = scenarioEventFallback[scenario.id];
+  return fallback ? [fallback] : [];
+};
+
+const timelineScenarios: readonly TimelineResponseScenario[] =
+  apiScenarios.map((scenario) => ({
+    id: scenario.id,
+    label: scenario.label,
+    description: scenario.description,
+    stageIndex: stageIndexMap.get(scenario.timelineStage) ?? 0,
+    tone: toneByBannerTone[scenario.banner.tone] ?? 'default',
+    note: scenario.focusManagement,
+    ctaState: deriveCtaState(scenario),
+    ctaLabel: scenario.cta.label,
+    fieldState: scenario.fieldMode,
+    fieldValues: {
+      name: scenario.payload.name,
+      email: scenario.payload.email,
+      message: scenario.payload.message,
+    },
+    telemetryEvents: extractTelemetryEvents(scenario),
+  }));
 
 const defaultFormValues: ContactFormDraft = {
   name: '',
@@ -481,6 +688,13 @@ export default async function FormElementsDebugPage({
             sync with `/api/contact`.
           </p>
         </header>
+
+        <SubmissionTimelineSection
+          stages={timelineStages}
+          scenarios={timelineScenarios}
+          tonePalette={timelineTonePalette}
+          telemetryLegend={telemetryLegend}
+        />
 
         <section>
           <h2 style={sectionHeadingStyle}>Preview Gallery</h2>

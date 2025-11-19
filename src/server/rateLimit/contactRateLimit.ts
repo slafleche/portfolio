@@ -1,5 +1,8 @@
-const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
-const RATE_LIMIT_MAX_REQUESTS = 1;
+import { formTokens } from '@/tokens/forms.tokens';
+
+const RATE_LIMIT_WINDOW_MS =
+	formTokens.rateLimit.windowSeconds * 1000;
+const RATE_LIMIT_MAX_REQUESTS = formTokens.rateLimit.maxRequests;
 
 type Entry = {
 	count: number;

@@ -1,13 +1,13 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import type { CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { formTokens } from '@/tokens/forms.tokens';
 import { glassyButtonTokens } from '@/tokens/glassy.tokens';
-import * as debugFormStyles from '@/styles/components/debugForm.css';
 
-type Tone = 'default' | 'info' | 'success' | 'warning' | 'error' | 'muted';
+export type Tone = 'default' | 'info' | 'success' | 'warning' | 'error' | 'muted';
 
-type TonePalette = Record<
+export type TonePalette = Record<
   Tone,
   { border: string; bg: string; accent: string; text: string }
 >;
@@ -33,12 +33,87 @@ export type ResponseScenario = {
     email?: string;
     message?: string;
   };
+  telemetryEvents?: readonly string[];
 };
 
 type Props = {
   stages: readonly TimelineStage[];
   scenarios: readonly ResponseScenario[];
   tonePalette: TonePalette;
+  telemetryLegend: readonly TimelineTelemetryDescriptor[];
+};
+
+export type TimelineTelemetryDescriptor = {
+  event: string;
+  label: string;
+  description: string;
+  dimensions: readonly string[];
+};
+
+const stackStyle: CSSProperties = {
+  maxWidth: formTokens.layout.maxWidth.css(),
+  margin: '0 auto',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: formTokens.layout.fieldGap.multiply(2).css(),
+};
+
+const blockStyle: CSSProperties = {
+  borderRadius: 24,
+  border: '1px solid rgba(245,240,255,0.2)',
+  padding: 32,
+  backgroundColor: 'rgba(8,6,16,0.65)',
+  boxShadow: '0 40px 140px rgba(6,4,18,0.35)',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: formTokens.layout.fieldGap.css(),
+};
+
+const eyebrowStyle: CSSProperties = {
+  textTransform: 'uppercase',
+  letterSpacing: 2,
+  fontSize: 12,
+  color: formTokens.label.text.color.css(),
+  margin: 0,
+};
+
+const titleStyle: CSSProperties = {
+  margin: '0 0 4px',
+  fontSize: 20,
+  color: formTokens.field.text.color.css(),
+};
+
+const listStyle: CSSProperties = {
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: formTokens.layout.fieldGap.css(),
+};
+
+const helperTextStyle: CSSProperties = {
+  margin: '8px 0 0',
+  fontSize: 14,
+  color: formTokens.counter.text.color.css(),
+  lineHeight: 1.5,
+};
+
+const accentListItemStyle: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 8,
+  borderLeftWidth: 4,
+  borderLeftStyle: 'solid',
+  paddingLeft: formTokens.layout.fieldGap.css(),
+};
+
+const codeStyle: CSSProperties = {
+  fontSize: 12,
+  padding: '2px 6px',
+  borderRadius: 6,
+  backgroundColor: 'rgba(255,255,255,0.08)',
+  border: '1px solid rgba(255,255,255,0.12)',
 };
 
 const formContainerStyle = {
@@ -62,6 +137,7 @@ export default function SubmissionTimelineSection({
   stages,
   scenarios,
   tonePalette,
+  telemetryLegend,
 }: Props) {
   const [selectedScenarioId, setSelectedScenarioId] = useState(
     () => scenarios[0]?.id ?? '',
@@ -86,11 +162,26 @@ export default function SubmissionTimelineSection({
     }
   }, [activeScenario?.fieldState]);
 
+  const previousScenarioRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!activeScenario) return;
+    if (previousScenarioRef.current === activeScenario.id) return;
+    previousScenarioRef.current = activeScenario.id;
+    activeScenario.telemetryEvents?.forEach((event) => {
+      console.debug('[ContactForm][debug][telemetry]', event, {
+        source: 'timeline',
+        scenarioId: activeScenario.id,
+        stage: stages[activeScenario.stageIndex]?.id ?? null,
+      });
+    });
+  }, [activeScenario, stages]);
+
   return (
-    <div className={debugFormStyles.stack}>
-      <article className={debugFormStyles.block}>
-        <p className={debugFormStyles.eyebrow}>Timeline</p>
-        <h4 className={debugFormStyles.title}>
+    <div style={stackStyle}>
+      <article style={blockStyle}>
+        <p style={eyebrowStyle}>Timeline</p>
+        <h4 style={titleStyle}>
           Submission flow (interactive)
         </h4>
         <div
@@ -128,7 +219,7 @@ export default function SubmissionTimelineSection({
             );
           })}
         </div>
-        <ol className={debugFormStyles.list}>
+        <ol style={listStyle}>
           {stages.map((stage, index) => {
             const isActive =
               activeScenario?.stageIndex !== undefined &&
@@ -136,8 +227,8 @@ export default function SubmissionTimelineSection({
             return (
               <li
                 key={stage.id}
-                className={debugFormStyles.accentListItem}
                 style={{
+                  ...accentListItemStyle,
                   borderLeftColor: isActive
                     ? timelineStageTone.accent
                     : 'rgba(245,240,255,0.24)',
@@ -156,8 +247,7 @@ export default function SubmissionTimelineSection({
                 </span>
                 <strong>{stage.label}</strong>
                 <p
-                  className={debugFormStyles.helperText}
-                  style={{ margin: 0 }}
+                  style={{ ...helperTextStyle, margin: 0 }}
                 >
                   {stage.description}
                 </p>
@@ -167,9 +257,9 @@ export default function SubmissionTimelineSection({
         </ol>
       </article>
 
-      <article className={debugFormStyles.block}>
-        <p className={debugFormStyles.eyebrow}>CTA & Locks</p>
-        <h4 className={debugFormStyles.title}>
+      <article style={blockStyle}>
+        <p style={eyebrowStyle}>CTA & Locks</p>
+        <h4 style={titleStyle}>
           Submit button + field state
         </h4>
         <div style={formContainerStyle}>
@@ -287,6 +377,39 @@ export default function SubmissionTimelineSection({
             {activeScenario?.ctaState === 'busy' ? 'Sending…' : ctaLabel}
           </button>
         </div>
+      </article>
+
+      <article style={blockStyle}>
+        <p style={eyebrowStyle}>Telemetry</p>
+        <h4 style={titleStyle}>
+          Console events & dimensions
+        </h4>
+        <p style={helperTextStyle}>
+          Selecting a scenario above emits the same debug logs you&apos;ll see
+          when the production form runs. Use these to confirm QA captures the
+          right metrics before touching Brevo.
+        </p>
+        <ul style={listStyle}>
+          {telemetryLegend.map((item) => (
+            <li
+              key={item.event}
+              style={{
+                ...accentListItemStyle,
+                borderLeftColor: 'rgba(245,240,255,0.24)',
+              }}
+            >
+              <code style={codeStyle}>{item.event}</code>
+              <strong>{item.label}</strong>
+              <p style={helperTextStyle}>
+                {item.description}
+              </p>
+              <p style={helperTextStyle}>
+                <span style={{ fontWeight: 600 }}>Dimensions:</span>{' '}
+                {item.dimensions.join(', ')}
+              </p>
+            </li>
+          ))}
+        </ul>
       </article>
     </div>
   );

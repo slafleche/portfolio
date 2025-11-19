@@ -28,10 +28,23 @@ export const enFormCopy = {
 	'form-status-validation_error':
 		'Please check the fields and try again.',
 	'form-status-rate_limited':
-		'Too many attempts. Please wait a minute.',
-	'form-status-service_unavailable':
+		'Too many attempts. Please retry soon.',
+	'form-status-rate_limited-countdown':
+		'Too many attempts. Please retry in {seconds}s.',
+ 'form-status-service_unavailable':
 		"Email service is temporarily unavailable. We'll retry soon.",
 	'form-status-not_configured':
 		"Email service isn't configured yet. Please try again later.",
 	'form-status-blocked': "We couldn't send your message right now.",
+	'form-turnstile-loading': 'Loading human verification…',
+	'form-turnstile-ready':
+		'Complete the verification above to enable submission.',
+	'form-turnstile-verified': 'Verified — you can send your message.',
+	'form-turnstile-expired': 'Verification expired. Please try again.',
+	'form-turnstile-error': 'Verification is unavailable. Please retry.',
+	'form-turnstile-disabled':
+		'Human verification is disabled in this environment.',
+	'form-turnstile-button-pending': "Verify you're human",
+	'form-turnstile-button-error': 'Verification unavailable',
+	'form-turnstile-preview': 'Human verification preview (debug).',
 } as const;
