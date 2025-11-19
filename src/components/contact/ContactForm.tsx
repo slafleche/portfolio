@@ -34,6 +34,7 @@ import { formTokens } from '@/tokens/forms.tokens';
 import { Markdown } from '@/components/Markdown';
 import { useContactDialog } from '@/components/contact/ContactDialogProvider';
 import { DEFAULT_LOCALE } from '@/lib/locales/locale';
+import { FormLabel } from './FormLabel';
 import type {
   ContactFormProps,
   ContactFormDebugFieldState,
@@ -1169,12 +1170,11 @@ export default function ContactForm({
               <legend className={s.legend}>{copy.heading}</legend>
 
           <div className={s.fieldGroup}>
-            <label className={s.labelRow} htmlFor={nameFieldId}>
-              <span>{copy.labels.name}</span>
-              <span aria-hidden="true" className={s.required}>
-                *
-              </span>
-            </label>
+            <FormLabel
+              htmlFor={nameFieldId}
+              label={copy.labels.name}
+              required
+            />
             <input
               id={nameFieldId}
               name="name"
@@ -1217,12 +1217,11 @@ export default function ContactForm({
           </div>
 
           <div className={s.fieldGroup}>
-            <label className={s.labelRow} htmlFor={emailFieldId}>
-              <span>{copy.labels.email}</span>
-              <span aria-hidden="true" className={s.required}>
-                *
-              </span>
-            </label>
+            <FormLabel
+              htmlFor={emailFieldId}
+              label={copy.labels.email}
+              required
+            />
             <input
               id={emailFieldId}
               name="email"
@@ -1265,12 +1264,11 @@ export default function ContactForm({
           </div>
 
           <div className={s.fieldGroup}>
-            <label className={s.labelRow} htmlFor={messageFieldId}>
-              <span>{copy.labels.message}</span>
-              <span aria-hidden="true" className={s.required}>
-                *
-              </span>
-            </label>
+            <FormLabel
+              htmlFor={messageFieldId}
+              label={copy.labels.message}
+              required
+            />
             <textarea
               id={messageFieldId}
               name="message"
