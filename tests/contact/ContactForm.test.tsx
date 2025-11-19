@@ -36,6 +36,11 @@ vi.mock('@/modules/contactForm/mockSubmit', () => ({
 const contactCopy: ContactFormCopy = {
   heading: 'Get in touch',
   counterTemplate: '{count} characters left',
+  messages: {
+    maxChars: 'Maximum characters reached.',
+    urlUsage: 'Links used: {used} of {limit}',
+    maxLinks: 'Maximum links reached.',
+  },
   requiredIndicator: 'Required field',
   submitLabel: 'Send message',
   successBody: 'We will reply soon.',

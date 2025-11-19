@@ -6,6 +6,9 @@ export const frFormCopy = {
   'form-message-label': 'Message',
   'form-submit-label': 'Envoyer le message',
   'form-counter-remaining': '{count} caractères restants',
+  'form-message-max_chars': 'Nombre maximum de caractères atteint.',
+  'form-message-url_usage': 'Liens utilisés : {used} sur {limit}',
+  'form-message-max_links': 'Nombre maximum de liens atteint.',
   'form-privacy-text':
     'Nous utilisons ces informations uniquement pour vous répondre.',
   'form-privacy-link-label': 'Politique de confidentialité',

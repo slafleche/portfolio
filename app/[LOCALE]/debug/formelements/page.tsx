@@ -11,6 +11,7 @@ import { TextareaInput } from '@/components/contact/primitives/TextareaInput';
 import { SubmitButton } from '@/components/contact/primitives/SubmitButton';
 import { NameBlock } from '@/components/contact/blocks/NameBlock';
 import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
+import { MessageBlock } from '@/components/contact/blocks/MessageBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
 
@@ -81,7 +82,13 @@ export default function ContactFormDebugPagePlaceholder() {
   ] = useState('');
   const requiredText = 'Required field';
   const autoResizeHandlers = useAutoResizeHandlers();
-  const noopChange: React.ChangeEventHandler<HTMLInputElement> = () => {};
+  const lockedMessage =
+    'Here is a very long message that reaches the maximum length and contains multiple links: https://example.com https://foo.com https://bar.com';
+  const counterTemplate = '{count} characters remaining';
+  const maxCharactersMessage = 'Maximum characters reached.';
+  const urlUsageTemplate = 'Links used: {used} of {limit}';
+  const maxUrlsMessage = 'Maximum links reached.';
+  const noopChange = () => {};
   const noopFocus = () => {};
 
   return (
@@ -261,6 +268,48 @@ export default function ContactFormDebugPagePlaceholder() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 helperText="We'll only use this to reply."
+                errorText={null}
+                onFocusBefore={noopFocus}
+                onFocusAfter={noopFocus}
+              />
+            </article>
+          </FormBlocksProvider>
+
+          <FormBlocksProvider>
+            <article style={cardStyle}>
+              <span style={labelStyle}>MessageBlock (locked)</span>
+              <MessageBlock
+                label="Message"
+                requiredText={requiredText}
+                value={lockedMessage}
+                counterTemplate={counterTemplate}
+                maxCharactersMessage={maxCharactersMessage}
+                urlUsageTemplate={urlUsageTemplate}
+                maxUrlsMessage={maxUrlsMessage}
+                onChange={() => {}}
+                helperText={null}
+                errorText={null}
+                readOnly
+                disabled
+                onFocusBefore={noopFocus}
+                onFocusAfter={noopFocus}
+              />
+            </article>
+          </FormBlocksProvider>
+
+          <FormBlocksProvider>
+            <article style={cardStyle}>
+              <span style={labelStyle}>MessageBlock (interactive)</span>
+              <MessageBlock
+                label="Message"
+                requiredText={requiredText}
+                value={message}
+                counterTemplate={counterTemplate}
+                maxCharactersMessage={maxCharactersMessage}
+                urlUsageTemplate={urlUsageTemplate}
+                maxUrlsMessage={maxUrlsMessage}
+                onChange={(event) => setMessage(event.target.value)}
+                helperText="Share up to 2000 characters."
                 errorText={null}
                 onFocusBefore={noopFocus}
                 onFocusAfter={noopFocus}

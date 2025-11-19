@@ -45,6 +45,9 @@ export type MessageBlockProps = {
   label: string;
   requiredText: string;
   counterTemplate: string;
+  maxCharactersMessage: string;
+  urlUsageTemplate: string;
+  maxUrlsMessage: string;
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
   onBlur?: FocusEventHandler<HTMLTextAreaElement>;
   helperText?: string | null;
@@ -61,6 +64,9 @@ export function MessageBlock({
   label,
   requiredText,
   counterTemplate,
+  maxCharactersMessage,
+  urlUsageTemplate,
+  maxUrlsMessage,
   onChange,
   onBlur,
   helperText,
@@ -73,7 +79,8 @@ export function MessageBlock({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const generatedId = useId();
   const textareaId = id ?? `${generatedId}-message`;
-  const hintId = `${textareaId}-hint`;
+  const characterHintId = `${textareaId}-hint`;
+  const linksHintId = `${textareaId}-links`;
   const autoResizeHandlers = useMemo(
     () => createAutoResizeHandlers(textareaRef),
     [],
@@ -113,6 +120,20 @@ export function MessageBlock({
     '{count}',
     remainingCharacters.toString(),
   );
+  const characterHint =
+    remainingCharacters === 0 ? maxCharactersMessage : counterText;
+  const urlCount = countUrls(value);
+  const showLinksHint = urlCount > 0;
+  const linksHint = showLinksHint
+    ? urlCount >= MESSAGE_URL_LIMIT
+      ? maxUrlsMessage
+      : urlUsageTemplate
+          .replace('{used}', urlCount.toString())
+          .replace('{limit}', MESSAGE_URL_LIMIT.toString())
+    : null;
+  const describedBy = showLinksHint
+    ? `${characterHintId} ${linksHintId}`
+    : characterHintId;
 
   return (
     <div className={clsx(s.fieldGroup)}>
@@ -134,14 +155,22 @@ export function MessageBlock({
         onBlur={onBlur}
         minLength={MESSAGE_MIN_LENGTH}
         maxLength={MESSAGE_MAX_LENGTH}
-        aria-describedby={hintId}
+        aria-describedby={describedBy}
         aria-invalid={errorText ? 'true' : undefined}
         readOnly={readOnly}
         disabled={disabled}
       />
-      <FormHint tone={errorText ? 'error' : 'helper'} id={hintId}>
-        {errorText || helperText || counterText}
+      <FormHint tone={errorText ? 'error' : 'helper'} id={characterHintId}>
+        {errorText || helperText || characterHint}
       </FormHint>
+      {showLinksHint && linksHint ? (
+        <FormHint
+          tone={urlCount >= MESSAGE_URL_LIMIT ? 'error' : 'helper'}
+          id={linksHintId}
+        >
+          {linksHint}
+        </FormHint>
+      ) : null}
     </div>
   );
 }
