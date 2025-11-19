@@ -1263,11 +1263,11 @@ export default function ContactForm({
               <legend className={s.legend}>{copy.heading}</legend>
 
               <div className={s.fieldGroup}>
-                <FormLabel
+                {/* <FormLabel
                   htmlFor={nameFieldId}
                   label={copy.labels.name}
                   required
-                />
+                /> */}
                 <input
                   id={nameFieldId}
                   name="name"
@@ -1320,11 +1320,11 @@ export default function ContactForm({
               </div>
 
               <div className={s.fieldGroup}>
-                <FormLabel
+                {/* <FormLabel
                   htmlFor={emailFieldId}
                   label={copy.labels.email}
                   required
-                />
+                /> */}
                 <input
                   id={emailFieldId}
                   name="email"
@@ -1377,11 +1377,11 @@ export default function ContactForm({
               </div>
 
               <div className={s.fieldGroup}>
-                <FormLabel
+                {/* <FormLabel
                   htmlFor={messageFieldId}
                   label={copy.labels.message}
                   required
-                />
+                /> */}
                 <textarea
                   id={messageFieldId}
                   name="message"

@@ -7,6 +7,7 @@ export const enFormCopy = {
 	'form-submit-label': 'Send message',
 	'form-counter-remaining': '{count} characters remaining',
 	'form-privacy-text': 'We only use this to reply.',
+	'form-required-indicator': 'Required field',
 	'form-privacy-link-label': 'Privacy policy',
 	'form-privacy-close-label': 'Back to form',
 	'form-honeypot-label': 'Leave this field blank',

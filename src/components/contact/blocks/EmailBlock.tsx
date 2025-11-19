@@ -7,6 +7,7 @@ import { EMAIL_PATTERN } from '@/modules/contactForm/validation.constants';
 export type EmailBlockProps = {
   value: string;
   label: string;
+  requiredText: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   helperText?: string | null;
@@ -24,6 +25,7 @@ export function EmailBlock({
   onChange,
   onBlur,
   helperText,
+  requiredText,
   errorText,
   readOnly,
   disabled,
@@ -56,6 +58,7 @@ export function EmailBlock({
       onBlur={onBlur}
       helperText={helperText}
       errorText={errorText}
+      requiredText={requiredText}
       readOnly={readOnly}
       disabled={disabled}
       maxLength={maxLength}
