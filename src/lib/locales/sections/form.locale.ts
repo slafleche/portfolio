@@ -97,6 +97,17 @@ export type ContactFormCopy = {
     message: string;
   };
   honeypotLabel: string;
+  turnstile: {
+    loading: string;
+    ready: string;
+    verified: string;
+    expired: string;
+    error: string;
+    disabled: string;
+    buttonPending: string;
+    buttonError: string;
+    preview: string;
+  };
   errors: {
     name: {
       required: string;
@@ -116,6 +127,7 @@ export type ContactFormCopy = {
     };
   };
   statuses: Record<FormStatusKey, string>;
+  rateLimitedCountdown: string;
 };
 
 export const buildContactFormCopy = (
@@ -123,6 +135,11 @@ export const buildContactFormCopy = (
 ): ContactFormCopy => {
   const minChars = formTokens.message.minChars.toString();
   const withMin = (value: string) => value.replace('{min}', minChars);
+  const seconds = formTokens.rateLimit.windowSeconds.toString();
+  const withSeconds = (value: string) =>
+    value.includes('{seconds}')
+      ? value.replace('{seconds}', seconds)
+      : value;
   return {
     heading: t(FORM_KEYS.heading),
     successBody: t(FORM_KEYS.successBody),
@@ -139,6 +156,17 @@ export const buildContactFormCopy = (
       message: t(FORM_LABEL_KEYS.message),
     },
     honeypotLabel: t(FORM_KEYS.honeypotLabel),
+    turnstile: {
+      loading: t('form-turnstile-loading'),
+      ready: t('form-turnstile-ready'),
+      verified: t('form-turnstile-verified'),
+      expired: t('form-turnstile-expired'),
+      error: t('form-turnstile-error'),
+      disabled: t('form-turnstile-disabled'),
+      buttonPending: t('form-turnstile-button-pending'),
+      buttonError: t('form-turnstile-button-error'),
+      preview: t('form-turnstile-preview'),
+    },
     errors: {
       name: {
         required: t(FORM_ERROR_KEYS.name.required),
@@ -159,8 +187,9 @@ export const buildContactFormCopy = (
     },
     statuses: Object.fromEntries(
       Object.entries(FORM_STATUS_KEYS).map(
-        ([status, key]) => [status, t(key)],
+        ([status, key]) => [status, withSeconds(t(key))],
       ),
     ) as Record<FormStatusKey, string>,
+    rateLimitedCountdown: t('form-status-rate_limited-countdown'),
   };
 };

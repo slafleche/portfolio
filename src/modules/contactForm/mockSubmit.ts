@@ -21,6 +21,7 @@ export type ContactFormResponse = {
   ok: boolean;
   code: FormServerResponseCode;
   message: string;
+  retryAfterSeconds?: number;
 };
 
 const DEFAULT_STATUS_MESSAGES: Record<FormStatusKey, string> = {
@@ -115,5 +116,8 @@ export async function mockSubmit(
     ok: false,
     code,
     message: resolveMessage(lookupKey, options?.messages),
+    ...(code === 'rate_limited'
+      ? { retryAfterSeconds: 60 }
+      : {}),
   };
 }

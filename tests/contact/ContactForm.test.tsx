@@ -38,6 +38,7 @@ const contactCopy: ContactFormCopy = {
   counterTemplate: '{count} characters left',
   submitLabel: 'Send message',
   successBody: 'We will reply soon.',
+  rateLimitedCountdown: 'Too many attempts. Please wait {seconds}s.',
   privacy: {
     text: 'We only use this to reply.',
     linkLabel: 'Privacy',
@@ -49,6 +50,17 @@ const contactCopy: ContactFormCopy = {
     message: 'Message',
   },
   honeypotLabel: 'Leave blank',
+  turnstile: {
+    loading: 'Loading verification…',
+    ready: 'Complete the verification above to enable submission.',
+    verified: 'Verified — you can send your message.',
+    expired: 'Verification expired. Please try again.',
+    error: 'Verification is unavailable. Please retry.',
+    disabled: 'Human verification is disabled here.',
+    buttonPending: "Verify you're human",
+    buttonError: 'Verification unavailable',
+    preview: 'Human verification preview (debug).',
+  },
   errors: {
     name: {
       required: 'Name required',

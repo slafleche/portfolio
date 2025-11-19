@@ -250,6 +250,10 @@ export default function ContactForm({
     setHasAttemptedSubmit,
   ] = useState(false);
   const [
+    rateLimitSecondsLeft,
+    setRateLimitSecondsLeft,
+  ] = useState<number | null>(null);
+  const [
     toastState,
     setToastState,
   ] = useState<ToastState>({
@@ -283,6 +287,17 @@ export default function ContactForm({
   const shouldHideFormBody = status === 'success';
   const dialogWasOpenRef = useRef(isOpen);
 
+  const realFlowDebugEnabled =
+    !debugState &&
+    (process.env.NEXT_PUBLIC_CONTACT_DEBUG_LOGS === 'true' ||
+      process.env.NODE_ENV !== 'production');
+
+  const focusLogsEnabled =
+    Boolean(debugState?.logFocusEvents) || realFlowDebugEnabled;
+
+  const telemetryLogsEnabled =
+    Boolean(debugState?.enableTelemetryLogs) || realFlowDebugEnabled;
+
   useEffect(() => {
     onSuccessStateChange?.(shouldHideFormBody);
   }, [onSuccessStateChange, shouldHideFormBody]);
@@ -299,8 +314,47 @@ export default function ContactForm({
     ? debugState.hasAttemptedSubmit ?? Boolean(debugState.fieldErrors)
     : hasAttemptedSubmit;
 
-  const resolvedFieldStates =
-    debugState?.fieldStates ?? ({} as Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>);
+  const resolvedFieldStates = useMemo(
+    () =>
+      debugState?.fieldStates ??
+      ({} as Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>),
+    [debugState?.fieldStates],
+  );
+
+  const liveFieldLocks = useMemo(() => {
+    const submittingLock =
+      resolvedIsSubmitting || status === 'sending';
+    const statusLock =
+      status === 'blocked' ||
+      status === 'rate_limited' ||
+      status === 'not_configured' ||
+      status === 'success';
+    return {
+      readOnly: submittingLock,
+      disabled: statusLock,
+    };
+  }, [resolvedIsSubmitting, status]);
+
+  const computedFieldStates = useMemo(() => {
+    const next: Partial<
+      Record<DebugFieldKey, ContactFormDebugFieldState>
+    > = {};
+    (
+      ['name', 'email', 'message'] as DebugFieldKey[]
+    ).forEach((field) => {
+      const base = resolvedFieldStates[field];
+      const readOnly = liveFieldLocks.readOnly || base?.readOnly;
+      const disabled = liveFieldLocks.disabled || base?.disabled;
+      if (readOnly || disabled || base?.dataDebug) {
+        next[field] = {
+          readOnly: Boolean(readOnly),
+          disabled: Boolean(disabled),
+          dataDebug: base?.dataDebug,
+        };
+      }
+    });
+    return next;
+  }, [liveFieldLocks, resolvedFieldStates]);
 
   const resolvedInlineErrors =
     debugState?.inlineErrors ?? ({} as Partial<Record<DebugFieldKey, string>>);
@@ -498,12 +552,23 @@ export default function ContactForm({
       ) {
         resetFormState();
       }
+      if (response.code === 'rate_limited') {
+        const { retryAfterSeconds } = response;
+        if (typeof retryAfterSeconds === 'number') {
+          setRateLimitSecondsLeft(retryAfterSeconds);
+        } else {
+          setRateLimitSecondsLeft(null);
+        }
+      } else {
+        setRateLimitSecondsLeft(null);
+      }
     },
     [
       copy.statuses,
       resetFormState,
       showToast,
       storageKeyRef,
+      setRateLimitSecondsLeft,
     ],
   );
 
@@ -517,14 +582,14 @@ export default function ContactForm({
 
   const logFocusEvent = useCallback(
     (label: string, element: HTMLElement | null) => {
-      if (!debugState?.logFocusEvents) return;
+      if (!focusLogsEnabled) return;
       console.debug('[ContactForm][debug][focus]', label, {
         element,
         descriptor: describeElement(element),
         values,
       });
     },
-    [debugState?.logFocusEvents, describeElement, values],
+    [focusLogsEnabled, describeElement, values],
   );
 
   const logStatusFocus = useCallback(
@@ -536,10 +601,10 @@ export default function ContactForm({
 
   const logTelemetryEvent = useCallback(
     (event: string, detail?: unknown) => {
-      if (!debugState?.enableTelemetryLogs) return;
-      console.debug(`[contact.submit] ${event}`, detail ?? null);
+      if (!telemetryLogsEnabled) return;
+      console.debug('[ContactForm][debug][telemetry]', event, detail ?? null);
     },
-    [debugState?.enableTelemetryLogs],
+    [telemetryLogsEnabled],
   );
 
 
@@ -685,7 +750,31 @@ export default function ContactForm({
   const resetStatus = useCallback(() => {
     setStatus(null);
     setStatusMessage('');
+    setRateLimitSecondsLeft(null);
   }, []);
+
+  useEffect(() => {
+    if (status !== 'rate_limited') {
+      setRateLimitSecondsLeft(null);
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (status !== 'rate_limited') return;
+    if (rateLimitSecondsLeft === null) return;
+    if (rateLimitSecondsLeft <= 0) {
+      resetStatus();
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      setRateLimitSecondsLeft((prev) =>
+        prev && prev > 0 ? prev - 1 : null,
+      );
+    }, 1000);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [rateLimitSecondsLeft, resetStatus, status]);
 
   const syncMessageHeight = useCallback(() => {
     const textarea = messageRef.current;
@@ -901,22 +990,34 @@ export default function ContactForm({
   const turnstileStatusMessage = useMemo(() => {
     switch (turnstileStatus) {
       case 'loading':
-        return 'Loading human verification…';
+        return copy.turnstile.loading;
       case 'ready':
-        return 'Complete the verification above to enable submission.';
+        return copy.turnstile.ready;
       case 'verified':
-        return 'Verified — you can send your message.';
+        return copy.turnstile.verified;
       case 'expired':
-        return 'Verification expired. Please try again.';
+        return copy.turnstile.expired;
       case 'error':
-        return 'Verification is unavailable. Please retry.';
+        return copy.turnstile.error;
       case 'bypassed':
       default:
-        return turnstileEnabled
-          ? null
-          : 'Human verification is disabled in this environment.';
+        return turnstileEnabled ? null : copy.turnstile.disabled;
     }
-  }, [turnstileStatus, turnstileEnabled]);
+  }, [copy.turnstile, turnstileEnabled, turnstileStatus]);
+
+  const rateLimitCountdownLabel = useMemo(() => {
+    if (rateLimitSecondsLeft === null) return null;
+    const seconds = Math.max(0, rateLimitSecondsLeft);
+    const template = copy.rateLimitedCountdown;
+    if (template.includes('{seconds}')) {
+      return template.replace('{seconds}', seconds.toString());
+    }
+    return `${copy.statuses.rate_limited} (${seconds}s)`;
+  }, [
+    copy.rateLimitedCountdown,
+    copy.statuses.rate_limited,
+    rateLimitSecondsLeft,
+  ]);
 
   const derivedButtonState = useMemo(() => {
     if (resolvedIsSubmitting) {
@@ -937,7 +1038,7 @@ export default function ContactForm({
       status !== 'not_configured'
     ) {
       return {
-        label: 'Verify you’re human',
+        label: copy.turnstile.buttonPending,
         disabled: true,
         ariaBusy: false,
         dataDebug: 'turnstilePending',
@@ -946,10 +1047,19 @@ export default function ContactForm({
 
     if (turnstileEnabled && turnstileStatus === 'error') {
       return {
-        label: 'Verification unavailable',
+        label: copy.turnstile.buttonError,
         disabled: true,
         ariaBusy: false,
         dataDebug: 'turnstileError',
+      };
+    }
+
+    if (status === 'rate_limited') {
+      return {
+        label: rateLimitCountdownLabel ?? copy.statuses.rate_limited,
+        disabled: true,
+        ariaBusy: false,
+        dataDebug: 'locked',
       };
     }
 
@@ -957,17 +1067,13 @@ export default function ContactForm({
       status &&
       (status === 'success' ||
         status === 'blocked' ||
-        status === 'rate_limited' ||
         status === 'not_configured')
     ) {
-      const label =
-        status === 'success' || status === 'blocked'
-          ? copy.statuses.success
-          : status === 'rate_limited'
-            ? copy.statuses.rate_limited
-            : copy.statuses.not_configured;
       return {
-        label,
+        label:
+          status === 'success' || status === 'blocked'
+            ? copy.statuses.success
+            : copy.statuses.not_configured,
         disabled: true,
         ariaBusy: false,
         dataDebug: 'locked',
@@ -983,11 +1089,14 @@ export default function ContactForm({
   }, [
     copy.statuses,
     copy.submitLabel,
+    copy.turnstile.buttonPending,
+    copy.turnstile.buttonError,
     resolvedIsSubmitting,
     status,
     turnstileEnabled,
     turnstileStatus,
     values.token,
+    rateLimitCountdownLabel,
   ]);
 
   const canResetTurnstile =
@@ -1049,6 +1158,13 @@ export default function ContactForm({
         ? s.toastError
         : s.toastInfo;
 
+  const effectiveStatusMessage = useMemo<string>(() => {
+    if (status === 'rate_limited' && rateLimitCountdownLabel) {
+      return rateLimitCountdownLabel;
+    }
+    return statusMessage;
+  }, [rateLimitCountdownLabel, status, statusMessage]);
+
   return (
     <Toast.Provider duration={6000} swipeDirection="down">
       <form
@@ -1087,7 +1203,9 @@ export default function ContactForm({
               aria-atomic="true"
               tabIndex={-1}
             >
-              <span className={s.statusText}>{statusMessage}</span>
+              <span className={s.statusText}>
+                {effectiveStatusMessage}
+              </span>
             </div>
           ) : null}
         </div>
@@ -1117,9 +1235,9 @@ export default function ContactForm({
               minLength={2}
               maxLength={80}
               autoComplete="name"
-              readOnly={resolvedFieldStates.name?.readOnly ?? false}
-              disabled={resolvedFieldStates.name?.disabled ?? false}
-              data-debug={resolvedFieldStates.name?.dataDebug}
+              readOnly={computedFieldStates.name?.readOnly ?? false}
+              disabled={computedFieldStates.name?.disabled ?? false}
+              data-debug={computedFieldStates.name?.dataDebug}
               data-error={Boolean(
                 shouldShowError('name') && resolvedFieldErrors.name,
               )}
@@ -1165,9 +1283,9 @@ export default function ContactForm({
               required
               maxLength={254}
               autoComplete="email"
-              readOnly={resolvedFieldStates.email?.readOnly ?? false}
-              disabled={resolvedFieldStates.email?.disabled ?? false}
-              data-debug={resolvedFieldStates.email?.dataDebug}
+              readOnly={computedFieldStates.email?.readOnly ?? false}
+              disabled={computedFieldStates.email?.disabled ?? false}
+              data-debug={computedFieldStates.email?.dataDebug}
               data-error={Boolean(
                 shouldShowError('email') && resolvedFieldErrors.email,
               )}
@@ -1212,9 +1330,9 @@ export default function ContactForm({
               rows={formTokens.message.minRows}
               minLength={formTokens.message.minChars}
               maxLength={formTokens.message.maxChars}
-              readOnly={resolvedFieldStates.message?.readOnly ?? false}
-              disabled={resolvedFieldStates.message?.disabled ?? false}
-              data-debug={resolvedFieldStates.message?.dataDebug}
+              readOnly={computedFieldStates.message?.readOnly ?? false}
+              disabled={computedFieldStates.message?.disabled ?? false}
+              data-debug={computedFieldStates.message?.dataDebug}
               data-error={Boolean(
                 shouldShowError('message') &&
                   resolvedFieldErrors.message,
@@ -1307,8 +1425,8 @@ export default function ContactForm({
               {!shouldRenderTurnstileWidget ? (
                 <span className={s.turnstilePlaceholder}>
                   {turnstileSiteKey
-                    ? 'Human verification preview (debug).'
-                    : 'Human verification disabled in this environment.'}
+                    ? copy.turnstile.preview
+                    : copy.turnstile.disabled}
                 </span>
               ) : null}
             </div>

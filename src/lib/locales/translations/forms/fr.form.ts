@@ -31,11 +31,29 @@ export const frFormCopy = {
   'form-status-validation_error':
     'Veuillez vérifier les champs et réessayer.',
   'form-status-rate_limited':
-    'Trop de tentatives. Veuillez patienter une minute.',
+    'Trop de tentatives. Veuillez réessayer bientôt.',
+  'form-status-rate_limited-countdown':
+    'Trop de tentatives. Réessayez dans {seconds}s.',
   'form-status-service_unavailable':
     "Le service d'envoi est temporairement indisponible. Réessayez bientôt.",
   'form-status-not_configured':
     "Le service d'envoi n'est pas encore configuré. Réessayez plus tard.",
   'form-status-blocked':
     'Nous ne pouvons pas envoyer votre message pour le moment.',
+  'form-turnstile-loading': 'Chargement de la vérification humaine…',
+  'form-turnstile-ready':
+    'Complétez la vérification ci-dessus pour activer l’envoi.',
+  'form-turnstile-verified':
+    'Vérification réussie — vous pouvez envoyer votre message.',
+  'form-turnstile-expired':
+    'La vérification a expiré. Veuillez réessayer.',
+  'form-turnstile-error':
+    'La vérification est indisponible. Veuillez réessayer.',
+  'form-turnstile-disabled':
+    'La vérification humaine est désactivée dans cet environnement.',
+  'form-turnstile-button-pending':
+    'Confirmez que vous êtes humain',
+  'form-turnstile-button-error': 'Vérification indisponible',
+  'form-turnstile-preview':
+    'Aperçu de vérification humaine (debug).',
 } as const;

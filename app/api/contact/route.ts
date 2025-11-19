@@ -75,20 +75,23 @@ const buildResponse = (
 		status?: number;
 		okOverride?: boolean;
 		headers?: HeadersInit;
+		bodyExtras?: Record<string, unknown>;
 	},
 ) => {
 	const statusKey = statusFromCode(code);
 	const ok = options.okOverride ?? (code === 'success');
 	const headers = new Headers(options.headers);
 	headers.set('x-submission-id', options.submissionId);
+	const body = {
+		ok,
+		code,
+		message:
+			options.copy.statuses[statusKey] ??
+			options.copy.statuses.generic,
+		...(options.bodyExtras ?? {}),
+	};
 	return NextResponse.json(
-		{
-			ok,
-			code,
-			message:
-				options.copy.statuses[statusKey] ??
-				options.copy.statuses.generic,
-		},
+		body,
 		{
 			status: options.status ?? (ok ? 200 : 400),
 			headers,
@@ -258,6 +261,10 @@ export async function POST(request: NextRequest) {
 				reason: 'rate-limited',
 				retryAfterSeconds: rate.retryAfterSeconds,
 			},
+			bodyExtras:
+				rate.retryAfterSeconds !== undefined
+					? { retryAfterSeconds: rate.retryAfterSeconds }
+					: undefined,
 		});
 	}
 
