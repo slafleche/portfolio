@@ -1,4 +1,4 @@
-import type { FormErrorKey } from '@/lib/locales/sections/form.locale';
+import type { FormErrorKey } from '../../../../src/lib/locales/sections/form.locale';
 
 export type FieldKey = 'name' | 'email' | 'message';
 
@@ -66,7 +66,9 @@ export const uiPermutations: readonly UiPermutation[] = [
         label: baseFieldLabels.message,
         placeholder: 'Tell me about your project…',
         helper: 'Min 40 characters · Max 1200 characters',
-        notes: ['Character counter hidden until user types.'],
+        notes: [
+          'Character counter hidden until user types.',
+        ],
       },
     },
   },
@@ -243,8 +245,7 @@ export const uiPermutations: readonly UiPermutation[] = [
       email: {
         label: baseFieldLabels.email,
         value: 'user@blocked-domain.dev',
-        error:
-          'Brevo rejected this domain. Try a different address.',
+        error: 'Brevo rejected this domain. Try a different address.',
         errorKey: 'form-error-email-invalid',
         badge: 'Brevo response',
         dataDebug: 'brevo-domain-rejected',
@@ -291,8 +292,7 @@ export const uiPermutations: readonly UiPermutation[] = [
   {
     id: 'readonlyPending',
     label: 'Readonly (pending submit)',
-    description:
-      'Form locks inputs while awaiting the API response.',
+    description: 'Form locks inputs while awaiting the API response.',
     formMode: 'readonly',
     fields: {
       name: {
