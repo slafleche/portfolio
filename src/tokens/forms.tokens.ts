@@ -2,15 +2,13 @@ import { colorVars } from '@/styles/componentTokens/global.componentTokens';
 import { m } from '@/styles/measurementKit';
 
 export const formTokens = {
+  textarea: {
+    minHeight: m(250),
+  },
   label: {
     text: {
       color: colorVars.white.alpha(0.85),
     },
-  },
-  message: {
-    minChars: 10,
-    maxChars: 2000,
-    minRows: 5,
   },
   layout: {
     maxWidth: m(640),
