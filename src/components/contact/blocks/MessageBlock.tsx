@@ -10,13 +10,8 @@ import {
   MESSAGE_URL_LIMIT,
   MESSAGE_MIN_LENGTH,
   MESSAGE_MAX_LENGTH,
-  URL_PATTERN,
 } from '@/modules/contactForm/validation.constants';
-
-const countUrls = (value: string) => {
-  const matches = value.match(URL_PATTERN);
-  return matches ? matches.length : 0;
-};
+import { evaluateMessageField } from '@/modules/contactForm/validation';
 
 const createAutoResizeHandlers = (
   nodeRef: React.MutableRefObject<HTMLTextAreaElement | null>,
@@ -85,6 +80,10 @@ export function MessageBlock({
     () => createAutoResizeHandlers(textareaRef),
     [],
   );
+  const evaluation = useMemo(
+    () => evaluateMessageField(value),
+    [value],
+  );
 
   useFormBlock(
     useMemo(
@@ -92,29 +91,15 @@ export function MessageBlock({
         key: 'message',
         focus: () => textareaRef.current?.focus(),
         getValue: () => value,
-        validate: () => {
-          const length = value.length;
-          if (length === 0) return false;
-          if (length < MESSAGE_MIN_LENGTH) return false;
-          if (length > MESSAGE_MAX_LENGTH) return false;
-          if (countUrls(value) > MESSAGE_URL_LIMIT) return false;
-          return true;
-        },
+        validate: () => evaluation.validation.ok,
         requestFocusBefore: onFocusBefore ?? (() => {}),
         requestFocusAfter: onFocusAfter ?? (() => {}),
       }),
-      [
-        onFocusAfter,
-        onFocusBefore,
-        value,
-      ],
+      [evaluation.validation.ok, onFocusAfter, onFocusBefore, value],
     ),
   );
 
-  const remainingCharacters = Math.max(
-    0,
-    MESSAGE_MAX_LENGTH - value.length,
-  );
+  const remainingCharacters = evaluation.remainingCharacters;
 
   const counterText = counterTemplate.replace(
     '{count}',
@@ -122,7 +107,7 @@ export function MessageBlock({
   );
   const characterHint =
     remainingCharacters === 0 ? maxCharactersMessage : counterText;
-  const urlCount = countUrls(value);
+  const urlCount = evaluation.urlCount;
   const showLinksHint = urlCount > 0;
   const linksHint = showLinksHint
     ? urlCount >= MESSAGE_URL_LIMIT

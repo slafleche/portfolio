@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react';
 import type { ChangeEventHandler, FocusEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
-import { EMAIL_PATTERN } from '@/modules/contactForm/validation.constants';
+import { evaluateEmailField } from '@/modules/contactForm/validation';
 
 export type EmailBlockProps = {
   value: string;
@@ -34,6 +34,10 @@ export function EmailBlock({
   onFocusAfter,
 }: EmailBlockProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const evaluation = useMemo(
+    () => evaluateEmailField(value),
+    [value],
+  );
 
   useFormBlock(
     useMemo(
@@ -41,11 +45,11 @@ export function EmailBlock({
         key: 'email',
         focus: () => inputRef.current?.focus(),
         getValue: () => value,
-        validate: () => EMAIL_PATTERN.test(value.trim()),
+        validate: () => evaluation.validation.ok,
         requestFocusBefore: onFocusBefore ?? (() => {}),
         requestFocusAfter: onFocusAfter ?? (() => {}),
       }),
-      [onFocusAfter, onFocusBefore, value],
+      [evaluation, onFocusAfter, onFocusBefore, value],
     ),
   );
 

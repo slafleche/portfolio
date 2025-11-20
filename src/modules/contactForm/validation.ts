@@ -34,11 +34,168 @@ export type FieldErrorMap = Partial<
   Record<FieldName, FormErrorKey>
 >;
 
+export type NameValidationReason =
+  | 'empty'
+  | 'too_short'
+  | 'too_long';
+
+export type NameValidationResult =
+  | { ok: true }
+  | { ok: false; reason: NameValidationReason };
+
+export type EmailValidationReason =
+  | 'empty'
+  | 'invalid';
+
+export type EmailValidationResult =
+  | { ok: true }
+  | { ok: false; reason: EmailValidationReason };
+
+export type MessageValidationReason =
+  | 'empty'
+  | 'too_short'
+  | 'too_long'
+  | 'too_many_links';
+
+export type MessageValidationResult =
+  | { ok: true; urlCount: number }
+  | { ok: false; reason: MessageValidationReason; urlCount: number };
+
+export type TokenValidationReason = 'missing';
+
+export type TokenValidationResult =
+  | { ok: true }
+  | { ok: false; reason: TokenValidationReason };
+
+export type NameFieldData = {
+  value: string;
+  length: number;
+  validation: NameValidationResult;
+};
+
+export type EmailFieldData = {
+  value: string;
+  validation: EmailValidationResult;
+};
+
+export type MessageFieldData = {
+  value: string;
+  length: number;
+  remainingCharacters: number;
+  urlCount: number;
+  validation: MessageValidationResult;
+};
+
+export type TokenFieldData = {
+  value: string;
+  validation: TokenValidationResult;
+};
+
 export type ValidationResult = {
   draft: ContactFormDraft;
   errors: FieldErrorMap;
   status: FormStatusKey | null;
 };
+
+export function evaluateNameField(
+  value: string | null | undefined,
+): NameFieldData {
+  const normalized = sanitize(value);
+  const length = normalized.length;
+  const validation: NameValidationResult = (() => {
+    if (length === 0) return { ok: false, reason: 'empty' };
+    if (length < NAME_LIMIT.min)
+      return { ok: false, reason: 'too_short' };
+    if (length > NAME_LIMIT.max)
+      return { ok: false, reason: 'too_long' };
+    return { ok: true };
+  })();
+  return {
+    value: normalized,
+    length,
+    validation,
+  };
+}
+
+export function evaluateEmailField(
+  value: string | null | undefined,
+): EmailFieldData {
+  const normalized = sanitize(value).toLowerCase();
+  const validation: EmailValidationResult = (() => {
+    if (!normalized.length)
+      return { ok: false, reason: 'empty' };
+    if (!EMAIL_PATTERN.test(normalized))
+      return { ok: false, reason: 'invalid' };
+    return { ok: true };
+  })();
+  return {
+    value: normalized,
+    validation,
+  };
+}
+
+export function evaluateMessageField(
+  value: string | null | undefined,
+): MessageFieldData {
+  const normalized = sanitize(value);
+  const length = normalized.length;
+  const urlCount = countUrls(normalized);
+  const remainingCharacters = Math.max(
+    0,
+    MESSAGE_MAX_LENGTH - length,
+  );
+  const validation: MessageValidationResult = (() => {
+    if (length === 0) {
+      return {
+        ok: false,
+        reason: 'empty',
+        urlCount,
+      };
+    }
+    if (length < MESSAGE_MIN_LENGTH) {
+      return {
+        ok: false,
+        reason: 'too_short',
+        urlCount,
+      };
+    }
+    if (length > MESSAGE_MAX_LENGTH) {
+      return {
+        ok: false,
+        reason: 'too_long',
+        urlCount,
+      };
+    }
+    if (urlCount > MESSAGE_URL_LIMIT) {
+      return {
+        ok: false,
+        reason: 'too_many_links',
+        urlCount,
+      };
+    }
+    return { ok: true, urlCount };
+  })();
+  return {
+    value: normalized,
+    length,
+    remainingCharacters,
+    urlCount,
+    validation,
+  };
+}
+
+export function evaluateTokenField(
+  value: string | null | undefined,
+): TokenFieldData {
+  const normalized = sanitize(value);
+  const validation: TokenValidationResult = normalized
+    ? { ok: true }
+    : { ok: false, reason: 'missing' };
+  return {
+    value: normalized,
+    validation,
+  };
+}
 
 const sanitize = (value?: string | null): string =>
   value ? value.trim() : '';
@@ -86,28 +243,34 @@ export function validateDraft(
   const draft = normalizeInput(raw);
   const errors: FieldErrorMap = {};
 
-  if (draft.name.length < NAME_LIMIT.min) {
-    errors.name = 'form-error-name-required';
-  } else if (draft.name.length > NAME_LIMIT.max) {
-    errors.name = 'form-error-name-too_long';
+  const nameData = evaluateNameField(draft.name);
+  if (!nameData.validation.ok) {
+    errors.name =
+      nameData.validation.reason === 'too_long'
+        ? 'form-error-name-too_long'
+        : 'form-error-name-required';
   }
 
-  if (!draft.email.length || !EMAIL_PATTERN.test(draft.email)) {
+  const emailData = evaluateEmailField(draft.email);
+  if (!emailData.validation.ok) {
     errors.email = 'form-error-email-invalid';
   }
 
-  const minMessageLength = MESSAGE_MIN_LENGTH;
-  if (draft.message.length === 0) {
-    errors.message = 'form-error-message-required';
-  } else if (draft.message.length < minMessageLength) {
-    errors.message = 'form-error-message-too_short';
-  } else if (draft.message.length > MESSAGE_MAX_LENGTH) {
-    errors.message = 'form-error-message-too_long';
-  } else if (countUrls(draft.message) > MESSAGE_URL_LIMIT) {
-    errors.message = 'form-error-message-too_many_links';
+  const messageData = evaluateMessageField(draft.message);
+  if (!messageData.validation.ok) {
+    const reason = messageData.validation.reason;
+    errors.message =
+      reason === 'too_short'
+        ? 'form-error-message-too_short'
+        : reason === 'too_long'
+          ? 'form-error-message-too_long'
+          : reason === 'too_many_links'
+            ? 'form-error-message-too_many_links'
+            : 'form-error-message-required';
   }
 
-  if (!draft.token) {
+  const tokenData = evaluateTokenField(draft.token);
+  if (!tokenData.validation.ok) {
     errors.token = 'form-error-token-missing';
   }
 

@@ -3,6 +3,7 @@ import type { ChangeEventHandler, FocusEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
+import { evaluateNameField } from '@/modules/contactForm/validation';
 
 export type NameBlockProps = {
   value: string;
@@ -36,6 +37,10 @@ export function NameBlock({
   onFocusAfter,
 }: NameBlockProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const evaluation = useMemo(
+    () => evaluateNameField(value),
+    [value],
+  );
 
   useFormBlock(
     useMemo(
@@ -43,11 +48,11 @@ export function NameBlock({
         key: 'name',
         focus: () => inputRef.current?.focus(),
         getValue: () => value,
-        validate: () => value.trim().length > 0,
+        validate: () => evaluation.validation.ok,
         requestFocusBefore: onFocusBefore ?? (() => {}),
         requestFocusAfter: onFocusAfter ?? (() => {}),
       }),
-      [onFocusAfter, onFocusBefore, value],
+      [evaluation, onFocusAfter, onFocusBefore, value],
     ),
   );
 
