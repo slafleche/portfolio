@@ -14,6 +14,7 @@ import { NameBlock } from './blocks/NameBlock';
 import { EmailBlock } from './blocks/EmailBlock';
 import { MessageBlock } from './blocks/MessageBlock';
 import { TurnstileBlock } from './blocks/TurnstileBlock';
+import { HoneypotBlock } from './blocks/HoneypotBlock';
 import type {
   ContactFormProps,
   TurnstileState,
@@ -93,7 +94,6 @@ export default function ContactForm({
   actionUrl = DEFAULT_ACTION_URL,
   formRef = null,
   copy,
-  debugState,
   ...rest
 }: ContactFormProps) {
   void rest;
@@ -101,15 +101,19 @@ export default function ContactForm({
   const [
     nameValue,
     setNameValue,
-  ] = useState(debugState?.values?.name ?? '');
+  ] = useState('');
   const [
     emailValue,
     setEmailValue,
-  ] = useState(debugState?.values?.email ?? '');
+  ] = useState('');
   const [
     messageValue,
     setMessageValue,
-  ] = useState(debugState?.values?.message ?? '');
+  ] = useState('');
+  const [
+    honeypotValue,
+    setHoneypotValue,
+  ] = useState('');
   const turnstileSiteKey =
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? null;
   const turnstileEnabled = Boolean(turnstileSiteKey);
@@ -123,12 +127,10 @@ export default function ContactForm({
     turnstileToken,
     setTurnstileToken,
   ] = useState(
-    debugState?.values?.token ??
-      (turnstileEnabled ? '' : DEFAULT_TURNSTILE_TOKEN),
+    turnstileEnabled ? '' : DEFAULT_TURNSTILE_TOKEN,
   );
   const turnstileContainerRef = useRef<HTMLDivElement | null>(null);
   const turnstileWidgetIdRef = useRef<string | null>(null);
-  const turnstileSimulationRef = useRef<string | null>(null);
   const contactDialog = useContext(ContactDialogContext);
 
   const handleNameChange = useCallback<
@@ -148,8 +150,13 @@ export default function ContactForm({
   >((event) => {
     setMessageValue(event.target.value);
   }, []);
+  const handleHoneypotChange = useCallback<
+    React.ChangeEventHandler<HTMLInputElement>
+  >((event) => {
+    setHoneypotValue(event.target.value);
+  }, []);
   const shouldRenderTurnstileWidget =
-    turnstileEnabled && !debugState?.turnstileSimulation;
+    turnstileEnabled;
 
   useEffect(() => {
     if (!shouldRenderTurnstileWidget || !turnstileSiteKey) return;
@@ -205,19 +212,6 @@ export default function ContactForm({
     turnstileSiteKey,
   ]);
 
-  useEffect(() => {
-    const simulation = debugState?.turnstileSimulation ?? null;
-    if (simulation === turnstileSimulationRef.current) return;
-    turnstileSimulationRef.current = simulation;
-    if (!simulation) return;
-    setTurnstileToken('');
-    setTurnstileStatus(
-      simulation === 'expired' ? 'expired' : 'ready',
-    );
-  }, [
-    debugState?.turnstileSimulation,
-  ]);
-
   const handlePrivacyLinkClick = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
       if (!contactDialog) return;
@@ -239,25 +233,30 @@ export default function ContactForm({
           copy={copy.blocks.name}
           value={nameValue}
           onChange={handleNameChange}
-          onBlur={debugState ? undefined : undefined}
-          readOnly={debugState?.fieldStates?.name?.readOnly}
-          disabled={debugState?.fieldStates?.name?.disabled}
+          onBlur={undefined}
+          readOnly={undefined}
+          disabled={undefined}
         />
         <EmailBlock
           copy={copy.blocks.email}
           value={emailValue}
           onChange={handleEmailChange}
-          onBlur={debugState ? undefined : undefined}
-          readOnly={debugState?.fieldStates?.email?.readOnly}
-          disabled={debugState?.fieldStates?.email?.disabled}
+          onBlur={undefined}
+          readOnly={undefined}
+          disabled={undefined}
         />
         <MessageBlock
           copy={copy.blocks.message}
           value={messageValue}
           onChange={handleMessageChange}
-          onBlur={debugState ? undefined : undefined}
-          helperText={debugState?.inlineHelpers?.message ?? null}
-          errorText={debugState?.inlineErrors?.message ?? null}
+          onBlur={undefined}
+          helperText={null}
+          errorText={null}
+        />
+        <HoneypotBlock
+          copy={copy.blocks.honeypot}
+          value={honeypotValue}
+          onChange={handleHoneypotChange}
         />
         <input type="hidden" name="token" value={turnstileToken} />
         <TurnstileBlock
