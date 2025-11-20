@@ -56,34 +56,26 @@ export default function ContactForm({
         noValidate
       >
         <NameBlock
-          label={copy.labels.name}
-          requiredText={copy.requiredIndicator}
+          copy={copy.blocks.name}
           value={nameValue}
           onChange={handleNameChange}
-          helperText={debugState?.inlineHelpers?.name ?? null}
-          errorText={debugState?.inlineErrors?.name ?? null}
+          onBlur={debugState ? undefined : undefined}
           readOnly={debugState?.fieldStates?.name?.readOnly}
           disabled={debugState?.fieldStates?.name?.disabled}
         />
         <EmailBlock
-          label={copy.labels.email}
-          requiredText={copy.requiredIndicator}
+          copy={copy.blocks.email}
           value={emailValue}
           onChange={handleEmailChange}
-          helperText={debugState?.inlineHelpers?.email ?? null}
-          errorText={debugState?.inlineErrors?.email ?? null}
+          onBlur={debugState ? undefined : undefined}
           readOnly={debugState?.fieldStates?.email?.readOnly}
           disabled={debugState?.fieldStates?.email?.disabled}
         />
         <MessageBlock
+          copy={copy.blocks.message}
           value={messageValue}
-          label={copy.labels.message}
-          requiredText={copy.requiredIndicator}
-          counterTemplate={copy.counterTemplate}
-          maxCharactersMessage={copy.messages.maxChars}
-          urlUsageTemplate={copy.messages.urlUsage}
-          maxUrlsMessage={copy.messages.maxLinks}
           onChange={handleMessageChange}
+          onBlur={debugState ? undefined : undefined}
           helperText={debugState?.inlineHelpers?.message ?? null}
           errorText={debugState?.inlineErrors?.message ?? null}
         />

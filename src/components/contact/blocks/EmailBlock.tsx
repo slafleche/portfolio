@@ -3,15 +3,13 @@ import type { ChangeEventHandler, FocusEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
 import { evaluateEmailField } from '@/modules/contactForm/validation';
+import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
 
 export type EmailBlockProps = {
   value: string;
-  label: string;
-  requiredText: string;
+  copy: EmailBlockLocale;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
-  helperText?: string | null;
-  errorText?: string | null;
   readOnly?: boolean;
   disabled?: boolean;
   maxLength?: number;
@@ -21,17 +19,14 @@ export type EmailBlockProps = {
 
 export function EmailBlock({
   value,
-  label,
   onChange,
   onBlur,
-  helperText,
-  requiredText,
-  errorText,
   readOnly,
   disabled,
   maxLength,
   onFocusBefore,
   onFocusAfter,
+  copy,
 }: EmailBlockProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const evaluation = useMemo(
@@ -46,23 +41,25 @@ export function EmailBlock({
         focus: () => inputRef.current?.focus(),
         getValue: () => value,
         validate: () => evaluation.validation.ok,
+        getValidationSummary: () => {
+          if (evaluation.validation.ok) return null;
+          return copy.errors.invalid;
+        },
         requestFocusBefore: onFocusBefore ?? (() => {}),
         requestFocusAfter: onFocusAfter ?? (() => {}),
       }),
-      [evaluation, onFocusAfter, onFocusBefore, value],
+      [copy.errors.invalid, evaluation, onFocusAfter, onFocusBefore, value],
     ),
   );
 
   return (
     <TextInputBlock
       blockKey="email"
-      label={label}
+      label={copy.label}
       value={value}
       onChange={onChange}
       onBlur={onBlur}
-      helperText={helperText}
-      errorText={errorText}
-      requiredText={requiredText}
+      requiredText={copy.requiredText}
       readOnly={readOnly}
       disabled={disabled}
       maxLength={maxLength}

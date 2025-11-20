@@ -4,15 +4,13 @@ import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
 import { evaluateNameField } from '@/modules/contactForm/validation';
+import type { NameBlockLocale } from '@/lib/locales/form/form.name';
 
 export type NameBlockProps = {
   value: string;
-  label: string;
-  requiredText: string;
+  copy: NameBlockLocale;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
-  helperText?: string | null;
-  errorText?: string | null;
   readOnly?: boolean;
   disabled?: boolean;
   maxLength?: number;
@@ -23,18 +21,15 @@ export type NameBlockProps = {
 
 export function NameBlock({
   value,
-  label,
   onChange,
-  requiredText,
   onBlur,
-  helperText,
-  errorText,
   readOnly,
   disabled,
   maxLength,
   minLength,
   onFocusBefore,
   onFocusAfter,
+  copy,
 }: NameBlockProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const evaluation = useMemo(
@@ -49,23 +44,28 @@ export function NameBlock({
         focus: () => inputRef.current?.focus(),
         getValue: () => value,
         validate: () => evaluation.validation.ok,
+        getValidationSummary: () => {
+          if (evaluation.validation.ok) return null;
+          if (evaluation.validation.reason === 'too_long') {
+            return copy.errors.tooLong;
+          }
+          return copy.errors.required;
+        },
         requestFocusBefore: onFocusBefore ?? (() => {}),
         requestFocusAfter: onFocusAfter ?? (() => {}),
       }),
-      [evaluation, onFocusAfter, onFocusBefore, value],
+      [copy.errors, evaluation, onFocusAfter, onFocusBefore, value],
     ),
   );
 
   return (
     <TextInputBlock
       blockKey="name"
-      label={label}
+      label={copy.label}
       value={value}
       onChange={onChange}
       onBlur={onBlur}
-      requiredText={requiredText}
-      helperText={helperText}
-      errorText={errorText}
+      requiredText={copy.requiredText}
       readOnly={readOnly}
       disabled={disabled}
       maxLength={maxLength ?? NAME_LIMIT.max}
