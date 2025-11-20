@@ -101,6 +101,28 @@ const contactCopy: ContactFormCopy = {
         tooManyLinks: 'Too many links',
       },
     },
+    turnstile: {
+      label: 'Human verification',
+      requiredText: 'Required field',
+      statuses: {
+        loading: 'Loading human verification…',
+        ready: 'Complete the verification above to enable submission.',
+        verified: 'Verified — you can send your message.',
+        expired: 'Verification expired. Please try again.',
+        error: 'Verification is unavailable. Please retry.',
+        disabled: 'Human verification is disabled here.',
+      },
+      buttons: {
+        pending: 'Verify you\\'re human',
+        error: 'Verification unavailable',
+      },
+      preview: 'Human verification preview (debug).',
+      summary: {
+        missing: 'Complete the human verification.',
+        expired: 'Human verification expired. Please try again.',
+        error: 'Human verification is unavailable. Please retry.',
+      },
+    },
   },
 };
 
