@@ -26,7 +26,6 @@ export type ContactFormDebugState = {
   isSubmitting?: boolean;
   hasAttemptedSubmit?: boolean;
   fieldStates?: Partial<Record<DebugFieldKey, ContactFormDebugFieldState>>;
-  revealHoneypot?: boolean;
   logFocusEvents?: boolean;
   showSubmitOverlay?: boolean;
   scrollStatusIntoView?: boolean;

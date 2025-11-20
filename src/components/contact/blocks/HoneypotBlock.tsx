@@ -8,7 +8,6 @@ export type HoneypotBlockProps = {
   onChange: ChangeEventHandler<HTMLInputElement>;
   copy: HoneypotBlockLocale;
   name?: string;
-  reveal?: boolean;
 };
 
 export function HoneypotBlock({
@@ -16,21 +15,17 @@ export function HoneypotBlock({
   onChange,
   copy,
   name = 'hp',
-  reveal = false,
 }: HoneypotBlockProps) {
   const inputId = useId();
 
   return (
-    <div
-      aria-hidden={!reveal}
-      className={reveal ? undefined : s.visuallyHidden}
-    >
+    <div aria-hidden className={s.visuallyHidden}>
       <label htmlFor={inputId}>{copy.label}</label>
       <input
         id={inputId}
         name={name}
         type="text"
-        tabIndex={reveal ? 0 : -1}
+        tabIndex={-1}
         autoComplete="off"
         value={value}
         onChange={onChange}

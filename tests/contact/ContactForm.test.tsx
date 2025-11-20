@@ -112,7 +112,7 @@ const contactCopy: ContactFormCopy = {
         disabled: 'Human verification is disabled here.',
       },
       buttons: {
-        pending: 'Verify you\\'re human',
+        pending: "Verify you're human",
         error: 'Verification unavailable',
       },
       preview: 'Human verification preview (debug).',
