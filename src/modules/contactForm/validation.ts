@@ -1,14 +1,15 @@
-import { formTokens } from '@/tokens/forms.tokens';
 import type {
   FormErrorKey,
   FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
 import {
-	NAME_LIMIT,
-	EMAIL_MAX_LENGTH,
-	EMAIL_PATTERN,
-	URL_PATTERN,
-	MESSAGE_URL_LIMIT,
+  NAME_LIMIT,
+  EMAIL_MAX_LENGTH,
+  EMAIL_PATTERN,
+  URL_PATTERN,
+  MESSAGE_URL_LIMIT,
+  MESSAGE_MIN_LENGTH,
+  MESSAGE_MAX_LENGTH,
 } from './validation.constants';
 
 export type RawContactFormInput = {
@@ -65,7 +66,7 @@ export function normalizeInput(
   );
   const message = clampLength(
     sanitize(input.message),
-    formTokens.message.maxChars,
+    MESSAGE_MAX_LENGTH,
   );
   const token = sanitize(input.token);
   const hp = sanitize(input.hp);
@@ -95,12 +96,12 @@ export function validateDraft(
     errors.email = 'form-error-email-invalid';
   }
 
-  const minMessageLength = formTokens.message.minChars;
+  const minMessageLength = MESSAGE_MIN_LENGTH;
   if (draft.message.length === 0) {
     errors.message = 'form-error-message-required';
   } else if (draft.message.length < minMessageLength) {
     errors.message = 'form-error-message-too_short';
-  } else if (draft.message.length > formTokens.message.maxChars) {
+  } else if (draft.message.length > MESSAGE_MAX_LENGTH) {
     errors.message = 'form-error-message-too_long';
   } else if (countUrls(draft.message) > MESSAGE_URL_LIMIT) {
     errors.message = 'form-error-message-too_many_links';

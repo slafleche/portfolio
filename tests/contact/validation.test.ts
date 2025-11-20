@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { normalizeInput, validateDraft } from '@/modules/contactForm/validation';
 import {
   MESSAGE_URL_LIMIT,
-  normalizeInput,
-  validateDraft,
-} from '@/modules/contactForm/validation';
-import { formTokens } from '@/tokens/forms.tokens';
+  MESSAGE_MAX_LENGTH,
+} from '@/modules/contactForm/validation.constants';
 
 const baseInput = {
   name: 'Jane Doe',
@@ -71,7 +70,7 @@ describe('contactForm validation', () => {
       message: longMessage,
     });
     expect(tooLong.draft.message.length).toBe(
-      formTokens.message.maxChars,
+      MESSAGE_MAX_LENGTH,
     );
   });
 
