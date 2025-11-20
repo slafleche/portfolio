@@ -1,6 +1,7 @@
 import type { Messages } from '@/data/locales';
 import type { Translator } from './helpers.locale';
 import { formTokens } from '@/tokens/forms.tokens';
+import { MESSAGE_MIN_LENGTH } from '@/modules/contactForm/validation.constants';
 
 export const FORM_KEYS = {
   heading: 'form-heading',
@@ -143,7 +144,7 @@ export type ContactFormCopy = {
 export const buildContactFormCopy = (
   t: Translator,
 ): ContactFormCopy => {
-  const minChars = formTokens.message.minChars.toString();
+  const minChars = MESSAGE_MIN_LENGTH.toString();
   const withMin = (value: string) => value.replace('{min}', minChars);
   const seconds = formTokens.rateLimit.windowSeconds.toString();
   const withSeconds = (value: string) =>
