@@ -11,11 +11,13 @@ import {
 } from 'react';
 import type { ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import * as s from '@/styles/components/contactDialog.css';
+import * as dialogStyles from '@/styles/components/contactDialog.css';
+import * as formStyles from '@/styles/components/forms.css';
 import ContactForm from './ContactForm';
 import type { ContactFormToastDebugScenario } from './contact.types';
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
+import { Markdown } from '@/components/Markdown';
 import { sharedStrings } from '@/lib/sharedStrings';
 
 type ModalIntent = 'none' | 'contact' | 'contact-policy';
@@ -265,6 +267,17 @@ export function ContactDialogProvider({
   const isOpen = intent !== 'none';
   const isPrivacyOpen = intent === 'contact-policy';
 
+  const handlePrivacyOpenChange = useCallback(
+    (nextOpen: boolean) => {
+      if (nextOpen) {
+        openPrivacy();
+      } else {
+        closePrivacy();
+      }
+    },
+    [closePrivacy, openPrivacy],
+  );
+
   const handleDialogOpenChange = useCallback(
     (nextOpen: boolean) => {
       if (!nextOpen) {
@@ -275,6 +288,11 @@ export function ContactDialogProvider({
     },
     [closeContact, openContact],
   );
+
+  const privacyUpdated =
+    typeof privacyCopy.updated === 'string'
+      ? privacyCopy.updated.trim()
+      : '';
 
   const contextValue = useMemo(
     () => ({
@@ -303,21 +321,21 @@ export function ContactDialogProvider({
       >
         {children}
         <Dialog.Portal>
-          <Dialog.Overlay className={s.overlay} />
-          <Dialog.Content className={s.content}>
-            <div className={s.panel}>
-              <div className={s.panelContent}>
+          <Dialog.Overlay className={dialogStyles.overlay} />
+          <Dialog.Content className={dialogStyles.content}>
+            <div className={dialogStyles.panel}>
+              <div className={dialogStyles.panelContent}>
                 <Dialog.Close asChild>
                   <button
                     type="button"
-                    className={s.closeButton}
+                    className={dialogStyles.closeButton}
                     aria-label="Close contact dialog"
                   >
                     ×
                   </button>
                 </Dialog.Close>
                 {!successVisible ? (
-                  <Dialog.Title className={s.heading}>
+                  <Dialog.Title className={dialogStyles.heading}>
                     {formCopy.heading}
                   </Dialog.Title>
                 ) : null}
@@ -329,6 +347,41 @@ export function ContactDialogProvider({
                   onSuccessStateChange={setSuccessVisible}
                 />
               </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+      <Dialog.Root
+        open={isPrivacyOpen}
+        onOpenChange={handlePrivacyOpenChange}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className={formStyles.privacyOverlay} />
+          <Dialog.Content className={formStyles.privacyDialog}>
+            <div className={formStyles.privacyPanel}>
+              <Dialog.Title className={formStyles.privacyTitle}>
+                {privacyCopy.title}
+              </Dialog.Title>
+              {privacyUpdated ? (
+                <p className={formStyles.privacyUpdated}>
+                  {privacyUpdated}
+                </p>
+              ) : null}
+              <Dialog.Description asChild>
+                <Markdown
+                  source={privacyCopy.content}
+                  className={formStyles.privacyBody}
+                />
+              </Dialog.Description>
+              <Dialog.Close asChild>
+                <button
+                  type="button"
+                  className={formStyles.privacyCloseIcon}
+                  aria-label={formCopy.privacy.closeLabel}
+                >
+                  ×
+                </button>
+              </Dialog.Close>
             </div>
           </Dialog.Content>
         </Dialog.Portal>

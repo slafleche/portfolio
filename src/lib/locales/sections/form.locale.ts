@@ -90,17 +90,6 @@ export type ContactFormCopy = {
     closeLabel: string;
   };
   honeypotLabel: string;
-  turnstile: {
-    loading: string;
-    ready: string;
-    verified: string;
-    expired: string;
-    error: string;
-    disabled: string;
-    buttonPending: string;
-    buttonError: string;
-    preview: string;
-  };
   errors: {
     token: {
       missing: string;
@@ -130,17 +119,6 @@ export const buildContactFormCopy = (
       closeLabel: t(FORM_KEYS.privacyCloseLabel),
     },
     honeypotLabel: t(FORM_KEYS.honeypotLabel),
-    turnstile: {
-      loading: t('form-turnstile-loading'),
-      ready: t('form-turnstile-ready'),
-      verified: t('form-turnstile-verified'),
-      expired: t('form-turnstile-expired'),
-      error: t('form-turnstile-error'),
-      disabled: t('form-turnstile-disabled'),
-      buttonPending: t('form-turnstile-button-pending'),
-      buttonError: t('form-turnstile-button-error'),
-      preview: t('form-turnstile-preview'),
-    },
     errors: {
       token: {
         missing: t(FORM_ERROR_KEYS.token.missing),
