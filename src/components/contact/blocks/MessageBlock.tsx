@@ -12,6 +12,7 @@ import {
   MESSAGE_MAX_LENGTH,
 } from '@/modules/contactForm/validation.constants';
 import { evaluateMessageField } from '@/modules/contactForm/validation';
+import type { MessageBlockLocale } from '@/lib/locales/form/form.message';
 
 const createAutoResizeHandlers = (
   nodeRef: React.MutableRefObject<HTMLTextAreaElement | null>,
@@ -37,12 +38,7 @@ const createAutoResizeHandlers = (
 export type MessageBlockProps = {
   id?: string;
   value: string;
-  label: string;
-  requiredText: string;
-  counterTemplate: string;
-  maxCharactersMessage: string;
-  urlUsageTemplate: string;
-  maxUrlsMessage: string;
+  copy: MessageBlockLocale;
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
   onBlur?: FocusEventHandler<HTMLTextAreaElement>;
   helperText?: string | null;
@@ -56,12 +52,7 @@ export type MessageBlockProps = {
 export function MessageBlock({
   id,
   value,
-  label,
-  requiredText,
-  counterTemplate,
-  maxCharactersMessage,
-  urlUsageTemplate,
-  maxUrlsMessage,
+  copy,
   onChange,
   onBlur,
   helperText,
@@ -84,7 +75,6 @@ export function MessageBlock({
     () => evaluateMessageField(value),
     [value],
   );
-
   useFormBlock(
     useMemo(
       () => ({
@@ -92,27 +82,47 @@ export function MessageBlock({
         focus: () => textareaRef.current?.focus(),
         getValue: () => value,
         validate: () => evaluation.validation.ok,
+        getValidationSummary: () => {
+          if (evaluation.validation.ok) return null;
+          const reason = evaluation.validation.reason;
+          if (reason === 'too_short') {
+            return copy.errors.tooShort;
+          }
+          if (reason === 'too_long') {
+            return copy.errors.tooLong;
+          }
+          if (reason === 'too_many_links') {
+            return copy.errors.tooManyLinks;
+          }
+          return copy.errors.required;
+        },
         requestFocusBefore: onFocusBefore ?? (() => {}),
         requestFocusAfter: onFocusAfter ?? (() => {}),
       }),
-      [evaluation.validation.ok, onFocusAfter, onFocusBefore, value],
+      [
+        copy.errors,
+        evaluation,
+        onFocusAfter,
+        onFocusBefore,
+        value,
+      ],
     ),
   );
 
   const remainingCharacters = evaluation.remainingCharacters;
 
-  const counterText = counterTemplate.replace(
+  const counterText = copy.counterTemplate.replace(
     '{count}',
     remainingCharacters.toString(),
   );
   const characterHint =
-    remainingCharacters === 0 ? maxCharactersMessage : counterText;
+    remainingCharacters === 0 ? copy.maxCharactersMessage : counterText;
   const urlCount = evaluation.urlCount;
   const showLinksHint = urlCount > 0;
   const linksHint = showLinksHint
     ? urlCount >= MESSAGE_URL_LIMIT
-      ? maxUrlsMessage
-      : urlUsageTemplate
+      ? copy.maxUrlsMessage
+      : copy.urlUsageTemplate
           .replace('{used}', urlCount.toString())
           .replace('{limit}', MESSAGE_URL_LIMIT.toString())
     : null;
@@ -124,9 +134,9 @@ export function MessageBlock({
     <div className={clsx(s.fieldGroup)}>
       <FormLabel
         htmlFor={textareaId}
-        label={label}
+        label={copy.label}
         required
-        requiredText={requiredText}
+        requiredText={copy.requiredText}
       />
       <TextareaInput
         id={textareaId}

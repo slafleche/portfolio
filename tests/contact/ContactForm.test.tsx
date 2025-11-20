@@ -18,7 +18,7 @@ const styleModule = vi.hoisted(() => {
   return new Proxy<Record<string, string>>({}, handler);
 });
 
-vi.mock('@/styles/components/contactForm.css', () => styleModule);
+vi.mock('@/styles/components/forms.css', () => styleModule);
 const dialogStyles = vi.hoisted(() => {
   const handler = {
     get: (_target: Record<string, string>, prop: PropertyKey) =>
@@ -35,12 +35,6 @@ vi.mock('@/modules/contactForm/mockSubmit', () => ({
 
 const contactCopy: ContactFormCopy = {
   heading: 'Get in touch',
-  counterTemplate: '{count} characters left',
-  messages: {
-    maxChars: 'Maximum characters reached.',
-    urlUsage: 'Links used: {used} of {limit}',
-    maxLinks: 'Maximum links reached.',
-  },
   requiredIndicator: 'Required field',
   submitLabel: 'Send message',
   successBody: 'We will reply soon.',
@@ -49,11 +43,6 @@ const contactCopy: ContactFormCopy = {
     text: 'We only use this to reply.',
     linkLabel: 'Privacy',
     closeLabel: 'Close',
-  },
-  labels: {
-    name: 'Name',
-    email: 'Email',
-    message: 'Message',
   },
   honeypotLabel: 'Leave blank',
   turnstile: {
@@ -68,19 +57,6 @@ const contactCopy: ContactFormCopy = {
     preview: 'Human verification preview (debug).',
   },
   errors: {
-    name: {
-      required: 'Name required',
-      tooLong: 'Name too long',
-    },
-    email: {
-      invalid: 'Email invalid',
-    },
-    message: {
-      required: 'Message required',
-      tooShort: 'Message too short',
-      tooLong: 'Message too long',
-      tooManyLinks: 'Too many links',
-    },
     token: {
       missing: 'Token missing',
     },
@@ -94,6 +70,37 @@ const contactCopy: ContactFormCopy = {
     service_unavailable: 'Service unavailable',
     not_configured: 'Email service not configured',
     blocked: 'Submission blocked',
+  },
+  blocks: {
+    name: {
+      label: 'Name',
+      requiredText: 'Required field',
+      errors: {
+        required: 'Name required',
+        tooLong: 'Name too long',
+      },
+    },
+    email: {
+      label: 'Email',
+      requiredText: 'Required field',
+      errors: {
+        invalid: 'Email invalid',
+      },
+    },
+    message: {
+      label: 'Message',
+      requiredText: 'Required field',
+      counterTemplate: '{count} characters left',
+      maxCharactersMessage: 'Maximum characters reached.',
+      urlUsageTemplate: 'Links used: {used} of {limit}',
+      maxUrlsMessage: 'Maximum links reached.',
+      errors: {
+        required: 'Message required',
+        tooShort: 'Message too short',
+        tooLong: 'Message too long',
+        tooManyLinks: 'Too many links',
+      },
+    },
   },
 };
 

@@ -81,6 +81,21 @@ export default function ContactFormDebugPagePlaceholder() {
     setMessage,
   ] = useState('');
   const requiredText = 'Required field';
+  const nameBlockCopy = {
+    label: 'Name',
+    requiredText,
+    errors: {
+      required: 'Name required',
+      tooLong: 'Name too long',
+    },
+  };
+  const emailBlockCopy = {
+    label: 'Email',
+    requiredText,
+    errors: {
+      invalid: 'Invalid email',
+    },
+  };
   const autoResizeHandlers = useAutoResizeHandlers();
   const lockedMessage =
     'Here is a very long message that reaches the maximum length and contains multiple links: https://example.com https://foo.com https://bar.com';
@@ -88,6 +103,20 @@ export default function ContactFormDebugPagePlaceholder() {
   const maxCharactersMessage = 'Maximum characters reached.';
   const urlUsageTemplate = 'Links used: {used} of {limit}';
   const maxUrlsMessage = 'Maximum links reached.';
+  const messageBlockCopy = {
+    label: 'Message',
+    requiredText,
+    counterTemplate,
+    maxCharactersMessage,
+    urlUsageTemplate,
+    maxUrlsMessage,
+    errors: {
+      required: 'Message required',
+      tooShort: 'Message too short',
+      tooLong: 'Message too long',
+      tooManyLinks: 'Too many links',
+    },
+  };
   const noopChange = () => {};
   const noopFocus = () => {};
 
@@ -208,12 +237,9 @@ export default function ContactFormDebugPagePlaceholder() {
             <article style={cardStyle}>
               <span style={labelStyle}>NameBlock (locked)</span>
               <NameBlock
-                label="Name"
-                requiredText={requiredText}
+                copy={nameBlockCopy}
                 value={'A'.repeat(NAME_LIMIT.max)}
                 onChange={noopChange}
-                helperText="Maximum reached"
-                errorText={null}
                 readOnly
                 disabled
                 onFocusBefore={noopFocus}
@@ -226,16 +252,9 @@ export default function ContactFormDebugPagePlaceholder() {
             <article style={cardStyle}>
               <span style={labelStyle}>NameBlock (interactive)</span>
               <NameBlock
-                label="Name"
-                requiredText={requiredText}
+                copy={nameBlockCopy}
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                helperText={
-                  name.length >= NAME_LIMIT.max
-                    ? 'Maximum reached'
-                    : `${NAME_LIMIT.max - name.length} characters remaining`
-                }
-                errorText={null}
                 onFocusBefore={noopFocus}
                 onFocusAfter={noopFocus}
               />
@@ -246,12 +265,9 @@ export default function ContactFormDebugPagePlaceholder() {
             <article style={cardStyle}>
               <span style={labelStyle}>EmailBlock (locked)</span>
               <EmailBlock
-                label="Email"
-                requiredText={requiredText}
+                copy={emailBlockCopy}
                 value="not-an-email"
                 onChange={noopChange}
-                helperText="We'll only use this to reply."
-                errorText="Please provide a valid email."
                 disabled
                 onFocusBefore={noopFocus}
                 onFocusAfter={noopFocus}
@@ -263,12 +279,9 @@ export default function ContactFormDebugPagePlaceholder() {
             <article style={cardStyle}>
               <span style={labelStyle}>EmailBlock (interactive)</span>
               <EmailBlock
-                label="Email"
-                requiredText={requiredText}
+                copy={emailBlockCopy}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                helperText="We'll only use this to reply."
-                errorText={null}
                 onFocusBefore={noopFocus}
                 onFocusAfter={noopFocus}
               />
@@ -279,13 +292,8 @@ export default function ContactFormDebugPagePlaceholder() {
             <article style={cardStyle}>
               <span style={labelStyle}>MessageBlock (locked)</span>
               <MessageBlock
-                label="Message"
-                requiredText={requiredText}
+                copy={messageBlockCopy}
                 value={lockedMessage}
-                counterTemplate={counterTemplate}
-                maxCharactersMessage={maxCharactersMessage}
-                urlUsageTemplate={urlUsageTemplate}
-                maxUrlsMessage={maxUrlsMessage}
                 onChange={() => {}}
                 helperText={null}
                 errorText={null}
@@ -301,13 +309,8 @@ export default function ContactFormDebugPagePlaceholder() {
             <article style={cardStyle}>
               <span style={labelStyle}>MessageBlock (interactive)</span>
               <MessageBlock
-                label="Message"
-                requiredText={requiredText}
+                copy={messageBlockCopy}
                 value={message}
-                counterTemplate={counterTemplate}
-                maxCharactersMessage={maxCharactersMessage}
-                urlUsageTemplate={urlUsageTemplate}
-                maxUrlsMessage={maxUrlsMessage}
                 onChange={(event) => setMessage(event.target.value)}
                 helperText="Share up to 2000 characters."
                 errorText={null}

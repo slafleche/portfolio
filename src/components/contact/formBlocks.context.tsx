@@ -16,6 +16,7 @@ export type FormBlockRegistration = {
   focus?: () => void;
   getValue?: () => unknown;
   validate?: () => boolean;
+  getValidationSummary?: () => string | null;
   requestFocusBefore?: () => void;
   requestFocusAfter?: () => void;
 };

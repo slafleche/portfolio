@@ -1,27 +1,20 @@
 import type { Messages } from '@/data/locales';
 import type { Translator } from './helpers.locale';
 import { formTokens } from '@/tokens/forms.tokens';
-import { MESSAGE_MIN_LENGTH } from '@/modules/contactForm/validation.constants';
+import {
+  buildFormBlockLocales,
+  type FormBlockLocales,
+} from '@/lib/locales/form/form.locale';
 
 export const FORM_KEYS = {
   heading: 'form-heading',
   successBody: 'form-success-body',
-  counterRemaining: 'form-counter-remaining',
-  messageMaxChars: 'form-message-max_chars',
-  messageUrlUsage: 'form-message-url_usage',
-  messageMaxLinks: 'form-message-max_links',
   requiredIndicator: 'form-required-indicator',
   privacyText: 'form-privacy-text',
   privacyLinkLabel: 'form-privacy-link-label',
   privacyCloseLabel: 'form-privacy-close-label',
   submitLabel: 'form-submit-label',
   honeypotLabel: 'form-honeypot-label',
-} as const satisfies Record<string, keyof Messages>;
-
-export const FORM_LABEL_KEYS = {
-  name: 'form-name-label',
-  email: 'form-email-label',
-  message: 'form-message-label',
 } as const satisfies Record<string, keyof Messages>;
 
 export const FORM_ERROR_KEYS = {
@@ -89,23 +82,12 @@ export type FormStatusKey =
 export type ContactFormCopy = {
   heading: string;
   successBody: string;
-  counterTemplate: string;
-  messages: {
-    maxChars: string;
-    urlUsage: string;
-    maxLinks: string;
-  };
   requiredIndicator: string;
   submitLabel: string;
   privacy: {
     text: string;
     linkLabel: string;
     closeLabel: string;
-  };
-  labels: {
-    name: string;
-    email: string;
-    message: string;
   };
   honeypotLabel: string;
   turnstile: {
@@ -120,32 +102,18 @@ export type ContactFormCopy = {
     preview: string;
   };
   errors: {
-    name: {
-      required: string;
-      tooLong: string;
-    };
-    email: {
-      invalid: string;
-    };
-    message: {
-      required: string;
-      tooShort: string;
-      tooLong: string;
-      tooManyLinks: string;
-    };
     token: {
       missing: string;
     };
   };
   statuses: Record<FormStatusKey, string>;
   rateLimitedCountdown: string;
+  blocks: FormBlockLocales;
 };
 
 export const buildContactFormCopy = (
   t: Translator,
 ): ContactFormCopy => {
-  const minChars = MESSAGE_MIN_LENGTH.toString();
-  const withMin = (value: string) => value.replace('{min}', minChars);
   const seconds = formTokens.rateLimit.windowSeconds.toString();
   const withSeconds = (value: string) =>
     value.includes('{seconds}')
@@ -154,23 +122,12 @@ export const buildContactFormCopy = (
   return {
     heading: t(FORM_KEYS.heading),
     successBody: t(FORM_KEYS.successBody),
-    counterTemplate: t(FORM_KEYS.counterRemaining),
-    messages: {
-      maxChars: t(FORM_KEYS.messageMaxChars),
-      urlUsage: t(FORM_KEYS.messageUrlUsage),
-      maxLinks: t(FORM_KEYS.messageMaxLinks),
-    },
     requiredIndicator: t(FORM_KEYS.requiredIndicator),
     submitLabel: t(FORM_KEYS.submitLabel),
     privacy: {
       text: t(FORM_KEYS.privacyText),
       linkLabel: t(FORM_KEYS.privacyLinkLabel),
       closeLabel: t(FORM_KEYS.privacyCloseLabel),
-    },
-    labels: {
-      name: t(FORM_LABEL_KEYS.name),
-      email: t(FORM_LABEL_KEYS.email),
-      message: t(FORM_LABEL_KEYS.message),
     },
     honeypotLabel: t(FORM_KEYS.honeypotLabel),
     turnstile: {
@@ -185,19 +142,6 @@ export const buildContactFormCopy = (
       preview: t('form-turnstile-preview'),
     },
     errors: {
-      name: {
-        required: t(FORM_ERROR_KEYS.name.required),
-        tooLong: t(FORM_ERROR_KEYS.name.tooLong),
-      },
-      email: {
-        invalid: t(FORM_ERROR_KEYS.email.invalid),
-      },
-      message: {
-        required: t(FORM_ERROR_KEYS.message.required),
-        tooShort: withMin(t(FORM_ERROR_KEYS.message.tooShort)),
-        tooLong: t(FORM_ERROR_KEYS.message.tooLong),
-        tooManyLinks: t(FORM_ERROR_KEYS.message.tooManyLinks),
-      },
       token: {
         missing: t(FORM_ERROR_KEYS.token.missing),
       },
@@ -208,5 +152,6 @@ export const buildContactFormCopy = (
       ),
     ) as Record<FormStatusKey, string>,
     rateLimitedCountdown: t('form-status-rate_limited-countdown'),
+    blocks: buildFormBlockLocales(t),
   };
 };
