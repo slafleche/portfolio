@@ -3,6 +3,10 @@ import { buildNameBlockLocale, type NameBlockLocale } from './form.name';
 import { buildEmailBlockLocale, type EmailBlockLocale } from './form.email';
 import { buildMessageBlockLocale, type MessageBlockLocale } from './form.message';
 import { buildTurnstileBlockLocale, type TurnstileBlockLocale } from './form.turnstile';
+import {
+  buildHoneypotBlockLocale,
+  type HoneypotBlockLocale,
+} from './form.honeypot';
 
 /**
  * Eventually this file will hold only the sparse form-level copy we still need
@@ -13,6 +17,7 @@ export type FormBlockLocales = {
   email: EmailBlockLocale;
   message: MessageBlockLocale;
   turnstile: TurnstileBlockLocale;
+  honeypot: HoneypotBlockLocale;
 };
 
 export const buildFormBlockLocales = (
@@ -22,4 +27,5 @@ export const buildFormBlockLocales = (
   email: buildEmailBlockLocale(translator),
   message: buildMessageBlockLocale(translator),
   turnstile: buildTurnstileBlockLocale(translator),
+  honeypot: buildHoneypotBlockLocale(translator),
 });

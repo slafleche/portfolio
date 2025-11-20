@@ -44,7 +44,6 @@ const contactCopy: ContactFormCopy = {
     linkLabel: 'Privacy',
     closeLabel: 'Close',
   },
-  honeypotLabel: 'Leave blank',
   turnstile: {
     loading: 'Loading verification…',
     ready: 'Complete the verification above to enable submission.',
@@ -122,6 +121,9 @@ const contactCopy: ContactFormCopy = {
         expired: 'Human verification expired. Please try again.',
         error: 'Human verification is unavailable. Please retry.',
       },
+    },
+    honeypot: {
+      label: 'Leave blank',
     },
   },
 };
