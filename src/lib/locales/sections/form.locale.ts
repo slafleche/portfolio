@@ -14,7 +14,6 @@ export const FORM_KEYS = {
   privacyLinkLabel: 'form-privacy-link-label',
   privacyCloseLabel: 'form-privacy-close-label',
   submitLabel: 'form-submit-label',
-  honeypotLabel: 'form-honeypot-label',
 } as const satisfies Record<string, keyof Messages>;
 
 export const FORM_ERROR_KEYS = {
@@ -89,7 +88,6 @@ export type ContactFormCopy = {
     linkLabel: string;
     closeLabel: string;
   };
-  honeypotLabel: string;
   errors: {
     token: {
       missing: string;
@@ -118,7 +116,6 @@ export const buildContactFormCopy = (
       linkLabel: t(FORM_KEYS.privacyLinkLabel),
       closeLabel: t(FORM_KEYS.privacyCloseLabel),
     },
-    honeypotLabel: t(FORM_KEYS.honeypotLabel),
     errors: {
       token: {
         missing: t(FORM_ERROR_KEYS.token.missing),
