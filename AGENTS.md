@@ -24,9 +24,9 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   for tiny edits, and root-level TODOs should be rare/explicit.
 - Must: Before coding, pause to check that tokens are consumed directly, helpers
   are in use, and values are not re-aliased without a real transformation.
-- Should: For step-by-step, list-based work on a known list of items, follow
-  the wizard flow described in `agents/wizard.md` (one item at a time with
-  explicit approval before moving on).
+- Should: For step-by-step, list-based work on a known list of items, follow the
+  wizard flow described in `agents/wizard.md` (one item at a time with explicit
+  approval before moving on).
 - Must: For non-trivial work that introduces new structures (types/interfaces,
   data shapes, locale key groups, helpers/config), first propose the primary
   building blocks and wait for explicit user approval before using them in
@@ -40,9 +40,9 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 
 - Must: Ask for confirmation before invasive refactors, API changes, or
   cross-cutting style rewrites.
-- Must: Get explicit confirmation before deleting any file or effectively
-  wiping its contents (for example, replacing a real doc with a stub),
-  especially `.md`, config, or rules files.
+- Must: Get explicit confirmation before deleting any file or effectively wiping
+  its contents (for example, replacing a real doc with a stub), especially
+  `.md`, config, or rules files.
 - Must: Do not introduce or convert files into “redirects” or barrels (for
   example, pointer TODOs, stub docs that only link elsewhere, or index/modules
   that only re-export others) unless the user explicitly approves using a
@@ -73,11 +73,11 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   out the mismatch and ask which to follow before proceeding.
 - Must: When there are multiple reasonable paths that would change behaviour or
   structure (for example, different refactor shapes, epic choices, or file
-  layouts), stop and ask the user to choose instead of silently prioritising
-  one based on internal rules.
+  layouts), stop and ask the user to choose instead of silently prioritising one
+  based on internal rules.
 - Must: When introducing a new pattern that is not clearly described in an
-  existing epic or module file (for example, a new helper style, file layout,
-  or locale key family), propose it first and wait for explicit user approval
+  existing epic or module file (for example, a new helper style, file layout, or
+  locale key family), propose it first and wait for explicit user approval
   before implementing.
 - Must: Treat `rules.yaml` and this `AGENTS.md` as canonical for architecture
   and agent behavior; do not weaken or bypass existing lint rules, layering
@@ -88,4 +88,6 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Should: When the user activates a role tag (for example, `#navigator` / `#n`,
   `#architect` / `#a`, `#projectManager`/`#pm`, `#coder`/`#c`), consult
   `roles/README.md` and the corresponding file under `roles/` and follow that
-  role’s behavior for the chat in addition to these rules.
+  role’s behavior for the chat in addition to these rules. When a role tag is
+  active, treat that role as active for the chat until the user explicitly
+  switches hats. Can be reset to nothing with `#none`
