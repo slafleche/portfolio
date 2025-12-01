@@ -7,9 +7,7 @@ import {
 } from '@/lib/locales/form/form.locale';
 import {
   FORM_STATUS_KEYS,
-  FORM_STATUS_CODES,
   type FormStatusKey,
-  type FormServerStatusCode,
 } from '@/lib/locales/form/form.status';
 
 export const FORM_KEYS = {
@@ -39,10 +37,7 @@ export const FORM_ERROR_KEYS = {
   token: {
     missing: 'form-error-token-missing',
   },
-} as const satisfies Record<
-  string,
-  Record<string, keyof Messages>
->;
+} as const satisfies Record<string, Record<string, keyof Messages>>;
 
 export const FORM_ERROR_KEY_LIST = [
   FORM_ERROR_KEYS.name.required,
@@ -55,8 +50,7 @@ export const FORM_ERROR_KEY_LIST = [
   FORM_ERROR_KEYS.token.missing,
 ] as const;
 
-export type FormErrorKey =
-  (typeof FORM_ERROR_KEY_LIST)[number];
+export type FormErrorKey = (typeof FORM_ERROR_KEY_LIST)[number];
 
 export type ContactFormCopy = {
   heading: string;
@@ -103,10 +97,18 @@ export const buildContactFormCopy = (
     },
     statuses: Object.fromEntries(
       Object.entries(FORM_STATUS_KEYS).map(
-        ([status, key]) => [status, withSeconds(t(key))],
+        ([
+          status,
+          key,
+        ]) => [
+          status,
+          withSeconds(t(key)),
+        ],
       ),
     ) as Record<FormStatusKey, string>,
     rateLimitedCountdown: t('form-status-rate_limited-countdown'),
     blocks: buildFormBlockLocales(t),
   };
 };
+
+export type { FormStatusKey };

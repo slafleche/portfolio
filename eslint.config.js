@@ -51,14 +51,15 @@ const tsNoProjectFiles = [
 export default [
 	{
 		ignores: [
-		'node_modules/**',
-		'.yarn/**',
-		'.next/**',
-		'dist/**',
-		'build/**',
-		'public/**',
-		'src/data/generated/**/*.gen.ts',
-		'src/lib/locales/generated/**/*.gen.ts',
+			'node_modules/**',
+			'.yarn/**',
+			'.next/**',
+			'dist/**',
+			'build/**',
+			'public/**',
+			'src/data/generated/**/*.gen.ts',
+			'src/lib/locales/generated/**/*.gen.ts',
+			'**/*.bak.*',
 		],
 	},
 	{
