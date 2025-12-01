@@ -12,7 +12,7 @@ work have clear inputs and outputs.
 - Inside an epic folder, files are prefixed with the epic id:
   - `<epic-id>_primer.md`
   - `<epic-id>_implementation.md`
-  - `<epic-id>_plan.md` or `TODO.<epic-id>.md`
+  - `<epic-id>_plan.md`
   - Optional: `<epic-id>_notes.md` or other supporting docs
 
 ## Files per epic
@@ -29,7 +29,7 @@ work have clear inputs and outputs.
   - Tradeoffs and risks.
   - Still no direct code edits; this is senior-dev guidance.
 
-- `<epic-id>_plan.md` / `TODO.<epic-id>.md` (owned by `#pm`)
+- `<epic-id>_plan.md` (owned by `#pm`)
   - Checklist of tasks/slices that implement the epic.
   - Each task can have inline notes (for example, under the checkbox) capturing
     constraints or acceptance criteria:
@@ -57,7 +57,7 @@ These files are designed to be the IO for different roles:
 
 - `#projectManager`
   - Reads primer and implementation notes.
-  - Breaks the work into tasks in `<epic-id>_plan.md` / `TODO.<epic-id>.md`.
+  - Breaks the work into tasks in `<epic-id>_plan.md`.
   - Ensures each task has clear notes and success criteria.
 
 - `#coder`
