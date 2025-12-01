@@ -22,13 +22,13 @@ Roles never switch themselves. They surface gaps or questions, and you decide wh
 - **Project Manager** — `#projectManager`, `#pm`  
   - Focus: slice and order work, and sanity-check the plan over time.  
   - Reads: `<epic-id>_primer.md`, `<epic-id>_implementation.md`.  
-  - Writes: `<epic-id>_plan.md` or `TODO.<epic-id>.md` (tasks, notes, dependencies).  
+  - Writes: `<epic-id>_plan.md` for epics, and backlog-style `TODO.*.md` / `*.backlog.md` files for cross-cutting work.  
   - Typical use:  
     - “`#pm for epic::contact-status` — turn the implementation notes into small, outcome-based tasks with a sensible order.”
 
 - **Coder** — `#coder`, `#c`  
   - Focus: implement the planned slices in code and tests, following epics + `AGENTS.md`.  
-  - Reads: relevant `AGENTS.md` files, `<epic-id>_primer.md`, `<epic-id>_implementation.md`, `<epic-id>_plan.md` / `TODO.<epic-id>.md`.  
+  - Reads: relevant `AGENTS.md` files, `<epic-id>_primer.md`, `<epic-id>_implementation.md`, and `<epic-id>_plan.md`.  
   - Typical use:  
     - “`#coder for epic::contact-status` — read the primer, implementation, and plan, then implement only the first task. Stop if anything conflicts with AGENTS or the plan.”
 

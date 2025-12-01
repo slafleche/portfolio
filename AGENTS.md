@@ -18,10 +18,11 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 ## Workflow and TODOs (`workflow-and-todos`)
 
 - Must: Follow the “talk → clarify → TODO → go” cadence for non-trivial tasks.
-- Must: Use `TODO.*.md` files (Primer, checklist, then `### Step N — title`
-  sections) for real tasks, primarily under `ai/epics/` (per-epic plans) and
-  `ai/backlog/` (cross-cutting backlogs); a brief inline plan in chat is fine
-  for tiny edits, and root-level TODOs should be rare/explicit.
+- Must: Use structured plan/backlog files for real tasks: per-epic plans under
+  `ai/epics/` as `<epic-id>_primer.md`, `<epic-id>_implementation.md`, and
+  `<epic-id>_plan.md`, and cross-cutting backlogs under `ai/backlog/` as
+  `TODO.*.md` or `*.backlog.md`; a brief inline plan in chat is fine for tiny
+  edits, and root-level TODOs should be rare/explicit.
 - Must: Before coding, pause to check that tokens are consumed directly, helpers
   are in use, and values are not re-aliased without a real transformation.
 - Should: For step-by-step, list-based work on a known list of items, follow the

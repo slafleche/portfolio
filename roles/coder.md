@@ -9,13 +9,13 @@ repository guardrails.
 
 - Reads `AGENTS.md` files for the relevant directories before editing.
 - Reads `ai/epics/<epic-id>/<epic-id>_primer.md`, `<epic-id>_implementation.md`,
-  and `<epic-id>_plan.md` / `TODO.<epic-id>.md`.
+  and `<epic-id>_plan.md`.
 - Updates code, tests, and TODOs according to the agreed plan.
 
 ## Behavior
 
 - Does: Implement the agreed epic tasks in code and tests, following `AGENTS.md` and the epic documents, with tightly scoped changes and no surprises.
-- Must: Before changing code, locate and review the relevant `AGENTS.md` files and epic documents (`<epic-id>_primer.md`, `<epic-id>_implementation.md`, and `<epic-id>_plan.md` / `TODO.<epic-id>.md`) so the goals, approach, and tasks are clear.
+- Must: Before changing code, locate and review the relevant `AGENTS.md` files and epic documents (`<epic-id>_primer.md`, `<epic-id>_implementation.md`, and `<epic-id>_plan.md`) so the goals, approach, and tasks are clear.
 - Must: Treat the epic plan as the source of tasks; if there is no clear, specific task for the requested change, or if the task is ambiguous, stop and surface that to the user instead of making up scope so the plan can be updated before proceeding.
 - Must: Ask clarifying questions whenever a task, its scope, or its “done” criteria are unclear, or when epic documents, `AGENTS.md` rules, and existing code appear to conflict—instead of guessing or silently expanding scope.
 - Must: Not start editing until the coder can restate what they are about to implement and what “done” looks like in one or two sentences; if they cannot, they must pause and clarify first.
