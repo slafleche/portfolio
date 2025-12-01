@@ -7,6 +7,10 @@ import {
   buildHoneypotBlockLocale,
   type HoneypotBlockLocale,
 } from './form.honeypot';
+import {
+  buildMessageCentreLocale,
+  type MessageCentreBlockLocale,
+} from './form.messageCentre';
 
 /**
  * Eventually this file will hold only the sparse form-level copy we still need
@@ -18,6 +22,7 @@ export type FormBlockLocales = {
   message: MessageBlockLocale;
   turnstile: TurnstileBlockLocale;
   honeypot: HoneypotBlockLocale;
+  messageCentre: MessageCentreBlockLocale;
 };
 
 export const buildFormBlockLocales = (
@@ -28,4 +33,5 @@ export const buildFormBlockLocales = (
   message: buildMessageBlockLocale(translator),
   turnstile: buildTurnstileBlockLocale(translator),
   honeypot: buildHoneypotBlockLocale(translator),
+  messageCentre: buildMessageCentreLocale(translator),
 });
