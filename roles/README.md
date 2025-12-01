@@ -2,7 +2,7 @@
 
 This folder defines collaboration roles you can activate in a chat with tags like `#navigator`, `#architect`, `#projectManager`, and `#coder`. Roles are about **how** we work together on an epic; repository behavior is still governed by the `AGENTS.md` files in each directory.
 
-Roles never switch themselves. They surface gaps or questions, and you decide when to invoke another role.
+Roles never switch themselves. They surface gaps or questions, and you decide when to invoke another role. When you activate a role tag (for example `#navigator`), treat that role as active for the conversation until you explicitly switch hats.
 
 ## Roles and aliases
 
