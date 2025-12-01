@@ -8,6 +8,7 @@ layers:
     forbidden_imports:
       - '../modules/**'
       - '../app/**'
+      - '../config/**'
     rules:
       no_css_alias: true
       measurement_math_only: true
@@ -50,6 +51,14 @@ layers:
       - '../tokens/**'
     forbidden_imports:
       - '../styles/components/**'
+      - '../app/**'
+    rules: {}
+  config:
+    path: 'src/config'
+    allowed_imports: []
+    forbidden_imports:
+      - '../tokens/**'
+      - '../styles/**'
       - '../app/**'
     rules: {}
   styles:

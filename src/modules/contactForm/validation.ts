@@ -1,7 +1,5 @@
-import type {
-  FormErrorKey,
-  FormStatusKey,
-} from '@/lib/locales/sections/form.locale';
+import type { FormErrorKey } from '@/lib/locales/sections/form.locale';
+import type { FormStatusKey } from '@/lib/locales/form/form.status';
 import {
   NAME_LIMIT,
   EMAIL_MAX_LENGTH,

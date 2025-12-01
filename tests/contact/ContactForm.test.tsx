@@ -122,6 +122,19 @@ const contactCopy: ContactFormCopy = {
         error: 'Human verification is unavailable. Please retry.',
       },
     },
+    messageCentre: {
+      statuses: {
+        sending: 'Sending…',
+        success: 'Message sent — thank you!',
+        generic: 'Something went wrong',
+        validation_error: 'Please fix the highlighted fields',
+        rate_limited: 'Too many attempts',
+        service_unavailable: 'Service unavailable',
+        not_configured: 'Service not configured',
+        blocked: 'Submission blocked',
+      },
+      rateLimitedCountdown: 'Too many attempts. Please wait {seconds}s.',
+    },
     honeypot: {
       label: 'Leave blank',
     },

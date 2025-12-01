@@ -108,10 +108,6 @@ export const formTokens = {
       color: colorVars.white.alpha(0.65),
     },
   },
-  rateLimit: {
-    windowSeconds: 60,
-    maxRequests: 1,
-  },
   successPanel: {
     icon: {
       color: colorVars.successAccent.alpha(0.9),

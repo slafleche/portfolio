@@ -1,8 +1,8 @@
-import { formTokens } from '@/tokens/forms.tokens';
+import { formConfig } from '@/config/formsConfig';
 
 const RATE_LIMIT_WINDOW_MS =
-	formTokens.rateLimit.windowSeconds * 1000;
-const RATE_LIMIT_MAX_REQUESTS = formTokens.rateLimit.maxRequests;
+	formConfig.rateLimit.windowSeconds * 1000;
+const RATE_LIMIT_MAX_REQUESTS = formConfig.rateLimit.maxRequests;
 
 type Entry = {
 	count: number;

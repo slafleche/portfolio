@@ -1,10 +1,16 @@
 import type { Messages } from '@/data/locales';
 import type { Translator } from './helpers.locale';
-import { formTokens } from '@/tokens/forms.tokens';
+import { formConfig } from '@/config/formsConfig';
 import {
   buildFormBlockLocales,
   type FormBlockLocales,
 } from '@/lib/locales/form/form.locale';
+import {
+  FORM_STATUS_KEYS,
+  FORM_STATUS_CODES,
+  type FormStatusKey,
+  type FormServerStatusCode,
+} from '@/lib/locales/form/form.status';
 
 export const FORM_KEYS = {
   heading: 'form-heading',
@@ -38,29 +44,6 @@ export const FORM_ERROR_KEYS = {
   Record<string, keyof Messages>
 >;
 
-export const FORM_STATUS_CODES = [
-  'success',
-  'validation_error',
-  'rate_limited',
-  'service_unavailable',
-  'not_configured',
-  'blocked',
-] as const;
-
-export type FormServerStatusCode =
-  (typeof FORM_STATUS_CODES)[number];
-
-export const FORM_STATUS_KEYS = {
-  sending: 'form-status-sending',
-  success: 'form-status-success',
-  generic: 'form-status-generic_error',
-  validation_error: 'form-status-validation_error',
-  rate_limited: 'form-status-rate_limited',
-  service_unavailable: 'form-status-service_unavailable',
-  not_configured: 'form-status-not_configured',
-  blocked: 'form-status-blocked',
-} as const satisfies Record<string, keyof Messages>;
-
 export const FORM_ERROR_KEY_LIST = [
   FORM_ERROR_KEYS.name.required,
   FORM_ERROR_KEYS.name.tooLong,
@@ -74,9 +57,6 @@ export const FORM_ERROR_KEY_LIST = [
 
 export type FormErrorKey =
   (typeof FORM_ERROR_KEY_LIST)[number];
-
-export type FormStatusKey =
-  keyof typeof FORM_STATUS_KEYS;
 
 export type ContactFormCopy = {
   heading: string;
@@ -101,7 +81,7 @@ export type ContactFormCopy = {
 export const buildContactFormCopy = (
   t: Translator,
 ): ContactFormCopy => {
-  const seconds = formTokens.rateLimit.windowSeconds.toString();
+  const seconds = formConfig.rateLimit.windowSeconds.toString();
   const withSeconds = (value: string) =>
     value.includes('{seconds}')
       ? value.replace('{seconds}', seconds)
