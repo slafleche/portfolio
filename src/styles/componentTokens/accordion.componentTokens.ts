@@ -1,7 +1,7 @@
 import { color } from '../helpers/colorWrap.helper';
 import { m } from '../measurementKit';
 import { mPercent } from '../measurementKit/units/percent';
-import { colorVars } from './global.componentTokens';
+import { colorVars } from '../../tokens/global.tokens';
 
 export const accordionSurfaceTokens = {
   gradientAngle: m(135, 'deg'),

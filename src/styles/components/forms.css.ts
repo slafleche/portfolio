@@ -5,7 +5,7 @@ import {
 } from '@vanilla-extract/css';
 import { formTokens } from '@/tokens/forms.tokens';
 import { m } from '../measurementKit';
-import { colorVars } from '../componentTokens/global.componentTokens';
+import { colorVars } from '../../tokens/global.tokens';
 import {
   glassVars,
   glassyButtonTokens,
@@ -101,7 +101,7 @@ export const required = style({
   fontSize: '0.85em',
 });
 
-export const input = style(controlBase);;
+export const input = style(controlBase);
 
 export const textarea = style([
   controlBase,

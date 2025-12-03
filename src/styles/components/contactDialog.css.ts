@@ -1,5 +1,5 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
-import { colorVars } from '../componentTokens/global.componentTokens';
+import { colorVars } from '../../tokens/global.tokens';
 import { m } from '../measurementKit';
 import {
   composeFontVariantStyles,
