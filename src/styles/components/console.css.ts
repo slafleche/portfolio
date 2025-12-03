@@ -1,8 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import {
-  colorVars,
-  consoleVars,
-} from '../componentTokens/global.componentTokens';
+import { colorVars, consoleVars } from '../../tokens/global.tokens';
 import { m } from '../measurementKit';
 import { paddings } from '../helpers/spacing.helper';
 import { boxShadow } from '../helpers/shadow.helper';
@@ -17,13 +14,13 @@ export const root = style({
   borderRadius: consoleVars.borders.radius.css(),
   border: `1px solid ${colorVars.white.alpha(0.12).css()}`,
   background: `linear-gradient(160deg, ${colorVars.black.alpha(0.85).css()} 0%, ${colorVars.contrast.alpha(0.22).css()} 100%)`,
-  
+
   boxShadow: boxShadow({
     x: m(10),
     y: m(30),
     blur: m(30),
     color: colorVars.black,
-    alpha: 0.45,  
+    alpha: 0.45,
   }),
   overflow: 'hidden',
   color: colorVars.white.alpha(0.86).css(),

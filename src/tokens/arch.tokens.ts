@@ -1,5 +1,5 @@
 import { color } from '@/styles/helpers/colorWrap.helper';
-import { colorVars } from '@/styles/componentTokens/global.componentTokens';
+import { colorVars } from '@/tokens/global.tokens';
 import { m } from '@/styles/measurementKit';
 import { glassNoise } from '../styles/helpers/glassy.helper';
 

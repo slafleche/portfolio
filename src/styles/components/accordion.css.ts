@@ -14,7 +14,7 @@ import {
 } from '../componentTokens/accordion.componentTokens';
 import { fontVariantStyles } from '../../tokens/fontVariants.tokens';
 import { outlines } from '../helpers/outlines.helper';
-import { colorVars } from '../componentTokens/global.componentTokens';
+import { colorVars } from '../../tokens/global.tokens';
 import { m } from '../measurementKit';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';

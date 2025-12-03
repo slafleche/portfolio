@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import borders from '@/styles/helpers/borders.helper';
 import { m } from '@/styles/measurementKit';
 import { color } from '@/styles/helpers/colorWrap.helper';
-import { colorVars } from '@/styles/componentTokens/global.componentTokens';
+import { colorVars } from '@/tokens/global.tokens';
 
 describe('borders.helper', () => {
   it('returns defaults for all edges when enabled', () => {
