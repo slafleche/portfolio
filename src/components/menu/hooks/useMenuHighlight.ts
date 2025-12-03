@@ -22,7 +22,7 @@ import {
   type HighlightState,
   type LinkMetric,
 } from '../menuUtils';
-import { archVars } from '../../../styles/componentTokens/global.componentTokens';
+import { archVars } from '../../../tokens/global.tokens';
 import { menuVars } from '../../../styles/componentTokens/menu.componentTokens';
 
 type HighlightStyles = {
@@ -500,8 +500,7 @@ export function useMenuHighlight({
       ) / definedMetrics.length;
 
     const highlightHeightValue = menuVars.height.getValue();
-    const widthPaddingValue =
-      menuVars.paddings.horizontal.getValue();
+    const widthPaddingValue = menuVars.paddings.horizontal.getValue();
 
     definedMetrics.forEach((metric) => {
       const archY = snapToDevicePixel(metric.archY + adjustment, dpr);
@@ -542,8 +541,7 @@ export function useMenuHighlight({
       for (let i = 0; i < sampleCount; i += 1) {
         const x = (navWidth * i) / (sampleCount - 1);
         const y =
-          computeArchY(navWidth, x) +
-          menuVars.yOffset.getValue();
+          computeArchY(navWidth, x) + menuVars.yOffset.getValue();
         path += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
       }
       setDebugArch({
@@ -717,7 +715,10 @@ export function useMenuHighlight({
       if (document.visibilityState !== 'visible') return;
       measure();
     };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener(
+      'visibilitychange',
+      handleVisibilityChange,
+    );
     return () => {
       document.removeEventListener(
         'visibilitychange',

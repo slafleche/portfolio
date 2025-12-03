@@ -4,7 +4,7 @@ import borders from './helpers/borders.helper';
 import { backgrounds } from './helpers/background.helper';
 import { color } from './helpers/colorWrap.helper';
 import { outlines } from './helpers/outlines.helper';
-import { colorVars } from './componentTokens/global.componentTokens';
+import { colorVars } from '../tokens/global.tokens';
 import {
   composeFontVariantStyles,
   fontVariants,

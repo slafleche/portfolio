@@ -2,7 +2,7 @@ import {
   archVars,
   colorVars,
   spacingVars,
-} from '../../styles/componentTokens/global.componentTokens';
+} from '../../tokens/global.tokens';
 
 /**
  * Shared document-level styling data.

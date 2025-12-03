@@ -5,16 +5,13 @@ import type {
   CornerPosition,
   CSS_TYPES,
 } from '@/styles/helpers/types.helper';
-import {
-  borderVars,
-  colorVars,
-} from '../componentTokens/global.componentTokens';
+import { borderVars, colorVars } from '../../tokens/global.tokens';
 import type {
   IBorder,
   BorderWidthInput,
   BorderRadiusInput,
   BorderMeasurementInput,
-} from '../componentTokens/global.componentTokens';
+} from '../../tokens/global.tokens';
 import { isMeasurement, hasCssMethod } from '../measurementKit';
 
 /**
@@ -131,49 +128,49 @@ type EdgeState = {
 const emptyEdge = (): EdgeState => ({ active: false });
 
 const applyEdgeSpec = (
-	edge: EdgeState,
-	spec?: EdgeSpec,
+  edge: EdgeState,
+  spec?: EdgeSpec,
 ): EdgeState => {
-	if (spec === undefined || spec === false) return edge;
-	if (spec === true) {
-		edge.active = true;
-		return edge;
-	}
+  if (spec === undefined || spec === false) return edge;
+  if (spec === true) {
+    edge.active = true;
+    return edge;
+  }
 
-	// Narrow to object before property access
-	if (typeof spec !== 'object' || spec === null) return edge;
+  // Narrow to object before property access
+  if (typeof spec !== 'object' || spec === null) return edge;
 
-	edge.active = true;
+  edge.active = true;
 
-	if ('width' in spec && spec.width !== undefined) {
-		edge.width =
-			asWidth((spec as { width?: BorderWidthInput }).width) ??
-			fallbackWidth();
-		edge._wExp = true;
-	}
+  if ('width' in spec && spec.width !== undefined) {
+    edge.width =
+      asWidth((spec as { width?: BorderWidthInput }).width) ??
+      fallbackWidth();
+    edge._wExp = true;
+  }
 
-	if ('style' in spec && spec.style !== undefined) {
-		edge.style = (
-			spec as { style?: CSS_TYPES.Property.BorderStyle }
-		).style!;
-		edge._sExp = true;
-	}
+  if ('style' in spec && spec.style !== undefined) {
+    edge.style = (
+      spec as { style?: CSS_TYPES.Property.BorderStyle }
+    ).style!;
+    edge._sExp = true;
+  }
 
-	if (
-		'color' in spec &&
-		(spec as { color?: unknown }).color !== undefined
-	) {
-		const c = (spec as { color?: unknown }).color;
-		edge.color =
-			typeof c === 'string'
-				? c // 'transparent' / 'currentColor' etc.
-				: hasCssMethod(c)
-					? c.css()
-					: fallbackColor(); // dev-only: you can throw here if you prefer
-		edge._cExp = true;
-	}
+  if (
+    'color' in spec &&
+    (spec as { color?: unknown }).color !== undefined
+  ) {
+    const c = (spec as { color?: unknown }).color;
+    edge.color =
+      typeof c === 'string'
+        ? c // 'transparent' / 'currentColor' etc.
+        : hasCssMethod(c)
+          ? c.css()
+          : fallbackColor(); // dev-only: you can throw here if you prefer
+    edge._cExp = true;
+  }
 
-	return edge;
+  return edge;
 };
 
 const resolveIntentToEdges = (intent: BorderIntent | undefined) => {

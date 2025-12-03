@@ -1,10 +1,7 @@
 import { keyframes, style } from '@vanilla-extract/css';
 import { m } from '../measurementKit';
 import { mPercent } from '../measurementKit/units/percent';
-import {
-  colorVars,
-  themeColours,
-} from '../componentTokens/global.componentTokens';
+import { colorVars, themeColours } from '../../tokens/global.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import {
   backgroundImageDecl,

@@ -12,7 +12,7 @@ import {
   dropShadowVars,
   logoVars,
   themeColours,
-} from '../componentTokens/global.componentTokens';
+} from '../../tokens/global.tokens';
 import {
   composeFontVariantStyles,
   fontVariants,
@@ -439,22 +439,13 @@ const translatePercentIntent = (x: number, y?: number) => ({
 
 const logoHoverRotate = keyframes({
   '0%': {
-    transform: transforms.value(
-      rotateIntent(0),
-      scaleIntent(1),
-    ),
+    transform: transforms.value(rotateIntent(0), scaleIntent(1)),
   },
   '20%': {
-    transform: transforms.value(
-      rotateIntent(-16),
-      scaleIntent(1),
-    ),
+    transform: transforms.value(rotateIntent(-16), scaleIntent(1)),
   },
   '40%': {
-    transform: transforms.value(
-      rotateIntent(-16),
-      scaleIntent(1),
-    ),
+    transform: transforms.value(rotateIntent(-16), scaleIntent(1)),
   },
   '55%': {
     transform: transforms.value(
@@ -492,16 +483,10 @@ const logoHoverRotateReverse = keyframes({
     ),
   },
   '74%': {
-    transform: transforms.value(
-      rotateIntent(-10),
-      scaleIntent(1),
-    ),
+    transform: transforms.value(rotateIntent(-10), scaleIntent(1)),
   },
   '100%': {
-    transform: transforms.value(
-      rotateIntent(0),
-      scaleIntent(1),
-    ),
+    transform: transforms.value(rotateIntent(0), scaleIntent(1)),
   },
 });
 
@@ -571,9 +556,7 @@ export const logoItem = style({
   top: archVars.top.half().add(logoVars.offsetY).css(),
   left: '50%',
   zIndex: 1,
-  transform: transforms.value(
-    translatePercentIntent(-50, -50),
-  ),
+  transform: transforms.value(translatePercentIntent(-50, -50)),
   width: logoHitboxPadding.multiply(2).css(),
   height: logoHitboxPadding.multiply(2).css(),
 });
@@ -638,10 +621,7 @@ export const logoWrap = style({
   alignItems: 'center',
   justifyContent: 'center',
   margin: '0 auto',
-  transform: transforms.value(
-    rotateIntent(0),
-    scaleIntent(1),
-  ),
+  transform: transforms.value(rotateIntent(0), scaleIntent(1)),
   clipPath: 'circle(50% at 50% 50%)',
   transformOrigin: 'center',
   transformBox: 'fill-box',

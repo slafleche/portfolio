@@ -4,7 +4,7 @@ import {
   archVars,
   colorVars,
   themeColours,
-} from './global.componentTokens';
+} from '../../tokens/global.tokens';
 
 export const menuVars = {
   height: archVars.top,

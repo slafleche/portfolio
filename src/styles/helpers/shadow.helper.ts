@@ -3,7 +3,7 @@ import { m, type IMeasurement } from '../measurementKit';
 import {
   dropShadowVars,
   colorVars,
-} from '../componentTokens/global.componentTokens';
+} from '../../tokens/global.tokens';
 export interface IBoxShadow {
   x?: IMeasurement;
   y?: IMeasurement;
@@ -24,22 +24,18 @@ const formatBoxShadow = (props: IBoxShadow = {}) => {
     alpha = dropShadowVars.alpha,
     inset = false,
   } = props || {};
-  const finalColor = alpha || alpha !== 1 ? color.alpha(alpha) : color;
+  const finalColor =
+    alpha || alpha !== 1 ? color.alpha(alpha) : color;
   return `${x.css()} ${y.css()} ${blur.css()} 0 ${finalColor.css()}${inset ? ' inset' : ''}`;
 };
 
-export type IBoxShadowTokens =
-  | IBoxShadow
-  | ReadonlyArray<IBoxShadow>;
+export type IBoxShadowTokens = IBoxShadow | ReadonlyArray<IBoxShadow>;
 
 const isBoxShadowList = (
   input: IBoxShadowTokens,
-): input is ReadonlyArray<IBoxShadow> =>
-  Array.isArray(input);
+): input is ReadonlyArray<IBoxShadow> => Array.isArray(input);
 
-export const boxShadow = (
-  input: IBoxShadowTokens = {},
-) => {
+export const boxShadow = (input: IBoxShadowTokens = {}) => {
   if (isBoxShadowList(input)) {
     return input.map((entry) => formatBoxShadow(entry)).join(', ');
   }

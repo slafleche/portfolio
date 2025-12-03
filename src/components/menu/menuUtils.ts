@@ -1,5 +1,5 @@
 import { assertUnit } from '@/styles/measurementKit';
-import { archVars } from '../../styles/componentTokens/global.componentTokens';
+import { archVars } from '../../tokens/global.tokens';
 import { menuVars } from '../../styles/componentTokens/menu.componentTokens';
 
 if (process.env.NODE_ENV !== 'production') {
@@ -144,8 +144,7 @@ export const computeCenteredHighlight = (navMetrics: {
   const highlightHeight = menuVars.height.getValue();
   const centerX = navWidth ? navWidth / 2 : fallbackWidth / 2;
   const centerY = navWidth
-    ? computeArchY(navWidth, centerX) +
-      menuVars.yOffset.getValue()
+    ? computeArchY(navWidth, centerX) + menuVars.yOffset.getValue()
     : highlightHeight / 2;
   const left = centerX - fallbackWidth / 2;
   const top = Math.max(0, centerY - highlightHeight / 2);

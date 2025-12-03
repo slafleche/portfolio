@@ -1,7 +1,7 @@
-import { color } from '../helpers/colorWrap.helper';
-import type { CardGradientPack } from '../helpers/cardGradient.helper';
+import { color } from '../styles/helpers/colorWrap.helper';
+import type { CardGradientPack } from '../styles/helpers/cardGradient.helper';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
-import { m } from '../measurementKit';
+import { m } from '../styles/measurementKit';
 export type ColorKeys = keyof typeof colors;
 
 export type {
@@ -11,7 +11,7 @@ export type {
   BorderRadiusConfig,
   BorderRadiusInput,
   IBorder,
-} from '../helpers/types.helper';
+} from '../styles/helpers/types.helper';
 
 // Chroma color objects for use in non-CSS contexts or helpers
 // Separate from colorVars as they could eventually be overwritable and are

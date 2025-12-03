@@ -1,7 +1,7 @@
 import { m } from '../styles/measurementKit';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { SpacingProps } from '../styles/helpers/spacing.helper';
-import { colorVars } from '../styles/componentTokens/global.componentTokens';
+import { colorVars } from './global.tokens';
 
 const blockSpacing = m(16);
 // const compactSpacing = m(8);

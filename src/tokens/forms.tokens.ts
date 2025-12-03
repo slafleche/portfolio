@@ -1,4 +1,4 @@
-import { colorVars } from '@/styles/componentTokens/global.componentTokens';
+import { colorVars } from '@/tokens/global.tokens';
 import { m } from '@/styles/measurementKit';
 
 export const formTokens = {
