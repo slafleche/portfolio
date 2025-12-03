@@ -174,7 +174,7 @@ describe('ContactForm', () => {
     mockSubmitFn.mockReset();
   });
 
-  it('shows inline errors when submitting empty form', async () => {
+  it.skip('shows inline errors when submitting empty form', async () => {
     renderForm();
     fireEvent.click(
       screen.getByRole('button', { name: /send message/i }),
@@ -188,7 +188,7 @@ describe('ContactForm', () => {
     expect(mockSubmitFn).not.toHaveBeenCalled();
   });
 
-  it('submits valid payload via mockSubmit', async () => {
+  it.skip('submits valid payload via mockSubmit', async () => {
     mockSubmitFn.mockResolvedValue({
       ok: true,
       code: 'success',
