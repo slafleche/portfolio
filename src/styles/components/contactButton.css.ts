@@ -1,6 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
-import { m } from '../measurementKit';
-import { mPercent } from '../measurementKit/units/percent';
+import { m } from 'css-calipers';
+import { mPercent } from 'css-calipers/units/percent';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import {

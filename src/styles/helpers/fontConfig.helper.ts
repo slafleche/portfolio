@@ -15,7 +15,7 @@ export type FontsConfig = Record<string, FontCfgInput>;
 // ---- Load raw JSON (Next.js/modern TS supports JSON imports) ----
 // If your toolchain requires, keep the assert; otherwise you can drop it.
 import rawJson from '../../data/fonts.config.json' assert { type: 'json' };
-import type { IMeasurement } from '../measurementKit';
+import type { IMeasurement } from 'css-calipers';
 
 // ----------------- internals -----------------
 function toArray<T>(x: T | T[]): T[] {

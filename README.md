@@ -20,23 +20,25 @@
 
 ### Helper Conventions
 
-- Require MeasurementKit values for anything that represents a scalar (lengths,
-  angles, timings). Use MK’s APIs (`add`, `subtract`, `multiply`, `divide`,
-  `round`, `floor`, `ceil`, `clamp`, etc.) instead of CSS math functions
-  (`calc`, `min`, `max`, `clamp`). Emit once you reach the style layer and rely
-  on the shared helpers—`paddings`, `margins`, `borders`, `boxShadow`, etc.—to
-  turn structured data into CSS.
+- Require measurement helper values (from `css-calipers`) for anything that
+  represents a scalar (lengths, angles, timings). Use measurement APIs
+  (`m`, `add`, `subtract`, `multiply`, `divide`, `round`, `floor`, `ceil`,
+  `clamp`, etc.) instead of CSS math functions (`calc`, `min`, `max`, `clamp`).
+  Emit once you reach the style layer and rely on the shared helpers—
+  `paddings`, `margins`, `borders`, `boxShadow`, etc.—to turn structured data
+  into CSS.
 - When you need those symbolic values, define a dedicated type in
   `src/styles/helpers/types.helper.ts` instead of falling back to loose unions.
   `SpacingKeyword` is the reference example: it extracts the string-only portion
   of `CSS_TYPES.Property.Margin` and allows `spacing.helper.ts` to accept `auto`
-  alongside real measurements without reopening the old `MeasurementLike` escape
-  hatch.
+  alongside real measurements without reopening the old `MeasurementLike`
+  escape hatch.
 - Spacing helpers accept either structured intent objects or shorthand
-  MeasurementKit/spacing keyword values. Use `{ all: ... }`,
+  measurement/spacing keyword values. Use `{ all: ... }`,
   `{ horizontal: ..., vertical: ... }`, etc., whenever you need axis overrides,
   but never pass raw numbers or strings—the helper will throw unless the value
-  is a MeasurementKit instance or one of the approved spacing keywords.
+  is a `css-calipers` measurement instance or one of the approved spacing
+  keywords.
 
 ### Token Structure
 

@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { colorVars, consoleVars } from '../../tokens/global.tokens';
-import { m } from '../measurementKit';
+import { m } from 'css-calipers';
 import { paddings } from '../helpers/spacing.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 

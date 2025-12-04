@@ -1,4 +1,4 @@
-import { isMeasurement } from '../measurementKit';
+import { isMeasurement } from 'css-calipers';
 import type { AxisValues, SpacingKeyword, SpacingValue } from './types.helper';
 
 const SPACING_KEYWORDS = new Set<SpacingKeyword>([
@@ -30,7 +30,7 @@ const resolve = (value: SpacingValue | undefined, fallback: string): string => {
   if (typeof out === 'string') return out;
 
   const msg = [
-    '[spacing] Expected a MeasurementKit value or approved spacing keyword (auto, inherit, initial, unset, revert, revert-layer).',
+    '[spacing] Expected a css-calipers measurement value or approved spacing keyword (auto, inherit, initial, unset, revert, revert-layer).',
     'Pass scalar lengths via measurement helpers (e.g., m(8)) or use the spacing helpers (`paddings`, `margins`) instead of raw strings.',
   ].join(' ');
 

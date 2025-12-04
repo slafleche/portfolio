@@ -2,7 +2,7 @@ import {
   assertMatchingUnits,
   m,
   type IMeasurement,
-} from '../measurementKit';
+} from 'css-calipers';
 
 export const measureHypotenuse = <Unit extends string>(
   a: IMeasurement<Unit>,

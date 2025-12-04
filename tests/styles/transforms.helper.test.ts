@@ -3,7 +3,7 @@ import transforms, {
   transformStyle,
   transformValue,
 } from '@/styles/helpers/transforms.helper';
-import { m } from '@/styles/measurementKit';
+import { m } from 'css-calipers';
 
 describe('transforms.helper', () => {
   it('composes translate/rotate/scale/skew/perspective parts', () => {

@@ -5,7 +5,7 @@ type-checked in isolation.
 
 Tokens hold only raw data: measurements, colors, timing values. Helpers convert
 those into logic—calculations, geometry, and relationships—with compile-time
-unit safety through MeasurementKit (migrating soon to [abbr:CSS] Calipers). Modules
+unit safety via [abbr:CSS] Calipers. Modules
 compose behavior, and styles are the only layer allowed to emit selectors,
 enforced by custom [abbr:ESLint] rules and lint-staged guards.
 

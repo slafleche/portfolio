@@ -46,7 +46,7 @@ import * as skipNavStyles from '@/styles/components/skipNav.css';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
 import { fontVariants } from '../tokens/fontVariants.tokens';
 import { menuVars } from '../styles/componentTokens/menu.componentTokens';
-import { m } from '@/styles/measurementKit';
+import { m } from 'css-calipers';
 import { sharedStrings } from '@/lib/sharedStrings';
 
 type FocusDebugOptions = {

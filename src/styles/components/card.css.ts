@@ -1,7 +1,7 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { makeCardGradient } from '../helpers/cardGradient.helper';
 import { colorVars, gradients } from '../../tokens/global.tokens';
-import { m } from '../measurementKit';
+import { m } from 'css-calipers';
 import { paddings } from '../helpers/spacing.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { glassVars } from '../../tokens/glassy.tokens';

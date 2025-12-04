@@ -6,8 +6,7 @@ import {
   resolveLinearAngle,
   stackBackground,
 } from '@/styles/helpers/gradients.helper';
-import { m } from '@/styles/measurementKit';
-import { mPercent } from '@/styles/measurementKit/units/percent';
+import { m, mPercent } from 'css-calipers';
 
 const stops = [
   { color: '#ff0000', at: mPercent(0) },

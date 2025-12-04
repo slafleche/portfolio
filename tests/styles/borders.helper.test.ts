@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import borders from '@/styles/helpers/borders.helper';
-import { m } from '@/styles/measurementKit';
+import { m } from 'css-calipers';
 import { color } from '@/styles/helpers/colorWrap.helper';
 import { colorVars } from '@/tokens/global.tokens';
 

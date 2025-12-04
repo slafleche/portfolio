@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import transforms from '@/styles/helpers/transforms.helper';
-import { assertUnit, m } from '@/styles/measurementKit';
+import { assertUnit, m } from 'css-calipers';
 import type { CSSProperties } from 'react';
 import {
   BASE_ANCHORS,

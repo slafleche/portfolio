@@ -1,7 +1,7 @@
 import {
   isPercentMeasurement,
   type PercentMeasurement,
-} from '../styles/measurementKit';
+} from 'css-calipers';
 
 export const percentToDecimal = (
   measurement: PercentMeasurement,
