@@ -14,27 +14,6 @@ import {
 import { evaluateMessageField } from '@/modules/contactForm/validation';
 import type { MessageBlockLocale } from '@/lib/locales/form/form.message';
 
-const createAutoResizeHandlers = (
-  nodeRef: React.MutableRefObject<HTMLTextAreaElement | null>,
-) => {
-  let baseHeight: number | null = null;
-  return {
-    onInit: (node: HTMLTextAreaElement) => {
-      nodeRef.current = node;
-      if (baseHeight === null) {
-        baseHeight = node.scrollHeight;
-      }
-    },
-    onSync: () => {
-      const node = nodeRef.current;
-      if (!node) return;
-      node.style.height = 'auto';
-      const minimum = baseHeight ?? node.scrollHeight;
-      node.style.height = `${Math.max(node.scrollHeight, minimum)}px`;
-    },
-  };
-};
-
 export type MessageBlockProps = {
   id?: string;
   value: string;
@@ -63,12 +42,31 @@ export function MessageBlock({
   onFocusAfter,
 }: MessageBlockProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const baseHeightRef = useRef<number | null>(null);
   const generatedId = useId();
   const textareaId = id ?? `${generatedId}-message`;
   const characterHintId = `${textareaId}-hint`;
   const linksHintId = `${textareaId}-links`;
   const autoResizeHandlers = useMemo(
-    () => createAutoResizeHandlers(textareaRef),
+    () => ({
+      onInit: (node: HTMLTextAreaElement) => {
+        textareaRef.current = node;
+        if (baseHeightRef.current === null) {
+          baseHeightRef.current = node.scrollHeight;
+        }
+      },
+      onSync: () => {
+        const node = textareaRef.current;
+        if (!node) return;
+        node.style.height = 'auto';
+        const minimum =
+          baseHeightRef.current ?? node.scrollHeight;
+        node.style.height = `${Math.max(
+          node.scrollHeight,
+          minimum,
+        )}px`;
+      },
+    }),
     [],
   );
   const evaluation = useMemo(

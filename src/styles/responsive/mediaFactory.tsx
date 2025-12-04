@@ -43,12 +43,15 @@ export function useMediaQuery(queryString: string) {
 		if (typeof window === 'undefined') return;
 		const mql = window.matchMedia(queryString);
 		const onChange = () => setMatches(mql.matches);
-		setMatches(mql.matches); // initial snapshot
+		const frameId = requestAnimationFrame(() => {
+			setMatches(mql.matches);
+		});
 		mql.addEventListener?.('change', onChange);
-		return () => mql.removeEventListener?.('change', onChange);
-	}, [
-		queryString,
-	]);
+		return () => {
+			mql.removeEventListener?.('change', onChange);
+			cancelAnimationFrame(frameId);
+		};
+	}, [queryString]);
 
 	return matches;
 }
@@ -116,9 +119,11 @@ export function useMediaFromMap<T extends Record<string, string>>(
 			),
 		) as Record<K, boolean | undefined>;
 
-		setMatches((prev) =>
-			shallowEqual(prev, initial) ? prev : initial,
-		);
+		const frameId = requestAnimationFrame(() => {
+			setMatches((prev) =>
+				shallowEqual(prev, initial) ? prev : initial,
+			);
+		});
 
 		// Subscribe with guarded setState
 		const handlers = mqls.map(
@@ -143,6 +148,7 @@ export function useMediaFromMap<T extends Record<string, string>>(
 		);
 
 		return () => {
+			cancelAnimationFrame(frameId);
 			for (const [
 				mql,
 				onChange,

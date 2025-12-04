@@ -309,7 +309,6 @@ export default function Menu({
 
   const {
     navRef,
-    linkRefs,
     navMetrics,
     highlightStyles,
     highlightVisible,
@@ -319,6 +318,7 @@ export default function Menu({
     hideHighlight,
     activeHighlightIndex,
     isHighlightTraveling,
+    registerLinkRef,
   } = useMenuHighlight({
     anchors,
     anchorCount,
@@ -864,7 +864,7 @@ export default function Menu({
           href={`#${id}`}
           className={s.navLink}
           ref={(el) => {
-            linkRefs.current[index] = el;
+            registerLinkRef(index, el);
           }}
           data-side={side}
           data-active={isActive}
@@ -1000,7 +1000,7 @@ export default function Menu({
                   className={s.logoLink}
                   prefetch={false}
                   ref={(el) => {
-                    linkRefs.current[0] = el;
+                    registerLinkRef(0, el);
                   }}
                   onClick={handleLogoClick}
                   onPointerDown={handleLogoPointerDown}

@@ -86,19 +86,30 @@ export default function Hero({
   useEffect(() => {
     let cancelled = false;
     let timer: number | null = null;
+    let frameId: number | null = null;
+
+    const setHeroCtaState = (ready: boolean, waiting: boolean) => {
+      frameId = requestAnimationFrame(() => {
+        if (cancelled) return;
+        setCtaReady(ready);
+        setWaitingForReveal(waiting);
+      });
+    };
+
     if (prefersReducedMotion) {
-      setCtaReady(true);
-      setWaitingForReveal(false);
+      setHeroCtaState(true, false);
       return () => {
         cancelled = true;
         if (timer !== null) {
           window.clearTimeout(timer);
         }
+        if (frameId !== null) {
+          cancelAnimationFrame(frameId);
+        }
       };
     }
 
-    setCtaReady(false);
-    setWaitingForReveal(true);
+    setHeroCtaState(false, true);
 
     const revealAfter = async () => {
       const { fonts, timeoutMs } = collectWaitForFonts(
@@ -151,6 +162,9 @@ export default function Hero({
       cancelled = true;
       if (timer !== null) {
         window.clearTimeout(timer);
+      }
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
       }
     };
   }, [

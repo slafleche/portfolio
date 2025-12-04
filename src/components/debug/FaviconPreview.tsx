@@ -101,6 +101,324 @@ const toColor = (value: string | undefined, fallback: string) => {
   return trimmed.length ? trimmed : fallback;
 };
 
+type MaskIconPreviewProps = {
+  cardStyle: CSSProperties;
+  previewColors: {
+    cardBorder: string;
+    border: string;
+    maskChip: string;
+    subtle: string;
+  };
+  theme: (typeof themeOptions)[number];
+  maskDisplayColor: string;
+  maskSvgSource: string;
+};
+
+function MaskIconPreview({
+  cardStyle,
+  previewColors,
+  theme,
+  maskDisplayColor,
+  maskSvgSource,
+}: MaskIconPreviewProps) {
+  return (
+    <div
+      style={{
+        ...cardStyle,
+        background: previewColors.maskChip,
+        border: previewColors.cardBorder,
+      }}
+    >
+      <div
+        aria-hidden
+        style={{
+          width: '96px',
+          height: '96px',
+          borderRadius: '50%',
+          backgroundColor: theme === 'dark' ? '#0d0a17' : '#dcd5ff',
+          boxShadow: `0 0 0 1px ${previewColors.border}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          aria-hidden
+          style={{
+            width: '70%',
+            aspectRatio: '1 / 1',
+            backgroundColor: maskDisplayColor,
+            maskImage: `url(${maskSvgSource})`,
+            WebkitMaskImage: `url(${maskSvgSource})`,
+            maskRepeat: 'no-repeat',
+            WebkitMaskRepeat: 'no-repeat',
+            maskPosition: 'center',
+            WebkitMaskPosition: 'center',
+            maskSize: 'contain',
+            WebkitMaskSize: 'contain',
+          }}
+        />
+      </div>
+      <div>
+        <div style={{ fontWeight: 600 }}>Safari mask-icon</div>
+        <div
+          style={{
+            fontSize: '0.75rem',
+            color: previewColors.subtle,
+            wordBreak: 'break-all',
+          }}
+        >
+          {maskSvgSource}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type CirclePreviewProps = {
+  cardStyle: CSSProperties;
+  previewColors: { border: string; subtle: string };
+  theme: (typeof themeOptions)[number];
+  appleTouch: FaviconPreviewData['appleTouch'];
+};
+
+function CirclePreview({
+  cardStyle,
+  previewColors,
+  theme,
+  appleTouch,
+}: CirclePreviewProps) {
+  return (
+    <div style={cardStyle}>
+      <div
+        aria-hidden
+        style={{
+          width: 120,
+          height: 120,
+          borderRadius: '50%',
+          overflow: 'hidden',
+          border: `1px solid ${previewColors.border}`,
+          background: theme === 'dark' ? '#0d0a17' : '#ffffff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <img
+          src={appleTouch.src}
+          alt="Circular favicon preview"
+          style={{
+            width: '110%',
+            height: '110%',
+            objectFit: 'cover',
+          }}
+        />
+      </div>
+      <div>
+        <div style={{ fontWeight: 600 }}>Circular preview</div>
+        <div
+          style={{
+            fontSize: '0.75rem',
+            color: previewColors.subtle,
+          }}
+        >
+          Simulates adaptive / round icons
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type IcoPreviewProps = {
+  cardStyle: CSSProperties;
+  previewColors: { subtle: string };
+  icoVariants: readonly FaviconPreviewData['icoVariants'][number][];
+  ico: FaviconPreviewData['ico'];
+  icoSizeSummary: string;
+};
+
+function IcoPreview({
+  cardStyle,
+  previewColors,
+  icoVariants,
+  ico,
+  icoSizeSummary,
+}: IcoPreviewProps) {
+  return (
+    <div style={cardStyle}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+          gap: '1.25rem',
+          flexWrap: 'wrap',
+          width: '100%',
+        }}
+      >
+        {icoVariants.map((icon) => (
+          <div
+            key={icon.hash}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.25rem',
+            }}
+          >
+            <img
+              src={icon.src}
+              width={icon.size}
+              height={icon.size}
+              alt={`${icon.size}×${icon.size} ICO layer`}
+              style={{
+                display: 'block',
+                imageRendering:
+                  icon.size <= 64 ? 'pixelated' : 'auto',
+              }}
+            />
+            <span
+              style={{
+                fontSize: '0.75rem',
+                color: previewColors.subtle,
+              }}
+            >
+              {icon.size}px
+            </span>
+          </div>
+        ))}
+      </div>
+      <div style={{ fontWeight: 600 }}>ICO container</div>
+      <div
+        style={{
+          fontSize: '0.75rem',
+          color: previewColors.subtle,
+        }}
+      >
+        Layers: {icoSizeSummary || 'none'}
+      </div>
+      <div
+        style={{
+          fontSize: '0.75rem',
+          color: previewColors.subtle,
+          wordBreak: 'break-all',
+        }}
+      >
+        {ico.fileName}
+      </div>
+    </div>
+  );
+}
+
+type MsTilePreviewProps = {
+  cardStyle: CSSProperties;
+  previewColors: { border: string; subtle: string };
+  msTile: FaviconPreviewData['msTile'];
+  tileForegroundSource: string | null;
+};
+
+function MsTilePreview({
+  cardStyle,
+  previewColors,
+  msTile,
+  tileForegroundSource,
+}: MsTilePreviewProps) {
+  return (
+    <div style={cardStyle}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.5rem',
+          alignItems: 'center',
+        }}
+      >
+        <div
+          aria-hidden
+          style={{
+            width: 120,
+            height: 120,
+            borderRadius: '18px',
+            backgroundColor: msTile.color,
+            border: `1px solid ${previewColors.border}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+          }}
+        >
+          {tileForegroundSource ? (
+            <img
+              src={tileForegroundSource}
+              alt="Windows tile foreground"
+              style={{
+                width: '80%',
+                height: '80%',
+                objectFit: 'contain',
+              }}
+            />
+          ) : (
+            <img
+              src={msTile.src}
+              alt="Windows tile PNG fallback"
+              style={{
+                width: '80%',
+                height: '80%',
+                objectFit: 'contain',
+                mixBlendMode: 'multiply',
+              }}
+            />
+          )}
+        </div>
+        <span
+          style={{ fontSize: '0.75rem', color: previewColors.subtle }}
+        >
+          {tileForegroundSource
+            ? 'Composited (color + foreground)'
+            : 'Composited preview (PNG fallback)'}
+        </span>
+        <div
+          aria-hidden
+          style={{
+            width: 120,
+            height: 120,
+            borderRadius: '18px',
+            overflow: 'hidden',
+            border: `1px solid ${previewColors.border}`,
+          }}
+        >
+          <img
+            src={msTile.src}
+            alt="Windows tile PNG"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+        <span
+          style={{ fontSize: '0.75rem', color: previewColors.subtle }}
+        >
+          Generated PNG
+        </span>
+      </div>
+      <div>
+        <div style={{ fontWeight: 600 }}>Windows tile</div>
+        <div
+          style={{
+            fontSize: '0.75rem',
+            color: previewColors.subtle,
+          }}
+        >
+          Tile color {msTile.color}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function FavIconPreview({
   data,
   locale,
@@ -258,259 +576,6 @@ export default function FavIconPreview({
     '#ffffff',
   );
   const tileForegroundSource = data.devTileForegroundSvgPath;
-
-  const MaskIconPreview = () => (
-    <div
-      style={{
-        ...cardStyle,
-        background: previewColors.maskChip,
-        border: previewColors.cardBorder,
-      }}
-    >
-      <div
-        aria-hidden
-        style={{
-          width: '96px',
-          height: '96px',
-          borderRadius: '50%',
-          backgroundColor: theme === 'dark' ? '#0d0a17' : '#dcd5ff',
-          boxShadow: `0 0 0 1px ${previewColors.border}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          aria-hidden
-          style={{
-            width: '70%',
-            aspectRatio: '1 / 1',
-            backgroundColor: maskDisplayColor,
-            maskImage: `url(${maskSvgSource})`,
-            WebkitMaskImage: `url(${maskSvgSource})`,
-            maskRepeat: 'no-repeat',
-            WebkitMaskRepeat: 'no-repeat',
-            maskPosition: 'center',
-            WebkitMaskPosition: 'center',
-            maskSize: 'contain',
-            WebkitMaskSize: 'contain',
-          }}
-        />
-      </div>
-      <div>
-        <div style={{ fontWeight: 600 }}>Safari mask-icon</div>
-        <div
-          style={{
-            fontSize: '0.75rem',
-            color: previewColors.subtle,
-            wordBreak: 'break-all',
-          }}
-        >
-          {maskSvgSource}
-        </div>
-      </div>
-    </div>
-  );
-
-  const CirclePreview = () => (
-    <div style={cardStyle}>
-      <div
-        aria-hidden
-        style={{
-          width: 120,
-          height: 120,
-          borderRadius: '50%',
-          overflow: 'hidden',
-          border: `1px solid ${previewColors.border}`,
-          background: theme === 'dark' ? '#0d0a17' : '#ffffff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <img
-          src={data.appleTouch.src}
-          alt="Circular favicon preview"
-          style={{
-            width: '110%',
-            height: '110%',
-            objectFit: 'cover',
-          }}
-        />
-      </div>
-      <div>
-        <div style={{ fontWeight: 600 }}>Circular preview</div>
-        <div
-          style={{
-            fontSize: '0.75rem',
-            color: previewColors.subtle,
-          }}
-        >
-          Simulates adaptive / round icons
-        </div>
-      </div>
-    </div>
-  );
-
-  const IcoPreview = () => (
-    <div style={cardStyle}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'center',
-          gap: '1.25rem',
-          flexWrap: 'wrap',
-          width: '100%',
-        }}
-      >
-        {data.icoVariants.map((icon) => (
-          <div
-            key={icon.hash}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.25rem',
-            }}
-          >
-            <img
-              src={icon.src}
-              width={icon.size}
-              height={icon.size}
-              alt={`${icon.size}×${icon.size} ICO layer`}
-              style={{
-                display: 'block',
-                imageRendering:
-                  icon.size <= 64 ? 'pixelated' : 'auto',
-              }}
-            />
-            <span
-              style={{
-                fontSize: '0.75rem',
-                color: previewColors.subtle,
-              }}
-            >
-              {icon.size}px
-            </span>
-          </div>
-        ))}
-      </div>
-      <div style={{ fontWeight: 600 }}>ICO container</div>
-      <div
-        style={{
-          fontSize: '0.75rem',
-          color: previewColors.subtle,
-        }}
-      >
-        Layers: {icoSizeSummary || 'none'}
-      </div>
-      <div
-        style={{
-          fontSize: '0.75rem',
-          color: previewColors.subtle,
-          wordBreak: 'break-all',
-        }}
-      >
-        {data.ico.fileName}
-      </div>
-    </div>
-  );
-
-  const MsTilePreview = () => (
-    <div style={cardStyle}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.5rem',
-          alignItems: 'center',
-        }}
-      >
-        <div
-          aria-hidden
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: '18px',
-            backgroundColor: data.msTile.color,
-            border: `1px solid ${previewColors.border}`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden',
-          }}
-        >
-          {tileForegroundSource ? (
-            <img
-              src={tileForegroundSource}
-              alt="Windows tile foreground"
-              style={{
-                width: '80%',
-                height: '80%',
-                objectFit: 'contain',
-              }}
-            />
-          ) : (
-            <img
-              src={data.msTile.src}
-              alt="Windows tile PNG fallback"
-              style={{
-                width: '80%',
-                height: '80%',
-                objectFit: 'contain',
-                mixBlendMode: 'multiply',
-              }}
-            />
-          )}
-        </div>
-        <span
-          style={{ fontSize: '0.75rem', color: previewColors.subtle }}
-        >
-          {tileForegroundSource
-            ? 'Composited (color + foreground)'
-            : 'Composited preview (PNG fallback)'}
-        </span>
-        <div
-          aria-hidden
-          style={{
-            width: 120,
-            height: 120,
-            borderRadius: '18px',
-            overflow: 'hidden',
-            border: `1px solid ${previewColors.border}`,
-          }}
-        >
-          <img
-            src={data.msTile.src}
-            alt="Windows tile PNG"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          />
-        </div>
-        <span
-          style={{ fontSize: '0.75rem', color: previewColors.subtle }}
-        >
-          Generated PNG
-        </span>
-      </div>
-      <div>
-        <div style={{ fontWeight: 600 }}>Windows tile</div>
-        <div
-          style={{
-            fontSize: '0.75rem',
-            color: previewColors.subtle,
-          }}
-        >
-          Tile color {data.msTile.color}
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div
@@ -807,7 +872,13 @@ export default function FavIconPreview({
             </div>
           </div>
 
-          <IcoPreview />
+          <IcoPreview
+            cardStyle={cardStyle}
+            previewColors={{ subtle: previewColors.subtle }}
+            icoVariants={data.icoVariants}
+            ico={data.ico}
+            icoSizeSummary={icoSizeSummary}
+          />
 
           <div style={cardStyle}>
             <img
@@ -855,9 +926,36 @@ export default function FavIconPreview({
             </div>
           ) : null}
 
-          <MaskIconPreview />
-          <CirclePreview />
-          <MsTilePreview />
+          <MaskIconPreview
+            cardStyle={cardStyle}
+            previewColors={{
+              maskChip: previewColors.maskChip,
+              cardBorder: previewColors.cardBorder,
+              border: previewColors.border,
+              subtle: previewColors.subtle,
+            }}
+            theme={theme}
+            maskDisplayColor={maskDisplayColor}
+            maskSvgSource={maskSvgSource}
+          />
+          <CirclePreview
+            cardStyle={cardStyle}
+            previewColors={{
+              border: previewColors.border,
+              subtle: previewColors.subtle,
+            }}
+            theme={theme}
+            appleTouch={data.appleTouch}
+          />
+          <MsTilePreview
+            cardStyle={cardStyle}
+            previewColors={{
+              border: previewColors.border,
+              subtle: previewColors.subtle,
+            }}
+            msTile={data.msTile}
+            tileForegroundSource={tileForegroundSource}
+          />
         </div>
       </section>
 

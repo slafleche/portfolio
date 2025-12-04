@@ -153,7 +153,16 @@ export default function HeroHeading({
     if (shouldAnimate) return;
 
     let cancelled = false;
-    setStaticReady(false);
+    let frameId: number | null = null;
+
+    const setStaticReadyAsync = (value: boolean) => {
+      frameId = requestAnimationFrame(() => {
+        if (cancelled) return;
+        setStaticReady(value);
+      });
+    };
+
+    setStaticReadyAsync(false);
 
     const { fonts, timeoutMs } = collectWaitForFonts(
       fontVariants.hero,
@@ -161,7 +170,7 @@ export default function HeroHeading({
     );
     const finalize = () => {
       if (!cancelled) {
-        setStaticReady(true);
+        setStaticReadyAsync(true);
         notifyReveal();
       }
     };
@@ -176,6 +185,9 @@ export default function HeroHeading({
 
     return () => {
       cancelled = true;
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+      }
     };
   }, [
     shouldAnimate,
