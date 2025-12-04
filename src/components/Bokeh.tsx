@@ -77,10 +77,6 @@ function BokehOverlay({
   ] = useState(() => mountedOnce);
   const raf1 = useRef<number | null>(null);
   const raf2 = useRef<number | null>(null);
-  const lastSize = useRef<{
-    width: number;
-    height: number;
-  } | null>(null);
 
   // Fade-in on mount to avoid jarring first paint
   useEffect(() => {
@@ -97,16 +93,8 @@ function BokehOverlay({
       if (raf2.current != null) cancelAnimationFrame(raf2.current);
     };
   }, []);
-
-  if (width != null && height != null) {
-    lastSize.current = {
-      width,
-      height,
-    };
-  }
-
-  const renderWidth = width ?? lastSize.current?.width ?? null;
-  const renderHeight = height ?? lastSize.current?.height ?? null;
+  const renderWidth = width ?? null;
+  const renderHeight = height ?? null;
 
   // Precompute color strings
   const colorStrs = useMemo(

@@ -165,12 +165,12 @@ export function useMenuHighlight({
     setMiniBokehActive,
   ] = useState(false);
   useEffect(() => {
-    if (!highlightEnabled) {
+    if (highlightEnabled) return;
+    const frameId = requestAnimationFrame(() => {
       setMiniBokehActive(false);
-    }
-  }, [
-    highlightEnabled,
-  ]);
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, [highlightEnabled]);
   const miniBokehTimerRef = useRef<ReturnType<
     typeof setTimeout
   > | null>(null);
@@ -182,19 +182,28 @@ export function useMenuHighlight({
   useEffect(() => {
     if (highlightEnabled) return;
     lastMetricRef.current = null;
-    setActiveIndex(null);
-    setTransitionDisabled(true);
-    setHighlight((prev) =>
-      prev.visible
-        ? {
-            ...prev,
-            visible: false,
-          }
-        : prev,
-    );
-  }, [
-    highlightEnabled,
-  ]);
+    const frameId = requestAnimationFrame(() => {
+      setActiveIndex(null);
+      setTransitionDisabled(true);
+      setHighlight((prev) =>
+        prev.visible
+          ? {
+              ...prev,
+              visible: false,
+            }
+          : prev,
+      );
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, [highlightEnabled]);
+
+  const registerLinkRef = useCallback(
+    (index: number, el: HTMLAnchorElement | null) => {
+      if (index < 0 || index >= anchorCount) return;
+      linkRefs.current[index] = el;
+    },
+    [anchorCount],
+  );
   const lastHoverIndexRef = useRef<number | null>(null);
   const hasResolvedHoverFromCacheRef = useRef(false);
   const lastPersistedCacheValueRef = useRef<string | null>(null);
@@ -210,21 +219,39 @@ export function useMenuHighlight({
     if (!highlightEnabled) {
       return undefined;
     }
+    let frameId: number | null = null;
     if (miniBokehTimerRef.current) {
       clearTimeout(miniBokehTimerRef.current);
       miniBokehTimerRef.current = null;
     }
     if (isLocked) {
-      setMiniBokehActive(true);
-      return undefined;
+      frameId = requestAnimationFrame(() => {
+        setMiniBokehActive(true);
+      });
+      return () => {
+        if (frameId !== null) {
+          cancelAnimationFrame(frameId);
+        }
+      };
     }
     if (disableTimeout) {
-      setMiniBokehActive(highlight.visible);
-      return undefined;
+      frameId = requestAnimationFrame(() => {
+        setMiniBokehActive(highlight.visible);
+      });
+      return () => {
+        if (frameId !== null) {
+          cancelAnimationFrame(frameId);
+        }
+      };
     }
     if (highlight.visible) {
-      setMiniBokehActive(true);
+      frameId = requestAnimationFrame(() => {
+        setMiniBokehActive(true);
+      });
       return () => {
+        if (frameId !== null) {
+          cancelAnimationFrame(frameId);
+        }
         if (miniBokehTimerRef.current) {
           clearTimeout(miniBokehTimerRef.current);
           miniBokehTimerRef.current = null;
@@ -294,11 +321,12 @@ export function useMenuHighlight({
       anchorCount,
     ).fill(null);
     linkMetricsRef.current = emptyMetrics;
-    setLinkMetrics(emptyMetrics);
+    const frameId = requestAnimationFrame(() => {
+      setLinkMetrics(emptyMetrics);
+    });
     lastMetricRef.current = null;
-  }, [
-    anchorCount,
-  ]);
+    return () => cancelAnimationFrame(frameId);
+  }, [anchorCount]);
 
   const persistLastHover = useCallback(
     (index: number | null) => {
@@ -852,24 +880,13 @@ export function useMenuHighlight({
         },
       };
     }
-    const navMetrics = navMetricsRef.current;
     const hasMeasurements = highlight.width && highlight.height;
     const defaultFallback = computeCenteredHighlight(navMetrics);
-    const cachedFallback = (() => {
-      const cachedIndex = lastHoverIndexRef.current;
-      if (cachedIndex != null) {
-        const metric =
-          linkMetricsRef.current[cachedIndex] ??
-          linkMetrics[cachedIndex];
-        if (metric) return metricToHighlightBox(metric);
-      }
-      return null;
-    })();
-
-    const originBox =
-      hasActivatedRef.current && cachedFallback
-        ? cachedFallback
-        : defaultFallback;
+    const activeMetric =
+      activeIndex != null ? linkMetrics[activeIndex] : null;
+    const originBox = activeMetric
+      ? metricToHighlightBox(activeMetric)
+      : defaultFallback;
     const containerBase = defaultFallback;
     const isActive = highlight.visible && hasMeasurements;
     const targetBox = isActive
@@ -910,7 +927,9 @@ export function useMenuHighlight({
     highlightEnabled,
     highlight,
     transitionDisabled,
+    activeIndex,
     linkMetrics,
+    navMetrics,
   ]);
 
   useEffect(() => {
@@ -922,9 +941,12 @@ export function useMenuHighlight({
     if (!metric) return;
     hasActivatedRef.current = true;
     lastHoverIndexRef.current = lockTargetIndex;
-    setActiveIndex(lockTargetIndex);
-    updateHighlightFromMetric(metric);
-    setMiniBokehActive(true);
+    const frameId = requestAnimationFrame(() => {
+      setActiveIndex(lockTargetIndex);
+      updateHighlightFromMetric(metric);
+      setMiniBokehActive(true);
+    });
+    return () => cancelAnimationFrame(frameId);
   }, [
     lockTargetIndex,
     linkMetrics,
@@ -937,7 +959,6 @@ export function useMenuHighlight({
 
   return {
     navRef,
-    linkRefs,
     navMetricsRef,
     navMetrics,
     highlightStyles,
@@ -948,5 +969,6 @@ export function useMenuHighlight({
     hideHighlight,
     activeHighlightIndex: highlightEnabled ? activeIndex : null,
     isHighlightTraveling: isTraveling,
+    registerLinkRef,
   };
 }

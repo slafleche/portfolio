@@ -49,7 +49,12 @@ function Arch({
     mounted,
     setMounted,
   ] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, []);
 
   // Safe numbers even before windowSize is known
   const fallbackWidth =

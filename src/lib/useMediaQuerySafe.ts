@@ -11,12 +11,15 @@ export function useMediaQuerySafe(query: string) {
 		if (typeof window === 'undefined') return;
 		const mql = window.matchMedia(query);
 		const onChange = () => setMatches(mql.matches);
-		setMatches(mql.matches);
+		const frameId = requestAnimationFrame(() => {
+			setMatches(mql.matches);
+		});
 		mql.addEventListener?.('change', onChange);
-		return () => mql.removeEventListener?.('change', onChange);
-	}, [
-		query,
-	]);
+		return () => {
+			mql.removeEventListener?.('change', onChange);
+			cancelAnimationFrame(frameId);
+		};
+	}, [query]);
 
 	return matches; // undefined on server, boolean on client
 }
