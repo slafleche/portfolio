@@ -18,7 +18,7 @@ claire dès le départ.
 **Définition réutilisable de la famille (partagée entre tokens et [abbr:CSS]) :**
 
 ```ts
-import { m } from '../styles/measurementKit';
+import { m } from 'css-calipers';
 import fontsConfig, { defineFontFamily } from '../styles/helpers/fontConfig.helper';
 
 const urbanist = defineFontFamily({
@@ -45,7 +45,7 @@ const urbanist = defineFontFamily({
 
 ```ts
 import { fontFamilies } from '../tokens/fontFamilies.tokens';
-import { m, mPercent } from '../styles/measurementKit';
+import { m, mPercent } from 'css-calipers';
 
 export const fontVariants = {
   hero: {

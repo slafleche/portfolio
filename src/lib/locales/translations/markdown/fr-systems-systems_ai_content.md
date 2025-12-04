@@ -6,7 +6,7 @@ les règles strictes. [abbr:ESLint] et lint-staged chargent directement ces fich
 imposent automatiquement les frontières de couches, limites d’import et règles
 d’émission. L’[abbr:AI] exécute la checklist « pause-before-coding », génère un plan
 [abbr:TODO] numéroté et livre ses changements dans sa propre branche ou tâche de
-refactor (comme la migration MeasurementKit → [abbr:CSS] Calipers).
+refactor (comme la migration de la couche de mesures vers [abbr:CSS] Calipers).
 
 Parce que la structure est déterministe, la collaboration reste nette. L’[abbr:AI]
 peut aller vite — écrire le boilerplate, étendre des helpers ou tester des

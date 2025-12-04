@@ -6,7 +6,7 @@ import {
   fullSizeOfParent,
   inheritHeight,
 } from '@/styles/helpers/positioning.helper';
-import { m } from '@/styles/measurementKit';
+import { m } from 'css-calipers';
 
 describe('positioning.helper', () => {
   it('builds absolute corner helpers with measurement defaults', () => {

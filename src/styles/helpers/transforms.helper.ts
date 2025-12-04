@@ -1,5 +1,5 @@
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
-import type { IMeasurement } from '../measurementKit';
+import type { IMeasurement } from 'css-calipers';
 
 type LengthValue = IMeasurement | null | undefined;
 type AngleValue = IMeasurement | null | undefined;

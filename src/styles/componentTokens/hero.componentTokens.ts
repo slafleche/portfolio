@@ -1,6 +1,6 @@
 import { color } from '../helpers/colorWrap.helper';
-import { m } from '../measurementKit';
-import { mPercent } from '../measurementKit/units/percent';
+import { m } from 'css-calipers';
+import { mPercent } from 'css-calipers/units/percent';
 import type { Stop } from '../helpers/gradients.helper';
 
 export const heroVars = {

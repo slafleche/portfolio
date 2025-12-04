@@ -1,4 +1,4 @@
-import { assertUnit } from '@/styles/measurementKit';
+import { assertUnit } from 'css-calipers';
 import { archVars } from '../../tokens/global.tokens';
 import { menuVars } from '../../styles/componentTokens/menu.componentTokens';
 

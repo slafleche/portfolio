@@ -1,4 +1,4 @@
-import { m, mPercent } from '../../styles/measurementKit';
+import { m, mPercent } from 'css-calipers';
 import { fontFamilies } from '../fontFamilies.tokens';
 import {
   defineFontVariant,

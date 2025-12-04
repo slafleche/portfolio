@@ -1,6 +1,6 @@
 import { color, type ColorWrapper } from './colorWrap.helper';
 import type { Property } from 'csstype';
-import { mPercent } from '../measurementKit/units/percent';
+import { mPercent } from 'css-calipers';
 import {
 	buildLinear,
 	resolveGradientSpotStops,
@@ -273,8 +273,9 @@ export function makeCardGradient(
 		 */
 		softenL?: number;
 			/**
-			 * Linear gradient direction. Accepts an MK angle measurement or
-			 * start/end percentage coordinates. Defaults to 90deg (to right).
+			 * Linear gradient direction. Accepts a css-calipers angle
+			 * measurement or start/end percentage coordinates. Defaults to
+			 * 90deg (to right).
 			 */
 		linearDirection?: LinearDirectionInput;
 		/**

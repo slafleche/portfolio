@@ -1,6 +1,6 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
 import { colorVars } from '../../tokens/global.tokens';
-import { m } from '../measurementKit';
+import { m } from 'css-calipers';
 import {
   composeFontVariantStyles,
   fontVariants,

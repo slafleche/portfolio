@@ -1,5 +1,5 @@
 import { color } from '../styles/helpers/colorWrap.helper';
-import { m, mPercent } from '../styles/measurementKit';
+import { m, mPercent } from 'css-calipers';
 import { colorVars } from './global.tokens';
 
 /**

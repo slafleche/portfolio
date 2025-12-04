@@ -10,10 +10,9 @@ This directory contains component-specific token bundles that feed style helpers
 ## State shaping (`tokens`)
 
 - Must: Keep bundle shapes consistent across states (for example, base/hover/focus/active share the same nested keys) so styles can swap states without learning a new structure.
-- Must: Avoid mixing raw CSS strings or numbers with MeasurementKit values inside the same bundle; stay in measurement space until helpers emit CSS.
+- Must: Avoid mixing raw CSS strings or numbers with css-calipers measurement values inside the same bundle; stay in measurement space until helpers emit CSS.
 
 ## Imports and usage (`style-helpers`, `styles-layer`)
 
-- Must: Import MeasurementKit utilities and shared helpers as needed, but do not import React/components/modules/app code here.
+- Must: Import measurement utilities (for example, from css-calipers) and shared helpers as needed, but do not import React/components/modules/app code here.
 - Must: Expect consumers in `src/styles/components` to spread these bundles into helpers rather than exploding them into manual CSS properties.
-

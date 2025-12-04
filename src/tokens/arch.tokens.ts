@@ -1,6 +1,6 @@
 import { color } from '@/styles/helpers/colorWrap.helper';
 import { colorVars } from '@/tokens/global.tokens';
-import { m } from '@/styles/measurementKit';
+import { m } from 'css-calipers';
 import { glassNoise } from '../styles/helpers/glassy.helper';
 
 /**

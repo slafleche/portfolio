@@ -24,7 +24,7 @@ import {
   m,
   mPercent,
   type IMeasurement,
-} from '../measurementKit';
+} from 'css-calipers';
 import transforms from '../helpers/transforms.helper';
 import { menuVars } from '../componentTokens/menu.componentTokens';
 

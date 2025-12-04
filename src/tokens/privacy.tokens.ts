@@ -1,4 +1,4 @@
-import { m } from '../styles/measurementKit';
+import { m } from 'css-calipers';
 import { colorVars } from './global.tokens';
 import { glassVars, glassyButtonTokens } from './glassy.tokens';
 import { layoutVars } from './layout.tokens';
