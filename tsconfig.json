@@ -36,12 +36,13 @@
     ]
   },
   "include": [
+    "app/*.tsx",
     "app/[LOCALE]/**/*.tsx",
-		"src/**/*",
-		"tests/**/*",
-		".next/types/**/*.ts",
-		"types/**/*.d.ts"
-	],
+    "src/**/*",
+    "tests/**/*",
+    ".next/types/**/*.ts",
+    "types/**/*.d.ts"
+  ],
 	"exclude": [
 		"node_modules",
 		"dist"

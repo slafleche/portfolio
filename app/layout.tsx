@@ -14,6 +14,23 @@ import {
 import { type Locale } from '@/lib/locales/translations';
 import debugRoutes from '@/data/debugRoutes.json';
 
+if (process.env.NODE_ENV !== 'production') {
+  const globalTracker = globalThis as {
+    __debugRoutesLogged?: boolean;
+  };
+  if (!globalTracker.__debugRoutesLogged) {
+    globalTracker.__debugRoutesLogged = true;
+    const debugLocale = debugRoutes.baseLocale;
+    const debugRouteList = debugRoutes.pages.map(
+      (page) => `/${debugLocale}/debug/${page}`,
+    );
+    console.info(
+      '[debug] Debug previews available:',
+      debugRouteList.join(', '),
+    );
+  }
+}
+
 interface RootLayoutProps {
   children: ReactNode;
 }
@@ -36,23 +53,6 @@ export default async function RootLayout({
   const faviconMeta =
     FAVICON_META_BUNDLES_BY_LOCALE[locale] ??
     FAVICON_META_BUNDLES_BY_LOCALE[fallbackLocale];
-
-  if (process.env.NODE_ENV !== 'production') {
-    const globalTracker = globalThis as {
-      __debugRoutesLogged?: boolean;
-    };
-    if (!globalTracker.__debugRoutesLogged) {
-      globalTracker.__debugRoutesLogged = true;
-      const debugLocale = debugRoutes.baseLocale;
-      const debugRouteList = debugRoutes.pages.map(
-        (page) => `/${debugLocale}/debug/${page}`,
-      );
-      console.info(
-        '[debug] Debug previews available:',
-        debugRouteList.join(', '),
-      );
-    }
-  }
 
   return (
     <html lang={locale}>

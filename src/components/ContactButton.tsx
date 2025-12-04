@@ -33,14 +33,19 @@ export default function ContactButton({
     mounted,
     setMounted,
   ] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    return () => cancelAnimationFrame(frameId);
+  }, []);
 
   const [
     phase,
     _setPhase,
   ] = useState<Phase>('hidden');
   const phaseRef = useRef<Phase>('hidden');
-  const phaseSinceRef = useRef<number>(Date.now());
+  const phaseSinceRef = useRef<number | null>(null);
   const shuttleRef = useRef<HTMLDivElement | null>(null);
   const linkRef = useRef<HTMLButtonElement | null>(null);
 
@@ -56,9 +61,24 @@ export default function ContactButton({
   const VISIBLE_DEBOUNCE_MS = 80;
   const MIN_SHOWN_DWELL_MS = 200;
 
-  const T0 = useRef<number>(performance.now());
-  const nowMs = () => Math.round(performance.now() - T0.current);
-  const since = () => Date.now() - phaseSinceRef.current;
+  const T0 = useRef<number | null>(null);
+  const nowMs = () =>
+    T0.current == null
+      ? 0
+      : Math.round(performance.now() - T0.current);
+  const since = () =>
+    phaseSinceRef.current == null
+      ? 0
+      : Date.now() - phaseSinceRef.current;
+
+  useEffect(() => {
+    if (T0.current == null) {
+      T0.current = performance.now();
+    }
+    if (phaseSinceRef.current == null) {
+      phaseSinceRef.current = Date.now();
+    }
+  }, []);
 
   const enableDebug =
     debugLog && process.env.NODE_ENV !== 'production';
