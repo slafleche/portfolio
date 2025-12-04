@@ -1,4 +1,4 @@
-import { m, assertUnit } from '../measurementKit';
+import { m, assertUnit } from 'css-calipers';
 
 /* ---------- SPIN (exit) ---------- */
 export const spinAnticDeg = m(-10, 'deg'); // wrong-direction pre-rotation

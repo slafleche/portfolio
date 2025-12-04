@@ -1,5 +1,5 @@
 import type { FontFamilyDef } from '../styles/helpers/types.helper';
-import { m } from '../styles/measurementKit';
+import { m } from 'css-calipers';
 import fontsConfig, {
   defineFontFamily,
 } from '../styles/helpers/fontConfig.helper';

@@ -1,5 +1,4 @@
-import { m } from '../measurementKit';
-import type { IMeasurement } from '../measurementKit';
+import { m, type IMeasurement } from 'css-calipers';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 export interface NoiseSvgOptions {
   opacity?: number;

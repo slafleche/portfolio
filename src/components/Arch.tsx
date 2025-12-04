@@ -14,7 +14,7 @@ import { createDomId } from '../lib/dom';
 
 import { shadowTotalY } from '../styles/helpers/shadow.helper';
 import { noiseStyle } from '../styles/helpers/noiseSVG.helper';
-import { assertUnit } from '../styles/measurementKit';
+import { assertUnit } from 'css-calipers';
 import { archVars } from '../tokens/global.tokens';
 import { archGlassVars } from '../tokens/arch.tokens';
 

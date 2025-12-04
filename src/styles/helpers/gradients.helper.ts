@@ -3,12 +3,13 @@ import {
   type ColorWrapper,
   type CuloriOKLCH,
 } from './colorWrap.helper';
-import { m, type IMeasurement } from '../measurementKit';
-import type { DegMeasurement } from '../measurementKit/units/angle';
 import {
+  m,
+  type IMeasurement,
+  type DegMeasurement,
   mPercent,
   type PercentMeasurement,
-} from '../measurementKit/units/percent';
+} from 'css-calipers';
 import {
   buildCurve,
   easing,
@@ -26,7 +27,7 @@ export type ColorInput = OKLCH | string | ColorWrapper; // supports wrapped them
 
 export type Stop = {
   color: ColorInput;
-  /** Percent position (MeasurementKit percent unit). */
+  /** Percent position (css-calipers percent unit). */
   at: PercentMeasurement;
 };
 

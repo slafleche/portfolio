@@ -7,7 +7,7 @@ import {
   shadowTotalY,
 } from '@/styles/helpers/shadow.helper';
 import { colorVars } from '@/tokens/global.tokens';
-import { m } from '@/styles/measurementKit';
+import { m } from 'css-calipers';
 
 describe('shadow.helper', () => {
   it('formats single and multiple box shadows', () => {

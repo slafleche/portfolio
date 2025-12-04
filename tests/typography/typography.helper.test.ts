@@ -7,7 +7,7 @@ import {
   relativeFontWeight,
 } from '@/styles/helpers/typography.helper';
 import { fontFamilies } from '@/tokens/fontFamilies.tokens';
-import { m, mPercent } from '@/styles/measurementKit';
+import { m, mPercent } from 'css-calipers';
 
 describe('typography.helper', () => {
   it('normalizes FontStyles into CSS-ready properties', () => {

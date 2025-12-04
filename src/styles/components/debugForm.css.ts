@@ -5,7 +5,7 @@ import borders from '@/styles/helpers/borders.helper';
 import { paddings, margins } from '@/styles/helpers/spacing.helper';
 import { boxShadow } from '@/styles/helpers/shadow.helper';
 import { backgrounds } from '@/styles/helpers/background.helper';
-import { m } from '@/styles/measurementKit';
+import { m } from 'css-calipers';
 
 const doubledFieldGap = formTokens.layout.fieldGap.multiply(2);
 const halfFieldGap = formTokens.layout.fieldGap.divide(2);

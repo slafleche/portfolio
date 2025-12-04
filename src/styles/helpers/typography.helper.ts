@@ -7,7 +7,7 @@ import {
   hasCssMethod,
   isPercentMeasurement,
   type PercentMeasurement,
-} from '../measurementKit';
+} from 'css-calipers';
 import { percentToDecimal } from '../../lib/math';
 
 const typographyWarning = (message: string): void => {

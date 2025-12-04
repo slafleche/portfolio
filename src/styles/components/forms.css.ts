@@ -4,7 +4,7 @@ import {
   type ComplexStyleRule,
 } from '@vanilla-extract/css';
 import { formTokens } from '@/tokens/forms.tokens';
-import { m } from '../measurementKit';
+import { m } from 'css-calipers';
 import { colorVars } from '../../tokens/global.tokens';
 import {
   glassVars,

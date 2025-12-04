@@ -2,7 +2,7 @@ import {
   dropShadowVars,
   colorVars,
 } from '../../tokens/global.tokens';
-import { m, mPercent } from '../measurementKit';
+import { m, mPercent } from 'css-calipers';
 
 export const cardImageVars = {
   borders: {

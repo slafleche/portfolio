@@ -1,6 +1,6 @@
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { ColorWrapper } from './colorWrap.helper';
-import type { IMeasurement } from '../measurementKit';
+import type { IMeasurement } from 'css-calipers';
 import { outlinesTokens } from '../../tokens/outlines.tokens';
 
 export type OutlinesValues = {

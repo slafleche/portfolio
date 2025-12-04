@@ -1,4 +1,4 @@
-import { m, type IMeasurement } from '../../styles/measurementKit';
+import { m, type IMeasurement } from 'css-calipers';
 import { menuVars } from '../../styles/componentTokens/menu.componentTokens';
 import transforms from '../../styles/helpers/transforms.helper';
 

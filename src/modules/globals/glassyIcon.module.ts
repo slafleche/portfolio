@@ -1,4 +1,4 @@
-import { mPercent } from '../../styles/measurementKit';
+import { mPercent } from 'css-calipers';
 
 export const glassyIcons = {
   borders: {

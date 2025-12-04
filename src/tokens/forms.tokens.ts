@@ -1,5 +1,5 @@
 import { colorVars } from '@/tokens/global.tokens';
-import { m } from '@/styles/measurementKit';
+import { m } from 'css-calipers';
 
 export const formTokens = {
   textarea: {

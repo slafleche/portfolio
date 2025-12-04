@@ -5,7 +5,7 @@ import {
   type FontsConfig,
   weightRangeFromConfig,
 } from '@/styles/helpers/fontConfig.helper';
-import { m } from '@/styles/measurementKit';
+import { m } from 'css-calipers';
 
 const sampleConfig: FontsConfig = {
   'Sample Family': {

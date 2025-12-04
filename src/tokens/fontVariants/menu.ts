@@ -1,4 +1,4 @@
-import { m } from '../../styles/measurementKit';
+import { m } from 'css-calipers';
 import { fontFamilies } from '../fontFamilies.tokens';
 import {
   defineFontVariant,

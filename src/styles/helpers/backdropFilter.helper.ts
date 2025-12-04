@@ -1,12 +1,11 @@
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
-import type { IMeasurement } from '../measurementKit';
-import type { PercentMeasurement } from '../measurementKit/units/percent';
+import type { IMeasurement, PercentMeasurement } from 'css-calipers';
 import { createSupportsFallback } from './supportsFallback.helper';
 
 /**
  * Composes backdrop-filter intents so styles always emit both
  * `backdropFilter` and `WebkitBackdropFilter` with identical values.
- * Accepts measurementKit inputs for blur + percent-driven filters
+ * Accepts css-calipers measurements for blur + percent-driven filters
  * (`mPercent`) alongside simple numeric knobs (e.g. brightness multipliers)
  * so presets/helpers can stay declarative. Blur inputs expect length-based
  * measurements (px/rem/vh/etc.).

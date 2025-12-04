@@ -1,5 +1,5 @@
 import type { ColorWrapper } from './colorWrap.helper';
-import { m, type IMeasurement } from '../measurementKit';
+import { m, type IMeasurement } from 'css-calipers';
 import {
   dropShadowVars,
   colorVars,

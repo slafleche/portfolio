@@ -7,7 +7,7 @@ import {
 import { heroVars } from '../componentTokens/hero.componentTokens';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { noiseBg } from '../helpers/noiseSVG.helper';
-import { m } from '../measurementKit';
+import { m } from 'css-calipers';
 import { paddings } from '../helpers/spacing.helper';
 import {
   backgroundImageDecl,
@@ -15,7 +15,7 @@ import {
 } from '../helpers/gradients.helper';
 import { projectorVars } from '../componentTokens/projector.componentTokens';
 import { glassVars } from '../../tokens/glassy.tokens';
-import { mPercent } from '../measurementKit/units/percent';
+import { mPercent } from 'css-calipers/units/percent';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS

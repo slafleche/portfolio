@@ -2,7 +2,7 @@ import {
   projectorChannels,
   projectorVars,
 } from '../styles/componentTokens/projector.componentTokens';
-import type { IMeasurement } from '../styles/measurementKit';
+import type { IMeasurement } from 'css-calipers';
 
 type Tier = 'desktop';
 

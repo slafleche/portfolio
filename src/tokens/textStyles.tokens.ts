@@ -1,4 +1,4 @@
-import { m } from '../styles/measurementKit';
+import { m } from 'css-calipers';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { SpacingProps } from '../styles/helpers/spacing.helper';
 import { colorVars } from './global.tokens';

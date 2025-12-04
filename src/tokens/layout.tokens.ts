@@ -1,4 +1,4 @@
-import { m } from '../styles/measurementKit';
+import { m } from 'css-calipers';
 
 const contentPadding = m(40);
 // const compactContentPadding = m(26);
