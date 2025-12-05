@@ -13,12 +13,12 @@ import type { ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as dialogStyles from '@/styles/components/contactDialog.css';
 import * as formStyles from '@/styles/components/forms.css';
-import ContactForm from './ContactForm';
-import type { ContactFormToastDebugScenario } from './contact.types';
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { Markdown } from '@/components/Markdown';
 import { sharedStrings } from '@/lib/sharedStrings';
+import ContactForm from './ContactForm';
+import { CloseButton } from './CloseButton';
 
 type ModalIntent = 'none' | 'contact' | 'contact-policy';
 
@@ -92,16 +92,14 @@ type ContactDialogProviderProps = {
   children: ReactNode;
   formCopy: ContactFormCopy;
   privacyCopy: PrivacyCopy;
-  locale: string;
-  toastDebugScenario?: ContactFormToastDebugScenario;
+  closeLabel: string;
 };
 
 export function ContactDialogProvider({
   children,
   formCopy,
   privacyCopy,
-  locale,
-  toastDebugScenario,
+  closeLabel,
 }: ContactDialogProviderProps) {
   const [
     intent,
@@ -326,13 +324,10 @@ export function ContactDialogProvider({
             <div className={dialogStyles.panel}>
               <div className={dialogStyles.panelContent}>
                 <Dialog.Close asChild>
-                  <button
-                    type="button"
+                  <CloseButton
+                    label={closeLabel}
                     className={dialogStyles.closeButton}
-                    aria-label="Close contact dialog"
-                  >
-                    ×
-                  </button>
+                  />
                 </Dialog.Close>
                 {!successVisible ? (
                   <Dialog.Title className={dialogStyles.heading}>
@@ -341,9 +336,6 @@ export function ContactDialogProvider({
                 ) : null}
                 <ContactForm
                   copy={formCopy}
-                  privacyCopy={privacyCopy}
-                  locale={locale}
-                  toastDebugScenario={toastDebugScenario}
                   onSuccessStateChange={setSuccessVisible}
                 />
               </div>
@@ -374,13 +366,10 @@ export function ContactDialogProvider({
                 />
               </Dialog.Description>
               <Dialog.Close asChild>
-                <button
-                  type="button"
+                <CloseButton
+                  label={formCopy.privacy.closeLabel}
                   className={formStyles.privacyCloseIcon}
-                  aria-label={formCopy.privacy.closeLabel}
-                >
-                  ×
-                </button>
+                />
               </Dialog.Close>
             </div>
           </Dialog.Content>
