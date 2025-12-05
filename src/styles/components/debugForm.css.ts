@@ -79,7 +79,7 @@ export const ctaRow = style({
   ...backgrounds(formTokens.field.backgrounds),
   display: 'flex',
   flexDirection: 'column',
-  gap: m(8).css(),
+  gap: '8px',
 });
 
 export const ctaButton = style({
@@ -108,8 +108,8 @@ export const code = style({
 export const accentListItem = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: m(4).css(),
-  borderLeftWidth: m(4).css(),
+  gap: '4px',
+  borderLeftWidth: '4px',
   borderLeftStyle: 'solid',
   paddingLeft: formTokens.layout.fieldGap.css(),
 });

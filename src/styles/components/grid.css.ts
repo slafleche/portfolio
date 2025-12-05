@@ -4,7 +4,7 @@ import { m } from 'css-calipers';
 export const root = style({
 	display: 'grid',
 	gridTemplateColumns: 'repeat(var(--grid-columns, 1), minmax(0, 1fr))',
-	gap: m(6).css(),
+	gap: '6px',
 });
 
 export const column = style({

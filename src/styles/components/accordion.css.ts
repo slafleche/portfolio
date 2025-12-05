@@ -94,7 +94,7 @@ export const trigger = style({
   display: 'grid',
   gridTemplateColumns: '1fr auto',
   alignItems: 'center',
-  gap: m(3).css(),
+  gap: '3px',
   width: '100%',
   padding: `${accordionItemTokens.paddingY.css()} ${accordionItemTokens.paddingX.css()}`,
   cursor: 'pointer',
@@ -129,7 +129,7 @@ export const triggerSubtitle = style({
 export const triggerText = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: m(1).css(),
+  gap: '1px',
 });
 
 export const icon = style({
@@ -168,7 +168,7 @@ export const content = style({
 });
 
 export const contentInner = style({
-  padding: `${m(3).css()} ${accordionItemTokens.paddingX.css()} ${accordionItemTokens.paddingY.css()}`,
+  padding: `3px ${accordionItemTokens.paddingX.css()} ${accordionItemTokens.paddingY.css()}`,
   color: colorVars.white.alpha(0.88).css(),
   lineHeight: 1.6,
 });
