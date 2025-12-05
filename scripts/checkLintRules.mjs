@@ -6,45 +6,112 @@ import process from 'node:process';
 
 const ROOT = path.resolve(process.cwd());
 
+/**
+ * Shared rule definitions.
+ * Each rule has:
+ * - id: stable identifier
+ * - groupTitle: heading for grouped human output
+ * - solution: short hint on how to fix
+ * - regex: line-level pattern to match
+ * - pattern (optional): substring that must be present in the POSIX path
+ */
 const FORBIDDEN_PATTERNS = [
   {
+    id: 'background-inline',
+    groupTitle: 'No raw background properties in styles.',
+    solution:
+      'Use backgrounds(...) helper instead of raw background/backgroundColor values.',
     regex: /background(?:Color)?\s*:\s*['"]/,
-    message: 'Use backgrounds(...) helper instead of raw background properties.',
   },
   {
+    id: 'border-inline',
+    groupTitle: 'No raw border properties in styles.',
+    solution:
+      'Use borders(...) helper instead of raw border/borderRadius values.',
     regex: /border(?:Radius)?\s*:\s*['"]/,
-    message: 'Use borders(...) helper instead of raw border properties.',
   },
   {
+    id: 'padding-inline',
+    groupTitle: 'No raw padding values in styles.',
+    solution:
+      'Use paddings(...) helper instead of raw padding values.',
     regex: /padding\s*:\s*['"]/,
-    message: 'Use paddings(...) helper instead of raw padding properties.',
   },
   {
+    id: 'margin-inline',
+    groupTitle: 'No raw margin values in styles.',
+    solution:
+      'Use margins(...) helper instead of raw margin values.',
     regex: /margin\s*:\s*['"]/,
-    message: 'Use margins(...) helper instead of raw margin properties.',
   },
 ];
 
 const LAYER_IMPORT_BLOCKS = [
   {
+    id: 'helpers-import-components',
+    groupTitle: 'Helpers must not import components.',
+    solution:
+      'Move shared logic to a lower layer or adjust imports so helpers only depend on tokens/helpers.',
     pattern: 'src/styles/helpers',
     regex: /from\s+['"]\.\.\/components\//,
-    message: 'Helpers cannot import components.',
   },
   {
+    id: 'components-import-modules',
+    groupTitle: 'Components should not import modules directly.',
+    solution:
+      'Route data/logic through appropriate boundaries instead of importing modules from component styles.',
     pattern: 'src/styles/components',
     regex: /from\s+['"]\.\.\/modules\//,
-    message: 'Components should not import modules directly.',
   },
   {
+    id: 'modules-import-component-styles',
+    groupTitle: 'Modules must not import component styles.',
+    solution:
+      'Move shared styles to helpers/tokens or invert the dependency so components own their styles.',
     pattern: 'src/modules',
     regex: /from\s+['"]\.\.\/styles\/components\//,
-    message: 'Modules must not import component styles.',
   },
 ];
 
+const MEASUREMENT_RULES = [
+  {
+    id: 'measurement-m-css',
+    groupTitle: 'Do not call m(...).css() in component styles.',
+    solution:
+      'Either hard-code the value or move the measurement into tokens/helpers; reserve m(...) for real reuse/math.',
+    pattern: 'src/styles/components',
+    // Match m(<number>[, 'unit']) .css(…) to catch trivial literal usage,
+    // but allow m(variable, …).css() helpers like addDeg.
+    regex: /m\(\s*\d+(?:\.\d+)?(?:\s*,\s*['"][^'"]+['"])?\s*\)\.css\(/,
+  },
+];
+
+const ALL_RULES = [
+  ...FORBIDDEN_PATTERNS,
+  ...MEASUREMENT_RULES,
+  ...LAYER_IMPORT_BLOCKS,
+];
+
+function isPlainMode() {
+  return process.argv.includes('--plain');
+}
+
+function isHumanMode() {
+  return process.argv.includes('--human');
+}
+
 function getStagedFiles() {
   const output = execSync('git diff --cached --name-only', {
+    encoding: 'utf-8',
+  });
+  return output
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function getAllTrackedFiles() {
+  const output = execSync('git ls-files', {
     encoding: 'utf-8',
   });
   return output
@@ -58,11 +125,27 @@ function readFile(filePath) {
   return readFileSync(filePath, 'utf-8');
 }
 
+/**
+ * @typedef {Object} Violation
+ * @property {string} filePath
+ * @property {number} lineNumber
+ * @property {object} rule
+ */
+
 function scanPatterns(filePath, content) {
   const violations = [];
-  for (const pattern of FORBIDDEN_PATTERNS) {
-    if (pattern.regex.test(content)) {
-      violations.push(`${filePath}: ${pattern.message}`);
+  const lines = content.split('\n');
+  for (const rule of FORBIDDEN_PATTERNS) {
+    for (let index = 0; index < lines.length; index += 1) {
+      const line = lines[index];
+      if (rule.regex.test(line)) {
+        const lineNumber = index + 1;
+        violations.push({
+          filePath,
+          lineNumber,
+          rule,
+        });
+      }
     }
   }
   return violations;
@@ -72,35 +155,133 @@ function scanImports(filePath, content) {
   const violations = [];
   const posix = filePath.split(path.sep).join('/');
   for (const block of LAYER_IMPORT_BLOCKS) {
-    if (posix.includes(block.pattern) && block.regex.test(content)) {
-      violations.push(`${filePath}: ${block.message}`);
+    if (!posix.includes(block.pattern)) continue;
+    const lines = content.split('\n');
+    for (let index = 0; index < lines.length; index += 1) {
+      const line = lines[index];
+      if (block.regex.test(line)) {
+        const lineNumber = index + 1;
+        violations.push({
+          filePath,
+          lineNumber,
+          rule: block,
+        });
+      }
     }
   }
   return violations;
 }
 
+function scanMeasurementCss(filePath, content) {
+  const violations = [];
+  const posix = filePath.split(path.sep).join('/');
+  for (const rule of MEASUREMENT_RULES) {
+    if (!posix.includes(rule.pattern)) continue;
+    const lines = content.split('\n');
+    for (let index = 0; index < lines.length; index += 1) {
+      const line = lines[index];
+      if (rule.regex.test(line)) {
+        const lineNumber = index + 1;
+        violations.push({
+          filePath,
+          lineNumber,
+          rule,
+        });
+      }
+    }
+  }
+  return violations;
+}
+
+function formatPlain(violations) {
+  console.error('\nLint guardrails failed:\n');
+  for (const violation of violations) {
+    const { filePath, lineNumber, rule } = violation;
+    const message = rule.groupTitle || 'Rule violation';
+    console.error(` - ${filePath}:${lineNumber}: ${message}`);
+  }
+  console.error('\nPlease fix the issues above before committing.');
+}
+
+function formatHuman(violations) {
+  console.error('\nLint guardrails failed:\n');
+
+  const byRule = new Map();
+  for (const violation of violations) {
+    const { rule, filePath, lineNumber } = violation;
+    const ruleId = rule.id || rule.groupTitle;
+    if (!byRule.has(ruleId)) {
+      byRule.set(ruleId, {
+        rule,
+        files: new Map(),
+      });
+    }
+    const group = byRule.get(ruleId);
+    if (!group.files.has(filePath)) {
+      group.files.set(filePath, new Set());
+    }
+    group.files.get(filePath).add(lineNumber);
+  }
+
+  for (const rule of ALL_RULES) {
+    const ruleId = rule.id || rule.groupTitle;
+    const group = byRule.get(ruleId);
+    if (!group) continue;
+    const { files } = group;
+
+    console.error(`- ${rule.groupTitle}`);
+    if (rule.solution) {
+      console.error(`  - Solution: ${rule.solution}`);
+    }
+    console.error('  Problematic files:');
+
+    const sortedFiles = Array.from(files.keys()).sort();
+    for (const filePath of sortedFiles) {
+      const lineNumbers = Array.from(files.get(filePath)).sort(
+        (a, b) => a - b,
+      );
+      console.error(`  - ${filePath}`);
+      for (const lineNumber of lineNumbers) {
+        console.error(`    - L${lineNumber}`);
+      }
+    }
+
+    console.error('');
+  }
+
+  console.error('Please fix the issues above before committing.');
+}
+
 function main() {
-  const staged = getStagedFiles();
-  if (!staged.length) {
+  const useAll =
+    process.env.LINT_RULES_ALL === '1' ||
+    process.argv.includes('--all');
+
+  const usePlain = isPlainMode() && !isHumanMode();
+
+  const targetFiles = useAll ? getAllTrackedFiles() : getStagedFiles();
+  if (!targetFiles.length) {
     return 0;
   }
 
-  const errors = [];
-  for (const relativePath of staged) {
+  const violations = [];
+  for (const relativePath of targetFiles) {
+    if (relativePath.includes('.bak.')) continue;
     const ext = path.extname(relativePath).toLowerCase();
     if (!['.ts', '.tsx', '.js', '.jsx', '.mjs'].includes(ext)) continue;
     const fullPath = path.join(ROOT, relativePath);
     const content = readFile(fullPath);
-    errors.push(...scanPatterns(relativePath, content));
-    errors.push(...scanImports(relativePath, content));
+    violations.push(...scanPatterns(relativePath, content));
+    violations.push(...scanImports(relativePath, content));
+    violations.push(...scanMeasurementCss(relativePath, content));
   }
 
-  if (errors.length) {
-    console.error('\nLint-staged guardrails failed:\n');
-    for (const error of errors) {
-      console.error(` - ${error}`);
+  if (violations.length) {
+    if (usePlain) {
+      formatPlain(violations);
+    } else {
+      formatHuman(violations);
     }
-    console.error('\nPlease fix the issues above before committing.');
     return 1;
   }
 
