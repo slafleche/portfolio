@@ -3,6 +3,7 @@ import { execSync } from 'node:child_process';
 import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { findMeasurementAliasViolations } from './measurementAliasesCheck.mjs';
 
 const ROOT = path.resolve(process.cwd());
 
@@ -190,6 +191,26 @@ function scanMeasurementCss(filePath, content) {
       }
     }
   }
+
+  // Measurement alias analysis (m(...) wrapped only to feed helpers).
+  const aliasViolations = findMeasurementAliasViolations(
+    filePath,
+    content,
+  );
+  for (const aliasViolation of aliasViolations) {
+    violations.push({
+      filePath,
+      lineNumber: aliasViolation.lineNumber,
+      rule: {
+        id: 'measurement-helper-m-literal',
+        groupTitle:
+          'Do not wrap m(...) in a local just to feed style helpers.',
+        solution:
+          'Use tokens or measurement variables (or plain CSS strings where helpers are not required); do not create local m(...) wrappers whose only purpose is to feed paddings/margins/borders/backgrounds/boxShadow/backdropFilters.',
+      },
+    });
+  }
+
   return violations;
 }
 
