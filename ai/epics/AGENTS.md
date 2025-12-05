@@ -12,6 +12,11 @@ repo. These files are the primary input/output for role "hats" such as
   - `<epic-id>_implementation.md` — high-level approach and architecture notes.
   - `<epic-id>_plan.md` — checklist of tasks/slices and their notes.
   - Optional: `<epic-id>_notes.md` — scratchpad or running notes for this epic.
+- May: When the user asks for a shorthand filename inside an epic folder (for
+  example, "spec.md" or "primer.md"), interpret it as `<epic-id>_spec.md`,
+  `<epic-id>_primer.md`, etc., so long as this keeps the prefix rule intact.
+  If there is any ambiguity about which epic id or suffix to use, ask the user
+  to confirm before creating or renaming files.
 
 ## Role usage (hats)
 
