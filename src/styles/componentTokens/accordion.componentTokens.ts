@@ -1,6 +1,5 @@
 import { color } from '../helpers/colorWrap.helper';
-import { m } from 'css-calipers';
-import { mPercent } from 'css-calipers/units/percent';
+import { m, mPercent } from 'css-calipers';
 import { colorVars } from '../../tokens/global.tokens';
 
 export const accordionSurfaceTokens = {
