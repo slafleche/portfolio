@@ -1,15 +1,12 @@
-import { useMemo, useRef } from 'react';
-import type { ChangeEventHandler, FocusEventHandler } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import type { ChangeEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
 import { evaluateEmailField } from '@/modules/contactForm/validation';
 import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
 
 export type EmailBlockProps = {
-  value: string;
   copy: EmailBlockLocale;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-  onBlur?: FocusEventHandler<HTMLInputElement>;
   readOnly?: boolean;
   disabled?: boolean;
   maxLength?: number;
@@ -18,9 +15,6 @@ export type EmailBlockProps = {
 };
 
 export function EmailBlock({
-  value,
-  onChange,
-  onBlur,
   readOnly,
   disabled,
   maxLength,
@@ -28,11 +22,16 @@ export function EmailBlock({
   onFocusAfter,
   copy,
 }: EmailBlockProps) {
+  const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement | null>(null);
   const evaluation = useMemo(
     () => evaluateEmailField(value),
     [value],
   );
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setValue(event.target.value);
+  };
 
   useFormBlock(
     useMemo(
@@ -57,8 +56,7 @@ export function EmailBlock({
       blockKey="email"
       label={copy.label}
       value={value}
-      onChange={onChange}
-      onBlur={onBlur}
+      onChange={handleChange}
       requiredText={copy.requiredText}
       readOnly={readOnly}
       disabled={disabled}
