@@ -1,10 +1,14 @@
-import type { CSS_TYPES } from '@/styles/helpers/types.helper';
+import type {
+  CSS_TYPES,
+  CssLike,
+} from '@/styles/helpers/types.helper';
 import type { GlobalStyleRule } from '@vanilla-extract/css';
 import { getImage } from '@/lib/images';
 import type { ColorWrapper } from './colorWrap.helper';
+import { hasCssMethod } from 'css-calipers';
 
 export interface IBackgrounds {
-  color?: ColorWrapper;
+  color?: ColorWrapper | CssLike | CSS_TYPES.Property.BackgroundColor;
   attachment?: CSS_TYPES.Property.BackgroundAttachment;
   position?: CSS_TYPES.Property.BackgroundPosition;
   repeat?: CSS_TYPES.Property.BackgroundRepeat;
@@ -141,9 +145,16 @@ export const backgrounds = (props: IBackgrounds): GlobalStyleRule => {
       : {}),
   };
   if (props.size) styles.backgroundSize = props.size;
-  if (props.color)
-    styles.backgroundColor =
-      props.color.css() as CSS_TYPES.Property.BackgroundColor;
+  if (props.color !== undefined) {
+    const c = props.color;
+    if (typeof c === 'string') {
+      styles.backgroundColor =
+        c as CSS_TYPES.Property.BackgroundColor;
+    } else if (hasCssMethod(c)) {
+      styles.backgroundColor =
+        c.css() as CSS_TYPES.Property.BackgroundColor;
+    }
+  }
   if (props.attachment)
     styles.backgroundAttachment = props.attachment;
   if (props.opacity !== undefined) styles.opacity = props.opacity;
