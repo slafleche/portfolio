@@ -92,6 +92,7 @@ export const closeButton = style({
   top: m(6).css(),
   marginTop: m(4).css(),
   marginBottom: m(4).css(),
+  padding: 0,
   alignSelf: 'flex-end',
   width: glassyButtonTokens.size.css(),
   height: glassyButtonTokens.size.css(),
