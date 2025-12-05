@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { ChangeEventHandler, FocusEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
@@ -7,10 +7,7 @@ import { evaluateNameField } from '@/modules/contactForm/validation';
 import type { NameBlockLocale } from '@/lib/locales/form/form.name';
 
 export type NameBlockProps = {
-  value: string;
   copy: NameBlockLocale;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-  onBlur?: FocusEventHandler<HTMLInputElement>;
   readOnly?: boolean;
   disabled?: boolean;
   maxLength?: number;
@@ -20,9 +17,6 @@ export type NameBlockProps = {
 };
 
 export function NameBlock({
-  value,
-  onChange,
-  onBlur,
   readOnly,
   disabled,
   maxLength,
@@ -31,11 +25,16 @@ export function NameBlock({
   onFocusAfter,
   copy,
 }: NameBlockProps) {
+  const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement | null>(null);
   const evaluation = useMemo(
     () => evaluateNameField(value),
     [value],
   );
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setValue(event.target.value);
+  };
 
   useFormBlock(
     useMemo(
@@ -63,8 +62,7 @@ export function NameBlock({
       blockKey="name"
       label={copy.label}
       value={value}
-      onChange={onChange}
-      onBlur={onBlur}
+      onChange={handleChange}
       requiredText={copy.requiredText}
       readOnly={readOnly}
       disabled={disabled}

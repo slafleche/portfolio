@@ -16,6 +16,7 @@ const frBaseData = {
   'menu-left_label': 'À propos de moi',
   'menu-right_label': 'Mon travail',
   localeChange: 'Choix de la langue',
+  'close-label': 'Fermer',
   'scroll-cue': 'Défiler vers le contenu',
 
   'manifest-name': 'Portfolio — Stéphane L.',

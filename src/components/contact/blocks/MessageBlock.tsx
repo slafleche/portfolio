@@ -1,5 +1,5 @@
-import { useId, useMemo, useRef } from 'react';
-import type { ChangeEventHandler, FocusEventHandler } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
+import type { ChangeEventHandler } from 'react';
 import clsx from 'clsx';
 import { TextareaInput } from '@/components/contact/primitives/TextareaInput';
 import { FormHint } from '@/components/contact/primitives/FormHint';
@@ -16,10 +16,7 @@ import type { MessageBlockLocale } from '@/lib/locales/form/form.message';
 
 export type MessageBlockProps = {
   id?: string;
-  value: string;
   copy: MessageBlockLocale;
-  onChange: ChangeEventHandler<HTMLTextAreaElement>;
-  onBlur?: FocusEventHandler<HTMLTextAreaElement>;
   helperText?: string | null;
   errorText?: string | null;
   readOnly?: boolean;
@@ -30,10 +27,7 @@ export type MessageBlockProps = {
 
 export function MessageBlock({
   id,
-  value,
   copy,
-  onChange,
-  onBlur,
   helperText,
   errorText,
   readOnly,
@@ -41,6 +35,7 @@ export function MessageBlock({
   onFocusBefore,
   onFocusAfter,
 }: MessageBlockProps) {
+  const [value, setValue] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const baseHeightRef = useRef<number | null>(null);
   const generatedId = useId();
@@ -143,9 +138,8 @@ export function MessageBlock({
         onChange={(event) => {
           autoResizeHandlers.onInit(event.currentTarget);
           autoResizeHandlers.onSync();
-          onChange(event);
+          setValue(event.currentTarget.value);
         }}
-        onBlur={onBlur}
         minLength={MESSAGE_MIN_LENGTH}
         maxLength={MESSAGE_MAX_LENGTH}
         aria-describedby={describedBy}

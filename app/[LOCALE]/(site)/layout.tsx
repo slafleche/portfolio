@@ -24,6 +24,7 @@ export default async function SiteLayout({
   const translator = await loadTranslator(locale);
   const contactFormCopy = buildContactFormCopy(translator);
   const privacyCopy = buildPrivacyCopy(translator);
+  const closeLabel = translator('close-label');
 
   return (
     <WindowSizeProvider>
@@ -31,7 +32,7 @@ export default async function SiteLayout({
         <ContactDialogProvider
           formCopy={contactFormCopy}
           privacyCopy={privacyCopy}
-          locale={locale}
+          closeLabel={closeLabel}
         >
           <SkipNavContent id="body">{children}</SkipNavContent>
         </ContactDialogProvider>
