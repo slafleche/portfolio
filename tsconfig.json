@@ -1,34 +1,36 @@
 {
-	"compilerOptions": {
-		"types": [
-			"node",
-			"next"
-		],
-		"target": "ESNext",
-		"module": "ESNext",
-		"moduleResolution": "bundler",
-		"jsx": "preserve",
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"sourceMap": true,
-		"baseUrl": "src",
-		"resolveJsonModule": true,
-		"paths": { "@/*": [
-				"*"
-			] },
-		"lib": [
-			"dom",
-			"dom.iterable",
-			"esnext"
-		],
-		"allowJs": true,
-		"noEmit": true,
-		"incremental": true,
-		"isolatedModules": true,
-		"allowImportingTsExtensions": true,
-		"verbatimModuleSyntax": true,
+  "compilerOptions": {
+    "types": [
+      "node",
+      "next"
+    ],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true,
+    "baseUrl": "src",
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": [
+        "*"
+      ]
+    },
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
     "plugins": [
       {
         "name": "next"
@@ -41,10 +43,11 @@
     "src/**/*",
     "tests/**/*",
     ".next/types/**/*.ts",
-    "types/**/*.d.ts"
+    "types/**/*.d.ts",
+    ".next/dev/types/**/*.ts"
   ],
-	"exclude": [
-		"node_modules",
-		"dist"
-	]
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

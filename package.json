@@ -88,7 +88,7 @@
     "fonts:urls": "tsx scripts/generateFontUrls.ts",
     "fonts": "yarn fonts:chars && yarn fonts:urls",
     "font:smoketest": "VERIFY_FONT_URLS=true yarn fonts:urls",
-    "dev": "DEBUG_VE=1 node scripts/devWithDebug.mjs",
+    "dev": "DEBUG_VE=1 node scripts/devWithDebug.mjs --webpack",
     "prebuild": "yarn copy:html && MINIFY=1 yarn fonts",
     "build": "next build",
     "start": "next start",

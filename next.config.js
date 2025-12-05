@@ -22,9 +22,19 @@ const nextConfig = {
 			process.env.NEXT_PUBLIC_MEASUREMENT_DEBUG ??
 			(isDev ? '1' : '0'),
 	},
+	turbopack: {},
 	webpack(config) {
-		// keep your alias
-		config.resolve.alias['@'] = path.resolve(__dirname, 'src');
+		config.resolve.alias = {
+			...(config.resolve.alias ?? {}),
+			'css-calipers': path.resolve(
+				__dirname,
+				'node_modules',
+				'css-calipers',
+				'dist',
+				'cjs',
+				'index.js',
+			),
+		};
 
 		if (
 			!config.module.rules.some((rule) =>
