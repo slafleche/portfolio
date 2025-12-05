@@ -75,7 +75,7 @@
     "*.{js,jsx,ts,tsx,mjs}": [
       "prettier --write",
       "eslint --fix",
-      "node scripts/checkLintRules.mjs"
+      "node scripts/checkLintRules.mjs --plain"
     ]
   },
   "packageManager": "yarn@4.11.0",
@@ -94,6 +94,7 @@
     "start": "next start",
     "lint:locales": "yarn locales:markdown && tsx scripts/checkLocaleMarkdown.ts",
     "lint": "eslint .",
+    "lint:rules": "LINT_RULES_ALL=1 node scripts/checkLintRules.mjs --human",
     "lint:fix": "eslint --fix .",
     "format:code": "prettier --write .",
     "format:svg": "prettier --no-config --parser html \"src/assets/**/*.{svg,SVG}\" --write",
