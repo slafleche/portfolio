@@ -153,7 +153,7 @@ export const bridge = style({
 //       size: undefined,
 //     },
 //   }),
-//   fontSize: m(26).css(),
+//   fontSize: '26px',
 //   lineHeight: 1,
 //   textShadow: `2px 2px 5px ${colorVars.black.css()}`,
 //   ...margins({
@@ -163,27 +163,27 @@ export const bridge = style({
 // });
 
 export const cta = style({
-  marginTop: m(16).css(),
+  marginTop: '16px',
   display: 'inline-flex',
   alignItems: 'center',
-  gap: m(3).css(),
+  gap: '3px',
   justifyContent: 'center',
   alignSelf: 'center',
-  padding: `${m(3).css()} ${m(6).css()}`,
-  borderRadius: m(3).css(),
+  padding: '3px 6px',
+  borderRadius: '3px',
   backgroundColor: colorVars.white.alpha(0.85).css(),
   color: colorVars.navBg.css(),
   fontWeight: 600,
   textDecoration: 'none',
   transition:
     'transform 150ms ease, box-shadow 150ms ease, opacity 220ms ease',
-  boxShadow: `0 ${m(1).css()} ${m(4).css()} rgba(0,0,0,0.15)`,
+  boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
   opacity: 0,
   pointerEvents: 'none',
   selectors: {
     '&:hover, &:focus-visible': {
       transform: 'translateY(-2px)',
-      boxShadow: `0 ${m(2).css()} ${m(8).css()} rgba(0,0,0,0.25)`,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
       outline: 'none',
     },
     '&[data-ready="true"]': {
@@ -194,8 +194,8 @@ export const cta = style({
 });
 
 export const ctaIcon = style({
-  width: m(14).css(),
-  height: m(14).css(),
+  width: '14px',
+  height: '14px',
   transition: 'transform 160ms ease',
   selectors: {
     [`${cta}:hover &`]: {
