@@ -52,10 +52,10 @@ export const panel = style({
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  padding: `${m(14).css()} ${m(10).css()}`,
+  padding: '14px 10px',
   background:
     'linear-gradient(180deg, rgba(20,16,48,0.94) 0%, rgba(15,11,36,0.92) 100%)',
-  boxShadow: `0 ${m(3).css()} ${m(12).css()} ${colorVars.black.alpha(0.4).css()}`,
+  boxShadow: `0 3px 12px ${colorVars.black.alpha(0.4).css()}`,
   borderRadius: 0,
   height: '100%',
   overflowY: 'auto',
@@ -68,7 +68,7 @@ export const panelContent = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'stretch',
-  gap: m(6).css(),
+  gap: '6px',
 });
 
 export const heading = style({
@@ -79,7 +79,7 @@ export const heading = style({
 });
 
 export const body = style({
-  marginTop: m(4).css(),
+  marginTop: '4px',
   ...composeFontVariantStyles(fontVariants.body),
   color: colorVars.white.alpha(0.9).css(),
   maxWidth: '70ch',
@@ -89,9 +89,9 @@ export const body = style({
 
 export const closeButton = style({
   position: 'sticky',
-  top: m(6).css(),
-  marginTop: m(4).css(),
-  marginBottom: m(4).css(),
+  top: '6px',
+  marginTop: '4px',
+  marginBottom: '4px',
   padding: 0,
   alignSelf: 'flex-end',
   width: glassyButtonTokens.size.css(),
@@ -167,5 +167,5 @@ export const closeButton = style({
 });
 
 globalStyle(`.${panel} p`, {
-  margin: `${m(3).css()} 0`,
+  margin: '3px 0',
 });

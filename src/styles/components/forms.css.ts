@@ -166,7 +166,7 @@ export const statusText = style({
 });
 
 export const statusWrapper = style({
-  minHeight: m(6).css(),
+  minHeight: '6px',
   transition: 'opacity 220ms ease, transform 220ms ease',
   opacity: 1,
   transform: 'translateY(0)',
@@ -319,7 +319,7 @@ export const privacyDialog = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: `${m(8).css()} ${m(6).css()}`,
+  padding: '8px 6px',
   zIndex: 1101,
 });
 
@@ -327,11 +327,11 @@ export const privacyPanel = style({
   position: 'relative',
   width: 'min(70ch, 90vw)',
   maxHeight: '80vh',
-  padding: `${m(12).css()} ${m(11).css()}`,
+  padding: '12px 11px',
   ...borders(formTokens.field.borders),
   backgroundColor: colorVars.bodyBg.css(),
   color: colorVars.bodyFg.css(),
-  boxShadow: `0 ${m(3).css()} ${m(12).css()} ${colorVars.black.alpha(0.35).css()}`,
+  boxShadow: `0 3px 12px ${colorVars.black.alpha(0.35).css()}`,
   overflowY: 'auto',
   display: 'grid',
   gap: formTokens.layout.fieldGap.css(),
@@ -356,8 +356,8 @@ export const privacyBody = style({
 
 export const privacyCloseIcon = style({
   position: 'absolute',
-  top: m(4).css(),
-  right: m(4).css(),
+  top: '4px',
+  right: '4px',
   width: glassyButtonTokens.iconSize.css(),
   height: glassyButtonTokens.iconSize.css(),
   ...borders(glassyButtonTokens.borders),
@@ -415,7 +415,7 @@ const toastBase: ComplexStyleRule = {
   gap: formTokens.layout.fieldGap.css(),
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
-  boxShadow: `0 ${m(4).css()} ${m(14).css()} ${colorVars.black
+  boxShadow: `0 4px 14px ${colorVars.black
     .alpha(0.35)
     .css()}`,
   pointerEvents: 'auto',
@@ -467,8 +467,8 @@ export const toastClose = style({
 
 export const toastViewport = style({
   position: 'fixed',
-  bottom: m(6).css(),
-  right: m(6).css(),
+  bottom: '6px',
+  right: '6px',
   width: 'min(320px, calc(100vw - 32px))',
   display: 'flex',
   flexDirection: 'column',
@@ -484,15 +484,15 @@ export const successPanel = style({
   gap: formTokens.layout.fieldGap.css(),
   justifyItems: 'center',
   textAlign: 'center',
-  padding: `${m(24).css()} ${m(12).css()}`,
+  padding: '24px 12px',
   borderRadius: formTokens.field.borders.radius.css(),
   ...backgrounds(formTokens.status.success.backgrounds),
   ...borders(formTokens.status.success.borders),
 });
 
 export const successIconWrapper = style({
-  width: m(64).css(),
-  height: m(64).css(),
+  width: '64px',
+  height: '64px',
   borderRadius: '50%',
   backgroundColor: formTokens.successPanel.icon.background.css(),
   display: 'flex',
@@ -501,14 +501,14 @@ export const successIconWrapper = style({
 });
 
 export const successIcon = style({
-  width: m(36).css(),
-  height: m(36).css(),
+  width: '36px',
+  height: '36px',
   color: formTokens.successPanel.icon.color.css(),
 });
 
 export const successCopy = style({
   display: 'grid',
-  gap: m(8).css(),
+  gap: '8px',
   maxWidth: '32ch',
 });
 

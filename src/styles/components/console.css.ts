@@ -29,7 +29,7 @@ export const root = style({
 export const header = style({
   display: 'flex',
   alignItems: 'center',
-  gap: m(6).css(),
+  gap: '6px',
   ...paddings({
     vertical: m(10),
     horizontal: m(16),
@@ -39,8 +39,8 @@ export const header = style({
 });
 
 export const windowDot = style({
-  width: m(10).css(),
-  height: m(10).css(),
+  width: '10px',
+  height: '10px',
   borderRadius: '50%',
   backgroundColor: '#ff5f56',
   selectors: {
@@ -55,7 +55,7 @@ export const windowDot = style({
 
 export const title = style({
   marginLeft: 'auto',
-  fontSize: m(14).css(),
+  fontSize: '14px',
   fontFamily: consoleFontStack,
   color: colorVars.white.alpha(0.5).css(),
 });
@@ -63,9 +63,9 @@ export const title = style({
 export const body = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: m(6).css(),
+  gap: '6px',
   fontFamily: consoleFontStack,
-  fontSize: m(16).css(),
+  fontSize: '16px',
   lineHeight: 1.6,
   flexGrow: 1,
   ...paddings({ all: m(18) }),
@@ -78,7 +78,7 @@ export const body = style({
 export const line = style({
   display: 'grid',
   gridTemplateColumns: 'auto 1fr',
-  gap: m(12).css(),
+  gap: '12px',
   alignItems: 'baseline',
   color: colorVars.white.alpha(0.4).css(),
 });

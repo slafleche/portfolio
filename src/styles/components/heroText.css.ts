@@ -17,9 +17,9 @@ export const container = style({
 export const backdrop = style({
   position: 'absolute',
   zIndex: 0,
-  inset: `0 ${m(-16).css()}`,
+  inset: '0 -16px',
   margin: '0 auto',
-  borderRadius: m(28).css(),
+  borderRadius: '28px',
   backgroundColor: colorVars.black.alpha(0).css(),
   pointerEvents: 'none',
   transition: 'none',
