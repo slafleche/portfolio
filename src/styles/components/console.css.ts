@@ -1,8 +1,9 @@
 import { style } from '@vanilla-extract/css';
 import { colorVars, consoleVars } from '../../tokens/global.tokens';
-import { m } from 'css-calipers';
 import { paddings } from '../helpers/spacing.helper';
+import { backgrounds } from '../helpers/background.helper';
 import { boxShadow } from '../helpers/shadow.helper';
+import { m } from 'css-calipers';
 
 const consoleFontStack = `"JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", monospace`;
 
@@ -42,13 +43,13 @@ export const windowDot = style({
   width: '10px',
   height: '10px',
   borderRadius: '50%',
-  backgroundColor: '#ff5f56',
+  ...backgrounds({ color: '#ff5f56' }),
   selectors: {
     '&[data-variant="warn"]': {
-      backgroundColor: '#ffbd2e',
+      ...backgrounds({ color: '#ffbd2e' }),
     },
     '&[data-variant="success"]': {
-      backgroundColor: '#27c93f',
+      ...backgrounds({ color: '#27c93f' }),
     },
   },
 });
