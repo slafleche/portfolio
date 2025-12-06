@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { assertUnit } from 'css-calipers';
 import { chevronVars, colorVars } from '../../tokens/global.tokens';
-// import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 
 if (process.env.NODE_ENV !== 'production') {
