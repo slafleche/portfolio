@@ -1,6 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { paddings, margins } from './helpers/spacing.helper';
-import borders from './helpers/borders.helper';
+import borders from '@/styles/helpers/borders.config';
 import { backgrounds } from './helpers/background.helper';
 import { color } from './helpers/colorWrap.helper';
 import { outlines } from './helpers/outlines.helper';

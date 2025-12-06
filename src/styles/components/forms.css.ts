@@ -10,7 +10,7 @@ import {
   glassVars,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
-import borders from '../helpers/borders.helper';
+import borders from '@/styles/helpers/borders.config';
 import { boxShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';

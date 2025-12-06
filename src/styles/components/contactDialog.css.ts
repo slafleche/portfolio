@@ -9,7 +9,7 @@ import {
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
-import borders from '../helpers/borders.helper';
+import borders from '@/styles/helpers/borders.config';
 import { backgrounds } from '../helpers/background.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
 
