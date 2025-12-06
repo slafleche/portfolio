@@ -95,6 +95,19 @@ export type ValidationResult = {
   status: FormStatusKey | null;
 };
 
+// Error ownership summary (kept here as a guide for formCopy/formValidation epics):
+// - Name: handles 'empty', 'too_short', 'too_long' reasons and maps them to
+//   user-facing "required" vs "too long" messages via NameBlockLocale.errors.
+// - Email: handles 'empty', 'invalid' reasons and maps them to the
+//   "invalid email" message via EmailBlockLocale.errors.invalid.
+// - Message: handles 'empty', 'too_short', 'too_long', 'too_many_links' reasons
+//   and maps them to "required", "too short (with {min})", "too long", and
+//   "too many links" messages via MessageBlockLocale.errors, plus helper/counter
+//   text for remaining characters and URL usage.
+// - Token (Turnstile): handles 'missing' (and, via status, expired/error)
+//   reasons and maps them to TurnstileBlockLocale.summary/status messages.
+// - Honeypot: has no user-facing errors; it only acts as a silent spam gate.
+
 export function evaluateNameField(
   value: string | null | undefined,
 ): NameFieldData {
