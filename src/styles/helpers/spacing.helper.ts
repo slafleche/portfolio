@@ -1,4 +1,4 @@
-import { isMeasurement } from 'css-calipers';
+import { isMeasurement, m } from 'css-calipers';
 import type { AxisValues, SpacingKeyword, SpacingValue } from './types.helper';
 
 const SPACING_KEYWORDS = new Set<SpacingKeyword>([
@@ -10,35 +10,50 @@ const SPACING_KEYWORDS = new Set<SpacingKeyword>([
   'revert-layer',
 ]);
 
+const defaultSpacing = (): SpacingFourSides => ({
+  top: m(0),
+  right: m(0),
+  bottom: m(0),
+  left: m(0),
+});
+
+/**
+ * SpacingProps:
+ * - Prefer `all` when every side shares the same spacing.
+ * - Prefer `vertical` when top/bottom are the same.
+ * - Prefer `horizontal` when left/right are the same.
+ * - Use explicit `top`/`right`/`bottom`/`left` only for asymmetrical cases.
+ */
 export type SpacingProps = AxisValues<SpacingValue>;
 export type SpacingInput = SpacingProps | undefined;
+export type SpacingFourSides = {
+  top: SpacingValue;
+  right: SpacingValue;
+  bottom: SpacingValue;
+  left: SpacingValue;
+};
 
 const isSpacingKeyword = (value: unknown): value is SpacingKeyword =>
   typeof value === 'string' && SPACING_KEYWORDS.has(value as SpacingKeyword);
 
-// IMeasurement → .css(), keyword passthrough
-const toCssLen = (v?: SpacingValue): string | undefined => {
-  if (v == null) return undefined;
+const spacingToCss = (v: SpacingValue): string => {
   if (isMeasurement(v)) return v.css();
   if (isSpacingKeyword(v)) return v;
-  return undefined;
+  throw new Error(
+    '[spacing] Expected a css-calipers measurement value or approved spacing keyword (auto, inherit, initial, unset, revert, revert-layer).',
+  );
 };
 
-const resolve = (value: SpacingValue | undefined, fallback: string): string => {
-  if (value === undefined) return fallback;
-  const out = toCssLen(value);
-  if (typeof out === 'string') return out;
-
-  const msg = [
-    '[spacing] Expected a css-calipers measurement value or approved spacing keyword (auto, inherit, initial, unset, revert, revert-layer).',
-    'Pass scalar lengths via measurement helpers (e.g., m(8)) or use the spacing helpers (`paddings`, `margins`) instead of raw strings.',
-  ].join(' ');
-
-  if (process.env.NODE_ENV !== 'production') {
-    throw new Error(msg);
+const resolve = (
+  candidates: Array<SpacingValue | undefined>,
+  fallback: SpacingValue,
+): string => {
+  for (const candidate of candidates) {
+    if (candidate !== undefined) {
+      return spacingToCss(candidate);
+    }
   }
-  console.warn(msg);
-  return fallback;
+  return spacingToCss(fallback);
 };
 
 const normalize = (input?: SpacingInput): SpacingProps | undefined => {
@@ -58,23 +73,13 @@ const normalize = (input?: SpacingInput): SpacingProps | undefined => {
 };
 
 const spacing = (input?: SpacingInput): string => {
+  const defaults = defaultSpacing();
   const props = normalize(input);
-  const base = resolve(props?.all, '0');
 
-  const verticalBase =
-    props?.vertical !== undefined
-      ? resolve(props.vertical, base)
-      : base;
-
-  const horizontalBase =
-    props?.horizontal !== undefined
-      ? resolve(props.horizontal, base)
-      : base;
-
-  const topSpacing = resolve(props?.top, verticalBase);
-  const rightSpacing = resolve(props?.right, horizontalBase);
-  const bottomSpacing = resolve(props?.bottom, verticalBase);
-  const leftSpacing = resolve(props?.left, horizontalBase);
+  const topSpacing = resolve([props?.top, props?.vertical, props?.all], defaults.top);
+  const rightSpacing = resolve([props?.right, props?.horizontal, props?.all], defaults.right);
+  const bottomSpacing = resolve([props?.bottom, props?.vertical, props?.all], defaults.bottom);
+  const leftSpacing = resolve([props?.left, props?.horizontal, props?.all], defaults.left);
 
   const allEqual =
     topSpacing === rightSpacing &&
