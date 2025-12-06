@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import type { ChangeEventHandler, FocusEventHandler } from 'react';
+import type { ChangeEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';

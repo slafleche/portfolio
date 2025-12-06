@@ -1,4 +1,6 @@
 import type { CSSProperties } from 'react';
+import { m } from 'css-calipers';
+import borders from '@/styles/helpers/borders.helper';
 import { resolveLocale } from '@/lib/locales/locale';
 import { enAbbreviations } from '@/lib/locales/translations/abbreviations/en.abbr';
 import { frAbbreviations } from '@/lib/locales/translations/abbreviations/fr.abbr';
@@ -76,7 +78,10 @@ const pageStyles: Record<string, CSSProperties> = {
     margin: 0,
   },
   table: {
-    border: '1px solid rgba(245,240,255,0.2)',
+    ...borders.all({
+      width: m(1),
+      color: 'rgba(245,240,255,0.2)',
+    }),
     borderRadius: 16,
     overflow: 'hidden',
   },
@@ -91,23 +96,35 @@ const pageStyles: Record<string, CSSProperties> = {
   },
   headerCell: {
     padding: '12px 16px',
-    borderRight: '1px solid rgba(255,255,255,0.08)',
+    ...borders.right({
+      width: m(1),
+      color: 'rgba(255,255,255,0.08)',
+    }),
   },
   row: {
     display: 'grid',
     gridTemplateColumns: '220px 1fr 1fr',
-    borderTop: '1px solid rgba(255,255,255,0.08)',
+    ...borders.top({
+      width: m(1),
+      color: 'rgba(255,255,255,0.08)',
+    }),
     backgroundColor: 'rgba(7,5,14,0.9)',
   },
   slugCell: {
     padding: '16px',
-    borderRight: '1px solid rgba(255,255,255,0.08)',
+    ...borders.right({
+      width: m(1),
+      color: 'rgba(255,255,255,0.08)',
+    }),
     fontFamily: '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
     fontSize: 13,
   },
   localeCell: {
     padding: '16px',
-    borderRight: '1px solid rgba(255,255,255,0.08)',
+    ...borders.right({
+      width: m(1),
+      color: 'rgba(255,255,255,0.08)',
+    }),
     minHeight: 120,
     display: 'flex',
     flexDirection: 'column',

@@ -37,6 +37,18 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   field to an established type), follow the existing pattern without re-
   approving the building blocks.
 
+## File freshness and edits (`file-freshness`)
+
+- Must: Before editing any existing non-generated file that has been mentioned
+  in this chat or is currently active in the IDE, re-read its current contents
+  in this session and base changes only on that latest version, not on any
+  earlier in-memory snapshot.
+- Should: Prefer small, targeted patches over whole-file rewrites unless the
+  user explicitly asks for a larger refactor or restructure.
+- Must: Before editing any markdown file (`*.md`), re-read the full file
+  contents in this chat session (even if you saw it earlier) and treat that as
+  the single source of truth for your edits.
+
 ## Approval-required actions
 
 - Must: Ask for confirmation before invasive refactors, API changes, or
@@ -92,3 +104,10 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   role’s behavior for the chat in addition to these rules. When a role tag is
   active, treat that role as active for the chat until the user explicitly
   switches hats. Can be reset to nothing with `#none`
+- Must: When the user deletes or asks to delete a section, heading, or list
+  item in a markdown file, do not reintroduce that content (or a similar
+  replacement) in later edits unless the user clearly requests it again in the
+  current chat.
+- Should: If you believe a removed markdown section is still useful (for
+  example, a checklist or plan), propose the new structure in chat and wait for
+  explicit approval instead of silently restoring it.
