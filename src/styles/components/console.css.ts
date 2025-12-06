@@ -2,8 +2,9 @@ import { style } from '@vanilla-extract/css';
 import { colorVars, consoleVars } from '../../tokens/global.tokens';
 import { paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
+import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 
 const consoleFontStack = `"JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", monospace`;
 
@@ -42,7 +43,7 @@ export const header = style({
 export const windowDot = style({
   width: '10px',
   height: '10px',
-  borderRadius: '50%',
+  ...borders({ radius: mPercent(50) }, { allowRadiusOnly: true }),
   ...backgrounds({ color: '#ff5f56' }),
   selectors: {
     '&[data-variant="warn"]': {

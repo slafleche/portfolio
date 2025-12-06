@@ -2,12 +2,12 @@
 
 ## Primer
 
-- Goal: capture high-value regression suites before extracting MeasurementKit
-  (MK) and friends into a shared library.
+- Goal: capture high-value regression suites around shared helpers before and
+  after extracting the measurement layer into the `css-calipers` library.
 - Focus: pure helpers (measurement math, typography, color/shadow utilities),
   validation logic, and new `/api/contact` endpoint behaviours.
-- Tooling: Vitest for unit suites (MK, typography, helpers), React Testing
-  Library for component-level validation checks, and
+- Tooling: Vitest for unit suites (measurement helpers, typography, helpers),
+  React Testing Library for component-level validation checks, and
   `next-test-api-route-handler` for exercising API routes without booting a
   server.
 - Philosophy: prefer fast unit tests for deterministic helpers, complement with
@@ -52,6 +52,13 @@
       closes/reopens; also verify focus returns to the trigger and that toast
       helpers don’t double-announce status messages once they land. This is the
       last mile to claim end-to-end coverage of the dialog UX.
+ - [ ] Contact form copy ownership
+   - [ ] Assert `ContactForm` renders each block (Name, Email, Message,
+         Turnstile, Honeypot) with its own block copy object, never reading
+         field-level labels or errors directly from `ContactFormCopy`.
+   - [ ] Assert `ContactFormCopy` no longer exposes any field-level error
+         strings, only form-level heading/success/submit/privacy/status/countdown
+         plus the `blocks` bundle.
 
 ## Bucket — Middleware & Debug Guards
 
@@ -64,4 +71,3 @@
 - [ ] Locale switcher persistence: after toggling locales via the menu, confirm
       the middleware preserves the current canonical path (systems/home/debug)
       rather than kicking users back to `/[locale]`.
-
