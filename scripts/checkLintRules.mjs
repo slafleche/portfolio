@@ -28,22 +28,40 @@ const FORBIDDEN_PATTERNS = [
     id: 'border-inline',
     groupTitle: 'No raw border properties in styles.',
     solution:
-      'Use borders(...) helper instead of raw border/borderRadius values.',
-    regex: /border(?:Radius)?\s*:\s*['"]/,
+      'Use borders(...) helper instead of raw border/borderRadius or side-specific border values.',
+    regex:
+      /border(?:Radius|Top|Right|Bottom|Left)?\s*:\s*['"]/,
   },
   {
     id: 'padding-inline',
     groupTitle: 'No raw padding values in styles.',
     solution:
       'Use paddings(...) helper instead of raw padding values.',
-    regex: /padding\s*:\s*['"]/,
+    regex:
+      /padding(?:Top|Right|Bottom|Left)?\s*:\s*['"]/,
   },
   {
     id: 'margin-inline',
     groupTitle: 'No raw margin values in styles.',
     solution:
       'Use margins(...) helper instead of raw margin values.',
-    regex: /margin\s*:\s*['"]/,
+    regex:
+      /margin(?:Top|Right|Bottom|Left)?\s*:\s*['"]/,
+  },
+  {
+    id: 'box-shadow-inline',
+    groupTitle: 'No raw boxShadow values in styles.',
+    solution:
+      'Use boxShadow(...) helper or token-driven boxShadows instead of raw boxShadow strings.',
+    regex: /boxShadow\s*:\s*['"`]/,
+  },
+  {
+    id: 'backdrop-filter-inline',
+    groupTitle: 'No raw backdrop-filter values in styles.',
+    solution:
+      'Use backdropFilters.style(...) helper instead of raw backdropFilter/WebkitBackdropFilter strings.',
+    regex:
+      /(backdropFilter|WebkitBackdropFilter)\s*:\s*['"`]/,
   },
 ];
 
@@ -84,6 +102,24 @@ const MEASUREMENT_RULES = [
     // Match m(<number>[, 'unit']) .css(…) to catch trivial literal usage,
     // but allow m(variable, …).css() helpers like addDeg.
     regex: /m\(\s*\d+(?:\.\d+)?(?:\s*,\s*['"][^'"]+['"])?\s*\)\.css\(/,
+  },
+  {
+    id: 'measurement-helper-m-literal',
+    groupTitle: 'Do not pass m(...) directly into style helpers.',
+    solution:
+      'Use tokens or measurement variables (or plain CSS strings where helpers are not required); do not call m(...) inline when calling paddings/margins/borders/backgrounds/boxShadow/backdropFilters.',
+    pattern: 'src/styles',
+    regex:
+      /\b(?:paddings|margins|borders|backgrounds|boxShadow|backdropFilters(?:\.style)?)\b[^;\n]*\bm\(/,
+  },
+  {
+    id: 'measurement-helper-m-literal',
+    groupTitle: 'Do not pass m(...) directly into style helpers.',
+    solution:
+      'Use tokens or measurement variables (or plain CSS strings where helpers are not required); do not call m(...) inline when calling paddings/margins/borders/backgrounds/boxShadow/backdropFilters.',
+    pattern: 'app/',
+    regex:
+      /\b(?:paddings|margins|borders|backgrounds|boxShadow|backdropFilters(?:\.style)?)\b[^;\n]*\bm\(/,
   },
 ];
 

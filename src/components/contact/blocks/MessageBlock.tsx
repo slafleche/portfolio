@@ -1,5 +1,4 @@
 import { useId, useMemo, useRef, useState } from 'react';
-import type { ChangeEventHandler } from 'react';
 import clsx from 'clsx';
 import { TextareaInput } from '@/components/contact/primitives/TextareaInput';
 import { FormHint } from '@/components/contact/primitives/FormHint';

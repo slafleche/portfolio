@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import borders from '@/styles/helpers/borders.helper';
+import borders from '@/styles/helpers/borders.config';
 import { m } from 'css-calipers';
 import { color } from '@/styles/helpers/colorWrap.helper';
 import { colorVars } from '@/tokens/global.tokens';
@@ -21,6 +21,16 @@ describe('borders.helper', () => {
     });
     expect(result.borderWidth).toBe('2px 2px 2px 0px');
     expect(result.borderStyle).toBe('dashed');
+    expect(result.borderColor).toBe('red');
+  });
+
+  it('prefers top-level shorthand for all edges', () => {
+    const result = borders({
+      width: m(1),
+      color: 'red',
+    });
+    expect(result.borderWidth).toBe('1px');
+    expect(result.borderStyle).toBe('solid');
     expect(result.borderColor).toBe('red');
   });
 
