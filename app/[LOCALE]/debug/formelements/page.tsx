@@ -1,14 +1,23 @@
 'use client';
 
+import { m } from 'css-calipers';
+import { paddings, margins } from '@/styles/helpers/spacing.helper';
+
 // Debug sandbox: inline every bit of styling so we don't share space with "real" styles.
 // No shared CSS, no production polish—just enough layout to preview primitives in isolation.
 
 // import { useCallback, useMemo, useRef } from 'react';
 
 const rootStyle = {
-  padding: '32px 16px',
+  ...paddings({
+    vertical: m(32),
+    horizontal: m(16),
+  }),
   maxWidth: 1200,
-  margin: '0 auto',
+  ...margins({
+    vertical: m(0),
+    horizontal: 'auto',
+  }),
 } as const;
 
 // const gridStyle = {

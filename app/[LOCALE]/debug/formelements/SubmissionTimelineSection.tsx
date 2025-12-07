@@ -136,21 +136,19 @@ const codeStyle: CSSProperties = {
     vertical: m(2),
     horizontal: m(6),
   }),
-  borderRadius: '6px',
   ...backgrounds({ color: 'rgba(255,255,255,0.08)' }) as CSSProperties,
   ...borders({
+    radius: m(6),
       width: m(1),
       color: 'rgba(255,255,255,0.12)',
   }),
 };
 
 const formContainerStyle: CSSProperties = {
-  borderRadius: 18,
   ...borders({
-    all: {
+    radius: m(18),
       width: m(1),
       color: 'rgba(245,240,255,0.18)',
-    },
   }),
   ...paddings({ all: m(24) }),
   ...backgrounds({ color: 'rgba(6,4,18,0.75)' }) as CSSProperties,
