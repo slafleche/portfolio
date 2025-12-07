@@ -4,7 +4,12 @@ import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { findMeasurementAliasViolations } from './measurementAliasesCheck.mjs';
-import { DEBUG_TOKEN_WHITELISTS } from './lint/debugTokens.config.mjs';
+import {
+  DEBUG_TOKEN_WHITELISTS,
+  LINT_FILE_IGNORE_SUBSTRINGS,
+  STYLE_RULE_SKIP_PATHS,
+  STYLE_LITERAL_RESETS,
+} from './lint/debugTokens.config.mjs';
 
 const ROOT = path.resolve(process.cwd());
 
@@ -175,12 +180,11 @@ function readFile(filePath) {
 function scanPatterns(filePath, content) {
   const posix = filePath.split(path.sep).join('/');
 
-  // Skip raw CSS property checks for token/config and built artifact files.
+  // Skip raw CSS property checks for token/config and built artefact files.
   // These are not style-layer sources and may legitimately use keys like
   // "background" or "border" in non-CSS contexts.
   if (
-    posix.startsWith('src/tokens/') ||
-    posix === 'public/main.js'
+    STYLE_RULE_SKIP_PATHS.some((prefix) => posix.startsWith(prefix))
   ) {
     return [];
   }
@@ -188,39 +192,13 @@ function scanPatterns(filePath, content) {
   const violations = [];
   const lines = content.split('\n');
   for (const rule of FORBIDDEN_PATTERNS) {
+    const literalResets = STYLE_LITERAL_RESETS[rule.id] ?? [];
     for (let index = 0; index < lines.length; index += 1) {
       const line = lines[index];
        const trimmed = line.trim();
        if (trimmed.startsWith('//')) continue;
       if (!rule.regex.test(line)) continue;
-
-      // Allow plain background resets (`background: 'none'` / "none") while
-      // still flagging all other raw background usages.
-      if (rule.id === 'background-inline') {
-        const isPlainBackgroundNone =
-          /\bbackground\s*:\s*['"]none['"]/.test(line) &&
-          !/\bbackgroundColor\b/.test(line);
-        if (isPlainBackgroundNone) continue;
-      }
-
-      // Allow plain border resets (`border: 'none'` / "none") while still
-      // flagging all other raw border usages.
-      if (rule.id === 'border-inline') {
-        const isPlainBorderNone =
-          /\bborder\s*:\s*['"]none['"]/.test(line) &&
-          !/\bborder(?:Top|Right|Bottom|Left|Radius)\b/.test(line);
-        const isRadiusInherit =
-          /\bborderRadius\s*:\s*['"]inherit['"]/.test(line);
-        if (isPlainBorderNone || isRadiusInherit) continue;
-      }
-
-      // Allow plain box-shadow resets (`boxShadow: 'none'` / "none") while
-      // still flagging all other raw boxShadow usages.
-      if (rule.id === 'box-shadow-inline') {
-        const isPlainBoxShadowNone =
-          /\bboxShadow\s*:\s*['"]none['"]/.test(line);
-        if (isPlainBoxShadowNone) continue;
-      }
+      if (literalResets.some((predicate) => predicate(line))) continue;
 
       const lineNumber = index + 1;
       violations.push({
@@ -405,7 +383,12 @@ function main() {
 
   const violations = [];
   for (const relativePath of targetFiles) {
-    if (relativePath.includes('.bak.')) continue;
+    if (
+      LINT_FILE_IGNORE_SUBSTRINGS.some((marker) =>
+        relativePath.includes(marker),
+      )
+    )
+      continue;
     const ext = path.extname(relativePath).toLowerCase();
     if (!['.ts', '.tsx', '.js', '.jsx', '.mjs'].includes(ext)) continue;
     const fullPath = path.join(ROOT, relativePath);
