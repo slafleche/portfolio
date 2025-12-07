@@ -1,3 +1,46 @@
+// Global lint-rule configuration and per-page exceptions.
+// This file is the source of truth for:
+// - Files that should be ignored entirely by lint guardrails.
+// - Paths where raw CSS property rules are skipped (tokens, generated).
+// - Literal reset values that are allowed even though they look like
+//   "raw" CSS strings (e.g. border: 'none').
+// - Per-page token import whitelists for debug sandboxes.
+
+// Files to skip entirely (matched by substring in the relative path).
+export const LINT_FILE_IGNORE_SUBSTRINGS = ['.bak.'];
+
+// Paths where raw CSS property checks (background/border/padding/margin/
+// boxShadow/backdropFilter) are not applied because they are config or
+// generated artefacts rather than style-layer sources.
+export const STYLE_RULE_SKIP_PATHS = ['src/tokens/', 'public/main.js'];
+
+// Literal reset values that are allowed for specific inline style rules.
+// Keys are rule ids from FORBIDDEN_PATTERNS in checkLintRules.mjs.
+// Each entry is an array of predicates that return true when a line
+// should be treated as an allowed reset for that rule.
+export const STYLE_LITERAL_RESETS = {
+  'background-inline': [
+    // Allow plain background resets (`background: 'none'`) but not
+    // backgroundColor, which must still use helpers.
+    (line) =>
+      /\bbackground\s*:\s*['"]none['"]/.test(line) &&
+      !/\bbackgroundColor\b/.test(line),
+  ],
+  'border-inline': [
+    // Allow plain border resets (`border: 'none'`) but not side-specific
+    // or radius shorthands, which must still use helpers.
+    (line) =>
+      /\bborder\s*:\s*['"]none['"]/.test(line) &&
+      !/\bborder(?:Top|Right|Bottom|Left|Radius)\b/.test(line),
+    // Allow inherit for radius, since it does not define a new shape.
+    (line) => /\bborderRadius\s*:\s*['"]inherit['"]/.test(line),
+  ],
+  'box-shadow-inline': [
+    // Allow plain box-shadow resets (`boxShadow: 'none'`).
+    (line) => /\bboxShadow\s*:\s*['"]none['"]/.test(line),
+  ],
+};
+
 // Per-page token import whitelists for debug sandboxes.
 // Each entry documents a single debug page that is allowed to import
 // specific token modules from "@/tokens/*", and why.
