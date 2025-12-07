@@ -9,13 +9,8 @@ must not leak into production behaviour.
   `src/tokens` as part of work on files under `app/[LOCALE]/debug/`.
 - Must: By default, do not import tokens (`@/tokens/...`) into debug pages.
 - May: When a specific debug sandbox genuinely needs to inspect real token
-  values (for example, to visualise form layouts), you may whitelist token
-  imports for that page explicitly in this file; do not introduce new token
-  imports from debug pages without adding or updating a whitelist entry.
+  values (for example, to visualise favicon themes or form layouts), you may
+  whitelist token imports for that page. Each whitelist is per-page and must
+  be kept in sync between this file (for humans) and
+  `scripts/lint/debugTokens.config.mjs` (for the lint guardrails).
 
-### Whitelisted token imports
-
-- `app/[LOCALE]/debug/formelements/SubmissionTimelineSection.tsx`
-  - Allowed imports only:
-    - `formTokens` from `@/tokens/forms.tokens`
-    - `glassyButtonTokens` from `@/tokens/glassy.tokens`

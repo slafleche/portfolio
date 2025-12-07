@@ -4,6 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { findMeasurementAliasViolations } from './measurementAliasesCheck.mjs';
+import { DEBUG_TOKEN_WHITELISTS } from './lint/debugTokens.config.mjs';
 
 const ROOT = path.resolve(process.cwd());
 
@@ -235,19 +236,36 @@ function scanPatterns(filePath, content) {
 function scanImports(filePath, content) {
   const violations = [];
   const posix = filePath.split(path.sep).join('/');
+  const debugTokenConfig = DEBUG_TOKEN_WHITELISTS.find(
+    (entry) => entry.filePath === posix,
+  );
   for (const block of LAYER_IMPORT_BLOCKS) {
     if (!posix.includes(block.pattern)) continue;
     const lines = content.split('\n');
     for (let index = 0; index < lines.length; index += 1) {
       const line = lines[index];
-      if (block.regex.test(line)) {
-        const lineNumber = index + 1;
-        violations.push({
-          filePath,
-          lineNumber,
-          rule: block,
-        });
+      if (!block.regex.test(line)) continue;
+
+      // Per-page token import whitelists for debug sandboxes.
+      if (block.id === 'debug-pages-no-tokens' && debugTokenConfig) {
+        const isAllowed = debugTokenConfig.allowedTokenImports.some(
+          (specifier) =>
+            new RegExp(
+              String.raw`from\s+['"]${specifier.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                '\\$&',
+              )}['"]`,
+            ).test(line),
+        );
+        if (isAllowed) continue;
       }
+
+      const lineNumber = index + 1;
+      violations.push({
+        filePath,
+        lineNumber,
+        rule: block,
+      });
     }
   }
   return violations;
