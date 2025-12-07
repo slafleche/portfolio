@@ -88,7 +88,7 @@ const pageStyles: Record<string, CSSProperties> = {
     fontSize: 18,
     lineHeight: 1.6,
     maxWidth: 780,
-    ...margins({ all: m(0) }),
+    ...margins(m(0)),
   },
   table: {
     ...borders.all({
@@ -131,7 +131,7 @@ const pageStyles: Record<string, CSSProperties> = {
     }) as CSSProperties),
   },
   slugCell: {
-    ...paddings({ all: m(16) }),
+    ...paddings(m(16)),
     ...borders.right({
       width: m(1),
       color: 'rgba(255,255,255,0.08)',
@@ -140,7 +140,7 @@ const pageStyles: Record<string, CSSProperties> = {
     fontSize: 13,
   },
   localeCell: {
-    ...paddings({ all: m(16) }),
+    ...paddings(m(16)),
     ...borders.right({
       width: m(1),
       color: 'rgba(255,255,255,0.08)',

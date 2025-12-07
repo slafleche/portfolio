@@ -514,8 +514,7 @@ export const list = style({
       justifyContent: 'flex-end',
       order: 0,
       ...paddings({
-        right: logoNavPaddingMeasurement,
-        left: logoNavPaddingMeasurement,
+        horizontal: logoNavPaddingMeasurement,
       }),
       transformOrigin: 'right center',
     },
@@ -524,8 +523,7 @@ export const list = style({
       justifyContent: 'flex-start',
       order: 1,
       ...paddings({
-        right: logoNavPaddingMeasurement,
-        left: logoNavPaddingMeasurement,
+        horizontal: logoNavPaddingMeasurement,
       }),
       transformOrigin: 'left center',
     },

@@ -60,7 +60,7 @@ export const absolutePosition = {
         bottom: 0 as CSS_TYPES.Property.Bottom,
         maxHeight: '100%' as CSS_TYPES.Property.MaxHeight,
         maxWidth: '100%' as CSS_TYPES.Property.MaxWidth,
-        ...margins({ all: 'auto' }),
+        ...margins('auto'),
       };
     }
   },
@@ -73,10 +73,7 @@ export const absolutePosition = {
       bottom: 0 as CSS_TYPES.Property.Bottom,
       maxHeight: '100%' as CSS_TYPES.Property.MaxHeight,
       maxWidth: '100%' as CSS_TYPES.Property.MaxWidth,
-      ...margins({
-        top: 'auto',
-        bottom: 'auto',
-      }),
+      ...margins({ vertical: 'auto' }),
     };
   },
   middleRight: (right: IMeasurement = m(0)) => {
@@ -88,10 +85,7 @@ export const absolutePosition = {
       bottom: 0 as CSS_TYPES.Property.Bottom,
       maxHeight: '100%' as CSS_TYPES.Property.MaxHeight,
       maxWidth: '100%' as CSS_TYPES.Property.MaxWidth,
-      ...margins({
-        top: 'auto',
-        bottom: 'auto',
-      }),
+      ...margins({ vertical: 'auto' }),
     };
   },
   middleBottom: (bottom: IMeasurement = m(0)) => {

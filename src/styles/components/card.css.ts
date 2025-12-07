@@ -9,9 +9,7 @@ import { borders } from '../helpers/borders.helper';
 
 export const root = style({
   position: 'relative',
-  ...margins({
-    all: m(20),
-  }),
+  ...margins(m(20)),
   display: 'flex',
   flexDirection: 'column',
   selectors: {
@@ -53,9 +51,7 @@ export const frame = style({
 export const content = style({
   position: 'relative',
   zIndex: 2,
-  ...paddings({
-    all: m(40),
-  }),
+  ...paddings(m(40)),
   ...borders.radii(glassVars.borders),
   flex: 1,
   display: 'flex',
