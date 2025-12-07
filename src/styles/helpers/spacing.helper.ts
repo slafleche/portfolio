@@ -18,14 +18,28 @@ const defaultSpacing = (): SpacingFourSides => ({
 });
 
 /**
- * SpacingProps:
+ * Spacing intent (internal):
  * - Prefer `all` when every side shares the same spacing.
  * - Prefer `vertical` when top/bottom are the same.
  * - Prefer `horizontal` when left/right are the same.
  * - Use explicit `top`/`right`/`bottom`/`left` only for asymmetrical cases.
+ *
+ * External callers should eventually rely on `SpacingIntent` (which omits the
+ * internal `all` axis) plus value shorthands; helpers keep this richer shape
+ * for their own resolution logic.
  */
-export type SpacingProps = AxisValues<SpacingValue>;
-export type SpacingInput = SpacingProps | undefined;
+export type SpacingIntentInternal = AxisValues<SpacingValue>;
+
+export type SpacingIntent = {
+  horizontal?: SpacingValue;
+  vertical?: SpacingValue;
+} & Partial<Record<'top' | 'right' | 'bottom' | 'left', SpacingValue>>;
+
+export type SpacingInput = SpacingIntentInternal | undefined;
+export type SpacingInputPublic =
+  | SpacingValue
+  | SpacingIntent
+  | undefined;
 export type SpacingFourSides = {
   top: SpacingValue;
   right: SpacingValue;
@@ -56,23 +70,33 @@ const resolve = (
   return spacingToCss(fallback);
 };
 
-const normalize = (input?: SpacingInput): SpacingProps | undefined => {
+const normalize = (
+  input?: SpacingInput | SpacingInputPublic,
+): SpacingIntentInternal | undefined => {
   if (input === undefined) return undefined;
 
-  if (
-    typeof input !== 'object' ||
-    input === null ||
-    Array.isArray(input)
-  ) {
-    throw new Error(
-      '[spacing] Expected a spacing intent object (e.g., { all, horizontal, vertical }). Wrap standalone measurements/keywords (e.g., { all: m(8) }).',
-    );
+  if (isMeasurement(input) || isSpacingKeyword(input)) {
+    return {
+      all: input,
+    } as SpacingIntentInternal;
   }
 
-  return input;
+  if (
+    typeof input === 'object' &&
+    input !== null &&
+    !Array.isArray(input)
+  ) {
+    return input as SpacingIntentInternal;
+  }
+
+  throw new Error(
+    '[spacing] Expected a spacing value or spacing intent object (e.g., { vertical, horizontal }). Wrap unsupported inputs accordingly.',
+  );
 };
 
-const spacing = (input?: SpacingInput): string => {
+const spacing = (
+  input?: SpacingInput | SpacingInputPublic,
+): string => {
   const defaults = defaultSpacing();
   const props = normalize(input);
 
@@ -102,10 +126,14 @@ const spacing = (input?: SpacingInput): string => {
   return `${topSpacing} ${rightSpacing} ${bottomSpacing} ${leftSpacing}`;
 };
 
-export const paddings = (props?: SpacingInput) => ({
+export const paddings = (
+  props?: SpacingInput | SpacingInputPublic,
+) => ({
   padding: spacing(props),
 });
 
-export const margins = (props?: SpacingInput) => ({
+export const margins = (
+  props?: SpacingInput | SpacingInputPublic,
+) => ({
   margin: spacing(props),
 });

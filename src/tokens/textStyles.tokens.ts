@@ -1,6 +1,6 @@
 import { m } from 'css-calipers';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
-import type { SpacingProps } from '../styles/helpers/spacing.helper';
+import type { SpacingIntentInternal } from '../styles/helpers/spacing.helper';
 import { colorVars } from './global.tokens';
 
 const blockSpacing = m(16);
@@ -16,16 +16,16 @@ export const textStyleVars = {
   paragraph: {
     margins: {
       bottom: blockSpacing,
-    } as SpacingProps,
+    } as SpacingIntentInternal,
   },
   blockquote: {
     color: colorVars.bodyFg.alpha(0.85),
     margins: {
       bottom: blockSpacing,
-    } as SpacingProps,
+    } as SpacingIntentInternal,
     paddings: {
       left: m(16),
-    } as SpacingProps,
+    } as SpacingIntentInternal,
     borders: {
       all: {
         width: m(3),

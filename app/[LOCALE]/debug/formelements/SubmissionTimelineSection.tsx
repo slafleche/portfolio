@@ -72,7 +72,7 @@ const blockStyle: CSSProperties = {
     width: m(1),
     color: 'rgba(245,240,255,0.2)',
   }),
-  ...paddings({ all: m(32) }),
+  ...paddings(m(32)),
   ...backgrounds({ color: 'rgba(8,6,16,0.65)' }) as CSSProperties,
   boxShadow: boxShadow({
     y: m(40),
@@ -150,7 +150,7 @@ const formContainerStyle: CSSProperties = {
       width: m(1),
       color: 'rgba(245,240,255,0.18)',
   }),
-  ...paddings({ all: m(24) }),
+  ...paddings(m(24)),
   ...backgrounds({ color: 'rgba(6,4,18,0.75)' }) as CSSProperties,
   display: 'flex',
   flexDirection: 'column' as const,

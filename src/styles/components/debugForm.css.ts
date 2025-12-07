@@ -23,7 +23,7 @@ export const stack = style({
 
 export const block = style({
   ...borders(formTokens.field.borders),
-  ...paddings({ all: doubledFieldGap }),
+  ...paddings(doubledFieldGap),
   ...backgrounds(formTokens.field.backgrounds),
   boxShadow: boxShadow({
     x: m(0),
@@ -83,7 +83,7 @@ export const ctaList = style({
 
 export const ctaRow = style({
   ...borders(formTokens.field.borders),
-  ...paddings({ all: formTokens.layout.fieldGap }),
+  ...paddings(formTokens.layout.fieldGap),
   ...backgrounds(formTokens.field.backgrounds),
   display: 'flex',
   flexDirection: 'column',
