@@ -1,6 +1,8 @@
 import type { CSSProperties } from 'react';
 import { m } from 'css-calipers';
 import borders from '@/styles/helpers/borders.helper';
+import { backgrounds } from '@/styles/helpers/background.helper';
+import { paddings, margins } from '@/styles/helpers/spacing.helper';
 import { resolveLocale } from '@/lib/locales/locale';
 import { enAbbreviations } from '@/lib/locales/translations/abbreviations/en.abbr';
 import { frAbbreviations } from '@/lib/locales/translations/abbreviations/fr.abbr';
@@ -47,15 +49,22 @@ function buildOrderedKeys() {
 const pageStyles: Record<string, CSSProperties> = {
   main: {
     minHeight: '100vh',
-    padding: '64px 24px 96px',
-    backgroundColor: '#07050e',
+    ...paddings({
+      top: m(64),
+      horizontal: m(24),
+      bottom: m(96),
+    }),
+    ...backgrounds({ color: '#07050e' }),
     color: '#f5f0ff',
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
   },
   container: {
     maxWidth: 1200,
-    margin: '0 auto',
+    ...margins({
+      vertical: m(0),
+      horizontal: 'auto',
+    }),
     display: 'flex',
     flexDirection: 'column',
     gap: 40,
@@ -69,13 +78,17 @@ const pageStyles: Record<string, CSSProperties> = {
   },
   headerTitle: {
     fontSize: 48,
-    margin: '0 0 16px',
+    ...margins({
+      top: m(0),
+      horizontal: m(0),
+      bottom: m(16),
+    }),
   },
   headerIntro: {
     fontSize: 18,
     lineHeight: 1.6,
     maxWidth: 780,
-    margin: 0,
+    ...margins({ all: m(0) }),
   },
   table: {
     ...borders.all({
@@ -88,14 +101,17 @@ const pageStyles: Record<string, CSSProperties> = {
   headerRow: {
     display: 'grid',
     gridTemplateColumns: '220px 1fr 1fr',
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    ...backgrounds({ color: 'rgba(255,255,255,0.08)' }),
     fontSize: 14,
     fontWeight: 600,
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
   headerCell: {
-    padding: '12px 16px',
+    ...paddings({
+      vertical: m(12),
+      horizontal: m(16),
+    }),
     ...borders.right({
       width: m(1),
       color: 'rgba(255,255,255,0.08)',
@@ -108,10 +124,10 @@ const pageStyles: Record<string, CSSProperties> = {
       width: m(1),
       color: 'rgba(255,255,255,0.08)',
     }),
-    backgroundColor: 'rgba(7,5,14,0.9)',
+    ...backgrounds({ color: 'rgba(7,5,14,0.9)' }),
   },
   slugCell: {
-    padding: '16px',
+    ...paddings({ all: m(16) }),
     ...borders.right({
       width: m(1),
       color: 'rgba(255,255,255,0.08)',
@@ -120,7 +136,7 @@ const pageStyles: Record<string, CSSProperties> = {
     fontSize: 13,
   },
   localeCell: {
-    padding: '16px',
+    ...paddings({ all: m(16) }),
     ...borders.right({
       width: m(1),
       color: 'rgba(255,255,255,0.08)',
@@ -148,7 +164,7 @@ const pageStyles: Record<string, CSSProperties> = {
 
 const blankCellStyle: CSSProperties = {
   ...pageStyles.localeCell,
-  backgroundColor: 'rgba(255,255,255,0.02)',
+  ...backgrounds({ color: 'rgba(255,255,255,0.02)' }),
 };
 
 export default async function AbbreviationDebugPage({
