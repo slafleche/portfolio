@@ -486,7 +486,7 @@ export const toastTitle = style({
 
 export const toastClose = style({
   border: 'none',
-  background: 'transparent',
+  background: 'none',
   color: colorVars.bodyFg.css(),
   fontSize: '1.25rem',
   lineHeight: 1,
