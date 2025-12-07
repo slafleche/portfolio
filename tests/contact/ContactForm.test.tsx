@@ -6,7 +6,6 @@ import {
   ContactDialogContext,
 } from '@/components/contact/ContactDialogProvider';
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
-import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 
 const mockSubmitFn = vi.fn();
 const styleModule = vi.hoisted(() => {
@@ -43,17 +42,6 @@ const contactCopy: ContactFormCopy = {
     text: 'We only use this to reply.',
     linkLabel: 'Privacy',
     closeLabel: 'Close',
-  },
-  turnstile: {
-    loading: 'Loading verification…',
-    ready: 'Complete the verification above to enable submission.',
-    verified: 'Verified — you can send your message.',
-    expired: 'Verification expired. Please try again.',
-    error: 'Verification is unavailable. Please retry.',
-    disabled: 'Human verification is disabled here.',
-    buttonPending: "Verify you're human",
-    buttonError: 'Verification unavailable',
-    preview: 'Human verification preview (debug).',
   },
   errors: {
     token: {
@@ -141,13 +129,6 @@ const contactCopy: ContactFormCopy = {
   },
 };
 
-const privacyCopy: PrivacyCopy = {
-  title: 'Privacy Policy',
-  href: '/privacy',
-  updated: 'Updated recently',
-  content: 'Privacy content',
-};
-
 const dialogValue = {
   open: vi.fn(),
   close: vi.fn(),
@@ -159,11 +140,9 @@ const dialogValue = {
 
 const renderForm = () =>
   render(
-    <ContactDialogContext.Provider value={dialogValue}>
+      <ContactDialogContext.Provider value={dialogValue}>
       <ContactForm
         copy={contactCopy}
-        privacyCopy={privacyCopy}
-        locale="en"
         actionUrl="mock"
       />
     </ContactDialogContext.Provider>,
