@@ -2,8 +2,13 @@
 
 import type { CSSProperties } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { m } from 'css-calipers';
 import { formTokens } from '@/tokens/forms.tokens';
 import { glassyButtonTokens } from '@/tokens/glassy.tokens';
+import { paddings, margins } from '@/styles/helpers/spacing.helper';
+import { backgrounds } from '@/styles/helpers/background.helper';
+import borders from '@/styles/helpers/borders.helper';
+import { boxShadow } from '@/styles/helpers/shadow.helper';
 
 export type Tone = 'default' | 'info' | 'success' | 'warning' | 'error' | 'muted';
 
@@ -52,7 +57,10 @@ export type TimelineTelemetryDescriptor = {
 
 const stackStyle: CSSProperties = {
   maxWidth: formTokens.layout.maxWidth.css(),
-  margin: '0 auto',
+  ...margins({
+    vertical: m(0),
+    horizontal: 'auto',
+  }),
   display: 'flex',
   flexDirection: 'column',
   gap: formTokens.layout.fieldGap.multiply(2).css(),
@@ -60,10 +68,18 @@ const stackStyle: CSSProperties = {
 
 const blockStyle: CSSProperties = {
   borderRadius: 24,
-  border: '1px solid rgba(245,240,255,0.2)',
-  padding: 32,
-  backgroundColor: 'rgba(8,6,16,0.65)',
-  boxShadow: '0 40px 140px rgba(6,4,18,0.35)',
+  ...borders({
+    all: {
+      width: m(1),
+      color: 'rgba(245,240,255,0.2)',
+    },
+  }),
+  ...paddings({ all: m(32) }),
+  ...backgrounds({ color: 'rgba(8,6,16,0.65)' }),
+  boxShadow: boxShadow({
+    y: m(40),
+    blur: m(140),
+  }),
   display: 'flex',
   flexDirection: 'column',
   gap: formTokens.layout.fieldGap.css(),
@@ -78,7 +94,11 @@ const eyebrowStyle: CSSProperties = {
 };
 
 const titleStyle: CSSProperties = {
-  margin: '0 0 4px',
+  ...margins({
+    top: m(0),
+    horizontal: m(0),
+    bottom: m(4),
+  }),
   fontSize: 20,
   color: formTokens.field.text.color.css(),
 };
@@ -93,7 +113,11 @@ const listStyle: CSSProperties = {
 };
 
 const helperTextStyle: CSSProperties = {
-  margin: '8px 0 0',
+  ...margins({
+    top: m(8),
+    horizontal: m(0),
+    bottom: m(0),
+  }),
   fontSize: 14,
   color: formTokens.counter.text.color.css(),
   lineHeight: 1.5,
@@ -110,17 +134,30 @@ const accentListItemStyle: CSSProperties = {
 
 const codeStyle: CSSProperties = {
   fontSize: 12,
-  padding: '2px 6px',
+  ...paddings({
+    vertical: m(2),
+    horizontal: m(6),
+  }),
   borderRadius: 6,
-  backgroundColor: 'rgba(255,255,255,0.08)',
-  border: '1px solid rgba(255,255,255,0.12)',
+  ...backgrounds({ color: 'rgba(255,255,255,0.08)' }),
+  ...borders({
+    all: {
+      width: m(1),
+      color: 'rgba(255,255,255,0.12)',
+    },
+  }),
 };
 
 const formContainerStyle = {
   borderRadius: 18,
-  border: '1px solid rgba(245,240,255,0.18)',
-  padding: 24,
-  backgroundColor: 'rgba(6,4,18,0.75)',
+  ...borders({
+    all: {
+      width: m(1),
+      color: 'rgba(245,240,255,0.18)',
+    },
+  }),
+  ...paddings({ all: m(24) }),
+  ...backgrounds({ color: 'rgba(6,4,18,0.75)' }),
   display: 'flex',
   flexDirection: 'column' as const,
   gap: 16,
@@ -202,11 +239,21 @@ export default function SubmissionTimelineSection({
                 onClick={() => setSelectedScenarioId(scenario.id)}
                 style={{
                   borderRadius: 999,
-                  border: `1px solid ${palette.border}`,
-                  padding: '8px 14px',
-                  backgroundColor: isActive
-                    ? palette.accent
-                    : 'transparent',
+                  ...borders({
+                    all: {
+                      width: m(1),
+                      color: palette.border,
+                    },
+                  }),
+                  ...paddings({
+                    vertical: m(8),
+                    horizontal: m(14),
+                  }),
+                  ...backgrounds({
+                    color: isActive
+                      ? palette.accent
+                      : 'transparent',
+                  }),
                   color: isActive ? '#120a24' : palette.text,
                   cursor: 'pointer',
                   fontSize: 13,
@@ -277,11 +324,21 @@ export default function SubmissionTimelineSection({
               style={{
                 width: '100%',
                 borderRadius: 10,
-                border: '1px solid rgba(245,240,255,0.25)',
-                padding: '10px 12px',
-                backgroundColor: fieldProps.disabled
-                  ? 'rgba(255,255,255,0.04)'
-                  : 'rgba(6,4,18,0.85)',
+                ...borders({
+                  all: {
+                    width: m(1),
+                    color: 'rgba(245,240,255,0.25)',
+                  },
+                }),
+                ...paddings({
+                  vertical: m(10),
+                  horizontal: m(12),
+                }),
+                ...backgrounds({
+                  color: fieldProps.disabled
+                    ? 'rgba(255,255,255,0.04)'
+                    : 'rgba(6,4,18,0.85)',
+                }),
                 color: '#f5f0ff',
                 marginBottom: 12,
               }}
@@ -301,11 +358,21 @@ export default function SubmissionTimelineSection({
               style={{
                 width: '100%',
                 borderRadius: 10,
-                border: '1px solid rgba(245,240,255,0.25)',
-                padding: '10px 12px',
-                backgroundColor: fieldProps.disabled
-                  ? 'rgba(255,255,255,0.04)'
-                  : 'rgba(6,4,18,0.85)',
+                ...borders({
+                  all: {
+                    width: m(1),
+                    color: 'rgba(245,240,255,0.25)',
+                  },
+                }),
+                ...paddings({
+                  vertical: m(10),
+                  horizontal: m(12),
+                }),
+                ...backgrounds({
+                  color: fieldProps.disabled
+                    ? 'rgba(255,255,255,0.04)'
+                    : 'rgba(6,4,18,0.85)',
+                }),
                 color: '#f5f0ff',
                 marginBottom: 12,
               }}
@@ -325,11 +392,21 @@ export default function SubmissionTimelineSection({
               style={{
                 width: '100%',
                 borderRadius: 10,
-                border: '1px solid rgba(245,240,255,0.25)',
-                padding: '10px 12px',
-                backgroundColor: fieldProps.disabled
-                  ? 'rgba(255,255,255,0.04)'
-                  : 'rgba(6,4,18,0.85)',
+                ...borders({
+                  all: {
+                    width: m(1),
+                    color: 'rgba(245,240,255,0.25)',
+                  },
+                }),
+                ...paddings({
+                  vertical: m(10),
+                  horizontal: m(12),
+                }),
+                ...backgrounds({
+                  color: fieldProps.disabled
+                    ? 'rgba(255,255,255,0.04)'
+                    : 'rgba(6,4,18,0.85)',
+                }),
                 color: '#f5f0ff',
                 resize: 'vertical',
               }}
@@ -340,7 +417,11 @@ export default function SubmissionTimelineSection({
               style={{
                 fontSize: 14,
                 color: 'rgba(245,240,255,0.75)',
-                margin: '4px 0 0',
+                ...margins({
+                  top: m(4),
+                  horizontal: m(0),
+                  bottom: m(0),
+                }),
               }}
             >
               {activeScenario.note}
@@ -356,11 +437,13 @@ export default function SubmissionTimelineSection({
             style={{
               minHeight: glassyButtonTokens.size.css(),
               borderRadius: glassyButtonTokens.borders.radius.css(),
-              border: `1px solid ${glassyButtonTokens.borders.color.css()}`,
-              backgroundColor:
-                activeScenario?.ctaState === 'success'
-                  ? 'rgba(77,201,173,0.2)'
-                  : 'rgba(255,255,255,0.08)',
+              ...borders(glassyButtonTokens.borders),
+              ...backgrounds({
+                color:
+                  activeScenario?.ctaState === 'success'
+                    ? 'rgba(77,201,173,0.2)'
+                    : 'rgba(255,255,255,0.08)',
+              }),
               color: glassyButtonTokens.text.color.css(),
               fontWeight: 600,
               display: 'flex',

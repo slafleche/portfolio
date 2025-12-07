@@ -6,7 +6,7 @@ import borders from '../../src/styles/helpers/borders.helper';
 
 describe('borders.helper', () => {
   it('returns defaults for all edges when enabled', () => {
-    const result = borders({ all: true });
+    const result = borders.defaults();
     expect(result.borderWidth).toBe('4px');
     expect(result.borderStyle).toBe('solid');
     expect(result.borderColor).toBe(colorVars.border.css());

@@ -15,9 +15,11 @@ export type BorderLike = IBorder | Readonly<IBorder>;
 export type EdgeSpec = boolean | BorderLike;
 export type RadiusSpec = CompassCorners<BorderRadiusInput>;
 
-export interface BorderIntent extends AxisValues<EdgeSpec> {
+interface BorderIntentInternal extends AxisValues<EdgeSpec> {
   radius?: RadiusSpec | 0 | null;
 }
+
+export type BorderIntent = Omit<BorderIntentInternal, 'all'>;
 
 export interface FinalBorderCSS {
   borderColor?: CSS_TYPES.Property.BorderColor;
@@ -64,7 +66,9 @@ export type BorderOptions = {
   allowRadiusOnly?: boolean;
 };
 
-export const edgeKeys: Array<Exclude<keyof BorderIntent, 'radius'>> = [
+export const edgeKeys: Array<
+  Exclude<keyof BorderIntentInternal, 'radius'>
+> = [
   'all',
   'vertical',
   'horizontal',
@@ -86,7 +90,7 @@ export type BorderShortcut = Partial<BorderLike> & {
 };
 
 export type BorderInput =
-  | BorderIntent
+  | BorderIntentInternal
   | BorderRadiusInput
   | BorderShortcut
   | BorderLike;

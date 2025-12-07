@@ -29,15 +29,16 @@ Ownership principle:
 - Core function:
   - `borders(intent?: BorderInput, options?: BorderOptions): FinalBorderCSS`.
 - Types:
-  - `BorderIntent extends AxisValues<EdgeSpec>` with optional `radius`.
+  - Internal `BorderIntentInternal extends AxisValues<EdgeSpec>` with optional `radius`, including an internal `all` axis.
+  - Public `BorderIntent = Omit<BorderIntentInternal, 'all'>` so callers don’t pass `all` directly.
   - `BorderLike` / `IBorder` which allow width/color/style/radius.
 - Defaults:
   - Width and radius fallback to values derived from `borderVars` (tokens).
   - Style falls back to a default (e.g., `'solid'`).
   - Color falls back to `colorVars.border`.
 - Existing public patterns:
-  - Top-level width/color/style for “all edges the same”.
-  - Axis-based helpers: `.none()`, `.top()`, `.vertical()`, `.all()`.
+  - Top-level width/color/style for “all edges the same” (shorthand merged into an internal `all` axis).
+  - Axis-based helpers: `.none()`, `.top()`, `.vertical()`, plus side-specific helpers; `all` remains an internal axis, not a preferred public input key.
 
 Ownership principle:
 
@@ -120,4 +121,3 @@ For this epic, these ideas stay in the notes; we only make sure the new default-
 - Complexity vs clarity:
   - There’s a risk of over-engineering configuration too early.
   - The epic should stay focused on making defaults explicit and introspectable; configuration comes in a later, dedicated epic once we see actual multi-project usage.
-
