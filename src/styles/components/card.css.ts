@@ -2,14 +2,16 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { makeCardGradient } from '../helpers/cardGradient.helper';
 import { colorVars, gradients } from '../../tokens/global.tokens';
 import { m } from 'css-calipers';
-import { paddings } from '../helpers/spacing.helper';
+import { paddings, margins } from '../helpers/spacing.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { glassVars } from '../../tokens/glassy.tokens';
 import { borders } from '../helpers/borders.helper';
 
 export const root = style({
   position: 'relative',
-  margin: '20px',
+  ...margins({
+    all: m(20),
+  }),
   display: 'flex',
   flexDirection: 'column',
   selectors: {
@@ -77,7 +79,6 @@ export const gradient = style({
   ...absolutePosition.fullSize(),
   filter: 'blur(2px)',
   pointerEvents: 'none',
-  borderRadius: 'inherit',
   zIndex: 0,
 });
 
