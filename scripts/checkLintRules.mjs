@@ -191,6 +191,15 @@ function scanPatterns(filePath, content) {
       const line = lines[index];
       if (!rule.regex.test(line)) continue;
 
+      // Allow plain background resets (`background: 'none'` / "none") while
+      // still flagging all other raw background usages.
+      if (rule.id === 'background-inline') {
+        const isPlainBackgroundNone =
+          /\bbackground\s*:\s*['"]none['"]/.test(line) &&
+          !/\bbackgroundColor\b/.test(line);
+        if (isPlainBackgroundNone) continue;
+      }
+
       // Allow plain border resets (`border: 'none'` / "none") while still
       // flagging all other raw border usages.
       if (rule.id === 'border-inline') {
@@ -329,7 +338,27 @@ function formatHuman(violations) {
     console.error('');
   }
 
-  console.error('Please fix the issues above before committing.');
+  // Summary with counts by file.
+  const byFile = new Map();
+  for (const { filePath } of violations) {
+    byFile.set(filePath, (byFile.get(filePath) ?? 0) + 1);
+  }
+
+  const totalViolations = violations.length;
+  const filesWithViolations = byFile.size;
+
+  console.error('Summary:');
+  console.error(`- Files with violations: ${filesWithViolations}`);
+  console.error(`- Total violations: ${totalViolations}`);
+  console.error('- Violations by file:');
+
+  const sortedFiles = Array.from(byFile.keys()).sort();
+  for (const filePath of sortedFiles) {
+    const count = byFile.get(filePath) ?? 0;
+    console.error(`  - ${filePath}: ${count}`);
+  }
+
+  console.error('\nPlease fix the issues above before committing.');
 }
 
 function main() {
