@@ -172,6 +172,18 @@ function readFile(filePath) {
  */
 
 function scanPatterns(filePath, content) {
+  const posix = filePath.split(path.sep).join('/');
+
+  // Skip raw CSS property checks for token/config and built artifact files.
+  // These are not style-layer sources and may legitimately use keys like
+  // "background" or "border" in non-CSS contexts.
+  if (
+    posix.startsWith('src/tokens/') ||
+    posix === 'public/main.js'
+  ) {
+    return [];
+  }
+
   const violations = [];
   const lines = content.split('\n');
   for (const rule of FORBIDDEN_PATTERNS) {
