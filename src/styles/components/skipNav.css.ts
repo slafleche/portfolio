@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { colorVars } from '../../tokens/global.tokens';
-import { m } from 'css-calipers';
+import { colorVars } from '../../tokens/global.tokens';;
 
 export const link = style({
   position: 'fixed',

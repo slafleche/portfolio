@@ -4,13 +4,12 @@ import {
   type ComplexStyleRule,
 } from '@vanilla-extract/css';
 import { formTokens } from '@/tokens/forms.tokens';
-import { m } from 'css-calipers';
 import { colorVars } from '../../tokens/global.tokens';
 import {
   glassVars,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
-import borders from '@/styles/helpers/borders.config';
+import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
