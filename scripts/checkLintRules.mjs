@@ -189,6 +189,8 @@ function scanPatterns(filePath, content) {
   for (const rule of FORBIDDEN_PATTERNS) {
     for (let index = 0; index < lines.length; index += 1) {
       const line = lines[index];
+       const trimmed = line.trim();
+       if (trimmed.startsWith('//')) continue;
       if (!rule.regex.test(line)) continue;
 
       // Allow plain background resets (`background: 'none'` / "none") while
