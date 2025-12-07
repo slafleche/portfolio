@@ -208,7 +208,9 @@ function scanPatterns(filePath, content) {
         const isPlainBorderNone =
           /\bborder\s*:\s*['"]none['"]/.test(line) &&
           !/\bborder(?:Top|Right|Bottom|Left|Radius)\b/.test(line);
-        if (isPlainBorderNone) continue;
+        const isRadiusInherit =
+          /\bborderRadius\s*:\s*['"]inherit['"]/.test(line);
+        if (isPlainBorderNone || isRadiusInherit) continue;
       }
 
       const lineNumber = index + 1;
