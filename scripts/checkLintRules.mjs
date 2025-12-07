@@ -67,6 +67,14 @@ const FORBIDDEN_PATTERNS = [
 
 const LAYER_IMPORT_BLOCKS = [
   {
+    id: 'debug-pages-no-tokens',
+    groupTitle: 'Debug pages must not import tokens.',
+    solution:
+      'Keep debug sandboxes self-contained; do not import tokens from "@/tokens/".',
+    pattern: 'app/[LOCALE]/debug',
+    regex: /from\s+['"]@\/tokens\//,
+  },
+  {
     id: 'helpers-import-components',
     groupTitle: 'Helpers must not import components.',
     solution:
@@ -103,30 +111,24 @@ const MEASUREMENT_RULES = [
     // but allow m(variable, …).css() helpers like addDeg.
     regex: /m\(\s*\d+(?:\.\d+)?(?:\s*,\s*['"][^'"]+['"])?\s*\)\.css\(/,
   },
-  {
-    id: 'measurement-helper-m-literal',
-    groupTitle: 'Do not pass m(...) directly into style helpers.',
-    solution:
-      'Use tokens or measurement variables (or plain CSS strings where helpers are not required); do not call m(...) inline when calling paddings/margins/borders/backgrounds/boxShadow/backdropFilters.',
-    pattern: 'src/styles',
-    regex:
-      /\b(?:paddings|margins|borders|backgrounds|boxShadow|backdropFilters(?:\.style)?)\b[^;\n]*\bm\(/,
-  },
-  {
-    id: 'measurement-helper-m-literal',
-    groupTitle: 'Do not pass m(...) directly into style helpers.',
-    solution:
-      'Use tokens or measurement variables (or plain CSS strings where helpers are not required); do not call m(...) inline when calling paddings/margins/borders/backgrounds/boxShadow/backdropFilters.',
-    pattern: 'app/',
-    regex:
-      /\b(?:paddings|margins|borders|backgrounds|boxShadow|backdropFilters(?:\.style)?)\b[^;\n]*\bm\(/,
-  },
 ];
+
+// Alias-based rule for measurement helpers; actual matches are produced by
+// measurementAliasesCheck.mjs, but we keep a stub here so reporting stays
+// grouped and ordered with other rules.
+const MEASUREMENT_ALIAS_RULE = {
+  id: 'measurement-helper-m-literal',
+  groupTitle:
+    'Do not wrap m(...) in a local just to feed style helpers.',
+  solution:
+    'Use tokens or measurement variables (or plain CSS strings where helpers are not required); do not create local m(...) wrappers whose only purpose is to feed paddings/margins/borders/backgrounds/boxShadow/backdropFilters.',
+};
 
 const ALL_RULES = [
   ...FORBIDDEN_PATTERNS,
   ...MEASUREMENT_RULES,
   ...LAYER_IMPORT_BLOCKS,
+  MEASUREMENT_ALIAS_RULE,
 ];
 
 function isPlainMode() {
