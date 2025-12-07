@@ -32,7 +32,10 @@ export const header = style({
   display: 'flex',
   alignItems: 'center',
   gap: '6px',
-  ...paddings(consoleVars.header.padding),
+  ...paddings({
+    vertical: m(10),
+    horizontal: m(16),
+  }),
   background: colorVars.black.alpha(0.6).css(),
   borderBottom: `1px solid ${colorVars.white.alpha(0.06).css()}`,
 });
@@ -67,7 +70,10 @@ export const body = style({
   fontSize: '16px',
   lineHeight: 1.6,
   flexGrow: 1,
-  ...paddings(consoleVars.body.padding),
+  ...paddings({
+    vertical: m(18),
+    horizontal: m(18),
+  }),
 
   backgroundColor: colorVars.black.mix(colorVars.white, 0.005).css(),
   justifyContent: 'flex-end',
