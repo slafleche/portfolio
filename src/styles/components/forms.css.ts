@@ -11,9 +11,10 @@ import {
 } from '../../tokens/glassy.tokens';
 import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
-import { paddings } from '../helpers/spacing.helper';
+import { margins, paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
+import { m } from 'css-calipers';
 
 const controlBase: ComplexStyleRule = {
   width: '100%',
@@ -62,8 +63,16 @@ export const form = style({
 
 export const fieldset = style({
   border: 'none',
-  margin: 0,
-  padding: 0,
+  ...margins({
+    top: m(0),
+    bottom: m(0),
+    horizontal: m(0),
+  }),
+  ...paddings({
+    top: m(0),
+    bottom: m(0),
+    horizontal: m(0),
+  }),
   display: 'grid',
   gap: formTokens.layout.fieldGap.css(),
 });
@@ -198,7 +207,10 @@ export const buttonRow = style({
 
 export const submitButton = style({
   minHeight: formTokens.button.minHeight.css(),
-  padding: `0 ${formTokens.button.paddings.horizontal.css()}`,
+  ...paddings({
+    vertical: m(0),
+    horizontal: formTokens.button.paddings.horizontal,
+  }),
   border: 'none',
   ...borders(glassyButtonTokens.borders),
   ...backgrounds(glassyButtonTokens.backgrounds),
@@ -270,13 +282,20 @@ export const turnstileSection = style({
 export const turnstileWidget = style({
   minHeight: '70px',
   borderRadius: 12,
-  border: '1px solid rgba(245,240,255,0.12)',
-  backgroundColor: 'rgba(8,6,16,0.6)',
+  ...borders({
+    width: m(1),
+    color: 'rgba(245,240,255,0.12)',
+  }),
+  ...backgrounds({ color: 'rgba(8,6,16,0.6)' }),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
-  padding: 8,
+  ...paddings({
+    top: m(8),
+    bottom: m(8),
+    horizontal: m(8),
+  }),
 });
 
 export const turnstilePlaceholder = style({
@@ -318,7 +337,10 @@ export const privacyDialog = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: '8px 6px',
+  ...paddings({
+    vertical: m(8),
+    horizontal: m(6),
+  }),
   zIndex: 1101,
 });
 
@@ -326,11 +348,20 @@ export const privacyPanel = style({
   position: 'relative',
   width: 'min(70ch, 90vw)',
   maxHeight: '80vh',
-  padding: '12px 11px',
+  ...paddings({
+    vertical: m(12),
+    horizontal: m(11),
+  }),
   ...borders(formTokens.field.borders),
   backgroundColor: colorVars.bodyBg.css(),
   color: colorVars.bodyFg.css(),
-  boxShadow: `0 3px 12px ${colorVars.black.alpha(0.35).css()}`,
+  boxShadow: boxShadow({
+    x: m(0),
+    y: m(3),
+    blur: m(12),
+    color: colorVars.black,
+    alpha: 0.35,
+  }),
   overflowY: 'auto',
   display: 'grid',
   gap: formTokens.layout.fieldGap.css(),
@@ -414,9 +445,13 @@ const toastBase: ComplexStyleRule = {
   gap: formTokens.layout.fieldGap.css(),
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
-  boxShadow: `0 4px 14px ${colorVars.black
-    .alpha(0.35)
-    .css()}`,
+  boxShadow: boxShadow({
+    x: m(0),
+    y: m(4),
+    blur: m(14),
+    color: colorVars.black,
+    alpha: 0.35,
+  }),
   pointerEvents: 'auto',
 };
 
@@ -483,7 +518,10 @@ export const successPanel = style({
   gap: formTokens.layout.fieldGap.css(),
   justifyItems: 'center',
   textAlign: 'center',
-  padding: '24px 12px',
+  ...paddings({
+    vertical: m(24),
+    horizontal: m(12),
+  }),
   borderRadius: formTokens.field.borders.radius.css(),
   ...backgrounds(formTokens.status.success.backgrounds),
   ...borders(formTokens.status.success.borders),
@@ -492,8 +530,13 @@ export const successPanel = style({
 export const successIconWrapper = style({
   width: '64px',
   height: '64px',
-  borderRadius: '50%',
-  backgroundColor: formTokens.successPanel.icon.background.css(),
+  ...borders(
+    { radius: m(32) },
+    { allowRadiusOnly: true },
+  ),
+  ...backgrounds({
+    color: formTokens.successPanel.icon.background,
+  }),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

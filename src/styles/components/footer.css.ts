@@ -1,12 +1,28 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import type { ComplexStyleRule } from '@vanilla-extract/css';
+import { m } from 'css-calipers';
 import { noiseBg } from '../helpers/noiseSVG.helper';
+import { paddings, margins } from '../helpers/spacing.helper';
+import { backgrounds } from '../helpers/background.helper';
+import { borders } from '../helpers/borders.helper';
+import { boxShadow } from '../helpers/shadow.helper';
+import backdropFilters from '../helpers/backdropFilter.helper';
 
 export const root = style({
   position: 'relative',
-  marginTop: '96px',
-  padding: '80px 24px 120px',
-  background: 'linear-gradient(135deg, #f97794 10%, #623aa2 100%)',
+  ...margins({
+    top: m(96),
+    horizontal: m(0),
+    bottom: m(0),
+  }),
+  ...paddings({
+    top: m(80),
+    horizontal: m(24),
+    bottom: m(120),
+  }),
+  ...backgrounds({
+    image: 'linear-gradient(135deg, #f97794 10%, #623aa2 100%)',
+  }),
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -58,9 +74,14 @@ export const links = style({
 export const overlay = style({
   position: 'absolute',
   inset: '0',
-  borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-  background: 'rgba(255, 255, 255, 0.06)',
-  backdropFilter: 'blur(5px)',
+  ...borders({
+    top: {
+      width: m(1),
+      color: 'rgba(255, 255, 255, 0.2)',
+    },
+  }),
+  ...backgrounds({ color: 'rgba(255, 255, 255, 0.06)' }),
+  ...backdropFilters.style({ blur: m(5) }),
   zIndex: 0,
   ...noiseBg({ opacity: 0.07 }),
 });
@@ -74,11 +95,19 @@ const glassLinkBase: ComplexStyleRule = {
   justifyContent: 'center',
   color: '#ffffff',
   textDecoration: 'none',
-  borderRadius: '8px',
-  background: 'rgba(255, 255, 255, 0.05)',
-  backdropFilter: 'blur(3px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
-  boxShadow: '0 20px 30px rgba(0, 0, 0, 0.15)',
+  ...borders({
+    radius: m(8),
+    width: m(1),
+    color: 'rgba(255, 255, 255, 0.2)',
+  }),
+  ...backgrounds({ color: 'rgba(255, 255, 255, 0.05)' }),
+  ...backdropFilters.style({ blur: m(3) }),
+  boxShadow: boxShadow({
+    x: m(0),
+    y: m(20),
+    blur: m(30),
+    alpha: 0.15,
+  }),
   overflow: 'hidden',
   transition: 'transform 200ms ease, box-shadow 200ms ease',
 };
@@ -90,7 +119,12 @@ export const glassLink = style([
       '&:hover': {
         cursor: 'pointer',
         transform: 'translateY(-20px)',
-        boxShadow: '0 24px 36px rgba(0, 0, 0, 0.25)',
+        boxShadow: boxShadow({
+          x: m(0),
+          y: m(24),
+          blur: m(36),
+          alpha: 0.25,
+        }),
       },
     },
   },
@@ -103,7 +137,7 @@ const glassLinkShineBase: ComplexStyleRule = {
   left: 0,
   width: '50%',
   height: '100%',
-  background: 'rgba(255, 255, 255, 0.5)',
+  ...backgrounds({ color: 'rgba(255, 255, 255, 0.5)' }),
   transform: 'skewX(45deg) translateX(220%)',
   transition: 'transform 400ms ease',
   zIndex: 0,
