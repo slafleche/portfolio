@@ -177,14 +177,23 @@ function scanPatterns(filePath, content) {
   for (const rule of FORBIDDEN_PATTERNS) {
     for (let index = 0; index < lines.length; index += 1) {
       const line = lines[index];
-      if (rule.regex.test(line)) {
-        const lineNumber = index + 1;
-        violations.push({
-          filePath,
-          lineNumber,
-          rule,
-        });
+      if (!rule.regex.test(line)) continue;
+
+      // Allow plain border resets (`border: 'none'` / "none") while still
+      // flagging all other raw border usages.
+      if (rule.id === 'border-inline') {
+        const isPlainBorderNone =
+          /\bborder\s*:\s*['"]none['"]/.test(line) &&
+          !/\bborder(?:Top|Right|Bottom|Left|Radius)\b/.test(line);
+        if (isPlainBorderNone) continue;
       }
+
+      const lineNumber = index + 1;
+      violations.push({
+        filePath,
+        lineNumber,
+        rule,
+      });
     }
   }
   return violations;

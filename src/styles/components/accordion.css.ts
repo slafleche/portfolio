@@ -78,7 +78,7 @@ export const accordion = style({
 
 export const item = style({
   ...borders(glassyPanelTokens.borders),
-  background: 'transparent',
+  ...backgrounds({ color: 'transparent' }),
   boxShadow: 'none',
   overflow: 'hidden',
 });
@@ -89,7 +89,7 @@ export const header = style({
 
 export const trigger = style({
   appearance: 'none',
-  background: 'transparent',
+  ...backgrounds({ color: 'transparent' }),
   border: 'none',
   display: 'grid',
   gridTemplateColumns: '1fr auto',
@@ -103,10 +103,10 @@ export const trigger = style({
   transition: 'background-color 180ms ease, transform 180ms ease',
   selectors: {
     '&:hover': {
-      backgroundColor: colorVars.white.alpha(0.05).css(),
+      ...backgrounds({ color: colorVars.white.alpha(0.05) }),
     },
     '&:focus-visible': {
-      backgroundColor: colorVars.white.alpha(0.08).css(),
+      ...backgrounds({ color: colorVars.white.alpha(0.08) }),
       ...outlines({
         color: colorVars.white.alpha(0.4),
         width: m(0.75),
@@ -141,7 +141,7 @@ export const icon = style({
   width: accordionItemTokens.iconSize.css(),
   height: accordionItemTokens.iconSize.css(),
   borderRadius: '50%',
-  backgroundColor: colorVars.white.alpha(0.1).css(),
+  ...backgrounds({ color: colorVars.white.alpha(0.1) }),
   selectors: {
     [`${trigger}[data-state="open"] &`]: {
       transform: 'rotate(180deg)',
