@@ -1,4 +1,5 @@
 import { globalStyle } from '@vanilla-extract/css';
+import { m } from 'css-calipers';
 import { documentSurface } from '../modules/globals/document.module';
 import {
   composeFontVariantStyles,
@@ -8,6 +9,7 @@ import {
   ReducedMotion,
   reducedMotion,
 } from './helpers/accessibility.helper';
+import { paddings } from './helpers/spacing.helper';
 import './utilities.css';
 
 const {
@@ -58,10 +60,6 @@ globalStyle('main', {
       minHeight: '100svh',
     },
   },
-});
-
-globalStyle('a', {
-  backgroundColor: 'transparent',
 });
 
 globalStyle('abbr[title]', {
@@ -140,7 +138,11 @@ globalStyle(
 );
 
 globalStyle('fieldset', {
-  padding: '0.35em 0.75em 0.625em',
+  ...paddings({
+    top: m(0.35, 'em'),
+    horizontal: m(0.75, 'em'),
+    bottom: m(0.625, 'em'),
+  }),
 });
 
 globalStyle('legend', {
