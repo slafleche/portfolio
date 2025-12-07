@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
+import { backgrounds } from '@/styles/helpers/background.helper';
 
 export default function DebugLayout({
   children,
@@ -9,7 +10,7 @@ export default function DebugLayout({
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#0a0616',
+        ...(backgrounds({ color: '#0a0616' }) as CSSProperties),
         fontFamily:
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
       }}
