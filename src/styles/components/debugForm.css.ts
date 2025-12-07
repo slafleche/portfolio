@@ -46,7 +46,11 @@ export const eyebrow = style({
 });
 
 export const title = style({
-  margin: '0 0 4px',
+  ...margins({
+    top: m(0),
+    horizontal: m(0),
+    bottom: m(4),
+  }),
   fontSize: 20,
   color: formTokens.field.text.color.css(),
 });
@@ -61,7 +65,11 @@ export const list = style({
 });
 
 export const helperText = style({
-  margin: '8px 0 0',
+  ...margins({
+    top: m(8),
+    horizontal: m(0),
+    bottom: m(0),
+  }),
   fontSize: 14,
   color: formTokens.counter.text.color.css(),
   lineHeight: 1.5,
@@ -99,17 +107,27 @@ export const ctaButton = style({
 
 export const code = style({
   fontSize: 12,
-  padding: '2px 6px',
+  ...paddings({
+    vertical: m(2),
+    horizontal: m(6),
+  }),
   borderRadius: 6,
-  backgroundColor: 'rgba(255,255,255,0.08)',
-  border: '1px solid rgba(255,255,255,0.12)',
+  ...backgrounds({ color: 'rgba(255,255,255,0.08)' }),
+  ...borders({
+    width: m(1),
+    color: 'rgba(255,255,255,0.12)',
+  }),
 });
 
 export const accentListItem = style({
   display: 'flex',
   flexDirection: 'column',
   gap: '4px',
-  borderLeftWidth: '4px',
-  borderLeftStyle: 'solid',
+  ...borders({
+    left: {
+      width: m(4),
+      color: 'currentColor',
+    },
+  }),
   paddingLeft: formTokens.layout.fieldGap.css(),
 });
