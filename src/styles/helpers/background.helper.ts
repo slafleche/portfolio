@@ -148,8 +148,7 @@ export const backgrounds = (props: IBackgrounds): GlobalStyleRule => {
   if (props.color !== undefined) {
     const c = props.color;
     if (typeof c === 'string') {
-      styles.backgroundColor =
-        c as CSS_TYPES.Property.BackgroundColor;
+      styles.backgroundColor = c;
     } else if (hasCssMethod(c)) {
       styles.backgroundColor =
         c.css() as CSS_TYPES.Property.BackgroundColor;
