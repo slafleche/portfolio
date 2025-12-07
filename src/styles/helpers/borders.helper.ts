@@ -602,6 +602,15 @@ export const borders = Object.assign(
     all(overrides?: BorderLike): FinalBorderCSS {
       return resolve({ all: overrides ?? true });
     },
+    defaults(): FinalBorderCSS {
+      return resolve({ all: true });
+    },
+    radii(intent?: BorderInput): FinalBorderCSS {
+      return resolve(intent, { allowRadiusOnly: true });
+    },
+    unset(): FinalBorderCSS {
+      return { border: 'none' };
+    },
   },
 );
 
