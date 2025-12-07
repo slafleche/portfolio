@@ -17,8 +17,22 @@
  * @property {string} message
  */
 
+// Simple one-line declaration: const foo = m(18);
 const DECLARATION_REGEX =
   /\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*m\(\s*\d+(?:\.\d+)?(?:\s*,\s*['"][^'"]+['"])?\s*\)\s*;?/;
+
+// Block-style declaration starting an object/array literal:
+// const foo = { all: m(18) };
+// const bar = [
+//   m(4),
+// ];
+const BLOCK_DECL_REGEX =
+  /\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*[{[]/;
+
+// Within a declaration block, still only treat numeric/unit m(...) calls
+// as literal measurements (tokens like m(tokenVar) should remain allowed).
+const BLOCK_M_LITERAL_REGEX =
+  /\bm\(\s*\d+(?:\.\d+)?(?:\s*,\s*['"][^'"]+['"])?\s*\)/;
 
 const ALIAS_REGEX =
   /\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*([A-Za-z_$][\w$]*)\s*;?/;
@@ -34,6 +48,11 @@ const HELPER_REGEX =
  * @returns {MeasurementAliasViolation[]}
  */
 export function findMeasurementAliasViolations(filePath, content) {
+  // Tokens are allowed to define measurement configs freely.
+  if (filePath.startsWith('src/tokens/')) {
+    return [];
+  }
+
   const lines = content.split('\n');
 
   /** @type {Map<string, number>} */
@@ -47,6 +66,30 @@ export function findMeasurementAliasViolations(filePath, content) {
       const name = match[1];
       if (!literalDecls.has(name)) {
         literalDecls.set(name, index + 1);
+      }
+    }
+
+    // Block-style object/array declaration; accumulate until the end
+    // of the initializer and look for numeric m(...) usage inside.
+    const blockMatch = BLOCK_DECL_REGEX.exec(line);
+    if (blockMatch) {
+      const name = blockMatch[1];
+      // Collect a small block starting at this line until we hit a line
+      // that looks like it closes the initializer.
+      let block = line;
+      let cursor = index + 1;
+      while (cursor < lines.length) {
+        const nextLine = lines[cursor];
+        block += `\n${nextLine}`;
+        if (/[}\]]\s*;?\s*$/.test(nextLine)) {
+          break;
+        }
+        cursor += 1;
+      }
+      if (BLOCK_M_LITERAL_REGEX.test(block)) {
+        if (!literalDecls.has(name)) {
+          literalDecls.set(name, index + 1);
+        }
       }
     }
   }
@@ -112,6 +155,13 @@ export function findMeasurementAliasViolations(filePath, content) {
         const name = match[1];
         const info = usage.get(name);
         if (!info) continue;
+
+        const declLine = literalDecls.get(name);
+        const isDeclarationLine = declLine === index + 1;
+        // Ignore the declaration line itself; we only care about how the
+        // measurement literal is *used* elsewhere.
+        if (isDeclarationLine) continue;
+
         if (hasHelper) {
           info.helper = true;
         } else {
@@ -141,4 +191,3 @@ export function findMeasurementAliasViolations(filePath, content) {
 
   return violations;
 }
-

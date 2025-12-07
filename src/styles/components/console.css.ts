@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 import { colorVars, consoleVars } from '../../tokens/global.tokens';
-import { paddings } from '../helpers/spacing.helper';
+import { paddings, margins } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
@@ -32,10 +32,7 @@ export const header = style({
   display: 'flex',
   alignItems: 'center',
   gap: '6px',
-  ...paddings({
-    vertical: m(10),
-    horizontal: m(16),
-  }),
+  ...paddings(consoleVars.header.padding),
   background: colorVars.black.alpha(0.6).css(),
   borderBottom: `1px solid ${colorVars.white.alpha(0.06).css()}`,
 });
@@ -56,7 +53,7 @@ export const windowDot = style({
 });
 
 export const title = style({
-  marginLeft: 'auto',
+  ...margins({ left: 'auto' }),
   fontSize: '14px',
   fontFamily: consoleFontStack,
   color: colorVars.white.alpha(0.5).css(),
@@ -70,7 +67,7 @@ export const body = style({
   fontSize: '16px',
   lineHeight: 1.6,
   flexGrow: 1,
-  ...paddings({ all: m(18) }),
+  ...paddings(consoleVars.body.padding),
 
   backgroundColor: colorVars.black.mix(colorVars.white, 0.005).css(),
   justifyContent: 'flex-end',
