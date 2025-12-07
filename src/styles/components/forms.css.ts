@@ -63,16 +63,8 @@ export const form = style({
 
 export const fieldset = style({
   border: 'none',
-  ...margins({
-    top: m(0),
-    bottom: m(0),
-    horizontal: m(0),
-  }),
-  ...paddings({
-    top: m(0),
-    bottom: m(0),
-    horizontal: m(0),
-  }),
+  ...margins(m(0)),
+  ...paddings(m(0)),
   display: 'grid',
   gap: formTokens.layout.fieldGap.css(),
 });
@@ -291,11 +283,7 @@ export const turnstileWidget = style({
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
-  ...paddings({
-    top: m(8),
-    bottom: m(8),
-    horizontal: m(8),
-  }),
+  ...paddings(m(8)),
 });
 
 export const turnstilePlaceholder = style({

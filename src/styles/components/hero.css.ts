@@ -213,10 +213,7 @@ const offset = m(20);
 export const vennContainer = style({
   position: 'relative',
   isolation: 'isolate',
-  ...paddings({
-    horizontal: offset.multiply(4),
-    vertical: offset.multiply(4),
-  }),
+  ...paddings(offset.multiply(4)),
 });
 
 export const consolePanel = style({
@@ -290,10 +287,7 @@ export const panel = style({
 });
 
 export const panelContents = style({
-  ...paddings({
-    vertical: m(80),
-    horizontal: m(80),
-  }),
+  ...paddings(m(80)),
 });
 
 const heroSurfaceOverlay = buildLinear({

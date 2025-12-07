@@ -27,7 +27,7 @@ describe('spacing.helper', () => {
   it('throws on invalid input types', () => {
     expect(() =>
       paddings('8px' as unknown as Parameters<typeof paddings>[0]),
-    ).toThrow(/spacing intent object/);
+    ).toThrow(/spacing value or spacing intent object/);
   });
 
   it('derives three-value shorthand when vertical differs', () => {
@@ -56,5 +56,47 @@ describe('spacing.helper', () => {
       left: 'inherit',
     });
     expect(styles).toEqual({ padding: 'auto 12px auto inherit' });
+  });
+
+  it('accepts a single measurement as shorthand for all sides', () => {
+    const styles = margins(m(8));
+    expect(styles).toEqual({ margin: '8px' });
+  });
+
+  it('accepts a single spacing keyword as shorthand for all sides', () => {
+    const styles = paddings('auto');
+    expect(styles).toEqual({ padding: 'auto' });
+  });
+
+  it('uses zero defaults when no input is provided', () => {
+    expect(paddings()).toEqual({ padding: '0px' });
+    expect(margins()).toEqual({ margin: '0px' });
+  });
+
+  it('accepts an axis-only intent without all', () => {
+    const styles = margins({
+      vertical: m(8),
+      horizontal: m(0),
+    });
+    expect(styles).toEqual({ margin: '8px 0px' });
+  });
+
+  it('supports horizontal-only spacing intent', () => {
+    const styles = margins({
+      horizontal: m(5),
+    });
+    expect(styles).toEqual({ margin: '0px 5px' });
+  });
+
+  it('supports single-side spacing intent', () => {
+    const styles = paddings({
+      left: m(10),
+    });
+    expect(styles).toEqual({ padding: '0px 0px 0px 10px' });
+  });
+
+  it('supports multiple spacing keywords', () => {
+    const styles = paddings('inherit');
+    expect(styles).toEqual({ padding: 'inherit' });
   });
 });

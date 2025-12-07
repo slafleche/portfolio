@@ -130,11 +130,20 @@ const MEASUREMENT_ALIAS_RULE = {
     'Use tokens or measurement variables (or plain CSS strings where helpers are not required); do not create local m(...) wrappers whose only purpose is to feed paddings/margins/borders/backgrounds/boxShadow/backdropFilters.',
 };
 
+const SPACING_SIMPLIFY_RULE = {
+  id: 'spacing-helper-simplifiable-call',
+  groupTitle:
+    'Simplify paddings/margins helper inputs when they restate the same value multiple times.',
+  solution:
+    'Use axis shorthands or value shorthands (for example, paddings(m(16)), margins({ horizontal: x }), or vertical: x) instead of repeating the same spacing on multiple sides.',
+};
+
 const ALL_RULES = [
   ...FORBIDDEN_PATTERNS,
   ...MEASUREMENT_RULES,
   ...LAYER_IMPORT_BLOCKS,
   MEASUREMENT_ALIAS_RULE,
+  SPACING_SIMPLIFY_RULE,
 ];
 
 function isPlainMode() {
@@ -290,6 +299,134 @@ function scanMeasurementCss(filePath, content) {
   return violations;
 }
 
+function scanSpacingSimplifications(filePath, content) {
+  const posix = filePath.split(path.sep).join('/');
+
+  // Skip token/config and built artefact files; spacing simplifications are
+  // only enforced in style-layer sources.
+  if (
+    STYLE_RULE_SKIP_PATHS.some((prefix) => posix.startsWith(prefix))
+  ) {
+    return [];
+  }
+
+  const violations = [];
+
+  // Look for paddings({...}) / margins({...}) calls with an inline object.
+  const callPattern =
+    /\b(paddings|margins)\(\s*\{([\s\S]*?)\}\s*\)/g;
+
+  let match;
+  while ((match = callPattern.exec(content)) !== null) {
+    const objectBody = match[2];
+    const props = {};
+
+    const lines = objectBody.split('\n');
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line || line.startsWith('//')) continue;
+
+      const propMatch =
+        /^([a-zA-Z]+)\s*:\s*([^,}]+)\s*[,}]?/.exec(line);
+      if (!propMatch) continue;
+
+      const key = propMatch[1];
+      let value = propMatch[2].trim();
+      // Strip trailing inline comments from the value.
+      value = value.replace(/\/\/.*$/, '').trim();
+
+      props[key] = value;
+    }
+
+    const v = props.vertical;
+    const h = props.horizontal;
+    const t = props.top;
+    const r = props.right;
+    const b = props.bottom;
+    const l = props.left;
+
+    let simplifiable = false;
+
+    // 1) left/right pair with same value, no horizontal axis.
+    if (
+      l !== undefined &&
+      r !== undefined &&
+      l === r &&
+      h === undefined
+    ) {
+      simplifiable = true;
+    }
+
+    // 2) top/bottom pair with same value, no vertical axis.
+    if (
+      t !== undefined &&
+      b !== undefined &&
+      t === b &&
+      v === undefined
+    ) {
+      simplifiable = true;
+    }
+
+    // 3) vertical/horizontal both present with same value and no side overrides.
+    const hasAnySide =
+      t !== undefined ||
+      r !== undefined ||
+      b !== undefined ||
+      l !== undefined;
+    if (
+      v !== undefined &&
+      h !== undefined &&
+      v === h &&
+      !hasAnySide
+    ) {
+      simplifiable = true;
+    }
+
+    // 4) Axis plus redundant side(s) that restate the same value.
+    if (
+      v !== undefined &&
+      ((t !== undefined && t === v) ||
+        (b !== undefined && b === v))
+    ) {
+      simplifiable = true;
+    }
+    if (
+      h !== undefined &&
+      ((l !== undefined && l === h) ||
+        (r !== undefined && r === h))
+    ) {
+      simplifiable = true;
+    }
+
+    // 5) All four sides present with the same value and no axes.
+    if (
+      t !== undefined &&
+      r !== undefined &&
+      b !== undefined &&
+      l !== undefined &&
+      v === undefined &&
+      h === undefined &&
+      t === r &&
+      r === b &&
+      b === l
+    ) {
+      simplifiable = true;
+    }
+
+    if (!simplifiable) continue;
+
+    const lineNumber =
+      content.slice(0, match.index).split('\n').length;
+    violations.push({
+      filePath,
+      lineNumber,
+      rule: SPACING_SIMPLIFY_RULE,
+    });
+  }
+
+  return violations;
+}
+
 function formatPlain(violations) {
   console.error('\nLint guardrails failed:\n');
   for (const violation of violations) {
@@ -396,6 +533,9 @@ function main() {
     violations.push(...scanPatterns(relativePath, content));
     violations.push(...scanImports(relativePath, content));
     violations.push(...scanMeasurementCss(relativePath, content));
+    violations.push(
+      ...scanSpacingSimplifications(relativePath, content),
+    );
   }
 
   if (violations.length) {

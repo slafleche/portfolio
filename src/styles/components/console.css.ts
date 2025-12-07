@@ -70,10 +70,7 @@ export const body = style({
   fontSize: '16px',
   lineHeight: 1.6,
   flexGrow: 1,
-  ...paddings({
-    vertical: m(18),
-    horizontal: m(18),
-  }),
+  ...paddings(m(18)),
 
   backgroundColor: colorVars.black.mix(colorVars.white, 0.005).css(),
   justifyContent: 'flex-end',
