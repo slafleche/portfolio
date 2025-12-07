@@ -54,7 +54,7 @@ const pageStyles: Record<string, CSSProperties> = {
       horizontal: m(24),
       bottom: m(96),
     }),
-    ...backgrounds({ color: '#07050e' }),
+    ...(backgrounds({ color: '#07050e' }) as CSSProperties),
     color: '#f5f0ff',
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
@@ -101,7 +101,9 @@ const pageStyles: Record<string, CSSProperties> = {
   headerRow: {
     display: 'grid',
     gridTemplateColumns: '220px 1fr 1fr',
-    ...backgrounds({ color: 'rgba(255,255,255,0.08)' }),
+    ...(backgrounds({
+      color: 'rgba(255,255,255,0.08)',
+    }) as CSSProperties),
     fontSize: 14,
     fontWeight: 600,
     textTransform: 'uppercase',
@@ -124,7 +126,9 @@ const pageStyles: Record<string, CSSProperties> = {
       width: m(1),
       color: 'rgba(255,255,255,0.08)',
     }),
-    ...backgrounds({ color: 'rgba(7,5,14,0.9)' }),
+    ...(backgrounds({
+      color: 'rgba(7,5,14,0.9)',
+    }) as CSSProperties),
   },
   slugCell: {
     ...paddings({ all: m(16) }),
@@ -164,7 +168,9 @@ const pageStyles: Record<string, CSSProperties> = {
 
 const blankCellStyle: CSSProperties = {
   ...pageStyles.localeCell,
-  ...backgrounds({ color: 'rgba(255,255,255,0.02)' }),
+  ...(backgrounds({
+    color: 'rgba(255,255,255,0.02)',
+  }) as CSSProperties),
 };
 
 export default async function AbbreviationDebugPage({
