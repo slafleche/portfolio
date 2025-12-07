@@ -2,13 +2,13 @@
 
 import type { CSSProperties } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 import { formTokens } from '@/tokens/forms.tokens';
 import { glassyButtonTokens } from '@/tokens/glassy.tokens';
 import { paddings, margins } from '@/styles/helpers/spacing.helper';
 import { backgrounds } from '@/styles/helpers/background.helper';
-import borders from '@/styles/helpers/borders.helper';
 import { boxShadow } from '@/styles/helpers/shadow.helper';
+import borders from '../../../../src/styles/helpers/borders.helper';
 
 export type Tone = 'default' | 'info' | 'success' | 'warning' | 'error' | 'muted';
 
@@ -67,15 +67,13 @@ const stackStyle: CSSProperties = {
 };
 
 const blockStyle: CSSProperties = {
-  borderRadius: 24,
   ...borders({
-    all: {
-      width: m(1),
-      color: 'rgba(245,240,255,0.2)',
-    },
+    radius: m(24),
+    width: m(1),
+    color: 'rgba(245,240,255,0.2)',
   }),
   ...paddings({ all: m(32) }),
-  ...backgrounds({ color: 'rgba(8,6,16,0.65)' }),
+  ...backgrounds({ color: 'rgba(8,6,16,0.65)' }) as CSSProperties,
   boxShadow: boxShadow({
     y: m(40),
     blur: m(140),
@@ -133,22 +131,20 @@ const accentListItemStyle: CSSProperties = {
 };
 
 const codeStyle: CSSProperties = {
-  fontSize: 12,
+  fontSize: '12px',
   ...paddings({
     vertical: m(2),
     horizontal: m(6),
   }),
-  borderRadius: 6,
-  ...backgrounds({ color: 'rgba(255,255,255,0.08)' }),
+  borderRadius: '6px',
+  ...backgrounds({ color: 'rgba(255,255,255,0.08)' }) as CSSProperties,
   ...borders({
-    all: {
       width: m(1),
       color: 'rgba(255,255,255,0.12)',
-    },
   }),
 };
 
-const formContainerStyle = {
+const formContainerStyle: CSSProperties = {
   borderRadius: 18,
   ...borders({
     all: {
@@ -157,7 +153,7 @@ const formContainerStyle = {
     },
   }),
   ...paddings({ all: m(24) }),
-  ...backgrounds({ color: 'rgba(6,4,18,0.75)' }),
+  ...backgrounds({ color: 'rgba(6,4,18,0.75)' }) as CSSProperties,
   display: 'flex',
   flexDirection: 'column' as const,
   gap: 16,
@@ -238,12 +234,10 @@ export default function SubmissionTimelineSection({
                 type="button"
                 onClick={() => setSelectedScenarioId(scenario.id)}
                 style={{
-                  borderRadius: 999,
                   ...borders({
-                    all: {
-                      width: m(1),
-                      color: palette.border,
-                    },
+                    radius: mPercent(50),
+                    width: m(1),
+                    color: palette.border,
                   }),
                   ...paddings({
                     vertical: m(8),
@@ -253,7 +247,7 @@ export default function SubmissionTimelineSection({
                     color: isActive
                       ? palette.accent
                       : 'transparent',
-                  }),
+                  }) as CSSProperties,
                   color: isActive ? '#120a24' : palette.text,
                   cursor: 'pointer',
                   fontSize: 13,
@@ -338,7 +332,7 @@ export default function SubmissionTimelineSection({
                   color: fieldProps.disabled
                     ? 'rgba(255,255,255,0.04)'
                     : 'rgba(6,4,18,0.85)',
-                }),
+                }) as CSSProperties,
                 color: '#f5f0ff',
                 marginBottom: 12,
               }}
@@ -372,7 +366,7 @@ export default function SubmissionTimelineSection({
                   color: fieldProps.disabled
                     ? 'rgba(255,255,255,0.04)'
                     : 'rgba(6,4,18,0.85)',
-                }),
+                }) as CSSProperties,
                 color: '#f5f0ff',
                 marginBottom: 12,
               }}
@@ -406,7 +400,7 @@ export default function SubmissionTimelineSection({
                   color: fieldProps.disabled
                     ? 'rgba(255,255,255,0.04)'
                     : 'rgba(6,4,18,0.85)',
-                }),
+                }) as CSSProperties,
                 color: '#f5f0ff',
                 resize: 'vertical',
               }}
@@ -443,7 +437,7 @@ export default function SubmissionTimelineSection({
                   activeScenario?.ctaState === 'success'
                     ? 'rgba(77,201,173,0.2)'
                     : 'rgba(255,255,255,0.08)',
-              }),
+              }) as CSSProperties,
               color: glassyButtonTokens.text.color.css(),
               fontWeight: 600,
               display: 'flex',
