@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
 
 export const root = style({
 	display: 'grid',

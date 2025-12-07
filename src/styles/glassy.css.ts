@@ -6,7 +6,7 @@ import {
 import { glassVars } from '../tokens/glassy.tokens';
 import { globalDropShadowFilter } from './helpers/shadow.helper';
 import { noiseBg } from './helpers/noiseSVG.helper';
-import borders from '@/styles/helpers/borders.config';
+import borders from './helpers/borders.helper';
 import backdropFilters from './helpers/backdropFilter.helper';
 
 const glassBackground = createGlassBackground();

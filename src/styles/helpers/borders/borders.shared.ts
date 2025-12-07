@@ -6,7 +6,6 @@ import type {
 import type {
   CompassRegion,
   CornerPosition,
-  CSS_TYPES,
 } from '@/styles/helpers/types.helper';
 import { isMeasurement } from 'css-calipers';
 import type {
@@ -95,4 +94,3 @@ export const zoneKeys: CompassRegion[] = [
   'east',
   'west',
 ];
-
