@@ -42,7 +42,7 @@ export const container = style({
 
 export const frame = style({
   position: 'relative',
-  ...borders(glassVars.borders, { allowRadiusOnly: true }),
+  ...borders.radii(glassVars.borders),
   overflow: 'hidden',
   backgroundColor: colorVars.transparent.css(),
   display: 'flex',
@@ -56,7 +56,7 @@ export const content = style({
   ...paddings({
     all: m(40),
   }),
-  ...borders(glassVars.borders, { allowRadiusOnly: true }),
+  ...borders.radii(glassVars.borders),
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
