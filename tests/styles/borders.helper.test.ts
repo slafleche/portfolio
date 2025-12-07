@@ -35,10 +35,9 @@ describe('borders.helper', () => {
   });
 
   it('resolves radius-only intents when allowed', () => {
-    const result = borders(
-      { radius: { nw: m(8), ne: m(8) } },
-      { allowRadiusOnly: true },
-    );
+    const result = borders.radii({
+      radius: { nw: m(8), ne: m(8) },
+    });
     expect(result).toEqual({ borderRadius: '8px 8px 0 0' });
   });
 
