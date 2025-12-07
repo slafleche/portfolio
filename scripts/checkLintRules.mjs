@@ -213,6 +213,14 @@ function scanPatterns(filePath, content) {
         if (isPlainBorderNone || isRadiusInherit) continue;
       }
 
+      // Allow plain box-shadow resets (`boxShadow: 'none'` / "none") while
+      // still flagging all other raw boxShadow usages.
+      if (rule.id === 'box-shadow-inline') {
+        const isPlainBoxShadowNone =
+          /\bboxShadow\s*:\s*['"]none['"]/.test(line);
+        if (isPlainBoxShadowNone) continue;
+      }
+
       const lineNumber = index + 1;
       violations.push({
         filePath,
