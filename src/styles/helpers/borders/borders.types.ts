@@ -7,7 +7,6 @@ import type {
 } from '@/styles/helpers/types.helper';
 import type {
   IBorder,
-  BorderWidthInput,
   BorderRadiusInput,
 } from '@/tokens/global.tokens';
 
@@ -93,4 +92,3 @@ export type BorderInput =
   | BorderLike;
 
 export type Corner = 'tl' | 'tr' | 'br' | 'bl';
-
