@@ -367,10 +367,6 @@ const resolveRadiusCompass = (
    Main: border()
 -------------------------- */
 
-type BorderOptions = {
-  allowRadiusOnly?: boolean;
-};
-
 const hasRadiusIntent = (intent?: BorderIntent): boolean => {
   if (!intent) return false;
   const radius = intent.radius;
@@ -474,10 +470,7 @@ const normalizeIntent = (
   return intent;
 };
 
-const resolve = (
-  input?: BorderInput,
-  options?: BorderOptions,
-): FinalBorderCSS => {
+const resolve = (input?: BorderInput): FinalBorderCSS => {
   const intent = normalizeIntent(input);
   if (intent && 'all' in intent && intent.all === false) {
     // prefer borders.none()
@@ -486,22 +479,7 @@ const resolve = (
   const { t, r, b, l } = resolveIntentToEdges(intent ?? {});
   const anyActive = t.active || r.active || b.active || l.active;
 
-  const radiusOnly =
-    options?.allowRadiusOnly &&
-    hasRadiusIntent(intent) &&
-    !hasEdgeIntent(intent);
-
-  if (!anyActive && !radiusOnly) return {};
-
-  if (!anyActive && radiusOnly) {
-    const radiusVal = resolveRadiusCompass(intent?.radius, {
-      t,
-      r,
-      b,
-      l,
-    });
-    return radiusVal ? { borderRadius: radiusVal } : {};
-  }
+  if (!anyActive) return {};
 
   const widths = [
     t.width!,
@@ -570,13 +548,27 @@ const resolve = (
   return css;
 };
 
+const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
+  const intent = normalizeIntent(input);
+  if (!intent) return {};
+  if (!hasRadiusIntent(intent) || hasEdgeIntent(intent)) return {};
+
+  const edges = resolveIntentToEdges(intent);
+  const radiusVal = resolveRadiusCompass(intent.radius, edges);
+
+  if (!radiusVal || radiusVal === '0' || radiusVal === '0px') {
+    return {};
+  }
+
+  return { borderRadius: radiusVal };
+};
+
 /* --------------------------
    Public API
 -------------------------- */
 
 export const borders = Object.assign(
-  (intent?: BorderInput, options?: BorderOptions): FinalBorderCSS =>
-    resolve(intent, options),
+  (intent?: BorderInput): FinalBorderCSS => resolve(intent),
   {
     none(): FinalBorderCSS {
       return { border: 'none' };
@@ -606,7 +598,7 @@ export const borders = Object.assign(
       return resolve({ all: true });
     },
     radii(intent?: BorderInput): FinalBorderCSS {
-      return resolve(intent, { allowRadiusOnly: true });
+      return resolveRadiusOnly(intent);
     },
     unset(): FinalBorderCSS {
       return { border: 'none' };

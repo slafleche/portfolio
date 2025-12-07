@@ -8,7 +8,7 @@ import { boxShadow } from './shadow.helper';
 
 export const frame = style({
   // position: 'relative',
-  ...borders(glassVars.borders, { allowRadiusOnly: true }),
+  ...borders.radii(glassVars.borders),
   // overflow: 'hidden',
   boxShadow: boxShadow(),
 });
@@ -20,7 +20,7 @@ export const surfaceBorder = style({
   height: '100%',
   width: '100%',
   ...paddings(glassVars.paddings),
-  ...borders(glassVars.borders, { allowRadiusOnly: true }),
+  ...borders.radii(glassVars.borders),
   pointerEvents: 'none',
   WebkitMask:
     'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
@@ -42,7 +42,7 @@ export const rim = style({
   position: 'absolute',
   inset: 0,
   ...paddings(glassVars.paddings),
-  ...borders(glassVars.borders, { allowRadiusOnly: true }),
+  ...borders.radii(glassVars.borders),
   pointerEvents: 'none',
   WebkitMask:
     'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',

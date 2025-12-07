@@ -15,7 +15,7 @@ import {
 import { fontVariantStyles } from '../../tokens/fontVariants.tokens';
 import { outlines } from '../helpers/outlines.helper';
 import { colorVars } from '../../tokens/global.tokens';
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
@@ -140,7 +140,7 @@ export const icon = style({
   justifyContent: 'center',
   width: accordionItemTokens.iconSize.css(),
   height: accordionItemTokens.iconSize.css(),
-  borderRadius: '50%',
+  ...borders.radii({ radius: mPercent(50) }),
   ...backgrounds({ color: colorVars.white.alpha(0.1) }),
   selectors: {
     [`${trigger}[data-state="open"] &`]: {

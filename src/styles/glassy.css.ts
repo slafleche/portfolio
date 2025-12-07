@@ -73,7 +73,7 @@ export const element = style({
   position: 'relative',
   width: '100%',
   height: '100%',
-  ...borders(glassVars.borders, { allowRadiusOnly: true }),
+  ...borders.radii(glassVars.borders),
   zIndex: 4,
 });
 
@@ -84,7 +84,7 @@ export const grain = style({
   width: `calc(100% - ${glassVars.borders.width.double().css()})`,
   height: `calc(100% - ${glassVars.borders.width.double().css()})`,
   pointerEvents: 'none',
-  ...borders(innerRadius, { allowRadiusOnly: true }),
+  ...borders.radii(innerRadius),
   ...noiseBg({ backgroundImage: glassNoise() }),
   zIndex: 3,
 });
