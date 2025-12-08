@@ -105,7 +105,7 @@
     "svg:clean": "yarn svgo && yarn format:svg",
     "svgo": "node scripts/optimizeSvgs.mjs --write",
     "favicons": "node --import tsx scripts/generateFavicons.ts",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch",
     "upgrade:latest": "yarn up \"*@latest\" \"@*/*@latest\" && yarn dedupe"
   }
