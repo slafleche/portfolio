@@ -13,7 +13,6 @@ const copy: HoneypotBlockLocale = {
 
 describe('Contact form block tests: HoneypotBlock', () => {
   it('tabs from before sentinel to after sentinel, skipping honeypot', async () => {
-
     const { getByTestId } = render(
       <FocusSentinelWrapper>
         <HoneypotBlock copy={copy} />
@@ -36,7 +35,6 @@ describe('Contact form block tests: HoneypotBlock', () => {
   });
 
   it('renders honeypot structure and accessibility attributes', () => {
-
     const { container } = render(<HoneypotBlock copy={copy} />);
 
     const wrapper = container.firstElementChild as HTMLElement | null;
@@ -94,3 +92,4 @@ describe('Contact form block tests: HoneypotBlock', () => {
     expect(submittedValue).toBe('bot-signal');
   });
 });
+

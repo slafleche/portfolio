@@ -133,14 +133,7 @@ export function NameBlock({
         requestFocusAfter: contract.requestFocusAfter,
         liveValidation: liveValidationRegistration,
       };
-    }, [
-      copy,
-      evaluation,
-      id,
-      onFocusAfter,
-      onFocusBefore,
-      value,
-    ]),
+    }, [copy, evaluation, id, liveValidationRegistration, onFocusAfter, onFocusBefore, value]),
   );
 
   const liveValidation = hasBlurred || continuousValidation;
@@ -157,6 +150,7 @@ export function NameBlock({
   return (
     <div id={id} data-order={order}>
       <TextInputBlock
+        id={id}
         blockKey="name"
         label={copy.label}
         value={value}
