@@ -1,3 +1,4 @@
+import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { ColorWrapper } from './colorWrap.helper';
 import { m, type IMeasurement } from 'css-calipers';
 import {
@@ -29,18 +30,41 @@ const formatBoxShadow = (props: IBoxShadow = {}) => {
   return `${x.css()} ${y.css()} ${blur.css()} 0 ${finalColor.css()}${inset ? ' inset' : ''}`;
 };
 
-export type IBoxShadowTokens = IBoxShadow | ReadonlyArray<IBoxShadow>;
+export type IBoxShadowTokens =
+  | IBoxShadow
+  | ReadonlyArray<IBoxShadow>;
 
 const isBoxShadowList = (
   input: IBoxShadowTokens,
 ): input is ReadonlyArray<IBoxShadow> => Array.isArray(input);
 
-export const boxShadow = (input: IBoxShadowTokens = {}) => {
+const boxShadowValue = (
+  input: IBoxShadowTokens = {},
+): CSS_TYPES.Property.BoxShadow => {
   if (isBoxShadowList(input)) {
-    return input.map((entry) => formatBoxShadow(entry)).join(', ');
+    return input
+      .map((entry) => formatBoxShadow(entry))
+      .join(', ') as CSS_TYPES.Property.BoxShadow;
   }
-  return formatBoxShadow(input);
+  return formatBoxShadow(
+    input,
+  ) as CSS_TYPES.Property.BoxShadow;
 };
+
+type BoxShadowComposer = {
+  (
+    input?: IBoxShadowTokens,
+  ): {
+    boxShadow: CSS_TYPES.Property.BoxShadow;
+  };
+  value: typeof boxShadowValue;
+};
+
+export const boxShadow = ((input: IBoxShadowTokens = {}) => ({
+  boxShadow: boxShadowValue(input),
+})) as BoxShadowComposer;
+
+boxShadow.value = boxShadowValue;
 
 // CSS filter: drop-shadow() helper, using global defaults
 export const globalDropShadowFilter = (props: IBoxShadow = {}) => {
