@@ -65,4 +65,10 @@ export const frFormCopy = {
     'La vérification a expiré. Veuillez réessayer.',
   'form-turnstile-summary-error':
     'La vérification est indisponible. Veuillez réessayer.',
+  'form-category_error-required_input':
+    'Veuillez remplir le(s) champ(s) obligatoire(s).',
+  'form-category_error-invalid_input':
+    'Veuillez corriger le(s) champ(s) indiqué(s).',
+  'form-category_error-submission_error':
+    "Malheureusement, nous n'avons pas pu envoyer votre message pour la raison suivante :",
 } as const;

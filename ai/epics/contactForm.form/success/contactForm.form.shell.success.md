@@ -18,6 +18,11 @@ This file describes success criteria for the `ContactForm` shell component.
 - When `validateAll()` returns `true`, the shell calls `collectPayload()` and forwards the opaque payload to a submit helper; it does not inspect or transform field-level data.
 - When `validateAll()` returns `false`, the shell cancels the submit attempt without calling the submit helper.
 
+## Transport and submit helper
+
+- The shell uses a JS submit helper as the primary submission path: it builds a payload via `collectPayload()`/per-block `getPayload` and calls the `/api/contact` route (or equivalent) using that payload, rather than relying on a native form POST as the main mechanism.
+- A native `action`/`method` on the `<form>` element is optional and, if present, acts only as a progressive enhancement or legacy fallback; success for this epic means the JS submit path is the authoritative source of submit behaviour.
+
 ## Submit state and status
 
 - The shell owns an `isSubmitting` flag initialised to `false` and flips it to `true` only while a submission attempt is in flight.
@@ -46,4 +51,3 @@ This file describes success criteria for the `ContactForm` shell component.
 - On each submission attempt, a triage helper (in the message-centre layer or an adjacent orchestration helper) selects a single priority message from the collected messages, based on severity and field order.
 - The shell reuses metadata from the priority message (for example, a `scrollTarget`) only to drive scroll/focus behaviour; it does not map or rewrite message text.
 - Toast decisions remain in the message-centre layer: at most one toast is surfaced per submission, based on the priority message’s `categoryError`, not per-field errors.
-
