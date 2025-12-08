@@ -37,7 +37,7 @@ const controlBase: ComplexStyleRule = {
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
         ...borders(formTokens.field.focusVisible.borders),
-        boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
+        ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&:disabled, &[data-debug="disabled"]': {
       opacity: 0.55,
@@ -58,7 +58,9 @@ export const form = style({
   gap: formTokens.layout.sectionGap.css(),
   maxWidth: formTokens.layout.maxWidth.css(),
   width: '100%',
-  margin: '0 auto',
+  ...margins({
+    horizontal: 'auto',
+  }),
 });
 
 export const fieldset = style({
@@ -74,7 +76,7 @@ export const legend = style({
   width: '1px',
   height: '1px',
   padding: 0,
-  margin: '-1px',
+  ...margins(m(-1)),
   overflow: 'hidden',
   clip: 'rect(0 0 0 0)',
   whiteSpace: 'nowrap',
@@ -208,21 +210,21 @@ export const submitButton = style({
   ...backgrounds(glassyButtonTokens.backgrounds),
   color: glassyButtonTokens.text.color.css(),
   fontWeight: 600,
-  boxShadow: boxShadow(glassyButtonTokens.boxShadows),
+  ...boxShadow(glassyButtonTokens.boxShadows),
   ...backdropFilters.style({ blur: glassVars.blur }),
   transition:
     'transform 160ms ease, opacity 160ms ease, background 160ms ease, box-shadow 160ms ease',
   selectors: {
     '&:hover, &[data-debug="hover"]': {
       ...backgrounds(glassyButtonTokens.hover.backgrounds),
-      boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
+      ...boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-1px)',
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
         outline: 'none',
         ...backgrounds(glassyButtonTokens.focusVisible.backgrounds),
-        boxShadow: boxShadow(
+        ...boxShadow(
           glassyButtonTokens.focusVisible.boxShadows,
         ),
       },
@@ -232,7 +234,7 @@ export const submitButton = style({
       transform: 'none',
     },
     '&:active, &[data-debug="active"]': {
-      boxShadow: boxShadow(glassyButtonTokens.active.boxShadows),
+      ...boxShadow(glassyButtonTokens.active.boxShadows),
       transform: 'translateY(0)',
     },
   },
@@ -260,7 +262,7 @@ export const privacyLink = style({
     },
     '&:focus, &:focus-visible': {
       outline: 'none',
-      boxShadow: boxShadow(formTokens.field.focusVisible.shadow),
+      ...boxShadow(formTokens.field.focusVisible.shadow),
     },
   },
 });
@@ -343,7 +345,7 @@ export const privacyPanel = style({
   ...borders(formTokens.field.borders),
   backgroundColor: colorVars.bodyBg.css(),
   color: colorVars.bodyFg.css(),
-  boxShadow: boxShadow({
+  ...boxShadow({
     x: m(0),
     y: m(3),
     blur: m(12),
@@ -387,13 +389,13 @@ export const privacyCloseIcon = style({
   fontSize: glassyButtonTokens.iconSize.css(),
   fontWeight: 600,
   cursor: 'pointer',
-  boxShadow: boxShadow(glassyButtonTokens.boxShadows),
+  ...boxShadow(glassyButtonTokens.boxShadows),
   ...backdropFilters.style({ blur: glassVars.blur.double() }),
   // transition: glassyButtonTokens.transition,
   selectors: {
     '&:hover': {
       // background: glassyButtonTokens.hover.background.color.css(),
-      boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
+      ...boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-1px)',
     },
     '&:focus, &:focus-visible': {
@@ -401,13 +403,13 @@ export const privacyCloseIcon = style({
       // ...backgrounds(glasssButtonTokens.focusVisible.backgrounds),
       // background:
       // glassyButtonTokens.focusVisible.background.color.css(),
-      boxShadow: boxShadow(
+      ...boxShadow(
         glassyButtonTokens.focusVisible.boxShadows,
       ),
     },
     '&:active': {
       transform: 'translateY(0)',
-      boxShadow: boxShadow(glassyButtonTokens.boxShadows),
+      ...boxShadow(glassyButtonTokens.boxShadows),
     },
   },
 });
@@ -417,7 +419,7 @@ export const visuallyHidden = style({
   width: '1px',
   height: '1px',
   padding: 0,
-  margin: '-1px',
+  ...margins(m(-1)),
   overflow: 'hidden',
   clip: 'rect(0 0 0 0)',
   whiteSpace: 'nowrap',
@@ -433,7 +435,7 @@ const toastBase: ComplexStyleRule = {
   gap: formTokens.layout.fieldGap.css(),
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
-  boxShadow: boxShadow({
+  ...boxShadow({
     x: m(0),
     y: m(4),
     blur: m(14),

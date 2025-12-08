@@ -104,7 +104,7 @@ export const closeButton = style({
   justifyContent: 'center',
   fontSize: glassyButtonTokens.iconSize.css(),
   fontWeight: 600,
-  boxShadow: boxShadow(glassyButtonTokens.boxShadows),
+  ...boxShadow(glassyButtonTokens.boxShadows),
   ...backdropFilters.style({ blur: glassVars.blur }),
   transition:
     'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
@@ -123,7 +123,7 @@ export const closeButton = style({
     },
     '&:hover': {
       ...backgrounds(glassyButtonTokens.hover.backgrounds),
-      boxShadow: boxShadow(glassyButtonTokens.hover.boxShadows),
+      ...boxShadow(glassyButtonTokens.hover.boxShadows),
       transform: 'translateY(-2px)',
     },
     '&:focus-visible': {
@@ -133,7 +133,7 @@ export const closeButton = style({
     },
     '&:active': {
       transform: 'translateY(0)',
-      boxShadow: boxShadow(glassyButtonTokens.active.boxShadows),
+      ...boxShadow(glassyButtonTokens.active.boxShadows),
     },
     '&:hover::after, &:focus-visible::after': {
       opacity: 1,

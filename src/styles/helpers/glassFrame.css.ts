@@ -10,7 +10,7 @@ export const frame = style({
   // position: 'relative',
   ...borders.radii(glassVars.borders),
   // overflow: 'hidden',
-  boxShadow: boxShadow(),
+  ...boxShadow(),
 });
 
 export const surfaceBorder = style({

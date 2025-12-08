@@ -11,21 +11,34 @@ import { m } from 'css-calipers';
 
 describe('shadow.helper', () => {
   it('formats single and multiple box shadows', () => {
-    const single = boxShadow({
+    const singleStyle = boxShadow({
       x: m(1),
       y: m(2),
       blur: m(3),
       color: colorVars.brand,
       alpha: 0.5,
     });
-    expect(single).toBe('1px 2px 3px 0 rgb(91 65 153 / 0.5)');
+    expect(singleStyle.boxShadow).toBe(
+      '1px 2px 3px 0 rgb(91 65 153 / 0.5)',
+    );
 
-    const multi = boxShadow([
+    const multiStyle = boxShadow([
       { x: m(0), y: m(1) },
       { x: m(1), y: m(2), inset: true },
     ]);
-    expect(multi).toContain(' inset');
-    expect(multi.split(', ')).toHaveLength(2);
+    expect(multiStyle.boxShadow).toContain(' inset');
+    expect(multiStyle.boxShadow.split(', ')).toHaveLength(2);
+
+    const singleValue = boxShadow.value({
+      x: m(1),
+      y: m(2),
+      blur: m(3),
+      color: colorVars.brand,
+      alpha: 0.5,
+    });
+    expect(singleValue).toBe(
+      '1px 2px 3px 0 rgb(91 65 153 / 0.5)',
+    );
   });
 
   it('builds drop-shadow filters with defaults', () => {

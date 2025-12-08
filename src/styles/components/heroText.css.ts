@@ -1,6 +1,9 @@
 import { style, globalStyle } from '@vanilla-extract/css';
+import { m } from 'css-calipers';
 import { colorVars } from '../../tokens/global.tokens';
 import { projectorVars } from '../componentTokens/projector.componentTokens';
+import { margins } from '../helpers/spacing.helper';
+import borders from '../helpers/borders.helper';
 
 export const container = style({
   position: 'relative',
@@ -17,8 +20,8 @@ export const backdrop = style({
   position: 'absolute',
   zIndex: 0,
   inset: '0 -16px',
-  margin: '0 auto',
-  borderRadius: '28px',
+  ...margins({ horizontal: 'auto' }),
+  ...borders.radii({ radius: m(28) }),
   backgroundColor: colorVars.black.alpha(0).css(),
   pointerEvents: 'none',
   transition: 'none',

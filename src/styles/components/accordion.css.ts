@@ -68,7 +68,7 @@ export const accordion = style({
   flexDirection: 'column',
   gap: accordionItemTokens.gap.css(),
   overflow: 'hidden',
-  boxShadow: boxShadow(glassyPanelTokens.shadow),
+  ...boxShadow(glassyPanelTokens.shadow),
   ...paddings(accordionSurfaceTokens.paddings),
   ...borders(accordionSurfaceTokens.borders),
   ...backgroundImageDecl(surfaceGradient),

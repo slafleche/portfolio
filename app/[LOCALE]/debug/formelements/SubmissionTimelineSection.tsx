@@ -74,7 +74,7 @@ const blockStyle: CSSProperties = {
   }),
   ...paddings(m(32)),
   ...backgrounds({ color: 'rgba(8,6,16,0.65)' }) as CSSProperties,
-  boxShadow: boxShadow({
+  ...boxShadow({
     y: m(40),
     blur: m(140),
   }),

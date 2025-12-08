@@ -37,7 +37,7 @@ export const link = style({
   width: chevronVars.width.add(chevronVars.padding.double()).css(),
   height: chevronVars.width.add(chevronVars.padding.double()).css(),
   transition: 'background 0.3s ease-in',
-  boxShadow: boxShadow(),
+  ...boxShadow(),
   selectors: {
     '&:hover': {
       opacity: 1,

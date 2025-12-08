@@ -25,7 +25,7 @@ export const block = style({
   ...borders(formTokens.field.borders),
   ...paddings(doubledFieldGap),
   ...backgrounds(formTokens.field.backgrounds),
-  boxShadow: boxShadow({
+  ...boxShadow({
     x: m(0),
     y: m(40),
     blur: m(140),
@@ -102,7 +102,7 @@ export const ctaButton = style({
   alignItems: 'center',
   justifyContent: 'center',
   gap: halfFieldGap.css(),
-  boxShadow: boxShadow(glassyButtonTokens.boxShadows),
+  ...boxShadow(glassyButtonTokens.boxShadows),
 });
 
 export const code = style({
