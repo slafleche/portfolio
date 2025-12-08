@@ -50,4 +50,4 @@ This file describes success criteria for the `ContactForm` shell component.
 - The shell ensures the message-centre provider/component is rendered inside the form so blocks and infrastructure can publish `MessageCentreTransmission` data.
 - On each submission attempt, a triage helper (in the message-centre layer or an adjacent orchestration helper) selects a single priority message from the collected messages, based on severity and field order.
 - The shell reuses metadata from the priority message (for example, a `scrollTarget`) only to drive scroll/focus behaviour; it does not map or rewrite message text.
-- Toast decisions remain in the message-centre layer: at most one toast is surfaced per submission, based on the priority message’s `categoryError`, not per-field errors.
+- Toast decisions remain in the message-centre layer: at most one toast is surfaced per submission, based on the priority message’s higher-order summary message (derived from its category), not per-field errors.

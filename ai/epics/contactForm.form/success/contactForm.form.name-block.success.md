@@ -14,13 +14,12 @@ This file describes success criteria for the `NameBlock` component.
 - Validation runs locally in the block and produces a simple “ok vs reason” result; all mapping from reasons to user-facing copy stays in the block.
 - When validation fails, the block:
   - Surfaces a clear inline hint attached to the control (for example, “Name required”, “Name too long”).
-  - Publishes a `MessageCentreTransmission` that includes a `Message` with:
-    - `type: 'error'`.
-    - A stable internal `code` for the specific failure.
-    - `text` containing the user-facing message.
-    - A `categoryError` that groups this under a higher-level “invalid input” style category.
-    - A `scrollTarget` that identifies the name control as the place to scroll and focus.
-- When validation passes, the block clears its inline error state and does not emit error-type messages.
+  - Produces a structured validation result whose `messages` entries:
+    - Use `type: 'error'` for invalid states.
+    - Include a stable internal `code` for the specific failure.
+    - Provide `text` containing the user-facing message.
+    - Provide a `scrollTarget` that identifies the name control as the place to scroll and focus.
+- When validation passes, the block clears its inline error state and returns an empty error-message list.
 
 ## Form-blocks contract
 
@@ -30,5 +29,4 @@ This file describes success criteria for the `NameBlock` component.
   - A `getValue` accessor for payload construction.
   - A `validate` function that returns a simple boolean validity signal for the form-blocks API.
   - Any hooks needed for continuous validation (for example, enabling live checks after the first submit).
-- The block does not depend on form-level error flags; it responds only to coarse `isSubmitting` and any shared read-only/disabled state passed from the shell.
-
+- The block does not depend on form-level error flags; it responds only to shared read-only/disabled state passed from the shell.

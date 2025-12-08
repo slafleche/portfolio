@@ -7,9 +7,9 @@ This file describes success criteria for the generic contact form block contract
 - Each block is responsible for:
   - Rendering its own UI (label, control, helper/error text) using localized copy passed via props.
   - Owning its own value and validation logic, delegated to shared helpers where appropriate.
-  - Emitting field-level messages describing its state without deciding how those messages are presented (inline vs toast).
+  - Producing structured validation results that include field-level messages describing its state, without deciding how those messages are presented (inline vs toast).
 - Blocks do not:
-  - Know about the overall submit lifecycle beyond coarse `isSubmitting`/read-only/disabled state.
+  - Know about the overall submit lifecycle beyond coarse read-only/disabled state.
   - Inspect or set global form-level error flags.
   - Decide how or when to show toasts; they only publish messages.
 
@@ -28,27 +28,24 @@ This file describes success criteria for the generic contact form block contract
 
 ## Message-centre interface
 
-- Blocks emit messages via a `MessageCentreTransmission` structure with:
-  - `source`: usually the block key, so messages can be grouped and ordered.
-  - `messages`: an array of `Message` objects describing field-level state.
-- Each `Message` produced by a block follows this pattern:
+- Blocks do not talk to the message centre directly.
+- Each block’s validation result includes message objects that describe its field-level state:
   - `type`: `'error' | 'warning' | 'info'`, chosen to reflect severity.
   - `code`: a stable internal identifier for the specific message scenario.
   - `text`: the user-facing, localized message string.
-  - `categoryError`: a higher-order category (for example, a shared “invalid input” bucket for field validation failures, or a “verification” category for Turnstile errors).
-  - Optional `scrollTarget`: an identifier that allows the shell to scroll this block into view and focus it when the message is selected as the priority error.
+  - Optional `scrollTarget`: an identifier that allows the shell or recovery helpers to scroll this block into view and focus it when the message is selected as the priority error.
+- On submission attempts, an orchestration helper collects validation output from all blocks, attaches a higher-order summary string for the selected error category (for example, “required input”, “invalid input”, “submission error”), and wraps the result into message-centre transmissions consumed by the message-centre layer.
 - Success criteria for messaging:
-  - For any invalid state, the block emits at most one `error`-type `Message` at a time per source, keeping the bundle concise.
-  - When the block returns to a valid state, it stops emitting error-type messages for that condition.
-  - Blocks never emit toasts directly; they only publish `Message` objects that the message-centre layer can triage and present.
+  - For any invalid state, a block’s validation result includes at most one `error`-type message at a time per source, keeping the bundle concise.
+  - When the block returns to a valid state, it stops producing error-type messages for that condition.
+  - Blocks never request toasts directly; they only produce messages that the message-centre/triage layer can combine, prioritise, and present.
 
 ## Props and external state
 
 - Blocks accept only the props they need for:
   - Localized copy.
-  - Coarse form state (for example, `readOnly`, `disabled`, and `isSubmitting`).
+  - Coarse form state (for example, `readOnly` and `disabled`).
   - Optional debug and preview modes.
 - Blocks remain reusable in different surfaces (dialog, debug page, tests) as long as:
   - The form-blocks and message-centre providers are present.
   - The same contract and message shapes are respected.
-
