@@ -1,12 +1,12 @@
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
-import type { Message } from '../messageCentre.types';
+import type { MessageBase, TranslatedErrorMessage } from '../messageCentre.types';
 
 type ContactFormBlockId = string;
 
 export type ContactFormBlockValidationResult = {
   id: ContactFormBlockId;
   valid: boolean;
-  messages: Message[];
+  messages: MessageBase[];
 };
 
 export type ContactFormBlockBaseProps = {
@@ -16,12 +16,17 @@ export type ContactFormBlockBaseProps = {
   required?: boolean;
 }
 
+export type ContactFormBlockPayload<Value> = {
+  id: ContactFormBlockId;
+  value: Value;
+};
+
 export type ContactFormBlockContract<Value> = {
   validate: () => ContactFormBlockValidationResult;
-  getValue: () => Value;
   focus: () => void;
   requestFocusBefore: () => void;
   requestFocusAfter: () => void;
+  getPayload: () => ContactFormBlockPayload<Value>;
 };
 
 export type ContactFormDebugFieldState = {
@@ -34,9 +39,7 @@ export type ContactFormProps = {
   onSuccessStateChange?: (visible: boolean) => void;
 };
 
-
-export type MessageBundle = {
-  globals: string[]; // from here
-  blocks: string[];
-  priority?: Message; // set here
+export type BlockMessage = Omit<MessageBase, 'code'> & {
+  source: ContactFormBlockId;
+  higherOrderErrorMessage: TranslatedErrorMessage;
 };

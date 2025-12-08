@@ -1,13 +1,21 @@
-export type Message = {
-  type: 'error' | 'warning' | 'info';
-  code: string; // Internal code to identify the message
-  text: string; // User-facing message text
-  categoryError: string; // higher order error message. for example, the test may be a specific field is bad, but the category is invalid inputs
-  scrollTarget?: string; // optional key of scroll & focus, use to turn submit into up arrow button
-}
 
-export type MessageCentreTransmission = {
-  source: string; // either 'global' or the block key
-  messages: Message[];
+export type CategoryErrorKey =
+  | 'RequiredInput'
+  | 'InvalidInput'
+  | 'SubmissionError';
+
+export type TranslatedErrorMessage = string;
+
+// Raw message shape produced by blocks / form internals before category/source are attached.
+export type MessageBase = {
+  type: 'error' | 'warning' | 'info';
+  code: string; // Internal code to identify the message scenario (e.g., 'turnstile.missing').
+  text: string; // User-facing message text.
+  scrollTarget?: string; // Optional key for scroll & focus (usually a block id).
 };
 
+// Generic envelope used when sending messages toward the message centre.
+export type MessageCentreTransmission<TMessage extends MessageBase = MessageBase> = {
+  source: string; // Block key or 'form' / other logical sources.
+  messages: TMessage[];
+};

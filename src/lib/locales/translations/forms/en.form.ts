@@ -57,4 +57,10 @@ export const enFormCopy = {
     'Human verification expired. Please try again.',
   'form-turnstile-summary-error':
     'Human verification is unavailable. Please retry.',
+  'form-category_error-required_input':
+    'Please fill all required field(s).',
+  'form-category_error-invalid_input':
+    'Please correct the flagged field(s).',
+  'form-category_error-submission_error':
+    "Unfortunately, we couldn't send your message because:",
 } as const;
