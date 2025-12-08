@@ -507,6 +507,7 @@ function scanSingleLayerHelpers(filePath, content) {
   let inVeStyle = false;
   let veStartLine = 0;
   let veHelperCounts = makeCounter();
+  let veSkipDepth = 0;
 
   // JSX inline style={{ ... }} blocks.
   let inJsxStyle = false;
@@ -522,15 +523,30 @@ function scanSingleLayerHelpers(filePath, content) {
       inVeStyle = true;
       veStartLine = lineNumber;
       veHelperCounts = makeCounter();
+      veSkipDepth = 0;
     }
 
     if (inVeStyle) {
-      for (const name of helperNames) {
-        if (line.includes(`...${name}`)) {
-          const matches = line.match(
-            new RegExp(String.raw`\.\.\.${name}\b`, 'g'),
-          );
-          if (matches) veHelperCounts[name] += matches.length;
+      const opens = (line.match(/{/g) || []).length;
+      const closes = (line.match(/}/g) || []).length;
+
+      if (veSkipDepth > 0) {
+        veSkipDepth += opens - closes;
+      } else if (
+        line.includes('selectors:') ||
+        line.includes('@media')
+      ) {
+        veSkipDepth += opens - closes;
+      }
+
+      if (veSkipDepth === 0) {
+        for (const name of helperNames) {
+          if (line.includes(`...${name}`)) {
+            const matches = line.match(
+              new RegExp(String.raw`\.\.\.${name}\b`, 'g'),
+            );
+            if (matches) veHelperCounts[name] += matches.length;
+          }
         }
       }
 
@@ -545,6 +561,7 @@ function scanSingleLayerHelpers(filePath, content) {
           }
         }
         inVeStyle = false;
+        veSkipDepth = 0;
       }
     }
 
