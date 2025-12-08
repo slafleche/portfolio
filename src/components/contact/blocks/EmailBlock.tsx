@@ -4,8 +4,9 @@ import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
 import { evaluateEmailField } from '@/modules/contactForm/validation';
 import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
+import type { ContactFormBlockBaseProps } from '../types/form.types';
 
-export type EmailBlockProps = {
+export type EmailBlockProps = ContactFormBlockBaseProps & {
   copy: EmailBlockLocale;
   readOnly?: boolean;
   disabled?: boolean;
@@ -15,6 +16,8 @@ export type EmailBlockProps = {
 };
 
 export function EmailBlock({
+  id,
+  order,
   readOnly,
   disabled,
   maxLength,
@@ -52,19 +55,21 @@ export function EmailBlock({
   );
 
   return (
-    <TextInputBlock
-      blockKey="email"
-      label={copy.label}
-      value={value}
-      onChange={handleChange}
-      requiredText={copy.requiredText}
-      readOnly={readOnly}
-      disabled={disabled}
-      maxLength={maxLength}
-      type="email"
-      autoComplete="email"
-      ref={inputRef}
-      required
-    />
+    <div id={id} data-order={order}>
+      <TextInputBlock
+        blockKey="email"
+        label={copy.label}
+        value={value}
+        onChange={handleChange}
+        requiredText={copy.requiredText}
+        readOnly={readOnly}
+        disabled={disabled}
+        maxLength={maxLength}
+        type="email"
+        autoComplete="email"
+        ref={inputRef}
+        required
+      />
+    </div>
   );
 }

@@ -12,9 +12,11 @@ import {
 } from '@/modules/contactForm/validation.constants';
 import { evaluateMessageField } from '@/modules/contactForm/validation';
 import type { MessageBlockLocale } from '@/lib/locales/form/form.message';
+import type { ContactFormBlockBaseProps } from '../types/form.types';
 
-export type MessageBlockProps = {
-  id?: string;
+export type MessageBlockProps = ContactFormBlockBaseProps & {
+  id: string;
+  order: number;
   copy: MessageBlockLocale;
   helperText?: string | null;
   errorText?: string | null;
@@ -26,6 +28,7 @@ export type MessageBlockProps = {
 
 export function MessageBlock({
   id,
+  order,
   copy,
   helperText,
   errorText,
@@ -123,7 +126,7 @@ export function MessageBlock({
     : characterHintId;
 
   return (
-    <div className={clsx(s.fieldGroup)}>
+    <div id={id} data-order={order} className={clsx(s.fieldGroup)}>
       <FormLabel
         htmlFor={textareaId}
         label={copy.label}

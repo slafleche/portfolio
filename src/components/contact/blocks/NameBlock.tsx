@@ -5,11 +5,10 @@ import { useFormBlock } from '../formBlocks.context';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
 import { evaluateNameField } from '@/modules/contactForm/validation';
 import type { NameBlockLocale } from '@/lib/locales/form/form.name';
+import type { ContactFormBlockBaseProps } from '../types/form.types';
 
-export type NameBlockProps = {
+export type NameBlockProps = ContactFormBlockBaseProps & {
   copy: NameBlockLocale;
-  readOnly?: boolean;
-  disabled?: boolean;
   maxLength?: number;
   minLength?: number;
   onFocusBefore?: () => void;
@@ -17,7 +16,9 @@ export type NameBlockProps = {
 };
 
 export function NameBlock({
-  readOnly,
+  id,
+  order,
+  required = true,
   disabled,
   maxLength,
   minLength,
@@ -58,18 +59,19 @@ export function NameBlock({
   );
 
   return (
-    <TextInputBlock
-      blockKey="name"
-      label={copy.label}
-      value={value}
-      onChange={handleChange}
-      requiredText={copy.requiredText}
-      readOnly={readOnly}
-      disabled={disabled}
-      maxLength={maxLength ?? NAME_LIMIT.max}
-      minLength={minLength ?? NAME_LIMIT.min}
-      ref={inputRef}
-      required
-    />
+    <div id={id} data-order={order}>
+      <TextInputBlock
+        blockKey="name"
+        label={copy.label}
+        value={value}
+        onChange={handleChange}
+        requiredText={copy.requiredText}
+        disabled={disabled}
+        maxLength={maxLength ?? NAME_LIMIT.max}
+        minLength={minLength ?? NAME_LIMIT.min}
+        ref={inputRef}
+        required={required}
+        />
+    </div>
   );
 }

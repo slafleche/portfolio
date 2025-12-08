@@ -5,8 +5,9 @@ import { FormLabel } from '@/components/contact/primitives/FormLabel';
 import { FormHint } from '@/components/contact/primitives/FormHint';
 import { TextInput } from '@/components/contact/primitives/TextInput';
 import * as s from '@/styles/components/forms.css';
+import type { ContactFormBlockBaseProps } from '../types/form.types';
 
-type BaseProps = {
+type BaseProps = Omit<ContactFormBlockBaseProps, 'order' | 'id'> & {
   blockKey: string;
   label: string;
   value: string;
@@ -33,6 +34,7 @@ export const TextInputBlock = forwardRef<
 >(
   (
     {
+      id,
       blockKey,
       label,
       value,
@@ -55,7 +57,9 @@ export const TextInputBlock = forwardRef<
     const inputId = useId();
     const hintId = `${blockKey}-hint`;
     return (
-      <div className={clsx(s.fieldGroup, className)}>
+      <div 
+      id={id}
+      className={clsx(s.fieldGroup, className)}>
         <FormLabel
           htmlFor={inputId}
           label={label}
