@@ -18,7 +18,8 @@ import {
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
 
-import { paddings } from '../helpers/spacing.helper';
+import { paddings, margins } from '../helpers/spacing.helper';
+import borders from '../helpers/borders.helper';
 import {
   assertUnit,
   m,
@@ -169,7 +170,7 @@ export const miniBokehContainer = style({
 
 const blobBase = style({
   position: 'absolute',
-  borderRadius: '999px',
+  ...borders.radii({ radius: mPercent(50) }),
   pointerEvents: 'none',
   mixBlendMode: 'screen',
   transform: 'translate(-50%, -50%)',
@@ -391,7 +392,7 @@ export const miniBokeh = style({
   top: 0,
   width: '100%',
   height: '100%',
-  borderRadius: '999px',
+  ...borders.radii({ radius: mPercent(50) }),
   mixBlendMode: 'screen',
   opacity: 0.5,
   transition:
@@ -508,23 +509,20 @@ export const list = style({
   flexWrap: 'nowrap',
   flexGrow: '1',
   width: '50%',
+  ...paddings({
+    horizontal: logoNavPaddingMeasurement,
+  }),
   // top: menuYOffset.css(),
   selectors: {
     '&[data-side="left"]': {
       justifyContent: 'flex-end',
       order: 0,
-      ...paddings({
-        horizontal: logoNavPaddingMeasurement,
-      }),
       transformOrigin: 'right center',
     },
 
     '&[data-side="right"]': {
       justifyContent: 'flex-start',
       order: 1,
-      ...paddings({
-        horizontal: logoNavPaddingMeasurement,
-      }),
       transformOrigin: 'left center',
     },
   },
@@ -583,7 +581,7 @@ export const logoClip = style({
   height: '100%',
   justifyContent: 'center',
   alignItems: 'center',
-  borderRadius: '50%',
+  ...borders.radii({ radius: mPercent(50) }),
   overflow: 'hidden',
   pointerEvents: 'none',
 });
@@ -603,7 +601,7 @@ export const headerNavItem = style({
 
 export const link = style({
   textDecoration: 'none',
-  borderRadius: 8,
+  ...borders.radii({ radius: m(8) }),
   ...paddings({
     vertical: m(10),
     horizontal: m(20),
@@ -618,7 +616,7 @@ export const logoWrap = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  margin: '0 auto',
+  ...margins({ horizontal: 'auto' }),
   transform: transforms.value(rotateIntent(0), scaleIntent(1)),
   clipPath: 'circle(50% at 50% 50%)',
   transformOrigin: 'center',
@@ -751,7 +749,7 @@ export const navLink = style({
   lineHeight: 1,
   textDecoration: 'none',
   letterSpacing: '0.5px',
-  borderRadius: '50%',
+  ...borders.radii({ radius: mPercent(50) }),
   color: menuVars.text.color.css(),
   transition: 'all 0.45s ease',
   backgroundRepeat: 'no-repeat',
