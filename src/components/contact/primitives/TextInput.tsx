@@ -11,6 +11,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       {...props}
       ref={ref}
       className={clsx(s.input, className)}
+      data-input="text"
     />
   ),
 );

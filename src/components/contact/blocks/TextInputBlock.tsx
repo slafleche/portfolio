@@ -7,7 +7,8 @@ import { TextInput } from '@/components/contact/primitives/TextInput';
 import * as s from '@/styles/components/forms.css';
 import type { ContactFormBlockBaseProps } from '../types/form.types';
 
-type BaseProps = Omit<ContactFormBlockBaseProps, 'order' | 'id'> & {
+type BaseProps = Omit<ContactFormBlockBaseProps, 'order'> & {
+  id: string;
   blockKey: string;
   label: string;
   value: string;
@@ -72,6 +73,7 @@ export const TextInputBlock = forwardRef<
           value={value}
           onChange={onChange}
           onBlur={onBlur}
+          required={required}
           readOnly={readOnly}
           disabled={disabled}
           maxLength={maxLength}
