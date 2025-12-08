@@ -9,7 +9,12 @@ import clsx from 'clsx';
 import * as s from '@/styles/components/forms.css';
 import { useFormBlock } from '../formBlocks.context';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
-import type { ContactFormBlockBaseProps } from '../types/form.types';
+import type {
+  ContactFormBlockBaseProps,
+  ContactFormBlockValidationResult,
+  ContactFormBlockContract,
+  ContactFormBlockPayload,
+} from '../types/form.types';
 
 export type TurnstileBlockProps = Omit<ContactFormBlockBaseProps, 'required'>& {
   copy: TurnstileBlockLocale;
@@ -92,6 +97,66 @@ const loadTurnstileScript = () => {
   return turnstileScriptPromise;
 };
 
+const buildTurnstileValidationResult = (
+  id: string,
+  status: TurnstileState,
+  copy: TurnstileBlockLocale,
+): ContactFormBlockValidationResult => {
+  const valid = COMPLETED_STATUSES.includes(status);
+  if (valid) {
+    return {
+      id,
+      valid: true,
+      messages: [],
+    };
+  }
+
+  const code =
+    status === 'expired'
+      ? 'turnstile.expired'
+      : status === 'error'
+        ? 'turnstile.error'
+        : 'turnstile.missing';
+
+  const text =
+    status === 'expired'
+      ? copy.summary.expired
+      : status === 'error'
+        ? copy.summary.error
+        : copy.summary.missing;
+
+  return {
+    id,
+    valid: false,
+    messages: [
+      {
+        type: 'error',
+        code,
+        text,
+        scrollTarget: id,
+      },
+    ],
+  };
+};
+
+const buildTurnstileContract = (
+  id: string,
+  status: TurnstileState,
+  copy: TurnstileBlockLocale,
+  token: string,
+): ContactFormBlockContract<string> => ({
+  validate: () => buildTurnstileValidationResult(id, status, copy),
+  getPayload: (): ContactFormBlockPayload<string> => ({
+    id,
+    value: token,
+  }),
+  focus: () => {
+    // Placeholder: focus behaviour can be refined once the form orchestrator uses it.
+  },
+  requestFocusBefore: () => {},
+  requestFocusAfter: () => {},
+});
+
 export function TurnstileBlock({
   id,
   order,
@@ -167,10 +232,11 @@ export function TurnstileBlock({
   }, [shouldRenderTurnstileWidget, turnstileSiteKey]);
 
   const statusMessage = useMemo(() => {
-    if (status === 'expired') return copy.statuses.expired;
-    if (status === 'error') return copy.statuses.error;
-    return null;
-  }, [copy.statuses, status]);
+    if (COMPLETED_STATUSES.includes(status)) return null;
+    if (status === 'expired') return copy.summary.expired;
+    if (status === 'error') return copy.summary.error;
+    return copy.summary.missing;
+  }, [copy.summary, status]);
 
   const validationSummary = useMemo(() => {
     if (COMPLETED_STATUSES.includes(status)) return null;
@@ -181,13 +247,20 @@ export function TurnstileBlock({
 
   useFormBlock(
     useMemo(
-      () => ({
-        key: 'turnstile',
-        getValue: () => token,
-        validate: () => COMPLETED_STATUSES.includes(status),
-        getValidationSummary: () => validationSummary,
-      }),
-      [status, token, validationSummary],
+      () => {
+        const contract = buildTurnstileContract(id, status, copy, token);
+        return {
+          key: 'turnstile',
+          getValue: () => token,
+          validate: () => contract.validate().valid,
+          getValidationSummary: () => validationSummary,
+          focus: contract.focus,
+          requestFocusBefore: contract.requestFocusBefore,
+          requestFocusAfter: contract.requestFocusAfter,
+          liveValidation: false,
+        };
+      },
+      [copy, id, status, token, validationSummary],
     ),
   );
 

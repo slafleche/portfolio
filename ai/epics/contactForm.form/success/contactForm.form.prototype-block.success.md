@@ -21,6 +21,7 @@ This file describes success criteria for the generic contact form block contract
   - `focus(): void` — moves focus to the primary interactive element and, where appropriate, positions the cursor (for example, at the end of the current value).
   - `getValue(): unknown` — returns the block’s current value in a shape suitable for payload construction.
   - `validate(): boolean` — runs the block’s validation and returns a simple validity result (`true` when valid).
+  - `liveValidation: boolean` — indicates whether this block is currently in “live validation” mode for its own UI; text-input style blocks typically move into live mode after the field has blurred at least once, and all blocks treat validation as live after the form enables continuous validation following a failed submit.
   - Optional helpers such as:
     - `getValidationSummary(): string | null` — a concise summary of the current error, if any.
     - `requestFocusBefore(): void` and `requestFocusAfter(): void` — hooks used for focus choreography between neighbouring blocks.

@@ -19,10 +19,19 @@ export type FormBlockRegistration = {
   getValidationSummary?: () => string | null;
   requestFocusBefore?: () => void;
   requestFocusAfter?: () => void;
+  // Indicates whether this block is currently in "live validation" mode.
+  // Blocks typically compute this as (hasBlurred || continuousValidation),
+  // where `hasBlurred` is local state and `continuousValidation` comes from
+  // the form-blocks context after the first failed submit.
+  liveValidation: boolean;
 };
 
 type FormBlocksContextValue = {
   registerBlock: (registration: FormBlockRegistration) => () => void;
+  // Global live-validation flag: false initially, then set to true by the
+  // form shell (for example, after the first failed submit) to indicate that
+  // all blocks should treat their validation as "live" while the form is
+  // invalid.
   continuousValidation: boolean;
   enableContinuousValidation: () => void;
 };

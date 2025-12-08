@@ -4,7 +4,12 @@ import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
 import { evaluateEmailField } from '@/modules/contactForm/validation';
 import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
-import type { ContactFormBlockBaseProps } from '../types/form.types';
+import type {
+  ContactFormBlockBaseProps,
+  ContactFormBlockValidationResult,
+  ContactFormBlockContract,
+  ContactFormBlockPayload,
+} from '../types/form.types';
 
 export type EmailBlockProps = ContactFormBlockBaseProps & {
   copy: EmailBlockLocale;
@@ -14,6 +19,56 @@ export type EmailBlockProps = ContactFormBlockBaseProps & {
   onFocusBefore?: () => void;
   onFocusAfter?: () => void;
 };
+
+const buildEmailValidationResult = (
+  id: string,
+  evaluation: ReturnType<typeof evaluateEmailField>,
+  copy: EmailBlockLocale,
+): ContactFormBlockValidationResult => {
+  const valid = evaluation.validation.ok;
+  if (valid) {
+    return {
+      id,
+      valid: true,
+      messages: [],
+    };
+  }
+
+  const code = 'form-error-email-invalid';
+  const text = copy.errors.invalid;
+
+  return {
+    id,
+    valid: false,
+    messages: [
+      {
+        type: 'error',
+        code,
+        text,
+        scrollTarget: id,
+      },
+    ],
+  };
+};
+
+const buildEmailContract = (
+  id: string,
+  value: string,
+  evaluation: ReturnType<typeof evaluateEmailField>,
+  copy: EmailBlockLocale,
+  focus: () => void,
+  onFocusBefore?: () => void,
+  onFocusAfter?: () => void,
+): ContactFormBlockContract<string> => ({
+  validate: () => buildEmailValidationResult(id, evaluation, copy),
+  getPayload: (): ContactFormBlockPayload<string> => ({
+    id,
+    value,
+  }),
+  focus,
+  requestFocusBefore: onFocusBefore ?? (() => {}),
+  requestFocusAfter: onFocusAfter ?? (() => {}),
+});
 
 export function EmailBlock({
   id,
@@ -26,6 +81,7 @@ export function EmailBlock({
   copy,
 }: EmailBlockProps) {
   const [value, setValue] = useState('');
+  const [hasBlurred, setHasBlurred] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const evaluation = useMemo(
     () => evaluateEmailField(value),
@@ -36,23 +92,51 @@ export function EmailBlock({
     setValue(event.target.value);
   };
 
-  useFormBlock(
-    useMemo(
-      () => ({
+  const liveValidationRegistration = hasBlurred;
+
+  const { continuousValidation } = useFormBlock(
+    useMemo(() => {
+      const focus = () => {
+        inputRef.current?.focus();
+      };
+      const contract = buildEmailContract(
+        id,
+        value,
+        evaluation,
+        copy,
+        focus,
+        onFocusBefore,
+        onFocusAfter,
+      );
+      return {
         key: 'email',
-        focus: () => inputRef.current?.focus(),
+        focus: contract.focus,
         getValue: () => value,
-        validate: () => evaluation.validation.ok,
+        validate: () => contract.validate().valid,
         getValidationSummary: () => {
           if (evaluation.validation.ok) return null;
           return copy.errors.invalid;
         },
-        requestFocusBefore: onFocusBefore ?? (() => {}),
-        requestFocusAfter: onFocusAfter ?? (() => {}),
-      }),
-      [copy.errors.invalid, evaluation, onFocusAfter, onFocusBefore, value],
-    ),
+        requestFocusBefore: contract.requestFocusBefore,
+        requestFocusAfter: contract.requestFocusAfter,
+        liveValidation: liveValidationRegistration,
+      };
+    }, [
+      copy.errors.invalid,
+      evaluation,
+      id,
+      onFocusAfter,
+      onFocusBefore,
+      value,
+    ]),
   );
+
+  const liveValidation = hasBlurred || continuousValidation;
+
+  const localErrorText =
+    !evaluation.validation.ok && liveValidation
+      ? copy.errors.invalid
+      : null;
 
   return (
     <div id={id} data-order={order}>
@@ -61,6 +145,12 @@ export function EmailBlock({
         label={copy.label}
         value={value}
         onChange={handleChange}
+        onBlur={() => {
+          if (!hasBlurred) {
+            setHasBlurred(true);
+          }
+        }}
+        errorText={localErrorText}
         requiredText={copy.requiredText}
         readOnly={readOnly}
         disabled={disabled}

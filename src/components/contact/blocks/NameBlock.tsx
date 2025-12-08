@@ -5,7 +5,12 @@ import { useFormBlock } from '../formBlocks.context';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
 import { evaluateNameField } from '@/modules/contactForm/validation';
 import type { NameBlockLocale } from '@/lib/locales/form/form.name';
-import type { ContactFormBlockBaseProps } from '../types/form.types';
+import type {
+  ContactFormBlockBaseProps,
+  ContactFormBlockValidationResult,
+  ContactFormBlockContract,
+  ContactFormBlockPayload,
+} from '../types/form.types';
 
 export type NameBlockProps = ContactFormBlockBaseProps & {
   copy: NameBlockLocale;
@@ -14,6 +19,64 @@ export type NameBlockProps = ContactFormBlockBaseProps & {
   onFocusBefore?: () => void;
   onFocusAfter?: () => void;
 };
+
+const buildNameValidationResult = (
+  id: string,
+  evaluation: ReturnType<typeof evaluateNameField>,
+  copy: NameBlockLocale,
+): ContactFormBlockValidationResult => {
+  const valid = evaluation.validation.ok;
+  if (valid) {
+    return {
+      id,
+      valid: true,
+      messages: [],
+    };
+  }
+
+  const reason = evaluation.validation.reason;
+  const isTooLong = reason === 'too_long';
+
+  const code = isTooLong
+    ? 'form-error-name-too_long'
+    : 'form-error-name-required';
+
+  const text = isTooLong
+    ? copy.errors.tooLong
+    : copy.errors.required;
+
+  return {
+    id,
+    valid: false,
+    messages: [
+      {
+        type: 'error',
+        code,
+        text,
+        scrollTarget: id,
+      },
+    ],
+  };
+};
+
+const buildNameContract = (
+  id: string,
+  value: string,
+  evaluation: ReturnType<typeof evaluateNameField>,
+  copy: NameBlockLocale,
+  focus: () => void,
+  onFocusBefore?: () => void,
+  onFocusAfter?: () => void,
+): ContactFormBlockContract<string> => ({
+  validate: () => buildNameValidationResult(id, evaluation, copy),
+  getPayload: (): ContactFormBlockPayload<string> => ({
+    id,
+    value,
+  }),
+  focus,
+  requestFocusBefore: onFocusBefore ?? (() => {}),
+  requestFocusAfter: onFocusAfter ?? (() => {}),
+});
 
 export function NameBlock({
   id,
@@ -27,6 +90,7 @@ export function NameBlock({
   copy,
 }: NameBlockProps) {
   const [value, setValue] = useState('');
+  const [hasBlurred, setHasBlurred] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const evaluation = useMemo(
     () => evaluateNameField(value),
@@ -37,13 +101,27 @@ export function NameBlock({
     setValue(event.target.value);
   };
 
-  useFormBlock(
-    useMemo(
-      () => ({
+  const liveValidationRegistration = hasBlurred;
+
+  const { continuousValidation } = useFormBlock(
+    useMemo(() => {
+      const focus = () => {
+        inputRef.current?.focus();
+      };
+      const contract = buildNameContract(
+        id,
+        value,
+        evaluation,
+        copy,
+        focus,
+        onFocusBefore,
+        onFocusAfter,
+      );
+      return {
         key: 'name',
-        focus: () => inputRef.current?.focus(),
+        focus: contract.focus,
         getValue: () => value,
-        validate: () => evaluation.validation.ok,
+        validate: () => contract.validate().valid,
         getValidationSummary: () => {
           if (evaluation.validation.ok) return null;
           if (evaluation.validation.reason === 'too_long') {
@@ -51,12 +129,30 @@ export function NameBlock({
           }
           return copy.errors.required;
         },
-        requestFocusBefore: onFocusBefore ?? (() => {}),
-        requestFocusAfter: onFocusAfter ?? (() => {}),
-      }),
-      [copy.errors, evaluation, onFocusAfter, onFocusBefore, value],
-    ),
+        requestFocusBefore: contract.requestFocusBefore,
+        requestFocusAfter: contract.requestFocusAfter,
+        liveValidation: liveValidationRegistration,
+      };
+    }, [
+      copy,
+      evaluation,
+      id,
+      onFocusAfter,
+      onFocusBefore,
+      value,
+    ]),
   );
+
+  const liveValidation = hasBlurred || continuousValidation;
+
+  let localErrorText: string | null = null;
+  if (!evaluation.validation.ok && liveValidation) {
+    if (evaluation.validation.reason === 'too_long') {
+      localErrorText = copy.errors.tooLong;
+    } else {
+      localErrorText = copy.errors.required;
+    }
+  }
 
   return (
     <div id={id} data-order={order}>
@@ -65,6 +161,12 @@ export function NameBlock({
         label={copy.label}
         value={value}
         onChange={handleChange}
+        onBlur={() => {
+          if (!hasBlurred) {
+            setHasBlurred(true);
+          }
+        }}
+        errorText={localErrorText}
         requiredText={copy.requiredText}
         disabled={disabled}
         maxLength={maxLength ?? NAME_LIMIT.max}
