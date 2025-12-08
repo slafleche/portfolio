@@ -2,6 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
+import { m } from 'css-calipers';
+import { paddings, margins } from '@/styles/helpers/spacing.helper';
+import borders from '@/styles/helpers/borders.helper';
+import { boxShadow } from '@/styles/helpers/shadow.helper';
 
 type BasicIcon = {
   src: string;
@@ -134,9 +138,15 @@ function MaskIconPreview({
         style={{
           width: '96px',
           height: '96px',
-          borderRadius: '50%',
+          ...borders.radii({ radius: m(50, '%') }),
           backgroundColor: theme === 'dark' ? '#0d0a17' : '#dcd5ff',
-          boxShadow: `0 0 0 1px ${previewColors.border}`,
+          ...boxShadow({
+            x: m(0),
+            y: m(0),
+            blur: m(0),
+            spread: m(1),
+            alpha: theme === 'dark' ? 0.25 : 0.18,
+          }),
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -196,9 +206,14 @@ function CirclePreview({
         style={{
           width: 120,
           height: 120,
-          borderRadius: '50%',
+          ...borders.radii({ radius: m(50, '%') }),
           overflow: 'hidden',
-          border: `1px solid ${previewColors.border}`,
+          ...borders({
+            all: {
+              width: m(1),
+              color: previewColors.border,
+            },
+          }),
           background: theme === 'dark' ? '#0d0a17' : '#ffffff',
           display: 'flex',
           alignItems: 'center',
@@ -339,9 +354,14 @@ function MsTilePreview({
           style={{
             width: 120,
             height: 120,
-            borderRadius: '18px',
+            ...borders.radii({ radius: m(18) }),
             backgroundColor: msTile.color,
-            border: `1px solid ${previewColors.border}`,
+            ...borders({
+              all: {
+                width: m(1),
+                color: previewColors.border,
+              },
+            }),
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -383,9 +403,14 @@ function MsTilePreview({
           style={{
             width: 120,
             height: 120,
-            borderRadius: '18px',
+            ...borders.radii({ radius: m(18) }),
             overflow: 'hidden',
-            border: `1px solid ${previewColors.border}`,
+            ...borders({
+              all: {
+                width: m(1),
+                color: previewColors.border,
+              },
+            }),
           }}
         >
           <img
@@ -517,11 +542,16 @@ export default function FavIconPreview({
     alignItems: 'center',
     justifyContent: 'center',
     gap: '0.5rem',
-    padding: '1rem',
-    borderRadius: '1rem',
+    ...paddings(m(16)),
+    ...borders.radii({ radius: m(16) }),
     border: previewColors.cardBorder,
     background: previewColors.cardBg,
-    boxShadow: '0 10px 30px rgba(15, 12, 45, 0.12)',
+    ...boxShadow({
+      x: m(0),
+      y: m(10),
+      blur: m(30),
+      alpha: 0.12,
+    }),
     textAlign: 'center',
   };
 
@@ -532,8 +562,13 @@ export default function FavIconPreview({
   };
 
   const swatchStyle: CSSProperties = {
-    borderRadius: '0.75rem',
-    border: `1px solid ${previewColors.border}`,
+    ...borders.radii({ radius: m(12) }),
+    ...borders({
+      all: {
+        width: m(1),
+        color: previewColors.border,
+      },
+    }),
     background: theme === 'dark' ? '#0a071c' : '#ffffff',
     display: 'flex',
     alignItems: 'center',
@@ -583,7 +618,11 @@ export default function FavIconPreview({
         display: 'flex',
         flexDirection: 'column',
         gap: '2rem',
-        padding: '2.5rem 6vw 4rem',
+        ...paddings({
+          top: m(2.5, 'rem'),
+          bottom: m(4, 'rem'),
+          horizontal: m(6, 'vw'),
+        }),
         color: previewColors.fg,
         background:
           theme === 'dark'
@@ -596,9 +635,17 @@ export default function FavIconPreview({
       {!assetsReady ? (
         <div
           style={{
-            padding: '1.2rem 1.5rem',
-            borderRadius: '1rem',
-            border: '1px solid rgba(240,90,120,0.55)',
+            ...paddings({
+              vertical: m(1.2, 'rem'),
+              horizontal: m(1.5, 'rem'),
+            }),
+            ...borders.radii({ radius: m(16) }),
+            ...borders({
+              all: {
+                width: m(1),
+                color: 'rgba(240,90,120,0.55)',
+              },
+            }),
             background:
               theme === 'dark'
                 ? 'rgba(255,90,90,0.12)'
@@ -628,7 +675,7 @@ export default function FavIconPreview({
           flexDirection: 'column',
           gap: '1rem',
           maxWidth: '960px',
-          margin: '0 auto',
+          ...margins({ horizontal: 'auto' }),
         }}
       >
         <div
@@ -666,14 +713,14 @@ export default function FavIconPreview({
           style={{
             fontSize: '2.25rem',
             lineHeight: 1.15,
-            margin: 0,
+            ...margins(m(0)),
           }}
         >
           Favicons sandbox
         </h1>
         <p
           style={{
-            margin: 0,
+            ...margins(m(0)),
             maxWidth: '640px',
             color: previewColors.subtle,
             fontSize: '1rem',
@@ -690,10 +737,15 @@ export default function FavIconPreview({
             display: 'flex',
             flexWrap: 'wrap',
             gap: '0.75rem',
-            padding: '1rem',
-            borderRadius: '0.9rem',
+            ...paddings(m(16)),
+            ...borders.radii({ radius: m(14) }),
             background: previewColors.controlBg,
-            border: `1px solid ${previewColors.border}`,
+            ...borders({
+              all: {
+                width: m(1),
+                color: previewColors.border,
+              },
+            }),
             color: previewColors.fg,
           }}
         >
@@ -712,11 +764,19 @@ export default function FavIconPreview({
                   type="button"
                   onClick={() => setTheme(option)}
                   style={{
-                    padding: '0.6rem 1.4rem',
-                    borderRadius: '999px',
-                    border: active
-                      ? `1px solid ${previewColors.border}`
-                      : '1px solid transparent',
+                    ...paddings({
+                      vertical: m(0.6, 'rem'),
+                      horizontal: m(1.4, 'rem'),
+                    }),
+                    ...borders.radii({ radius: m(50, '%') }),
+                    ...borders({
+                      all: {
+                        width: m(1),
+                        color: active
+                          ? previewColors.border
+                          : 'transparent',
+                      },
+                    }),
                     background: active
                       ? 'rgba(255,255,255,0.14)'
                       : 'rgba(0,0,0,0.08)',
@@ -755,8 +815,13 @@ export default function FavIconPreview({
                 style={{
                   width: '18px',
                   height: '18px',
-                  borderRadius: '6px',
-                  border: `1px solid ${previewColors.border}`,
+                  ...borders.radii({ radius: m(6) }),
+                  ...borders({
+                    all: {
+                      width: m(1),
+                      color: previewColors.border,
+                    },
+                  }),
                   backgroundColor: lightColor,
                 }}
               />
@@ -769,9 +834,17 @@ export default function FavIconPreview({
               placeholder={defaultLight}
               disabled={theme === 'dark'}
               style={{
-                padding: '0.55rem 0.75rem',
-                borderRadius: '0.6rem',
-                border: `1px solid ${previewColors.border}`,
+                ...paddings({
+                  vertical: m(0.55, 'rem'),
+                  horizontal: m(0.75, 'rem'),
+                }),
+                ...borders.radii({ radius: m(9.6) }),
+                ...borders({
+                  all: {
+                    width: m(1),
+                    color: previewColors.border,
+                  },
+                }),
                 background: previewColors.inputBg,
                 color: previewColors.fg,
                 opacity: theme === 'dark' ? 0.5 : 1,
@@ -800,8 +873,13 @@ export default function FavIconPreview({
                 style={{
                   width: '18px',
                   height: '18px',
-                  borderRadius: '6px',
-                  border: `1px solid ${previewColors.border}`,
+                  ...borders.radii({ radius: m(6) }),
+                  ...borders({
+                    all: {
+                      width: m(1),
+                      color: previewColors.border,
+                    },
+                  }),
                   backgroundColor: darkColor,
                 }}
               />
@@ -814,9 +892,17 @@ export default function FavIconPreview({
               placeholder={defaultDark}
               disabled={theme === 'light'}
               style={{
-                padding: '0.55rem 0.75rem',
-                borderRadius: '0.6rem',
-                border: `1px solid ${previewColors.border}`,
+                ...paddings({
+                  vertical: m(0.55, 'rem'),
+                  horizontal: m(0.75, 'rem'),
+                }),
+                ...borders.radii({ radius: m(9.6) }),
+                ...borders({
+                  all: {
+                    width: m(1),
+                    color: previewColors.border,
+                  },
+                }),
                 background: previewColors.inputBg,
                 color: previewColors.fg,
                 opacity: theme === 'light' ? 0.5 : 1,
@@ -828,11 +914,17 @@ export default function FavIconPreview({
 
       <section
         style={{
-          padding: '2rem',
-          borderRadius: '2rem',
+          ...paddings(m(32)),
+          ...borders.radii({ radius: m(32) }),
           backgroundColor: previewColors.bg,
           color: previewColors.fg,
-          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
+          ...boxShadow({
+            x: m(0),
+            y: m(0),
+            blur: m(0),
+            spread: m(1),
+            alpha: 0.06,
+          }),
           display: 'flex',
           flexDirection: 'column',
           gap: '1.5rem',
@@ -842,7 +934,9 @@ export default function FavIconPreview({
           <h2 style={{ margin: 0 }}>Primary preview</h2>
           <p
             style={{
-              margin: '0.25rem 0 0',
+              ...margins({
+                top: m(0.25, 'rem'),
+              }),
               color: previewColors.subtle,
             }}
           >
@@ -856,7 +950,9 @@ export default function FavIconPreview({
               width={144}
               height={144}
               alt="Favicon SVG"
-              style={{ borderRadius: '32px' }}
+              style={{
+                ...borders.radii({ radius: m(32) }),
+              }}
             />
             <div>
               <div style={{ fontWeight: 600 }}>SVG</div>
@@ -886,7 +982,9 @@ export default function FavIconPreview({
               width={128}
               height={128}
               alt="Apple touch icon"
-              style={{ borderRadius: '28px' }}
+              style={{
+                ...borders.radii({ radius: m(28) }),
+              }}
             />
             <div>
               <div style={{ fontWeight: 600 }}>Apple touch</div>
@@ -908,8 +1006,10 @@ export default function FavIconPreview({
                 src={data.maskableIcon.src}
                 width={128}
                 height={128}
-                alt="Maskable icon"
-                style={{ borderRadius: '38%' }}
+              alt="Maskable icon"
+              style={{
+                ...borders.radii({ radius: m(38, '%') }),
+              }}
               />
               <div>
                 <div style={{ fontWeight: 600 }}>Maskable (PWA)</div>
@@ -970,7 +1070,9 @@ export default function FavIconPreview({
           <h2 style={{ margin: 0 }}>PNG variants</h2>
           <p
             style={{
-              margin: '0.25rem 0 0',
+              ...margins({
+                top: m(0.25, 'rem'),
+              }),
               color: previewColors.subtle,
             }}
           >
@@ -989,7 +1091,7 @@ export default function FavIconPreview({
                   alignItems: 'center',
                   width: 'fit-content',
                   maxWidth: '100%',
-                  padding: '0.75rem',
+                  ...paddings(m(12)),
                   gap: '0.75rem',
                 }}
               >
@@ -1035,8 +1137,8 @@ export default function FavIconPreview({
       >
         <div
           style={{
-            padding: '1.5rem',
-            borderRadius: '1.5rem',
+            ...paddings(m(24)),
+            ...borders.radii({ radius: m(24) }),
             background:
               theme === 'dark'
                 ? 'rgba(12,9,30,0.8)'
@@ -1069,9 +1171,14 @@ export default function FavIconPreview({
                     style={{
                       width: '42px',
                       height: '42px',
-                      borderRadius: '12px',
+                      ...borders.radii({ radius: m(12) }),
                       backgroundColor: value,
-                      border: `1px solid ${previewColors.border}`,
+                      ...borders({
+                        all: {
+                          width: m(1),
+                          color: previewColors.border,
+                        },
+                      }),
                       flexShrink: 0,
                     }}
                   />
@@ -1099,24 +1206,29 @@ export default function FavIconPreview({
 
         <div
           style={{
-            padding: '1.5rem',
-            borderRadius: '1.5rem',
+            ...paddings(m(24)),
+            ...borders.radii({ radius: m(24) }),
             background:
               theme === 'dark'
                 ? 'rgba(12,9,30,0.8)'
                 : 'rgba(255,255,255,0.6)',
-            border: `1px solid ${previewColors.border}`,
+            ...borders({
+              all: {
+                width: m(1),
+                color: previewColors.border,
+              },
+            }),
             display: 'flex',
             flexDirection: 'column',
             gap: '0.75rem',
           }}
         >
           <h3 style={{ margin: 0 }}>Meta tags &amp; manifest</h3>
-          <ul
+         <ul
             style={{
               listStyle: 'none',
-              padding: 0,
-              margin: 0,
+              ...paddings(m(0)),
+              ...margins(m(0)),
               display: 'flex',
               flexDirection: 'column',
               gap: '0.5rem',
@@ -1188,11 +1300,13 @@ export default function FavIconPreview({
                 </a>
               </li>
             ) : null}
-            <li>
-              <strong>description</strong>
+              <li>
+                <strong>description</strong>
               <div
-                style={{
-                  marginTop: '0.25rem',
+                  style={{
+                  ...margins({
+                    top: m(0.25, 'rem'),
+                  }),
                   color: previewColors.subtle,
                   fontSize: '0.85rem',
                   lineHeight: 1.5,
@@ -1207,8 +1321,8 @@ export default function FavIconPreview({
 
       <section
         style={{
-          padding: '1.5rem',
-          borderRadius: '1.5rem',
+          ...paddings(m(24)),
+          ...borders.radii({ radius: m(24) }),
           background:
             theme === 'dark'
               ? 'rgba(12,9,30,0.8)'
@@ -1234,9 +1348,18 @@ export default function FavIconPreview({
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.25rem',
-                padding: '0.75rem 1rem',
-                borderRadius: '1rem',
-                border: `1px dashed ${previewColors.border}`,
+                ...paddings({
+                  vertical: m(12),
+                  horizontal: m(16),
+                }),
+                ...borders.radii({ radius: m(16) }),
+                ...borders({
+                  all: {
+                    width: m(1),
+                    color: previewColors.border,
+                    style: 'dashed',
+                  },
+                }),
                 background:
                   theme === 'dark'
                     ? 'rgba(18,14,36,0.85)'

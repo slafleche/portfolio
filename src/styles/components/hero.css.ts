@@ -8,7 +8,9 @@ import {
 import { heroVars } from '../componentTokens/hero.componentTokens';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { noiseBg } from '../helpers/noiseSVG.helper';
-import { paddings } from '../helpers/spacing.helper';
+import { paddings, margins } from '../helpers/spacing.helper';
+import borders from '../helpers/borders.helper';
+import { boxShadow } from '../helpers/shadow.helper';
 import {
   backgroundImageDecl,
   buildLinear,
@@ -163,27 +165,42 @@ export const bridge = style({
 // });
 
 export const cta = style({
-  marginTop: '16px',
+  ...margins({ top: m(16) }),
   display: 'inline-flex',
   alignItems: 'center',
   gap: '3px',
   justifyContent: 'center',
   alignSelf: 'center',
-  padding: '3px 6px',
-  borderRadius: '3px',
+  ...paddings({
+    vertical: m(3),
+    horizontal: m(6),
+  }),
+  ...borders.radii({ radius: m(3) }),
   backgroundColor: colorVars.white.alpha(0.85).css(),
   color: colorVars.navBg.css(),
   fontWeight: 600,
   textDecoration: 'none',
   transition:
     'transform 150ms ease, box-shadow 150ms ease, opacity 220ms ease',
-  boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+  ...boxShadow({
+    x: m(0),
+    y: m(1),
+    blur: m(4),
+    alpha: 0.15,
+    color: colorVars.black,
+  }),
   opacity: 0,
   pointerEvents: 'none',
   selectors: {
     '&:hover, &:focus-visible': {
       transform: 'translateY(-2px)',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+      ...boxShadow({
+        x: m(0),
+        y: m(2),
+        blur: m(8),
+        alpha: 0.25,
+        color: colorVars.black,
+      }),
       outline: 'none',
     },
     '&[data-ready="true"]': {
@@ -283,7 +300,9 @@ export const panel = style({
   flexDirection: 'column',
   alignItems: 'center',
   alignSelf: 'center',
-  margin: '0 auto',
+  ...margins({
+    horizontal: 'auto',
+  }),
 });
 
 export const panelContents = style({

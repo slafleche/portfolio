@@ -17,7 +17,7 @@ export const root = style({
   border: `1px solid ${colorVars.white.alpha(0.12).css()}`,
   background: `linear-gradient(160deg, ${colorVars.black.alpha(0.85).css()} 0%, ${colorVars.contrast.alpha(0.22).css()} 100%)`,
 
-  boxShadow: boxShadow({
+  ...boxShadow({
     x: m(10),
     y: m(30),
     blur: m(30),

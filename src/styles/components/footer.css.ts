@@ -102,7 +102,7 @@ const glassLinkBase: ComplexStyleRule = {
   }),
   ...backgrounds({ color: 'rgba(255, 255, 255, 0.05)' }),
   ...backdropFilters.style({ blur: m(3) }),
-  boxShadow: boxShadow({
+  ...boxShadow({
     x: m(0),
     y: m(20),
     blur: m(30),
@@ -119,7 +119,7 @@ export const glassLink = style([
       '&:hover': {
         cursor: 'pointer',
         transform: 'translateY(-20px)',
-        boxShadow: boxShadow({
+        ...boxShadow({
           x: m(0),
           y: m(24),
           blur: m(36),

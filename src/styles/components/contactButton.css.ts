@@ -184,14 +184,14 @@ export const button = style({
   backgroundColor: colorVars.white.alpha(0.95).css(),
   color: colorVars.svgColor.css(),
   textDecoration: 'none',
-  boxShadow: boxShadow(),
+  ...boxShadow(),
   pointerEvents: 'auto',
   transition: `box-shadow ${hoverTransitionMs.css()} ease`,
   transformOrigin: `0 50%`,
   willChange: 'transform',
   selectors: {
     '&:hover, &:focus-visible': {
-      boxShadow: boxShadow({ blur: hoverBlurPx }),
+      ...boxShadow({ blur: hoverBlurPx }),
     },
     '&:focus-visible': outlines({
       color: themeColours.lights.b.mix(themeColours.lights.d, 0.5),

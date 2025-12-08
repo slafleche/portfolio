@@ -138,12 +138,65 @@ const SPACING_SIMPLIFY_RULE = {
     'Use axis shorthands or value shorthands (for example, paddings(m(16)), margins({ horizontal: x }), or vertical: x) instead of repeating the same spacing on multiple sides.',
 };
 
+const BORDERS_COMBINED_RULE = {
+  id: 'borders-helper-combine-radius-and-edges',
+  groupTitle:
+    'Use a single borders(...) helper layer per style object.',
+  solution:
+    'Within a single style object, do not spread borders helpers more than once; combine radius, edges, and variants into a single borders(...) helper layer.',
+};
+
+const PADDINGS_SINGLE_LAYER_RULE = {
+  id: 'paddings-helper-single-layer',
+  groupTitle:
+    'Use a single paddings(...) helper layer per style object.',
+  solution:
+    'Within a single style object, do not spread paddings(...) more than once; express the full padding intent in a single helper call.',
+};
+
+const MARGINS_SINGLE_LAYER_RULE = {
+  id: 'margins-helper-single-layer',
+  groupTitle:
+    'Use a single margins(...) helper layer per style object.',
+  solution:
+    'Within a single style object, do not spread margins(...) more than once; express the full margin intent in a single helper call.',
+};
+
+const BACKGROUNDS_SINGLE_LAYER_RULE = {
+  id: 'backgrounds-helper-single-layer',
+  groupTitle:
+    'Use a single backgrounds(...) helper layer per style object.',
+  solution:
+    'Within a single style object, do not spread backgrounds(...) more than once; express the full background intent in a single helper call.',
+};
+
+const BACKDROP_FILTERS_SINGLE_LAYER_RULE = {
+  id: 'backdropFilters-helper-single-layer',
+  groupTitle:
+    'Use a single backdropFilters helper layer per style object.',
+  solution:
+    'Within a single style object, do not spread backdropFilters helpers (for example, backdropFilters.style(...)) more than once; express the full filter intent in a single helper call.',
+};
+
+const SINGLE_LAYER_HELPER_RULES = {
+  borders: BORDERS_COMBINED_RULE,
+  paddings: PADDINGS_SINGLE_LAYER_RULE,
+  margins: MARGINS_SINGLE_LAYER_RULE,
+  backgrounds: BACKGROUNDS_SINGLE_LAYER_RULE,
+  backdropFilters: BACKDROP_FILTERS_SINGLE_LAYER_RULE,
+};
+
 const ALL_RULES = [
   ...FORBIDDEN_PATTERNS,
   ...MEASUREMENT_RULES,
   ...LAYER_IMPORT_BLOCKS,
   MEASUREMENT_ALIAS_RULE,
   SPACING_SIMPLIFY_RULE,
+  BORDERS_COMBINED_RULE,
+  PADDINGS_SINGLE_LAYER_RULE,
+  MARGINS_SINGLE_LAYER_RULE,
+  BACKGROUNDS_SINGLE_LAYER_RULE,
+  BACKDROP_FILTERS_SINGLE_LAYER_RULE,
 ];
 
 function isPlainMode() {
@@ -427,6 +480,109 @@ function scanSpacingSimplifications(filePath, content) {
   return violations;
 }
 
+function scanSingleLayerHelpers(filePath, content) {
+  const posix = filePath.split(path.sep).join('/');
+
+  // Skip token/config, built artefact, and test files; single-layer helper
+  // enforcement applies only to style-layer sources.
+  if (
+    STYLE_RULE_SKIP_PATHS.some((prefix) => posix.startsWith(prefix)) ||
+    posix.startsWith('tests/') ||
+    /\.test\.[jt]sx?$/.test(posix)
+  ) {
+    return [];
+  }
+
+  const violations = [];
+  const lines = content.split('\n');
+  const helperNames = Object.keys(SINGLE_LAYER_HELPER_RULES);
+
+  const makeCounter = () =>
+    helperNames.reduce((acc, name) => {
+      acc[name] = 0;
+      return acc;
+    }, {});
+
+  // Vanilla-extract style({ ... }) blocks.
+  let inVeStyle = false;
+  let veStartLine = 0;
+  let veHelperCounts = makeCounter();
+
+  // JSX inline style={{ ... }} blocks.
+  let inJsxStyle = false;
+  let jsxStartLine = 0;
+  let jsxHelperCounts = makeCounter();
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const lineNumber = index + 1;
+    const line = lines[index];
+
+    // Track vanilla-extract style({ ... }).
+    if (line.includes('style({')) {
+      inVeStyle = true;
+      veStartLine = lineNumber;
+      veHelperCounts = makeCounter();
+    }
+
+    if (inVeStyle) {
+      for (const name of helperNames) {
+        if (line.includes(`...${name}`)) {
+          const matches = line.match(
+            new RegExp(String.raw`\.\.\.${name}\b`, 'g'),
+          );
+          if (matches) veHelperCounts[name] += matches.length;
+        }
+      }
+
+      if (line.includes('});')) {
+        for (const name of helperNames) {
+          if (veHelperCounts[name] > 1) {
+            violations.push({
+              filePath,
+              lineNumber: veStartLine,
+              rule: SINGLE_LAYER_HELPER_RULES[name],
+            });
+          }
+        }
+        inVeStyle = false;
+      }
+    }
+
+    // Track JSX style={{ ... }}.
+    if (line.includes('style={{')) {
+      inJsxStyle = true;
+      jsxStartLine = lineNumber;
+      jsxHelperCounts = makeCounter();
+    }
+
+    if (inJsxStyle) {
+      for (const name of helperNames) {
+        if (line.includes(`...${name}`)) {
+          const matches = line.match(
+            new RegExp(String.raw`\.\.\.${name}\b`, 'g'),
+          );
+          if (matches) jsxHelperCounts[name] += matches.length;
+        }
+      }
+
+      if (line.includes('}}')) {
+        for (const name of helperNames) {
+          if (jsxHelperCounts[name] > 1) {
+            violations.push({
+              filePath,
+              lineNumber: jsxStartLine,
+              rule: SINGLE_LAYER_HELPER_RULES[name],
+            });
+          }
+        }
+        inJsxStyle = false;
+      }
+    }
+  }
+
+  return violations;
+}
+
 function formatPlain(violations) {
   console.error('\nLint guardrails failed:\n');
   for (const violation of violations) {
@@ -535,6 +691,9 @@ function main() {
     violations.push(...scanMeasurementCss(relativePath, content));
     violations.push(
       ...scanSpacingSimplifications(relativePath, content),
+    );
+    violations.push(
+      ...scanSingleLayerHelpers(relativePath, content),
     );
   }
 
