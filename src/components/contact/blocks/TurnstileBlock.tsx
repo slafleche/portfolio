@@ -1,10 +1,17 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type MouseEventHandler,
+} from 'react';
 import clsx from 'clsx';
 import * as s from '@/styles/components/forms.css';
 import { useFormBlock } from '../formBlocks.context';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
+import type { ContactFormBlockBaseProps } from '../types/form.types';
 
-export type TurnstileBlockProps = {
+export type TurnstileBlockProps = Omit<ContactFormBlockBaseProps, 'required'>& {
   copy: TurnstileBlockLocale;
 };
 
@@ -15,8 +22,6 @@ export type TurnstileState =
   | 'verified'
   | 'expired'
   | 'error';
-
-
 
 const COMPLETED_STATUSES: TurnstileState[] = ['verified', 'bypassed'];
 
@@ -88,23 +93,27 @@ const loadTurnstileScript = () => {
 };
 
 export function TurnstileBlock({
+  id,
+  order,
+  disabled,
   copy,
 }: TurnstileBlockProps) {
+
   const turnstileSiteKey =
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? null;
-  const turnstileEnabled = Boolean(turnstileSiteKey);
+  const hasTurnstileConfig = Boolean(turnstileSiteKey);
 
   const [status, setStatus] = useState<TurnstileState>(
-    turnstileEnabled ? 'loading' : 'bypassed',
+    hasTurnstileConfig ? 'loading' : 'bypassed',
   );
   const [token, setToken] = useState<string>(
-    turnstileEnabled ? '' : DEFAULT_TURNSTILE_TOKEN,
+    hasTurnstileConfig ? '' : DEFAULT_TURNSTILE_TOKEN,
   );
 
   const widgetRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
 
-  const shouldRenderTurnstileWidget = turnstileEnabled;
+  const shouldRenderTurnstileWidget = hasTurnstileConfig;
 
   useEffect(() => {
     if (!shouldRenderTurnstileWidget || !turnstileSiteKey) return;
@@ -183,7 +192,21 @@ export function TurnstileBlock({
   );
 
   return (
-    <div className={clsx(s.turnstileSection)} data-state={status}>
+    <div
+      id={id}
+      data-order={order}
+      className={clsx(s.turnstileSection)}
+      data-state={status}
+      data-disabled={disabled ? 'true' : 'false'}
+      onClickCapture={
+        ((event) => {
+          if (disabled) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        }) as MouseEventHandler<HTMLDivElement>
+      }
+    >
       <div
         ref={widgetRef}
         className={s.turnstileWidget}

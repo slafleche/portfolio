@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { FormBlocksProvider } from './formBlocks.context';
 import { NameBlock } from './blocks/NameBlock';
 import { EmailBlock } from './blocks/EmailBlock';
@@ -8,7 +9,11 @@ import { TurnstileBlock } from './blocks/TurnstileBlock';
 import { HoneypotBlock } from './blocks/HoneypotBlock';
 import { ContactPrivacy } from './ContactPrivacy';
 import * as s from '@/styles/components/forms.css';
-import type { ContactFormProps } from './types/form.types';
+import type {
+  ContactFormBlockBaseProps,
+  ContactFormProps,
+} from './types/form.types';
+import { useSafeId } from '../../lib/dom';
 
 const DEFAULT_ACTION_URL = '/api/contact';
 
@@ -18,7 +23,14 @@ export default function ContactForm({
   ...rest
 }: ContactFormProps) {
   void rest;
+  const idPrefix = useSafeId('contact-form-');
 
+  const [formMembers] = useState<ContactFormBlockBaseProps[]>(() => [
+    { id: `${idPrefix}name`, order: 1, disabled: false, required: true },
+    { id: `${idPrefix}email`, order: 2, disabled: false, required: true },
+    { id: `${idPrefix}message`, order: 3, disabled: false, required: true },
+    { id: `${idPrefix}turnstile`, order: 4, disabled: false, required: true },
+  ]);
   return (
     <FormBlocksProvider>
       <form
@@ -26,12 +38,24 @@ export default function ContactForm({
         action={actionUrl}
         noValidate
       >
-        <NameBlock copy={copy.blocks.name} />
-        <EmailBlock copy={copy.blocks.email} />
-        <MessageBlock copy={copy.blocks.message} />
-        <HoneypotBlock copy={copy.blocks.honeypot} />
-        <TurnstileBlock copy={copy.blocks.turnstile} />
+        <NameBlock
+          {...formMembers[0]}
+          copy={copy.blocks.name}
+        />
+        <EmailBlock
+          {...formMembers[1]}
+          copy={copy.blocks.email}
+        />
+        <MessageBlock
+          {...formMembers[2]}
+          copy={copy.blocks.message}
+        />
+        <TurnstileBlock
+          {...formMembers[3]}
+          copy={copy.blocks.turnstile}
+        />
         <ContactPrivacy copy={copy.privacy} />
+        <HoneypotBlock copy={copy.blocks.honeypot} />
       </form>
     </FormBlocksProvider>
   );

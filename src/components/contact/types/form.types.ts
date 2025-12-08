@@ -6,19 +6,19 @@ type ContactFormBlockId = string;
 export type ContactFormBlockValidationResult = {
   id: ContactFormBlockId;
   valid: boolean;
+  messages: Message[];
 };
 
-export type ContactFormBlockPayload<Value = unknown> = {
-  id: ContactFormBlockId;
-  value: Value;
-};
-
-export type ContactFormBlockContract<Payload = unknown> = {
+export type ContactFormBlockBaseProps = {
+  id: ContactFormBlockId; 
   order: number;
-  isSubmitting: boolean;
+  disabled: boolean;
+  required?: boolean;
+}
+
+export type ContactFormBlockContract<Value> = {
   validate: () => ContactFormBlockValidationResult;
-  getPayload: () => ContactFormBlockPayload<Payload>;
-  getValue: () => string;
+  getValue: () => Value;
   focus: () => void;
   requestFocusBefore: () => void;
   requestFocusAfter: () => void;
