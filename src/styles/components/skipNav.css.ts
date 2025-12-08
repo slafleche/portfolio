@@ -1,5 +1,9 @@
 import { style } from '@vanilla-extract/css';
-import { colorVars } from '../../tokens/global.tokens';;
+import { m } from 'css-calipers';
+import { colorVars } from '../../tokens/global.tokens';
+import { paddings } from '../helpers/spacing.helper';
+import borders from '../helpers/borders.helper';
+import { boxShadow } from '../helpers/shadow.helper';
 
 export const link = style({
   position: 'fixed',
@@ -8,10 +12,19 @@ export const link = style({
   top: '2px',
   backgroundColor: colorVars.bodyBg.css(),
   color: colorVars.bodyFg.css(),
-  padding: '2px 4px',
-  borderRadius: '2px',
+  ...paddings({
+    vertical: m(2),
+    horizontal: m(4),
+  }),
+  ...borders.radii({ radius: m(2) }),
   textDecoration: 'none',
-  boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+  ...boxShadow({
+    x: m(0),
+    y: m(1),
+    blur: m(4),
+    color: colorVars.black,
+    alpha: 0.25,
+  }),
   zIndex: 200,
   transition:
     'transform 180ms ease-in-out, opacity 180ms ease-in-out',
