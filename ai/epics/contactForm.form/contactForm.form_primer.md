@@ -59,3 +59,6 @@ infrastructure handle everything else.
   - Receives all of its data from blocks and shared infrastructure, not from
     the form component.
 
+## Stories
+
+- Error handling and messaging: see `stories/contactForm.form.story.error-messaging.md` for the detailed user story covering message triage, priority selection, toasts, and scroll/focus recovery behaviour when submissions fail.

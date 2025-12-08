@@ -18,6 +18,18 @@ repo. These files are the primary input/output for role "hats" such as
   If there is any ambiguity about which epic id or suffix to use, ask the user
   to confirm before creating or renaming files.
 
+## Stories
+
+- Should: Keep short, single-paragraph user stories inline in `<epic-id>_primer.md` under a clearly labeled heading (for example, "User stories").
+- Should: When a story grows beyond a small paragraph or needs detailed flows/acceptance criteria, place it in a dedicated stories file under `ai/epics/<epic-id>/stories/` using the pattern `<epic-id>.story.<story-name>.md`.
+- Must: Avoid duplicating long stories between the primer and stories files; when a story has its own file, reference it briefly from the primer instead of copying the full text.
+
+## Success criteria
+
+- Should: Keep simple, short success criteria as bullet points in `<epic-id>_primer.md` under a "Success criteria" (or similar) heading.
+- Should: When success criteria become complex (for example, per-component checklists or multiple categories), move the detailed versions into separate files under `ai/epics/<epic-id>/success/` using the pattern `success/<epic-id>.<success-name>.success.md`.
+- Must: Treat the detailed success files as canonical for their scope; the primer should reference them briefly instead of duplicating full criteria text.
+
 ## Role usage (hats)
 
 - Should: Use the epics files as IO for roles:

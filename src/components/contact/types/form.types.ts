@@ -1,4 +1,5 @@
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
+import type { Message } from '../messageCentre.types';
 
 type ContactFormBlockId = string;
 
@@ -17,6 +18,10 @@ export type ContactFormBlockContract<Payload = unknown> = {
   isSubmitting: boolean;
   validate: () => ContactFormBlockValidationResult;
   getPayload: () => ContactFormBlockPayload<Payload>;
+  getValue: () => string;
+  focus: () => void;
+  requestFocusBefore: () => void;
+  requestFocusAfter: () => void;
 };
 
 export type ContactFormDebugFieldState = {
@@ -27,4 +32,11 @@ export type ContactFormProps = {
   copy: ContactFormCopy;
   actionUrl?: string;
   onSuccessStateChange?: (visible: boolean) => void;
+};
+
+
+export type MessageBundle = {
+  globals: string[]; // from here
+  blocks: string[];
+  priority?: Message; // set here
 };
