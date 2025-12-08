@@ -23,21 +23,23 @@ export const STYLE_LITERAL_RESETS = {
     // Allow plain background resets (`background: 'none'`) but not
     // backgroundColor, which must still use helpers.
     (line) =>
-      /\bbackground\s*:\s*['"]none['"]/.test(line) &&
+      /\bbackground\s*:\s*['"]none(?:\s*!important)?['"]/.test(line) &&
       !/\bbackgroundColor\b/.test(line),
   ],
   'border-inline': [
     // Allow plain border resets (`border: 'none'`) but not side-specific
     // or radius shorthands, which must still use helpers.
     (line) =>
-      /\bborder\s*:\s*['"]none['"]/.test(line) &&
+      /\bborder\s*:\s*['"]none(?:\s*!important)?['"]/.test(line) &&
       !/\bborder(?:Top|Right|Bottom|Left|Radius)\b/.test(line),
     // Allow inherit for radius, since it does not define a new shape.
-    (line) => /\bborderRadius\s*:\s*['"]inherit['"]/.test(line),
+    (line) =>
+      /\bborderRadius\s*:\s*['"]inherit(?:\s*!important)?['"]/.test(line),
   ],
   'box-shadow-inline': [
     // Allow plain box-shadow resets (`boxShadow: 'none'`).
-    (line) => /\bboxShadow\s*:\s*['"]none['"]/.test(line),
+    (line) =>
+      /\bboxShadow\s*:\s*['"]none(?:\s*!important)?['"]/.test(line),
   ],
 };
 

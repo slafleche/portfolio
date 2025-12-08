@@ -1,13 +1,15 @@
 import { style } from '@vanilla-extract/css';
 // import { globalMediaQueryStyles } from './responsive/mediaQueries';
-import { paddings } from './helpers/spacing.helper';
+import { margins, paddings } from './helpers/spacing.helper';
 import { layoutVars } from '../tokens/layout.tokens';
 
 export const content = style({
   position: 'relative',
   width: '100%',
   maxWidth: layoutVars.contentWidth.css(),
-  margin: 'auto',
+  ...margins({
+    horizontal: 'auto',
+  }),
   ...paddings({
     horizontal: layoutVars.contentPadding,
   }),

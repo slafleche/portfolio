@@ -6,6 +6,7 @@ import type { GlobalStyleRule } from '@vanilla-extract/css';
 import { getImage } from '@/lib/images';
 import type { ColorWrapper } from './colorWrap.helper';
 import { hasCssMethod } from 'css-calipers';
+import { margins } from './spacing.helper';
 
 export interface IBackgrounds {
   color?: ColorWrapper | CssLike | CSS_TYPES.Property.BackgroundColor;
@@ -168,7 +169,7 @@ export const objectFitWithFallback = () => {
     right: 0,
     bottom: 0,
     left: 0,
-    margin: 'auto',
+    ...margins('auto'),
     height: 'auto',
     width: '100%',
     $nest: {

@@ -36,7 +36,7 @@ const FORBIDDEN_PATTERNS = [
     solution:
       'Use borders(...) helper instead of raw border/borderRadius or side-specific border values.',
     regex:
-      /border(?:Radius|Top|Right|Bottom|Left)?\s*:\s*['"]/,
+      /border(?:Radius|Top|Right|Bottom|Left)?\s*:\s*(?:['"]|important\()/,
   },
   {
     id: 'padding-inline',
@@ -44,7 +44,7 @@ const FORBIDDEN_PATTERNS = [
     solution:
       'Use paddings(...) helper instead of raw padding values.',
     regex:
-      /padding(?:Top|Right|Bottom|Left)?\s*:\s*['"]/,
+      /padding(?:Top|Right|Bottom|Left)?\s*:\s*(?:['"]|important\()/,
   },
   {
     id: 'margin-inline',
@@ -52,7 +52,7 @@ const FORBIDDEN_PATTERNS = [
     solution:
       'Use margins(...) helper instead of raw margin values.',
     regex:
-      /margin(?:Top|Right|Bottom|Left)?\s*:\s*['"]/,
+      /margin(?:Top|Right|Bottom|Left)?\s*:\s*(?:['"]|important\()/,
   },
   {
     id: 'box-shadow-inline',
@@ -527,25 +527,28 @@ function scanSingleLayerHelpers(filePath, content) {
     }
 
     if (inVeStyle) {
-      const opens = (line.match(/{/g) || []).length;
-      const closes = (line.match(/}/g) || []).length;
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('//')) {
+        const opens = (line.match(/{/g) || []).length;
+        const closes = (line.match(/}/g) || []).length;
 
-      if (veSkipDepth > 0) {
-        veSkipDepth += opens - closes;
-      } else if (
-        line.includes('selectors:') ||
-        line.includes('@media')
-      ) {
-        veSkipDepth += opens - closes;
-      }
+        if (veSkipDepth > 0) {
+          veSkipDepth += opens - closes;
+        } else if (
+          line.includes('selectors:') ||
+          line.includes('@media')
+        ) {
+          veSkipDepth += opens - closes;
+        }
 
-      if (veSkipDepth === 0) {
-        for (const name of helperNames) {
-          if (line.includes(`...${name}`)) {
-            const matches = line.match(
-              new RegExp(String.raw`\.\.\.${name}\b`, 'g'),
-            );
-            if (matches) veHelperCounts[name] += matches.length;
+        if (veSkipDepth === 0) {
+          for (const name of helperNames) {
+            if (line.includes(`...${name}`)) {
+              const matches = line.match(
+                new RegExp(String.raw`\.\.\.${name}\b`, 'g'),
+              );
+              if (matches) veHelperCounts[name] += matches.length;
+            }
           }
         }
       }
@@ -573,12 +576,15 @@ function scanSingleLayerHelpers(filePath, content) {
     }
 
     if (inJsxStyle) {
-      for (const name of helperNames) {
-        if (line.includes(`...${name}`)) {
-          const matches = line.match(
-            new RegExp(String.raw`\.\.\.${name}\b`, 'g'),
-          );
-          if (matches) jsxHelperCounts[name] += matches.length;
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('//')) {
+        for (const name of helperNames) {
+          if (line.includes(`...${name}`)) {
+            const matches = line.match(
+              new RegExp(String.raw`\.\.\.${name}\b`, 'g'),
+            );
+            if (matches) jsxHelperCounts[name] += matches.length;
+          }
         }
       }
 
@@ -699,6 +705,7 @@ function main() {
       )
     )
       continue;
+    if (relativePath.startsWith('tests/')) continue;
     const ext = path.extname(relativePath).toLowerCase();
     if (!['.ts', '.tsx', '.js', '.jsx', '.mjs'].includes(ext)) continue;
     const fullPath = path.join(ROOT, relativePath);
