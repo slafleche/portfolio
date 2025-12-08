@@ -1,12 +1,14 @@
 import { style } from '@vanilla-extract/css';
-import { paddings } from '../helpers/spacing.helper';
+import { margins, paddings } from '../helpers/spacing.helper';
 import { privacyTokens } from '../../tokens/privacy.tokens';
 
 export const container = style({
   position: 'relative',
   width: '100%',
   maxWidth: privacyTokens.layout.maxWidth.css(),
-  margin: '0 auto',
+  ...margins({
+    horizontal: 'auto',
+  }),
   ...paddings(privacyTokens.layout.paddings),
   display: 'grid',
   gap: privacyTokens.layout.sectionGap.css(),
