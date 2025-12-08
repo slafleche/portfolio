@@ -96,6 +96,9 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   and agent behavior; do not weaken or bypass existing lint rules, layering
   constraints, or pre-commit checks unless the user explicitly requests it and
   understands the trade-offs.
+- Must: For circular or pill-shaped corners, prefer percentage-based border radii
+  (for example, 50%) via measurement helpers instead of oversized absolute radii
+  (for example, m(9999)).
 - Should: When editing `rules.yaml`, keep related scripts under `scripts/` in
   sync and run `yarn lint` to ensure configs still load.
 - Should: When the user activates a role tag (for example, `#navigator` / `#n`,
