@@ -12,6 +12,7 @@ import { boxShadow } from '../helpers/shadow.helper';
 import { backgrounds } from '../helpers/background.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import borders from '../helpers/borders.helper';
+import { margins, paddings } from '../helpers/spacing.helper';
 import { m } from 'css-calipers';
 
 const sheenSweep = keyframes({
@@ -52,10 +53,19 @@ export const panel = style({
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  padding: '14px 10px',
+  ...paddings({
+    vertical: m(14),
+    horizontal: m(10),
+  }),
   background:
     'linear-gradient(180deg, rgba(20,16,48,0.94) 0%, rgba(15,11,36,0.92) 100%)',
-  boxShadow: `0 3px 12px ${colorVars.black.alpha(0.4).css()}`,
+  ...boxShadow({
+    x: m(0),
+    y: m(3),
+    blur: m(12),
+    color: colorVars.black,
+    alpha: 0.4,
+  }),
   borderRadius: 0,
   height: '100%',
   overflowY: 'auto',
@@ -63,7 +73,9 @@ export const panel = style({
 
 export const panelContent = style({
   width: 'min(64rem, 90vw)',
-  margin: '0 auto',
+  ...margins({
+    horizontal: 'auto',
+  }),
   textAlign: 'center',
   display: 'flex',
   flexDirection: 'column',
@@ -79,19 +91,21 @@ export const heading = style({
 });
 
 export const body = style({
-  marginTop: '4px',
+  ...margins({
+    top: m(4),
+    horizontal: 'auto',
+  }),
   ...composeFontVariantStyles(fontVariants.body),
   color: colorVars.white.alpha(0.9).css(),
   maxWidth: '70ch',
-  marginLeft: 'auto',
-  marginRight: 'auto',
 });
 
 export const closeButton = style({
   position: 'sticky',
   top: '6px',
-  marginTop: '4px',
-  marginBottom: '4px',
+  ...margins({
+    vertical: m(4),
+  }),
   padding: 0,
   alignSelf: 'flex-end',
   width: glassyButtonTokens.size.css(),
@@ -167,5 +181,7 @@ export const closeButton = style({
 });
 
 globalStyle(`.${panel} p`, {
-  margin: '3px 0',
+  ...margins({
+    vertical: m(3),
+  }),
 });
