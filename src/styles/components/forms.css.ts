@@ -39,7 +39,7 @@ const controlBase: ComplexStyleRule = {
         ...borders(formTokens.field.focusVisible.borders),
         ...boxShadow(formTokens.field.focusVisible.shadow),
       },
-    '&:[data-disabled="true"], &[data-debug="disabled"]': {
+    '&[data-disabled="true"], &[data-debug="disabled"]': {
       opacity: 0.55,
       cursor: 'not-allowed',
     },
