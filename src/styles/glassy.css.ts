@@ -44,7 +44,7 @@ export const surfaceFill = style({
   top: glassVars.borders.width.css(),
   width: `calc(100% - ${glassVars.borders.width.double().css()})`,
   height: `calc(100% - ${glassVars.borders.width.double().css()})`,
-  ...borders(innerRadius, { allowRadiusOnly: true }),
+  ...borders.radii({ radius: innerRadius }),
   ...baseSurfaceBackground,
   pointerEvents: 'none',
   zIndex: 0,
@@ -56,7 +56,7 @@ export const surfaceShine = style({
   top: glassVars.borders.width.css(),
   width: '100%',
   height: '100%',
-  ...borders(innerRadius, { allowRadiusOnly: true }),
+  ...borders.radii({ radius: innerRadius }),
   background: `linear-gradient(135deg, ${glassVars.surfaceGlowPrimaryTint
     .alpha(glassVars.surfaceGlow.primaryTintAlpha)
     .css()}, ${glassVars.surfaceGlowSecondaryTint

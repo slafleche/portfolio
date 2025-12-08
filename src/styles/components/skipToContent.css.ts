@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
-import { assertUnit } from 'css-calipers';
+import { assertUnit, m } from 'css-calipers';
 import { chevronVars, colorVars } from '../../tokens/global.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
+import borders from '../helpers/borders.helper';
 
 if (process.env.NODE_ENV !== 'production') {
   assertUnit(chevronVars.width, 'px', 'skipToContent chevron width');
@@ -33,7 +34,7 @@ export const link = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  borderRadius: '50%',
+  ...borders.radii({ radius: m(50, '%') }),
   width: chevronVars.width.add(chevronVars.padding.double()).css(),
   height: chevronVars.width.add(chevronVars.padding.double()).css(),
   transition: 'background 0.3s ease-in',

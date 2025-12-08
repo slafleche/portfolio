@@ -5,11 +5,9 @@ import {
   composeFontVariantStyles,
   fontVariants,
 } from '../tokens/fontVariants.tokens';
-import {
-  ReducedMotion,
-  reducedMotion,
-} from './helpers/accessibility.helper';
+import { ReducedMotion, reducedMotion } from './helpers/accessibility.helper';
 import { paddings } from './helpers/spacing.helper';
+import borders from './helpers/borders.helper';
 import './utilities.css';
 
 const {
@@ -63,7 +61,7 @@ globalStyle('main', {
 });
 
 globalStyle('abbr[title]', {
-  borderBottom: 'none',
+  ...borders.none(),
   textDecoration: 'underline',
   textDecorationStyle: 'dotted',
 });
