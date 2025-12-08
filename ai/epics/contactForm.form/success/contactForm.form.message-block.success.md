@@ -17,13 +17,12 @@ This file describes success criteria for the `MessageBlock` (free-text message) 
 - The block surfaces:
   - A character counter and any link-usage hints as helper text.
   - Inline error hints when the message is too short, too long, has too many links, or is missing.
-- When validation fails, the block publishes a `MessageCentreTransmission` containing a `Message` with:
+- When validation fails, the block’s structured validation result includes a message with:
   - `type: 'error'`.
   - A stable `code` for the specific failure reason.
   - `text` matching the user-facing error.
-  - A `categoryError` that groups this under the same “invalid input” style category used by other fields.
   - A `scrollTarget` that allows the message field to be scrolled into view and focused as a priority error.
-- When validation passes, the block emits no error-type messages and may emit informational messages if needed for the message centre.
+- When validation passes, the block includes no error-type messages and may include informational messages in its validation result if needed for the message centre.
 
 ## Form-blocks contract
 
@@ -32,5 +31,4 @@ This file describes success criteria for the `MessageBlock` (free-text message) 
   - A `focus` function that moves focus into the textarea and positions the cursor appropriately.
   - A `getValue` accessor for payload construction.
   - A `validate` function returning a boolean validity signal aligned with the error messages it emits.
-- The block does not rely on form-level error flags; it responds only to coarse `isSubmitting` or read-only/disabled states passed from the shell.
-
+- The block does not rely on form-level error flags; it responds only to coarse read-only/disabled states passed from the shell.

@@ -25,8 +25,11 @@ infrastructure handle everything else.
   - When valid, the form can request a combined payload assembled from all
     blocks and hand it to the submit logic.
 - Isolate messaging:
-  - The form has no knowledge of per-field or global messages; blocks talk to
-    the message-centre layer directly.
+  - The form has no knowledge of per-field or global message copy; blocks and
+    shared helpers produce structured validation data that a dedicated
+    message-centre/triage layer turns into user-facing messages.
+  - Blocks do not call the message centre directly; messages are created and
+    updated as part of submit/triage flows.
   - The form only exposes coarse submission status (e.g., “submitting”, “idle”,
     and high-level success/failure) for the rest of the tree to react to.
 - Make the form reusable:
@@ -53,8 +56,8 @@ infrastructure handle everything else.
 - Blocks:
   - Self-identify and manage their own validation and messaging, without the
     form needing to know their internal details.
-  - Respond to `isSubmitting` for disabling, but do not rely on form-level
-    error flags.
+  - Respond to shared `disabled`/read-only state passed down from the shell for
+    disabling, but do not rely on form-level error flags.
 - Message-centre:
   - Receives all of its data from blocks and shared infrastructure, not from
     the form component.

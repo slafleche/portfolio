@@ -10,11 +10,16 @@ intended to be implementable without additional context.
   - A shared provider or component for the message centre.
 - Render each block component (e.g., Name, Email, Message, Turnstile,
   Honeypot) in the desired visual/DOM order.
-- For each block, pass:
+- For each block, pass the shared base props from the block contract:
+  - `id: string` — a unique identifier for this block instance within the form
+    (for example, a safe-id prefix plus a logical suffix like `"name"`).
   - `order: number` — a monotonically increasing integer that reflects render
     order (1, 2, 3, …).
-  - `isSubmitting: boolean` — true only while a submission attempt is in
-    flight.
+  - `disabled: boolean` — `true` whenever the shell wants to prevent user
+    interaction with the block (for example, while a submission attempt is in
+    flight).
+  - `required?: boolean` — an optional hint used by blocks to show required
+    indicators; it does not drive validation logic in the shell.
 
 ## State
 
@@ -23,6 +28,8 @@ intended to be implementable without additional context.
   - Optional: a coarse `submitStatus` enum or string
     (`'idle' | 'success' | 'error' | 'blocked' | 'rate_limited' | …`) for UI
     affordances outside individual blocks.
+  - An `invalid: boolean` flag that is set when a submission attempt fails
+    validation and cleared only once validation passes again.
 - No per-field state:
   - Do not store field values, errors, or validation flags in `ContactForm`.
   - Do not track “has attempted submit” or “continuous validation” flags in
@@ -33,15 +40,16 @@ intended to be implementable without additional context.
 - `ContactForm` must call into a shared “form-blocks” API exposed via a hook or
   context. The API must provide at least:
   - `validateAll(): boolean`
-    - Triggers validation in all registered blocks.
+    - Triggers each registered block’s validation function from its contract.
     - Returns `true` only if all blocks report themselves valid.
-    - Blocks are responsible for updating any message-centre data as part of
-      validation; `ContactForm` does not receive or inspect messages.
+    - May also populate internal validation summaries that an adjacent triage
+      helper can use to derive messaging; `ContactForm` itself only needs the
+      boolean result to decide whether to proceed with submission.
   - `collectPayload(): unknown`
-    - Aggregates payload fragments from all registered blocks into a single
-      payload object suitable for submission.
+    - Calls each block’s payload helper from its contract and aggregates the
+      results into a single payload object suitable for submission.
     - The returned value is treated as opaque by `ContactForm`; it is forwarded
-      to the submit helper.
+      to the submit helper without inspection or transformation.
 
 ## Submit behaviour
 
@@ -54,9 +62,10 @@ intended to be implementable without additional context.
   - Call `validateAll()`.
   - If `validateAll()` returns `false`:
     - Set `isSubmitting` back to `false`.
+    - Set `invalid` to `true`.
     - Do not call `collectPayload()`.
-    - Do not inspect which blocks failed or what messages exist.
   - If `validateAll()` returns `true`:
+    - Set `invalid` to `false`.
     - Call `collectPayload()` and store the result in a local variable
       `payload`.
     - Pass `payload` to a submit helper (a separate function that performs the
@@ -78,12 +87,19 @@ intended to be implementable without additional context.
 ## Message-centre interaction
 
 - `ContactForm` does not:
-  - Create, store, or transform any message-centre data.
-  - Map validation reasons to user-facing strings.
-  - Decide which messages are inline vs global vs toast-like.
+  - Map validation reasons or error codes to user-facing strings.
+  - Decide which messages are inline vs global vs toast-like; that belongs to
+    the message-centre layer and its helpers.
 - `ContactForm` responsibilities:
   - Ensure the message-centre provider/component is rendered within the form so
-    blocks can publish messages.
+    blocks and orchestration helpers can publish structured message data.
+  - Cooperate with a triage helper (in the message-centre layer or an adjacent
+    orchestration module) that:
+    - Receives structured validation output from blocks.
+    - Selects a single “priority” message per submission attempt based on
+      severity and block order.
+    - Exposes metadata such as a `scrollTarget` that `ContactForm` can use to
+      drive scroll/focus recovery when needed.
   - Optionally forward coarse `submitStatus` or high-level statuses from the
     submit helper into the message-centre layer (e.g., via a dedicated API),
     without touching individual field messages.
@@ -97,4 +113,3 @@ intended to be implementable without additional context.
 - All field-specific behaviour (validation rules, error strings, counters,
   Turnstile widget handling) must live in block components or shared helpers,
   not in `ContactForm`.
-
