@@ -1,6 +1,7 @@
 import type { ContactFormPayload } from '@/modules/contactForm/mockSubmit';
 
 type BannerTone =
+  | 'catastrophic'
   | 'info'
   | 'success'
   | 'warning'

@@ -8,7 +8,7 @@ export type TranslatedErrorMessage = string;
 
 // Raw message shape produced by blocks / form internals before category/source are attached.
 export type MessageBase = {
-  type: 'error' | 'warning' | 'info';
+  type: 'catastrophic' | 'error' | 'warning' | 'info';
   code: string; // Internal code to identify the message scenario (e.g., 'turnstile.missing').
   text: string; // User-facing message text.
   scrollTarget?: string; // Optional key for scroll & focus (usually a block id).
