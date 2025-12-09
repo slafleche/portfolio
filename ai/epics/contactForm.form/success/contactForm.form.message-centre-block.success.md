@@ -13,9 +13,12 @@ This file describes success criteria for the message centre layer and its primar
 - The message centre treats each inbound transmission as:
   - `source`: a label identifying where the messages came from (for example, `"global"` or a block key).
   - `messages`: an array of message objects, each with:
-    - `type`: `'error' | 'warning' | 'info'`.
+    - `type`: `'catastrophic' | 'error' | 'warning' | 'info'`.
     - `code`: a stable internal identifier.
     - `text`: the user-facing message.
+    - catastrophic meaning can't send messges (no human verifiation)
+      - if catastroic is found, ignore everything else and just send that to the message centre
+        - trigger toaster and scroll to message centre, disabled form.
     - A higher-order summary string derived from the error category (for example, “required input”, “invalid input”, “submission error”) that is already localized; the message centre does not call translation itself.
     - Optional `scrollTarget` describing where scroll/focus recovery should land.
 - On each submission attempt, the message centre (or a closely related helper) runs a triage pass across all messages to select a single priority message by:

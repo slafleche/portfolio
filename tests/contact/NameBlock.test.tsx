@@ -55,6 +55,14 @@ describe('Contact form block tests: NameBlock', () => {
       expect(input).toBeRequired();
       expect(input).toHaveAttribute('type', 'text');
       expect(input).toHaveAttribute('aria-describedby', 'name-hint');
+      expect(input).toHaveAttribute(
+        'maxlength',
+        NAME_LIMIT.max.toString(),
+      );
+      expect(input).toHaveAttribute(
+        'minlength',
+        NAME_LIMIT.min.toString(),
+      );
 
       // Disabled behaviour: user input does not change value or error state
       const initialValue = input.value;

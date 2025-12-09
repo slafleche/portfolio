@@ -6,7 +6,7 @@ This file describes success criteria for tests covering the `TurnstileBlock` com
 
 - Registration:
   - Registers under key `"turnstile"`.
-  - `getValue()` returns the current token string (or an empty string when bypassed or missing).
+  - `getValue()` returns the current token string (empty when missing, and a default/mock token when bypassed in debug environments).
   - `validate()` returns:
     - `true` when status is `verified` or `bypassed`.
     - `false` when status is `loading`, `ready`, `expired`, or `error`.
@@ -38,4 +38,4 @@ This file describes success criteria for tests covering the `TurnstileBlock` com
   - When not verified, the hidden token input is empty (or contains only the mock/default token in bypassed environments).
 - Disabled and error handling:
   - When the block is rendered with `disabled` set, pointer interaction with the Turnstile container is prevented (clicks do not change status or token).
-  - When the Turnstile script fails to load or the widget cannot be mounted, the block transitions to an `error` state, shows the corresponding summary message, and structured validation uses the `turnstile.error` code and copy.
+  - When the Turnstile widget cannot be mounted (for example, the script fails to load or the widget throws during render), the block transitions to an `error` state, shows the corresponding summary message, and structured validation uses the `turnstile.error` code and copy.

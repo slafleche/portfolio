@@ -3,6 +3,7 @@ import type { ChangeEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
 import { evaluateEmailField } from '@/modules/contactForm/validation';
+import { EMAIL_MAX_LENGTH } from '@/modules/contactForm/validation.constants';
 import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
 import type {
   ContactFormBlockBaseProps,
@@ -144,7 +145,7 @@ export function EmailBlock({
         requiredText={copy.requiredText}
         readOnly={readOnly}
         disabled={disabled}
-        maxLength={maxLength}
+        maxLength={maxLength ?? EMAIL_MAX_LENGTH}
         type="email"
         autoComplete="email"
         ref={inputRef}

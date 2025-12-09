@@ -1,5 +1,5 @@
 import React, { type ReactElement, type ReactNode, type ComponentType, useEffect } from 'react';
-import { render, type RenderResult } from '@testing-library/react';
+import { render, type RenderResult, act } from '@testing-library/react';
 import { FocusSentinelWrapper } from '../components/FocusSentinelWrapper';
 import * as formBlocksModule from '@/components/contact/formBlocks.context';
 import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
@@ -65,7 +65,9 @@ export function renderBlockWithFormBlocks<Props extends object>(
 
   const enableContinuousValidation = () => {
     if (lastEnableContinuousValidation) {
-      lastEnableContinuousValidation();
+      act(() => {
+        lastEnableContinuousValidation?.();
+      });
     }
   };
 

@@ -10,7 +10,7 @@ import { backgrounds } from '@/styles/helpers/background.helper';
 import { boxShadow } from '@/styles/helpers/shadow.helper';
 import borders from '../../../../src/styles/helpers/borders.helper';
 
-export type Tone = 'default' | 'info' | 'success' | 'warning' | 'error' | 'muted';
+export type Tone = 'default' | 'catastrophic' | 'info' | 'success' | 'warning' | 'error' | 'muted';
 
 export type TonePalette = Record<
   Tone,

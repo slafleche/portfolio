@@ -30,7 +30,7 @@ This file describes success criteria for the generic contact form block contract
 
 - Blocks do not talk to the message centre directly.
 - Each block’s validation result includes message objects that describe its field-level state:
-  - `type`: `'error' | 'warning' | 'info'`, chosen to reflect severity.
+  - `type`: `'catastrophic' | 'error' | 'warning' | 'info'`, chosen to reflect severity.
   - `code`: a stable internal identifier for the specific message scenario.
   - `text`: the user-facing, localized message string.
   - Optional `scrollTarget`: an identifier that allows the shell or recovery helpers to scroll this block into view and focus it when the message is selected as the priority error.
