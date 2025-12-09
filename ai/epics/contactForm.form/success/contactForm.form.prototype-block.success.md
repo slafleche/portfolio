@@ -24,7 +24,6 @@ This file describes success criteria for the generic contact form block contract
   - `liveValidation: boolean` — indicates whether this block is currently in “live validation” mode for its own UI; text-input style blocks typically move into live mode after the field has blurred at least once, and all blocks treat validation as live after the form enables continuous validation following a failed submit.
   - Optional helpers such as:
     - `getValidationSummary(): string | null` — a concise summary of the current error, if any.
-    - `requestFocusBefore(): void` and `requestFocusAfter(): void` — hooks used for focus choreography between neighbouring blocks.
 - Blocks treat the form-blocks API as their only contract to the shell for validation and payload; they do not reach into the shell’s state directly.
 
 ## Message-centre interface
