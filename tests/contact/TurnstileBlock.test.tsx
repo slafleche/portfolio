@@ -8,24 +8,12 @@ import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
-type TurnstileApiOptions = {
-  sitekey: string;
-  callback: (token: string) => void;
-  'expired-callback': () => void;
-  'error-callback': () => void;
-};
+type TurnstileApi = NonNullable<Window['turnstile']>;
+type TurnstileApiOptions = Parameters<TurnstileApi['render']>[1];
 
-type MockTurnstileApi = {
-  render: (container: HTMLElement, options: TurnstileApiOptions) => string;
-  reset: (id?: string) => void;
+type MockTurnstileApi = TurnstileApi & {
   lastOptions: TurnstileApiOptions | null;
 };
-
-declare global {
-  interface Window {
-    turnstile?: MockTurnstileApi;
-  }
-}
 
 const turnstileCopy: TurnstileBlockLocale = {
   label: enFormCopy['form-turnstile-label'],
@@ -55,8 +43,8 @@ const ORIGINAL_ENV = { ...process.env };
 const createMockTurnstile = (shouldThrowOnRender = false): MockTurnstileApi => {
   const api: MockTurnstileApi = {
     lastOptions: null,
-    render: (container: HTMLElement, options: TurnstileApiOptions) => {
-      if (!container) {
+    render: (container, options) => {
+      if (!container || typeof container === 'string') {
         throw new Error('Missing container');
       }
       api.lastOptions = options;
@@ -72,7 +60,6 @@ const createMockTurnstile = (shouldThrowOnRender = false): MockTurnstileApi => {
 
 const setTurnstileEnv = (siteKey: string | null) => {
   if (siteKey === null) {
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   } else {
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = siteKey;
@@ -92,7 +79,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
   });
 
   describe('wiring and state representation', () => {
-    it('renders the wrapper with id, order, and hidden token input', () => {
+    it('renders the wrapper with id, order, and hidden token input', async () => {
       const { container } = render(
         <FormBlocksProvider>
           <TurnstileBlock
@@ -111,9 +98,12 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
       if (!wrapper) return;
 
+      await waitFor(() => {
+        expect(wrapper).toHaveAttribute('data-state');
+      });
+
       expect(wrapper).toHaveAttribute('data-order', '1');
       expect(wrapper).toHaveAttribute('data-disabled', 'false');
-      expect(wrapper).toHaveAttribute('data-state');
 
       const widgetContainer = wrapper.querySelector(
         '[data-rendered]',
@@ -222,13 +212,13 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
       if (!wrapper) return;
 
-      const api = window.turnstile;
+      const api = window.turnstile as MockTurnstileApi | undefined;
       await waitFor(() => {
         expect(api?.lastOptions).not.toBeNull();
       });
 
       await act(async () => {
-        api?.lastOptions?.callback('test-token');
+        api?.lastOptions?.callback?.('test-token');
       });
 
       expect(wrapper).toHaveAttribute('data-state', 'verified');
@@ -261,13 +251,13 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
       if (!wrapper) return;
 
-      const api = window.turnstile;
+      const api = window.turnstile as MockTurnstileApi | undefined;
       await waitFor(() => {
         expect(api?.lastOptions).not.toBeNull();
       });
 
     await act(async () => {
-      api?.lastOptions?.['expired-callback']();
+      api?.lastOptions?.['expired-callback']?.();
     });
 
     expect(wrapper).toHaveAttribute('data-state', 'expired');
@@ -302,13 +292,13 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
       if (!wrapper) return;
 
-      const api = window.turnstile;
+      const api = window.turnstile as MockTurnstileApi | undefined;
       await waitFor(() => {
         expect(api?.lastOptions).not.toBeNull();
       });
 
       await act(async () => {
-        api?.lastOptions?.['error-callback']();
+        api?.lastOptions?.['error-callback']?.();
       });
 
       expect(wrapper).toHaveAttribute('data-state', 'error');
@@ -391,7 +381,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       await userEvent.click(widgetContainer);
 
-      const api = window.turnstile;
+      const api = window.turnstile as MockTurnstileApi | undefined;
       expect(api?.lastOptions).not.toBeNull();
       expect(wrapper.getAttribute('data-state')).toMatch(
         /^(loading|ready|bypassed|error)$/,
@@ -413,12 +403,16 @@ describe('Contact form block contract: TurnstileBlock', () => {
     window.turnstile = undefined;
   });
 
-  it('registers under key "turnstile" with core contract shape', () => {
+  it('registers under key "turnstile" with core contract shape', async () => {
     const { getRegistration } = renderTurnstileBlockWithFormBlocks({
       id: 'test-turnstile-block',
       order: 0,
       disabled: false,
       copy: turnstileCopy,
+    });
+
+    await waitFor(() => {
+      expect(getRegistration()).not.toBeNull();
     });
 
     const registration = getRegistration();
@@ -442,7 +436,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
       copy: turnstileCopy,
     });
 
-    const api = window.turnstile;
+    const api = window.turnstile as MockTurnstileApi | undefined;
     let registration = getRegistration();
     expect(registration?.getValue?.()).toBe('');
 
@@ -451,7 +445,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
     });
 
     await act(async () => {
-      api?.lastOptions?.callback('verified-token');
+      api?.lastOptions?.callback?.('verified-token');
     });
 
     registration = getRegistration();
@@ -483,26 +477,26 @@ describe('Contact form block contract: TurnstileBlock', () => {
     let registration = getRegistration();
     expect(registration?.validate?.()).toBe(false);
 
-    const api = window.turnstile;
+    const api = window.turnstile as MockTurnstileApi | undefined;
     await waitFor(() => {
       expect(api?.lastOptions).not.toBeNull();
     });
 
     await act(async () => {
-      api?.lastOptions?.callback('verified-token');
+      api?.lastOptions?.callback?.('verified-token');
     });
 
     registration = getRegistration();
     expect(registration?.validate?.()).toBe(true);
 
     await act(async () => {
-      api?.lastOptions?.['expired-callback']();
+      api?.lastOptions?.['expired-callback']?.();
     });
     registration = getRegistration();
     expect(registration?.validate?.()).toBe(false);
 
     await act(async () => {
-      api?.lastOptions?.['error-callback']();
+      api?.lastOptions?.['error-callback']?.();
     });
     registration = getRegistration();
     expect(registration?.validate?.()).toBe(false);
@@ -535,13 +529,13 @@ describe('Contact form block contract: TurnstileBlock', () => {
       turnstileCopy.summary.missing,
     );
 
-    const api = window.turnstile;
+    const api = window.turnstile as MockTurnstileApi | undefined;
     await waitFor(() => {
       expect(api?.lastOptions).not.toBeNull();
     });
 
     await act(async () => {
-      api?.lastOptions?.['expired-callback']();
+      api?.lastOptions?.['expired-callback']?.();
     });
 
     const expiredRegistration = getRegistration();
@@ -550,7 +544,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
     );
 
     await act(async () => {
-      api?.lastOptions?.['error-callback']();
+      api?.lastOptions?.['error-callback']?.();
     });
 
     const errorRegistration = getRegistration();
@@ -569,7 +563,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
       copy: turnstileCopy,
     });
 
-    const api = window.turnstile;
+    const api = window.turnstile as MockTurnstileApi | undefined;
     await waitFor(() => {
       expect(api?.lastOptions).not.toBeNull();
     });
@@ -588,7 +582,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
     expect(result.messages[0].scrollTarget).toBe(blockId);
 
     await act(async () => {
-      api?.lastOptions?.callback('verified-token');
+      api?.lastOptions?.callback?.('verified-token');
     });
     contract = getTurnstileContract();
     if (!contract) return;
@@ -597,7 +591,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
     expect(result.messages).toHaveLength(0);
 
     await act(async () => {
-      api?.lastOptions?.['expired-callback']();
+      api?.lastOptions?.['expired-callback']?.();
     });
     contract = getTurnstileContract();
     if (!contract) return;
@@ -610,7 +604,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
     );
 
     await act(async () => {
-      api?.lastOptions?.['error-callback']();
+      api?.lastOptions?.['error-callback']?.();
     });
     contract = getTurnstileContract();
     if (!contract) return;
