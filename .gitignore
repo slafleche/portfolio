@@ -85,6 +85,12 @@ src/lib/locales/generated/
 TODO.*.md
 
 # -----------------------
+# Local tools / scripts (ignored by default)
+# -----------------------
+.local/*
+!.local/.gitkeep
+
+# -----------------------
 # Debug logs
 # -----------------------
 npm-debug.log*
