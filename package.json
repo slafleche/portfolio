@@ -36,7 +36,6 @@
     "@vanilla-extract/next-plugin": "^2.4.16",
     "@vanilla-extract/recipes": "^0.5.7",
     "@vanilla-extract/sprinkles": "^1.6.5",
-    "@vanilla-extract/vite-plugin": "^5.1.3",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.22",
     "chokidar": "^5.0.0",
@@ -109,6 +108,7 @@
     "favicons": "node --import tsx scripts/generateFavicons.ts",
     "test": "vitest run",
     "test:form": "vitest run tests/contact",
+    "test:api": "vitest run tests/api tests/server",
     "test:watch": "vitest --watch",
     "upgrade:latest": "yarn up \"*@latest\" \"@*/*@latest\" && yarn dedupe"
   }
