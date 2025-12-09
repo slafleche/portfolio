@@ -26,7 +26,12 @@ export const MessageCentreBlock = forwardRef<
   }, [messages.blocks, messages.globals, messages.toastFallback]);
 
   return (
-    <div role="status" aria-live="polite" aria-atomic="true">
+    <div
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      data-form="messages"
+    >
       <div
         className={s.statusWrapper}
         data-visible={inlineMessages.length ? 'true' : 'false'}

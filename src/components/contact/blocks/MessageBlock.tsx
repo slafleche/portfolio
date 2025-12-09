@@ -106,9 +106,10 @@ export function MessageBlock({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const baseHeightRef = useRef<number | null>(null);
   const generatedId = useId();
-  const textareaId = id ?? `${generatedId}-message`;
-  const characterHintId = `${textareaId}-hint`;
-  const linksHintId = `${textareaId}-links`;
+  const blockId = id ?? generatedId;
+  const textareaId = `${blockId}-input`;
+  const characterHintId = `${blockId}-hint`;
+  const linksHintId = `${blockId}-links`;
   const autoResizeHandlers = useMemo(
     () => ({
       onInit: (node: HTMLTextAreaElement) => {

@@ -11,7 +11,7 @@ export default function ContactFormSuccess({
   description,
 }: ContactFormSuccessProps) {
   return (
-    <div className={s.successPanel}>
+    <div className={s.successPanel} data-form="success">
       <div className={s.successIconWrapper} aria-hidden="true">
         <CircledCheckIcon className={s.successIcon} />
       </div>
