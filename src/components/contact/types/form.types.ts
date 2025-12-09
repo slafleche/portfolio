@@ -1,4 +1,5 @@
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
+import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 import type { MessageBase, TranslatedErrorMessage } from '../messageCentre.types';
 
 type ContactFormBlockId = string;
@@ -41,3 +42,13 @@ export type BlockMessage = Omit<MessageBase, 'code'> & {
   source: ContactFormBlockId;
   higherOrderErrorMessage: TranslatedErrorMessage;
 };
+
+export type ContactFormSubmitCode = FormServerResponseCode;
+
+export type ContactFormSubmitStatus =
+  | ContactFormSubmitCode
+  | 'idle';
+
+export type ContactFormFlowSubmitHelper = (
+  payload: ContactFormBlockPayload<unknown>[],
+) => Promise<ContactFormSubmitCode>;

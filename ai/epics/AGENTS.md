@@ -18,6 +18,11 @@ repo. These files are the primary input/output for role "hats" such as
   If there is any ambiguity about which epic id or suffix to use, ask the user
   to confirm before creating or renaming files.
 
+## Tasks and checklists
+
+- Must: Represent actionable tasks in epic TODO/backlog files (for example, `form.TODO.md`, `TODO.bugs.md`, `*.backlog.md`) as Markdown task items using `- [ ]` / `- [x]` rather than plain bullets.
+- May: Use plain `-` bullets for explanatory or contextual notes that are not themselves tasks.
+
 ## Stories
 
 - Should: Keep short, single-paragraph user stories inline in `<epic-id>_primer.md` under a clearly labeled heading (for example, "User stories").

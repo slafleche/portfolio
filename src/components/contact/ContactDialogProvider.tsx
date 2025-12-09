@@ -17,6 +17,7 @@ import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { Markdown } from '@/components/Markdown';
 import { sharedStrings } from '@/lib/sharedStrings';
+import ContactFormSuccess from './ContactFormSuccess';
 import ContactForm from './ContactForm';
 import { CloseButton } from './CloseButton';
 
@@ -330,14 +331,23 @@ export function ContactDialogProvider({
                   />
                 </Dialog.Close>
                 {!successVisible ? (
-                  <Dialog.Title className={dialogStyles.heading}>
-                    {formCopy.heading}
-                  </Dialog.Title>
-                ) : null}
-                <ContactForm
-                  copy={formCopy}
-                  onSuccessStateChange={setSuccessVisible}
-                />
+                  <>
+                    <Dialog.Title
+                      className={dialogStyles.heading}
+                    >
+                      {formCopy.heading}
+                    </Dialog.Title>
+                    <ContactForm
+                      copy={formCopy}
+                      onSuccessStateChange={setSuccessVisible}
+                    />
+                  </>
+                ) : (
+                  <ContactFormSuccess
+                    title={formCopy.heading}
+                    description={formCopy.successBody}
+                  />
+                )}
               </div>
             </div>
           </Dialog.Content>

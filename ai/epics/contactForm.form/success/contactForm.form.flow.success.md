@@ -12,7 +12,7 @@ This file describes success criteria for the `ContactFormFlow` layer (hook/conte
   - `isSubmitting`: `true` only while a submission attempt is in flight.
   - `invalid`: `true` when the last submission attempt failed validation and `false` once validation passes again.
   - `submitStatus`: a small enum/string representing coarse result
-    (for example, `'idle' | 'success' | 'validation_error' | 'rate_limited' | 'service_unavailable' | 'blocked' | 'generic_error'`).
+    (for example, `'idle' | 'success' | 'validation_error' | 'rate_limited' | 'service_unavailable' | 'not_configured' | 'blocked' | 'generic_error'`).
 - Expose state and handlers to the `ContactForm` shell without exposing field-level values or messages.
 
 ## Inputs
@@ -26,6 +26,9 @@ This file describes success criteria for the `ContactFormFlow` layer (hook/conte
   - Returns a result or throws in a way that can be mapped into the submit status codes.
 - Optional callbacks:
   - A success-visibility callback (for example `onSuccessStateChange(visible: boolean)`) that downstream components can use to show or hide success panels.
+  - The callback is invoked with:
+    - `true` when a submission completes with a `'success'` status code.
+    - `false` when a submission completes with any non-success status or when the submit helper throws.
 
 ## Outputs / API
 
@@ -37,14 +40,22 @@ This file describes success criteria for the `ContactFormFlow` layer (hook/conte
     - Ignores duplicate submits while `isSubmitting` is `true`.
     - Sets `isSubmitting` to `true` before kicking off validation.
     - Calls `validateAll()` across all registered blocks.
+      - `validateAll()` operates purely via registered contracts; it does not know about specific block types.
+      - If there are no registered block contracts at all, the flow treats this as a configuration failure rather than “all valid”.
     - When any block is invalid:
       - Sets `invalid` to `true`.
       - Leaves or sets `submitStatus` to `'validation_error'` (or similar).
+      - Calls `enableContinuousValidation()` on the form-blocks context so blocks can switch into live-validation mode.
       - Resets `isSubmitting` to `false` and exits without collecting payload.
     - When all blocks are valid:
       - Sets `invalid` to `false`.
-      - Calls `collectPayload()` to obtain an opaque payload.
-      - Invokes the submit helper with that payload.
+      - If validation produced zero block results (no contracts registered):
+        - Sets `submitStatus` to `'not_configured'`.
+        - Keeps `invalid` as `false` (there is nothing the user can fix).
+        - Skips payload collection and does not invoke the submit helper.
+      - Otherwise:
+        - Calls `collectPayload()` to obtain an opaque payload (an array of block payload entries).
+        - Invokes the submit helper with that payload.
       - Maps the result or error into a coarse `submitStatus` value.
       - Resets `isSubmitting` to `false` when the attempt completes, regardless of success or failure.
 - `isSubmitting: boolean`:
@@ -52,7 +63,7 @@ This file describes success criteria for the `ContactFormFlow` layer (hook/conte
 - `invalid: boolean`:
   - `true` after a failed validation attempt (client-side or server-side) and remains `true` until the next successful validation.
 - `submitStatus: string`:
-  - The latest coarse status derived from the submit helper or internal guards.
+  - The latest coarse status derived from the submit helper or internal guards (`'idle' | FormServerResponseCode | 'not_configured'`).
 - `latestValidationResults: ContactFormBlockValidationResult[]`:
   - The most recent per-block validation results, suitable as input to the outcome/message-centre layer.
 - `latestPayload: unknown | null` (optional):
@@ -68,6 +79,7 @@ This file describes success criteria for the `ContactFormFlow` layer (hook/conte
   - Treat the payload as opaque and forward it unchanged to the submit helper.
   - Ensure `isSubmitting` is reset to `false` in all code paths (success, validation failure, network error, etc.).
   - Keep its public API stable so the shell and outcome layers can be tested with stub blocks as well as with the real form.
+  - When there are no registered block contracts, surface this as `'not_configured'` via `submitStatus` without calling the submit helper, so the outcome layer can treat it as a catastrophic “form unavailable” condition.
 
 ## Unit-test coverage — ContactFormFlow
 
@@ -124,3 +136,26 @@ Tests for `ContactFormFlow` focus on a small set of core scenarios:
     - `latestValidationResults` still show all blocks as valid.
 
 These tests are written against the hook/context using stubbed block contracts and submit helpers; they do not involve real Name/Email/Message/Turnstile blocks or DOM concerns.
+
+In addition to the four core scenarios above, coverage should include:
+
+- Block archetypes:
+  - At least one “value + validation” contract that can be valid or invalid and emits one or more messages when invalid.
+  - At least one “token-like” contract whose validity can flip independently of its payload and may emit multiple messages.
+  - At least one “payload-only gate” contract that always reports valid, emits no messages, but still contributes a payload entry.
+  - Asserts that `latestValidationResults` preserves the messages from each contract and that the payload array includes all contributing blocks, regardless of archetype.
+- No-blocks configuration:
+  - A scenario where no contracts are registered when `handleSubmit` is called.
+  - Asserts that:
+    - The submit helper is never called.
+    - `invalid` remains `false`.
+    - `submitStatus` is set to `'not_configured'`.
+- Server status mapping:
+  - Scenarios where the submit helper resolves with each coarse status code:
+    - `'success'` keeps `invalid` as `false` and sets `submitStatus` to `'success'`.
+    - `'validation_error'` sets `invalid` to `true`, calls `enableContinuousValidation()`, and sets `submitStatus` to `'validation_error'`.
+    - Other non-success codes (`'rate_limited'`, `'service_unavailable'`, `'blocked'`, `'generic_error'`) set `submitStatus` to the corresponding code while leaving `invalid` as `false`.
+  - A scenario where the submit helper rejects, asserting `submitStatus` becomes `'generic_error'` and `invalid` remains `false`.
+- Success-visibility callback:
+  - Asserts that `onSuccessStateChange(true)` is called only when the submit helper resolves with `'success'`.
+  - Asserts that `onSuccessStateChange(false)` is called when the submit helper resolves with any non-success status or rejects, and that it is not called at all for client-side validation failures that short-circuit before submit.

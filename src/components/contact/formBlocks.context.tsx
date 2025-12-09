@@ -34,6 +34,7 @@ type FormBlocksContextValue = {
   // invalid.
   continuousValidation: boolean;
   enableContinuousValidation: () => void;
+  getRegistrationsSnapshot: () => FormBlockRegistration[];
 };
 
 const FormBlocksContext = createContext<FormBlocksContextValue | null>(null);
@@ -62,6 +63,8 @@ export function FormBlocksProvider({
       registerBlock,
       continuousValidation,
       enableContinuousValidation: () => setContinuousValidation(true),
+      getRegistrationsSnapshot: () =>
+        Array.from(blocksRef.current.values()),
     }),
     [continuousValidation, registerBlock],
   );
@@ -104,6 +107,8 @@ export function TestFormBlocksProvider({
       registerBlock,
       continuousValidation,
       enableContinuousValidation: () => setContinuousValidation(true),
+      getRegistrationsSnapshot: () =>
+        Array.from(blocksRef.current.values()),
     }),
     [continuousValidation, registerBlock],
   );
