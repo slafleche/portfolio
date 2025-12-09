@@ -43,11 +43,12 @@ This file describes success criteria for the `ContactForm` shell component.
   - A small “jump to first error” style control is visible near the submit area.
 - Activating the jump control runs a shared recovery protocol: scrolls the priority field into view and focuses it so the user can start editing immediately.
 - As the user edits and blocks re-evaluate, live validation clears error-type messages; when no errors remain, the invalid flag is cleared, the jump control disappears, and the submit control returns to its normal behaviour.
+- When the selected priority message is catastrophic (for example, human verification cannot be loaded), the shell disables all interactive form controls and scrolls to the message-centre region instead of a specific field so the user encounters the explanation immediately.
 
 ## Message-centre interaction
 
 - The shell does not construct or inspect field-level messages; blocks and shared helpers are responsible for turning validation results into messages.
 - The shell ensures the message-centre provider/component is rendered inside the form so blocks and infrastructure can publish `MessageCentreTransmission` data.
-- On each submission attempt, a triage helper (in the message-centre layer or an adjacent orchestration helper) selects a single priority message from the collected messages, based on severity and field order.
+- On each submission attempt, a triage helper (in the form shell or an adjacent orchestration helper) selects a single priority message from the collected messages, based on severity and field order.
 - The shell reuses metadata from the priority message (for example, a `scrollTarget`) only to drive scroll/focus behaviour; it does not map or rewrite message text.
-- Toast decisions remain in the message-centre layer: at most one toast is surfaced per submission, based on the priority message’s higher-order summary message (derived from its category), not per-field errors.
+- Toast decisions are driven by the higher-order summary attached to the selected priority message: the form/message-centre helper passes at most one such summary string to the `MessageCentreBlock`, which shows it (or nothing) as a toast; per-field errors never trigger independent toasts.
