@@ -24,8 +24,6 @@ export type ContactFormBlockPayload<Value> = {
 export type ContactFormBlockContract<Value> = {
   validate: () => ContactFormBlockValidationResult;
   focus: () => void;
-  requestFocusBefore: () => void;
-  requestFocusAfter: () => void;
   getPayload: () => ContactFormBlockPayload<Value>;
 };
 

@@ -64,18 +64,12 @@ const buildNameContract = (
   value: string,
   evaluation: ReturnType<typeof evaluateNameField>,
   copy: NameBlockLocale,
-  focus: () => void,
-  onFocusBefore?: () => void,
-  onFocusAfter?: () => void,
-): ContactFormBlockContract<string> => ({
+): Omit<ContactFormBlockContract<string>, 'focus'> => ({
   validate: () => buildNameValidationResult(id, evaluation, copy),
   getPayload: (): ContactFormBlockPayload<string> => ({
     id,
     value,
   }),
-  focus,
-  requestFocusBefore: onFocusBefore ?? (() => {}),
-  requestFocusAfter: onFocusAfter ?? (() => {}),
 });
 
 export function NameBlock({
@@ -85,8 +79,6 @@ export function NameBlock({
   disabled,
   maxLength,
   minLength,
-  onFocusBefore,
-  onFocusAfter,
   copy,
 }: NameBlockProps) {
   const [value, setValue] = useState('');
@@ -105,18 +97,18 @@ export function NameBlock({
 
   const { continuousValidation } = useFormBlock(
     useMemo(() => {
-      const focus = () => {
-        inputRef.current?.focus();
-      };
-      const contract = buildNameContract(
+      const baseContract = buildNameContract(
         id,
         value,
         evaluation,
         copy,
-        focus,
-        onFocusBefore,
-        onFocusAfter,
       );
+      const contract: ContactFormBlockContract<string> = {
+        ...baseContract,
+        focus: () => {
+          inputRef.current?.focus();
+        },
+      };
       return {
         key: 'name',
         focus: contract.focus,
@@ -129,11 +121,10 @@ export function NameBlock({
           }
           return copy.errors.required;
         },
-        requestFocusBefore: contract.requestFocusBefore,
-        requestFocusAfter: contract.requestFocusAfter,
         liveValidation: liveValidationRegistration,
+        getContract: () => contract,
       };
-    }, [copy, evaluation, id, liveValidationRegistration, onFocusAfter, onFocusBefore, value]),
+    }, [copy, evaluation, id, liveValidationRegistration, value]),
   );
 
   const liveValidation = hasBlurred || continuousValidation;

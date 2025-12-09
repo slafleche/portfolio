@@ -19,3 +19,11 @@ export type MessageCentreTransmission<TMessage extends MessageBase = MessageBase
   source: string; // Block key or 'form' / other logical sources.
   messages: TMessage[];
 };
+
+// Flattened message summaries used by the MessageCentreBlock for display.
+// `globals` are form-level messages; `blocks` are block-specific summaries.
+export type MessageCentreMessages = {
+  globals: string[];
+  blocks: string[];
+  toastFallback?: string;
+};

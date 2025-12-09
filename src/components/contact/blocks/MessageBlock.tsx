@@ -84,18 +84,12 @@ const buildMessageContract = (
   value: string,
   evaluation: ReturnType<typeof evaluateMessageField>,
   copy: MessageBlockLocale,
-  focus: () => void,
-  onFocusBefore?: () => void,
-  onFocusAfter?: () => void,
-): ContactFormBlockContract<string> => ({
+): Omit<ContactFormBlockContract<string>, 'focus'> => ({
   validate: () => buildMessageValidationResult(id, evaluation, copy),
   getPayload: (): ContactFormBlockPayload<string> => ({
     id,
     value,
   }),
-  focus,
-  requestFocusBefore: onFocusBefore ?? (() => {}),
-  requestFocusAfter: onFocusAfter ?? (() => {}),
 });
 
 export function MessageBlock({
@@ -106,8 +100,6 @@ export function MessageBlock({
   errorText,
   readOnly,
   disabled,
-  onFocusBefore,
-  onFocusAfter,
 }: MessageBlockProps) {
   const [value, setValue] = useState('');
   const [hasBlurred, setHasBlurred] = useState(false);
@@ -147,18 +139,18 @@ export function MessageBlock({
 
   const { continuousValidation } = useFormBlock(
     useMemo(() => {
-      const focus = () => {
-        textareaRef.current?.focus();
-      };
-      const contract = buildMessageContract(
+      const baseContract = buildMessageContract(
         id,
         value,
         evaluation,
         copy,
-        focus,
-        onFocusBefore,
-        onFocusAfter,
       );
+      const contract: ContactFormBlockContract<string> = {
+        ...baseContract,
+        focus: () => {
+          textareaRef.current?.focus();
+        },
+      };
       return {
         key: 'message',
         focus: contract.focus,
@@ -178,18 +170,10 @@ export function MessageBlock({
           }
           return copy.errors.required;
         },
-        requestFocusBefore: contract.requestFocusBefore,
-        requestFocusAfter: contract.requestFocusAfter,
         liveValidation: liveValidationRegistration,
+        getContract: () => contract,
       };
-    }, [
-      copy.errors,
-      evaluation,
-      id,
-      onFocusAfter,
-      onFocusBefore,
-      value,
-    ]),
+    }, [copy, evaluation, id, value, liveValidationRegistration]),
   );
 
   const liveValidation = hasBlurred || continuousValidation;

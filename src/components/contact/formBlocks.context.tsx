@@ -10,6 +10,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import type { ContactFormBlockContract } from './types/form.types';
 
 export type FormBlockRegistration = {
   key: string;
@@ -17,13 +18,12 @@ export type FormBlockRegistration = {
   getValue?: () => unknown;
   validate?: () => boolean;
   getValidationSummary?: () => string | null;
-  requestFocusBefore?: () => void;
-  requestFocusAfter?: () => void;
   // Indicates whether this block is currently in "live validation" mode.
   // Blocks typically compute this as (hasBlurred || continuousValidation),
   // where `hasBlurred` is local state and `continuousValidation` comes from
   // the form-blocks context after the first failed submit.
   liveValidation: boolean;
+  getContract?: () => ContactFormBlockContract<unknown>;
 };
 
 type FormBlocksContextValue = {
@@ -49,20 +49,54 @@ export function FormBlocksProvider({
 
   const registerBlock = useCallback(
     (registration: FormBlockRegistration) => {
-      if (
-        process.env.NODE_ENV !== 'production' &&
-        (!registration.requestFocusBefore || !registration.requestFocusAfter)
-      ) {
-        console.warn(
-          `FormBlock "${registration.key}" is missing focus boundary handlers.`,
-        );
-      }
       blocksRef.current.set(registration.key, registration);
       return () => {
         blocksRef.current.delete(registration.key);
       };
     },
     [],
+  );
+
+  const value = useMemo<FormBlocksContextValue>(
+    () => ({
+      registerBlock,
+      continuousValidation,
+      enableContinuousValidation: () => setContinuousValidation(true),
+    }),
+    [continuousValidation, registerBlock],
+  );
+
+  return (
+    <FormBlocksContext.Provider value={value}>
+      {children}
+    </FormBlocksContext.Provider>
+  );
+}
+
+type TestFormBlocksProviderProps = {
+  children: ReactNode;
+  onRegisterBlock?: (registration: FormBlockRegistration) => void;
+};
+
+export function TestFormBlocksProvider({
+  children,
+  onRegisterBlock,
+}: TestFormBlocksProviderProps) {
+  const [continuousValidation, setContinuousValidation] =
+    useState<boolean>(false);
+  const blocksRef = useRef(new Map<string, FormBlockRegistration>());
+
+  const registerBlock = useCallback(
+    (registration: FormBlockRegistration) => {
+      blocksRef.current.set(registration.key, registration);
+      if (onRegisterBlock) {
+        onRegisterBlock(registration);
+      }
+      return () => {
+        blocksRef.current.delete(registration.key);
+      };
+    },
+    [onRegisterBlock],
   );
 
   const value = useMemo<FormBlocksContextValue>(

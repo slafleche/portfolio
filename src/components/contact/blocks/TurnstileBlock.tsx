@@ -153,8 +153,6 @@ const buildTurnstileContract = (
   focus: () => {
     // Placeholder: focus behaviour can be refined once the form orchestrator uses it.
   },
-  requestFocusBefore: () => {},
-  requestFocusAfter: () => {},
 });
 
 export function TurnstileBlock({
@@ -255,9 +253,8 @@ export function TurnstileBlock({
           validate: () => contract.validate().valid,
           getValidationSummary: () => validationSummary,
           focus: contract.focus,
-          requestFocusBefore: contract.requestFocusBefore,
-          requestFocusAfter: contract.requestFocusAfter,
           liveValidation: false,
+          getContract: () => contract,
         };
       },
       [copy, id, status, token, validationSummary],

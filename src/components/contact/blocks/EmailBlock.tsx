@@ -56,18 +56,12 @@ const buildEmailContract = (
   value: string,
   evaluation: ReturnType<typeof evaluateEmailField>,
   copy: EmailBlockLocale,
-  focus: () => void,
-  onFocusBefore?: () => void,
-  onFocusAfter?: () => void,
-): ContactFormBlockContract<string> => ({
+): Omit<ContactFormBlockContract<string>, 'focus'> => ({
   validate: () => buildEmailValidationResult(id, evaluation, copy),
   getPayload: (): ContactFormBlockPayload<string> => ({
     id,
     value,
   }),
-  focus,
-  requestFocusBefore: onFocusBefore ?? (() => {}),
-  requestFocusAfter: onFocusAfter ?? (() => {}),
 });
 
 export function EmailBlock({
@@ -76,8 +70,6 @@ export function EmailBlock({
   readOnly,
   disabled,
   maxLength,
-  onFocusBefore,
-  onFocusAfter,
   copy,
 }: EmailBlockProps) {
   const [value, setValue] = useState('');
@@ -96,18 +88,18 @@ export function EmailBlock({
 
   const { continuousValidation } = useFormBlock(
     useMemo(() => {
-      const focus = () => {
-        inputRef.current?.focus();
-      };
-      const contract = buildEmailContract(
+      const baseContract = buildEmailContract(
         id,
         value,
         evaluation,
         copy,
-        focus,
-        onFocusBefore,
-        onFocusAfter,
       );
+      const contract: ContactFormBlockContract<string> = {
+        ...baseContract,
+        focus: () => {
+          inputRef.current?.focus();
+        },
+      };
       return {
         key: 'email',
         focus: contract.focus,
@@ -117,17 +109,15 @@ export function EmailBlock({
           if (evaluation.validation.ok) return null;
           return copy.errors.invalid;
         },
-        requestFocusBefore: contract.requestFocusBefore,
-        requestFocusAfter: contract.requestFocusAfter,
         liveValidation: liveValidationRegistration,
+        getContract: () => contract,
       };
     }, [
-      copy.errors.invalid,
+      copy,
       evaluation,
       id,
-      onFocusAfter,
-      onFocusBefore,
       value,
+      liveValidationRegistration,
     ]),
   );
 
