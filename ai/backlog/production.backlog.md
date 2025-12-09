@@ -41,15 +41,8 @@ Risks:
 
 - [ ] Mirror env vars in Vercel (never commit secrets).
 
-### Deferred — Step 8 (blocked until mailbox plan)
-
-- [ ] Set up Gmail “Send as slafleche@proton.me" using Brevo SMTP (domain
-      verified + SPF/DKIM) to send and forward replies securely without paying
-      for a mailbox.
-
 ### Deferred — Step 0 Prereqs (blocked until Vercel setup)
 
 - [ ] Mirror `.env.local` secrets (`BREVO_API_KEY`, `MAIL_FROM`, `MAIL_TO`,
       Turnstile keys) into Vercel.
 - [ ] Verify Brevo sender email(s) + document the setup in `README`.
-
