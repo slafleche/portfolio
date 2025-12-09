@@ -233,5 +233,24 @@ describe('Contact form message centre: MessageCentreBlock', () => {
 
       expect(queryToastRegion()).toBeNull();
     });
+
+    it('exposes the toast via a live region with status role', () => {
+      const messages: MessageCentreMessages = {
+        globals: ['Global one'],
+        blocks: [],
+        toastFallback: undefined,
+      };
+
+      const { queryToastRegion, getToastText } =
+        renderMessageCentre(messages);
+
+      const toastRegion = queryToastRegion();
+      expect(toastRegion).not.toBeNull();
+      if (!toastRegion) return;
+
+      expect(toastRegion).toHaveAttribute('role', 'status');
+      expect(toastRegion).toHaveAttribute('aria-live', 'polite');
+      expect(getToastText()).toBe('Global one');
+    });
   });
 });
