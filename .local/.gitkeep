@@ -1,0 +1,3 @@
+# Local-only tools and scripts live in this folder.
+# .gitignore keeps everything here untracked except this file.
+
