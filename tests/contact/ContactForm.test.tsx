@@ -16,12 +16,12 @@ const buildCopy = () =>
   );
 
 const buildStatusMessages = (copy = buildCopy()) =>
-  copy.blocks.messageCentre.statuses as Record<
-    FormStatusKey,
-    string
-  >;
+  copy.blocks.messageCentre.statuses as Record<FormStatusKey, string>;
 
-function renderWrappedContactForm(copy = buildCopy(), actionUrl = '/api/contact') {
+function renderWrappedContactForm(
+  copy = buildCopy(),
+  actionUrl = '/api/contact',
+) {
   const dialogValue = {
     open: () => {},
     close: () => {},
@@ -230,10 +230,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       ) as HTMLTextAreaElement;
 
       await userEvent.type(nameInput, 'Jane Doe');
-      await userEvent.type(
-        emailInput,
-        'jane@example.com',
-      );
+      await userEvent.type(emailInput, 'jane@example.com');
       await userEvent.type(
         messageInput,
         'This is a sufficiently long message for validation.',
@@ -271,9 +268,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(messageInput).toBeDisabled();
       expect(submitButton).toBeDisabled();
 
-      expect(
-        screen.queryByTestId('jump-to-first-issue'),
-      ).toBeNull();
+      expect(screen.queryByTestId('jump-to-first-issue')).toBeNull();
     } finally {
       // @ts-expect-error restoring test override
       global.fetch = originalFetch;

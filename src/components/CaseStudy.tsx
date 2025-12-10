@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useMemo } from 'react';
 import type { CaseStudyListItem } from '@/lib/locales/sections/caseStudies.locale';
@@ -6,7 +6,6 @@ import { Accordion } from '@/components/Accordion';
 import { createDomId } from '@/lib/dom';
 import { Markdown } from '@/components/Markdown';
 import * as s from '@/styles/components/accordion.css';
-
 
 type CaseStudyProps = {
   id?: string;
@@ -21,7 +20,9 @@ export default function CaseStudy({
 }: CaseStudyProps) {
   const baseId = useMemo(
     () => id ?? createDomId('case-study'),
-    [id],
+    [
+      id,
+    ],
   );
 
   return (

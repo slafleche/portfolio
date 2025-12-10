@@ -5,7 +5,10 @@ import { colorVars } from '../../tokens/global.tokens';
 export const accordionSurfaceTokens = {
   gradientAngle: m(135, 'deg'),
   gradientStops: [
-    { color: color('#160f24'), at: mPercent(0) },
+    {
+      color: color('#160f24'),
+      at: mPercent(0),
+    },
     { color: color('#281532'), at: mPercent(100) },
   ] as const,
   gradientOpacity: 0.18,

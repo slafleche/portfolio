@@ -8,7 +8,10 @@ import type {
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
-import { makeMessageBase, makeValidationResult } from './helpers/messageFactories.helpers';
+import {
+  makeMessageBase,
+  makeValidationResult,
+} from './helpers/messageFactories.helpers';
 
 const STATUS_MESSAGES: Record<FormStatusKey, string> = {
   sending: 'sending',
@@ -72,7 +75,10 @@ describe('Contact form shell harness', () => {
       blocks,
       submitHelper,
       statusMessages: STATUS_MESSAGES,
-      blockOrder: ['first', 'second'],
+      blockOrder: [
+        'first',
+        'second',
+      ],
     });
 
     submit();
@@ -108,12 +114,14 @@ describe('Contact form shell harness', () => {
 
     const { submit, container, getByRole, queryByTestId } =
       renderContactFormShellHarness({
-      blocks,
-      submitHelper,
-      statusMessages: STATUS_MESSAGES,
-      blockOrder: ['first'],
-      onJumpToFirstIssue,
-    });
+        blocks,
+        submitHelper,
+        statusMessages: STATUS_MESSAGES,
+        blockOrder: [
+          'first',
+        ],
+        onJumpToFirstIssue,
+      });
 
     submit();
 
@@ -160,19 +168,19 @@ describe('Contact form shell harness', () => {
 
     const { submit, container, getByRole, queryByTestId } =
       renderContactFormShellHarness({
-      blocks: [],
-      submitHelper,
-      statusMessages: STATUS_MESSAGES,
-    });
+        blocks: [],
+        submitHelper,
+        statusMessages: STATUS_MESSAGES,
+      });
 
     submit();
 
     await waitFor(() => {
-    const inlineRegion = container.querySelector(
-      '[role="status"][aria-atomic="true"]',
-    ) as HTMLElement | null;
-    expect(inlineRegion).not.toBeNull();
-    if (!inlineRegion) return;
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      if (!inlineRegion) return;
       expect(inlineRegion.textContent ?? '').toContain(
         'not_configured',
       );
@@ -218,7 +226,11 @@ describe('Contact form shell harness', () => {
       'generic',
     ];
 
-    for (let index = 0; index < nonSuccessStatuses.length; index += 1) {
+    for (
+      let index = 0;
+      index < nonSuccessStatuses.length;
+      index += 1
+    ) {
       const submitHelper = nonSuccessStatuses[index];
       const expectedSummary = expectedSummaries[index];
 
@@ -227,7 +239,9 @@ describe('Contact form shell harness', () => {
           blocks,
           submitHelper,
           statusMessages: STATUS_MESSAGES,
-          blockOrder: ['first'],
+          blockOrder: [
+            'first',
+          ],
         });
 
       submit();

@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FormBlocksProvider,
   useFormBlocksContext,
@@ -112,10 +107,9 @@ function ContactFormInner({
       const priorityMessage = outcome.priority.message;
 
       if (options.catastrophic) {
-        const messageCentre =
-          document.querySelector<HTMLElement>(
-            '[data-form="messages"]',
-          );
+        const messageCentre = document.querySelector<HTMLElement>(
+          '[data-form="messages"]',
+        );
         if (messageCentre) {
           messageCentre.scrollIntoView({
             block: 'start',
@@ -129,10 +123,7 @@ function ContactFormInner({
       if (!scrollTarget) return;
 
       const element = document.getElementById(scrollTarget);
-      if (
-        element &&
-        typeof element.scrollIntoView === 'function'
-      ) {
+      if (element && typeof element.scrollIntoView === 'function') {
         element.scrollIntoView({
           block: 'start',
           behavior: 'smooth',
@@ -156,7 +147,10 @@ function ContactFormInner({
         }
       });
     },
-    [getRegistrationsSnapshot, outcome.priority.message],
+    [
+      getRegistrationsSnapshot,
+      outcome.priority.message,
+    ],
   );
 
   const wasCatastrophicRef = useRef(isCatastrophic);
@@ -166,12 +160,19 @@ function ContactFormInner({
       scrollToPriorityTarget({ catastrophic: true });
     }
     wasCatastrophicRef.current = isCatastrophic;
-  }, [isCatastrophic, scrollToPriorityTarget]);
+  }, [
+    isCatastrophic,
+    scrollToPriorityTarget,
+  ]);
 
   const handleJumpToFirstIssue = useCallback(() => {
     if (!isInvalid || isCatastrophic) return;
     scrollToPriorityTarget({ catastrophic: false });
-  }, [isInvalid, isCatastrophic, scrollToPriorityTarget]);
+  }, [
+    isInvalid,
+    isCatastrophic,
+    scrollToPriorityTarget,
+  ]);
 
   return (
     <form
@@ -212,10 +213,7 @@ function ContactFormInner({
           data-testid="jump-to-first-issue"
           onClick={handleJumpToFirstIssue}
         >
-          {
-            copy.blocks.messageCentre.statuses
-              .validation_error
-          }
+          {copy.blocks.messageCentre.statuses.validation_error}
         </button>
       ) : null}
       <SubmitButton disabled={disableSubmit}>
@@ -234,7 +232,9 @@ export default function ContactForm({
   void rest;
   const idPrefix = useSafeId('contact-form-');
 
-  const [formMembers] = useState<ContactFormBlockBaseProps[]>(() => [
+  const [
+    formMembers,
+  ] = useState<ContactFormBlockBaseProps[]>(() => [
     {
       id: `${idPrefix}name`,
       order: 1,
@@ -278,14 +278,16 @@ export default function ContactForm({
           body: JSON.stringify(payload),
         });
 
-        const data =
-          (await response.json()) as ContactFormResponse;
+        const data = (await response.json()) as ContactFormResponse;
         return data.code;
       } catch {
         throw new Error('contact_form_submit_failed');
       }
     },
-    [actionUrl, formMembers],
+    [
+      actionUrl,
+      formMembers,
+    ],
   );
 
   return (

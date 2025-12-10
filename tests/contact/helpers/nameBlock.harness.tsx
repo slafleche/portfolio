@@ -17,9 +17,15 @@ type NameBlockHarnessResult = ReturnType<
 
 export const renderNameBlockWithFormBlocks = (
   props: NameBlockProps,
-  options?: Parameters<typeof renderBlockWithFormBlocks<NameBlockProps>>[2],
+  options?: Parameters<
+    typeof renderBlockWithFormBlocks<NameBlockProps>
+  >[2],
 ): NameBlockHarnessResult => {
-  const renderResult = renderBlockWithFormBlocks(NameBlock, props, options);
+  const renderResult = renderBlockWithFormBlocks(
+    NameBlock,
+    props,
+    options,
+  );
 
   const getRegistration = () => renderResult.getLatestRegistration();
 

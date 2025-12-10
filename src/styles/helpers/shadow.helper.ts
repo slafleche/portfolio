@@ -30,9 +30,7 @@ const formatBoxShadow = (props: IBoxShadow = {}) => {
   return `${x.css()} ${y.css()} ${blur.css()} 0 ${finalColor.css()}${inset ? ' inset' : ''}`;
 };
 
-export type IBoxShadowTokens =
-  | IBoxShadow
-  | ReadonlyArray<IBoxShadow>;
+export type IBoxShadowTokens = IBoxShadow | ReadonlyArray<IBoxShadow>;
 
 const isBoxShadowList = (
   input: IBoxShadowTokens,
@@ -46,15 +44,11 @@ const boxShadowValue = (
       .map((entry) => formatBoxShadow(entry))
       .join(', ') as CSS_TYPES.Property.BoxShadow;
   }
-  return formatBoxShadow(
-    input,
-  ) as CSS_TYPES.Property.BoxShadow;
+  return formatBoxShadow(input) as CSS_TYPES.Property.BoxShadow;
 };
 
 type BoxShadowComposer = {
-  (
-    input?: IBoxShadowTokens,
-  ): {
+  (input?: IBoxShadowTokens): {
     boxShadow: CSS_TYPES.Property.BoxShadow;
   };
   value: typeof boxShadowValue;

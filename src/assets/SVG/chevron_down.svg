@@ -8,9 +8,18 @@
 >
   <defs>
     <linearGradient id="a">
-      <stop offset="0" style="stop-color: #fff; stop-opacity: 1" />
-      <stop offset=".44738" style="stop-color: #f5f5f5; stop-opacity: 1" />
-      <stop offset="1" style="stop-color: #808485; stop-opacity: 1" />
+      <stop
+        offset="0"
+        style="stop-color: #fff; stop-opacity: 1"
+      />
+      <stop
+        offset=".44738"
+        style="stop-color: #f5f5f5; stop-opacity: 1"
+      />
+      <stop
+        offset="1"
+        style="stop-color: #808485; stop-opacity: 1"
+      />
     </linearGradient>
     <linearGradient
       xlink:href="#a"

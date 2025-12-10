@@ -19,7 +19,10 @@ import {
   FAVICON_DEV_MASK_SVG_PATH,
   FAVICON_DEV_TILE_FOREGROUND_SVG_PATH,
 } from '@/data/generated/favicons.manifest.gen';
-import { faviconAssetPlan, faviconThemeColors } from '@/tokens/favicon.tokens';
+import {
+  faviconAssetPlan,
+  faviconThemeColors,
+} from '@/tokens/favicon.tokens';
 
 type DebugParams = Promise<{ LOCALE: string }>;
 type LocaleKey = keyof typeof FAVICON_WEB_MANIFESTS;
@@ -33,13 +36,13 @@ export default async function FaviconDebugPage({
   const availableLocales = Object.keys(
     FAVICON_WEB_MANIFESTS,
   ) as LocaleKey[];
-  const fallbackLocale = FAVICON_DEFAULT_WEB_MANIFEST
-    .locale as LocaleKey;
-  const locale = (availableLocales.includes(
-    LOCALE as LocaleKey,
-  )
-    ? LOCALE
-    : fallbackLocale) as LocaleKey;
+  const fallbackLocale =
+    FAVICON_DEFAULT_WEB_MANIFEST.locale as LocaleKey;
+  const locale = (
+    availableLocales.includes(LOCALE as LocaleKey)
+      ? LOCALE
+      : fallbackLocale
+  ) as LocaleKey;
 
   const linkDescriptors =
     FAVICON_LINK_DESCRIPTORS_BY_LOCALE[locale] ??
@@ -58,7 +61,9 @@ export default async function FaviconDebugPage({
     FAVICON_APPLE_TOUCH_ICON.fileName,
     FAVICON_MASK_ICON.fileName,
     ...(FAVICON_MASKABLE_ICON
-      ? [FAVICON_MASKABLE_ICON.fileName]
+      ? [
+          FAVICON_MASKABLE_ICON.fileName,
+        ]
       : []),
     FAVICON_MS_TILE.fileName,
     FAVICON_BROWSERCONFIG.fileName,

@@ -37,15 +37,18 @@ type FormBlocksContextValue = {
   getRegistrationsSnapshot: () => FormBlockRegistration[];
 };
 
-const FormBlocksContext = createContext<FormBlocksContextValue | null>(null);
+const FormBlocksContext =
+  createContext<FormBlocksContextValue | null>(null);
 
 export function FormBlocksProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [continuousValidation, setContinuousValidation] =
-    useState<boolean>(false);
+  const [
+    continuousValidation,
+    setContinuousValidation,
+  ] = useState<boolean>(false);
   const blocksRef = useRef(new Map<string, FormBlockRegistration>());
 
   const registerBlock = useCallback(
@@ -66,7 +69,10 @@ export function FormBlocksProvider({
       getRegistrationsSnapshot: () =>
         Array.from(blocksRef.current.values()),
     }),
-    [continuousValidation, registerBlock],
+    [
+      continuousValidation,
+      registerBlock,
+    ],
   );
 
   return (
@@ -85,8 +91,10 @@ export function TestFormBlocksProvider({
   children,
   onRegisterBlock,
 }: TestFormBlocksProviderProps) {
-  const [continuousValidation, setContinuousValidation] =
-    useState<boolean>(false);
+  const [
+    continuousValidation,
+    setContinuousValidation,
+  ] = useState<boolean>(false);
   const blocksRef = useRef(new Map<string, FormBlockRegistration>());
 
   const registerBlock = useCallback(
@@ -99,7 +107,9 @@ export function TestFormBlocksProvider({
         blocksRef.current.delete(registration.key);
       };
     },
-    [onRegisterBlock],
+    [
+      onRegisterBlock,
+    ],
   );
 
   const value = useMemo<FormBlocksContextValue>(
@@ -110,7 +120,10 @@ export function TestFormBlocksProvider({
       getRegistrationsSnapshot: () =>
         Array.from(blocksRef.current.values()),
     }),
-    [continuousValidation, registerBlock],
+    [
+      continuousValidation,
+      registerBlock,
+    ],
   );
 
   return (
@@ -123,7 +136,9 @@ export function TestFormBlocksProvider({
 export const useFormBlocksContext = () => {
   const context = useContext(FormBlocksContext);
   if (!context) {
-    throw new Error('useFormBlocksContext must be used within FormBlocksProvider');
+    throw new Error(
+      'useFormBlocksContext must be used within FormBlocksProvider',
+    );
   }
   return context;
 };
@@ -132,7 +147,10 @@ export const useFormBlock = (registration: FormBlockRegistration) => {
   const context = useFormBlocksContext();
   useEffect(() => {
     return context.registerBlock(registration);
-  }, [context, registration]);
+  }, [
+    context,
+    registration,
+  ]);
   return {
     continuousValidation: context.continuousValidation,
     enableContinuousValidation: context.enableContinuousValidation,

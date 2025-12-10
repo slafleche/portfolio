@@ -48,7 +48,8 @@ export const absolutePosition = {
         left: '50%' as CSS_TYPES.Property.Left,
         right: 'initial' as CSS_TYPES.Property.Right,
         bottom: 'initial' as CSS_TYPES.Property.Bottom,
-        transform: 'translate(-50%, -50%)' as CSS_TYPES.Property.Transform,
+        transform:
+          'translate(-50%, -50%)' as CSS_TYPES.Property.Transform,
       };
     } else {
       return {

@@ -102,7 +102,11 @@ export function buildContactFormOutcome(
     });
 
     const blockMessage = result.messages.find((message) =>
-      ['catastrophic', 'error', 'warning'].includes(message.type),
+      [
+        'catastrophic',
+        'error',
+        'warning',
+      ].includes(message.type),
     );
     if (blockMessage) {
       messagesForUi.blocks.push(blockMessage.text);
@@ -172,11 +176,14 @@ export function buildContactFormOutcome(
     }
   }
 
-  if (!priorityMessage && statusSummary && submitStatus !== 'success' && submitStatus !== 'idle') {
+  if (
+    !priorityMessage &&
+    statusSummary &&
+    submitStatus !== 'success' &&
+    submitStatus !== 'idle'
+  ) {
     const type: MessageBase['type'] =
-      submitStatus === 'not_configured'
-        ? 'catastrophic'
-        : 'error';
+      submitStatus === 'not_configured' ? 'catastrophic' : 'error';
     priorityMessage = {
       type,
       text: statusSummary,
@@ -185,15 +192,18 @@ export function buildContactFormOutcome(
 
   const hasErrors =
     allMessages.some((entry) =>
-      ['catastrophic', 'error'].includes(entry.message.type),
+      [
+        'catastrophic',
+        'error',
+      ].includes(entry.message.type),
     ) ||
     (!!priorityMessage &&
-      ['catastrophic', 'error'].includes(
-        priorityMessage.type,
-      ));
+      [
+        'catastrophic',
+        'error',
+      ].includes(priorityMessage.type));
 
-  const isCatastrophic =
-    priorityMessage?.type === 'catastrophic';
+  const isCatastrophic = priorityMessage?.type === 'catastrophic';
 
   const priority: ContactFormOutcomePriority = {
     message: priorityMessage,
@@ -224,6 +234,10 @@ export function useContactFormOutcome({
         { submitStatus, latestValidationResults },
         config,
       ),
-    [config, latestValidationResults, submitStatus],
+    [
+      config,
+      latestValidationResults,
+      submitStatus,
+    ],
   );
 }

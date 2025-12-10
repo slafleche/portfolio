@@ -41,9 +41,7 @@ const buildNameValidationResult = (
     ? 'form-error-name-too_long'
     : 'form-error-name-required';
 
-  const text = isTooLong
-    ? copy.errors.tooLong
-    : copy.errors.required;
+  const text = isTooLong ? copy.errors.tooLong : copy.errors.required;
 
   return {
     id,
@@ -81,15 +79,25 @@ export function NameBlock({
   minLength,
   copy,
 }: NameBlockProps) {
-  const [value, setValue] = useState('');
-  const [hasBlurred, setHasBlurred] = useState(false);
+  const [
+    value,
+    setValue,
+  ] = useState('');
+  const [
+    hasBlurred,
+    setHasBlurred,
+  ] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const evaluation = useMemo(
     () => evaluateNameField(value),
-    [value],
+    [
+      value,
+    ],
   );
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
     setValue(event.target.value);
   };
 
@@ -124,7 +132,13 @@ export function NameBlock({
         liveValidation: liveValidationRegistration,
         getContract: () => contract,
       };
-    }, [copy, evaluation, id, liveValidationRegistration, value]),
+    }, [
+      copy,
+      evaluation,
+      id,
+      liveValidationRegistration,
+      value,
+    ]),
   );
 
   const liveValidation = hasBlurred || continuousValidation;
@@ -158,7 +172,7 @@ export function NameBlock({
         minLength={minLength ?? NAME_LIMIT.min}
         ref={inputRef}
         required={required}
-        />
+      />
     </div>
   );
 }

@@ -100,10 +100,8 @@ export default function Menu({
   curiosityMessages,
   logoRedirectPaths,
 }: MenuProps) {
-  const {
-    isOpen: isContactDialogOpen,
-    isPrivacyOpen,
-  } = useContactDialog();
+  const { isOpen: isContactDialogOpen, isPrivacyOpen } =
+    useContactDialog();
   const pathname = usePathname();
   const normalizedPath = pathname ?? '/';
   const parts = normalizedPath.split('/').filter(Boolean);
@@ -192,7 +190,9 @@ export default function Menu({
       if (href.includes('#')) return href;
       return `${href}${reservedModalHash}`;
     },
-    [reservedModalHash],
+    [
+      reservedModalHash,
+    ],
   );
   const logoId = 'menu-logo';
   const [
@@ -273,7 +273,9 @@ export default function Menu({
   ]);
 
   useEffect(() => {
-    const { fonts, timeoutMs } = collectWaitForFonts(fontVariants.menu);
+    const { fonts, timeoutMs } = collectWaitForFonts(
+      fontVariants.menu,
+    );
     if (fonts.length === 0) {
       setFontsReady(true);
       return;
@@ -838,10 +840,7 @@ export default function Menu({
     const transformIntents: TransformIntent[] = [
       {
         skew: {
-          x:
-            side === 'right'
-              ? skew.negation()
-              : skew,
+          x: side === 'right' ? skew.negation() : skew,
         },
       },
     ];

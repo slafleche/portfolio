@@ -10,7 +10,14 @@ import { backgrounds } from '@/styles/helpers/background.helper';
 import { boxShadow } from '@/styles/helpers/shadow.helper';
 import borders from '../../../../src/styles/helpers/borders.helper';
 
-export type Tone = 'default' | 'catastrophic' | 'info' | 'success' | 'warning' | 'error' | 'muted';
+export type Tone =
+  | 'default'
+  | 'catastrophic'
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'muted';
 
 export type TonePalette = Record<
   Tone,
@@ -73,7 +80,7 @@ const blockStyle: CSSProperties = {
     color: 'rgba(245,240,255,0.2)',
   }),
   ...paddings(m(32)),
-  ...backgrounds({ color: 'rgba(8,6,16,0.65)' }) as CSSProperties,
+  ...(backgrounds({ color: 'rgba(8,6,16,0.65)' }) as CSSProperties),
   ...boxShadow({
     y: m(40),
     blur: m(140),
@@ -136,22 +143,24 @@ const codeStyle: CSSProperties = {
     vertical: m(2),
     horizontal: m(6),
   }),
-  ...backgrounds({ color: 'rgba(255,255,255,0.08)' }) as CSSProperties,
+  ...(backgrounds({
+    color: 'rgba(255,255,255,0.08)',
+  }) as CSSProperties),
   ...borders({
     radius: m(6),
-      width: m(1),
-      color: 'rgba(255,255,255,0.12)',
+    width: m(1),
+    color: 'rgba(255,255,255,0.12)',
   }),
 };
 
 const formContainerStyle: CSSProperties = {
   ...borders({
     radius: m(18),
-      width: m(1),
-      color: 'rgba(245,240,255,0.18)',
+    width: m(1),
+    color: 'rgba(245,240,255,0.18)',
   }),
   ...paddings(m(24)),
-  ...backgrounds({ color: 'rgba(6,4,18,0.75)' }) as CSSProperties,
+  ...(backgrounds({ color: 'rgba(6,4,18,0.75)' }) as CSSProperties),
   display: 'flex',
   flexDirection: 'column' as const,
   gap: 16,
@@ -170,15 +179,18 @@ export default function SubmissionTimelineSection({
   tonePalette,
   telemetryLegend,
 }: Props) {
-  const [selectedScenarioId, setSelectedScenarioId] = useState(
-    () => scenarios[0]?.id ?? '',
-  );
+  const [
+    selectedScenarioId,
+    setSelectedScenarioId,
+  ] = useState(() => scenarios[0]?.id ?? '');
 
   const activeScenario =
-    scenarios.find((scenario) => scenario.id === selectedScenarioId) ??
-    scenarios[0];
+    scenarios.find(
+      (scenario) => scenario.id === selectedScenarioId,
+    ) ?? scenarios[0];
 
-  const timelineStageTone = tonePalette[activeScenario?.tone ?? 'default'];
+  const timelineStageTone =
+    tonePalette[activeScenario?.tone ?? 'default'];
 
   const ctaLabel = activeScenario?.ctaLabel ?? 'Send message';
 
@@ -191,7 +203,9 @@ export default function SubmissionTimelineSection({
       default:
         return { readOnly: false, disabled: false };
     }
-  }, [activeScenario?.fieldState]);
+  }, [
+    activeScenario?.fieldState,
+  ]);
 
   const previousScenarioRef = useRef<string | null>(null);
 
@@ -206,15 +220,16 @@ export default function SubmissionTimelineSection({
         stage: stages[activeScenario.stageIndex]?.id ?? null,
       });
     });
-  }, [activeScenario, stages]);
+  }, [
+    activeScenario,
+    stages,
+  ]);
 
   return (
     <div style={stackStyle}>
       <article style={blockStyle}>
         <p style={eyebrowStyle}>Timeline</p>
-        <h4 style={titleStyle}>
-          Submission flow (interactive)
-        </h4>
+        <h4 style={titleStyle}>Submission flow (interactive)</h4>
         <div
           style={{
             display: 'flex',
@@ -241,11 +256,9 @@ export default function SubmissionTimelineSection({
                     vertical: m(8),
                     horizontal: m(14),
                   }),
-                  ...backgrounds({
-                    color: isActive
-                      ? palette.accent
-                      : 'transparent',
-                  }) as CSSProperties,
+                  ...(backgrounds({
+                    color: isActive ? palette.accent : 'transparent',
+                  }) as CSSProperties),
                   color: isActive ? '#120a24' : palette.text,
                   cursor: 'pointer',
                   fontSize: 13,
@@ -285,9 +298,7 @@ export default function SubmissionTimelineSection({
                   Step {index + 1}
                 </span>
                 <strong>{stage.label}</strong>
-                <p
-                  style={{ ...helperTextStyle, margin: 0 }}
-                >
+                <p style={{ ...helperTextStyle, margin: 0 }}>
                   {stage.description}
                 </p>
               </li>
@@ -298,9 +309,7 @@ export default function SubmissionTimelineSection({
 
       <article style={blockStyle}>
         <p style={eyebrowStyle}>CTA & Locks</p>
-        <h4 style={titleStyle}>
-          Submit button + field state
-        </h4>
+        <h4 style={titleStyle}>Submit button + field state</h4>
         <div style={formContainerStyle}>
           <div>
             <label style={formLabelStyle} htmlFor="preview-name">
@@ -326,11 +335,11 @@ export default function SubmissionTimelineSection({
                   vertical: m(10),
                   horizontal: m(12),
                 }),
-                ...backgrounds({
+                ...(backgrounds({
                   color: fieldProps.disabled
                     ? 'rgba(255,255,255,0.04)'
                     : 'rgba(6,4,18,0.85)',
-                }) as CSSProperties,
+                }) as CSSProperties),
                 color: '#f5f0ff',
                 marginBottom: 12,
               }}
@@ -360,11 +369,11 @@ export default function SubmissionTimelineSection({
                   vertical: m(10),
                   horizontal: m(12),
                 }),
-                ...backgrounds({
+                ...(backgrounds({
                   color: fieldProps.disabled
                     ? 'rgba(255,255,255,0.04)'
                     : 'rgba(6,4,18,0.85)',
-                }) as CSSProperties,
+                }) as CSSProperties),
                 color: '#f5f0ff',
                 marginBottom: 12,
               }}
@@ -377,7 +386,9 @@ export default function SubmissionTimelineSection({
             <textarea
               id="preview-message"
               rows={4}
-              defaultValue={activeScenario?.fieldValues?.message ?? ''}
+              defaultValue={
+                activeScenario?.fieldValues?.message ?? ''
+              }
               readOnly={fieldProps.readOnly}
               disabled={fieldProps.disabled}
               data-debug={activeScenario?.fieldState}
@@ -394,11 +405,11 @@ export default function SubmissionTimelineSection({
                   vertical: m(10),
                   horizontal: m(12),
                 }),
-                ...backgrounds({
+                ...(backgrounds({
                   color: fieldProps.disabled
                     ? 'rgba(255,255,255,0.04)'
                     : 'rgba(6,4,18,0.85)',
-                }) as CSSProperties,
+                }) as CSSProperties),
                 color: '#f5f0ff',
                 resize: 'vertical',
               }}
@@ -430,12 +441,12 @@ export default function SubmissionTimelineSection({
               minHeight: glassyButtonTokens.size.css(),
               borderRadius: glassyButtonTokens.borders.radius.css(),
               ...borders(glassyButtonTokens.borders),
-              ...backgrounds({
+              ...(backgrounds({
                 color:
                   activeScenario?.ctaState === 'success'
                     ? 'rgba(77,201,173,0.2)'
                     : 'rgba(255,255,255,0.08)',
-              }) as CSSProperties,
+              }) as CSSProperties),
               color: glassyButtonTokens.text.color.css(),
               fontWeight: 600,
               display: 'flex',
@@ -449,20 +460,20 @@ export default function SubmissionTimelineSection({
                   : 'pointer',
             }}
           >
-            {activeScenario?.ctaState === 'busy' ? 'Sending…' : ctaLabel}
+            {activeScenario?.ctaState === 'busy'
+              ? 'Sending…'
+              : ctaLabel}
           </button>
         </div>
       </article>
 
       <article style={blockStyle}>
         <p style={eyebrowStyle}>Telemetry</p>
-        <h4 style={titleStyle}>
-          Console events & dimensions
-        </h4>
+        <h4 style={titleStyle}>Console events & dimensions</h4>
         <p style={helperTextStyle}>
-          Selecting a scenario above emits the same debug logs you&apos;ll see
-          when the production form runs. Use these to confirm QA captures the
-          right metrics before touching Brevo.
+          Selecting a scenario above emits the same debug logs
+          you&apos;ll see when the production form runs. Use these to
+          confirm QA captures the right metrics before touching Brevo.
         </p>
         <ul style={listStyle}>
           {telemetryLegend.map((item) => (
@@ -475,9 +486,7 @@ export default function SubmissionTimelineSection({
             >
               <code style={codeStyle}>{item.event}</code>
               <strong>{item.label}</strong>
-              <p style={helperTextStyle}>
-                {item.description}
-              </p>
+              <p style={helperTextStyle}>{item.description}</p>
               <p style={helperTextStyle}>
                 <span style={{ fontWeight: 600 }}>Dimensions:</span>{' '}
                 {item.dimensions.join(', ')}

@@ -5,9 +5,7 @@ import { Markdown } from '@/components/Markdown';
 
 describe('Markdown component', () => {
   it('renders anchors with target and rel when openLinksInNewTab is true', () => {
-    render(
-      <Markdown source="[Docs](https://example.com)" />,
-    );
+    render(<Markdown source="[Docs](https://example.com)" />);
     const link = screen.getByRole('link', { name: 'Docs' });
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', 'noopener noreferrer');

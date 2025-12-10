@@ -17,7 +17,9 @@ type TurnstileBlockHarnessResult = ReturnType<
 
 export const renderTurnstileBlockWithFormBlocks = (
   props: TurnstileBlockProps,
-  options?: Parameters<typeof renderBlockWithFormBlocks<TurnstileBlockProps>>[2],
+  options?: Parameters<
+    typeof renderBlockWithFormBlocks<TurnstileBlockProps>
+  >[2],
 ): TurnstileBlockHarnessResult => {
   const renderResult = renderBlockWithFormBlocks(
     TurnstileBlock,
@@ -49,4 +51,3 @@ export const renderTurnstileBlockWithFormBlocks = (
     validateTurnstile,
   };
 };
-

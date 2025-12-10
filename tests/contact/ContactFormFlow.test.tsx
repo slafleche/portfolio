@@ -32,19 +32,17 @@ type StubBlockProps = {
 };
 
 function StubBlock({ config }: StubBlockProps) {
-  const contract = useMemo(
-    () => {
-      const validate =
-        config.validateMock ??
-        (() => config.validationResult);
-      return {
-        validate,
-        getPayload: () => config.payload,
-        focus: () => {},
-      };
-    },
-    [config],
-  );
+  const contract = useMemo(() => {
+    const validate =
+      config.validateMock ?? (() => config.validationResult);
+    return {
+      validate,
+      getPayload: () => config.payload,
+      focus: () => {},
+    };
+  }, [
+    config,
+  ]);
 
   const { continuousValidation } = useFormBlock(
     useMemo(
@@ -57,7 +55,11 @@ function StubBlock({ config }: StubBlockProps) {
         liveValidation: false,
         getContract: () => contract,
       }),
-      [config.key, config.payload.value, contract],
+      [
+        config.key,
+        config.payload.value,
+        contract,
+      ],
     ),
   );
 
@@ -65,7 +67,10 @@ function StubBlock({ config }: StubBlockProps) {
     if (config.onContinuousValidationChange) {
       config.onContinuousValidationChange(continuousValidation);
     }
-  }, [config, continuousValidation]);
+  }, [
+    config,
+    continuousValidation,
+  ]);
 
   return null;
 }
@@ -109,15 +114,9 @@ function FlowHarnessInner({
   return (
     <>
       {blocks.map((config) => (
-        <StubBlock
-          key={config.key}
-          config={config}
-        />
+        <StubBlock key={config.key} config={config} />
       ))}
-      <form
-        aria-label="flow form"
-        onSubmit={flow.handleSubmit}
-      >
+      <form aria-label="flow form" onSubmit={flow.handleSubmit}>
         <button type="submit">Submit</button>
       </form>
     </>
@@ -181,14 +180,19 @@ describe('ContactFormFlow', () => {
       payload: createPayload('gate', 'hp-value'),
     };
 
-    const submitHelper: ContactFormFlowSubmitHelper =
-      vi.fn().mockResolvedValue('success');
+    const submitHelper: ContactFormFlowSubmitHelper = vi
+      .fn()
+      .mockResolvedValue('success');
     const onFlowChange = vi.fn();
     const onSuccessStateChange = vi.fn();
 
     render(
       <FlowHarness
-        blocks={[valueBlock, tokenBlock, gateBlock]}
+        blocks={[
+          valueBlock,
+          tokenBlock,
+          gateBlock,
+        ]}
         submitHelper={submitHelper}
         onFlowChange={onFlowChange}
         onSuccessStateChange={onSuccessStateChange}
@@ -228,7 +232,11 @@ describe('ContactFormFlow', () => {
       onFlowChange as unknown as {
         mock?: { calls: [ContactFormFlowState][] };
       }
-    ).mock?.calls.some(([state]) => state.isSubmitting);
+    ).mock?.calls.some(
+      ([
+        state,
+      ]) => state.isSubmitting,
+    );
     expect(sawSubmittingState).toBe(true);
 
     expect(onSuccessStateChange).toHaveBeenCalledWith(true);
@@ -256,14 +264,18 @@ describe('ContactFormFlow', () => {
       payload: createPayload('other', 'value'),
     };
 
-    const submitHelper: ContactFormFlowSubmitHelper =
-      vi.fn().mockResolvedValue('success');
+    const submitHelper: ContactFormFlowSubmitHelper = vi
+      .fn()
+      .mockResolvedValue('success');
     const onFlowChange = vi.fn();
     const onSuccessStateChange = vi.fn();
 
     render(
       <FlowHarness
-        blocks={[invalidBlock, validBlock]}
+        blocks={[
+          invalidBlock,
+          validBlock,
+        ]}
         submitHelper={submitHelper}
         onFlowChange={onFlowChange}
         onSuccessStateChange={onSuccessStateChange}
@@ -303,11 +315,17 @@ describe('ContactFormFlow', () => {
     ]);
 
     const continuousCalls =
-      (invalidContinuousSpy as unknown as {
-        mock?: { calls: [boolean][] };
-      }).mock?.calls ?? [];
+      (
+        invalidContinuousSpy as unknown as {
+          mock?: { calls: [boolean][] };
+        }
+      ).mock?.calls ?? [];
     expect(
-      continuousCalls.some(([value]) => value === true),
+      continuousCalls.some(
+        ([
+          value,
+        ]) => value === true,
+      ),
     ).toBe(true);
 
     expect(onSuccessStateChange).not.toHaveBeenCalled();
@@ -341,7 +359,9 @@ describe('ContactFormFlow', () => {
 
     render(
       <FlowHarness
-        blocks={[block]}
+        blocks={[
+          block,
+        ]}
         submitHelper={submitHelper}
         onFlowChange={onFlowChange}
       />,
@@ -384,7 +404,9 @@ describe('ContactFormFlow', () => {
 
     render(
       <FlowHarness
-        blocks={[block]}
+        blocks={[
+          block,
+        ]}
         submitHelper={submitHelper}
         onFlowChange={onFlowChange}
         onSuccessStateChange={onSuccessStateChange}
@@ -406,7 +428,9 @@ describe('ContactFormFlow', () => {
       expect(lastState.isSubmitting).toBe(false);
       expect(lastState.invalid).toBe(false);
       expect(lastState.submitStatus).toBe('generic_error');
-      expect(lastState.latestPayload).toEqual([block.payload]);
+      expect(lastState.latestPayload).toEqual([
+        block.payload,
+      ]);
     });
 
     expect(onSuccessStateChange).toHaveBeenCalledWith(false);
@@ -469,7 +493,9 @@ describe('ContactFormFlow', () => {
 
     render(
       <FlowHarness
-        blocks={[block]}
+        blocks={[
+          block,
+        ]}
         submitHelper={submitHelper}
         onFlowChange={onFlowChange}
         onSuccessStateChange={onSuccessStateChange}
@@ -491,15 +517,23 @@ describe('ContactFormFlow', () => {
       expect(lastState.isSubmitting).toBe(false);
       expect(lastState.invalid).toBe(true);
       expect(lastState.submitStatus).toBe('validation_error');
-      expect(lastState.latestPayload).toEqual([block.payload]);
+      expect(lastState.latestPayload).toEqual([
+        block.payload,
+      ]);
     });
 
     const continuousCalls =
-      (continuousSpy as unknown as {
-        mock?: { calls: [boolean][] };
-      }).mock?.calls ?? [];
+      (
+        continuousSpy as unknown as {
+          mock?: { calls: [boolean][] };
+        }
+      ).mock?.calls ?? [];
     expect(
-      continuousCalls.some(([value]) => value === true),
+      continuousCalls.some(
+        ([
+          value,
+        ]) => value === true,
+      ),
     ).toBe(true);
 
     expect(onSuccessStateChange).toHaveBeenCalledWith(false);
@@ -520,14 +554,17 @@ describe('ContactFormFlow', () => {
     ];
 
     for (const code of statusCodes) {
-      const submitHelper: ContactFormFlowSubmitHelper =
-        vi.fn().mockResolvedValue(code);
+      const submitHelper: ContactFormFlowSubmitHelper = vi
+        .fn()
+        .mockResolvedValue(code);
       const onFlowChange = vi.fn();
       const onSuccessStateChange = vi.fn();
 
       const { getByRole, unmount } = render(
         <FlowHarness
-          blocks={[block]}
+          blocks={[
+            block,
+          ]}
           submitHelper={submitHelper}
           onFlowChange={onFlowChange}
           onSuccessStateChange={onSuccessStateChange}

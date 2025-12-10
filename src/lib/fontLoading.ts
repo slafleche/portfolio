@@ -46,7 +46,10 @@ export function waitForFonts(
 
 export function collectWaitForFonts(
   ...sources: Array<
-    | { waitForFonts?: readonly string[]; waitForFontsTimeoutMs?: number }
+    | {
+        waitForFonts?: readonly string[];
+        waitForFontsTimeoutMs?: number;
+      }
     | undefined
     | null
   >
@@ -66,10 +69,9 @@ export function collectWaitForFonts(
       }
     }
     if (source.waitForFontsTimeoutMs !== undefined) {
-      timeoutMs = Math.max(
-        timeoutMs ?? 0,
-        source.waitForFontsTimeoutMs ?? 0,
-      ) || timeoutMs;
+      timeoutMs =
+        Math.max(timeoutMs ?? 0, source.waitForFontsTimeoutMs ?? 0) ||
+        timeoutMs;
     }
   }
 

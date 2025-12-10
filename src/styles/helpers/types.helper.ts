@@ -13,16 +13,18 @@ export type Axis = 'top' | 'right' | 'bottom' | 'left';
 
 /**
  * AxisValues:
+ *
  * - `all`: apply the same value to all four sides.
  * - `vertical`: apply the same value to `top` and `bottom`.
  * - `horizontal`: apply the same value to `left` and `right`.
  *
  * Shorthands are preferred when they accurately describe the intent:
+ *
  * - If all four sides are equal, use `all`.
- * - If top/bottom match but left/right differ, use `vertical` plus explicit
- *   `left`/`right` overrides.
- * - If left/right match but top/bottom differ, use `horizontal` plus explicit
- *   `top`/`bottom` overrides.
+ * - If top/bottom match but left/right differ, use `vertical` plus
+ *   explicit `left`/`right` overrides.
+ * - If left/right match but top/bottom differ, use `horizontal` plus
+ *   explicit `top`/`bottom` overrides.
  */
 export type AxisValues<T> = {
   all?: T;

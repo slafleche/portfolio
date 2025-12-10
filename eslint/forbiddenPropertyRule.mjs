@@ -49,7 +49,8 @@ const getPropertyName = (node) => {
   if (!key) return null;
   if (!computed) {
     if (key.type === 'Identifier') return key.name;
-    if (key.type === 'Literal' && typeof key.value === 'string') return key.value;
+    if (key.type === 'Literal' && typeof key.value === 'string')
+      return key.value;
   }
   if (key.type === 'Literal' && typeof key.value === 'string') {
     return key.value;
@@ -94,7 +95,9 @@ const forbiddenPropertyRule = {
         if (propName !== property) return;
         const filename = context.getFilename();
         const normalizedFile = normalizePath(filename);
-        const relative = normalizePath(path.relative(projectRoot, filename));
+        const relative = normalizePath(
+          path.relative(projectRoot, filename),
+        );
         const isAllowed = matcher(normalizedFile, relative);
         if (isAllowed) return;
         context.report({

@@ -1,7 +1,7 @@
 ### Polices
 
-La configuration des polices part d’un seul fichier partagé entre le [abbr:CSS] et les
-requêtes Google Fonts.  
+La configuration des polices part d’un seul fichier partagé entre le [abbr:CSS]
+et les requêtes Google Fonts.  
 Les graisses sont définies comme des plages ou des listes, rendant l’intention
 claire dès le départ.
 
@@ -15,11 +15,14 @@ claire dès le départ.
 }
 ```
 
-**Définition réutilisable de la famille (partagée entre tokens et [abbr:CSS]) :**
+**Définition réutilisable de la famille (partagée entre tokens et
+[abbr:CSS]) :**
 
 ```ts
 import { m } from 'css-calipers';
-import fontsConfig, { defineFontFamily } from '../styles/helpers/fontConfig.helper';
+import fontsConfig, {
+  defineFontFamily,
+} from '../styles/helpers/fontConfig.helper';
 
 const urbanist = defineFontFamily({
   familyName: 'Urbanist',
@@ -73,8 +76,8 @@ import { composeFontVariantStyles } from '../tokens/fontVariants.tokens';
 const heroHeading = composeFontVariantStyles(fontVariants.hero);
 ```
 
-La même configuration alimente un générateur d’[abbr:URL] qui ne demande que les plages
-et styles réellement utilisés.  
+La même configuration alimente un générateur d’[abbr:URL] qui ne demande que les
+plages et styles réellement utilisés.  
 Cela garde la typographie cohérente entre [abbr:CSS] et requêtes réseau tout en
 allégeant la charge utile.
 
@@ -83,8 +86,8 @@ allégeant la charge utile.
 ### Localisation
 
 Chaque section ne charge que le texte dont elle a besoin.  
-Les bundles correspondent directement aux sections [abbr:UI], donc le chargement reste
-léger et la responsabilité claire.  
+Les bundles correspondent directement aux sections [abbr:UI], donc le chargement
+reste léger et la responsabilité claire.  
 Un seul traducteur est créé par locale, et les builders s’en servent pour
 composer des objets de texte simples — pas de couche i18n, pas d’appels `t()`
 dans le rendu.
@@ -112,9 +115,9 @@ prévisibles.
 ### Pipeline des Médias
 
 Les médias ne sont pas stockés dans le dépôt.  
-De petits fichiers [abbr:JSON] pointent vers les originaux distants, et des scripts
-gèrent le téléchargement, l’optimisation et la génération de manifestes prêts à
-l’emploi.
+De petits fichiers [abbr:JSON] pointent vers les originaux distants, et des
+scripts gèrent le téléchargement, l’optimisation et la génération de manifestes
+prêts à l’emploi.
 
 ```
 # src/assets/videos/videoSources.json
@@ -141,5 +144,5 @@ l’emploi.
 
 Ce processus garde les fichiers lourds hors du contrôle de version et produit
 des sorties déterministes prêtes à être consommées par les composants.  
-Les [abbr:SVG] suivent le même principe : nettoyés avec [abbr:SVGO] et formatés avec Prettier
-pour des [abbr:ID]s sûrs et des diffs cohérents.
+Les [abbr:SVG] suivent le même principe : nettoyés avec [abbr:SVGO] et formatés
+avec Prettier pour des [abbr:ID]s sûrs et des diffs cohérents.

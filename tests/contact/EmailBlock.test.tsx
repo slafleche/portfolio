@@ -63,28 +63,23 @@ describe('Contact form block tests: EmailBlock', () => {
       void userEvent.type(input, 'user@example.com');
 
       expect(input.value).toBe(initialValue);
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
   });
 
   describe('focus and keyboard behaviour', () => {
     it('participates correctly in focus order with focus sentinels', async () => {
-      const {
-        getByTestId,
-        container,
-        getRegistration,
-      } = renderEmailBlockWithFormBlocks(
-        {
-          id: 'test-email-block',
-          order: 0,
-          copy: emailCopy,
-          disabled: false,
-        },
-        { wrapWithFocusSentinels: true },
-      );
+      const { getByTestId, container, getRegistration } =
+        renderEmailBlockWithFormBlocks(
+          {
+            id: 'test-email-block',
+            order: 0,
+            copy: emailCopy,
+            disabled: false,
+          },
+          { wrapWithFocusSentinels: true },
+        );
 
       const handles = createFocusSentinelHandles(getByTestId);
       const emailInput = container.querySelector(
@@ -116,12 +111,13 @@ describe('Contact form block tests: EmailBlock', () => {
     });
 
     it('moves focus to the input even when an inline error is shown', async () => {
-      const { container, getRegistration } = renderEmailBlockWithFormBlocks({
-        id: 'test-email-block',
-        order: 0,
-        copy: emailCopy,
-        disabled: false,
-      });
+      const { container, getRegistration } =
+        renderEmailBlockWithFormBlocks({
+          id: 'test-email-block',
+          order: 0,
+          copy: emailCopy,
+          disabled: false,
+        });
 
       const emailInput = container.querySelector(
         'input[data-input="text"]',
@@ -165,16 +161,12 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       await userEvent.type(input, 'invalid-email');
 
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       fireEvent.blur(input);
@@ -203,9 +195,7 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       await userEvent.type(input, 'invalid-email');
@@ -219,9 +209,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.clear(input);
       await userEvent.type(input, 'user@example.com');
 
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -247,9 +235,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.type(input, 'user@example.com');
       fireEvent.blur(input);
 
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -269,9 +255,7 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       await userEvent.type(input, 'invalid-email');
@@ -286,9 +270,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.clear(input);
       await userEvent.type(input, 'user@example.com');
 
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -316,9 +298,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.type(input, 'user@example.com');
 
       expect(input.value).toBe(initialValue);
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -347,9 +327,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.type(input, 'invalid-email');
 
       expect(input.value).toBe(initialValue);
-      expect(
-        screen.queryByText(emailCopy.errors.invalid),
-      ).toBeNull();
+      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -433,12 +411,13 @@ describe('Contact form block contract: EmailBlock', () => {
   });
 
   it('getValue reflects the current email value', async () => {
-    const { getRegistration, container } = renderEmailBlockWithFormBlocks({
-      id: 'test-email-block',
-      order: 0,
-      copy: emailCopy,
-      disabled: false,
-    });
+    const { getRegistration, container } =
+      renderEmailBlockWithFormBlocks({
+        id: 'test-email-block',
+        order: 0,
+        copy: emailCopy,
+        disabled: false,
+      });
 
     const input = container.querySelector(
       'input[data-input="text"]',
@@ -454,12 +433,13 @@ describe('Contact form block contract: EmailBlock', () => {
   });
 
   it('validate returns false for invalid and true for valid emails', async () => {
-    const { getRegistration, container } = renderEmailBlockWithFormBlocks({
-      id: 'test-email-block',
-      order: 0,
-      copy: emailCopy,
-      disabled: false,
-    });
+    const { getRegistration, container } =
+      renderEmailBlockWithFormBlocks({
+        id: 'test-email-block',
+        order: 0,
+        copy: emailCopy,
+        disabled: false,
+      });
 
     const input = container.querySelector(
       'input[data-input="text"]',
@@ -484,12 +464,13 @@ describe('Contact form block contract: EmailBlock', () => {
   });
 
   it('liveValidation is false initially and true after first blur', () => {
-    const { getRegistration, container } = renderEmailBlockWithFormBlocks({
-      id: 'test-email-block',
-      order: 0,
-      copy: emailCopy,
-      disabled: false,
-    });
+    const { getRegistration, container } =
+      renderEmailBlockWithFormBlocks({
+        id: 'test-email-block',
+        order: 0,
+        copy: emailCopy,
+        disabled: false,
+      });
 
     const input = container.querySelector(
       'input[data-input="text"]',
@@ -518,7 +499,9 @@ describe('Contact form block contract: EmailBlock', () => {
     const result = validateEmail();
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
-    const [message] = result.messages;
+    const [
+      message,
+    ] = result.messages;
     expect(message.type).toBe('error');
     expect(message.code).toBe('form-error-email-invalid');
     expect(message.text).toBe(emailCopy.errors.invalid);
@@ -526,12 +509,13 @@ describe('Contact form block contract: EmailBlock', () => {
   });
 
   it('returns structured validation result for invalid email', async () => {
-    const { validateEmail, container } = renderEmailBlockWithFormBlocks({
-      id: 'test-email-block',
-      order: 0,
-      copy: emailCopy,
-      disabled: false,
-    });
+    const { validateEmail, container } =
+      renderEmailBlockWithFormBlocks({
+        id: 'test-email-block',
+        order: 0,
+        copy: emailCopy,
+        disabled: false,
+      });
 
     const input = container.querySelector(
       'input[data-input="text"]',
@@ -545,7 +529,9 @@ describe('Contact form block contract: EmailBlock', () => {
     const result = validateEmail();
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
-    const [message] = result.messages;
+    const [
+      message,
+    ] = result.messages;
     expect(message.type).toBe('error');
     expect(message.code).toBe('form-error-email-invalid');
     expect(message.text).toBe(emailCopy.errors.invalid);
@@ -553,12 +539,13 @@ describe('Contact form block contract: EmailBlock', () => {
   });
 
   it('returns structured validation result for valid email', async () => {
-    const { validateEmail, container } = renderEmailBlockWithFormBlocks({
-      id: 'test-email-block',
-      order: 0,
-      copy: emailCopy,
-      disabled: false,
-    });
+    const { validateEmail, container } =
+      renderEmailBlockWithFormBlocks({
+        id: 'test-email-block',
+        order: 0,
+        copy: emailCopy,
+        disabled: false,
+      });
 
     const input = container.querySelector(
       'input[data-input="text"]',

@@ -101,8 +101,14 @@ export function MessageBlock({
   readOnly,
   disabled,
 }: MessageBlockProps) {
-  const [value, setValue] = useState('');
-  const [hasBlurred, setHasBlurred] = useState(false);
+  const [
+    value,
+    setValue,
+  ] = useState('');
+  const [
+    hasBlurred,
+    setHasBlurred,
+  ] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const baseHeightRef = useRef<number | null>(null);
   const generatedId = useId();
@@ -122,8 +128,7 @@ export function MessageBlock({
         const node = textareaRef.current;
         if (!node) return;
         node.style.height = 'auto';
-        const minimum =
-          baseHeightRef.current ?? node.scrollHeight;
+        const minimum = baseHeightRef.current ?? node.scrollHeight;
         node.style.height = `${Math.max(
           node.scrollHeight,
           minimum,
@@ -134,7 +139,9 @@ export function MessageBlock({
   );
   const evaluation = useMemo(
     () => evaluateMessageField(value),
-    [value],
+    [
+      value,
+    ],
   );
   const liveValidationRegistration = hasBlurred;
 
@@ -174,7 +181,13 @@ export function MessageBlock({
         liveValidation: liveValidationRegistration,
         getContract: () => contract,
       };
-    }, [copy, evaluation, id, value, liveValidationRegistration]),
+    }, [
+      copy,
+      evaluation,
+      id,
+      value,
+      liveValidationRegistration,
+    ]),
   );
 
   const liveValidation = hasBlurred || continuousValidation;
@@ -186,7 +199,9 @@ export function MessageBlock({
     remainingCharacters.toString(),
   );
   const characterHint =
-    remainingCharacters === 0 ? copy.maxCharactersMessage : counterText;
+    remainingCharacters === 0
+      ? copy.maxCharactersMessage
+      : counterText;
   const urlCount = evaluation.urlCount;
   const showLinksHint = urlCount > 0;
   const linksHint = showLinksHint
@@ -245,7 +260,10 @@ export function MessageBlock({
         readOnly={readOnly}
         disabled={disabled}
       />
-      <FormHint tone={effectiveErrorText ? 'error' : 'helper'} id={characterHintId}>
+      <FormHint
+        tone={effectiveErrorText ? 'error' : 'helper'}
+        id={characterHintId}
+      >
         {effectiveErrorText || helperText || characterHint}
       </FormHint>
       {showLinksHint && linksHint ? (

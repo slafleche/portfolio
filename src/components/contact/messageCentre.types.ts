@@ -1,4 +1,3 @@
-
 export type CategoryErrorKey =
   | 'RequiredInput'
   | 'InvalidInput'
@@ -15,7 +14,9 @@ export type MessageBase = {
 };
 
 // Generic envelope used when sending messages toward the message centre.
-export type MessageCentreTransmission<TMessage extends MessageBase = MessageBase> = {
+export type MessageCentreTransmission<
+  TMessage extends MessageBase = MessageBase,
+> = {
   source: string; // Block key or 'form' / other logical sources.
   messages: TMessage[];
 };

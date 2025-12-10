@@ -15,8 +15,8 @@ globalStyle('*[data-visible="sc-only"]', {
   ...important(paddings(m(0))),
   ...important(margins(m(-1))),
   overflow: 'hidden !important' as CSS_TYPES.Property.Overflow,
-  clip: 'rect(0,0,0,0) !important' as CSS_TYPES.Property.Clip,  
-  border: "none !important" as CSS_TYPES.Property.Border,
+  clip: 'rect(0,0,0,0) !important' as CSS_TYPES.Property.Clip,
+  border: 'none !important' as CSS_TYPES.Property.Border,
 });
 
 globalStyle('*[data-interaction="none"]', {

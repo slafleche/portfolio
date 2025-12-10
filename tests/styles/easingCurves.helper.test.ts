@@ -16,14 +16,22 @@ describe('easingCurves.helper', () => {
 
   it('builds deterministic curves from explicit positions', () => {
     const samples = buildCurve({
-      positions: [0.9, 0.5, -0.2, 0.25],
+      positions: [
+        0.9,
+        0.5,
+        -0.2,
+        0.25,
+      ],
       min: 10,
       max: 20,
       easing: easing.easeOutQuad,
     });
 
     expect(samples).toEqual([
-      { position: 0, value: 10 },
+      {
+        position: 0,
+        value: 10,
+      },
       { position: 0.25, value: 14.375 },
       { position: 0.5, value: 17.5 },
       { position: 0.9, value: 19.9 },
@@ -39,7 +47,10 @@ describe('easingCurves.helper', () => {
     });
 
     expect(samples).toEqual([
-      { position: 0.2, value: 0.2 },
+      {
+        position: 0.2,
+        value: 0.2,
+      },
       { position: 0.3333, value: 0.3333 },
       { position: 0.4667, value: 0.4667 },
       { position: 0.6, value: 0.6 },

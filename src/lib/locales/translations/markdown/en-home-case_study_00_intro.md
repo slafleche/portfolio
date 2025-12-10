@@ -1,1 +1,3 @@
-At Vanilla Forums, I progressed from themer to [abbr:R&D] team member, contributing to token-based infrastructure that decoupled design from implementation and let teams refactor products without breaking client themes.
+At Vanilla Forums, I progressed from themer to [abbr:R&D] team member,
+contributing to token-based infrastructure that decoupled design from
+implementation and let teams refactor products without breaking client themes.

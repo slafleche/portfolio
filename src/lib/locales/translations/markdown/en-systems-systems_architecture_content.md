@@ -5,9 +5,9 @@ type-checked in isolation.
 
 Tokens hold only raw data: measurements, colors, timing values. Helpers convert
 those into logic—calculations, geometry, and relationships—with compile-time
-unit safety via [abbr:CSS] Calipers. Modules
-compose behavior, and styles are the only layer allowed to emit selectors,
-enforced by custom [abbr:ESLint] rules and lint-staged guards.
+unit safety via [abbr:CSS] Calipers. Modules compose behavior, and styles are
+the only layer allowed to emit selectors, enforced by custom [abbr:ESLint] rules
+and lint-staged guards.
 
 That separation makes the system predictable and auditable. Any visual change
 can be traced back to a numeric or logical source, and automated tools can

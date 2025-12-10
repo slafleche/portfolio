@@ -15,24 +15,29 @@
 
 ### Contact dialog debugging
 
-- `ContactDialogProvider` accepts an optional `toastDebugScenario` prop so you can pin a specific toast while tweaking styles (e.g., `toastDebugScenario="service_unavailable"` or `{ code: 'generic_error', message: 'Custom copy' }`). The provider threads the prop through to `ContactForm`.
-- Success scenarios never enqueue toasts; the prop only affects error/guard states so you can inspect rate-limit, validation, or outage banners without wiring up fake submissions.
+- `ContactDialogProvider` accepts an optional `toastDebugScenario` prop so you
+  can pin a specific toast while tweaking styles (e.g.,
+  `toastDebugScenario="service_unavailable"` or
+  `{ code: 'generic_error', message: 'Custom copy' }`). The provider threads the
+  prop through to `ContactForm`.
+- Success scenarios never enqueue toasts; the prop only affects error/guard
+  states so you can inspect rate-limit, validation, or outage banners without
+  wiring up fake submissions.
 
 ### Helper Conventions
 
 - Require measurement helper values (from `css-calipers`) for anything that
-  represents a scalar (lengths, angles, timings). Use measurement APIs
-  (`m`, `add`, `subtract`, `multiply`, `divide`, `round`, `floor`, `ceil`,
-  `clamp`, etc.) instead of CSS math functions (`calc`, `min`, `max`, `clamp`).
-  Emit once you reach the style layer and rely on the shared helpers—
-  `paddings`, `margins`, `borders`, `boxShadow`, etc.—to turn structured data
-  into CSS.
+  represents a scalar (lengths, angles, timings). Use measurement APIs (`m`,
+  `add`, `subtract`, `multiply`, `divide`, `round`, `floor`, `ceil`, `clamp`,
+  etc.) instead of CSS math functions (`calc`, `min`, `max`, `clamp`). Emit once
+  you reach the style layer and rely on the shared helpers— `paddings`,
+  `margins`, `borders`, `boxShadow`, etc.—to turn structured data into CSS.
 - When you need those symbolic values, define a dedicated type in
   `src/styles/helpers/types.helper.ts` instead of falling back to loose unions.
   `SpacingKeyword` is the reference example: it extracts the string-only portion
   of `CSS_TYPES.Property.Margin` and allows `spacing.helper.ts` to accept `auto`
-  alongside real measurements without reopening the old `MeasurementLike`
-  escape hatch.
+  alongside real measurements without reopening the old `MeasurementLike` escape
+  hatch.
 - Spacing helpers accept either structured intent objects or shorthand
   measurement/spacing keyword values. Use `{ all: ... }`,
   `{ horizontal: ..., vertical: ... }`, etc., whenever you need axis overrides,
@@ -73,17 +78,18 @@
 
 ### Linting & Guardrails
 
-- `rules.yaml` is the machine-readable source of truth for all hard rules (layering,
-  helper usage, TODO cadence, forbidden properties). ESLint consumes it via
-  `eslint/rules.mjs`, and the `custom/forbidden-property` rule surfaces friendly
-  `file:line:col` errors (e.g., “Use `backdropFilters.style()`…”) instead of
-  cryptic stack traces whenever a guarded property appears outside its helper.
+- `rules.yaml` is the machine-readable source of truth for all hard rules
+  (layering, helper usage, TODO cadence, forbidden properties). ESLint consumes
+  it via `eslint/rules.mjs`, and the `custom/forbidden-property` rule surfaces
+  friendly `file:line:col` errors (e.g., “Use `backdropFilters.style()`…”)
+  instead of cryptic stack traces whenever a guarded property appears outside
+  its helper.
 - `lint-staged` now runs `node scripts/checkLintRules.mjs` after prettier/eslint
   to catch disallowed imports or raw background/border/padding/margin props in
   staged files. Fix violations before committing.
-- Keep `ai.md` for narrative context, but treat `rules.yaml` + the automated checks
-  as canonical—if you change the rules, update the YAML and the lint scripts in
-  the same slice.
+- Keep `ai.md` for narrative context, but treat `rules.yaml` + the automated
+  checks as canonical—if you change the rules, update the YAML and the lint
+  scripts in the same slice.
 
 ### Setup
 

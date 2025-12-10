@@ -119,7 +119,9 @@ export default async function SystemsPage({
           hint: curiosityMessages.hint,
           targetHref: curiosityTarget,
         }}
-        logoRedirectPaths={[curiosityTarget]}
+        logoRedirectPaths={[
+          curiosityTarget,
+        ]}
       />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>

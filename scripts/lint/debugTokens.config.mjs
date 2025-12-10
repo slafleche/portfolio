@@ -7,12 +7,17 @@
 // - Per-page token import whitelists for debug sandboxes.
 
 // Files to skip entirely (matched by substring in the relative path).
-export const LINT_FILE_IGNORE_SUBSTRINGS = ['.bak.'];
+export const LINT_FILE_IGNORE_SUBSTRINGS = [
+  '.bak.',
+];
 
 // Paths where raw CSS property checks (background/border/padding/margin/
 // boxShadow/backdropFilter) are not applied because they are config or
 // generated artefacts rather than style-layer sources.
-export const STYLE_RULE_SKIP_PATHS = ['src/tokens/', 'public/main.js'];
+export const STYLE_RULE_SKIP_PATHS = [
+  'src/tokens/',
+  'public/main.js',
+];
 
 // Literal reset values that are allowed for specific inline style rules.
 // Keys are rule ids from FORBIDDEN_PATTERNS in checkLintRules.mjs.
@@ -23,8 +28,9 @@ export const STYLE_LITERAL_RESETS = {
     // Allow plain background resets (`background: 'none'`) but not
     // backgroundColor, which must still use helpers.
     (line) =>
-      /\bbackground\s*:\s*['"]none(?:\s*!important)?['"]/.test(line) &&
-      !/\bbackgroundColor\b/.test(line),
+      /\bbackground\s*:\s*['"]none(?:\s*!important)?['"]/.test(
+        line,
+      ) && !/\bbackgroundColor\b/.test(line),
   ],
   'border-inline': [
     // Allow plain border resets (`border: 'none'`) but not side-specific
@@ -34,7 +40,9 @@ export const STYLE_LITERAL_RESETS = {
       !/\bborder(?:Top|Right|Bottom|Left|Radius)\b/.test(line),
     // Allow inherit for radius, since it does not define a new shape.
     (line) =>
-      /\bborderRadius\s*:\s*['"]inherit(?:\s*!important)?['"]/.test(line),
+      /\bborderRadius\s*:\s*['"]inherit(?:\s*!important)?['"]/.test(
+        line,
+      ),
   ],
   'box-shadow-inline': [
     // Allow plain box-shadow resets (`boxShadow: 'none'`).
@@ -54,8 +62,11 @@ export const STYLE_LITERAL_RESETS = {
 export const DEBUG_TOKEN_WHITELISTS = [
   {
     filePath: 'app/[LOCALE]/debug/favicons/page.tsx',
-    purpose: 'Favicon debug page: exercises favicon token set and asset plan.',
-    allowedTokenImports: ['@/tokens/favicon.tokens'],
+    purpose:
+      'Favicon debug page: exercises favicon token set and asset plan.',
+    allowedTokenImports: [
+      '@/tokens/favicon.tokens',
+    ],
   },
   {
     filePath:

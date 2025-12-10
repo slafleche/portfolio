@@ -41,6 +41,21 @@ work have clear inputs and outputs.
   - Scratchpad for experiments or running thoughts that do not fit in the
     primer/implementation/plan files.
 
+### Blocked upgrades
+
+Some epics represent **upgrades** (for example, toolchain or dependency updates)
+that are currently blocked by external requirements. For these, we use:
+
+- A normal epic folder under `ai/epics/<epic-id>/` (for example,
+  `ai/epics/prettierUpgrade/`).
+- A companion requirements file under `ai/epics/blockedUpgrades/` named
+  `<epic-id>_requirements.md` that lists the explicit conditions which must be
+  satisfied before the upgrade work can start.
+
+When running in an upgrade-check role (for example, `#upgradable`), agents
+should prefer the requirements files in `blockedUpgrades/` as the source of
+truth for whether an upgrade epic is still blocked or ready to proceed.
+
 ## Role expectations (hats)
 
 These files are designed to be the IO for different roles:

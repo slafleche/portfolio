@@ -16,43 +16,6 @@ import { backgrounds } from '../helpers/background.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import { m } from 'css-calipers';
 
-const controlBase: ComplexStyleRule = {
-  width: '100%',
-  ...paddings(formTokens.field.paddings),
-  ...borders(formTokens.field.borders),
-  ...backgrounds(formTokens.field.backgrounds),
-  color: formTokens.field.text.color.css(),
-  transition: 'border-color 160ms ease, box-shadow 160ms ease',
-  outline: 'none',
-  font: 'inherit',
-  boxSizing: 'border-box',
-  selectors: {
-    '&::placeholder': {
-      color: formTokens.field.placeholder.color.css(),
-      opacity: 1,
-    },
-    '&:hover, &[data-debug="hover"]': {
-      ...borders(formTokens.field.hover.borders),
-    },
-    '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
-      {
-        ...borders(formTokens.field.focusVisible.borders),
-        ...boxShadow(formTokens.field.focusVisible.shadow),
-      },
-    '&[data-disabled="true"], &[data-debug="disabled"]': {
-      opacity: 0.55,
-      cursor: 'not-allowed',
-    },
-    '&[data-debug="readonly"]': {
-      opacity: 0.85,
-    },
-    '&[data-error="true"]': {
-      color: formTokens.field.error.text.color.css(),
-      ...borders(formTokens.field.error.borders),
-    },
-  },
-};
-
 export const form = style({
   display: 'grid',
   gap: formTokens.layout.sectionGap.css(),
@@ -103,16 +66,83 @@ export const required = style({
   fontSize: '0.85em',
 });
 
-export const input = style(controlBase);
-
-export const textarea = style([
-  controlBase,
-  {
-    minHeight: formTokens.textarea.minHeight.css(),
-    resize: 'none',
-    overflowY: 'hidden',
+export const input = style({
+  width: '100%',
+  ...paddings(formTokens.field.paddings),
+  ...borders(formTokens.field.borders),
+  ...backgrounds(formTokens.field.backgrounds),
+  color: formTokens.field.text.color.css(),
+  transition: 'border-color 160ms ease, box-shadow 160ms ease',
+  outline: 'none',
+  font: 'inherit',
+  boxSizing: 'border-box',
+  selectors: {
+    '&::placeholder': {
+      color: formTokens.field.placeholder.color.css(),
+      opacity: 1,
+    },
+    '&:hover, &[data-debug="hover"]': {
+      ...borders(formTokens.field.hover.borders),
+    },
+    '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
+      {
+        ...borders(formTokens.field.focusVisible.borders),
+        ...boxShadow(formTokens.field.focusVisible.shadow),
+      },
+    '&[data-disabled="true"], &[data-debug="disabled"]': {
+      opacity: 0.55,
+      cursor: 'not-allowed',
+    },
+    '&[data-debug="readonly"]': {
+      opacity: 0.85,
+    },
+    '&[data-error="true"]': {
+      color: formTokens.field.error.text.color.css(),
+      ...borders(formTokens.field.error.borders),
+    },
   },
-]);
+});
+
+export const textarea = style({
+  width: '100%',
+  ...paddings(formTokens.field.paddings),
+  ...borders(formTokens.field.borders),
+  ...backgrounds(formTokens.field.backgrounds),
+  color: formTokens.field.text.color.css(),
+  transition: 'border-color 160ms ease, box-shadow 160ms ease',
+  outline: 'none',
+  font: 'inherit',
+  boxSizing: 'border-box',
+  minHeight: formTokens.textarea.minHeight.css(),
+  resize: 'none',
+  overflowY: 'hidden',
+
+  selectors: {
+    '&::placeholder': {
+      color: formTokens.field.placeholder.color.css(),
+      opacity: 1,
+    },
+    '&:hover, &[data-debug="hover"]': {
+      ...borders(formTokens.field.hover.borders),
+    },
+    '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
+      {
+        ...borders(formTokens.field.focusVisible.borders),
+        ...boxShadow(formTokens.field.focusVisible.shadow),
+      },
+    '&[data-disabled="true"], &[data-debug="disabled"]': {
+      opacity: 0.55,
+      cursor: 'not-allowed',
+    },
+    '&[data-debug="readonly"]': {
+      opacity: 0.85,
+    },
+    '&[data-error="true"]': {
+      color: formTokens.field.error.text.color.css(),
+      ...borders(formTokens.field.error.borders),
+    },
+  },
+});
 
 export const errorText = style({
   color: formTokens.field.error.text.color.css(),
@@ -129,35 +159,40 @@ export const helperText = style({
   fontSize: '0.85rem',
 });
 
-const statusBase: ComplexStyleRule = {
-  display: 'flex',
-  alignItems: 'center',
-  ...borders(formTokens.field.borders),
-  ...paddings(formTokens.field.paddings),
-  gap: formTokens.layout.fieldGap.css(),
-};
-
-export const status = style(statusBase);
+export const status = style();
 
 export const statusSuccess = style([
-  statusBase,
   {
+    display: 'flex',
+    alignItems: 'center',
+    ...borders(formTokens.field.borders),
+    ...paddings(formTokens.field.paddings),
+    gap: formTokens.layout.fieldGap.css(),
     ...backgrounds(formTokens.status.success.backgrounds),
     ...borders(formTokens.status.success.borders),
   },
 ]);
 
 export const statusError = style([
-  statusBase,
   {
+    display: 'flex',
+    alignItems: 'center',
+    ...borders(formTokens.field.borders),
+    ...paddings(formTokens.field.paddings),
+    gap: formTokens.layout.fieldGap.css(),
+
     ...backgrounds(formTokens.status.error.backgrounds),
     ...borders(formTokens.status.error.borders),
   },
 ]);
 
 export const statusGeneric = style([
-  statusBase,
   {
+    display: 'flex',
+    alignItems: 'center',
+    ...borders(formTokens.field.borders),
+    ...paddings(formTokens.field.paddings),
+    gap: formTokens.layout.fieldGap.css(),
     ...backgrounds(formTokens.status.generic.backgrounds),
     ...borders(formTokens.status.generic.borders),
   },
@@ -224,9 +259,7 @@ export const submitButton = style({
       {
         outline: 'none',
         ...backgrounds(glassyButtonTokens.focusVisible.backgrounds),
-        ...boxShadow(
-          glassyButtonTokens.focusVisible.boxShadows,
-        ),
+        ...boxShadow(glassyButtonTokens.focusVisible.boxShadows),
       },
     '&:disabled, &[data-debug="disabled"]': {
       opacity: 0.5,
@@ -403,9 +436,7 @@ export const privacyCloseIcon = style({
       // ...backgrounds(glasssButtonTokens.focusVisible.backgrounds),
       // background:
       // glassyButtonTokens.focusVisible.background.color.css(),
-      ...boxShadow(
-        glassyButtonTokens.focusVisible.boxShadows,
-      ),
+      ...boxShadow(glassyButtonTokens.focusVisible.boxShadows),
     },
     '&:active': {
       transform: 'translateY(0)',

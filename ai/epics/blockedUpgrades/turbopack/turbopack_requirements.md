@@ -12,4 +12,3 @@ move dev/build workflows from webpack to Turbopack.
 - [ ] A small, documented smoke-test (for example, `yarn dev` and `yarn build`
       with Turbopack enabled) that we can run locally and in CI to validate the
       Turbopack configuration before switching defaults.
-

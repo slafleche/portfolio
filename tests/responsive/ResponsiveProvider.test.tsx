@@ -18,11 +18,7 @@ vi.mock('@/styles/responsive', () => ({
 
 const Consumer = () => {
   const state = useResponsive();
-  return (
-    <div data-testid="responsive">
-      {state.mode ?? 'none'}
-    </div>
-  );
+  return <div data-testid="responsive">{state.mode ?? 'none'}</div>;
 };
 
 describe('ResponsiveProvider', () => {
@@ -37,7 +33,9 @@ describe('ResponsiveProvider', () => {
         <Consumer />
       </ResponsiveProvider>,
     );
-    expect(screen.getByTestId('responsive')).toHaveTextContent('fullSize');
+    expect(screen.getByTestId('responsive')).toHaveTextContent(
+      'fullSize',
+    );
   });
 
   it('falls back to undefined mode when breakpoint not matched', () => {
@@ -47,6 +45,8 @@ describe('ResponsiveProvider', () => {
         <Consumer />
       </ResponsiveProvider>,
     );
-    expect(screen.getByTestId('responsive')).toHaveTextContent('none');
+    expect(screen.getByTestId('responsive')).toHaveTextContent(
+      'none',
+    );
   });
 });

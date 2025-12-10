@@ -13,187 +13,205 @@ import tseslint from 'typescript-eslint';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const tsconfigPath = path.join(__dirname, 'tsconfig.json');
 const customRuleConfigs =
-	(await import('./eslint/rules.mjs')).default ?? [];
+  (await import('./eslint/rules.mjs')).default ?? [];
 
 const importFlatConfig =
-	(importPluginFlatRecommended?.default ?? importPluginFlatRecommended) ?? {};
-const promiseFlatConfig =
-	promisePlugin.configs?.['flat/recommended'] ?? {
-		plugins: { promise: promisePlugin },
-		rules: {},
-	};
-const reactFlatRecommended =
-	react.configs?.flat?.recommended ?? { rules: {}, plugins: { react } };
-const reactHooksRecommended =
-	reactHooks.configs?.['recommended-latest'] ??
-	reactHooks.configs?.recommended ?? {
-		plugins: { 'react-hooks': reactHooks },
-		rules: {
-			'react-hooks/rules-of-hooks': 'error',
-			'react-hooks/exhaustive-deps': 'warn',
-		},
-	};
+  importPluginFlatRecommended?.default ??
+  importPluginFlatRecommended ??
+  {};
+const promiseFlatConfig = promisePlugin.configs?.[
+  'flat/recommended'
+] ?? {
+  plugins: { promise: promisePlugin },
+  rules: {},
+};
+const reactFlatRecommended = react.configs?.flat?.recommended ?? {
+  rules: {},
+  plugins: { react },
+};
+const reactHooksRecommended = reactHooks.configs?.[
+  'recommended-latest'
+] ??
+  reactHooks.configs?.recommended ?? {
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
+  };
 
 const tsSourceFiles = [
-	'src/**/*.{ts,tsx}',
-	'app/**/*.{ts,tsx}',
-	'types/**/*.{ts,tsx}',
+  'src/**/*.{ts,tsx}',
+  'app/**/*.{ts,tsx}',
+  'types/**/*.{ts,tsx}',
 ];
 
 const tsNoProjectFiles = [
-	'middleware.ts',
-	'next-env.d.ts',
-	'scripts/**/*.ts',
-	'tests/**/*.{ts,tsx}',
+  'middleware.ts',
+  'next-env.d.ts',
+  'scripts/**/*.ts',
+  'tests/**/*.{ts,tsx}',
 ];
 
 /** @type {import('eslint').FlatConfig.Config[]} */
 export default [
-	{
-		ignores: [
-			'node_modules/**',
-			'.yarn/**',
-			'.next/**',
-			'dist/**',
-			'build/**',
-			'public/**',
-			'src/data/generated/**/*.gen.ts',
-			'src/lib/locales/generated/**/*.gen.ts',
-			'**/*.bak.*',
-		],
-	},
-	{
-		files: [
-			'*.config.{js,cjs,mjs}',
-			'**/*.config.{js,cjs,mjs}',
-			'next.config.js',
-			'prettier.config.cjs',
-		],
-		languageOptions: {
-			parserOptions: {
-				project: false,
-			},
-			globals: {
-				process: 'readonly',
-				module: 'readonly',
-				require: 'readonly',
-			},
-		},
-	},
-	{
-		...js.configs.recommended,
-		files: ['**/*.{js,mjs,cjs,jsx}'],
-		languageOptions: {
-			...js.configs.recommended.languageOptions,
-			ecmaVersion: 'latest',
-			sourceType: 'module',
-		},
-	},
-	...tseslint.configs.recommendedTypeChecked.map((config) => ({
-		...config,
-		files: config.files ?? tsSourceFiles,
-		ignores: [
-			...(config.ignores ?? []),
-			'**/*.config.{js,cjs,mjs}',
-			'scripts/**/*',
-			'middleware.ts',
-		],
-		languageOptions: {
-			...config.languageOptions,
-			parserOptions: {
-				...(config.languageOptions?.parserOptions ?? {}),
-				project: [tsconfigPath],
-				tsconfigRootDir: __dirname,
-			},
-		},
-	})),
-	{
-		files: tsNoProjectFiles,
-		languageOptions: {
-			parser: tseslint.parser,
-			parserOptions: {
-				project: false,
-				ecmaVersion: 'latest',
-				sourceType: 'module',
-			},
-		},
-	},
-	{
-		files: ['**/*.{js,jsx,ts,tsx,cjs,mjs}'],
-		plugins: {
-			import: importPlugin,
-		},
-		settings: {
-			'import/resolver': {
-				typescript: {
-					project: tsconfigPath,
-				},
-			},
-		},
-		languageOptions: {
-			ecmaVersion: 'latest',
-			sourceType: 'module',
-		},
-		rules: importFlatConfig.rules ?? {},
-	},
-	{
-		...promiseFlatConfig,
-		files: ['**/*.{js,jsx,ts,tsx}'],
-	},
-	{
-		files: ['scripts/**/*.{js,cjs,mjs,ts}'],
-		languageOptions: {
-			parserOptions: {
-				project: false,
-			},
-			globals: {
-				require: 'readonly',
-				module: 'readonly',
-				process: 'readonly',
-				console: 'readonly',
-				URL: 'readonly',
-				fetch: 'readonly',
-				Buffer: 'readonly',
-				__dirname: 'readonly',
-				setTimeout: 'readonly',
-				clearTimeout: 'readonly',
-				setInterval: 'readonly',
-				clearInterval: 'readonly',
-			},
-		},
-		rules: {
-			'no-unused-vars': 'off',
-			'no-empty': 'off',
-		},
-	},
-	{
-		files: ['**/*.{jsx,tsx,js,ts}'],
-		plugins: {
-			react,
-			'react-hooks': reactHooks,
-		},
-		settings: {
-			react: {
-				version: 'detect',
-			},
-		},
-		languageOptions: {
-			parserOptions: {
-				ecmaFeatures: {
-					jsx: true,
-				},
-			},
-		},
-		rules: {
-			...(reactFlatRecommended.rules ?? {}),
-			...(reactHooksRecommended.rules ?? {}),
-			'react/react-in-jsx-scope': 'off',
-			'react/jsx-uses-react': 'off',
-			'react/prop-types': 'off',
-			'react/no-unescaped-entities': 'off',
-			'react/jsx-no-comment-textnodes': 'off',
-		},
-	},
-	...customRuleConfigs,
-	eslintConfigPrettier,
+  {
+    ignores: [
+      'node_modules/**',
+      '.yarn/**',
+      '.next/**',
+      'dist/**',
+      'build/**',
+      'public/**',
+      'src/data/generated/**/*.gen.ts',
+      'src/lib/locales/generated/**/*.gen.ts',
+      '**/*.bak.*',
+    ],
+  },
+  {
+    files: [
+      '*.config.{js,cjs,mjs}',
+      '**/*.config.{js,cjs,mjs}',
+      'next.config.js',
+      'prettier.config.cjs',
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: false,
+      },
+      globals: {
+        process: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
+      },
+    },
+  },
+  {
+    ...js.configs.recommended,
+    files: [
+      '**/*.{js,mjs,cjs,jsx}',
+    ],
+    languageOptions: {
+      ...js.configs.recommended.languageOptions,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+  },
+  ...tseslint.configs.recommendedTypeChecked.map((config) => ({
+    ...config,
+    files: config.files ?? tsSourceFiles,
+    ignores: [
+      ...(config.ignores ?? []),
+      '**/*.config.{js,cjs,mjs}',
+      'scripts/**/*',
+      'middleware.ts',
+    ],
+    languageOptions: {
+      ...config.languageOptions,
+      parserOptions: {
+        ...(config.languageOptions?.parserOptions ?? {}),
+        project: [
+          tsconfigPath,
+        ],
+        tsconfigRootDir: __dirname,
+      },
+    },
+  })),
+  {
+    files: tsNoProjectFiles,
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: false,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+  },
+  {
+    files: [
+      '**/*.{js,jsx,ts,tsx,cjs,mjs}',
+    ],
+    plugins: {
+      import: importPlugin,
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: tsconfigPath,
+        },
+      },
+    },
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+    rules: importFlatConfig.rules ?? {},
+  },
+  {
+    ...promiseFlatConfig,
+    files: [
+      '**/*.{js,jsx,ts,tsx}',
+    ],
+  },
+  {
+    files: [
+      'scripts/**/*.{js,cjs,mjs,ts}',
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: false,
+      },
+      globals: {
+        require: 'readonly',
+        module: 'readonly',
+        process: 'readonly',
+        console: 'readonly',
+        URL: 'readonly',
+        fetch: 'readonly',
+        Buffer: 'readonly',
+        __dirname: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+      },
+    },
+    rules: {
+      'no-unused-vars': 'off',
+      'no-empty': 'off',
+    },
+  },
+  {
+    files: [
+      '**/*.{jsx,tsx,js,ts}',
+    ],
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {
+      ...(reactFlatRecommended.rules ?? {}),
+      ...(reactHooksRecommended.rules ?? {}),
+      'react/react-in-jsx-scope': 'off',
+      'react/jsx-uses-react': 'off',
+      'react/prop-types': 'off',
+      'react/no-unescaped-entities': 'off',
+      'react/jsx-no-comment-textnodes': 'off',
+    },
+  },
+  ...customRuleConfigs,
+  eslintConfigPrettier,
 ];

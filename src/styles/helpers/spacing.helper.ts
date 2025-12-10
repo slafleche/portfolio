@@ -1,5 +1,9 @@
 import { isMeasurement, m } from 'css-calipers';
-import type { AxisValues, SpacingKeyword, SpacingValue } from './types.helper';
+import type {
+  AxisValues,
+  SpacingKeyword,
+  SpacingValue,
+} from './types.helper';
 
 const SPACING_KEYWORDS = new Set<SpacingKeyword>([
   'auto',
@@ -19,21 +23,25 @@ const defaultSpacing = (): SpacingFourSides => ({
 
 /**
  * Spacing intent (internal):
+ *
  * - Prefer `all` when every side shares the same spacing.
  * - Prefer `vertical` when top/bottom are the same.
  * - Prefer `horizontal` when left/right are the same.
- * - Use explicit `top`/`right`/`bottom`/`left` only for asymmetrical cases.
+ * - Use explicit `top`/`right`/`bottom`/`left` only for asymmetrical
+ *   cases.
  *
- * External callers should eventually rely on `SpacingIntent` (which omits the
- * internal `all` axis) plus value shorthands; helpers keep this richer shape
- * for their own resolution logic.
+ * External callers should eventually rely on `SpacingIntent` (which
+ * omits the internal `all` axis) plus value shorthands; helpers keep
+ * this richer shape for their own resolution logic.
  */
 export type SpacingIntentInternal = AxisValues<SpacingValue>;
 
 export type SpacingIntent = {
   horizontal?: SpacingValue;
   vertical?: SpacingValue;
-} & Partial<Record<'top' | 'right' | 'bottom' | 'left', SpacingValue>>;
+} & Partial<
+  Record<'top' | 'right' | 'bottom' | 'left', SpacingValue>
+>;
 
 export type SpacingInput = SpacingIntentInternal | undefined;
 export type SpacingInputPublic =
@@ -48,7 +56,8 @@ export type SpacingFourSides = {
 };
 
 const isSpacingKeyword = (value: unknown): value is SpacingKeyword =>
-  typeof value === 'string' && SPACING_KEYWORDS.has(value as SpacingKeyword);
+  typeof value === 'string' &&
+  SPACING_KEYWORDS.has(value as SpacingKeyword);
 
 const spacingToCss = (v: SpacingValue): string => {
   if (isMeasurement(v)) return v.css();
@@ -100,10 +109,38 @@ const spacing = (
   const defaults = defaultSpacing();
   const props = normalize(input);
 
-  const topSpacing = resolve([props?.top, props?.vertical, props?.all], defaults.top);
-  const rightSpacing = resolve([props?.right, props?.horizontal, props?.all], defaults.right);
-  const bottomSpacing = resolve([props?.bottom, props?.vertical, props?.all], defaults.bottom);
-  const leftSpacing = resolve([props?.left, props?.horizontal, props?.all], defaults.left);
+  const topSpacing = resolve(
+    [
+      props?.top,
+      props?.vertical,
+      props?.all,
+    ],
+    defaults.top,
+  );
+  const rightSpacing = resolve(
+    [
+      props?.right,
+      props?.horizontal,
+      props?.all,
+    ],
+    defaults.right,
+  );
+  const bottomSpacing = resolve(
+    [
+      props?.bottom,
+      props?.vertical,
+      props?.all,
+    ],
+    defaults.bottom,
+  );
+  const leftSpacing = resolve(
+    [
+      props?.left,
+      props?.horizontal,
+      props?.all,
+    ],
+    defaults.left,
+  );
 
   const allEqual =
     topSpacing === rightSpacing &&

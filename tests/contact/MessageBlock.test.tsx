@@ -63,17 +63,22 @@ describe('Contact form block tests: MessageBlock', () => {
       ).toBeInTheDocument();
 
       expect(textarea).not.toBeDisabled();
-      expect(textarea).toHaveAttribute('minlength', MESSAGE_MIN_LENGTH.toString());
-      expect(textarea).toHaveAttribute('maxlength', MESSAGE_MAX_LENGTH.toString());
+      expect(textarea).toHaveAttribute(
+        'minlength',
+        MESSAGE_MIN_LENGTH.toString(),
+      );
+      expect(textarea).toHaveAttribute(
+        'maxlength',
+        MESSAGE_MAX_LENGTH.toString(),
+      );
       expect(textarea).toHaveAttribute(
         'aria-describedby',
         'test-message-block-hint',
       );
 
-      const initialCounterText = enFormCopy['form-counter-remaining'].replace(
-        '{count}',
-        MESSAGE_MAX_LENGTH.toString(),
-      );
+      const initialCounterText = enFormCopy[
+        'form-counter-remaining'
+      ].replace('{count}', MESSAGE_MAX_LENGTH.toString());
       expect(
         screen.getByText(initialCounterText),
       ).toBeInTheDocument();
@@ -82,19 +87,16 @@ describe('Contact form block tests: MessageBlock', () => {
 
   describe('focus and keyboard behaviour', () => {
     it('participates correctly in focus order with focus sentinels', async () => {
-      const {
-        getByTestId,
-        container,
-        getRegistration,
-      } = renderMessageBlockWithFormBlocks(
-        {
-          id: 'test-message-block',
-          order: 0,
-          copy: messageCopy,
-          disabled: false,
-        },
-        { wrapWithFocusSentinels: true },
-      );
+      const { getByTestId, container, getRegistration } =
+        renderMessageBlockWithFormBlocks(
+          {
+            id: 'test-message-block',
+            order: 0,
+            copy: messageCopy,
+            disabled: false,
+          },
+          { wrapWithFocusSentinels: true },
+        );
 
       const handles = createFocusSentinelHandles(getByTestId);
       const textarea = container.querySelector(
@@ -126,12 +128,13 @@ describe('Contact form block tests: MessageBlock', () => {
     });
 
     it('moves focus to the textarea even when an inline error is shown', () => {
-      const { container, getRegistration } = renderMessageBlockWithFormBlocks({
-        id: 'test-message-block',
-        order: 0,
-        copy: messageCopy,
-        disabled: false,
-      });
+      const { container, getRegistration } =
+        renderMessageBlockWithFormBlocks({
+          id: 'test-message-block',
+          order: 0,
+          copy: messageCopy,
+          disabled: false,
+        });
 
       const textarea = container.querySelector(
         'textarea',
@@ -174,7 +177,9 @@ describe('Contact form block tests: MessageBlock', () => {
       if (!textarea) return;
 
       const maxLengthValue = 'x'.repeat(MESSAGE_MAX_LENGTH);
-      fireEvent.change(textarea, { target: { value: maxLengthValue } });
+      fireEvent.change(textarea, {
+        target: { value: maxLengthValue },
+      });
 
       expect(
         screen.getByText(messageCopy.maxCharactersMessage),
@@ -339,9 +344,7 @@ describe('Contact form block tests: MessageBlock', () => {
       const urls = Array.from(
         { length: urlCount },
         (_, index) => `https://example${index}.com`,
-      ).join(
-        ' ',
-      );
+      ).join(' ');
 
       fireEvent.change(textarea, { target: { value: urls } });
 
@@ -374,9 +377,10 @@ describe('Contact form block tests: MessageBlock', () => {
       if (!textarea) return;
 
       const urlCount = MESSAGE_URL_LIMIT + 1;
-      const urls = Array.from({ length: urlCount }, (_, index) => `https://example${index}.com`).join(
-        ' ',
-      );
+      const urls = Array.from(
+        { length: urlCount },
+        (_, index) => `https://example${index}.com`,
+      ).join(' ');
 
       fireEvent.change(textarea, { target: { value: urls } });
       fireEvent.blur(textarea);
@@ -577,12 +581,13 @@ describe('Contact form block contract: MessageBlock', () => {
   });
 
   it('getValue reflects the current textarea value', async () => {
-    const { getRegistration, container } = renderMessageBlockWithFormBlocks({
-      id: 'test-message-block',
-      order: 0,
-      copy: messageCopy,
-      disabled: false,
-    });
+    const { getRegistration, container } =
+      renderMessageBlockWithFormBlocks({
+        id: 'test-message-block',
+        order: 0,
+        copy: messageCopy,
+        disabled: false,
+      });
 
     const textarea = container.querySelector(
       'textarea',
@@ -598,12 +603,13 @@ describe('Contact form block contract: MessageBlock', () => {
   });
 
   it('validate returns false for invalid and true for valid messages', async () => {
-    const { getRegistration, container } = renderMessageBlockWithFormBlocks({
-      id: 'test-message-block',
-      order: 0,
-      copy: messageCopy,
-      disabled: false,
-    });
+    const { getRegistration, container } =
+      renderMessageBlockWithFormBlocks({
+        id: 'test-message-block',
+        order: 0,
+        copy: messageCopy,
+        disabled: false,
+      });
 
     const textarea = container.querySelector(
       'textarea',
@@ -623,12 +629,13 @@ describe('Contact form block contract: MessageBlock', () => {
   });
 
   it('liveValidation is false initially and true after first blur', () => {
-    const { getRegistration, container } = renderMessageBlockWithFormBlocks({
-      id: 'test-message-block',
-      order: 0,
-      copy: messageCopy,
-      disabled: false,
-    });
+    const { getRegistration, container } =
+      renderMessageBlockWithFormBlocks({
+        id: 'test-message-block',
+        order: 0,
+        copy: messageCopy,
+        disabled: false,
+      });
 
     const textarea = container.querySelector(
       'textarea',
@@ -657,7 +664,9 @@ describe('Contact form block contract: MessageBlock', () => {
     const result = validateMessage();
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
-    const [message] = result.messages;
+    const [
+      message,
+    ] = result.messages;
     expect(message.type).toBe('error');
     expect(message.code).toBe('form-error-message-required');
     expect(message.text).toBe(messageCopy.errors.required);
@@ -665,12 +674,13 @@ describe('Contact form block contract: MessageBlock', () => {
   });
 
   it('returns structured validation result for too-short message', async () => {
-    const { validateMessage, container } = renderMessageBlockWithFormBlocks({
-      id: 'test-message-block',
-      order: 0,
-      copy: messageCopy,
-      disabled: false,
-    });
+    const { validateMessage, container } =
+      renderMessageBlockWithFormBlocks({
+        id: 'test-message-block',
+        order: 0,
+        copy: messageCopy,
+        disabled: false,
+      });
 
     const textarea = container.querySelector(
       'textarea',
@@ -687,7 +697,9 @@ describe('Contact form block contract: MessageBlock', () => {
     const result = validateMessage();
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
-    const [message] = result.messages;
+    const [
+      message,
+    ] = result.messages;
     expect(message.type).toBe('error');
     expect(message.code).toBe('form-error-message-too_short');
     expect(message.text).toBe(messageCopy.errors.tooShort);
@@ -695,12 +707,13 @@ describe('Contact form block contract: MessageBlock', () => {
   });
 
   it('returns structured validation result for too-long message', () => {
-    const { validateMessage, container } = renderMessageBlockWithFormBlocks({
-      id: 'test-message-block',
-      order: 0,
-      copy: messageCopy,
-      disabled: false,
-    });
+    const { validateMessage, container } =
+      renderMessageBlockWithFormBlocks({
+        id: 'test-message-block',
+        order: 0,
+        copy: messageCopy,
+        disabled: false,
+      });
 
     const textarea = container.querySelector(
       'textarea',
@@ -715,7 +728,9 @@ describe('Contact form block contract: MessageBlock', () => {
     const result = validateMessage();
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
-    const [message] = result.messages;
+    const [
+      message,
+    ] = result.messages;
     expect(message.type).toBe('error');
     expect(message.code).toBe('form-error-message-too_long');
     expect(message.text).toBe(messageCopy.errors.tooLong);
@@ -723,12 +738,13 @@ describe('Contact form block contract: MessageBlock', () => {
   });
 
   it('returns structured validation result for too-many-links message', () => {
-    const { validateMessage, container } = renderMessageBlockWithFormBlocks({
-      id: 'test-message-block',
-      order: 0,
-      copy: messageCopy,
-      disabled: false,
-    });
+    const { validateMessage, container } =
+      renderMessageBlockWithFormBlocks({
+        id: 'test-message-block',
+        order: 0,
+        copy: messageCopy,
+        disabled: false,
+      });
 
     const textarea = container.querySelector(
       'textarea',
@@ -738,16 +754,19 @@ describe('Contact form block contract: MessageBlock', () => {
     if (!textarea) return;
 
     const urlCount = MESSAGE_URL_LIMIT + 1;
-    const urls = Array.from({ length: urlCount }, (_, index) => `https://example${index}.com`).join(
-      ' ',
-    );
+    const urls = Array.from(
+      { length: urlCount },
+      (_, index) => `https://example${index}.com`,
+    ).join(' ');
 
     fireEvent.change(textarea, { target: { value: urls } });
 
     const result = validateMessage();
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
-    const [message] = result.messages;
+    const [
+      message,
+    ] = result.messages;
     expect(message.type).toBe('error');
     expect(message.code).toBe('form-error-message-too_many_links');
     expect(message.text).toBe(messageCopy.errors.tooManyLinks);
@@ -755,12 +774,13 @@ describe('Contact form block contract: MessageBlock', () => {
   });
 
   it('returns structured validation result for valid message', async () => {
-    const { validateMessage, container } = renderMessageBlockWithFormBlocks({
-      id: 'test-message-block',
-      order: 0,
-      copy: messageCopy,
-      disabled: false,
-    });
+    const { validateMessage, container } =
+      renderMessageBlockWithFormBlocks({
+        id: 'test-message-block',
+        order: 0,
+        copy: messageCopy,
+        disabled: false,
+      });
 
     const textarea = container.querySelector(
       'textarea',

@@ -15,7 +15,9 @@ describe('nesting.helper', () => {
 
   it('combines nested selectors with base variants', () => {
     const result = nest('&:is(button, a[href])', [
-      { '&:focus-visible': { outline: '2px solid currentColor' } },
+      {
+        '&:focus-visible': { outline: '2px solid currentColor' },
+      },
       { '&:hover, &.is-hover': { textDecoration: 'underline' } },
     ]);
 
@@ -23,7 +25,9 @@ describe('nesting.helper', () => {
       outline: '2px solid currentColor',
     });
     expect(
-      result['&:is(button, a[href]):hover, &:is(button, a[href]).is-hover'],
+      result[
+        '&:is(button, a[href]):hover, &:is(button, a[href]).is-hover'
+      ],
     ).toEqual({ textDecoration: 'underline' });
   });
 });

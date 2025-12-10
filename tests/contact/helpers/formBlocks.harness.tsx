@@ -1,5 +1,14 @@
-import React, { type ReactElement, type ReactNode, type ComponentType, useEffect } from 'react';
-import { render, type RenderResult, act } from '@testing-library/react';
+import React, {
+  type ReactElement,
+  type ReactNode,
+  type ComponentType,
+  useEffect,
+} from 'react';
+import {
+  render,
+  type RenderResult,
+  act,
+} from '@testing-library/react';
 import { FocusSentinelWrapper } from '../components/FocusSentinelWrapper';
 import * as formBlocksModule from '@/components/contact/formBlocks.context';
 import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
@@ -16,11 +25,14 @@ type RenderBlockResult = RenderResult & {
 let lastEnableContinuousValidation: (() => void) | null = null;
 
 const HarnessControl = () => {
-  const { enableContinuousValidation } = formBlocksModule.useFormBlocksContext();
+  const { enableContinuousValidation } =
+    formBlocksModule.useFormBlocksContext();
 
   useEffect(() => {
     lastEnableContinuousValidation = enableContinuousValidation;
-  }, [enableContinuousValidation]);
+  }, [
+    enableContinuousValidation,
+  ]);
 
   return null;
 };
@@ -32,7 +44,9 @@ const HarnessShell = ({
   children: ReactNode;
   onRegisterBlock?: (registration: FormBlockRegistration) => void;
 }) => (
-  <formBlocksModule.TestFormBlocksProvider onRegisterBlock={onRegisterBlock}>
+  <formBlocksModule.TestFormBlocksProvider
+    onRegisterBlock={onRegisterBlock}
+  >
     <HarnessControl />
     {children}
   </formBlocksModule.TestFormBlocksProvider>
@@ -45,17 +59,20 @@ export function renderBlockWithFormBlocks<Props extends object>(
 ): RenderBlockResult {
   let latestRegistration: FormBlockRegistration | null = null;
 
-  const handleRegisterBlock = (registration: FormBlockRegistration) => {
+  const handleRegisterBlock = (
+    registration: FormBlockRegistration,
+  ) => {
     latestRegistration = registration;
   };
 
-  const wrappedBlock: ReactElement = options?.wrapWithFocusSentinels ? (
-    <FocusSentinelWrapper>
+  const wrappedBlock: ReactElement =
+    options?.wrapWithFocusSentinels ? (
+      <FocusSentinelWrapper>
+        <BlockComponent {...props} />
+      </FocusSentinelWrapper>
+    ) : (
       <BlockComponent {...props} />
-    </FocusSentinelWrapper>
-  ) : (
-    <BlockComponent {...props} />
-  );
+    );
 
   const renderResult = render(
     <HarnessShell onRegisterBlock={handleRegisterBlock}>

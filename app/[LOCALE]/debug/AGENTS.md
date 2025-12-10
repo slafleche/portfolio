@@ -1,7 +1,7 @@
 # Agent Instructions for `app/[LOCALE]/debug`
 
-This directory contains debug sandboxes and inspection pages. Changes here
-must not leak into production behaviour.
+This directory contains debug sandboxes and inspection pages. Changes here must
+not leak into production behaviour.
 
 ## Tokens and isolation
 
@@ -10,7 +10,6 @@ must not leak into production behaviour.
 - Must: By default, do not import tokens (`@/tokens/...`) into debug pages.
 - May: When a specific debug sandbox genuinely needs to inspect real token
   values (for example, to visualise favicon themes or form layouts), you may
-  whitelist token imports for that page. Each whitelist is per-page and must
-  be kept in sync between this file (for humans) and
+  whitelist token imports for that page. Each whitelist is per-page and must be
+  kept in sync between this file (for humans) and
   `scripts/lint/debugTokens.config.mjs` (for the lint guardrails).
-

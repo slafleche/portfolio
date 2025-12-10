@@ -10,15 +10,16 @@ type BaseProps = {
 type CloseButtonProps = BaseProps &
   ComponentPropsWithoutRef<'button'>;
 
-export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
-  ({ label, className, iconClassName, type = 'button', ...rest }, ref) => {
+export const CloseButton = forwardRef<
+  HTMLButtonElement,
+  CloseButtonProps
+>(
+  (
+    { label, className, iconClassName, type = 'button', ...rest },
+    ref,
+  ) => {
     return (
-      <button
-        ref={ref}
-        type={type}
-        className={className}
-        {...rest}
-      >
+      <button ref={ref} type={type} className={className} {...rest}>
         <CloseIcon label={label} className={iconClassName} />
       </button>
     );
@@ -26,4 +27,3 @@ export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
 );
 
 CloseButton.displayName = 'CloseButton';
-

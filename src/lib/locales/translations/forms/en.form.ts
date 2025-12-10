@@ -52,7 +52,8 @@ export const enFormCopy = {
   'form-turnstile-button-pending': "Verify you're human",
   'form-turnstile-button-error': 'Verification unavailable',
   'form-turnstile-preview': 'Human verification preview (debug).',
-  'form-turnstile-summary-missing': 'Complete the human verification.',
+  'form-turnstile-summary-missing':
+    'Complete the human verification.',
   'form-turnstile-summary-expired':
     'Human verification expired. Please try again.',
   'form-turnstile-summary-error':

@@ -12,8 +12,14 @@ export const MessageCentreBlock = forwardRef<
   MessageCentreBlockProps
 >(function MessageCentreBlock({ messages }, ref) {
   const inlineMessages = useMemo(
-    () => [...messages.globals, ...messages.blocks],
-    [messages.blocks, messages.globals],
+    () => [
+      ...messages.globals,
+      ...messages.blocks,
+    ],
+    [
+      messages.blocks,
+      messages.globals,
+    ],
   );
 
   const toastMessage = useMemo(() => {
@@ -23,7 +29,11 @@ export const MessageCentreBlock = forwardRef<
       return messages.toastFallback;
     }
     return null;
-  }, [messages.blocks, messages.globals, messages.toastFallback]);
+  }, [
+    messages.blocks,
+    messages.globals,
+    messages.toastFallback,
+  ]);
 
   return (
     <div
@@ -37,10 +47,7 @@ export const MessageCentreBlock = forwardRef<
         data-visible={inlineMessages.length ? 'true' : 'false'}
       >
         {inlineMessages.length ? (
-          <div
-            ref={ref as Ref<HTMLDivElement>}
-            className={s.status}
-          >
+          <div ref={ref as Ref<HTMLDivElement>} className={s.status}>
             {inlineMessages.map((line, index) => (
               <span key={`${index}-${line}`} className={s.statusText}>
                 {line}

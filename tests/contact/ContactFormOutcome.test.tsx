@@ -27,7 +27,11 @@ const STATUS_MESSAGES: Record<FormStatusKey, string> = {
   blocked: 'blocked',
 };
 
-const BLOCK_ORDER = ['first', 'second', 'token'];
+const BLOCK_ORDER = [
+  'first',
+  'second',
+  'token',
+];
 
 const useTestOutcome: OutcomeHook<ContactFormOutcomeResult> = (
   snapshot: ContactFormFlowSnapshot,
@@ -264,9 +268,7 @@ describe('ContactFormOutcome', () => {
       if (!outcome.priority.message) return;
 
       expect(outcome.priority.message.type).toBe('error');
-      expect(outcome.priority.message.text).toBe(
-        expectedSummary,
-      );
+      expect(outcome.priority.message.text).toBe(expectedSummary);
       expect(outcome.hasErrors).toBe(true);
       expect(outcome.isCatastrophic).toBe(false);
 
@@ -300,4 +302,3 @@ describe('ContactFormOutcome', () => {
     expect(outcome.isCatastrophic).toBe(false);
   });
 });
-

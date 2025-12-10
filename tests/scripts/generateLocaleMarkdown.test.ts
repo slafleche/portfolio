@@ -40,7 +40,9 @@ describe('generateLocaleMarkdown helpers', () => {
     );
 
     const { messages, keys } = await readMarkdownFiles(dir);
-    expect(Array.from(keys)).toEqual(['intro-content']);
+    expect(Array.from(keys)).toEqual([
+      'intro-content',
+    ]);
     expect(messages.en?.['intro-content']).toContain('Hello');
     expect(messages.fr?.['intro-content']).toContain('Bonjour');
   });
@@ -60,7 +62,9 @@ describe('generateLocaleMarkdown helpers', () => {
         en: { intro: '# Hi' },
         fr: { intro: '# Salut' },
       },
-      new Set(['intro']),
+      new Set([
+        'intro',
+      ]),
     );
     expect(output.startsWith('// AUTO-GENERATED')).toBe(true);
     expect(output).toContain('export const MARKDOWN_MESSAGE_KEYS');

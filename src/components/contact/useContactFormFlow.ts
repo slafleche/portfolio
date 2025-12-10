@@ -24,32 +24,43 @@ export type ContactFormFlowState = {
 };
 
 export type ContactFormFlowApi = ContactFormFlowState & {
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void | Promise<void>;
+  handleSubmit: (
+    event: FormEvent<HTMLFormElement>,
+  ) => void | Promise<void>;
 };
 
 export function useContactFormFlow(
   options: UseContactFormFlowOptions,
 ): ContactFormFlowApi {
   const { submitHelper, onSuccessStateChange } = options;
-  const {
-    getRegistrationsSnapshot,
-    enableContinuousValidation,
-  } = useFormBlocksContext();
+  const { getRegistrationsSnapshot, enableContinuousValidation } =
+    useFormBlocksContext();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [invalid, setInvalid] = useState(false);
-  const [submitStatus, setSubmitStatus] =
-    useState<ContactFormSubmitStatus>('idle');
-  const [latestValidationResults, setLatestValidationResults] = useState<
-    ContactFormBlockValidationResult[]
-  >([]);
-  const [latestPayload, setLatestPayload] =
-    useState<ContactFormBlockPayload<unknown>[] | null>(null);
+  const [
+    isSubmitting,
+    setIsSubmitting,
+  ] = useState(false);
+  const [
+    invalid,
+    setInvalid,
+  ] = useState(false);
+  const [
+    submitStatus,
+    setSubmitStatus,
+  ] = useState<ContactFormSubmitStatus>('idle');
+  const [
+    latestValidationResults,
+    setLatestValidationResults,
+  ] = useState<ContactFormBlockValidationResult[]>([]);
+  const [
+    latestPayload,
+    setLatestPayload,
+  ] = useState<ContactFormBlockPayload<unknown>[] | null>(null);
 
   const inFlightRef = useRef(false);
 
-  const validateAll = useCallback(
-    (): ContactFormBlockValidationResult[] => {
+  const validateAll =
+    useCallback((): ContactFormBlockValidationResult[] => {
       const registrations = getRegistrationsSnapshot();
       const results: ContactFormBlockValidationResult[] = [];
 
@@ -61,12 +72,12 @@ export function useContactFormFlow(
       });
 
       return results;
-    },
-    [getRegistrationsSnapshot],
-  );
+    }, [
+      getRegistrationsSnapshot,
+    ]);
 
-  const collectPayload = useCallback(
-    (): ContactFormBlockPayload<unknown>[] => {
+  const collectPayload =
+    useCallback((): ContactFormBlockPayload<unknown>[] => {
       const registrations = getRegistrationsSnapshot();
       const payloads: ContactFormBlockPayload<unknown>[] = [];
 
@@ -78,9 +89,9 @@ export function useContactFormFlow(
       });
 
       return payloads;
-    },
-    [getRegistrationsSnapshot],
-  );
+    }, [
+      getRegistrationsSnapshot,
+    ]);
 
   const handleSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {

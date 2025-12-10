@@ -4,8 +4,13 @@ export const important = <T extends Record<string, unknown>>(
   styles: T,
 ): T =>
   Object.fromEntries(
-    Object.entries(styles).map(([key, value]) => [
-      key,
-      typeof value === 'string' ? `${value} !important` : value,
-    ]),
+    Object.entries(styles).map(
+      ([
+        key,
+        value,
+      ]) => [
+        key,
+        typeof value === 'string' ? `${value} !important` : value,
+      ],
+    ),
   ) as T;

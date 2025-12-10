@@ -10,7 +10,7 @@ const lookup = (slug: string) =>
       label: 'AI',
       definition: 'Artificial Intelligence',
     },
-  }[slug]);
+  })[slug];
 
 describe('abbr renderer', () => {
   it('renders abbreviations with escaped label + definition', () => {
@@ -19,7 +19,9 @@ describe('abbr renderer', () => {
       term: 'AI',
       lookup,
     });
-    expect(html).toBe('<abbr title="Artificial Intelligence">AI</abbr>');
+    expect(html).toBe(
+      '<abbr title="Artificial Intelligence">AI</abbr>',
+    );
   });
 
   it('throws when slugs are missing in development', () => {

@@ -27,7 +27,9 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       ) as HTMLDivElement | null;
       expect(statusWrapper).not.toBeNull();
       if (!statusWrapper) return;
-      expect(statusWrapper.getAttribute('data-visible')).toBe('false');
+      expect(statusWrapper.getAttribute('data-visible')).toBe(
+        'false',
+      );
 
       expect(liveRegion.textContent?.trim() ?? '').toBe('');
       expect(queryToastRegion()).toBeNull();
@@ -35,7 +37,9 @@ describe('Contact form message centre: MessageCentreBlock', () => {
 
     it('switches the inline status wrapper to visible when messages appear', () => {
       const messages: MessageCentreMessages = {
-        globals: ['Global error'],
+        globals: [
+          'Global error',
+        ],
         blocks: [],
         toastFallback: undefined,
       };
@@ -56,7 +60,9 @@ describe('Contact form message centre: MessageCentreBlock', () => {
 
     it('hides inline status and toast again when messages clear', () => {
       const messagesWithContent: MessageCentreMessages = {
-        globals: ['Global error'],
+        globals: [
+          'Global error',
+        ],
         blocks: [],
         toastFallback: undefined,
       };
@@ -77,7 +83,9 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       ) as HTMLDivElement | null;
       expect(statusWrapper).not.toBeNull();
       if (!statusWrapper) return;
-      expect(statusWrapper.getAttribute('data-visible')).toBe('false');
+      expect(statusWrapper.getAttribute('data-visible')).toBe(
+        'false',
+      );
       expect(liveRegion.textContent?.trim() ?? '').toBe('');
       expect(queryToastRegion()).toBeNull();
     });
@@ -86,7 +94,10 @@ describe('Contact form message centre: MessageCentreBlock', () => {
   describe('inline content shapes', () => {
     it('renders global messages inline in order', () => {
       const messages: MessageCentreMessages = {
-        globals: ['First global', 'Second global'],
+        globals: [
+          'First global',
+          'Second global',
+        ],
         blocks: [],
         toastFallback: undefined,
       };
@@ -103,13 +114,19 @@ describe('Contact form message centre: MessageCentreBlock', () => {
         statusWrapper.querySelectorAll('span'),
       );
       const texts = spans.map((span) => span.textContent?.trim());
-      expect(texts).toEqual(['First global', 'Second global']);
+      expect(texts).toEqual([
+        'First global',
+        'Second global',
+      ]);
     });
 
     it('renders block messages inline in order', () => {
       const messages: MessageCentreMessages = {
         globals: [],
-        blocks: ['Name error', 'Email error'],
+        blocks: [
+          'Name error',
+          'Email error',
+        ],
         toastFallback: undefined,
       };
 
@@ -125,13 +142,21 @@ describe('Contact form message centre: MessageCentreBlock', () => {
         statusWrapper.querySelectorAll('span'),
       );
       const texts = spans.map((span) => span.textContent?.trim());
-      expect(texts).toEqual(['Name error', 'Email error']);
+      expect(texts).toEqual([
+        'Name error',
+        'Email error',
+      ]);
     });
 
     it('renders globals before blocks when both are present', () => {
       const messages: MessageCentreMessages = {
-        globals: ['Global summary'],
-        blocks: ['Name error', 'Email error'],
+        globals: [
+          'Global summary',
+        ],
+        blocks: [
+          'Name error',
+          'Email error',
+        ],
         toastFallback: undefined,
       };
 
@@ -163,8 +188,13 @@ describe('Contact form message centre: MessageCentreBlock', () => {
 
     it('uses the first global message as the toast when globals are present', () => {
       const messages: MessageCentreMessages = {
-        globals: ['Global one', 'Global two'],
-        blocks: ['Block message'],
+        globals: [
+          'Global one',
+          'Global two',
+        ],
+        blocks: [
+          'Block message',
+        ],
         toastFallback: 'Fallback summary',
       };
 
@@ -180,7 +210,9 @@ describe('Contact form message centre: MessageCentreBlock', () => {
     it('uses the single block message as the toast when there are no globals', () => {
       const messages: MessageCentreMessages = {
         globals: [],
-        blocks: ['Only block error'],
+        blocks: [
+          'Only block error',
+        ],
         toastFallback: undefined,
       };
 
@@ -194,7 +226,10 @@ describe('Contact form message centre: MessageCentreBlock', () => {
     it('does not render a toast when there are multiple block messages and no fallback', () => {
       const messages: MessageCentreMessages = {
         globals: [],
-        blocks: ['Block one', 'Block two'],
+        blocks: [
+          'Block one',
+          'Block two',
+        ],
         toastFallback: undefined,
       };
 
@@ -206,7 +241,10 @@ describe('Contact form message centre: MessageCentreBlock', () => {
     it('uses toastFallback as toast text when there are multiple block messages and no globals', () => {
       const messages: MessageCentreMessages = {
         globals: [],
-        blocks: ['Block one', 'Block two'],
+        blocks: [
+          'Block one',
+          'Block two',
+        ],
         toastFallback: 'Summary toast',
       };
 
@@ -220,7 +258,9 @@ describe('Contact form message centre: MessageCentreBlock', () => {
     it('removes the toast when messages change to a non-toast shape', () => {
       const messagesWithToast: MessageCentreMessages = {
         globals: [],
-        blocks: ['Only block error'],
+        blocks: [
+          'Only block error',
+        ],
         toastFallback: undefined,
       };
 
@@ -236,7 +276,9 @@ describe('Contact form message centre: MessageCentreBlock', () => {
 
     it('exposes the toast via a live region with status role', () => {
       const messages: MessageCentreMessages = {
-        globals: ['Global one'],
+        globals: [
+          'Global one',
+        ],
         blocks: [],
         toastFallback: undefined,
       };

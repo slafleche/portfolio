@@ -70,31 +70,24 @@ describe('Contact form block tests: NameBlock', () => {
       void userEvent.type(input, 'Jane Doe');
 
       expect(input.value).toBe(initialValue);
-      expect(
-        screen.queryByText(nameCopy.errors.required),
-      ).toBeNull();
-      expect(
-        screen.queryByText(nameCopy.errors.tooLong),
-      ).toBeNull();
+      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
+      expect(screen.queryByText(nameCopy.errors.tooLong)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
   });
 
   describe('focus and keyboard behaviour', () => {
     it('participates correctly in focus order with focus sentinels', async () => {
-      const {
-        getByTestId,
-        container,
-        getRegistration,
-      } = renderNameBlockWithFormBlocks(
-        {
-          id: 'test-name-block',
-          order: 0,
-          copy: nameCopy,
-          disabled: false,
-        },
-        { wrapWithFocusSentinels: true },
-      );
+      const { getByTestId, container, getRegistration } =
+        renderNameBlockWithFormBlocks(
+          {
+            id: 'test-name-block',
+            order: 0,
+            copy: nameCopy,
+            disabled: false,
+          },
+          { wrapWithFocusSentinels: true },
+        );
 
       const handles = createFocusSentinelHandles(getByTestId);
       const nameInput = container.querySelector(
@@ -132,12 +125,13 @@ describe('Contact form block tests: NameBlock', () => {
     });
 
     it('moves focus to the input even when an inline error is shown', () => {
-      const { container, getRegistration } = renderNameBlockWithFormBlocks({
-        id: 'test-name-block',
-        order: 0,
-        copy: nameCopy,
-        disabled: false,
-      });
+      const { container, getRegistration } =
+        renderNameBlockWithFormBlocks({
+          id: 'test-name-block',
+          order: 0,
+          copy: nameCopy,
+          disabled: false,
+        });
 
       const nameInput = container.querySelector(
         'input[data-input="text"]',
@@ -180,9 +174,7 @@ describe('Contact form block tests: NameBlock', () => {
       if (!input) return;
 
       // Before blur, no inline error text
-      expect(
-        screen.queryByText(nameCopy.errors.required),
-      ).toBeNull();
+      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       // Trigger blur with empty value
@@ -214,9 +206,7 @@ describe('Contact form block tests: NameBlock', () => {
       if (!input) return;
 
       // Initial state: no error
-      expect(
-        screen.queryByText(nameCopy.errors.required),
-      ).toBeNull();
+      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       // First blur with empty value triggers required error
@@ -229,9 +219,7 @@ describe('Contact form block tests: NameBlock', () => {
       // After first blur, live validation is on: fixing the value clears the error
       await userEvent.type(input, 'Jane Doe');
 
-      expect(
-        screen.queryByText(nameCopy.errors.required),
-      ).toBeNull();
+      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -299,22 +287,19 @@ describe('Contact form block tests: NameBlock', () => {
       fireEvent.change(input, { target: { value: validValue } });
       fireEvent.blur(input);
 
-      expect(
-        screen.queryByText(nameCopy.errors.required),
-      ).toBeNull();
-      expect(
-        screen.queryByText(nameCopy.errors.tooLong),
-      ).toBeNull();
+      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
+      expect(screen.queryByText(nameCopy.errors.tooLong)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
     it('shows and then clears inline error when continuousValidation is enabled and value becomes valid', async () => {
-      const { container, enableContinuousValidation } = renderNameBlockWithFormBlocks({
-        id: 'test-name-block',
-        order: 0,
-        copy: nameCopy,
-        disabled: false,
-      });
+      const { container, enableContinuousValidation } =
+        renderNameBlockWithFormBlocks({
+          id: 'test-name-block',
+          order: 0,
+          copy: nameCopy,
+          disabled: false,
+        });
 
       const input = container.querySelector(
         'input[data-input="text"]',
@@ -323,9 +308,7 @@ describe('Contact form block tests: NameBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      expect(
-        screen.queryByText(nameCopy.errors.required),
-      ).toBeNull();
+      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       enableContinuousValidation();
@@ -338,9 +321,7 @@ describe('Contact form block tests: NameBlock', () => {
       await userEvent.clear(input);
       await userEvent.type(input, 'Jane Doe');
 
-      expect(
-        screen.queryByText(nameCopy.errors.required),
-      ).toBeNull();
+      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
   });
@@ -367,12 +348,13 @@ describe('Contact form block contract: NameBlock', () => {
   });
 
   it('getValue reflects the current input value', async () => {
-    const { getRegistration, container } = renderNameBlockWithFormBlocks({
-      id: 'test-name-block',
-      order: 0,
-      copy: nameCopy,
-      disabled: false,
-    });
+    const { getRegistration, container } =
+      renderNameBlockWithFormBlocks({
+        id: 'test-name-block',
+        order: 0,
+        copy: nameCopy,
+        disabled: false,
+      });
 
     const input = container.querySelector(
       'input[data-input="text"]',
@@ -388,12 +370,13 @@ describe('Contact form block contract: NameBlock', () => {
   });
 
   it('validate returns false for invalid and true for valid values', async () => {
-    const { getRegistration, container } = renderNameBlockWithFormBlocks({
-      id: 'test-name-block',
-      order: 0,
-      copy: nameCopy,
-      disabled: false,
-    });
+    const { getRegistration, container } =
+      renderNameBlockWithFormBlocks({
+        id: 'test-name-block',
+        order: 0,
+        copy: nameCopy,
+        disabled: false,
+      });
 
     const input = container.querySelector(
       'input[data-input="text"]',
@@ -412,12 +395,13 @@ describe('Contact form block contract: NameBlock', () => {
   });
 
   it('liveValidation is false initially and true after first blur', () => {
-    const { getRegistration, container } = renderNameBlockWithFormBlocks({
-      id: 'test-name-block',
-      order: 0,
-      copy: nameCopy,
-      disabled: false,
-    });
+    const { getRegistration, container } =
+      renderNameBlockWithFormBlocks({
+        id: 'test-name-block',
+        order: 0,
+        copy: nameCopy,
+        disabled: false,
+      });
 
     const input = container.querySelector(
       'input[data-input="text"]',
@@ -446,7 +430,9 @@ describe('Contact form block contract: NameBlock', () => {
     const result = validateName();
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
-    const [message] = result.messages;
+    const [
+      message,
+    ] = result.messages;
     expect(message.type).toBe('error');
     expect(message.code).toBe('form-error-name-required');
     expect(message.text).toBe(nameCopy.errors.required);
@@ -454,12 +440,14 @@ describe('Contact form block contract: NameBlock', () => {
   });
 
   it('returns structured validation result for a too-short non-empty value', async () => {
-    const { validateName, container } = renderNameBlockWithFormBlocks({
-      id: 'test-name-block',
-      order: 0,
-      copy: nameCopy,
-      disabled: false,
-    });
+    const { validateName, container } = renderNameBlockWithFormBlocks(
+      {
+        id: 'test-name-block',
+        order: 0,
+        copy: nameCopy,
+        disabled: false,
+      },
+    );
 
     const input = container.querySelector(
       'input[data-input="text"]',
@@ -468,15 +456,15 @@ describe('Contact form block contract: NameBlock', () => {
     expect(input).not.toBeNull();
     if (!input) return;
 
-    const tooShortValue = 'x'.repeat(
-      Math.max(1, NAME_LIMIT.min - 1),
-    );
+    const tooShortValue = 'x'.repeat(Math.max(1, NAME_LIMIT.min - 1));
     await userEvent.type(input, tooShortValue);
 
     const result = validateName();
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
-    const [message] = result.messages;
+    const [
+      message,
+    ] = result.messages;
     expect(message.type).toBe('error');
     expect(message.code).toBe('form-error-name-required');
     expect(message.text).toBe(nameCopy.errors.required);
@@ -484,13 +472,15 @@ describe('Contact form block contract: NameBlock', () => {
   });
 
   it('returns structured validation result for too-long error', async () => {
-    const { validateName, container } = renderNameBlockWithFormBlocks({
-      id: 'test-name-block',
-      order: 0,
-      copy: nameCopy,
-      disabled: false,
-      maxLength: NAME_LIMIT.max,
-    });
+    const { validateName, container } = renderNameBlockWithFormBlocks(
+      {
+        id: 'test-name-block',
+        order: 0,
+        copy: nameCopy,
+        disabled: false,
+        maxLength: NAME_LIMIT.max,
+      },
+    );
 
     const input = container.querySelector(
       'input[data-input="text"]',
@@ -505,7 +495,9 @@ describe('Contact form block contract: NameBlock', () => {
     const result = validateName();
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
-    const [message] = result.messages;
+    const [
+      message,
+    ] = result.messages;
     expect(message.type).toBe('error');
     expect(message.code).toBe('form-error-name-too_long');
     expect(message.text).toBe(nameCopy.errors.tooLong);
@@ -513,13 +505,15 @@ describe('Contact form block contract: NameBlock', () => {
   });
 
   it('returns structured validation result for valid value', async () => {
-    const { validateName, container } = renderNameBlockWithFormBlocks({
-      id: 'test-name-block',
-      order: 0,
-      copy: nameCopy,
-      disabled: false,
-      minLength: NAME_LIMIT.min,
-    });
+    const { validateName, container } = renderNameBlockWithFormBlocks(
+      {
+        id: 'test-name-block',
+        order: 0,
+        copy: nameCopy,
+        disabled: false,
+        minLength: NAME_LIMIT.min,
+      },
+    );
 
     const input = container.querySelector(
       'input[data-input="text"]',

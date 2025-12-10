@@ -17,8 +17,14 @@ export function FormLabel({
   required,
   requiredText,
 }: FormLabelProps) {
-  if (required && !requiredText && process.env.NODE_ENV !== 'production') {
-    console.warn(`FormLabel for "${htmlFor}" is missing requiredText.`);
+  if (
+    required &&
+    !requiredText &&
+    process.env.NODE_ENV !== 'production'
+  ) {
+    console.warn(
+      `FormLabel for "${htmlFor}" is missing requiredText.`,
+    );
   }
   return (
     <label className={clsx(s.labelRow, className)} htmlFor={htmlFor}>

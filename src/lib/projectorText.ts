@@ -57,8 +57,7 @@ const getStageTimings = () => {
   const revealStart =
     totalCalibration +
     revealTiming.offsetFromCalibrationEnd.getValue();
-  const revealEnd =
-    revealStart + revealTiming.duration.getValue();
+  const revealEnd = revealStart + revealTiming.duration.getValue();
 
   const totalDuration = Math.max(toFocusEnd, revealEnd);
 

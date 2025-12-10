@@ -25,5 +25,5 @@ should:
 - Mark satisfied requirements as done (`- [x]`) with brief notes.
 - Report which upgrades remain blocked vs now unblocked.
 
-This keeps the main epic files focused on *what* we want to do, while the
-`blockedUpgrades` folder tracks *whether we are allowed to start*.
+This keeps the main epic files focused on _what_ we want to do, while the
+`blockedUpgrades` folder tracks _whether we are allowed to start_.

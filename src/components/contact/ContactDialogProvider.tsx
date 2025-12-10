@@ -33,17 +33,26 @@ const HASH_BY_INTENT: Record<ModalIntent, string> = {
 };
 
 const HASH_TO_INTENT: Record<string, ModalIntent> = Object.entries(
-	HASH_BY_INTENT,
-).reduce((map, [intent, hash]) => {
-	if (!hash) return map;
-	map[hash.toLowerCase()] = intent as ModalIntent;
-	return map;
-}, {} as Record<string, ModalIntent>);
+  HASH_BY_INTENT,
+).reduce(
+  (
+    map,
+    [
+      intent,
+      hash,
+    ],
+  ) => {
+    if (!hash) return map;
+    map[hash.toLowerCase()] = intent as ModalIntent;
+    return map;
+  },
+  {} as Record<string, ModalIntent>,
+);
 
 const HASH_ALIASES: Record<string, ModalIntent> = {
-	'#contact': 'contact',
-	'#contactform': 'contact',
-	'#contactpolicy': 'contact-policy',
+  '#contact': 'contact',
+  '#contactform': 'contact',
+  '#contactpolicy': 'contact-policy',
 };
 
 Object.assign(HASH_TO_INTENT, HASH_ALIASES);
@@ -51,9 +60,8 @@ Object.assign(HASH_TO_INTENT, HASH_ALIASES);
 const normalizeHash = (hash?: string | null) =>
   typeof hash === 'string' ? hash.trim().toLowerCase() : '';
 
-const resolveIntentFromHash = (
-  hash?: string | null,
-): ModalIntent => HASH_TO_INTENT[normalizeHash(hash)] ?? 'none';
+const resolveIntentFromHash = (hash?: string | null): ModalIntent =>
+  HASH_TO_INTENT[normalizeHash(hash)] ?? 'none';
 
 const buildUrlForIntent = (intent: ModalIntent) => {
   if (typeof window === 'undefined') return '';
@@ -110,7 +118,10 @@ export function ContactDialogProvider({
   const baseHistorySeededRef = useRef(false);
   const previousIntentRef = useRef<ModalIntent>('none');
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  const [successVisible, setSuccessVisible] = useState(false);
+  const [
+    successVisible,
+    setSuccessVisible,
+  ] = useState(false);
 
   const captureFocusAnchor = useCallback(() => {
     if (typeof document === 'undefined') return;
@@ -151,11 +162,7 @@ export function ContactDialogProvider({
 
       const method =
         historyMode === 'replace' ? 'replaceState' : 'pushState';
-      window.history[method](
-        window.history.state,
-        '',
-        targetUrl,
-      );
+      window.history[method](window.history.state, '', targetUrl);
     },
     [],
   );
@@ -188,18 +195,16 @@ export function ContactDialogProvider({
     const baseSeed = ensureBaseEntry();
     if (!baseSeed) return;
     const restoredUrl = `${baseSeed.baseUrl}${baseSeed.hash}`;
-    window.history.pushState(
-      window.history.state,
-      '',
-      restoredUrl,
-    );
-  }, [ensureBaseEntry]);
+    window.history.pushState(window.history.state, '', restoredUrl);
+  }, [
+    ensureBaseEntry,
+  ]);
 
   /**
-   * Always ensure the browser history reads:
-   * base (no hash) → #contact-form → #contact-form-policy
-   * This protects Back-button behavior for deep links, manual hash edits,
-   * and programmatic privacy opens across locales.
+   * Always ensure the browser history reads: base (no hash) →
+   * #contact-form → #contact-form-policy This protects Back-button
+   * behavior for deep links, manual hash edits, and programmatic
+   * privacy opens across locales.
    */
   const seedPolicyStack = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -210,25 +215,25 @@ export function ContactDialogProvider({
     const historyState: unknown = window.history.state;
     window.history.pushState(historyState, '', contactUrl);
     window.history.pushState(historyState, '', policyUrl);
-  }, [ensureBaseEntry]);
+  }, [
+    ensureBaseEntry,
+  ]);
 
   useEffect(() => {
     const prevIntent = previousIntentRef.current;
-    if (
-      intent === 'contact-policy' &&
-      prevIntent !== 'contact'
-    ) {
+    if (intent === 'contact-policy' && prevIntent !== 'contact') {
       seedPolicyStack();
     }
     previousIntentRef.current = intent;
-  }, [intent, seedPolicyStack]);
+  }, [
+    intent,
+    seedPolicyStack,
+  ]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const syncFromLocation = () => {
-      const hashIntent = resolveIntentFromHash(
-        window.location.hash,
-      );
+      const hashIntent = resolveIntentFromHash(window.location.hash);
       applyIntent(hashIntent, { history: 'none' });
     };
 
@@ -239,29 +244,41 @@ export function ContactDialogProvider({
       window.removeEventListener('popstate', syncFromLocation);
       window.removeEventListener('hashchange', syncFromLocation);
     };
-  }, [applyIntent]);
+  }, [
+    applyIntent,
+  ]);
 
   const openContact = useCallback(() => {
     captureFocusAnchor();
     applyIntent('contact', { history: 'push' });
     setSuccessVisible(false);
-  }, [applyIntent, captureFocusAnchor]);
+  }, [
+    applyIntent,
+    captureFocusAnchor,
+  ]);
 
   const closeContact = useCallback(() => {
     applyIntent('none', { history: 'replace' });
     setTimeout(restoreFocusAnchor, 0);
     setSuccessVisible(false);
-  }, [applyIntent, restoreFocusAnchor]);
+  }, [
+    applyIntent,
+    restoreFocusAnchor,
+  ]);
 
   const openPrivacy = useCallback(() => {
     const prevIntent = intentRef.current;
     const historyMode = prevIntent === 'contact' ? 'push' : 'none';
     applyIntent('contact-policy', { history: historyMode });
-  }, [applyIntent]);
+  }, [
+    applyIntent,
+  ]);
 
   const closePrivacy = useCallback(() => {
     applyIntent('contact', { history: 'replace' });
-  }, [applyIntent]);
+  }, [
+    applyIntent,
+  ]);
 
   const isOpen = intent !== 'none';
   const isPrivacyOpen = intent === 'contact-policy';
@@ -274,7 +291,10 @@ export function ContactDialogProvider({
         closePrivacy();
       }
     },
-    [closePrivacy, openPrivacy],
+    [
+      closePrivacy,
+      openPrivacy,
+    ],
   );
 
   const handleDialogOpenChange = useCallback(
@@ -285,7 +305,10 @@ export function ContactDialogProvider({
         openContact();
       }
     },
-    [closeContact, openContact],
+    [
+      closeContact,
+      openContact,
+    ],
   );
 
   const privacyUpdated =
@@ -332,9 +355,7 @@ export function ContactDialogProvider({
                 </Dialog.Close>
                 {!successVisible ? (
                   <>
-                    <Dialog.Title
-                      className={dialogStyles.heading}
-                    >
+                    <Dialog.Title className={dialogStyles.heading}>
                       {formCopy.heading}
                     </Dialog.Title>
                     <ContactForm

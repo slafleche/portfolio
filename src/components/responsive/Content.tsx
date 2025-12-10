@@ -54,10 +54,7 @@ export default function Content<T extends ElementType = 'section'>({
 
   const renderedBody =
     typeof markdown === 'string' ? (
-      <Markdown
-        source={markdown}
-        className={userContent}
-      />
+      <Markdown source={markdown} className={userContent} />
     ) : (
       children
     );

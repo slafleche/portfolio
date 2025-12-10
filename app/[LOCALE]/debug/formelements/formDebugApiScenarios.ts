@@ -85,8 +85,7 @@ export const apiScenarios: readonly ApiScenario[] = [
   {
     id: 'sending',
     label: 'Sending (pending)',
-    description:
-      'Form locked while POST /api/contact is in flight.',
+    description: 'Form locked while POST /api/contact is in flight.',
     status: 'sending',
     timelineStage: 'post',
     banner: {
@@ -112,7 +111,8 @@ export const apiScenarios: readonly ApiScenario[] = [
       'aria-live region announces “Sending message…” once.',
       'CTA has `aria-disabled="true"` plus spinner label.',
     ],
-    focusManagement: 'Keep focus on CTA so assistive tech hears progress.',
+    focusManagement:
+      'Keep focus on CTA so assistive tech hears progress.',
     telemetry: [
       'log event: contact.submit.start',
       'metric: contact.submit.duration (timer start)',
@@ -146,7 +146,8 @@ export const apiScenarios: readonly ApiScenario[] = [
       'Success banner uses `role="status"` with polite live region.',
       'Focus shifts to the banner so screen readers hear the confirmation.',
     ],
-    focusManagement: 'Move focus to the banner, then back to heading on dismiss.',
+    focusManagement:
+      'Move focus to the banner, then back to heading on dismiss.',
     telemetry: [
       'log event: contact.submit.success',
       'metric: contact.submit.duration (timer stop)',
@@ -205,7 +206,8 @@ export const apiScenarios: readonly ApiScenario[] = [
     payload: buildPayload({
       name: 'Cooldown Sample',
       email: 'cooldown@example.com',
-      message: 'We pause submissions for a minute when rate limits trip.',
+      message:
+        'We pause submissions for a minute when rate limits trip.',
       token: 'turnstile-token',
       hp: '',
     }),
@@ -213,7 +215,8 @@ export const apiScenarios: readonly ApiScenario[] = [
       'Banner explains rate limit and next retry window.',
       'CTA exposes `aria-disabled` plus countdown in the label.',
     ],
-    focusManagement: 'Keep focus on CTA so countdown announcements are heard.',
+    focusManagement:
+      'Keep focus on CTA so countdown announcements are heard.',
     telemetry: [
       'log event: contact.submit.rate_limited',
       'metric: contact.submit.cooldown.active = 1',
@@ -263,8 +266,7 @@ export const apiScenarios: readonly ApiScenario[] = [
     banner: {
       tone: 'muted',
       title: 'Looks good',
-      body:
-        'We accepted the message, but the send was skipped due to automated entry.',
+      body: 'We accepted the message, but the send was skipped due to automated entry.',
     },
     cta: {
       label: 'Message sent',
@@ -285,7 +287,8 @@ export const apiScenarios: readonly ApiScenario[] = [
       'UI mirrors success to avoid tipping off bots.',
       'No focus shift—keep the form disabled.',
     ],
-    focusManagement: 'Leave focus where it was; no announcement besides polite banner.',
+    focusManagement:
+      'Leave focus where it was; no announcement besides polite banner.',
     telemetry: [
       'log event: contact.submit.blocked',
       'metric: contact.submit.honeypot_tripped++',
@@ -319,7 +322,8 @@ export const apiScenarios: readonly ApiScenario[] = [
       'Banner uses `role="alert"` so the failure is read immediately.',
       'Focus shifts to banner, then back to first field when user dismisses.',
     ],
-    focusManagement: 'Move focus to banner, then to first field when user presses retry.',
+    focusManagement:
+      'Move focus to banner, then to first field when user presses retry.',
     telemetry: [
       'log event: contact.submit.generic_error',
       'metric: brevo.errors.generic++',
@@ -353,7 +357,8 @@ export const apiScenarios: readonly ApiScenario[] = [
       'Explain configuration issue in the banner, not inline errors.',
       'Form controls expose `aria-disabled="true"` so screen readers know it is locked.',
     ],
-    focusManagement: 'Send focus to the banner so the warning is announced.',
+    focusManagement:
+      'Send focus to the banner so the warning is announced.',
     telemetry: [
       'log event: contact.submit.not_configured',
       'metric: contact.submit.blocked_env++',

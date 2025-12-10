@@ -4,129 +4,123 @@ import { getImage, type ImageEntry } from '@/lib/images';
 
 type ImageSize = 'auto' | 'sm' | 'md' | 'lg';
 
-function inferSizeByWidth(
-	w: number,
-): Exclude<ImageSize, 'auto'> {
-	if (w <= 480) return 'sm'; // small sources → likely thumbnails/cards
-	if (w <= 1280) return 'md'; // mid-size sources → content images
-	return 'lg'; // large sources → hero-ish content
+function inferSizeByWidth(w: number): Exclude<ImageSize, 'auto'> {
+  if (w <= 480) return 'sm'; // small sources → likely thumbnails/cards
+  if (w <= 1280) return 'md'; // mid-size sources → content images
+  return 'lg'; // large sources → hero-ish content
 }
 
 function sizesFor(
-	size: Exclude<ImageSize, 'auto'>,
-	intrinsicW: number,
+  size: Exclude<ImageSize, 'auto'>,
+  intrinsicW: number,
 ): string {
-	switch (size) {
-		case 'sm':
-			// Respect the *real* width for tiny assets to avoid over-downloading.
-			return `${Math.min(intrinsicW, 360)}px`;
-		case 'md':
-			// Likely half-width on desktop, full on mobile.
-			return '(max-width: 768px) 100vw, 50vw';
-		case 'lg':
-			// Large content/hero—still not assuming full-bleed; 60vw on desktop.
-			return '(max-width: 768px) 100vw, 60vw';
-		default:
-			return '(max-width: 768px) 100vw, 60vw';
-	}
+  switch (size) {
+    case 'sm':
+      // Respect the *real* width for tiny assets to avoid over-downloading.
+      return `${Math.min(intrinsicW, 360)}px`;
+    case 'md':
+      // Likely half-width on desktop, full on mobile.
+      return '(max-width: 768px) 100vw, 50vw';
+    case 'lg':
+      // Large content/hero—still not assuming full-bleed; 60vw on desktop.
+      return '(max-width: 768px) 100vw, 60vw';
+    default:
+      return '(max-width: 768px) 100vw, 60vw';
+  }
 }
 
 type Props = {
-	name: string;
-	alt: string;
-	title?: string;
-	/**
-	 * Semantic size:
-	 *
-	 * - "auto" (default): inferred from manifest width
-	 * - "sm" | "md" | "lg": override
-	 */
-	size?: ImageSize;
-	className?: string;
-	width?: number;
-	height?: number;
-	fit?: React.CSSProperties['objectFit'];
-	priority?: boolean;
-	style?: React.CSSProperties;
-	onLoad?: (
-		event: React.SyntheticEvent<HTMLImageElement>,
-	) => void;
+  name: string;
+  alt: string;
+  title?: string;
+  /**
+   * Semantic size:
+   *
+   * - "auto" (default): inferred from manifest width
+   * - "sm" | "md" | "lg": override
+   */
+  size?: ImageSize;
+  className?: string;
+  width?: number;
+  height?: number;
+  fit?: React.CSSProperties['objectFit'];
+  priority?: boolean;
+  style?: React.CSSProperties;
+  onLoad?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
 };
 
 export default function ImageByName({
-	name,
-	alt,
-	title,
-	size = 'auto',
-	className,
-	style,
-	width,
-	height,
-	fit = 'cover',
-	priority = false,
-	onLoad,
+  name,
+  alt,
+  title,
+  size = 'auto',
+  className,
+  style,
+  width,
+  height,
+  fit = 'cover',
+  priority = false,
+  onLoad,
 }: Props) {
-	const data = getImage(name);
-	if (!data) return null;
+  const data = getImage(name);
+  if (!data) return null;
 
-	const toSrcSet = (arr?: ImageEntry['variants']['avif']) =>
-		(arr ?? [])
-			.slice()
-			.sort((a, b) => a.w - b.w)
-			.map((v) => `${v.url} ${v.w}w`)
-			.join(', ');
+  const toSrcSet = (arr?: ImageEntry['variants']['avif']) =>
+    (arr ?? [])
+      .slice()
+      .sort((a, b) => a.w - b.w)
+      .map((v) => `${v.url} ${v.w}w`)
+      .join(', ');
 
-	const resolvedSize =
-		size === 'auto'
-			? inferSizeByWidth(data.width)
-			: size;
-	const sizes = sizesFor(resolvedSize, data.width);
+  const resolvedSize =
+    size === 'auto' ? inferSizeByWidth(data.width) : size;
+  const sizes = sizesFor(resolvedSize, data.width);
 
-	const w = width ?? data.width;
-	const h = height ?? data.height;
+  const w = width ?? data.width;
+  const h = height ?? data.height;
 
-	return (
-		<picture className={className} style={style}>
-			{!!data.variants.avif?.length && (
-				<source
-					type="image/avif"
-					srcSet={toSrcSet(data.variants.avif)}
-					sizes={sizes}
-				/>
-			)}
-			{!!data.variants.webp?.length && (
-				<source
-					type="image/webp"
-					srcSet={toSrcSet(data.variants.webp)}
-					sizes={sizes}
-				/>
-			)}
-			<img
-				alt={alt}
-				title={title}
-				src={data.original.url}
-				srcSet={
-					data.variants.jpg?.length
-						? toSrcSet(data.variants.jpg)
-						: undefined
-				}
-				sizes={data.variants.jpg?.length ? sizes : undefined}
-				width={w}
-				height={h}
-				style={{
-					position: 'absolute',
-					inset: 0,
-					width: '100%',
-					height: '100%',
-					objectFit: fit,
-					aspectRatio:
-						!width && !height ? `${data.aspect}` : undefined,
-				}}
-				loading={priority ? 'eager' : 'lazy'}
-				decoding="async"
-				fetchPriority={priority ? 'high' : 'auto'}
-				onLoad={onLoad}
-			/>
-		</picture>
-	);
+  return (
+    <picture className={className} style={style}>
+      {!!data.variants.avif?.length && (
+        <source
+          type="image/avif"
+          srcSet={toSrcSet(data.variants.avif)}
+          sizes={sizes}
+        />
+      )}
+      {!!data.variants.webp?.length && (
+        <source
+          type="image/webp"
+          srcSet={toSrcSet(data.variants.webp)}
+          sizes={sizes}
+        />
+      )}
+      <img
+        alt={alt}
+        title={title}
+        src={data.original.url}
+        srcSet={
+          data.variants.jpg?.length
+            ? toSrcSet(data.variants.jpg)
+            : undefined
+        }
+        sizes={data.variants.jpg?.length ? sizes : undefined}
+        width={w}
+        height={h}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: fit,
+          aspectRatio:
+            !width && !height ? `${data.aspect}` : undefined,
+        }}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding="async"
+        fetchPriority={priority ? 'high' : 'auto'}
+        onLoad={onLoad}
+      />
+    </picture>
+  );
 }

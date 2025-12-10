@@ -16,14 +16,11 @@ export type FlowSnapshotFactoryOptions = {
 export function makeFlowSnapshot(
   options: FlowSnapshotFactoryOptions = {},
 ): ContactFormFlowSnapshot {
-  const {
-    submitStatus = 'idle',
-    latestValidationResults = [],
-  } = options;
+  const { submitStatus = 'idle', latestValidationResults = [] } =
+    options;
 
   return {
     submitStatus,
     latestValidationResults,
   };
 }
-

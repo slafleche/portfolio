@@ -44,7 +44,10 @@ function ShellStubBlock({ config }: ShellStubBlockProps) {
       getPayload: () => config.payload,
       focus: () => {},
     }),
-    [config.payload, config.validationResult],
+    [
+      config.payload,
+      config.validationResult,
+    ],
   );
 
   useFormBlock(
@@ -58,7 +61,11 @@ function ShellStubBlock({ config }: ShellStubBlockProps) {
         liveValidation: false,
         getContract: () => contract,
       }),
-      [config.key, config.payload.value, contract],
+      [
+        config.key,
+        config.payload.value,
+        contract,
+      ],
     ),
   );
 
@@ -109,8 +116,7 @@ function ContactFormShellHarnessInner({
     onOutcomeChange(outcome);
   }
 
-  const priorityScrollTarget =
-    outcome.priority.message?.scrollTarget;
+  const priorityScrollTarget = outcome.priority.message?.scrollTarget;
 
   const isCatastrophic = outcome.isCatastrophic;
   const isInvalid = flow.invalid;
@@ -120,10 +126,7 @@ function ContactFormShellHarnessInner({
   return (
     <>
       {blocks.map((config) => (
-        <ShellStubBlock
-          key={config.key}
-          config={config}
-        />
+        <ShellStubBlock key={config.key} config={config} />
       ))}
       <form
         aria-label="contact-form-shell"
@@ -149,10 +152,9 @@ function ContactFormShellHarnessInner({
   );
 }
 
-export type ContactFormShellHarnessRenderResult =
-  RenderResult & {
-    submit: () => void;
-  };
+export type ContactFormShellHarnessRenderResult = RenderResult & {
+  submit: () => void;
+};
 
 export function renderContactFormShellHarness(
   options: ContactFormShellHarnessOptions,

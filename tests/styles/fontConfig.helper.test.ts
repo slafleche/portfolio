@@ -12,7 +12,10 @@ const sampleConfig: FontsConfig = {
     weights: '300..700',
     axes: {
       wght: '300..700',
-      ital: ['0', '1'],
+      ital: [
+        '0',
+        '1',
+      ],
       wdth: '110',
       CASL: '0..1',
     },
@@ -26,7 +29,10 @@ describe('fontConfig.helper', () => {
       high: 800,
     });
     expect(
-      weightRangeFromConfig(['200..400', '600..700']),
+      weightRangeFromConfig([
+        '200..400',
+        '600..700',
+      ]),
     ).toEqual({ low: 200, high: 700 });
     expect(weightRangeFromConfig([])).toEqual({
       low: 400,
@@ -37,7 +43,10 @@ describe('fontConfig.helper', () => {
   it('builds font families using fonts.config axis metadata', () => {
     const family = defineFontFamily({
       familyName: 'Sample Family',
-      fallbacks: ['Helvetica', 'sans-serif'],
+      fallbacks: [
+        'Helvetica',
+        'sans-serif',
+      ],
       cfgMap: sampleConfig,
       spacing: m(0.2, 'rem'),
       offsetToFlushTop: m(0.1, 'rem'),
@@ -46,7 +55,9 @@ describe('fontConfig.helper', () => {
       axisDefaults: { GRAD: 0.2 },
     });
 
-    expect(family.family).toBe('"Sample Family", Helvetica, sans-serif');
+    expect(family.family).toBe(
+      '"Sample Family", Helvetica, sans-serif',
+    );
     expect(family.weights).toEqual({
       low: 300,
       high: 700,
@@ -72,7 +83,9 @@ describe('fontConfig.helper', () => {
     expect(() =>
       defineFontFamily({
         familyName: 'Sample Family',
-        fallbacks: ['sans-serif'],
+        fallbacks: [
+          'sans-serif',
+        ],
         cfgMap: sampleConfig,
         spacing: m(0.1, 'rem'),
         offsetToFlushTop: m(0, 'rem'),
@@ -84,25 +97,50 @@ describe('fontConfig.helper', () => {
   it('coerces raw JSON objects into FontsConfig and validates structure', () => {
     const config = asFontsConfig({
       Urbanist: {
-        texts: [42],
-        keys: [null],
-        weights: ['100..900'],
+        texts: [
+          42,
+        ],
+        keys: [
+          null,
+        ],
+        weights: [
+          '100..900',
+        ],
         ital: 'yes',
-        subsets: [123],
-        axes: { wght: ['100..900'], CASL: '0..1' },
+        subsets: [
+          123,
+        ],
+        axes: {
+          wght: [
+            '100..900',
+          ],
+          CASL: '0..1',
+        },
       },
     });
 
-    expect(config.Urbanist.weights).toEqual(['100..900']);
-    expect(config.Urbanist.texts).toEqual(['42']);
-    expect(config.Urbanist.keys).toEqual(['null']);
+    expect(config.Urbanist.weights).toEqual([
+      '100..900',
+    ]);
+    expect(config.Urbanist.texts).toEqual([
+      '42',
+    ]);
+    expect(config.Urbanist.keys).toEqual([
+      'null',
+    ]);
     expect(config.Urbanist.ital).toBeUndefined();
-    expect(config.Urbanist.subsets).toEqual(['123']);
+    expect(config.Urbanist.subsets).toEqual([
+      '123',
+    ]);
     expect(config.Urbanist.axes).toEqual({
-      wght: ['100..900'],
+      wght: [
+        '100..900',
+      ],
       CASL: '0..1',
     });
 
-    expect(() => asFontsConfig(null)).toThrow(/root must be an object/);
+    expect(() => asFontsConfig(null)).toThrow(
+      /root must be an object/,
+    );
   });
 });

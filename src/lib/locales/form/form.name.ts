@@ -19,9 +19,7 @@ const FORM_ERROR_KEYS = {
   tooLong: 'form-error-name-too_long',
 } as const;
 
-export function buildNameBlockLocale(
-  t: Translator,
-): NameBlockLocale {
+export function buildNameBlockLocale(t: Translator): NameBlockLocale {
   return {
     label: t(FORM_LABEL_KEYS.name),
     requiredText: t(FORM_REQUIRED_INDICATOR_KEY),

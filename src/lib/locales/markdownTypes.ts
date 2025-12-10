@@ -1,3 +1,3 @@
 export type MarkdownContent = string & {
-	readonly __markdown: true;
+  readonly __markdown: true;
 };

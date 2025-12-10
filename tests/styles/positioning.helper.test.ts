@@ -50,7 +50,9 @@ describe('positioning.helper', () => {
       justifyContent: 'center',
       flexWrap: 'wrap',
     });
-    expect(flexPosition.middleRight().justifyContent).toBe('flex-end');
+    expect(flexPosition.middleRight().justifyContent).toBe(
+      'flex-end',
+    );
   });
 
   it('provides full-size/flex utilities for containers', () => {

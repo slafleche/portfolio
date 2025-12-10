@@ -1,7 +1,7 @@
 ### Measurement System
 
-[abbr:CSS] should be treated with the same structure and reliability as any other
-code.  
+[abbr:CSS] should be treated with the same structure and reliability as any
+other code.  
 It stays flexible by default and only gets strict where math needs guarantees.
 
 A Measurement object defines the value and unit.  

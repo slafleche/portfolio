@@ -55,11 +55,9 @@ export function createScrollHarnessHandles(
 
   return {
     container,
-    getScrollTop: () =>
-      (container as HTMLElement).scrollTop,
+    getScrollTop: () => (container as HTMLElement).scrollTop,
     setScrollTop: (value: number) => {
       (container as HTMLElement).scrollTop = value;
     },
   };
 }
-

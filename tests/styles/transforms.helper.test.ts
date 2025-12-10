@@ -37,7 +37,13 @@ describe('transforms.helper', () => {
   });
 
   it('deduplicates custom strings and filters empty entries', () => {
-    const value = transformValue({ custom: ['matrix(1,0,0,1,0,0)', ' ', null] });
+    const value = transformValue({
+      custom: [
+        'matrix(1,0,0,1,0,0)',
+        ' ',
+        null,
+      ],
+    });
     expect(value).toBe('matrix(1,0,0,1,0,0)');
   });
 

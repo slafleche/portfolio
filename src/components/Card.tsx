@@ -1,52 +1,49 @@
 import * as s from '@/styles/components/card.css.ts';
-import type {
-	ComponentPropsWithoutRef,
-	ReactNode,
-} from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import Heading, { type IHeadingDepth } from './Heading';
 import clsx from 'clsx';
 import * as glassFrameStyles from '@/styles/helpers/glassFrame.css';
 
 type Props = IHeadingDepth &
-	ComponentPropsWithoutRef<'div'> & {
-		title?: ReactNode;
-		children?: ReactNode;
-		type?: string;
-	};
+  ComponentPropsWithoutRef<'div'> & {
+    title?: ReactNode;
+    children?: ReactNode;
+    type?: string;
+  };
 
 export default function Card({
-	title,
-	depth = 2,
-	className,
-	type,
-	children,
-	...rest
+  title,
+  depth = 2,
+  className,
+  type,
+  children,
+  ...rest
 }: Props) {
-	const gradientClass =
-		type === 'right' ? s.cardGradientB : s.cardGradientA;
+  const gradientClass =
+    type === 'right' ? s.cardGradientB : s.cardGradientA;
 
-	return (
-		<div
-			className={clsx(s.root, className)}
-			data-type={type}
-			{...rest}
-		>
-			<div className={clsx(glassFrameStyles.frame, s.frame)}>
-				<div
-					className={clsx(s.gradient, gradientClass)}
-					aria-hidden
-				/>
-				<div className={glassFrameStyles.surfaceBorder} aria-hidden />
-				<div className={glassFrameStyles.rim} aria-hidden />
-				<div className={s.content}>
-					{title && (
-						<Heading className={s.title} depth={depth}>
-							{title}
-						</Heading>
-					)}
-					{children}
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div
+      className={clsx(s.root, className)}
+      data-type={type}
+      {...rest}
+    >
+      <div className={clsx(glassFrameStyles.frame, s.frame)}>
+        <div
+          className={clsx(s.gradient, gradientClass)}
+          aria-hidden
+        />
+        <div className={glassFrameStyles.surfaceBorder} aria-hidden />
+        <div className={glassFrameStyles.rim} aria-hidden />
+        <div className={s.content}>
+          {title && (
+            <Heading className={s.title} depth={depth}>
+              {title}
+            </Heading>
+          )}
+          {children}
+        </div>
+      </div>
+    </div>
+  );
 }

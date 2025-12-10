@@ -6,9 +6,9 @@ import { createSupportsFallback } from './supportsFallback.helper';
  * Composes backdrop-filter intents so styles always emit both
  * `backdropFilter` and `WebkitBackdropFilter` with identical values.
  * Accepts css-calipers measurements for blur + percent-driven filters
- * (`mPercent`) alongside simple numeric knobs (e.g. brightness multipliers)
- * so presets/helpers can stay declarative. Blur inputs expect length-based
- * measurements (px/rem/vh/etc.).
+ * (`mPercent`) alongside simple numeric knobs (e.g. brightness
+ * multipliers) so presets/helpers can stay declarative. Blur inputs
+ * expect length-based measurements (px/rem/vh/etc.).
  */
 
 type BlurInput = IMeasurement<string> | null | undefined;
@@ -28,9 +28,12 @@ const blurPart = (value: BlurInput): string | undefined =>
 const percentPart = (
   value: PercentInput,
   fn: 'saturate' | 'contrast',
-): string | undefined => (value ? `${fn}(${value.css()})` : undefined);
+): string | undefined =>
+  value ? `${fn}(${value.css()})` : undefined;
 
-const brightnessPart = (value: BrightnessInput): string | undefined => {
+const brightnessPart = (
+  value: BrightnessInput,
+): string | undefined => {
   if (value === null || value === undefined) return undefined;
   if (typeof value === 'number') {
     if (!Number.isFinite(value)) return undefined;
@@ -89,9 +92,9 @@ type BackdropFilterComposer = {
 };
 
 /**
- * Default export mirrors the ergonomics of `transforms.helper.ts`, letting
- * callers compose intents while still reaching for `.value` / `.style` when
- * needed.
+ * Default export mirrors the ergonomics of `transforms.helper.ts`,
+ * letting callers compose intents while still reaching for `.value` /
+ * `.style` when needed.
  */
 const backdropFilters = ((...intents) =>
   backdropFilterStyle(...intents)) as BackdropFilterComposer;
@@ -105,19 +108,18 @@ const supportsBackdropQuery =
   '((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))';
 
 /**
- * Emits a global @supports guard (via the shared fallback helper) so we can
- * provide backdrop-filter powered styles while keeping deterministic
- * fallbacks for browsers that lack support.
+ * Emits a global @supports guard (via the shared fallback helper) so
+ * we can provide backdrop-filter powered styles while keeping
+ * deterministic fallbacks for browsers that lack support.
  *
  * Example usage:
  *
- * ```
- * registerBackdropFallback({
- *   selector: '.frostedCard',
- *   supported: backdropFilters.style({ blur: glassVars.blur }),
- *   fallback: { backgroundColor: glassVars.backupFill.css() },
- * });
- * ```
+ *     registerBackdropFallback({
+ *       selector: '.frostedCard',
+ *       supported: backdropFilters.style({ blur: glassVars.blur }),
+ *       fallback: { backgroundColor: glassVars.backupFill.css() },
+ *     });
  */
-export const registerBackdropFallback =
-  createSupportsFallback(supportsBackdropQuery);
+export const registerBackdropFallback = createSupportsFallback(
+  supportsBackdropQuery,
+);

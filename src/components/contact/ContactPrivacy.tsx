@@ -18,7 +18,9 @@ export function ContactPrivacy({ copy }: ContactPrivacyProps) {
       event.preventDefault();
       contactDialog.openPrivacy();
     },
-    [contactDialog],
+    [
+      contactDialog,
+    ],
   );
 
   return (
@@ -35,4 +37,3 @@ export function ContactPrivacy({ copy }: ContactPrivacyProps) {
     </p>
   );
 }
-

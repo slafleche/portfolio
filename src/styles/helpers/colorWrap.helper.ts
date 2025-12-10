@@ -269,73 +269,81 @@ const formatRgba = (value: Color): string => {
 };
 
 export function wrap(input: ColorInput): ColorWrapper {
-	// ---- special symbolic case ----
-	if (input === 'currentColor') {
-		// dummy immutable wrapper
-		const err = (fn: string) => {
-			const msg = `Cannot modify symbolic color 'currentColor' via ${fn}().`;
-			if (process.env.NODE_ENV !== 'production') throw new Error(msg);
-			console.warn(msg);
-			return symbolic;
-		};
+  // ---- special symbolic case ----
+  if (input === 'currentColor') {
+    // dummy immutable wrapper
+    const err = (fn: string) => {
+      const msg = `Cannot modify symbolic color 'currentColor' via ${fn}().`;
+      if (process.env.NODE_ENV !== 'production') throw new Error(msg);
+      console.warn(msg);
+      return symbolic;
+    };
 
-		const symbolic: ColorWrapper = {
-			unsafeColor: chroma('black'),
-			css: () => 'currentColor',
-			alpha: ((value?: number) => {
-				if (value === undefined) return 1;
-				return err('alpha');
-			}) as ColorWrapper['alpha'],
-			darken: () => err('darken'),
-			brighten: () => err('brighten'),
-			saturate: () => err('saturate'),
-			desaturate: () => err('desaturate'),
-			mix: () => err('mix'),
-			mixSolid: () => err('mixSolid'),
-			clone: () => symbolic,
-			value: () => chroma('black'),
-			solid: () => symbolic,
-		};
-		return symbolic;
-	}
+    const symbolic: ColorWrapper = {
+      unsafeColor: chroma('black'),
+      css: () => 'currentColor',
+      alpha: ((value?: number) => {
+        if (value === undefined) return 1;
+        return err('alpha');
+      }) as ColorWrapper['alpha'],
+      darken: () => err('darken'),
+      brighten: () => err('brighten'),
+      saturate: () => err('saturate'),
+      desaturate: () => err('desaturate'),
+      mix: () => err('mix'),
+      mixSolid: () => err('mixSolid'),
+      clone: () => symbolic,
+      value: () => chroma('black'),
+      solid: () => symbolic,
+    };
+    return symbolic;
+  }
 
-	// ---- regular flow ----
-	const base = toColor(input);
-	const alpha = ((value?: number) => {
-		if (value === undefined) {
-			return base.alpha();
-		}
-		return derive(base, (draft) => draft.alpha(value));
-	}) as ColorWrapper['alpha'];
+  // ---- regular flow ----
+  const base = toColor(input);
+  const alpha = ((value?: number) => {
+    if (value === undefined) {
+      return base.alpha();
+    }
+    return derive(base, (draft) => draft.alpha(value));
+  }) as ColorWrapper['alpha'];
 
-	return {
-		unsafeColor: base,
-		css: (options?: CssOptions) => {
-			const result = options?.forceAlpha ? formatRgba(base) : base.css();
-			if (options?.preferKeywordTransparent && base.alpha() === 0)
-				return 'transparent';
-			return result;
-		},
-		alpha,
-		darken: (value?: number) => derive(base, (draft) => draft.darken(value)),
-		brighten: (value?: number) => derive(base, (draft) => draft.brighten(value)),
-		saturate: (value?: number) => derive(base, (draft) => draft.saturate(value)),
-		desaturate: (value?: number) =>
-			derive(base, (draft) => draft.desaturate(value)),
-		mix: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
-			derive(base, (draft) =>
-				draft.mix(toColor(target), clampRatio(ratio), mode),
-			),
-		mixSolid: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
-			derive(base, (draft) =>
-				draft.alpha(1).mix(toColor(target), clampRatio(ratio), mode),
-			),
-		clone: () => wrap(cloneColor(base)),
-		value: () => cloneColor(base),
-		solid: () => derive(base, (draft) => draft.alpha(1)),
-	};
+  return {
+    unsafeColor: base,
+    css: (options?: CssOptions) => {
+      const result = options?.forceAlpha
+        ? formatRgba(base)
+        : base.css();
+      if (options?.preferKeywordTransparent && base.alpha() === 0)
+        return 'transparent';
+      return result;
+    },
+    alpha,
+    darken: (value?: number) =>
+      derive(base, (draft) => draft.darken(value)),
+    brighten: (value?: number) =>
+      derive(base, (draft) => draft.brighten(value)),
+    saturate: (value?: number) =>
+      derive(base, (draft) => draft.saturate(value)),
+    desaturate: (value?: number) =>
+      derive(base, (draft) => draft.desaturate(value)),
+    mix: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
+      derive(base, (draft) =>
+        draft.mix(toColor(target), clampRatio(ratio), mode),
+      ),
+    mixSolid: (
+      target: ColorInput,
+      ratio?: number,
+      mode?: MixArgs[2],
+    ) =>
+      derive(base, (draft) =>
+        draft.alpha(1).mix(toColor(target), clampRatio(ratio), mode),
+      ),
+    clone: () => wrap(cloneColor(base)),
+    value: () => cloneColor(base),
+    solid: () => derive(base, (draft) => draft.alpha(1)),
+  };
 }
-
 
 export const color = Object.assign(
   (input: ColorInput) => wrap(input),

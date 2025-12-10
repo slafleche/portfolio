@@ -13,7 +13,9 @@ export type MessageCentreHarnessResult = ReturnType<typeof render> & {
 export const renderMessageCentre = (
   messages: MessageCentreMessages,
 ): MessageCentreHarnessResult => {
-  const renderResult = render(<MessageCentreBlock messages={messages} />);
+  const renderResult = render(
+    <MessageCentreBlock messages={messages} />,
+  );
 
   const getInlineRegion = () => {
     const inlineRegion = renderResult.container.querySelector(
@@ -38,8 +40,12 @@ export const renderMessageCentre = (
     return toastRegion.textContent?.trim() ?? null;
   };
 
-  const rerenderWithMessages = (nextMessages: MessageCentreMessages) => {
-    renderResult.rerender(<MessageCentreBlock messages={nextMessages} />);
+  const rerenderWithMessages = (
+    nextMessages: MessageCentreMessages,
+  ) => {
+    renderResult.rerender(
+      <MessageCentreBlock messages={nextMessages} />,
+    );
   };
 
   return {

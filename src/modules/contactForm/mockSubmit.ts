@@ -27,9 +27,9 @@ export type ContactFormResponse = {
 const DEFAULT_STATUS_MESSAGES: Record<FormStatusKey, string> = {
   sending: 'Sending your message…',
   success: 'Message sent — thank you!',
-  generic: "We couldn't send your message right now. Please try again.",
-  validation_error:
-    'Please check the fields and try again.',
+  generic:
+    "We couldn't send your message right now. Please try again.",
+  validation_error: 'Please check the fields and try again.',
   rate_limited: 'Too many attempts. Please wait a minute.',
   service_unavailable:
     'Service is unavailable. Please try again shortly.',
@@ -55,7 +55,10 @@ const parseSimulationHint = (
 ): MockSubmitOptions['simulate'] | null => {
   const match = message.match(/\b#simulate=([a-z_]+)\b/i);
   if (!match) return null;
-  const [, raw] = match;
+  const [
+    ,
+    raw,
+  ] = match;
   const value = raw.toLowerCase();
   switch (value) {
     case 'success':
@@ -84,10 +87,7 @@ export async function mockSubmit(
   await wait(delay);
 
   if (payload.hp && payload.hp.trim().length > 0) {
-    const message = resolveMessage(
-      'success',
-      options?.messages,
-    );
+    const message = resolveMessage('success', options?.messages);
     return {
       ok: true,
       code: 'success',
@@ -116,8 +116,6 @@ export async function mockSubmit(
     ok: false,
     code,
     message: resolveMessage(lookupKey, options?.messages),
-    ...(code === 'rate_limited'
-      ? { retryAfterSeconds: 60 }
-      : {}),
+    ...(code === 'rate_limited' ? { retryAfterSeconds: 60 } : {}),
   };
 }

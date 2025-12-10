@@ -41,8 +41,8 @@ export default async function RootLayout({
   const headerList = await headers();
   const requestedLocale = headerList.get('x-locale') ?? undefined;
   const locale = resolveLocale(requestedLocale);
-  const fallbackLocale = FAVICON_DEFAULT_WEB_MANIFEST
-    .locale as Locale;
+  const fallbackLocale =
+    FAVICON_DEFAULT_WEB_MANIFEST.locale as Locale;
   const fontUrls = GOOGLE_FONT_URLS_BY_LOCALE[locale] ?? [];
   const linkGroup =
     FAVICON_LINK_DESCRIPTORS_BY_LOCALE[locale] ??

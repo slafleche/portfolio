@@ -36,9 +36,7 @@ describe('shadow.helper', () => {
       color: colorVars.brand,
       alpha: 0.5,
     });
-    expect(singleValue).toBe(
-      '1px 2px 3px 0 rgb(91 65 153 / 0.5)',
-    );
+    expect(singleValue).toBe('1px 2px 3px 0 rgb(91 65 153 / 0.5)');
   });
 
   it('builds drop-shadow filters with defaults', () => {

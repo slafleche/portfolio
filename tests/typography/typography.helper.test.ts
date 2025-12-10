@@ -70,8 +70,6 @@ describe('typography.helper', () => {
     expect(result.fontSize).toBe('20px');
     expect(result.letterSpacing).toBe('1px');
     expect(result.fontStyle).toBe('italic');
-    expect(result.fontWeight).toBeGreaterThan(
-      family.weights.default,
-    );
+    expect(result.fontWeight).toBeGreaterThan(family.weights.default);
   });
 });

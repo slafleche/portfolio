@@ -4,11 +4,11 @@ modules → styles vanilla-extract. Chaque couche a une responsabilité unique e
 passe sa propre vérification de types.
 
 Les tokens ne contiennent que des données brutes : mesures, couleurs, durées.
-Les helpers transforment ces valeurs en logique — calculs, géométrie,
-relations — avec une sécurité d’unités à la compilation grâce à [abbr:CSS] Calipers.
-Les modules composent les comportements et la
-couche styles est la seule autorisée à émettre des sélecteurs, imposée par des
-règles [abbr:ESLint] personnalisées et des garde-fous lint-staged.
+Les helpers transforment ces valeurs en logique — calculs, géométrie, relations
+— avec une sécurité d’unités à la compilation grâce à [abbr:CSS] Calipers. Les
+modules composent les comportements et la couche styles est la seule autorisée à
+émettre des sélecteurs, imposée par des règles [abbr:ESLint] personnalisées et
+des garde-fous lint-staged.
 
 Cette séparation rend le système prévisible et auditable. Toute variation
 visuelle se rattache à une source numérique ou logique, et les outils peuvent

@@ -1,8 +1,5 @@
 import type { ApiScenarioId } from './formDebugApiScenarios';
-import type {
-  FieldKey,
-  UiPermutationId,
-} from './formDebugUiStates';
+import type { FieldKey, UiPermutationId } from './formDebugUiStates';
 import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
 
 // Each card in the debug gallery composes a UI permutation (focus, hover, etc.)
@@ -46,7 +43,9 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'Locks the success view for styling/screenshots without submitting.',
     ui: { global: 'validEntry' },
     statusState: { status: 'success' },
-    info: ['Forces the celebratory panel without hitting the API.'],
+    info: [
+      'Forces the celebratory panel without hitting the API.',
+    ],
   },
   {
     id: 'ui-focus',
@@ -69,22 +68,19 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
   {
     id: 'ui-autofill',
     title: 'UI — Autofill',
-    description:
-      'Browser autofill palette across every control.',
+    description: 'Browser autofill palette across every control.',
     ui: { global: 'autofill' },
   },
   {
     id: 'ui-invalid',
     title: 'UI — Invalid (client)',
-    description:
-      'Client-side errors before hitting the API route.',
+    description: 'Client-side errors before hitting the API route.',
     ui: { global: 'invalid' },
   },
   {
     id: 'ui-brevo-domain',
     title: 'UI — Brevo domain rejected',
-    description:
-      'Server-driven domain rejection on the email field.',
+    description: 'Server-driven domain rejection on the email field.',
     ui: {
       global: 'validEntry',
       overrides: {
@@ -107,7 +103,9 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'Human verification required before enabling the CTA.',
     ui: { global: 'validEntry' },
     turnstileSimulation: 'missing',
-    info: ['Button stays disabled until Turnstile resolves.'],
+    info: [
+      'Button stays disabled until Turnstile resolves.',
+    ],
   },
   {
     id: 'ui-turnstile-expired',
@@ -116,7 +114,9 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'Challenge expired and needs a retry, showing helper copy.',
     ui: { global: 'validEntry' },
     turnstileSimulation: 'expired',
-    info: ['Displays the retry affordance + warning copy.'],
+    info: [
+      'Displays the retry affordance + warning copy.',
+    ],
   },
   {
     id: 'ui-readonly',
@@ -172,8 +172,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
   {
     id: 'api-service-down',
     title: 'API — Service unavailable',
-    description:
-      'Outage banner plus readonly fields awaiting retry.',
+    description: 'Outage banner plus readonly fields awaiting retry.',
     apiScenarioId: 'service_unavailable',
     ui: { global: 'readonlyPending' },
     showSubmitOverlay: true,
@@ -221,7 +220,9 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       'Environment missing Brevo keys; disable entire form.',
     apiScenarioId: 'not_configured',
     ui: { global: 'disabled' },
-    info: ['Shows new localized copy for the not-configured state.'],
+    info: [
+      'Shows new localized copy for the not-configured state.',
+    ],
     toastScenarioId: 'not_configured',
   },
 ] as const;

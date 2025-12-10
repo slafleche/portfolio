@@ -5,16 +5,13 @@ import { frData } from './fr.data';
 import { resolveAbbrShortcodes } from './resolveAbbrShortcodes';
 
 const frResolved = resolveAbbrShortcodes(
-	resolveMarkdownPlaceholders(
-		frData,
-		MARKDOWN_MESSAGES.fr,
-		'fr',
-	),
-	'fr',
+  resolveMarkdownPlaceholders(frData, MARKDOWN_MESSAGES.fr, 'fr'),
+  'fr',
 );
 
-export const fr =
-	frResolved satisfies LocaleMessagesShape ? frResolved : frResolved;
+export const fr = (frResolved satisfies LocaleMessagesShape)
+  ? frResolved
+  : frResolved;
 
 export type FrMessages = typeof fr;
 

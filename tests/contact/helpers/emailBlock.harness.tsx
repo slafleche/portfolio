@@ -17,9 +17,15 @@ type EmailBlockHarnessResult = ReturnType<
 
 export const renderEmailBlockWithFormBlocks = (
   props: EmailBlockProps,
-  options?: Parameters<typeof renderBlockWithFormBlocks<EmailBlockProps>>[2],
+  options?: Parameters<
+    typeof renderBlockWithFormBlocks<EmailBlockProps>
+  >[2],
 ): EmailBlockHarnessResult => {
-  const renderResult = renderBlockWithFormBlocks(EmailBlock, props, options);
+  const renderResult = renderBlockWithFormBlocks(
+    EmailBlock,
+    props,
+    options,
+  );
 
   const getRegistration = () => renderResult.getLatestRegistration();
 
@@ -45,4 +51,3 @@ export const renderEmailBlockWithFormBlocks = (
     validateEmail,
   };
 };
-

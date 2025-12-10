@@ -11,7 +11,9 @@ describe('mediaFactory', () => {
       minWidth: '768px',
       maxWidth: '1200px',
     });
-    expect(query).toBe('screen and (min-width: 768px) and (max-width: 1200px)');
+    expect(query).toBe(
+      'screen and (min-width: 768px) and (max-width: 1200px)',
+    );
   });
 
   it('normalizes query maps to strings', () => {

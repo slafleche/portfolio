@@ -8,9 +8,7 @@ export type OutcomeHook<TResult> = (
 
 export type OutcomeHarnessResult<TResult> = RenderResult & {
   getLatestOutcome: () => TResult;
-  rerenderWithSnapshot: (
-    snapshot: ContactFormFlowSnapshot,
-  ) => void;
+  rerenderWithSnapshot: (snapshot: ContactFormFlowSnapshot) => void;
 };
 
 export function renderOutcomeHook<TResult>(
@@ -23,12 +21,14 @@ export function renderOutcomeHook<TResult>(
     snapshot: ContactFormFlowSnapshot;
   }) {
     const outcome = useOutcome(snapshot);
-    return <span data-testid="outcome-json">{JSON.stringify(outcome)}</span>;
+    return (
+      <span data-testid="outcome-json">
+        {JSON.stringify(outcome)}
+      </span>
+    );
   }
 
-  const renderResult = render(
-    <Harness snapshot={initialSnapshot} />,
-  );
+  const renderResult = render(<Harness snapshot={initialSnapshot} />);
 
   const getLatestOutcome = () => {
     const nodes = renderResult.queryAllByTestId('outcome-json');

@@ -19,8 +19,12 @@ describe('Contact form block tests: HoneypotBlock', () => {
       </FocusSentinelWrapper>,
     );
 
-    const before = getByTestId('focus-sentinel-before') as HTMLInputElement;
-    const after = getByTestId('focus-sentinel-after') as HTMLInputElement;
+    const before = getByTestId(
+      'focus-sentinel-before',
+    ) as HTMLInputElement;
+    const after = getByTestId(
+      'focus-sentinel-after',
+    ) as HTMLInputElement;
 
     before.focus();
     expect(document.activeElement).toBe(before);
@@ -92,4 +96,3 @@ describe('Contact form block tests: HoneypotBlock', () => {
     expect(submittedValue).toBe('bot-signal');
   });
 });
-

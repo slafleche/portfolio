@@ -4,4 +4,3 @@ export const formConfig = {
     maxRequests: 1,
   },
 } as const;
-

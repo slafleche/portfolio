@@ -14,13 +14,14 @@ import {
 const ROOT = path.resolve(process.cwd());
 
 /**
- * Shared rule definitions.
- * Each rule has:
- * - id: stable identifier
- * - groupTitle: heading for grouped human output
- * - solution: short hint on how to fix
- * - regex: line-level pattern to match
- * - pattern (optional): substring that must be present in the POSIX path
+ * Shared rule definitions. Each rule has:
+ *
+ * - Id: stable identifier
+ * - GroupTitle: heading for grouped human output
+ * - Solution: short hint on how to fix
+ * - Regex: line-level pattern to match
+ * - Pattern (optional): substring that must be present in the POSIX
+ *   path
  */
 const FORBIDDEN_PATTERNS = [
   {
@@ -49,8 +50,7 @@ const FORBIDDEN_PATTERNS = [
   {
     id: 'margin-inline',
     groupTitle: 'No raw margin values in styles.',
-    solution:
-      'Use margins(...) helper instead of raw margin values.',
+    solution: 'Use margins(...) helper instead of raw margin values.',
     regex:
       /margin(?:Top|Right|Bottom|Left)?\s*:\s*(?:['"]|important\()/,
   },
@@ -66,8 +66,7 @@ const FORBIDDEN_PATTERNS = [
     groupTitle: 'No raw backdrop-filter values in styles.',
     solution:
       'Use backdropFilters.style(...) helper instead of raw backdropFilter/WebkitBackdropFilter strings.',
-    regex:
-      /(backdropFilter|WebkitBackdropFilter)\s*:\s*['"`]/,
+    regex: /(backdropFilter|WebkitBackdropFilter)\s*:\s*['"`]/,
   },
 ];
 
@@ -115,7 +114,8 @@ const MEASUREMENT_RULES = [
     pattern: 'src/styles/components',
     // Match m(<number>[, 'unit']) .css(…) to catch trivial literal usage,
     // but allow m(variable, …).css() helpers like addDeg.
-    regex: /m\(\s*\d+(?:\.\d+)?(?:\s*,\s*['"][^'"]+['"])?\s*\)\.css\(/,
+    regex:
+      /m\(\s*\d+(?:\.\d+)?(?:\s*,\s*['"][^'"]+['"])?\s*\)\.css\(/,
   },
 ];
 
@@ -257,10 +257,11 @@ function scanPatterns(filePath, content) {
     const literalResets = STYLE_LITERAL_RESETS[rule.id] ?? [];
     for (let index = 0; index < lines.length; index += 1) {
       const line = lines[index];
-       const trimmed = line.trim();
-       if (trimmed.startsWith('//')) continue;
+      const trimmed = line.trim();
+      if (trimmed.startsWith('//')) continue;
       if (!rule.regex.test(line)) continue;
-      if (literalResets.some((predicate) => predicate(line))) continue;
+      if (literalResets.some((predicate) => predicate(line)))
+        continue;
 
       const lineNumber = index + 1;
       violations.push({
@@ -366,8 +367,7 @@ function scanSpacingSimplifications(filePath, content) {
   const violations = [];
 
   // Look for paddings({...}) / margins({...}) calls with an inline object.
-  const callPattern =
-    /\b(paddings|margins)\(\s*\{([\s\S]*?)\}\s*\)/g;
+  const callPattern = /\b(paddings|margins)\(\s*\{([\s\S]*?)\}\s*\)/g;
 
   let match;
   while ((match = callPattern.exec(content)) !== null) {
@@ -379,8 +379,9 @@ function scanSpacingSimplifications(filePath, content) {
       const line = rawLine.trim();
       if (!line || line.startsWith('//')) continue;
 
-      const propMatch =
-        /^([a-zA-Z]+)\s*:\s*([^,}]+)\s*[,}]?/.exec(line);
+      const propMatch = /^([a-zA-Z]+)\s*:\s*([^,}]+)\s*[,}]?/.exec(
+        line,
+      );
       if (!propMatch) continue;
 
       const key = propMatch[1];
@@ -438,15 +439,13 @@ function scanSpacingSimplifications(filePath, content) {
     // 4) Axis plus redundant side(s) that restate the same value.
     if (
       v !== undefined &&
-      ((t !== undefined && t === v) ||
-        (b !== undefined && b === v))
+      ((t !== undefined && t === v) || (b !== undefined && b === v))
     ) {
       simplifiable = true;
     }
     if (
       h !== undefined &&
-      ((l !== undefined && l === h) ||
-        (r !== undefined && r === h))
+      ((l !== undefined && l === h) || (r !== undefined && r === h))
     ) {
       simplifiable = true;
     }
@@ -468,8 +467,9 @@ function scanSpacingSimplifications(filePath, content) {
 
     if (!simplifiable) continue;
 
-    const lineNumber =
-      content.slice(0, match.index).split('\n').length;
+    const lineNumber = content
+      .slice(0, match.index)
+      .split('\n').length;
     violations.push({
       filePath,
       lineNumber,
@@ -486,7 +486,9 @@ function scanSingleLayerHelpers(filePath, content) {
   // Skip token/config, built artefact, and test files; single-layer helper
   // enforcement applies only to style-layer sources.
   if (
-    STYLE_RULE_SKIP_PATHS.some((prefix) => posix.startsWith(prefix)) ||
+    STYLE_RULE_SKIP_PATHS.some((prefix) =>
+      posix.startsWith(prefix),
+    ) ||
     posix.startsWith('tests/') ||
     /\.test\.[jt]sx?$/.test(posix)
   ) {
@@ -692,7 +694,9 @@ function main() {
 
   const usePlain = isPlainMode() && !isHumanMode();
 
-  const targetFiles = useAll ? getAllTrackedFiles() : getStagedFiles();
+  const targetFiles = useAll
+    ? getAllTrackedFiles()
+    : getStagedFiles();
   if (!targetFiles.length) {
     return 0;
   }
@@ -707,7 +711,16 @@ function main() {
       continue;
     if (relativePath.startsWith('tests/')) continue;
     const ext = path.extname(relativePath).toLowerCase();
-    if (!['.ts', '.tsx', '.js', '.jsx', '.mjs'].includes(ext)) continue;
+    if (
+      ![
+        '.ts',
+        '.tsx',
+        '.js',
+        '.jsx',
+        '.mjs',
+      ].includes(ext)
+    )
+      continue;
     const fullPath = path.join(ROOT, relativePath);
     const content = readFile(fullPath);
     violations.push(...scanPatterns(relativePath, content));
@@ -716,9 +729,7 @@ function main() {
     violations.push(
       ...scanSpacingSimplifications(relativePath, content),
     );
-    violations.push(
-      ...scanSingleLayerHelpers(relativePath, content),
-    );
+    violations.push(...scanSingleLayerHelpers(relativePath, content));
   }
 
   if (violations.length) {

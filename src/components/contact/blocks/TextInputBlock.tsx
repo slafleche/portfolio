@@ -48,19 +48,17 @@ export const TextInputBlock = forwardRef<
       disabled,
       maxLength,
       minLength,
-  type = 'text',
-  autoComplete,
-  className,
-  requiredText,
-},
+      type = 'text',
+      autoComplete,
+      className,
+      requiredText,
+    },
     ref,
   ) => {
     const inputId = useId();
     const hintId = `${blockKey}-hint`;
     return (
-      <div 
-      id={id}
-      className={clsx(s.fieldGroup, className)}>
+      <div id={id} className={clsx(s.fieldGroup, className)}>
         <FormLabel
           htmlFor={inputId}
           label={label}

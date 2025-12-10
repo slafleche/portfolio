@@ -40,7 +40,9 @@ const turnstileCopy: TurnstileBlockLocale = {
 
 const ORIGINAL_ENV = { ...process.env };
 
-const createMockTurnstile = (shouldThrowOnRender = false): MockTurnstileApi => {
+const createMockTurnstile = (
+  shouldThrowOnRender = false,
+): MockTurnstileApi => {
   const api: MockTurnstileApi = {
     lastOptions: null,
     render: (container, options) => {
@@ -149,7 +151,10 @@ describe('Contact form block tests: TurnstileBlock', () => {
       ) as HTMLDivElement | null;
       expect(widgetContainer).not.toBeNull();
       if (!widgetContainer) return;
-      expect(widgetContainer).toHaveAttribute('data-rendered', 'false');
+      expect(widgetContainer).toHaveAttribute(
+        'data-rendered',
+        'false',
+      );
 
       const preview = screen.getByText(turnstileCopy.preview);
       expect(preview).toBeInTheDocument();
@@ -256,21 +261,21 @@ describe('Contact form block tests: TurnstileBlock', () => {
         expect(api?.lastOptions).not.toBeNull();
       });
 
-    await act(async () => {
-      api?.lastOptions?.['expired-callback']?.();
-    });
+      await act(async () => {
+        api?.lastOptions?.['expired-callback']?.();
+      });
 
-    expect(wrapper).toHaveAttribute('data-state', 'expired');
-    expect(
-      screen.getByText(turnstileCopy.summary.expired),
-    ).toBeInTheDocument();
+      expect(wrapper).toHaveAttribute('data-state', 'expired');
+      expect(
+        screen.getByText(turnstileCopy.summary.expired),
+      ).toBeInTheDocument();
 
-    const tokenInput = wrapper.querySelector(
-      'input[name="token"][type="hidden"]',
-    ) as HTMLInputElement | null;
-    expect(tokenInput).not.toBeNull();
-    if (!tokenInput) return;
-    expect(tokenInput.value).toBe('');
+      const tokenInput = wrapper.querySelector(
+        'input[name="token"][type="hidden"]',
+      ) as HTMLInputElement | null;
+      expect(tokenInput).not.toBeNull();
+      if (!tokenInput) return;
+      expect(tokenInput.value).toBe('');
     });
 
     it('moves to error state and shows error summary when the error callback is invoked', async () => {
@@ -556,12 +561,13 @@ describe('Contact form block contract: TurnstileBlock', () => {
   it('returns structured validation results from the internal contract for all statuses', async () => {
     const blockId = 'test-turnstile-block';
 
-    const { getTurnstileContract } = renderTurnstileBlockWithFormBlocks({
-      id: blockId,
-      order: 0,
-      disabled: false,
-      copy: turnstileCopy,
-    });
+    const { getTurnstileContract } =
+      renderTurnstileBlockWithFormBlocks({
+        id: blockId,
+        order: 0,
+        disabled: false,
+        copy: turnstileCopy,
+      });
 
     const api = window.turnstile as MockTurnstileApi | undefined;
     await waitFor(() => {
@@ -612,9 +618,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
     expect(result.valid).toBe(false);
     expect(result.messages).toHaveLength(1);
     expect(result.messages[0].code).toBe('turnstile.error');
-    expect(result.messages[0].text).toBe(
-      turnstileCopy.summary.error,
-    );
+    expect(result.messages[0].text).toBe(turnstileCopy.summary.error);
     expect(result.messages[0].scrollTarget).toBe(blockId);
   });
 
@@ -622,12 +626,13 @@ describe('Contact form block contract: TurnstileBlock', () => {
     setTurnstileEnv(null);
     window.turnstile = undefined;
 
-    const { getTurnstileContract } = renderTurnstileBlockWithFormBlocks({
-      id: 'test-turnstile-bypassed',
-      order: 0,
-      disabled: false,
-      copy: turnstileCopy,
-    });
+    const { getTurnstileContract } =
+      renderTurnstileBlockWithFormBlocks({
+        id: 'test-turnstile-bypassed',
+        order: 0,
+        disabled: false,
+        copy: turnstileCopy,
+      });
 
     const contract = getTurnstileContract();
     expect(contract).not.toBeNull();

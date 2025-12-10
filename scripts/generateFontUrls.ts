@@ -1,155 +1,153 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-	generateGoogleFontUrls,
-	type FontConfig,
+  generateGoogleFontUrls,
+  type FontConfig,
 } from '../src/lib/gfonts.ts';
 import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
 import { loadMessages } from '../src/lib/locales/locale.ts';
 
 const FONTS_CONFIG = path.resolve('src', 'data', 'fonts.config.json');
 const OUT_FILE = path.resolve(
-	'src',
-	'data',
-	'generated',
-	'googleFonts.gen.ts',
+  'src',
+  'data',
+  'generated',
+  'googleFonts.gen.ts',
 );
 
 type FontCfgInput = FontConfig & { keys?: string[] };
 type FontsConfig = Record<string, FontCfgInput>;
 
 const collapseToUniqueChars = (
-	strings: string[],
-	{ stripWhitespace = false } = {},
+  strings: string[],
+  { stripWhitespace = false } = {},
 ) => {
-	const joined = strings.join('');
-	const raw = stripWhitespace ? joined.replace(/\s+/g, '') : joined;
-	const nfc = raw.normalize('NFC');
-	return Array.from(new Set(nfc)).join('');
+  const joined = strings.join('');
+  const raw = stripWhitespace ? joined.replace(/\s+/g, '') : joined;
+  const nfc = raw.normalize('NFC');
+  return Array.from(new Set(nfc)).join('');
 };
 
 const collectStringsForKeys = (
-	keys: readonly string[],
-	messages: Record<string, unknown>,
+  keys: readonly string[],
+  messages: Record<string, unknown>,
 ) =>
-	keys
-		.map((key) => messages[key])
-		.filter((value): value is string => typeof value === 'string');
+  keys
+    .map((key) => messages[key])
+    .filter((value): value is string => typeof value === 'string');
 
 async function main() {
-	if (!fs.existsSync(FONTS_CONFIG)) {
-		throw new Error(
-			`Missing ${FONTS_CONFIG}. Add your font families there.`,
-		);
-	}
-	const fontsConfig = JSON.parse(
-		fs.readFileSync(FONTS_CONFIG, 'utf8'),
-	) as FontsConfig;
+  if (!fs.existsSync(FONTS_CONFIG)) {
+    throw new Error(
+      `Missing ${FONTS_CONFIG}. Add your font families there.`,
+    );
+  }
+  const fontsConfig = JSON.parse(
+    fs.readFileSync(FONTS_CONFIG, 'utf8'),
+  ) as FontsConfig;
 
-	const translationsEntries = await Promise.all(
-		AVAILABLE_LOCALES.map(async (locale) => {
-			const messages = await loadMessages(locale);
-			return [
-				locale,
-				messages as Record<string, unknown>,
-			] as const;
-		}),
-	);
-	const translations = Object.fromEntries(translationsEntries) as Record<
-		string,
-		Record<string, unknown>
-	>;
+  const translationsEntries = await Promise.all(
+    AVAILABLE_LOCALES.map(async (locale) => {
+      const messages = await loadMessages(locale);
+      return [
+        locale,
+        messages as Record<string,
+          unknown>,
+      ] as const;
+    }),
+  );
+  const translations = Object.fromEntries(
+    translationsEntries,
+  ) as Record<string, Record<string, unknown>>;
 
-	const referenceLocale = AVAILABLE_LOCALES[0];
-	const knownKeys = new Set(
-		Object.keys(translations[referenceLocale]),
-	);
-	const unknownByFamily: Record<string, string[]> = {};
+  const referenceLocale = AVAILABLE_LOCALES[0];
+  const knownKeys = new Set(
+    Object.keys(translations[referenceLocale]),
+  );
+  const unknownByFamily: Record<string, string[]> = {};
 
-	for (const [
-		family,
-		cfg,
-	] of Object.entries(fontsConfig)) {
-		const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
-		const unknown = keys.filter((key) => !knownKeys.has(key));
-		if (unknown.length) {
-			unknownByFamily[family] = unknown;
-		}
-	}
+  for (const [
+    family,
+    cfg,
+  ] of Object.entries(fontsConfig)) {
+    const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
+    const unknown = keys.filter((key) => !knownKeys.has(key));
+    if (unknown.length) {
+      unknownByFamily[family] = unknown;
+    }
+  }
 
-	if (Object.keys(unknownByFamily).length) {
-		const lines = Object.entries(unknownByFamily)
-			.map(
-				([
-					family,
-					keys,
-				]) => `  - ${family}: ${keys.join(', ')}`,
-			)
-			.join('\n');
-		throw new Error(
-			`fonts.config.json lists translation keys that do not exist in locale "${referenceLocale}":\n${lines}`,
-		);
-	}
+  if (Object.keys(unknownByFamily).length) {
+    const lines = Object.entries(unknownByFamily)
+      .map(
+        ([
+          family,
+          keys,
+        ]) => `  - ${family}: ${keys.join(', ')}`,
+      )
+      .join('\n');
+    throw new Error(
+      `fonts.config.json lists translation keys that do not exist in locale "${referenceLocale}":\n${lines}`,
+    );
+  }
 
-	const urlsByLocale: Record<string, string[]> = {};
-	const linkDescriptorsByLocale: Record<
-		string,
-		{ preloadHref: string; stylesheetHref: string }[]
-	> = {};
+  const urlsByLocale: Record<string, string[]> = {};
+  const linkDescriptorsByLocale: Record<
+    string,
+    { preloadHref: string; stylesheetHref: string }[]
+  > = {};
 
-	for (const locale of AVAILABLE_LOCALES) {
-		const messages = translations[locale];
-		const resolvedMap: Record<string, FontConfig> = {};
+  for (const locale of AVAILABLE_LOCALES) {
+    const messages = translations[locale];
+    const resolvedMap: Record<string, FontConfig> = {};
 
-		for (const [
-			family,
-			cfg,
-		] of Object.entries(fontsConfig)) {
-			const literalTexts = Array.isArray(cfg.texts)
-				? cfg.texts
-				: [];
-			const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
-			const extracted = collectStringsForKeys(keys, messages);
-			const charsetSources = [
-				...literalTexts,
-				...extracted,
-			];
-			const charset = charsetSources.length
-				? collapseToUniqueChars(charsetSources, {
-						stripWhitespace: false,
-					})
-				: '';
+    for (const [
+      family,
+      cfg,
+    ] of Object.entries(fontsConfig)) {
+      const literalTexts = Array.isArray(cfg.texts) ? cfg.texts : [];
+      const keys = Array.isArray(cfg.keys) ? cfg.keys : [];
+      const extracted = collectStringsForKeys(keys, messages);
+      const charsetSources = [
+        ...literalTexts,
+        ...extracted,
+      ];
+      const charset = charsetSources.length
+        ? collapseToUniqueChars(charsetSources, {
+            stripWhitespace: false,
+          })
+        : '';
 
-			resolvedMap[family] = {
-				texts: charset
-					? [
-							charset,
-						]
-					: undefined,
-				weights: cfg.weights,
-				ital: cfg.ital,
-				subsets: cfg.subsets,
-				axes: cfg.axes,
-				rawAxis: cfg.rawAxis,
-			};
-		}
+      resolvedMap[family] = {
+        texts: charset
+          ? [
+              charset,
+            ]
+          : undefined,
+        weights: cfg.weights,
+        ital: cfg.ital,
+        subsets: cfg.subsets,
+        axes: cfg.axes,
+        rawAxis: cfg.rawAxis,
+      };
+    }
 
-		const urls = generateGoogleFontUrls(resolvedMap, {
-			display: 'swap',
-			subsets: [
-				'latin',
-			],
-			stripWhitespaceFromText: false,
-		});
+    const urls = generateGoogleFontUrls(resolvedMap, {
+      display: 'swap',
+      subsets: [
+        'latin',
+      ],
+      stripWhitespaceFromText: false,
+    });
 
-		urlsByLocale[locale] = urls;
-		linkDescriptorsByLocale[locale] = urls.map((u) => ({
-			preloadHref: u,
-			stylesheetHref: u,
-		}));
-	}
+    urlsByLocale[locale] = urls;
+    linkDescriptorsByLocale[locale] = urls.map((u) => ({
+      preloadHref: u,
+      stylesheetHref: u,
+    }));
+  }
 
- const banner = `// AUTO-GENERATED by scripts/generateFontUrls.ts — DO NOT EDIT
+  const banner = `// AUTO-GENERATED by scripts/generateFontUrls.ts — DO NOT EDIT
 export const GOOGLE_FONT_URLS_BY_LOCALE = ${JSON.stringify(urlsByLocale, null, 2)} as const;
 
 export const GOOGLE_FONT_PRECONNECTS = [
@@ -158,55 +156,53 @@ export const GOOGLE_FONT_PRECONNECTS = [
 ] as const;
 
 export const GOOGLE_FONT_LINK_DESCRIPTORS_BY_LOCALE = ${JSON.stringify(
-		linkDescriptorsByLocale,
-		null,
-		2,
-	)} as const;
+    linkDescriptorsByLocale,
+    null,
+    2,
+  )} as const;
 `;
 
-fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
-fs.writeFileSync(OUT_FILE, banner, 'utf8');
+  fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
+  fs.writeFileSync(OUT_FILE, banner, 'utf8');
 
-	const shouldVerify =
-		String(process.env.VERIFY_FONT_URLS ?? '')
-			.toLowerCase()
-			.trim() === 'true';
+  const shouldVerify =
+    String(process.env.VERIFY_FONT_URLS ?? '')
+      .toLowerCase()
+      .trim() === 'true';
 
-	if (shouldVerify) {
-		const uniqueUrls = Array.from(
-			new Set(
-				Object.values(urlsByLocale).flat(),
-			),
-		);
+  if (shouldVerify) {
+    const uniqueUrls = Array.from(
+      new Set(Object.values(urlsByLocale).flat()),
+    );
 
-		await Promise.all(
-			uniqueUrls.map(async (href) => {
-				try {
-					const response = await fetch(href, {
-						method: 'HEAD',
-					});
-					if (!response.ok) {
-						throw new Error(
-							`HTTP ${response.status} ${response.statusText}`,
-						);
-					}
-				} catch (error) {
-					const message =
-						error instanceof Error ? error.message : String(error);
-					throw new Error(
-						`Failed to verify Google Font URL "${href}": ${message}`,
-					);
-				}
-			}),
-		);
-	}
+    await Promise.all(
+      uniqueUrls.map(async (href) => {
+        try {
+          const response = await fetch(href, {
+            method: 'HEAD',
+          });
+          if (!response.ok) {
+            throw new Error(
+              `HTTP ${response.status} ${response.statusText}`,
+            );
+          }
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : String(error);
+          throw new Error(
+            `Failed to verify Google Font URL "${href}": ${message}`,
+          );
+        }
+      }),
+    );
+  }
 
-	console.log(
-		`✅ Wrote ${OUT_FILE} for locales: ${AVAILABLE_LOCALES.join(', ')}`,
-	);
+  console.log(
+    `✅ Wrote ${OUT_FILE} for locales: ${AVAILABLE_LOCALES.join(', ')}`,
+  );
 }
 
 main().catch((error) => {
-	console.error(error);
-	process.exit(1);
+  console.error(error);
+  process.exit(1);
 });

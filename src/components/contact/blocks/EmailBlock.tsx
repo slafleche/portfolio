@@ -73,15 +73,25 @@ export function EmailBlock({
   maxLength,
   copy,
 }: EmailBlockProps) {
-  const [value, setValue] = useState('');
-  const [hasBlurred, setHasBlurred] = useState(false);
+  const [
+    value,
+    setValue,
+  ] = useState('');
+  const [
+    hasBlurred,
+    setHasBlurred,
+  ] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const evaluation = useMemo(
     () => evaluateEmailField(value),
-    [value],
+    [
+      value,
+    ],
   );
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
     setValue(event.target.value);
   };
 

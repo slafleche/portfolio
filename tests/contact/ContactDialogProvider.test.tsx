@@ -92,9 +92,7 @@ describe('ContactDialogProvider', () => {
         expect(successPanel).not.toBeNull();
       });
 
-      const liveForm = document.querySelector(
-        '[data-form="form"]',
-      );
+      const liveForm = document.querySelector('[data-form="form"]');
       expect(liveForm).toBeNull();
     } finally {
       // @ts-expect-error restoring test override

@@ -1,15 +1,13 @@
 'use client';
 
 import { forwardRef, useCallback } from 'react';
-import type {
-  ComponentPropsWithoutRef,
-  MouseEvent,
-} from 'react';
+import type { ComponentPropsWithoutRef, MouseEvent } from 'react';
 import { useContactDialog } from './ContactDialogProvider';
 
-type ContactDialogTriggerProps = ComponentPropsWithoutRef<'button'> & {
-  onOpen?: () => void;
-};
+type ContactDialogTriggerProps =
+  ComponentPropsWithoutRef<'button'> & {
+    onOpen?: () => void;
+  };
 
 const ContactDialogTrigger = forwardRef<
   HTMLButtonElement,
@@ -30,7 +28,11 @@ const ContactDialogTrigger = forwardRef<
       }
       open();
     },
-    [onClick, onOpen, open],
+    [
+      onClick,
+      onOpen,
+      open,
+    ],
   );
 
   return (

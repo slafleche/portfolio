@@ -16,7 +16,10 @@ describe('supportsFallback.helper', () => {
   it('applies supported/fallback blocks for each selector', () => {
     const applySupports = createSupportsFallback('display: grid');
     applySupports({
-      selector: ['.foo', '#bar'],
+      selector: [
+        '.foo',
+        '#bar',
+      ],
       supported: { display: 'grid' },
       fallback: { display: 'block' },
     });

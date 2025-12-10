@@ -1,4 +1,4 @@
 declare module '*.md' {
-	const content: import('../lib/locales/markdownTypes').MarkdownContent;
-	export default content;
+  const content: import('../lib/locales/markdownTypes').MarkdownContent;
+  export default content;
 }

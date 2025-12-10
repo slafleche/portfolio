@@ -1,4 +1,6 @@
-export function toTrimmedOrNull(value: string | null | undefined): string | null {
+export function toTrimmedOrNull(
+  value: string | null | undefined,
+): string | null {
   if (typeof value !== 'string') return null;
   const trimmed = value.trim();
   if (trimmed.length === 0) return null;
@@ -73,7 +75,9 @@ export type LocaleRichText = string & {
   readonly __localeRichText: true;
 };
 
-export const isLocaleRichText = (value: unknown): value is LocaleRichText =>
+export const isLocaleRichText = (
+  value: unknown,
+): value is LocaleRichText =>
   typeof value === 'string' && value.includes('<abbr');
 
 export const toLocaleRichText = (value: string): LocaleRichText =>

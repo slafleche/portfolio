@@ -88,64 +88,64 @@ function fullRestoreAndExit(exitCode = 0) {
 /* --------------------------------- Helpers -------------------------------- */
 
 export const AVAILABLE_LOCALES_PATTERN =
-	/AVAILABLE_LOCALES\s*=\s*\[\s*([\s\S]*?)\s*\]\s*as const/;
+  /AVAILABLE_LOCALES\s*=\s*\[\s*([\s\S]*?)\s*\]\s*as const/;
 
 export function parseAvailableLocalesSource(source) {
-	const match = source.match(AVAILABLE_LOCALES_PATTERN);
-	if (!match) return [];
-	return match[1]
-		.split(',')
-		.map((entry) => entry.replace(/['"`]/g, '').trim())
-		.filter(Boolean);
+  const match = source.match(AVAILABLE_LOCALES_PATTERN);
+  if (!match) return [];
+  return match[1]
+    .split(',')
+    .map((entry) => entry.replace(/['"`]/g, '').trim())
+    .filter(Boolean);
 }
 
 export async function loadAvailableLocales() {
-	const localeFile = path.resolve(
-		process.cwd(),
-		'src',
+  const localeFile = path.resolve(
+    process.cwd(),
+    'src',
     'lib',
     'locales',
     'translations',
     'index.ts',
-	);
-	try {
-		const raw = await readFile(localeFile, 'utf8');
-		return parseAvailableLocalesSource(raw);
-	} catch {
-		return [];
-	}
+  );
+  try {
+    const raw = await readFile(localeFile, 'utf8');
+    return parseAvailableLocalesSource(raw);
+  } catch {
+    return [];
+  }
 }
 
 export function parseDebugRoutesSource(raw) {
-	if (!raw || typeof raw !== 'string') return null;
-	try {
-		const parsed = JSON.parse(raw);
-		if (
-			!parsed ||
-			typeof parsed !== 'object' ||
-			!Array.isArray(parsed.pages)
-		) {
-			return null;
-		}
-		return parsed;
-	} catch {
-		return null;
-	}
+  if (!raw || typeof raw !== 'string') return null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (
+      !parsed ||
+      typeof parsed !== 'object' ||
+      !Array.isArray(parsed.pages)
+    ) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
 }
 
 export async function loadDebugRoutes() {
-	const routesFile = path.resolve(
-		process.cwd(),
+  const routesFile = path.resolve(
+    process.cwd(),
     'src',
     'data',
     'debugRoutes.json',
-	);
-	try {
-		const raw = await readFile(routesFile, 'utf8');
-		return parseDebugRoutesSource(raw);
-	} catch {
-		return null;
-	}
+  );
+  try {
+    const raw = await readFile(routesFile, 'utf8');
+    return parseDebugRoutesSource(raw);
+  } catch {
+    return null;
+  }
 }
 
 /* ------------------------------- Child spawn ------------------------------- */
@@ -212,7 +212,8 @@ const NOISY_WARNING_PATTERNS = [
   /No serializer registered for (?:SimpleWebpackError|PostCSSSyntaxError)/,
 ];
 
-const HTTP_LOG_RE = /^(GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD)\s+\/\S+/m;
+const HTTP_LOG_RE =
+  /^(GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD)\s+\/\S+/m;
 const RELOAD_MARKERS = [
   'Fast Refresh had to perform a full reload due to a runtime error.',
   'Fast Refresh had to perform a full reload.',
@@ -274,12 +275,16 @@ child.stdout.on('data', async (chunk) => {
 
 const formatVEVirtualCssLine = (line) => {
   const trimmed = line.trimStart();
-  const marker = '⨯ ./node_modules/@vanilla-extract/webpack-plugin/vanilla.virtual.css?';
+  const marker =
+    '⨯ ./node_modules/@vanilla-extract/webpack-plugin/vanilla.virtual.css?';
   if (!trimmed.startsWith(marker)) return line;
   const queryStart = line.indexOf('?');
   if (queryStart === -1) return line;
   const colonIndex = line.indexOf(':', queryStart);
-  const query = line.slice(queryStart + 1, colonIndex === -1 ? undefined : colonIndex);
+  const query = line.slice(
+    queryStart + 1,
+    colonIndex === -1 ? undefined : colonIndex,
+  );
   try {
     const params = new URLSearchParams(query);
     const fileName = params.get('fileName')
@@ -300,11 +305,13 @@ child.stderr.on('data', (chunk) => {
   stderrBuffer += chunk.toString();
   const lines = stderrBuffer.split(/\r?\n/);
   stderrBuffer = lines.pop() ?? '';
-  const filtered = lines.filter(
-    (line) =>
-      line.trim().length === 0 ||
-      !NOISY_WARNING_PATTERNS.some((pattern) => pattern.test(line)),
-  ).map(formatVEVirtualCssLine);
+  const filtered = lines
+    .filter(
+      (line) =>
+        line.trim().length === 0 ||
+        !NOISY_WARNING_PATTERNS.some((pattern) => pattern.test(line)),
+    )
+    .map(formatVEVirtualCssLine);
   const output = filtered.join('\n').trimEnd();
   if (output) {
     process.stderr.write(output + '\n');

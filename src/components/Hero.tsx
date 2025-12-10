@@ -44,8 +44,7 @@ export default function Hero({
   headingAnimated = true,
 }: Props) {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const isHeadingAnimated =
-    headingAnimated && !prefersReducedMotion;
+  const isHeadingAnimated = headingAnimated && !prefersReducedMotion;
   const [
     ctaReady,
     setCtaReady,
@@ -193,11 +192,11 @@ export default function Hero({
       data-heading-animated={isHeadingAnimated ? 'true' : 'false'}
     >
       {showVideo ? (
-		<VideoByName
-			name="hero"
-			title={copy.videoTitle}
-			label={copy.videoLabel}
-			kind="hero"
+        <VideoByName
+          name="hero"
+          title={copy.videoTitle}
+          label={copy.videoLabel}
+          kind="hero"
           className={s.video}
           contentWrapClassName={s.contentWrap}
           visualItemClassName={s.visualContent}
@@ -216,13 +215,13 @@ export default function Hero({
         <div className={s.video} aria-hidden>
           <div className={s.videoBg} />
           <div className={s.contentWrap}>
-			<ImageByName
-				name="video-hero"
-				alt=""
-				size="lg"
-				className={s.visualContent}
-				priority
-			/>
+            <ImageByName
+              name="video-hero"
+              alt=""
+              size="lg"
+              className={s.visualContent}
+              priority
+            />
           </div>
         </div>
       ) : null}

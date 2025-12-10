@@ -17,7 +17,9 @@ type MessageBlockHarnessResult = ReturnType<
 
 export const renderMessageBlockWithFormBlocks = (
   props: MessageBlockProps,
-  options?: Parameters<typeof renderBlockWithFormBlocks<MessageBlockProps>>[2],
+  options?: Parameters<
+    typeof renderBlockWithFormBlocks<MessageBlockProps>
+  >[2],
 ): MessageBlockHarnessResult => {
   const renderResult = renderBlockWithFormBlocks(
     MessageBlock,
@@ -49,4 +51,3 @@ export const renderMessageBlockWithFormBlocks = (
     validateMessage,
   };
 };
-

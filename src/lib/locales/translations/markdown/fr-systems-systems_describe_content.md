@@ -1,7 +1,7 @@
 ### Système de Mesure
 
-Traiter les mesures [abbr:CSS] comme de véritables objets plutôt que des chaînes de
-texte libres.  
+Traiter les mesures [abbr:CSS] comme de véritables objets plutôt que des chaînes
+de texte libres.  
 Les nombres portent du sens — unités, relations, échelles — et les manipuler
 comme des données rend ce sens explicite.
 
@@ -29,7 +29,8 @@ Elles permettent aux pièces de changer sans casser les proportions.
 
 ### Color Wrapper
 
-Les couleurs [abbr:CSS] sont flexibles, mais cette flexibilité devient vite fragile.  
+Les couleurs [abbr:CSS] sont flexibles, mais cette flexibilité devient vite
+fragile.  
 Un simple ajustement d’alpha peut traverser les couches ou ruiner le contraste
 d’un dégradé.  
 Le color wrapper transforme ce chaos en cohérence en traitant les couleurs comme

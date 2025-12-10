@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeInput, validateDraft } from '@/modules/contactForm/validation';
+import {
+  normalizeInput,
+  validateDraft,
+} from '@/modules/contactForm/validation';
 import {
   MESSAGE_URL_LIMIT,
   MESSAGE_MAX_LENGTH,
@@ -69,9 +72,7 @@ describe('contactForm validation', () => {
       ...baseInput,
       message: longMessage,
     });
-    expect(tooLong.draft.message.length).toBe(
-      MESSAGE_MAX_LENGTH,
-    );
+    expect(tooLong.draft.message.length).toBe(MESSAGE_MAX_LENGTH);
   });
 
   it('ignores honeypot content for validation but preserves in draft', () => {
@@ -83,14 +84,14 @@ describe('contactForm validation', () => {
     expect(result.errors).toEqual({});
   });
 });
-  it('flags too-short messages separately from empty ones', () => {
-    const result = validateDraft({
-      name: 'Jane',
-      email: 'jane@example.com',
-      message: 'short',
-      token: 'token',
-      hp: '',
-    });
-    expect(result.errors.message).toBe('form-error-message-too_short');
-    expect(result.status).toBe('validation_error');
+it('flags too-short messages separately from empty ones', () => {
+  const result = validateDraft({
+    name: 'Jane',
+    email: 'jane@example.com',
+    message: 'short',
+    token: 'token',
+    hp: '',
   });
+  expect(result.errors.message).toBe('form-error-message-too_short');
+  expect(result.status).toBe('validation_error');
+});

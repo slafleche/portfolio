@@ -170,7 +170,9 @@ export function useMenuHighlight({
       setMiniBokehActive(false);
     });
     return () => cancelAnimationFrame(frameId);
-  }, [highlightEnabled]);
+  }, [
+    highlightEnabled,
+  ]);
   const miniBokehTimerRef = useRef<ReturnType<
     typeof setTimeout
   > | null>(null);
@@ -195,14 +197,18 @@ export function useMenuHighlight({
       );
     });
     return () => cancelAnimationFrame(frameId);
-  }, [highlightEnabled]);
+  }, [
+    highlightEnabled,
+  ]);
 
   const registerLinkRef = useCallback(
     (index: number, el: HTMLAnchorElement | null) => {
       if (index < 0 || index >= anchorCount) return;
       linkRefs.current[index] = el;
     },
-    [anchorCount],
+    [
+      anchorCount,
+    ],
   );
   const lastHoverIndexRef = useRef<number | null>(null);
   const hasResolvedHoverFromCacheRef = useRef(false);
@@ -326,7 +332,9 @@ export function useMenuHighlight({
     });
     lastMetricRef.current = null;
     return () => cancelAnimationFrame(frameId);
-  }, [anchorCount]);
+  }, [
+    anchorCount,
+  ]);
 
   const persistLastHover = useCallback(
     (index: number | null) => {

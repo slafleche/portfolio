@@ -95,9 +95,7 @@ type DirectionVector = {
   to: DirectionPoint;
 };
 
-export type LinearDirectionInput =
-  | DegMeasurement
-  | DirectionVector;
+export type LinearDirectionInput = DegMeasurement | DirectionVector;
 
 const measurementValue = (
   value: MeasurementValue,
@@ -350,16 +348,10 @@ export function buildLinear({
     return color(input).alpha(targetAlpha);
   };
   const fStops = stops
-    .map(
-      (s) =>
-        `${colorFallback(withAlpha(s.color))} ${s.at.css()}`,
-    )
+    .map((s) => `${colorFallback(withAlpha(s.color))} ${s.at.css()}`)
     .join(', ');
   const mStops = stops
-    .map(
-      (s) =>
-        `${colorModern(withAlpha(s.color))} ${s.at.css()}`,
-    )
+    .map((s) => `${colorModern(withAlpha(s.color))} ${s.at.css()}`)
     .join(', ');
   return {
     fallback: `linear-gradient(${direction}, ${fStops})`,

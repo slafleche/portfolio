@@ -37,4 +37,3 @@ export function makeValidationResult({
     messages: resolvedMessages,
   };
 }
-

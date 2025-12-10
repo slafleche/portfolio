@@ -16,8 +16,8 @@ exercise it:
   of a coherent “Brevo surface” with clearly defined guarantees.
 
 This leaves gaps: we could change retry logic, error summarisation, or
-Brevo-to-form status mapping without tests catching regressions, even though
-the UI and debug flows depend on those contracts.
+Brevo-to-form status mapping without tests catching regressions, even though the
+UI and debug flows depend on those contracts.
 
 ## Goals
 
@@ -73,8 +73,8 @@ the UI and debug flows depend on those contracts.
       `service_unavailable`, `not_configured`, `generic_error`, etc.), aligned
       with both Brevo’s documented HTTP codes and our `brevoStatusToCode`
       helper.
-  - Maintain existing behaviour for honeypot short-circuit, Turnstile
-    outcomes, and rate limiting; Brevo scenarios layer on top.
+  - Maintain existing behaviour for honeypot short-circuit, Turnstile outcomes,
+    and rate limiting; Brevo scenarios layer on top.
 - Health route tests:
   - Explicitly treat the Brevo account probe as part of “production health”:
     - Missing env vars → “not configured”, no network call.

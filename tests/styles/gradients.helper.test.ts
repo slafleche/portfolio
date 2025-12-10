@@ -9,7 +9,10 @@ import {
 import { m, mPercent } from 'css-calipers';
 
 const stops = [
-  { color: '#ff0000', at: mPercent(0) },
+  {
+    color: '#ff0000',
+    at: mPercent(0),
+  },
   { color: '#00ff00', at: mPercent(50) },
   { color: '#0000ff', at: mPercent(100) },
 ];
@@ -54,11 +57,17 @@ describe('gradients.helper', () => {
     expect(radial.modern).toContain('oklch(');
 
     const stacked = stackBackground([
-      { kind: 'linear', options: { stops } },
+      {
+        kind: 'linear',
+        options: { stops },
+      },
       { kind: 'radial', options: { stops } },
     ]);
 
-    const [firstLayer, secondLayer] = stacked.fallback.split('), ');
+    const [
+      firstLayer,
+      secondLayer,
+    ] = stacked.fallback.split('), ');
     expect(firstLayer.startsWith('linear-gradient(')).toBe(true);
     expect(secondLayer.startsWith('radial-gradient(')).toBe(true);
     expect(stacked.modern).toContain('linear-gradient');

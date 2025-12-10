@@ -1,14 +1,11 @@
 import React from 'react';
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import {
-  FullwidthOnly,
-  CompactOnly,
-} from '@/styles/responsive';
+import { FullwidthOnly, CompactOnly } from '@/styles/responsive';
 
-const mockUseMediaQuery = vi.fn<
-	(...args: unknown[]) => boolean
->(() => true);
+const mockUseMediaQuery = vi.fn<(...args: unknown[]) => boolean>(
+  () => true,
+);
 
 vi.mock('@/styles/responsive/mediaFactory', () => ({
   queriesToStrings: (queries: Record<string, unknown>) => queries,

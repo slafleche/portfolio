@@ -9,8 +9,7 @@ export const FORM_STATUS_CODES = [
   'blocked',
 ] as const;
 
-export type FormServerStatusCode =
-  (typeof FORM_STATUS_CODES)[number];
+export type FormServerStatusCode = (typeof FORM_STATUS_CODES)[number];
 
 export const FORM_STATUS_KEYS = {
   sending: 'form-status-sending',
@@ -23,5 +22,4 @@ export const FORM_STATUS_KEYS = {
   blocked: 'form-status-blocked',
 } as const satisfies Record<string, keyof Messages>;
 
-export type FormStatusKey =
-  keyof typeof FORM_STATUS_KEYS;
+export type FormStatusKey = keyof typeof FORM_STATUS_KEYS;

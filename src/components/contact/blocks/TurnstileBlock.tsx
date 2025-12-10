@@ -16,7 +16,10 @@ import type {
   ContactFormBlockPayload,
 } from '../types/form.types';
 
-export type TurnstileBlockProps = Omit<ContactFormBlockBaseProps, 'required'>& {
+export type TurnstileBlockProps = Omit<
+  ContactFormBlockBaseProps,
+  'required'
+> & {
   copy: TurnstileBlockLocale;
 };
 
@@ -28,7 +31,10 @@ export type TurnstileState =
   | 'expired'
   | 'error';
 
-const COMPLETED_STATUSES: TurnstileState[] = ['verified', 'bypassed'];
+const COMPLETED_STATUSES: TurnstileState[] = [
+  'verified',
+  'bypassed',
+];
 
 const DEFAULT_TURNSTILE_TOKEN = 'mock-turnstile-token';
 const TURNSTILE_SCRIPT_SRC =
@@ -161,15 +167,20 @@ export function TurnstileBlock({
   disabled,
   copy,
 }: TurnstileBlockProps) {
-
   const turnstileSiteKey =
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? null;
   const hasTurnstileConfig = Boolean(turnstileSiteKey);
 
-  const [status, setStatus] = useState<TurnstileState>(
+  const [
+    status,
+    setStatus,
+  ] = useState<TurnstileState>(
     hasTurnstileConfig ? 'loading' : 'bypassed',
   );
-  const [token, setToken] = useState<string>(
+  const [
+    token,
+    setToken,
+  ] = useState<string>(
     hasTurnstileConfig ? '' : DEFAULT_TURNSTILE_TOKEN,
   );
 
@@ -227,38 +238,55 @@ export function TurnstileBlock({
       }
       widgetIdRef.current = null;
     };
-  }, [shouldRenderTurnstileWidget, turnstileSiteKey]);
+  }, [
+    shouldRenderTurnstileWidget,
+    turnstileSiteKey,
+  ]);
 
   const statusMessage = useMemo(() => {
     if (COMPLETED_STATUSES.includes(status)) return null;
     if (status === 'expired') return copy.summary.expired;
     if (status === 'error') return copy.summary.error;
     return copy.summary.missing;
-  }, [copy.summary, status]);
+  }, [
+    copy.summary,
+    status,
+  ]);
 
   const validationSummary = useMemo(() => {
     if (COMPLETED_STATUSES.includes(status)) return null;
     if (status === 'expired') return copy.summary.expired;
     if (status === 'error') return copy.summary.error;
     return copy.summary.missing;
-  }, [copy.summary, status]);
+  }, [
+    copy.summary,
+    status,
+  ]);
 
   useFormBlock(
-    useMemo(
-      () => {
-        const contract = buildTurnstileContract(id, status, copy, token);
-        return {
-          key: 'turnstile',
-          getValue: () => token,
-          validate: () => contract.validate().valid,
-          getValidationSummary: () => validationSummary,
-          focus: contract.focus,
-          liveValidation: false,
-          getContract: () => contract,
-        };
-      },
-      [copy, id, status, token, validationSummary],
-    ),
+    useMemo(() => {
+      const contract = buildTurnstileContract(
+        id,
+        status,
+        copy,
+        token,
+      );
+      return {
+        key: 'turnstile',
+        getValue: () => token,
+        validate: () => contract.validate().valid,
+        getValidationSummary: () => validationSummary,
+        focus: contract.focus,
+        liveValidation: false,
+        getContract: () => contract,
+      };
+    }, [
+      copy,
+      id,
+      status,
+      token,
+      validationSummary,
+    ]),
   );
 
   return (
@@ -283,7 +311,9 @@ export function TurnstileBlock({
         data-rendered={status !== 'bypassed'}
       >
         {status === 'bypassed' ? (
-          <span className={s.turnstilePlaceholder}>{copy.preview}</span>
+          <span className={s.turnstilePlaceholder}>
+            {copy.preview}
+          </span>
         ) : null}
       </div>
       <input type="hidden" name="token" value={token} />

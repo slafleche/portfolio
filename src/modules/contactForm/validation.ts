@@ -28,22 +28,15 @@ export type ContactFormDraft = {
 
 export type FieldName = 'name' | 'email' | 'message' | 'token';
 
-export type FieldErrorMap = Partial<
-  Record<FieldName, FormErrorKey>
->;
+export type FieldErrorMap = Partial<Record<FieldName, FormErrorKey>>;
 
-export type NameValidationReason =
-  | 'empty'
-  | 'too_short'
-  | 'too_long';
+export type NameValidationReason = 'empty' | 'too_short' | 'too_long';
 
 export type NameValidationResult =
   | { ok: true }
   | { ok: false; reason: NameValidationReason };
 
-export type EmailValidationReason =
-  | 'empty'
-  | 'invalid';
+export type EmailValidationReason = 'empty' | 'invalid';
 
 export type EmailValidationResult =
   | { ok: true }
@@ -133,8 +126,7 @@ export function evaluateEmailField(
 ): EmailFieldData {
   const normalized = sanitize(value).toLowerCase();
   const validation: EmailValidationResult = (() => {
-    if (!normalized.length)
-      return { ok: false, reason: 'empty' };
+    if (!normalized.length) return { ok: false, reason: 'empty' };
     if (!EMAIL_PATTERN.test(normalized))
       return { ok: false, reason: 'invalid' };
     return { ok: true };
@@ -224,10 +216,7 @@ const countUrls = (value: string): number => {
 export function normalizeInput(
   input: RawContactFormInput,
 ): ContactFormDraft {
-  const name = clampLength(
-    sanitize(input.name),
-    NAME_LIMIT.max,
-  );
+  const name = clampLength(sanitize(input.name), NAME_LIMIT.max);
   const email = clampLength(
     sanitize(input.email).toLowerCase(),
     EMAIL_MAX_LENGTH,

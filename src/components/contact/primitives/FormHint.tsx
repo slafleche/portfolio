@@ -10,16 +10,18 @@ type FormHintProps = {
   children?: ReactNode;
 };
 
-export function FormHint({ tone = "error", id, children }: FormHintProps) {
+export function FormHint({
+  tone = 'error',
+  id,
+  children,
+}: FormHintProps) {
   if (!children) {
     return null;
   }
   return (
     <p
       id={id}
-      className={clsx(
-        tone === 'error' ? s.errorText : s.helperText,
-      )}
+      className={clsx(tone === 'error' ? s.errorText : s.helperText)}
     >
       {children}
     </p>

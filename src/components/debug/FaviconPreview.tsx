@@ -348,24 +348,24 @@ function MsTilePreview({
           alignItems: 'center',
         }}
       >
-      <div
-        aria-hidden
-        style={{
-          width: 120,
-          height: 120,
-          ...borders({
-            radius: { all: m(18) },
-            all: {
-              width: m(1),
-              color: previewColors.border,
-            },
-          }),
-          backgroundColor: msTile.color,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-        }}
+        <div
+          aria-hidden
+          style={{
+            width: 120,
+            height: 120,
+            ...borders({
+              radius: { all: m(18) },
+              all: {
+                width: m(1),
+                color: previewColors.border,
+              },
+            }),
+            backgroundColor: msTile.color,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+          }}
         >
           {tileForegroundSource ? (
             <img
@@ -946,8 +946,8 @@ export default function FavIconPreview({
         </div>
         <div style={gridStyle}>
           <div style={cardStyle}>
-          <img
-            src={data.svg.src}
+            <img
+              src={data.svg.src}
               width={144}
               height={144}
               alt="Favicon SVG"
@@ -1009,10 +1009,10 @@ export default function FavIconPreview({
                 src={data.maskableIcon.src}
                 width={128}
                 height={128}
-              alt="Maskable icon"
-              style={{
-                ...borders.radii({ radius: m(38, '%') }),
-              }}
+                alt="Maskable icon"
+                style={{
+                  ...borders.radii({ radius: m(38, '%') }),
+                }}
               />
               <div>
                 <div style={{ fontWeight: 600 }}>Maskable (PWA)</div>
@@ -1175,18 +1175,18 @@ export default function FavIconPreview({
                   key={key}
                   style={{ display: 'flex', gap: '0.75rem' }}
                 >
-                      <span
-                        style={{
-                          width: '42px',
-                          height: '42px',
-                          ...borders({
-                            radius: { all: m(12) },
-                            all: {
-                              width: m(1),
-                              color: previewColors.border,
-                            },
-                          }),
-                          backgroundColor: value,
+                  <span
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      ...borders({
+                        radius: { all: m(12) },
+                        all: {
+                          width: m(1),
+                          color: previewColors.border,
+                        },
+                      }),
+                      backgroundColor: value,
                       flexShrink: 0,
                     }}
                   />
@@ -1232,11 +1232,11 @@ export default function FavIconPreview({
           }}
         >
           <h3 style={{ margin: 0 }}>Meta tags &amp; manifest</h3>
-            <ul
-              style={{
-                listStyle: 'none',
-                ...paddings(m(0)),
-                ...margins(m(0)),
+          <ul
+            style={{
+              listStyle: 'none',
+              ...paddings(m(0)),
+              ...margins(m(0)),
               display: 'flex',
               flexDirection: 'column',
               gap: '0.5rem',
@@ -1308,10 +1308,10 @@ export default function FavIconPreview({
                 </a>
               </li>
             ) : null}
-              <li>
-                <strong>description</strong>
+            <li>
+              <strong>description</strong>
               <div
-                  style={{
+                style={{
                   ...margins({
                     top: m(0.25, 'rem'),
                   }),
@@ -1327,20 +1327,20 @@ export default function FavIconPreview({
         </div>
       </section>
 
-        <section
-          style={{
-            ...paddings(m(24)),
-            ...borders({
-              radius: { all: m(24) },
-              all: {
-                width: m(1),
-                color: previewColors.border,
-              },
-            }),
-            background:
-              theme === 'dark'
-                ? 'rgba(12,9,30,0.8)'
-                : 'rgba(255,255,255,0.6)',
+      <section
+        style={{
+          ...paddings(m(24)),
+          ...borders({
+            radius: { all: m(24) },
+            all: {
+              width: m(1),
+              color: previewColors.border,
+            },
+          }),
+          background:
+            theme === 'dark'
+              ? 'rgba(12,9,30,0.8)'
+              : 'rgba(255,255,255,0.6)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1rem',
@@ -1355,24 +1355,24 @@ export default function FavIconPreview({
           }}
         >
           {data.linkDescriptors.main.map((link) => (
-              <div
-                key={`${link.rel}-${link.href}`}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.25rem',
-                  ...paddings({
-                    vertical: m(12),
-                    horizontal: m(16),
-                  }),
-                  ...borders({
-                    radius: { all: m(16) },
-                    all: {
-                      width: m(1),
-                      color: previewColors.border,
-                      style: 'dashed',
-                    },
-                  }),
+            <div
+              key={`${link.rel}-${link.href}`}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.25rem',
+                ...paddings({
+                  vertical: m(12),
+                  horizontal: m(16),
+                }),
+                ...borders({
+                  radius: { all: m(16) },
+                  all: {
+                    width: m(1),
+                    color: previewColors.border,
+                    style: 'dashed',
+                  },
+                }),
                 background:
                   theme === 'dark'
                     ? 'rgba(18,14,36,0.85)'

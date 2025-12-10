@@ -81,10 +81,28 @@ export const faviconSourceSvg = 'src/assets/SVG/faviconMaster.svg';
 
 export const faviconAssetPlan: FaviconAssetPlan = {
   svgOutputName: 'favicon.svg',
-  pngSizes: [16, 32, 48, 64, 96, 128, 192, 256, 384, 512],
-  icoSizes: [16, 32, 48],
+  pngSizes: [
+    16,
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256,
+    384,
+    512,
+  ],
+  icoSizes: [
+    16,
+    32,
+    48,
+  ],
   appleTouchSize: 180,
-  androidChromeSizes: [192, 512],
+  androidChromeSizes: [
+    192,
+    512,
+  ],
   maskableSize: 512,
   browserConfigTileSize: 150,
 };

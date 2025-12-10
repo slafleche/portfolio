@@ -1,6 +1,9 @@
 import clsx from 'clsx';
 import * as s from '@/styles/components/logo.css';
-import { color, type ColorWrapper } from '@/styles/helpers/colorWrap.helper';
+import {
+  color,
+  type ColorWrapper,
+} from '@/styles/helpers/colorWrap.helper';
 
 const LogoMode = {
   light: 'light',

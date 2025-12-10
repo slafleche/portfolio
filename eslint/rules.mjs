@@ -21,7 +21,9 @@ const buildImportRule = (layerName, layerConfig) => {
     'error',
     {
       patterns: forbidden.map((pattern) => ({
-        group: [pattern],
+        group: [
+          pattern,
+        ],
         message: `${layerName} restricted import`,
       })),
     },
@@ -50,9 +52,13 @@ const buildForbiddenPropertyConfigs = (layerName, layerConfig) => {
         message ?? `${layerName} restricted property "${name}"`;
       const allowPatterns = Array.isArray(allowIn)
         ? allowIn.filter(Boolean)
-        : [allowIn].filter(Boolean);
+        : [
+            allowIn,
+          ].filter(Boolean);
       return {
-        files: [`${layerConfig.path}/**/*.{ts,tsx}`],
+        files: [
+          `${layerConfig.path}/**/*.{ts,tsx}`,
+        ],
         plugins: customPlugin,
         rules: {
           'custom/forbidden-property': [
@@ -72,25 +78,34 @@ const buildForbiddenPropertyConfigs = (layerName, layerConfig) => {
 
 const layerConfigs = [];
 
-Object.entries(layers).forEach(([layerName, layerConfig]) => {
-  const files = [`${layerConfig.path}/**/*.{ts,tsx}`];
-  const importRule = buildImportRule(layerName, layerConfig);
-  const rules = {};
-  if (importRule) {
-    rules['no-restricted-imports'] = importRule;
-  }
-  layerConfigs.push({ files, rules });
-  const propertyConfigs = buildForbiddenPropertyConfigs(
+Object.entries(layers).forEach(
+  ([
     layerName,
     layerConfig,
-  );
-  if (propertyConfigs?.length) {
-    layerConfigs.push(...propertyConfigs);
-  }
-});
+  ]) => {
+    const files = [
+      `${layerConfig.path}/**/*.{ts,tsx}`,
+    ];
+    const importRule = buildImportRule(layerName, layerConfig);
+    const rules = {};
+    if (importRule) {
+      rules['no-restricted-imports'] = importRule;
+    }
+    layerConfigs.push({ files, rules });
+    const propertyConfigs = buildForbiddenPropertyConfigs(
+      layerName,
+      layerConfig,
+    );
+    if (propertyConfigs?.length) {
+      layerConfigs.push(...propertyConfigs);
+    }
+  },
+);
 
 layerConfigs.push({
-  files: ['**/*.{ts,tsx}'],
+  files: [
+    '**/*.{ts,tsx}',
+  ],
   plugins: customPlugin,
   rules: {
     'custom/prefer-m-shorthand': 'error',

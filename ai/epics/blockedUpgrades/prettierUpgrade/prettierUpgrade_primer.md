@@ -17,7 +17,7 @@ bug fixes without risking formatter instability.
   - Uses a supported Prettier + plugin combination.
   - Formats the entire repo (or a clearly defined subset) without crashes.
 - Define explicit, checkable requirements for upgrading Prettier, so that:
-  - We know *why* the upgrade is blocked (for example, missing plugin support).
+  - We know _why_ the upgrade is blocked (for example, missing plugin support).
   - We can periodically re-check those requirements and unblock the epic when
     upstream libraries catch up.
 - Keep the multiline array behaviour we rely on (for example,
@@ -26,13 +26,12 @@ bug fixes without risking formatter instability.
 
 ## Non-goals
 
-- Redesigning the project's code style or print width beyond changes required
-  by the Prettier upgrade itself.
+- Redesigning the project's code style or print width beyond changes required by
+  the Prettier upgrade itself.
 - Replacing Prettier with a different formatter.
 
 ## Link to blocked-upgrade requirements
 
-- See
-  `ai/epics/blockedUpgrades/prettierUpgrade/prettierUpgrade_requirements.md`
+- See `ai/epics/blockedUpgrades/prettierUpgrade/prettierUpgrade_requirements.md`
   for the concrete conditions that must be satisfied before we attempt the
   upgrade implementation and plan.

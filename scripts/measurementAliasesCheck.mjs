@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 /**
  * Lightweight measurement alias analysis for linting:
+ *
  * - Detects const/let/var identifiers assigned to m(<number>[, 'unit'])
  * - Propagates aliases through simple reassignment (const b = a;)
- * - Flags cases where those "m-literal" identifiers are only used to feed
- *   style helpers (paddings, margins, borders, backgrounds, boxShadow,
- *   backdropFilters.style) instead of coming from tokens.
+ * - Flags cases where those "m-literal" identifiers are only used to
+ *   feed style helpers (paddings, margins, borders, backgrounds,
+ *   boxShadow, backdropFilters.style) instead of coming from tokens.
  *
- * This is intentionally text-based and conservative; it is not a full parser.
+ * This is intentionally text-based and conservative; it is not a full
+ * parser.
  */
 
 /**
@@ -116,8 +118,14 @@ export function findMeasurementAliasViolations(filePath, content) {
   let changed = true;
   while (changed) {
     changed = false;
-    for (const [aliasName, sourceName] of aliasOf.entries()) {
-      if (mLiteralNames.has(sourceName) && !mLiteralNames.has(aliasName)) {
+    for (const [
+      aliasName,
+      sourceName,
+    ] of aliasOf.entries()) {
+      if (
+        mLiteralNames.has(sourceName) &&
+        !mLiteralNames.has(aliasName)
+      ) {
         mLiteralNames.add(aliasName);
         changed = true;
       }
@@ -125,7 +133,7 @@ export function findMeasurementAliasViolations(filePath, content) {
   }
 
   // Track how each m-literal-like name is used.
-  /** @type {Map<string, {helper: boolean; other: boolean}>} */
+  /** @type {Map<string, { helper: boolean; other: boolean }>} */
   const usage = new Map();
   for (const name of mLiteralNames) {
     usage.set(name, { helper: false, other: false });
@@ -174,7 +182,10 @@ export function findMeasurementAliasViolations(filePath, content) {
   /** @type {MeasurementAliasViolation[]} */
   const violations = [];
 
-  for (const [name, declLine] of literalDecls.entries()) {
+  for (const [
+    name,
+    declLine,
+  ] of literalDecls.entries()) {
     const info = usage.get(name);
     if (!info) continue;
     // If this literal (or its aliases) are used in a helper call and *not*

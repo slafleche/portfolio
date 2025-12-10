@@ -136,7 +136,8 @@ const pageStyles: Record<string, CSSProperties> = {
       width: m(1),
       color: 'rgba(255,255,255,0.08)',
     }),
-    fontFamily: '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+    fontFamily:
+      '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
     fontSize: 13,
   },
   localeCell: {
@@ -192,10 +193,10 @@ export default async function AbbreviationDebugPage({
             Abbreviation Inventory
           </h1>
           <p style={pageStyles.headerIntro}>
-            Side-by-side view of every abbreviation entry in both locales.
-            Use it to confirm labels, definitions, and rendered{' '}
-            {'<abbr>'} markup stay aligned. Empty cells indicate a missing entry
-            for that locale.
+            Side-by-side view of every abbreviation entry in both
+            locales. Use it to confirm labels, definitions, and
+            rendered {'<abbr>'} markup stay aligned. Empty cells
+            indicate a missing entry for that locale.
           </p>
         </header>
 
@@ -208,7 +209,8 @@ export default async function AbbreviationDebugPage({
                 style={{
                   ...pageStyles.headerCell,
                   borderRight:
-                    column.locale === COLUMN_META[COLUMN_META.length - 1]?.locale
+                    column.locale ===
+                    COLUMN_META[COLUMN_META.length - 1]?.locale
                       ? 'none'
                       : pageStyles.headerCell.borderRight,
                 }}
@@ -245,8 +247,7 @@ export default async function AbbreviationDebugPage({
                           {entry.label ?? ''}
                         </abbr>
                         <div style={pageStyles.meta}>
-                          <strong>Label:</strong>{' '}
-                          {entry.label ?? '—'}
+                          <strong>Label:</strong> {entry.label ?? '—'}
                         </div>
                         <div style={pageStyles.meta}>
                           <strong>Definition:</strong>{' '}

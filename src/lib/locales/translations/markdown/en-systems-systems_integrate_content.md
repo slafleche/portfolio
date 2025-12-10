@@ -1,7 +1,7 @@
 ### Fonts
 
-Font setup starts from a single configuration file used for both [abbr:CSS] and Google
-Fonts requests.  
+Font setup starts from a single configuration file used for both [abbr:CSS] and
+Google Fonts requests.  
 Weights are defined as percentages (0–100), so variable fonts can share the same
 scale and stay stable when swapped.
 
@@ -18,7 +18,9 @@ scale and stay stable when swapped.
 
 ```ts
 import { m } from 'css-calipers';
-import fontsConfig, { defineFontFamily } from '../styles/helpers/fontConfig.helper';
+import fontsConfig, {
+  defineFontFamily,
+} from '../styles/helpers/fontConfig.helper';
 
 const urbanist = defineFontFamily({
   familyName: 'Urbanist',
@@ -76,10 +78,10 @@ const heroHeading = composeFontVariantStyles(fontVariants.hero);
 
 ### Localization
 
-Each section loads only the copy it needs. Bundles map directly to [abbr:UI] sections,
-so payloads stay small and ownership is obvious. A single translator is created
-per locale and used to compose plain data objects for components — no runtime
-i18n layer, no `t()` calls in the [abbr:UI].
+Each section loads only the copy it needs. Bundles map directly to [abbr:UI]
+sections, so payloads stay small and ownership is obvious. A single translator
+is created per locale and used to compose plain data objects for components — no
+runtime i18n layer, no `t()` calls in the [abbr:UI].
 
 ```ts
 const t = await loadTranslator(locale);
@@ -88,8 +90,8 @@ const heroCopy = buildHeroCopy(t);
 <Hero copy={heroCopy} />
 ```
 
-Markdown is compiled to [abbr:HTML] at build time for specific keys, so rich text stays
-localized without adding runtime parsing.  
+Markdown is compiled to [abbr:HTML] at build time for specific keys, so rich
+text stays localized without adding runtime parsing.  
 Missing or mismatched keys surface immediately in development, and a pre-commit
 check ensures that invalid keys or missing files can’t be pushed by accident.  
 It keeps translations stable, transparent, and easy to maintain as content
@@ -100,8 +102,8 @@ evolves.
 ### Assets Pipeline
 
 Media isn’t checked into the repo.  
-Small [abbr:JSON] maps point to remote originals, and scripts handle downloading,
-optimization, and manifest generation for direct use in components.
+Small [abbr:JSON] maps point to remote originals, and scripts handle
+downloading, optimization, and manifest generation for direct use in components.
 
 ```
 src/assets/videos/videoSources.json
@@ -128,5 +130,5 @@ src/data/generated/videos.manifest.gen.json
 
 The process keeps large files out of version control and produces deterministic
 outputs that components can consume directly.  
-[abbr:SVG]s follow the same principle, cleaned with [abbr:SVGO] and formatted with Prettier
-for safe [abbr:ID]s and consistent diffs.
+[abbr:SVG]s follow the same principle, cleaned with [abbr:SVGO] and formatted
+with Prettier for safe [abbr:ID]s and consistent diffs.

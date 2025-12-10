@@ -38,7 +38,10 @@ export default async function HomePage({
   const translator = await loadTranslator(locale);
 
   const heroCopy = buildHeroCopy(translator);
-  const [approach, about] = translateMarkdownSections(translator, [
+  const [
+    approach,
+    about,
+  ] = translateMarkdownSections(translator, [
     {
       titleKey: 'approach',
       markdownKey: 'approach-content',
@@ -95,7 +98,9 @@ export default async function HomePage({
           hint: curiosityMessages.hint,
           targetHref: curiosityTarget,
         }}
-        logoRedirectPaths={[curiosityTarget]}
+        logoRedirectPaths={[
+          curiosityTarget,
+        ]}
       />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
@@ -163,10 +168,7 @@ export default async function HomePage({
           systemsLink={systemsLink}
         />
         {heroCopy.ctaLabel ? (
-          <ContactButton
-            watchId="hero"
-            label={heroCopy.ctaLabel}
-          />
+          <ContactButton watchId="hero" label={heroCopy.ctaLabel} />
         ) : null}
       </div>
     </>

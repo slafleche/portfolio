@@ -17,7 +17,8 @@ Each blocked upgrade is a normal epic folder under this directory:
 
 - Must: Keep requirements files co-located with their epic:
   - `ai/epics/blockedUpgrades/<epic-id>/<epic-id>_requirements.md`
-  - Example: `ai/epics/blockedUpgrades/prettierUpgrade/prettierUpgrade_requirements.md`
+  - Example:
+    `ai/epics/blockedUpgrades/prettierUpgrade/prettierUpgrade_requirements.md`
 - Each requirements file documents **only** the conditions that must be met
   before the upgrade epic can move from “blocked” into active implementation.
 
@@ -42,7 +43,7 @@ Each blocked upgrade is a normal epic folder under this directory:
     - Read the open `- [ ]` tasks.
     - For each task, decide whether it can be checked using:
       - Local repo state (for example, `package.json`, lockfile, config).
-      - External lookups (for example, library versions) *only* when allowed by
+      - External lookups (for example, library versions) _only_ when allowed by
         sandbox/approval rules.
     - When a requirement is clearly satisfied, update that line to `- [x]` and
       (optionally) add a brief note with what changed (for example, “Satisfied

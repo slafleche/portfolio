@@ -29,9 +29,7 @@ describe('ScrollHarness test helper', () => {
     expect(before).toBeInTheDocument();
     expect(after).toBeInTheDocument();
 
-    expect(
-      (container as HTMLElement).style.maxHeight,
-    ).toBe('300px');
+    expect((container as HTMLElement).style.maxHeight).toBe('300px');
     expect((before as HTMLElement).style.height).toBe('100px');
     expect((after as HTMLElement).style.height).toBe('200px');
 
@@ -39,6 +37,4 @@ describe('ScrollHarness test helper', () => {
     handles.setScrollTop(120);
     expect(handles.getScrollTop()).toBe(120);
   });
-}
-);
-
+});
