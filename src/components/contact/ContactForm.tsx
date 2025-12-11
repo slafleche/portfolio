@@ -15,6 +15,10 @@ import { SubmitButton } from './primitives/SubmitButton';
 import { ContactPrivacy } from './ContactPrivacy';
 import { useContactFormFlow } from './useContactFormFlow';
 import { useContactFormOutcome } from './useContactFormOutcome';
+import {
+  buildInvalidFieldSummary,
+  logContactFormDebugEvent,
+} from './contactFormDebugLogger';
 import * as s from '@/styles/components/forms.css';
 import type {
   ContactFormBlockBaseProps,
@@ -174,6 +178,31 @@ function ContactFormInner({
     scrollToPriorityTarget,
   ]);
 
+  const lastLoggedStatusRef = useRef(flow.submitStatus);
+
+  useEffect(() => {
+    const nextStatus = flow.submitStatus;
+    if (nextStatus === 'idle') {
+      lastLoggedStatusRef.current = nextStatus;
+      return;
+    }
+    if (lastLoggedStatusRef.current === nextStatus) {
+      return;
+    }
+    lastLoggedStatusRef.current = nextStatus;
+
+    logContactFormDebugEvent('submit_result', {
+      submitStatus: nextStatus,
+      code: nextStatus,
+      invalidFields: buildInvalidFieldSummary(
+        flow.latestValidationResults,
+      ),
+    });
+  }, [
+    flow.latestValidationResults,
+    flow.submitStatus,
+  ]);
+
   return (
     <form
       className={s.form}
@@ -181,6 +210,34 @@ function ContactFormInner({
       noValidate
       data-form="form"
       onSubmit={(event) => {
+        const registrations = getRegistrationsSnapshot();
+        const payloads: ContactFormBlockPayload<unknown>[] = [];
+        registrations.forEach((registration) => {
+          const contract = registration.getContract?.();
+          if (!contract) return;
+          try {
+            const payload = contract.getPayload();
+            payloads.push(payload);
+          } catch {
+            // Ignore payload failures in debug helper.
+          }
+        });
+
+        const normalizedPayload = buildContactFormPayload(
+          payloads,
+          formMembers,
+        );
+
+        logContactFormDebugEvent('submit_attempt', {
+          name: normalizedPayload.name,
+          email: normalizedPayload.email,
+          messageLength: normalizedPayload.message.length,
+          tokenPresent:
+            typeof normalizedPayload.token === 'string' &&
+            normalizedPayload.token.trim().length > 0,
+          hpValue: normalizedPayload.hp,
+        });
+
         void flow.handleSubmit(event);
       }}
     >

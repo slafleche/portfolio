@@ -23,6 +23,12 @@
 - Success scenarios never enqueue toasts; the prop only affects error/guard
   states so you can inspect rate-limit, validation, or outage banners without
   wiring up fake submissions.
+- For deeper wiring bugs, you can enable dev-only contact form logging by
+  setting `NEXT_PUBLIC_CONTACT_FORM_DEBUG=1` in your environment. With the flag
+  on (and never in production), each submission logs `[contact][form-debug]`
+  events in the browser console: a `submit_attempt` with the normalised payload
+  snapshot and a `submit_result` with the flow `submitStatus`, server `code`,
+  and a summary of invalid fields.
 
 ### Helper Conventions
 

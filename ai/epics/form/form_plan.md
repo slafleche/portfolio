@@ -67,14 +67,14 @@ and debug tooling.
       new scenarios uncovered while investigating this bug. - [ ] Optionally add
       a “live submission” card that uses the real `/api/contact` handler in a
       controlled environment.
-- [ ] Introduce a small, dev-only logging helper for the contact form that can
-      be toggled on/off, and: - [ ] Logs a compact summary of validation results
-      and status codes on submit. - [ ] Logs the normalised payload (without
-      leaking secrets) when needed for diagnosis. - [ ] Never runs in production
-      builds.
-- [ ] Document how to use: - [ ] The debug gallery to reproduce server-driven
-      scenarios. - [ ] The logging helper to follow a submission’s path
-      (validation, route result, status messages).
+- [x] Introduce a small, dev-only logging helper for the contact form that can
+      be toggled on/off via `NEXT_PUBLIC_CONTACT_FORM_DEBUG`, and: - [x] Logs a
+      compact summary of validation results and status codes on submit. - [x]
+      Logs the normalised payload (without leaking secrets) when needed for
+      diagnosis. - [x] Never runs in production builds.
+- [x] Document how to use: - [x] The debug gallery to reproduce server-driven
+      scenarios. - [x] The logging helper (see `form.logging` epic) to follow a
+      submission’s path (validation, route result, status messages).
 
 ## 4. Hardening and regression guarantees
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactForm from '@/components/contact/ContactForm';
@@ -9,6 +9,10 @@ import {
 } from '@/lib/locales/sections/form.locale';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
+import {
+  setContactFormDebugEnabled,
+  setContactFormDebugLogger,
+} from '@/components/contact/contactFormDebugLogger';
 
 const buildCopy = () =>
   buildContactFormCopy(
@@ -37,6 +41,11 @@ function renderWrappedContactForm(
     </ContactDialogContext.Provider>,
   );
 }
+
+afterEach(() => {
+  setContactFormDebugEnabled(null);
+  setContactFormDebugLogger(null);
+});
 
 describe('ContactForm — integration with flow and outcome layers', () => {
   it('submits a valid form via the JS flow while keeping the message centre quiet on success', async () => {
@@ -269,6 +278,216 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(submitButton).toBeDisabled();
 
       expect(screen.queryByTestId('jump-to-first-issue')).toBeNull();
+    } finally {
+      // @ts-expect-error restoring test override
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('does not emit debug events by default for a happy-path submission', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const logger = vi.fn();
+    setContactFormDebugLogger(logger);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: true,
+        code: 'success',
+        message: statusMessages.success,
+      }),
+    } as Response);
+
+    // @ts-expect-error test override
+    global.fetch = fetchMock;
+
+    try {
+      renderWrappedContactForm(copy, '/api/contact');
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      expect(logger).not.toHaveBeenCalled();
+    } finally {
+      // @ts-expect-error restoring test override
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('emits submit_attempt and submit_result events when debug is enabled for a happy-path submission', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const logger = vi.fn();
+    setContactFormDebugEnabled(true);
+    setContactFormDebugLogger(logger);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: true,
+        code: 'success',
+        message: statusMessages.success,
+      }),
+    } as Response);
+
+    // @ts-expect-error test override
+    global.fetch = fetchMock;
+
+    try {
+      renderWrappedContactForm(copy, '/api/contact');
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        expect(logger).toHaveBeenCalled();
+      });
+
+      const types = logger.mock.calls.map(
+        ([
+          event,
+        ]) => event.type,
+      );
+
+      expect(types).toContain('submit_attempt');
+      expect(types).toContain('submit_result');
+    } finally {
+      // @ts-expect-error restoring test override
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('emits a validation_error submit_result with message in the invalid field summary', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const logger = vi.fn();
+    setContactFormDebugEnabled(true);
+    setContactFormDebugLogger(logger);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn();
+
+    // @ts-expect-error test override
+    global.fetch = fetchMock;
+
+    try {
+      renderWrappedContactForm(copy, '/api/contact');
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'short',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(logger).toHaveBeenCalled();
+      });
+
+      const eventTypes = logger.mock.calls.map(
+        ([
+          event,
+        ]) => event.type,
+      );
+
+      expect(eventTypes).toContain('submit_attempt');
+      expect(eventTypes).toContain('submit_result');
+
+      const resultEvents = logger.mock.calls
+        .map(
+          ([
+            event,
+          ]) => event,
+        )
+        .filter((event) => event.type === 'submit_result');
+
+      expect(resultEvents.length).toBeGreaterThanOrEqual(1);
+
+      const lastResult =
+        resultEvents[resultEvents.length - 1].payload;
+
+      expect(lastResult.submitStatus).toBe('validation_error');
+      expect(
+        lastResult.invalidFields.some(
+          (field) => field.id.includes('message'),
+        ),
+      ).toBe(true);
     } finally {
       // @ts-expect-error restoring test override
       global.fetch = originalFetch;
