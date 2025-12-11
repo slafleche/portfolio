@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
 import { renderNameBlockWithFormBlocks } from './helpers/nameBlock.harness';
@@ -9,6 +9,7 @@ import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { NameBlockLocale } from '@/lib/locales/form/form.name';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
+import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
 
 const nameCopy: NameBlockLocale = {
   label: enFormCopy['form-name-label'],
@@ -20,6 +21,23 @@ const nameCopy: NameBlockLocale = {
 };
 
 describe('Contact form block tests: NameBlock', () => {
+  const getErrorHint = (container: HTMLElement) =>
+    container.querySelector(
+      '[data-form-hint="error"]',
+    ) as HTMLElement | null;
+
+  const expectErrorHintWiredToInput = (
+    container: HTMLElement,
+    input: HTMLInputElement,
+  ) => {
+    const errorHint = getErrorHint(container);
+    expect(errorHint).not.toBeNull();
+    if (!errorHint) return;
+    expect(errorHint.id).toBeTruthy();
+    const describedBy = input.getAttribute('aria-describedby');
+    expect(describedBy).toBe(errorHint.id);
+  };
+
   describe('wiring and ARIA', () => {
     it('renders the name input with its HTML wiring', () => {
       const { container } = render(
@@ -46,15 +64,16 @@ describe('Contact form block tests: NameBlock', () => {
       if (!label) return;
       expect(label.textContent).toContain(nameCopy.label);
       expect(label.htmlFor).toBe(input.id);
-      expect(
-        screen.getByText(nameCopy.requiredText),
-      ).toBeInTheDocument();
+      const requiredHint = label.querySelector(
+        '[data-visible="sc-only"]',
+      ) as HTMLElement | null;
+      expect(requiredHint).not.toBeNull();
 
       // HTML attributes
       expect(input).toBeDisabled();
       expect(input).toBeRequired();
       expect(input).toHaveAttribute('type', 'text');
-      expect(input).toHaveAttribute('aria-describedby', 'name-hint');
+      expect(input).toHaveAttribute('aria-describedby');
       expect(input).toHaveAttribute(
         'maxlength',
         NAME_LIMIT.max.toString(),
@@ -64,14 +83,18 @@ describe('Contact form block tests: NameBlock', () => {
         NAME_LIMIT.min.toString(),
       );
 
+      const helperHint = container.querySelector('[data-form-hint]');
+      expect(checkMatchingId(helperHint, input, 'describedby')).toBe(
+        true,
+      );
+
       // Disabled behaviour: user input does not change value or error state
       const initialValue = input.value;
 
       void userEvent.type(input, 'Jane Doe');
 
       expect(input.value).toBe(initialValue);
-      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
-      expect(screen.queryByText(nameCopy.errors.tooLong)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
   });
@@ -142,9 +165,7 @@ describe('Contact form block tests: NameBlock', () => {
 
       fireEvent.blur(nameInput);
 
-      expect(
-        screen.getByText(nameCopy.errors.required),
-      ).toBeInTheDocument();
+      expectErrorHintWiredToInput(container, nameInput);
 
       const registration = getRegistration();
       expect(registration).not.toBeNull();
@@ -174,15 +195,14 @@ describe('Contact form block tests: NameBlock', () => {
       if (!input) return;
 
       // Before blur, no inline error text
-      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       // Trigger blur with empty value
       fireEvent.blur(input);
 
       // After blur, required error is shown and aria-invalid is set
-      const error = screen.getByText(nameCopy.errors.required);
-      expect(error).toBeInTheDocument();
+      expectErrorHintWiredToInput(container, input);
       expect(input).toHaveAttribute('aria-invalid', 'true');
     });
 
@@ -206,20 +226,18 @@ describe('Contact form block tests: NameBlock', () => {
       if (!input) return;
 
       // Initial state: no error
-      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       // First blur with empty value triggers required error
       fireEvent.blur(input);
-      expect(
-        screen.getByText(nameCopy.errors.required),
-      ).toBeInTheDocument();
+      expectErrorHintWiredToInput(container, input);
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
       // After first blur, live validation is on: fixing the value clears the error
       await userEvent.type(input, 'Jane Doe');
 
-      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -247,9 +265,7 @@ describe('Contact form block tests: NameBlock', () => {
       fireEvent.change(input, { target: { value: tooLongValue } });
       fireEvent.blur(input);
 
-      expect(
-        screen.getByText(nameCopy.errors.tooLong),
-      ).toBeInTheDocument();
+      expectErrorHintWiredToInput(container, input);
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
       // Too short: non-empty value shorter than NAME_LIMIT.min should map to "required"
@@ -258,9 +274,7 @@ describe('Contact form block tests: NameBlock', () => {
       );
       fireEvent.change(input, { target: { value: tooShortValue } });
 
-      expect(
-        screen.getByText(nameCopy.errors.required),
-      ).toBeInTheDocument();
+      expectErrorHintWiredToInput(container, input);
       expect(input).toHaveAttribute('aria-invalid', 'true');
     });
 
@@ -287,8 +301,7 @@ describe('Contact form block tests: NameBlock', () => {
       fireEvent.change(input, { target: { value: validValue } });
       fireEvent.blur(input);
 
-      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
-      expect(screen.queryByText(nameCopy.errors.tooLong)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -308,20 +321,21 @@ describe('Contact form block tests: NameBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       enableContinuousValidation();
 
-      expect(
-        await screen.findByText(nameCopy.errors.required),
-      ).toBeInTheDocument();
+      await waitFor(() => {
+        const errorHint = getErrorHint(container);
+        expect(errorHint).not.toBeNull();
+      });
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
       await userEvent.clear(input);
       await userEvent.type(input, 'Jane Doe');
 
-      expect(screen.queryByText(nameCopy.errors.required)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
   });

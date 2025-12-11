@@ -311,14 +311,17 @@ export function TurnstileBlock({
         data-rendered={status !== 'bypassed'}
       >
         {status === 'bypassed' ? (
-          <span className={s.turnstilePlaceholder}>
+          <span
+            className={s.turnstilePlaceholder}
+            data-form-turnstile="preview"
+          >
             {copy.preview}
           </span>
         ) : null}
       </div>
       <input type="hidden" name="token" value={token} />
       {statusMessage ? (
-        <p className={s.turnstileStatus}>{statusMessage}</p>
+        <p data-form-turnstile="status" className={s.turnstileStatus}>{statusMessage}</p>
       ) : null}
     </div>
   );

@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import yaml from 'yaml';
 import forbiddenPropertyRule from './forbiddenPropertyRule.mjs';
 import preferMeasurementShorthandRule from './preferMeasurementShorthandRule.mjs';
+import ariaIdRefHelperRule from './ariaIdRefHelperRule.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
@@ -35,6 +36,7 @@ const customPlugin = {
     rules: {
       'forbidden-property': forbiddenPropertyRule,
       ...preferMeasurementShorthandRule,
+      ...ariaIdRefHelperRule,
     },
   },
 };
@@ -109,6 +111,16 @@ layerConfigs.push({
   plugins: customPlugin,
   rules: {
     'custom/prefer-m-shorthand': 'error',
+  },
+});
+
+layerConfigs.push({
+  files: [
+    'tests/**/*.{ts,tsx}',
+  ],
+  plugins: customPlugin,
+  rules: {
+    'custom/aria-idref-helper-required': 'error',
   },
 });
 

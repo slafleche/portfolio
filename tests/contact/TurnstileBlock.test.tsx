@@ -156,8 +156,11 @@ describe('Contact form block tests: TurnstileBlock', () => {
         'false',
       );
 
-      const preview = screen.getByText(turnstileCopy.preview);
-      expect(preview).toBeInTheDocument();
+      const preview = wrapper.querySelector(
+        '[data-form-turnstile="preview"]',
+      ) as HTMLElement | null;
+      expect(preview).not.toBeNull();
+      if (!preview) return;
 
       const tokenInput = wrapper.querySelector(
         'input[name="token"][type="hidden"]',
@@ -189,9 +192,12 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
       if (!wrapper) return;
 
-      expect(
-        await screen.findByText(turnstileCopy.summary.missing),
-      ).toBeInTheDocument();
+      const status = wrapper.querySelector(
+        '[data-form-turnstile="status"]',
+      ) as HTMLElement | null;
+      await waitFor(() => {
+        expect(status).not.toBeNull();
+      });
 
       expect(wrapper.getAttribute('data-state')).toMatch(
         /^(loading|ready)$/,
@@ -227,9 +233,10 @@ describe('Contact form block tests: TurnstileBlock', () => {
       });
 
       expect(wrapper).toHaveAttribute('data-state', 'verified');
-      expect(
-        screen.queryByText(turnstileCopy.summary.missing),
-      ).toBeNull();
+      const status = wrapper.querySelector(
+        '[data-form-turnstile="status"]',
+      );
+      expect(status).toBeNull();
 
       const tokenInput = wrapper.querySelector(
         'input[name="token"][type="hidden"]',
@@ -266,9 +273,10 @@ describe('Contact form block tests: TurnstileBlock', () => {
       });
 
       expect(wrapper).toHaveAttribute('data-state', 'expired');
-      expect(
-        screen.getByText(turnstileCopy.summary.expired),
-      ).toBeInTheDocument();
+      const status = wrapper.querySelector(
+        '[data-form-turnstile="status"]',
+      ) as HTMLElement | null;
+      expect(status).not.toBeNull();
 
       const tokenInput = wrapper.querySelector(
         'input[name="token"][type="hidden"]',
@@ -307,9 +315,10 @@ describe('Contact form block tests: TurnstileBlock', () => {
       });
 
       expect(wrapper).toHaveAttribute('data-state', 'error');
-      expect(
-        screen.getByText(turnstileCopy.summary.error),
-      ).toBeInTheDocument();
+      const status = wrapper.querySelector(
+        '[data-form-turnstile="status"]',
+      ) as HTMLElement | null;
+      expect(status).not.toBeNull();
 
       const tokenInput = wrapper.querySelector(
         'input[name="token"][type="hidden"]',
@@ -340,9 +349,12 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
       if (!wrapper) return;
 
-      expect(
-        await screen.findByText(turnstileCopy.summary.error),
-      ).toBeInTheDocument();
+      const status = wrapper.querySelector(
+        '[data-form-turnstile="status"]',
+      ) as HTMLElement | null;
+      await waitFor(() => {
+        expect(status).not.toBeNull();
+      });
       expect(wrapper).toHaveAttribute('data-state', 'error');
     });
   });

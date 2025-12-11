@@ -21,6 +21,7 @@ export function FormHint({
   return (
     <p
       id={id}
+      data-form-hint={tone}
       className={clsx(tone === 'error' ? s.errorText : s.helperText)}
     >
       {children}

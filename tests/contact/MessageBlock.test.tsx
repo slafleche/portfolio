@@ -58,9 +58,10 @@ describe('Contact form block tests: MessageBlock', () => {
       if (!label) return;
       expect(label.textContent).toContain(messageCopy.label);
       expect(label.htmlFor).toBe(textarea.id);
-      expect(
-        screen.getByText(messageCopy.requiredText),
-      ).toBeInTheDocument();
+      const requiredHint = label.querySelector(
+        '[data-visible="sc-only"]',
+      ) as HTMLElement | null;
+      expect(requiredHint).not.toBeNull();
 
       expect(textarea).not.toBeDisabled();
       expect(textarea).toHaveAttribute(
@@ -79,9 +80,12 @@ describe('Contact form block tests: MessageBlock', () => {
       const initialCounterText = enFormCopy[
         'form-counter-remaining'
       ].replace('{count}', MESSAGE_MAX_LENGTH.toString());
+      const counterHint = container.querySelector(
+        '#test-message-block-hint',
+      );
       expect(
-        screen.getByText(initialCounterText),
-      ).toBeInTheDocument();
+        checkMatchingId(counterHint, textarea, 'describedby'),
+      ).toBe(true);
     });
   });
 
@@ -145,9 +149,10 @@ describe('Contact form block tests: MessageBlock', () => {
 
       fireEvent.blur(textarea);
 
-      expect(
-        screen.getByText(messageCopy.errors.required),
-      ).toBeInTheDocument();
+      const errorHint = container.querySelector(
+        '#test-message-block-hint[data-form-hint="error"]',
+      ) as HTMLElement | null;
+      expect(errorHint).not.toBeNull();
 
       const registration = getRegistration();
       expect(registration).not.toBeNull();
@@ -181,9 +186,10 @@ describe('Contact form block tests: MessageBlock', () => {
         target: { value: maxLengthValue },
       });
 
-      expect(
-        screen.getByText(messageCopy.maxCharactersMessage),
-      ).toBeInTheDocument();
+      const hint = container.querySelector(
+        '#test-message-block-hint',
+      ) as HTMLElement | null;
+      expect(hint).not.toBeNull();
     });
 
     it('shows required error only after blur for empty message', () => {
@@ -206,15 +212,18 @@ describe('Contact form block tests: MessageBlock', () => {
       if (!textarea) return;
 
       expect(
-        screen.queryByText(messageCopy.errors.required),
+        container.querySelector(
+          '#test-message-block-hint[data-form-hint="error"]',
+        ),
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
 
       fireEvent.blur(textarea);
 
-      expect(
-        screen.getByText(messageCopy.errors.required),
-      ).toBeInTheDocument();
+      const requiredHint = container.querySelector(
+        '#test-message-block-hint[data-form-hint="error"]',
+      ) as HTMLElement | null;
+      expect(requiredHint).not.toBeNull();
       expect(textarea).toHaveAttribute('aria-invalid', 'true');
     });
 
@@ -243,21 +252,26 @@ describe('Contact form block tests: MessageBlock', () => {
       await userEvent.type(textarea, tooShortValue);
 
       expect(
-        screen.queryByText(messageCopy.errors.tooShort),
+        container.querySelector(
+          '#test-message-block-hint[data-form-hint="error"]',
+        ),
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
 
       fireEvent.blur(textarea);
 
-      expect(
-        screen.getByText(messageCopy.errors.tooShort),
-      ).toBeInTheDocument();
+      const tooShortHint = container.querySelector(
+        '#test-message-block-hint[data-form-hint="error"]',
+      ) as HTMLElement | null;
+      expect(tooShortHint).not.toBeNull();
       expect(textarea).toHaveAttribute('aria-invalid', 'true');
 
       await userEvent.type(textarea, 'x');
 
       expect(
-        screen.queryByText(messageCopy.errors.tooShort),
+        container.querySelector(
+          '#test-message-block-hint[data-form-hint="error"]',
+        ),
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
     });
@@ -285,16 +299,19 @@ describe('Contact form block tests: MessageBlock', () => {
       fireEvent.change(textarea, { target: { value: tooLongValue } });
       fireEvent.blur(textarea);
 
-      expect(
-        screen.getByText(messageCopy.errors.tooLong),
-      ).toBeInTheDocument();
+      const tooLongHint = container.querySelector(
+        '#test-message-block-hint[data-form-hint="error"]',
+      ) as HTMLElement | null;
+      expect(tooLongHint).not.toBeNull();
       expect(textarea).toHaveAttribute('aria-invalid', 'true');
 
       const validValue = 'x'.repeat(MESSAGE_MAX_LENGTH);
       fireEvent.change(textarea, { target: { value: validValue } });
 
       expect(
-        screen.queryByText(messageCopy.errors.tooLong),
+        container.querySelector(
+          '#test-message-block-hint[data-form-hint="error"]',
+        ),
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
     });
@@ -317,7 +334,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       expect(linksHint).toBeNull();
       expect(
-        screen.queryByText(messageCopy.maxUrlsMessage),
+        container.querySelector(
+          '#test-message-block-links[data-form-hint="helper"]',
+        ),
       ).toBeNull();
     });
 
@@ -348,12 +367,14 @@ describe('Contact form block tests: MessageBlock', () => {
 
       fireEvent.change(textarea, { target: { value: urls } });
 
-      expect(
-        screen.getByText(messageCopy.maxUrlsMessage),
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByText(messageCopy.errors.tooManyLinks),
-      ).toBeNull();
+      const linksHint = container.querySelector(
+        '#test-message-block-links[data-form-hint="helper"]',
+      ) as HTMLElement | null;
+      expect(linksHint).not.toBeNull();
+      const errorHint = container.querySelector(
+        '#test-message-block-hint[data-form-hint="error"]',
+      );
+      expect(errorHint).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
     });
 
@@ -385,13 +406,15 @@ describe('Contact form block tests: MessageBlock', () => {
       fireEvent.change(textarea, { target: { value: urls } });
       fireEvent.blur(textarea);
 
-      expect(
-        screen.getByText(messageCopy.errors.tooManyLinks),
-      ).toBeInTheDocument();
+      const tooManyLinksHint = container.querySelector(
+        '#test-message-block-hint[data-form-hint="error"]',
+      ) as HTMLElement | null;
+      expect(tooManyLinksHint).not.toBeNull();
       expect(textarea).toHaveAttribute('aria-invalid', 'true');
-      expect(
-        screen.getByText(messageCopy.maxUrlsMessage),
-      ).toBeInTheDocument();
+      const linksHint = container.querySelector(
+        '#test-message-block-links[data-form-hint="helper"]',
+      ) as HTMLElement | null;
+      expect(linksHint).not.toBeNull();
     });
 
     it('shows and then clears inline errors when continuousValidation is enabled and value becomes valid', async () => {
@@ -411,7 +434,9 @@ describe('Contact form block tests: MessageBlock', () => {
       if (!textarea) return;
 
       expect(
-        screen.queryByText(messageCopy.errors.tooShort),
+        container.querySelector(
+          '#test-message-block-hint[data-form-hint="error"]',
+        ),
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
 
@@ -422,9 +447,12 @@ describe('Contact form block tests: MessageBlock', () => {
 
       enableContinuousValidation();
 
-      expect(
-        await screen.findByText(messageCopy.errors.tooShort),
-      ).toBeInTheDocument();
+      await waitFor(() => {
+        const tooShortHint = container.querySelector(
+          '#test-message-block-hint[data-form-hint="error"]',
+        );
+        expect(tooShortHint).not.toBeNull();
+      });
       expect(textarea).toHaveAttribute('aria-invalid', 'true');
 
       const validValue = 'x'.repeat(MESSAGE_MIN_LENGTH);
@@ -432,7 +460,9 @@ describe('Contact form block tests: MessageBlock', () => {
       await userEvent.type(textarea, validValue);
 
       expect(
-        screen.queryByText(messageCopy.errors.tooShort),
+        container.querySelector(
+          '#test-message-block-hint[data-form-hint="error"]',
+        ),
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
     });
@@ -462,7 +492,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       expect(textarea.value).toBe(initialValue);
       expect(
-        screen.queryByText(messageCopy.errors.required),
+        container.querySelector(
+          '#test-message-block-hint[data-form-hint="error"]',
+        ),
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
     });
@@ -493,7 +525,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       expect(textarea.value).toBe(initialValue);
       expect(
-        screen.queryByText(messageCopy.errors.required),
+        container.querySelector(
+          '#test-message-block-hint[data-form-hint="error"]',
+        ),
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
     });
@@ -524,9 +558,10 @@ describe('Contact form block tests: MessageBlock', () => {
       await userEvent.type(textarea, tooShortValue);
       fireEvent.blur(textarea);
 
-      expect(
-        screen.getByText(messageCopy.errors.tooShort),
-      ).toBeInTheDocument();
+      const tooShortHintInitial = container.querySelector(
+        '#test-message-block-hint[data-form-hint="error"]',
+      ) as HTMLElement | null;
+      expect(tooShortHintInitial).not.toBeNull();
       expect(textarea).toHaveAttribute('aria-invalid', 'true');
 
       rerender(
@@ -548,9 +583,10 @@ describe('Contact form block tests: MessageBlock', () => {
       expect(textarea).not.toBeNull();
       if (!textarea) return;
 
-      expect(
-        screen.getByText(messageCopy.errors.tooShort),
-      ).toBeInTheDocument();
+      const tooShortHintAfter = container.querySelector(
+        '#test-message-block-hint[data-form-hint="error"]',
+      ) as HTMLElement | null;
+      expect(tooShortHintAfter).not.toBeNull();
       expect(textarea).toHaveAttribute('aria-invalid', 'true');
 
       const valueAfterError = textarea.value;

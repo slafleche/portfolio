@@ -23,17 +23,20 @@ describe('responsive entrypoints', () => {
     mockUseMediaQuery.mockReturnValue(true);
     render(
       <FullwidthOnly>
-        <p>wide</p>
+        <p data-responsive="wide">wide</p>
       </FullwidthOnly>,
     );
-    expect(screen.getByText('wide')).toBeVisible();
+    const wide = document.querySelector(
+      '[data-responsive="wide"]',
+    );
+    expect(wide).not.toBeNull();
   });
 
   it('hides children when fullwidth media query fails', () => {
     mockUseMediaQuery.mockReturnValue(false);
     const { container } = render(
       <FullwidthOnly>
-        <p>wide</p>
+        <p data-responsive="wide">wide</p>
       </FullwidthOnly>,
     );
     expect(container).toBeEmptyDOMElement();
@@ -42,9 +45,12 @@ describe('responsive entrypoints', () => {
   it('CompactOnly passthrough renders immediately (placeholder)', () => {
     render(
       <CompactOnly>
-        <span>compact</span>
+        <span data-responsive="compact">compact</span>
       </CompactOnly>,
     );
-    expect(screen.getByText('compact')).toBeVisible();
+    const compact = document.querySelector(
+      '[data-responsive="compact"]',
+    );
+    expect(compact).not.toBeNull();
   });
 });

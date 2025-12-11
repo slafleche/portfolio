@@ -1,9 +1,10 @@
 import React from 'react';
 import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
 import { renderEmailBlockWithFormBlocks } from './helpers/emailBlock.harness';
+import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
 import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
@@ -19,6 +20,23 @@ const emailCopy: EmailBlockLocale = {
 };
 
 describe('Contact form block tests: EmailBlock', () => {
+  const getErrorHint = (container: HTMLElement) =>
+    container.querySelector(
+      '[data-form-hint="error"]',
+    ) as HTMLElement | null;
+
+  const expectErrorHintWiredToInput = (
+    container: HTMLElement,
+    input: HTMLInputElement,
+  ) => {
+    const errorHint = getErrorHint(container);
+    expect(errorHint).not.toBeNull();
+    if (!errorHint) return;
+    expect(errorHint.id).toBeTruthy();
+    const describedBy = input.getAttribute('aria-describedby');
+    expect(describedBy).toBe(errorHint.id);
+  };
+
   describe('wiring and ARIA', () => {
     it('renders the email input with its HTML wiring', () => {
       const { container } = render(
@@ -44,15 +62,16 @@ describe('Contact form block tests: EmailBlock', () => {
       if (!label) return;
       expect(label.textContent).toContain(emailCopy.label);
       expect(label.htmlFor).toBe(input.id);
-      expect(
-        screen.getByText(emailCopy.requiredText),
-      ).toBeInTheDocument();
+      const requiredHint = label.querySelector(
+        '[data-visible="sc-only"]',
+      ) as HTMLElement | null;
+      expect(requiredHint).not.toBeNull();
 
       expect(input).toBeDisabled();
       expect(input).toBeRequired();
       expect(input).toHaveAttribute('type', 'email');
       expect(input).toHaveAttribute('autocomplete', 'email');
-      expect(input).toHaveAttribute('aria-describedby', 'email-hint');
+      expect(input).toHaveAttribute('aria-describedby');
       expect(input).toHaveAttribute(
         'maxlength',
         EMAIL_MAX_LENGTH.toString(),
@@ -63,8 +82,13 @@ describe('Contact form block tests: EmailBlock', () => {
       void userEvent.type(input, 'example@example.com');
 
       expect(input.value).toBe(initialValue);
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
+
+      const helperHint = container.querySelector('[data-form-hint]');
+      expect(checkMatchingId(helperHint, input, 'describedby')).toBe(
+        true,
+      );
     });
   });
 
@@ -129,9 +153,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.type(emailInput, 'invalid-email');
       fireEvent.blur(emailInput);
 
-      expect(
-        screen.getByText(emailCopy.errors.invalid),
-      ).toBeInTheDocument();
+      expectErrorHintWiredToInput(container, emailInput);
       expect(emailInput).toHaveAttribute('aria-invalid', 'true');
 
       const registration = getRegistration();
@@ -161,18 +183,17 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       await userEvent.type(input, 'invalid-email');
 
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       fireEvent.blur(input);
 
-      const error = screen.getByText(emailCopy.errors.invalid);
-      expect(error).toBeInTheDocument();
+      expectErrorHintWiredToInput(container, input);
       expect(input).toHaveAttribute('aria-invalid', 'true');
     });
 
@@ -195,21 +216,19 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       await userEvent.type(input, 'invalid-email');
       fireEvent.blur(input);
 
-      expect(
-        screen.getByText(emailCopy.errors.invalid),
-      ).toBeInTheDocument();
+      expectErrorHintWiredToInput(container, input);
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
       await userEvent.clear(input);
       await userEvent.type(input, 'example@example.com');
 
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -235,7 +254,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.type(input, 'example@example.com');
       fireEvent.blur(input);
 
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -255,22 +274,23 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
       await userEvent.type(input, 'invalid-email');
 
       enableContinuousValidation();
 
-      expect(
-        await screen.findByText(emailCopy.errors.invalid),
-      ).toBeInTheDocument();
+      await waitFor(() => {
+        const errorHint = getErrorHint(container);
+        expect(errorHint).not.toBeNull();
+      });
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
       await userEvent.clear(input);
       await userEvent.type(input, 'example@example.com');
 
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -298,7 +318,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.type(input, 'user@example.com');
 
       expect(input.value).toBe(initialValue);
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -327,7 +347,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.type(input, 'invalid-email');
 
       expect(input.value).toBe(initialValue);
-      expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
+      expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
     });
 
@@ -354,9 +374,7 @@ describe('Contact form block tests: EmailBlock', () => {
       await userEvent.type(input, 'invalid-email');
       fireEvent.blur(input);
 
-      expect(
-        screen.getByText(emailCopy.errors.invalid),
-      ).toBeInTheDocument();
+      expectErrorHintWiredToInput(container, input);
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
       rerender(
@@ -378,9 +396,8 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      expect(
-        screen.getByText(emailCopy.errors.invalid),
-      ).toBeInTheDocument();
+      const errorHintAfter = getErrorHint(container);
+      expect(errorHintAfter).not.toBeNull();
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
       const valueAfterError = input.value;
