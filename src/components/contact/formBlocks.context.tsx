@@ -42,6 +42,7 @@ type FormBlocksContextValue = {
     result: ContactFormBlockValidationResult,
   ) => void;
   getValidationResultsSnapshot: () => ContactFormBlockValidationResult[];
+  validationResultsVersion: number;
 };
 
 const FormBlocksContext =
@@ -60,6 +61,10 @@ export function FormBlocksProvider({
   const validationResultsRef = useRef(
     new Map<string, ContactFormBlockValidationResult>(),
   );
+  const [
+    validationResultsVersion,
+    setValidationResultsVersion,
+  ] = useState(0);
 
   const registerBlock = useCallback(
     (registration: FormBlockRegistration) => {
@@ -80,13 +85,16 @@ export function FormBlocksProvider({
         Array.from(blocksRef.current.values()),
       recordValidationResult: (result) => {
         validationResultsRef.current.set(result.id, result);
+        setValidationResultsVersion((version) => version + 1);
       },
       getValidationResultsSnapshot: () =>
         Array.from(validationResultsRef.current.values()),
+      validationResultsVersion,
     }),
     [
       continuousValidation,
       registerBlock,
+      validationResultsVersion,
     ],
   );
 
@@ -114,6 +122,10 @@ export function TestFormBlocksProvider({
   const validationResultsRef = useRef(
     new Map<string, ContactFormBlockValidationResult>(),
   );
+  const [
+    validationResultsVersion,
+    setValidationResultsVersion,
+  ] = useState(0);
 
   const registerBlock = useCallback(
     (registration: FormBlockRegistration) => {
@@ -139,13 +151,16 @@ export function TestFormBlocksProvider({
         Array.from(blocksRef.current.values()),
       recordValidationResult: (result) => {
         validationResultsRef.current.set(result.id, result);
+        setValidationResultsVersion((version) => version + 1);
       },
       getValidationResultsSnapshot: () =>
         Array.from(validationResultsRef.current.values()),
+      validationResultsVersion,
     }),
     [
       continuousValidation,
       registerBlock,
+      validationResultsVersion,
     ],
   );
 

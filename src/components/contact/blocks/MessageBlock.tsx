@@ -145,11 +145,8 @@ export function MessageBlock({
   );
   const liveValidationRegistration = hasBlurred;
 
-  const {
-    continuousValidation,
-    recordValidationResult,
-  } = useFormBlock(
-    useMemo(() => {
+  const registration = useMemo(
+    () => {
       const baseContract = buildMessageContract(
         id,
         value,
@@ -166,11 +163,7 @@ export function MessageBlock({
         key: 'message',
         focus: contract.focus,
         getValue: () => value,
-        validate: () => {
-          const result = contract.validate();
-          recordValidationResult(result);
-          return result.valid;
-        },
+        validate: () => contract.validate().valid,
         getValidationSummary: () => {
           if (evaluation.validation.ok) return null;
           const reason = evaluation.validation.reason;
@@ -188,14 +181,20 @@ export function MessageBlock({
         liveValidation: liveValidationRegistration,
         getContract: () => contract,
       };
-    }, [
+    },
+    [
       copy,
       evaluation,
       id,
       liveValidationRegistration,
       value,
-    ]),
+    ],
   );
+
+  const {
+    continuousValidation,
+    recordValidationResult,
+  } = useFormBlock(registration);
 
   const liveValidation = hasBlurred || continuousValidation;
 

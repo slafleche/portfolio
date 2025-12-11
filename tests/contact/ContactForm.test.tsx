@@ -156,7 +156,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     }
   });
 
-  it.skip('clears field errors with live feedback and successfully submits once all fields are valid', async () => {
+  it('clears validation banners and jump button as fields recover under live feedback, and submits once all fields are valid', async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
 
@@ -178,7 +178,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         '/api/contact',
       );
 
-      // 1) Fill only the name.
+      // 1) Fill only the name; leave email and message invalid.
       const nameInput = screen.getByLabelText(
         copy.blocks.name.label,
         { exact: false },
@@ -198,7 +198,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         name: copy.submitLabel,
       });
 
-      // 2) First submit: should show errors for email and message, but not name.
+      // 2) First submit: should show validation_error and errors for email and message.
       await userEvent.click(submitButton);
 
       await waitFor(() => {
@@ -207,18 +207,27 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
         if (!inlineRegion) return;
-        expect(inlineRegion.textContent ?? '').toContain(
-          statusMessages.validation_error,
-        );
+        const lines = Array.from(
+          inlineRegion.querySelectorAll('[data-error]'),
+        ) as HTMLElement[];
+        const codes = lines.map((el) => el.dataset.error);
+        expect(codes).toContain('validation_error');
+        expect(codes).toContain('form-error-email-invalid');
+        expect(
+          codes.some((code) =>
+            code?.startsWith('form-error-message-'),
+          ),
+        ).toBe(true);
       });
 
-      // We don't assert per-field messages in detail here, but we ensure no submit happened.
+      // No submit happened yet.
       expect(fetchMock).not.toHaveBeenCalled();
 
-      // 3) Fill email: its error should disappear (live validation).
+      // 3) Fix email: its error should disappear (live validation),
+      // while message is still invalid.
       await userEvent.type(emailInput, 'example@example.com');
 
-      // 4) Second submit: still missing valid message, so still validation error and no submit.
+      // 4) Second submit: still missing valid message, so still validation_error and no submit.
       await userEvent.click(submitButton);
 
       await waitFor(() => {
@@ -227,21 +236,50 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
         if (!inlineRegion) return;
-        expect(inlineRegion.textContent ?? '').toContain(
-          statusMessages.validation_error,
-        );
+        const lines = Array.from(
+          inlineRegion.querySelectorAll('[data-error]'),
+        ) as HTMLElement[];
+        const codes = lines.map((el) => el.dataset.error);
+        expect(codes).toContain('validation_error');
+        expect(
+          codes.some((code) =>
+            code?.startsWith('form-error-message-'),
+          ),
+        ).toBe(true);
+        expect(codes).not.toContain('form-error-email-invalid');
       });
 
       expect(fetchMock).not.toHaveBeenCalled();
 
       // 5) Fix message with a valid, long-enough value.
-      // Use a value that is definitely at or above MESSAGE_MIN_LENGTH.
       await userEvent.type(messageInput, 'This is a valid message.');
 
-      // 6) Final submit: validation error banner cleared and submission proceeds.
+      // 6) Final submit: validation banner cleared, no inline errors, and submission proceeds.
       await userEvent.click(submitButton);
 
-      expect(fetchMock).toHaveBeenCalledTimes(1);
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) return;
+        const lines = Array.from(
+          inlineRegion.querySelectorAll('[data-error]'),
+        ) as HTMLElement[];
+        const codes = lines.map((el) => el.dataset.error);
+        expect(codes.filter(Boolean)).toHaveLength(0);
+        expect(
+          inlineRegion.textContent?.trim() ?? '',
+        ).toBe('');
+      });
+
+      expect(
+        container.querySelector('[data-testid="jump-to-first-issue"]'),
+      ).toBeNull();
     } finally {
       global.fetch = originalFetch;
     }
@@ -361,6 +399,123 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(submitButton).toBeDisabled();
 
       expect(screen.queryByTestId('jump-to-first-issue')).toBeNull();
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('shifts priority and clears stale errors as different fields become invalid and then recover', async () => {
+    const copy = buildCopy();
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn();
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      const nameInput = screen.getByLabelText(
+        copy.blocks.name.label,
+        { exact: false },
+      ) as HTMLInputElement;
+      const emailInput = screen.getByLabelText(
+        copy.blocks.email.label,
+        { exact: false },
+      ) as HTMLInputElement;
+      const messageInput = screen.getByLabelText(
+        copy.blocks.message.label,
+        { exact: false },
+      ) as HTMLTextAreaElement;
+
+      // Start with both name and email invalid (empty) and submit.
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+      await userEvent.click(submitButton);
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      if (!inlineRegion) return;
+
+      await waitFor(() => {
+        const lines = Array.from(
+          inlineRegion.querySelectorAll('[data-error]'),
+        ) as HTMLElement[];
+        const codes = lines.map((el) => el.dataset.error);
+        expect(codes).toContain('validation_error');
+        expect(
+          codes.some((code) =>
+            code?.startsWith('form-error-name-'),
+          ),
+        ).toBe(true);
+        expect(codes).toContain('form-error-email-invalid');
+      });
+
+      // Fix name only; email stays invalid.
+      await userEvent.type(nameInput, 'Jane Doe');
+
+      await waitFor(() => {
+        const lines = Array.from(
+          inlineRegion.querySelectorAll('[data-error]'),
+        ) as HTMLElement[];
+        const codes = lines.map((el) => el.dataset.error);
+        expect(codes).toContain('validation_error');
+        expect(codes).toContain('form-error-email-invalid');
+        expect(
+          codes.some((code) =>
+            code?.startsWith('form-error-name-'),
+          ),
+        ).toBe(false);
+      });
+
+      // Fix email as well; message is still invalid, so we still expect a message-focused error.
+      await userEvent.type(emailInput, 'example@example.com');
+
+      await waitFor(() => {
+        const lines = Array.from(
+          inlineRegion.querySelectorAll('[data-error]'),
+        ) as HTMLElement[];
+        const codes = lines.map((el) => el.dataset.error);
+        expect(codes).toContain('validation_error');
+        expect(
+          codes.some((code) =>
+            code?.startsWith('form-error-message-'),
+          ),
+        ).toBe(true);
+        expect(codes).not.toContain('form-error-email-invalid');
+        expect(
+          codes.some((code) =>
+            code?.startsWith('form-error-name-'),
+          ),
+        ).toBe(false);
+      });
+
+      // Finally fix the message; now no errors should remain and jump button should disappear.
+      await userEvent.type(
+        messageInput,
+        'This is a valid message.',
+      );
+
+      await waitFor(() => {
+        const lines = Array.from(
+          inlineRegion.querySelectorAll('[data-error]'),
+        ) as HTMLElement[];
+        const codes = lines.map((el) => el.dataset.error);
+        expect(codes.filter(Boolean)).toHaveLength(0);
+        expect(
+          inlineRegion.textContent?.trim() ?? '',
+        ).toBe('');
+      });
+
+      expect(
+        container.querySelector('[data-testid="jump-to-first-issue"]'),
+      ).toBeNull();
     } finally {
       global.fetch = originalFetch;
     }

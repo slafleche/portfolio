@@ -22,6 +22,17 @@ export const MessageCentreBlock = forwardRef<
     ],
   );
 
+  const inlineCodes = useMemo(
+    () => [
+      ...(messages.globalCodes ?? []),
+      ...(messages.blockCodes ?? []),
+    ],
+    [
+      messages.globalCodes,
+      messages.blockCodes,
+    ],
+  );
+
   const toastMessage = useMemo(() => {
     if (messages.globals.length > 0) return messages.globals[0];
     if (messages.blocks.length === 1) return messages.blocks[0];
@@ -48,11 +59,18 @@ export const MessageCentreBlock = forwardRef<
       >
         {inlineMessages.length ? (
           <div ref={ref as Ref<HTMLDivElement>} className={s.status}>
-            {inlineMessages.map((line, index) => (
-              <span key={`${index}-${line}`} className={s.statusText}>
-                {line}
-              </span>
-            ))}
+            {inlineMessages.map((line, index) => {
+              const code = inlineCodes[index];
+              return (
+                <span
+                  key={`${index}-${line}`}
+                  className={s.statusText}
+                  data-error={code ?? undefined}
+                >
+                  {line}
+                </span>
+              );
+            })}
           </div>
         ) : null}
       </div>

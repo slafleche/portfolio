@@ -88,6 +88,8 @@ export function buildContactFormOutcome(
   const messagesForUi: MessageCentreMessages = {
     globals: [],
     blocks: [],
+    globalCodes: [],
+    blockCodes: [],
     toastFallback: undefined,
   };
 
@@ -110,6 +112,7 @@ export function buildContactFormOutcome(
     );
     if (blockMessage) {
       messagesForUi.blocks.push(blockMessage.text);
+      messagesForUi.blockCodes?.push(blockMessage.code);
     }
   });
 
@@ -159,6 +162,9 @@ export function buildContactFormOutcome(
 
   if (statusSummary) {
     messagesForUi.globals.push(statusSummary);
+    if (statusKey) {
+      messagesForUi.globalCodes?.push(statusKey);
+    }
   }
 
   if (statusSummary) {

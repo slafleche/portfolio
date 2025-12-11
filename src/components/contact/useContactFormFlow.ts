@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useFormBlocksContext } from './formBlocks.context';
 import type {
@@ -33,8 +33,13 @@ export function useContactFormFlow(
   options: UseContactFormFlowOptions,
 ): ContactFormFlowApi {
   const { submitHelper, onSuccessStateChange } = options;
-  const { getRegistrationsSnapshot, enableContinuousValidation } =
-    useFormBlocksContext();
+  const {
+    getRegistrationsSnapshot,
+    enableContinuousValidation,
+    recordValidationResult,
+    getValidationResultsSnapshot,
+    validationResultsVersion,
+  } = useFormBlocksContext();
 
   const [
     isSubmitting,
@@ -68,13 +73,22 @@ export function useContactFormFlow(
         const contract = registration.getContract?.();
         if (!contract) return;
         const result = contract.validate();
+        recordValidationResult(result);
         results.push(result);
       });
 
       return results;
     }, [
       getRegistrationsSnapshot,
+      recordValidationResult,
     ]);
+
+  useEffect(() => {
+    setLatestValidationResults(getValidationResultsSnapshot());
+  }, [
+    getValidationResultsSnapshot,
+    validationResultsVersion,
+  ]);
 
   const collectPayload =
     useCallback((): ContactFormBlockPayload<unknown>[] => {

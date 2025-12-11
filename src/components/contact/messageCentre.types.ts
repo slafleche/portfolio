@@ -26,5 +26,9 @@ export type MessageCentreTransmission<
 export type MessageCentreMessages = {
   globals: string[];
   blocks: string[];
+  // Optional machine-readable codes aligned with `globals` and `blocks`.
+  // When present, these can be exposed via data attributes for testing.
+  globalCodes?: string[];
+  blockCodes?: string[];
   toastFallback?: string;
 };

@@ -88,6 +88,7 @@ export function NameBlock({
     setHasBlurred,
   ] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
   const evaluation = useMemo(
     () => evaluateNameField(value),
     [
@@ -103,11 +104,8 @@ export function NameBlock({
 
   const liveValidationRegistration = hasBlurred;
 
-  const {
-    continuousValidation,
-    recordValidationResult,
-  } = useFormBlock(
-    useMemo(() => {
+  const registration = useMemo(
+    () => {
       const baseContract = buildNameContract(
         id,
         value,
@@ -124,11 +122,7 @@ export function NameBlock({
         key: 'name',
         focus: contract.focus,
         getValue: () => value,
-        validate: () => {
-          const result = contract.validate();
-          recordValidationResult(result);
-          return result.valid;
-        },
+        validate: () => contract.validate().valid,
         getValidationSummary: () => {
           if (evaluation.validation.ok) return null;
           if (evaluation.validation.reason === 'too_long') {
@@ -139,14 +133,20 @@ export function NameBlock({
         liveValidation: liveValidationRegistration,
         getContract: () => contract,
       };
-    }, [
+    },
+    [
       copy,
       evaluation,
       id,
       liveValidationRegistration,
       value,
-    ]),
+    ],
   );
+
+  const {
+    continuousValidation,
+    recordValidationResult,
+  } = useFormBlock(registration);
 
   const liveValidation = hasBlurred || continuousValidation;
 

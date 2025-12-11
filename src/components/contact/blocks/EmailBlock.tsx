@@ -97,11 +97,8 @@ export function EmailBlock({
 
   const liveValidationRegistration = hasBlurred;
 
-  const {
-    continuousValidation,
-    recordValidationResult,
-  } = useFormBlock(
-    useMemo(() => {
+  const registration = useMemo(
+    () => {
       const baseContract = buildEmailContract(
         id,
         value,
@@ -118,11 +115,7 @@ export function EmailBlock({
         key: 'email',
         focus: contract.focus,
         getValue: () => value,
-        validate: () => {
-          const result = contract.validate();
-          recordValidationResult(result);
-          return result.valid;
-        },
+        validate: () => contract.validate().valid,
         getValidationSummary: () => {
           if (evaluation.validation.ok) return null;
           return copy.errors.invalid;
@@ -130,14 +123,20 @@ export function EmailBlock({
         liveValidation: liveValidationRegistration,
         getContract: () => contract,
       };
-    }, [
+    },
+    [
       copy,
       evaluation,
       id,
       value,
       liveValidationRegistration,
-    ]),
+    ],
   );
+
+  const {
+    continuousValidation,
+    recordValidationResult,
+  } = useFormBlock(registration);
 
   const liveValidation = hasBlurred || continuousValidation;
   const localErrorText =
