@@ -95,6 +95,8 @@
     "start": "next start",
     "lint:locales": "yarn locales:markdown && tsx scripts/checkLocaleMarkdown.ts",
     "lint": "eslint .",
+    "lint:secrets:staged": "node scripts/checkSecretLookout.mjs",
+    "lint:secrets": "SECRET_LOOKOUT_ALL=1 node scripts/checkSecretLookout.mjs",
     "lint:rules": "LINT_RULES_ALL=1 node scripts/checkLintRules.mjs --human",
     "lint:fix": "eslint --fix .",
     "format:code": "prettier --write .",

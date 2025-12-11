@@ -52,7 +52,7 @@ const buildRequest = (
 
 const validPayload = () => ({
   name: 'Jane Doe',
-  email: 'jane@example.com',
+  email: 'example@example.com',
   message: 'Hello from a test message!',
   token: 'token-123',
   hp: '',

@@ -14,8 +14,8 @@ const setEnv = () => {
   process.env = {
     ...ORIGINAL_ENV,
     BREVO_API_KEY: 'test-key',
-    MAIL_FROM: 'from@example.com',
-    MAIL_TO: 'to@example.com',
+    MAIL_FROM: 'example@example.com',
+    MAIL_TO: 'example@example.com',
     BREVO_HEALTH_TIMEOUT_MS: '50',
   } as NodeJS.ProcessEnv;
 };

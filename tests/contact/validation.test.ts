@@ -10,7 +10,7 @@ import {
 
 const baseInput = {
   name: 'Jane Doe',
-  email: 'jane@example.com',
+  email: 'example@example.com',
   message: 'Hello there! This is a valid message.',
   token: 'turnstile-token',
   hp: '',
@@ -20,7 +20,7 @@ describe('contactForm validation', () => {
   it('normalizes casing, trims values, and clamps lengths', () => {
     const draft = normalizeInput({
       name: '  Jane  ',
-      email: 'USER@Example.COM ',
+      email: 'USER@EXAMPLE.COM ',
       message: 'hi',
       token: ' tok ',
       hp: ' trap ',
@@ -84,10 +84,10 @@ describe('contactForm validation', () => {
     expect(result.errors).toEqual({});
   });
 });
-it('flags too-short messages separately from empty ones', () => {
-  const result = validateDraft({
-    name: 'Jane',
-    email: 'jane@example.com',
+  it('flags too-short messages separately from empty ones', () => {
+    const result = validateDraft({
+      name: 'Jane',
+      email: 'example@example.com',
     message: 'short',
     token: 'token',
     hp: '',

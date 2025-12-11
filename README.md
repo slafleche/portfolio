@@ -105,14 +105,15 @@
   yarn fonts:urls                    # rebuild src/data/generated/googleFonts.gen.ts
   VERIFY_FONT_URLS=true yarn fonts:urls  # repeat with live HEAD checks against Google Fonts
   ```
-- Enable the locale guardrail pre-commit hook so commits fail when markdown
-  translations are missing:
+- Enable the guardrail pre-commit hook so commits fail when locale markdown is
+  missing or when the secret lookout finds potential emails/API keys in staged
+  changes:
   ```bash
   cp scripts/pre-commit.sh .git/hooks/pre-commit
   chmod +x .git/hooks/pre-commit
   ```
-  The hook runs `yarn lint:locales` on every commit; fix any reported issues and
-  re-run `git commit`.
+  The hook runs `yarn lint:locales` and `yarn lint:secrets` on every commit; fix
+  any reported issues and re-run `git commit`.
 
 ### Favicons pipeline
 

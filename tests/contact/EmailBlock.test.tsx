@@ -60,7 +60,7 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const initialValue = input.value;
 
-      void userEvent.type(input, 'user@example.com');
+      void userEvent.type(input, 'example@example.com');
 
       expect(input.value).toBe(initialValue);
       expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
@@ -207,7 +207,7 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
       await userEvent.clear(input);
-      await userEvent.type(input, 'user@example.com');
+      await userEvent.type(input, 'example@example.com');
 
       expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
@@ -232,7 +232,7 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).not.toBeNull();
       if (!input) return;
 
-      await userEvent.type(input, 'user@example.com');
+      await userEvent.type(input, 'example@example.com');
       fireEvent.blur(input);
 
       expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
@@ -268,7 +268,7 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
       await userEvent.clear(input);
-      await userEvent.type(input, 'user@example.com');
+      await userEvent.type(input, 'example@example.com');
 
       expect(screen.queryByText(emailCopy.errors.invalid)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
@@ -426,10 +426,10 @@ describe('Contact form block contract: EmailBlock', () => {
     expect(input).not.toBeNull();
     if (!input) return;
 
-    await userEvent.type(input, 'user@example.com');
+    await userEvent.type(input, 'example@example.com');
 
     const registration = getRegistration();
-    expect(registration?.getValue?.()).toBe('user@example.com');
+    expect(registration?.getValue?.()).toBe('example@example.com');
   });
 
   it('validate returns false for invalid and true for valid emails', async () => {
@@ -457,7 +457,7 @@ describe('Contact form block contract: EmailBlock', () => {
     expect(registration?.validate?.()).toBe(false);
 
     await userEvent.clear(input);
-    await userEvent.type(input, 'user@example.com');
+    await userEvent.type(input, 'example@example.com');
 
     registration = getRegistration();
     expect(registration?.validate?.()).toBe(true);
@@ -554,7 +554,7 @@ describe('Contact form block contract: EmailBlock', () => {
     expect(input).not.toBeNull();
     if (!input) return;
 
-    await userEvent.type(input, 'user@example.com');
+    await userEvent.type(input, 'example@example.com');
 
     const result = validateEmail();
     expect(result.valid).toBe(true);

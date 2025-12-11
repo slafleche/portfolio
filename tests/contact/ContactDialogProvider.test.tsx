@@ -69,7 +69,7 @@ describe('ContactDialogProvider', () => {
       );
 
       await userEvent.type(nameInput, 'Jane Doe');
-      await userEvent.type(emailInput, 'jane@example.com');
+      await userEvent.type(emailInput, 'example@example.com');
       await userEvent.type(
         messageInput,
         'This is a sufficiently long message for validation.',

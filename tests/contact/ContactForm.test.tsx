@@ -72,7 +72,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         screen.getByLabelText(copy.blocks.email.label, {
           exact: false,
         }),
-        'jane@example.com',
+        'example@example.com',
       );
       await userEvent.type(
         screen.getByLabelText(copy.blocks.message.label, {
@@ -230,7 +230,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       ) as HTMLTextAreaElement;
 
       await userEvent.type(nameInput, 'Jane Doe');
-      await userEvent.type(emailInput, 'jane@example.com');
+      await userEvent.type(emailInput, 'example@example.com');
       await userEvent.type(
         messageInput,
         'This is a sufficiently long message for validation.',

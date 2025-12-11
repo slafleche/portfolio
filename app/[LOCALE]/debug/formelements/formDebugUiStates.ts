@@ -244,7 +244,7 @@ export const uiPermutations: readonly UiPermutation[] = [
       },
       email: {
         label: baseFieldLabels.email,
-        value: 'user@blocked-domain.dev',
+        value: 'example@example.com',
         error: 'Brevo rejected this domain. Try a different address.',
         errorKey: 'form-error-email-invalid',
         badge: 'Brevo response',
@@ -276,7 +276,7 @@ export const uiPermutations: readonly UiPermutation[] = [
       },
       email: {
         label: baseFieldLabels.email,
-        value: 'hello@studio-tier.one',
+        value: 'example@example.com',
         success: 'We will reply here.',
         dataDebug: 'valid',
       },

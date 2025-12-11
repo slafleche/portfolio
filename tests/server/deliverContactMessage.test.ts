@@ -12,7 +12,7 @@ const ORIGINAL_ENV = { ...process.env };
 
 const buildDraft = (): ContactFormDraft => ({
   name: 'Test Sender',
-  email: 'sender@example.com',
+  email: 'example@example.com',
   message: 'Hello from a test payload with enough length.',
   token: 'turnstile-token',
   hp: '',
