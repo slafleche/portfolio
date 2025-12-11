@@ -109,7 +109,6 @@ function* findApiKeyMatches(line) {
       pattern.regex.flags.includes('i') ? 'gi' : 'g',
     );
     let match;
-    // eslint-disable-next-line no-cond-assign
     while ((match = regex.exec(line)) !== null) {
       yield {
         pattern,

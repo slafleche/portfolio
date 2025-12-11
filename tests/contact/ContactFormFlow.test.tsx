@@ -342,9 +342,9 @@ describe('ContactFormFlow', () => {
       validateMock,
     };
 
-    let resolveSubmit:
-      | ((code: FormServerResponseCode) => void)
-      | null = null;
+    let resolveSubmit: (code: FormServerResponseCode) => void = () => {
+      throw new Error('Expected submit promise resolver');
+    };
 
     const submitHelper: ContactFormFlowSubmitHelper = vi
       .fn()
@@ -377,9 +377,6 @@ describe('ContactFormFlow', () => {
     expect(submitHelper).toHaveBeenCalledTimes(1);
     expect(validateMock).toHaveBeenCalledTimes(1);
 
-    if (!resolveSubmit) {
-      throw new Error('Expected submit promise resolver');
-    }
     resolveSubmit('success');
 
     await waitFor(() => {

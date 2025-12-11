@@ -107,11 +107,11 @@ describe('deliverContactMessage', () => {
         ok: false,
         status: 500,
         json: async () => ({ message: 'down' }),
-      } as Response)
+      } as unknown as Response)
       .mockResolvedValueOnce({
         ok: true,
         status: 202,
-      } as Response);
+      } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
     const { deliverContactMessage } = await import(
@@ -140,11 +140,11 @@ describe('deliverContactMessage', () => {
         ok: false,
         status: 429,
         json: async () => ({ message: 'rate limited' }),
-      } as Response)
+      } as unknown as Response)
       .mockResolvedValueOnce({
         ok: true,
         status: 202,
-      } as Response);
+      } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
     const { deliverContactMessage } = await import(
@@ -173,7 +173,7 @@ describe('deliverContactMessage', () => {
         ok: false,
         status: 400,
         json: async () => ({ message: 'invalid parameters' }),
-      } as Response);
+      } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
     const { deliverContactMessage } = await import(
@@ -200,7 +200,7 @@ describe('deliverContactMessage', () => {
         ok: false,
         status: 403,
         json: async () => ({ message: 'forbidden' }),
-      } as Response);
+      } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
     const { deliverContactMessage } = await import(
@@ -229,11 +229,11 @@ describe('deliverContactMessage', () => {
         json: async () => {
           throw new Error('invalid json');
         },
-      } as Response)
+      } as unknown as Response)
       .mockResolvedValueOnce({
         ok: true,
         status: 202,
-      } as Response);
+      } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
     const { deliverContactMessage } = await import(
@@ -263,11 +263,11 @@ describe('deliverContactMessage', () => {
         ok: false,
         status: 502,
         json: async () => 'upstream gateway failed',
-      } as Response)
+      } as unknown as Response)
       .mockResolvedValueOnce({
         ok: true,
         status: 202,
-      } as Response);
+      } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
     const { deliverContactMessage } = await import(

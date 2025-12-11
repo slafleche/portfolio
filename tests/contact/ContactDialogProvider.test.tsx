@@ -11,13 +11,13 @@ import type { Translator } from '@/lib/locales/sections/helpers.locale';
 
 const buildFormCopy = () =>
   buildContactFormCopy(
-    ((key) =>
+    ((key: string) =>
       enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
   );
 
 const buildPrivacy = () =>
   buildPrivacyCopy(
-    ((key) => {
+    ((key: string) => {
       if (key === 'privacy-title') return 'Privacy';
       if (key === 'privacy-href') return '#privacy';
       if (key === 'privacy-updated') return '';

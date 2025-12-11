@@ -13,10 +13,12 @@ import {
   setContactFormDebugEnabled,
   setContactFormDebugLogger,
 } from '@/components/contact/contactFormDebugLogger';
+import type { Translator } from '@/lib/locales/sections/helpers.locale';
 
 const buildCopy = () =>
   buildContactFormCopy(
-    (key) => enFormCopy[key as keyof typeof enFormCopy],
+    ((key: string) =>
+      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
   );
 
 const buildStatusMessages = (copy = buildCopy()) =>
@@ -62,7 +64,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       }),
     } as Response);
 
-    // @ts-expect-error test override
     global.fetch = fetchMock;
 
     try {
@@ -113,7 +114,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       );
       expect(toastRegion).toBeNull();
     } finally {
-      // @ts-expect-error restoring test override
       global.fetch = originalFetch;
     }
   });
@@ -125,7 +125,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const originalFetch = global.fetch;
     const fetchMock = vi.fn();
 
-    // @ts-expect-error test override
     global.fetch = fetchMock;
 
     try {
@@ -155,7 +154,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       expect(submitButton).toBeDisabled();
     } finally {
-      // @ts-expect-error restoring test override
       global.fetch = originalFetch;
     }
   });
@@ -166,7 +164,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const originalFetch = global.fetch;
     const fetchMock = vi.fn();
 
-    // @ts-expect-error test override
     global.fetch = fetchMock;
 
     try {
@@ -197,7 +194,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       expect(fetchMock).not.toHaveBeenCalled();
     } finally {
-      // @ts-expect-error restoring test override
       global.fetch = originalFetch;
     }
   });
@@ -216,7 +212,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       }),
     } as Response);
 
-    // @ts-expect-error test override
     global.fetch = fetchMock;
 
     try {
@@ -251,7 +246,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(messageCentreRoot).not.toBeNull();
       if (!messageCentreRoot) return;
       const scrollSpy = vi.fn();
-      // @ts-expect-error jsdom does not define scrollIntoView by default
       messageCentreRoot.scrollIntoView = scrollSpy;
 
       const submitButton = screen.getByRole('button', {
@@ -279,7 +273,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       expect(screen.queryByTestId('jump-to-first-issue')).toBeNull();
     } finally {
-      // @ts-expect-error restoring test override
       global.fetch = originalFetch;
     }
   });
@@ -301,7 +294,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       }),
     } as Response);
 
-    // @ts-expect-error test override
     global.fetch = fetchMock;
 
     try {
@@ -338,7 +330,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       expect(logger).not.toHaveBeenCalled();
     } finally {
-      // @ts-expect-error restoring test override
       global.fetch = originalFetch;
     }
   });
@@ -361,7 +352,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       }),
     } as Response);
 
-    // @ts-expect-error test override
     global.fetch = fetchMock;
 
     try {
@@ -409,7 +399,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(types).toContain('submit_attempt');
       expect(types).toContain('submit_result');
     } finally {
-      // @ts-expect-error restoring test override
       global.fetch = originalFetch;
     }
   });
@@ -425,7 +414,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const originalFetch = global.fetch;
     const fetchMock = vi.fn();
 
-    // @ts-expect-error test override
     global.fetch = fetchMock;
 
     try {
@@ -485,11 +473,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(lastResult.submitStatus).toBe('validation_error');
       expect(
         lastResult.invalidFields.some(
-          (field) => field.id.includes('message'),
+          (field: { id: string }) =>
+            field.id.includes('message'),
         ),
       ).toBe(true);
     } finally {
-      // @ts-expect-error restoring test override
       global.fetch = originalFetch;
     }
   });
