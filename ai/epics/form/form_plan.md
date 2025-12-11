@@ -20,20 +20,45 @@ and debug tooling.
 
 ## 2. Integration / end-to-end coverage
 
-- [ ] Add at least one integration-style test that: - [ ] Drives `ContactForm`
-      (or a thin shell) with realistic user input. - [ ] Uses the real
-      `/api/contact` handler (with Turnstile/Brevo mocked at the server layer)
-      instead of a hard-coded `fetch` response. - [ ] Asserts the happy path: no
-      validation messages, `success` status, and appropriate success UI copy.
-- [ ] Add tests for non-success server statuses as seen from the UI: - [ ]
-      `validation_error` from the server (distinct from client-only errors). - [
-      ] `rate_limited` (with any countdown or retry hints). - [ ]
-      `service_unavailable`. - [ ] `not_configured` (catastrophic, disables the
-      form). - [ ] `blocked` (honeypot/Turnstile). - [ ] `generic_error`.
-- [ ] For each status above, assert: - [ ] Correct global banner copy from the
-      message centre. - [ ] Correct field disabling/readonly behaviour. - [ ]
-      Presence or absence of the “jump to first issue” control where it makes
-      sense (validation errors only).
+- [ ] Add at least one integration-style test that:
+  - [ ] Drives `ContactForm` (or a thin shell) with realistic user input.
+  - [ ] Uses the real `/api/contact` handler (with Turnstile/Brevo mocked at
+        the server layer) instead of a hard-coded `fetch` response.
+  - [ ] Asserts the happy path: no validation messages, `success` status, and
+        appropriate success UI copy.
+- [ ] Add tests for non-success server statuses as seen from the UI:
+  - [ ] `validation_error` from the server (distinct from client-only errors).
+  - [ ] `rate_limited` (with any countdown or retry hints).
+  - [ ] `service_unavailable`.
+  - [ ] `not_configured` (catastrophic, disables the form).
+  - [ ] `blocked` (honeypot/Turnstile).
+  - [ ] `generic_error`.
+- [ ] For each status above, assert:
+  - [ ] Correct global banner copy from the message centre.
+  - [ ] Correct field disabling/readonly behaviour.
+  - [ ] Presence or absence of the “jump to first issue” control where it makes
+        sense (validation errors only).
+- [ ] Add targeted coverage at each layer for the “short-but-non-empty message”
+      scenario:
+  - [ ] In `tests/contact/validation.test.ts`, add boundary tests around
+        `MESSAGE_MIN_LENGTH` so that:
+    - [ ] A message just below the threshold yields
+          `errors.message = 'form-error-message-too_short'` and
+          `status = 'validation_error'`.
+    - [ ] A message at or above the threshold yields no message error and
+          `status = null`.
+  - [ ] In `tests/contact/ContactFormFlow.test.tsx`, add flow tests where:
+    - [ ] All blocks are valid → submit helper is called once, `invalid = false`
+          and submit status reflects success.
+    - [ ] Only the Message block is invalid (short-but-non-empty) →
+          `invalid = true`, submit helper is not called, and the latest
+          validation results include the message block.
+  - [ ] In `tests/contact/ContactForm.test.tsx`, add UI tests where:
+    - [ ] A realistic “should succeed” payload (with a long-enough message)
+          submits successfully, shows success copy, and leaves no validation
+          banner.
+    - [ ] A valid Name/Email but too-short Message yields a validation banner,
+          a Message block error, and no `fetch` call.
 
 ## 3. Dev/debug tooling
 

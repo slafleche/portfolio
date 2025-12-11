@@ -95,6 +95,29 @@ debug tooling needed so that the entire contact stack is trustworthy.
 - The bug we observed (fields appear valid but the form still shows the generic
   validation banner and refuses to send) is captured as a testable scenario and
   has a documented root cause.
+- We have explicit coverage at each key layer:
+  - Validation layer (`validateDraft`):
+    - A realistic, valid payload (for example “real world” Name/Email plus a
+      message at or above `MESSAGE_MIN_LENGTH`) produces `errors = {}` and
+      `status = null`.
+    - A short-but-non-empty message just below `MESSAGE_MIN_LENGTH` produces
+      `errors.message = 'form-error-message-too_short'` and
+      `status = 'validation_error'`, with boundary tests that pin “just below”
+      vs “just at/above” the threshold.
+  - Flow layer (`useContactFormFlow` + form blocks):
+    - When all blocks are valid, the flow calls its submit helper once with a
+      full payload and reports `invalid = false` and a `success` submit status.
+    - When only the Message block is invalid (short-but-non-empty), the flow
+      reports `invalid = true`, `submitStatus = 'validation_error'`, does not
+      call the submit helper, and exposes enough state to drive the “jump to
+      first issue” control.
+  - UI layer (`ContactForm` + outcome/message centre):
+    - A realistic “should succeed” payload entered via the real form triggers
+      exactly one submission, shows the success copy, and leaves no lingering
+      validation banner.
+    - With valid Name and Email but a too-short, non-empty Message, the form
+      shows the validation banner and Message block error, does not call
+      `fetch`, and keeps the outcome in a stable, testable state.
 - There is at least one integration-style test that:
   - Drives `ContactForm` (or a thin harness around it) with realistic input.
   - Hits the real `/api/contact` handler or an equivalent in-process route
