@@ -29,6 +29,11 @@ Risks:
 - Over-logging PII.
 - Missing anti-abuse guards (honeypot, Turnstile, rate limits).
 
+Brevo delivery and contact-flow tests are governed by epic
+`brevo.deliveryTests` (see `ai/epics/brevo.deliveryTests/` for details); that
+epic now provides full unit and route coverage for the Brevo delivery client,
+`/api/contact`, and contact health route.
+
 ### Next — Deployment Prep
 
 - [ ] Add SPF + DKIM records to GoDaddy; wait for Brevo to mark "authenticated".

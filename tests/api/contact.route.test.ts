@@ -88,7 +88,7 @@ describe('POST /api/contact', () => {
     expect(mockedDeliver).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'Jane Doe',
-        email: 'jane@example.com',
+        email: 'example@example.com',
       }),
     );
     expect(infoSpy).toHaveBeenCalledWith(
@@ -233,6 +233,87 @@ describe('POST /api/contact', () => {
     const json = await response.json();
     expect(response.status).toBe(503);
     expect(json.code).toBe('not_configured');
+  });
+
+  it('maps Brevo 401 responses to not_configured code', async () => {
+    mockedDeliver.mockResolvedValue(
+      buildDeliveryResult({
+        ok: false,
+        status: 401,
+        error: { message: 'unauthorized' },
+      }),
+    );
+    const response = await contactRoute(
+      buildRequest(validPayload(), { locale: 'en' }),
+    );
+    const json = await response.json();
+    expect(response.status).toBe(401);
+    expect(json.code).toBe('not_configured');
+  });
+
+  it('maps Brevo 403 responses to not_configured code', async () => {
+    mockedDeliver.mockResolvedValue(
+      buildDeliveryResult({
+        ok: false,
+        status: 403,
+        error: { message: 'forbidden' },
+      }),
+    );
+    const response = await contactRoute(
+      buildRequest(validPayload(), { locale: 'en' }),
+    );
+    const json = await response.json();
+    expect(response.status).toBe(403);
+    expect(json.code).toBe('not_configured');
+  });
+
+  it('maps Brevo 429 responses to rate_limited code', async () => {
+    mockedDeliver.mockResolvedValue(
+      buildDeliveryResult({
+        ok: false,
+        status: 429,
+        error: { message: 'too many requests' },
+      }),
+    );
+    const response = await contactRoute(
+      buildRequest(validPayload(), { locale: 'en' }),
+    );
+    const json = await response.json();
+    expect(response.status).toBe(429);
+    expect(json.code).toBe('rate_limited');
+  });
+
+  it('maps unexpected Brevo failures to generic_error code', async () => {
+    mockedDeliver.mockResolvedValue(
+      buildDeliveryResult({
+        ok: false,
+        status: 418,
+        error: { message: "I'm a teapot" },
+      }),
+    );
+    const response = await contactRoute(
+      buildRequest(validPayload(), { locale: 'en' }),
+    );
+    const json = await response.json();
+    expect(response.status).toBe(418);
+    expect(json.code).toBe('generic_error');
+    expect(JSON.stringify(json)).not.toContain('teapot');
+    expect(JSON.stringify(json)).not.toContain('Brevo');
+  });
+
+  it('returns service_unavailable when Brevo delivery throws', async () => {
+    mockedDeliver.mockRejectedValue(
+      new Error('brevo request failed'),
+    );
+    const response = await contactRoute(
+      buildRequest(validPayload(), { locale: 'en' }),
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(json.code).toBe('service_unavailable');
+    expect(JSON.stringify(json)).not.toContain('brevo');
+    expect(JSON.stringify(json)).not.toContain('failed');
   });
 
   it('rejects oversized payloads with 413', async () => {

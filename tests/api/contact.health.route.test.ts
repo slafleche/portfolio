@@ -57,6 +57,24 @@ describe('GET /api/contact/health', () => {
     expect(json.ok).toBe(true);
     expect(json.brevo.reachable).toBe(true);
     expect(json.brevo.status).toBe(200);
+    expect(json.brevo.durationMs).toBeGreaterThanOrEqual(0);
+  });
+
+  it('marks Brevo unreachable when account endpoint responds non-200', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue({ ok: false, status: 500 });
+    vi.stubGlobal('fetch', fetchMock);
+    const response = await healthRoute();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(response.status).toBe(503);
+    const json = await response.json();
+    expect(json.ok).toBe(false);
+    expect(json.brevo.attempted).toBe(true);
+    expect(json.brevo.reachable).toBe(false);
+    expect(json.brevo.status).toBe(500);
+    expect(json.brevo.error).toContain('500');
+    expect(json.brevo.durationMs).toBeGreaterThanOrEqual(0);
   });
 
   it('fails health when Brevo probe throws', async () => {
@@ -69,7 +87,9 @@ describe('GET /api/contact/health', () => {
     expect(response.status).toBe(503);
     const json = await response.json();
     expect(json.ok).toBe(false);
+    expect(json.brevo.attempted).toBe(true);
     expect(json.brevo.reachable).toBe(false);
     expect(json.brevo.error).toContain('network down');
+    expect(json.brevo.durationMs).toBeGreaterThanOrEqual(0);
   });
 });

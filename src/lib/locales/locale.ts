@@ -3,7 +3,7 @@ import {
   LOCALE_LOADERS,
   type Locale,
   type Messages,
-} from '../../data/locales';
+} from '@/lib/locales/translations';
 import {
   MARKDOWN_MESSAGE_KEYS,
   type LocaleMessagesShape,
