@@ -3,19 +3,16 @@ import { DEFAULT_LOCALE } from './locale';
 import type { Locale } from '@/data/locales';
 import { escapeHtml } from '@/lib/stringUtils';
 
+const TYPED_HTML_MESSAGES: Record<Locale, Record<string, string>> =
+  HTML_MESSAGES as Record<Locale, Record<string, string>>;
+
 export function getHtmlMessage(
   locale: Locale,
   key: string,
   fallbackText: string,
 ): string {
-  const localeHtml =
-    (HTML_MESSAGES as Record<string, Record<string, string>>)[
-      locale
-    ] ?? {};
-  const fallbackHtml =
-    (HTML_MESSAGES as Record<string, Record<string, string>>)[
-      DEFAULT_LOCALE
-    ] ?? {};
+  const localeHtml = TYPED_HTML_MESSAGES[locale] ?? {};
+  const fallbackHtml = TYPED_HTML_MESSAGES[DEFAULT_LOCALE] ?? {};
 
   return (
     localeHtml[key] ?? fallbackHtml[key] ?? escapeHtml(fallbackText)
