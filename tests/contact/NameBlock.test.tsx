@@ -1,15 +1,20 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
 import { renderNameBlockWithFormBlocks } from './helpers/nameBlock.harness';
+import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import { NameBlock } from '@/components/contact/blocks/NameBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { NameBlockLocale } from '@/lib/locales/form/form.name';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
 import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
+
+type NameBlockValidationSnapshot = {
+  results: unknown[];
+};
 
 const nameCopy: NameBlockLocale = {
   label: enFormCopy['form-name-label'],
@@ -337,6 +342,149 @@ describe('Contact form block tests: NameBlock', () => {
 
       expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
+    });
+
+    it('reports validation results only when the live validation state changes', async () => {
+      const updates: NameBlockValidationSnapshot[] = [];
+      const handleUpdate = vi.fn((results: unknown[]) => {
+        updates.push({
+          results,
+        });
+      });
+
+      const { container } = render(
+        <FormBlocksProvider>
+          <FormBlocksValidationObserver
+            onUpdate={handleUpdate}
+          />
+          <NameBlock
+            id="test-name-block"
+            order={0}
+            copy={nameCopy}
+            disabled={false}
+          />
+        </FormBlocksProvider>,
+      );
+
+      const input = container.querySelector(
+        'input[data-input="text"]',
+      ) as HTMLInputElement | null;
+
+      expect(input).not.toBeNull();
+      if (!input) return;
+
+      // Initial render: no validation results recorded.
+      expect(handleUpdate).not.toHaveBeenCalled();
+
+      // First blur with empty value: enters live validation with a
+      // required-style error.
+      fireEvent.blur(input);
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(1);
+      });
+
+      // Typing a too-short but non-empty name keeps the block in the
+      // same "required" error bucket; live reporting should not emit
+      // an additional validation result for each keystroke.
+      const tooShortValue = 'x'.repeat(
+        Math.max(1, NAME_LIMIT.min - 1),
+      );
+      await userEvent.type(input, tooShortValue);
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(1);
+      });
+
+      // Once the value becomes valid, live reporting should emit a
+      // single new validation result (messages cleared).
+      const remaining = NAME_LIMIT.min - tooShortValue.length;
+      await userEvent.type(input, 'x'.repeat(remaining));
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(2);
+      });
+
+      const lastSnapshot = updates[updates.length - 1];
+      expect(
+        Array.isArray(lastSnapshot.results) &&
+          lastSnapshot.results.some(
+            (result) =>
+              typeof result === 'object' &&
+              result !== null &&
+              'id' in result &&
+              (result as { id: string }).id === 'test-name-block' &&
+              'valid' in result &&
+              (result as { valid: boolean }).valid === true,
+          ),
+      ).toBe(true);
+    });
+
+    it('emits at most one validation snapshot per name error bucket transition', async () => {
+      const updates: NameBlockValidationSnapshot[] = [];
+      const handleUpdate = vi.fn((results: unknown[]) => {
+        updates.push({
+          results,
+        });
+      });
+
+      const { container } = render(
+        <FormBlocksProvider>
+          <FormBlocksValidationObserver
+            onUpdate={handleUpdate}
+          />
+          <NameBlock
+            id="test-name-block"
+            order={0}
+            copy={nameCopy}
+            disabled={false}
+          />
+        </FormBlocksProvider>,
+      );
+
+      const input = container.querySelector(
+        'input[data-input="text"]',
+      ) as HTMLInputElement | null;
+
+      expect(input).not.toBeNull();
+      if (!input) return;
+
+      // Empty + blur → required-style bucket.
+      fireEvent.blur(input);
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(1);
+      });
+
+      // Too-long value → too_long bucket.
+      const tooLongValue = 'x'.repeat(NAME_LIMIT.max + 1);
+      fireEvent.change(input, { target: { value: tooLongValue } });
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(2);
+      });
+
+      // Valid value → clear errors bucket.
+      const validValue = 'x'.repeat(NAME_LIMIT.min);
+      fireEvent.change(input, { target: { value: validValue } });
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(3);
+      });
+
+      const lastSnapshot = updates[updates.length - 1];
+      expect(
+        Array.isArray(lastSnapshot.results) &&
+          lastSnapshot.results.some(
+            (result) =>
+              typeof result === 'object' &&
+              result !== null &&
+              'id' in result &&
+              (result as { id: string }).id === 'test-name-block' &&
+              'valid' in result &&
+              (result as { valid: boolean }).valid === true,
+          ),
+      ).toBe(true);
     });
   });
 });

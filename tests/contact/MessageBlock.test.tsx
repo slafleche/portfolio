@@ -1,9 +1,15 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
 import { renderMessageBlockWithFormBlocks } from './helpers/messageBlock.harness';
+import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import { MessageBlock } from '@/components/contact/blocks/MessageBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { MessageBlockLocale } from '@/lib/locales/form/form.message';
@@ -13,6 +19,11 @@ import {
   MESSAGE_MAX_LENGTH,
   MESSAGE_URL_LIMIT,
 } from '@/modules/contactForm/validation.constants';
+import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
+
+type MessageBlockValidationSnapshot = {
+  results: unknown[];
+};
 
 const messageCopy: MessageBlockLocale = {
   label: enFormCopy['form-message-label'],
@@ -465,6 +476,137 @@ describe('Contact form block tests: MessageBlock', () => {
         ),
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
+    });
+
+    it('emits at most one validation snapshot per error bucket transition', async () => {
+      const updates: MessageBlockValidationSnapshot[] = [];
+      const handleUpdate = vi.fn((results: unknown[]) => {
+        updates.push({
+          results,
+        });
+      });
+
+      const { container } = render(
+        <FormBlocksProvider>
+          <FormBlocksValidationObserver
+            onUpdate={handleUpdate}
+          />
+          <MessageBlock
+            id="test-message-block"
+            order={0}
+            copy={messageCopy}
+            disabled={false}
+          />
+        </FormBlocksProvider>,
+      );
+
+      const textarea = container.querySelector(
+        'textarea',
+      ) as HTMLTextAreaElement | null;
+
+      expect(textarea).not.toBeNull();
+      if (!textarea) return;
+
+      // Empty + blur → required bucket.
+      fireEvent.blur(textarea);
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(1);
+      });
+
+      // Too-short value → too_short bucket.
+      const tooShortValue = 'x'.repeat(
+        Math.max(1, MESSAGE_MIN_LENGTH - 1),
+      );
+      await userEvent.type(textarea, tooShortValue);
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(2);
+      });
+
+      // Too-long value → too_long bucket (jump directly beyond max).
+      const tooLongValue = 'x'.repeat(MESSAGE_MAX_LENGTH + 1);
+      fireEvent.change(textarea, {
+        target: { value: tooLongValue },
+      });
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(3);
+      });
+    });
+
+    it('reports validation results only when the live validation state changes', async () => {
+      const updates: MessageBlockValidationSnapshot[] = [];
+      const handleUpdate = vi.fn((results: unknown[]) => {
+        updates.push({
+          results,
+        });
+      });
+
+      const { container } = render(
+        <FormBlocksProvider>
+          <FormBlocksValidationObserver
+            onUpdate={handleUpdate}
+          />
+          <MessageBlock
+            id="test-message-block"
+            order={0}
+            copy={messageCopy}
+            disabled={false}
+          />
+        </FormBlocksProvider>,
+      );
+
+      const textarea = container.querySelector(
+        'textarea',
+      ) as HTMLTextAreaElement | null;
+
+      expect(textarea).not.toBeNull();
+      if (!textarea) return;
+
+      expect(handleUpdate).not.toHaveBeenCalled();
+
+      // First blur with empty value records a required error.
+      fireEvent.blur(textarea);
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(1);
+      });
+
+      // Typing within the same too-short bucket should not cause
+      // additional validation snapshots while the error code remains
+      // the same.
+      const tooShortValue = 'x'.repeat(
+        Math.max(1, MESSAGE_MIN_LENGTH - 1),
+      );
+      await userEvent.type(textarea, tooShortValue);
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(1);
+      });
+
+      // Once the message becomes long enough to be valid, live
+      // reporting should emit a single new snapshot to clear errors.
+      const remaining = MESSAGE_MIN_LENGTH - tooShortValue.length;
+      await userEvent.type(textarea, 'x'.repeat(remaining));
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(2);
+      });
+
+      const lastSnapshot = updates[updates.length - 1];
+      expect(
+        Array.isArray(lastSnapshot.results) &&
+          lastSnapshot.results.some(
+            (result) =>
+              typeof result === 'object' &&
+              result !== null &&
+              'id' in result &&
+              (result as { id: string }).id === 'test-message-block' &&
+              'valid' in result &&
+              (result as { valid: boolean }).valid === true,
+          ),
+      ).toBe(true);
     });
 
     it('does not update value or error state when disabled', async () => {

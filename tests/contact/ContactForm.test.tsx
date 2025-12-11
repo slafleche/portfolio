@@ -13,7 +13,23 @@ import {
   setContactFormDebugEnabled,
   setContactFormDebugLogger,
 } from '@/components/contact/contactFormDebugLogger';
+import {
+  FormBlocksProvider,
+} from '@/components/contact/formBlocks.context';
+import { NameBlock } from '@/components/contact/blocks/NameBlock';
+import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
+import { MessageBlock } from '@/components/contact/blocks/MessageBlock';
+import { useContactFormFlow } from '@/components/contact/useContactFormFlow';
+import {
+  type ContactFormFlowSubmitHelper,
+  type ContactFormBlockValidationResult,
+} from '@/components/contact/types/form.types';
+import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+import {
+  MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
+} from '@/modules/contactForm/validation.constants';
 
 const buildCopy = () =>
   buildContactFormCopy(
@@ -48,6 +64,72 @@ afterEach(() => {
   setContactFormDebugEnabled(null);
   setContactFormDebugLogger(null);
 });
+
+type LiveValidationHarnessProps = {
+  copy: ReturnType<typeof buildCopy>;
+  submitHelper: ContactFormFlowSubmitHelper;
+  onValidationUpdate: (
+    results: ContactFormBlockValidationResult[],
+  ) => void;
+};
+
+function LiveValidationHarness({
+  copy,
+  submitHelper,
+  onValidationUpdate,
+}: LiveValidationHarnessProps) {
+  return (
+    <FormBlocksProvider>
+      <FormBlocksValidationObserver
+        onUpdate={onValidationUpdate}
+      />
+      <LiveValidationInner copy={copy} submitHelper={submitHelper} />
+    </FormBlocksProvider>
+  );
+}
+
+type LiveValidationInnerProps = {
+  copy: ReturnType<typeof buildCopy>;
+  submitHelper: ContactFormFlowSubmitHelper;
+};
+
+function LiveValidationInner({
+  copy,
+  submitHelper,
+}: LiveValidationInnerProps) {
+  const flow = useContactFormFlow({
+    submitHelper,
+  });
+
+  return (
+    <form
+      aria-label="live validation harness"
+      onSubmit={(event) => {
+        void flow.handleSubmit(event);
+      }}
+    >
+      <NameBlock
+        id="live-name"
+        order={1}
+        copy={copy.blocks.name}
+        disabled={false}
+      />
+      <EmailBlock
+        id="live-email"
+        order={2}
+        copy={copy.blocks.email}
+        disabled={false}
+      />
+      <MessageBlock
+        id="live-message"
+        order={3}
+        copy={copy.blocks.message}
+        disabled={false}
+      />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
 
 describe('ContactForm — integration with flow and outcome layers', () => {
   it('submits a valid form via the JS flow while keeping the message centre quiet on success', async () => {
@@ -323,6 +405,192 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     } finally {
       global.fetch = originalFetch;
     }
+  });
+
+  it('does not trigger state-update-during-render warnings when live validation turns on', async () => {
+    const copy = buildCopy();
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn();
+    global.fetch = fetchMock;
+
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    try {
+      renderWrappedContactForm(copy, '/api/contact');
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      // First submit with empty fields enables continuous validation
+      // and causes blocks to enter live validation.
+      await userEvent.click(submitButton);
+
+      // In a healthy implementation this should not produce React
+      // warnings about updating state during render.
+      const calls = consoleErrorSpy.mock.calls;
+      const hasUpdateDuringRenderWarning = calls.some(
+        (args) =>
+          typeof args[0] === 'string' &&
+          args[0].includes(
+            'Cannot update a component while rendering a different component',
+          ),
+      );
+
+      expect(hasUpdateDuringRenderWarning).toBe(false);
+    } finally {
+      global.fetch = originalFetch;
+      consoleErrorSpy.mockRestore();
+    }
+  });
+
+  it('does not trigger state-update-during-render warnings in StrictMode when live validation turns on', async () => {
+    const copy = buildCopy();
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn();
+    global.fetch = fetchMock;
+
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    const dialogValue = {
+      open: () => {},
+      close: () => {},
+      isOpen: false,
+      openPrivacy: () => {},
+      closePrivacy: () => {},
+      isPrivacyOpen: false,
+    };
+
+    try {
+      render(
+        <React.StrictMode>
+          <ContactDialogContext.Provider value={dialogValue}>
+            <ContactForm copy={copy} actionUrl="/api/contact" />
+          </ContactDialogContext.Provider>
+        </React.StrictMode>,
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      const calls = consoleErrorSpy.mock.calls;
+      const hasUpdateDuringRenderWarning = calls.some(
+        (args) =>
+          typeof args[0] === 'string' &&
+          args[0].includes(
+            'Cannot update a component while rendering a different component',
+          ),
+      );
+
+      expect(hasUpdateDuringRenderWarning).toBe(false);
+    } finally {
+      global.fetch = originalFetch;
+      consoleErrorSpy.mockRestore();
+    }
+  });
+
+  it('reports validation results only on meaningful state changes for a full form flow', async () => {
+    const copy = buildCopy();
+
+    const updates: ContactFormBlockValidationResult[][] = [];
+    const handleUpdate = vi.fn(
+      (results: ContactFormBlockValidationResult[]) => {
+        updates.push(results);
+      },
+    );
+
+    const submitHelper: ContactFormFlowSubmitHelper = vi
+      .fn()
+      .mockResolvedValue('success');
+
+    render(
+      <LiveValidationHarness
+        copy={copy}
+        submitHelper={submitHelper}
+        onValidationUpdate={handleUpdate}
+      />,
+    );
+
+    const nameInput = screen.getByLabelText(
+      copy.blocks.name.label,
+      { exact: false },
+    ) as HTMLInputElement;
+    const emailInput = screen.getByLabelText(
+      copy.blocks.email.label,
+      { exact: false },
+    ) as HTMLInputElement;
+    const messageInput = screen.getByLabelText(
+      copy.blocks.message.label,
+      { exact: false },
+    ) as HTMLTextAreaElement;
+
+    await userEvent.type(nameInput, 'Jane Doe');
+    await userEvent.type(emailInput, 'example@example.com');
+
+    const tooLongValue = 'x'.repeat(MESSAGE_MAX_LENGTH + 10);
+    await userEvent.type(messageInput, tooLongValue);
+
+    const submitButton = screen.getByRole('button', {
+      name: 'Submit',
+    });
+
+    // First submit with an over-long message: form is invalid and
+    // live validation turns on. This should record at least one
+    // validation snapshot but must not call the submit helper.
+    await userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(handleUpdate).toHaveBeenCalled();
+    });
+
+    const baselineCalls = handleUpdate.mock.calls.length;
+    expect(submitHelper).not.toHaveBeenCalled();
+
+    // Editing the message while it remains in the same "too_long"
+    // error bucket should not cause additional validation snapshots
+    // at the flow level.
+    const extendedTooLongValue = `${tooLongValue}Y`;
+    await userEvent.clear(messageInput);
+    await userEvent.type(messageInput, extendedTooLongValue);
+
+    expect(handleUpdate).toHaveBeenCalledTimes(baselineCalls);
+
+    // Once the value becomes valid, submitting again should:
+    // - Call the submit helper exactly once.
+    // - Produce exactly one additional validation snapshot with all
+    //   blocks valid.
+    await userEvent.clear(messageInput);
+    const validValue = 'x'.repeat(MESSAGE_MIN_LENGTH);
+    await userEvent.type(messageInput, validValue);
+
+    await userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(submitHelper).toHaveBeenCalledTimes(1);
+    });
+
+    await waitFor(() => {
+      expect(handleUpdate).toHaveBeenCalledTimes(
+        baselineCalls + 1,
+      );
+    });
+
+    const lastSnapshot = updates[updates.length - 1];
+    expect(
+      lastSnapshot.some(
+        (result) =>
+          result.id === 'live-message' && result.valid === true,
+      ),
+    ).toBe(true);
   });
 
   it('treats not_configured as catastrophic: disables fields and scrolls to the message centre', async () => {
@@ -644,6 +912,63 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(types).toContain('submit_result');
     } finally {
       global.fetch = originalFetch;
+    }
+  });
+
+  it('does not spam debug events for repeated invalid submissions', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const logger = vi.fn();
+    setContactFormDebugEnabled(true);
+    setContactFormDebugLogger(logger);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'validation_error',
+        message: statusMessages.validation_error,
+      }),
+    } as Response);
+
+    global.fetch = fetchMock;
+
+    try {
+      renderWrappedContactForm(copy, '/api/contact');
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      // First invalid submit.
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      // Second invalid submit with no meaningful change.
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+      });
+
+      const attemptEvents = logger.mock.calls.filter(
+        ([event]) => event.type === 'submit_attempt',
+      );
+      const resultEvents = logger.mock.calls.filter(
+        ([event]) => event.type === 'submit_result',
+      );
+
+      expect(attemptEvents.length).toBe(2);
+      expect(resultEvents.length).toBe(2);
+    } finally {
+      global.fetch = originalFetch;
+      setContactFormDebugEnabled(null);
+      setContactFormDebugLogger(null);
     }
   });
 

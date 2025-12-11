@@ -1,15 +1,20 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
 import { renderEmailBlockWithFormBlocks } from './helpers/emailBlock.harness';
 import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
+import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { EMAIL_MAX_LENGTH } from '@/modules/contactForm/validation.constants';
+
+type EmailBlockValidationSnapshot = {
+  results: unknown[];
+};
 
 const emailCopy: EmailBlockLocale = {
   label: enFormCopy['form-email-label'],
@@ -256,6 +261,78 @@ describe('Contact form block tests: EmailBlock', () => {
 
       expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
+    });
+
+    it('reports validation results only when the live validation state changes', async () => {
+      const updates: EmailBlockValidationSnapshot[] = [];
+      const handleUpdate = vi.fn((results: unknown[]) => {
+        updates.push({
+          results,
+        });
+      });
+
+      const { container } = render(
+        <FormBlocksProvider>
+          <FormBlocksValidationObserver
+            onUpdate={handleUpdate}
+          />
+          <EmailBlock
+            id="test-email-block"
+            order={0}
+            copy={emailCopy}
+            disabled={false}
+          />
+        </FormBlocksProvider>,
+      );
+
+      const input = container.querySelector(
+        'input[data-input="text"]',
+      ) as HTMLInputElement | null;
+
+      expect(input).not.toBeNull();
+      if (!input) return;
+
+      expect(handleUpdate).not.toHaveBeenCalled();
+
+      // Enter an invalid email and blur: one invalid snapshot should
+      // be recorded.
+      await userEvent.type(input, 'invalid-email');
+      fireEvent.blur(input);
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(1);
+      });
+
+      // Additional invalid edits should stay within the same error
+      // bucket and not cause extra validation snapshots.
+      await userEvent.type(input, '-still-invalid');
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(1);
+      });
+
+      // Once the email becomes valid, live reporting should emit a
+      // single new validation result to clear messages.
+      await userEvent.clear(input);
+      await userEvent.type(input, 'example@example.com');
+
+      await waitFor(() => {
+        expect(handleUpdate).toHaveBeenCalledTimes(2);
+      });
+
+      const lastSnapshot = updates[updates.length - 1];
+      expect(
+        Array.isArray(lastSnapshot.results) &&
+          lastSnapshot.results.some(
+            (result) =>
+              typeof result === 'object' &&
+              result !== null &&
+              'id' in result &&
+              (result as { id: string }).id === 'test-email-block' &&
+              'valid' in result &&
+              (result as { valid: boolean }).valid === true,
+          ),
+      ).toBe(true);
     });
 
     it('shows and then clears inline error when continuousValidation is enabled and value becomes valid', async () => {

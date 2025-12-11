@@ -590,4 +590,100 @@ describe('ContactFormFlow', () => {
       unmount();
     }
   });
+
+  it('handles repeated invalid submits and recovery with continuous validation enabled', async () => {
+    let isValid = false;
+
+    const validateMock = vi.fn(() =>
+      createValidationResult('field', isValid),
+    );
+
+    const continuousSpy = vi.fn();
+
+    const block: StubBlockConfig = {
+      key: 'field-block',
+      validationResult: createValidationResult('field', false),
+      payload: createPayload('field', 'value'),
+      onContinuousValidationChange: continuousSpy,
+      validateMock,
+    };
+
+    const submitHelper: ContactFormFlowSubmitHelper = vi
+      .fn()
+      .mockResolvedValue('success');
+    const onFlowChange = vi.fn();
+
+    render(
+      <FlowHarness
+        blocks={[
+          block,
+        ]}
+        submitHelper={submitHelper}
+        onFlowChange={onFlowChange}
+      />,
+    );
+
+    const submitButton = screen.getByRole('button', {
+      name: 'Submit',
+    });
+
+    // First submit: invalid → validation_error, continuous validation enabled.
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      const lastState = getLastFlowState(onFlowChange);
+      expect(lastState.invalid).toBe(true);
+      expect(lastState.submitStatus).toBe('validation_error');
+    });
+
+    expect(submitHelper).not.toHaveBeenCalled();
+
+    // Second submit: still invalid, but the flow should remain stable
+    // (no submission, still invalid).
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      const lastState = getLastFlowState(onFlowChange);
+      expect(lastState.invalid).toBe(true);
+      expect(lastState.submitStatus).toBe('validation_error');
+    });
+
+    expect(submitHelper).not.toHaveBeenCalled();
+    expect(validateMock).toHaveBeenCalledTimes(2);
+
+    // Now mark the block as valid and submit again: the helper should
+    // be called once and the flow becomes valid/success.
+    isValid = true;
+
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(submitHelper).toHaveBeenCalledTimes(1);
+    });
+
+    await waitFor(() => {
+      const lastState = getLastFlowState(onFlowChange);
+      expect(lastState.invalid).toBe(false);
+      expect(lastState.submitStatus).toBe('success');
+      expect(
+        lastState.latestValidationResults.every(
+          (result) => result.valid,
+        ),
+      ).toBe(true);
+    });
+
+    const continuousCalls =
+      (
+        continuousSpy as unknown as {
+          mock?: { calls: [boolean][] };
+        }
+      ).mock?.calls ?? [];
+    expect(
+      continuousCalls.some(
+        ([
+          value,
+        ]) => value === true,
+      ),
+    ).toBe(true);
+  });
 });
