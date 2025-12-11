@@ -130,6 +130,34 @@ export default [
   },
   {
     files: [
+      'tests/**/*.{ts,tsx}',
+    ],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'screen',
+          property: 'getByText',
+          message:
+            'Avoid text-based queries in tests; prefer data-* hooks, roles, or labels.',
+        },
+        {
+          object: 'screen',
+          property: 'findByText',
+          message:
+            'Avoid text-based queries in tests; prefer data-* hooks, roles, or labels.',
+        },
+        {
+          object: 'screen',
+          property: 'queryByText',
+          message:
+            'Avoid text-based queries in tests; prefer data-* hooks, roles, or labels.',
+        },
+      ],
+    },
+  },
+  {
+    files: [
       '**/*.{js,jsx,ts,tsx,cjs,mjs}',
     ],
     plugins: {
