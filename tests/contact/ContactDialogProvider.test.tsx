@@ -7,20 +7,24 @@ import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
+import type { Translator } from '@/lib/locales/sections/helpers.locale';
 
 const buildFormCopy = () =>
   buildContactFormCopy(
-    (key) => enFormCopy[key as keyof typeof enFormCopy],
+    ((key) =>
+      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
   );
 
 const buildPrivacy = () =>
-  buildPrivacyCopy((key) => {
-    if (key === 'privacy-title') return 'Privacy';
-    if (key === 'privacy-href') return '#privacy';
-    if (key === 'privacy-updated') return '';
-    if (key === 'privacy-content') return 'Privacy content.';
-    return key;
-  });
+  buildPrivacyCopy(
+    ((key) => {
+      if (key === 'privacy-title') return 'Privacy';
+      if (key === 'privacy-href') return '#privacy';
+      if (key === 'privacy-updated') return '';
+      if (key === 'privacy-content') return 'Privacy content.';
+      return key;
+    }) as unknown as Translator,
+  );
 
 describe('ContactDialogProvider', () => {
   it('shows the success panel after a successful form submission inside the dialog', async () => {
@@ -37,7 +41,6 @@ describe('ContactDialogProvider', () => {
       }),
     } as Response);
 
-    // @ts-expect-error test override
     global.fetch = fetchMock;
 
     try {
@@ -95,7 +98,6 @@ describe('ContactDialogProvider', () => {
       const liveForm = document.querySelector('[data-form="form"]');
       expect(liveForm).toBeNull();
     } finally {
-      // @ts-expect-error restoring test override
       global.fetch = originalFetch;
     }
   });

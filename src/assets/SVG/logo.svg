@@ -8,38 +8,17 @@
 >
   <defs>
     <linearGradient id="c">
-      <stop
-        offset=".17753"
-        style="stop-color: #e6a87f; stop-opacity: 1"
-      />
-      <stop
-        offset=".471"
-        style="stop-color: #f27e8c; stop-opacity: 1"
-      />
-      <stop
-        offset="1"
-        style="stop-color: #ff549a; stop-opacity: 1"
-      />
+      <stop offset=".17753" style="stop-color: #e6a87f; stop-opacity: 1" />
+      <stop offset=".471" style="stop-color: #f27e8c; stop-opacity: 1" />
+      <stop offset="1" style="stop-color: #ff549a; stop-opacity: 1" />
     </linearGradient>
     <linearGradient id="b">
-      <stop
-        offset=".0692"
-        style="stop-color: #4744a0; stop-opacity: 1"
-      />
-      <stop
-        offset=".36528"
-        style="stop-color: #64eaeb; stop-opacity: 1"
-      />
+      <stop offset=".0692" style="stop-color: #4744a0; stop-opacity: 1" />
+      <stop offset=".36528" style="stop-color: #64eaeb; stop-opacity: 1" />
     </linearGradient>
     <linearGradient id="a">
-      <stop
-        offset=".20466"
-        style="stop-color: #3e43a0; stop-opacity: 1"
-      />
-      <stop
-        offset="1"
-        style="stop-color: #fe5998; stop-opacity: 1"
-      />
+      <stop offset=".20466" style="stop-color: #3e43a0; stop-opacity: 1" />
+      <stop offset="1" style="stop-color: #fe5998; stop-opacity: 1" />
     </linearGradient>
     <linearGradient
       xlink:href="#a"

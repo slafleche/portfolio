@@ -142,6 +142,7 @@ export function EmailBlock({
   return (
     <div id={id} data-order={order}>
       <TextInputBlock
+        id={id}
         blockKey="email"
         label={copy.label}
         value={value}

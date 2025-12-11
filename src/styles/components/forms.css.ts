@@ -159,40 +159,35 @@ export const helperText = style({
   fontSize: '0.85rem',
 });
 
-export const status = style();
+const statusBase: ComplexStyleRule = {
+  display: 'flex',
+  alignItems: 'center',
+  ...borders(formTokens.field.borders),
+  ...paddings(formTokens.field.paddings),
+  gap: formTokens.layout.fieldGap.css(),
+};
+
+export const status = style(statusBase);
 
 export const statusSuccess = style([
+  statusBase,
   {
-    display: 'flex',
-    alignItems: 'center',
-    ...borders(formTokens.field.borders),
-    ...paddings(formTokens.field.paddings),
-    gap: formTokens.layout.fieldGap.css(),
     ...backgrounds(formTokens.status.success.backgrounds),
     ...borders(formTokens.status.success.borders),
   },
 ]);
 
 export const statusError = style([
+  statusBase,
   {
-    display: 'flex',
-    alignItems: 'center',
-    ...borders(formTokens.field.borders),
-    ...paddings(formTokens.field.paddings),
-    gap: formTokens.layout.fieldGap.css(),
-
     ...backgrounds(formTokens.status.error.backgrounds),
     ...borders(formTokens.status.error.borders),
   },
 ]);
 
 export const statusGeneric = style([
+  statusBase,
   {
-    display: 'flex',
-    alignItems: 'center',
-    ...borders(formTokens.field.borders),
-    ...paddings(formTokens.field.paddings),
-    gap: formTokens.layout.fieldGap.css(),
     ...backgrounds(formTokens.status.generic.backgrounds),
     ...borders(formTokens.status.generic.borders),
   },

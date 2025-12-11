@@ -41,12 +41,9 @@ scripts/bash/
 # -----------------------
 # Generated data
 # -----------------------
-src/data/*
-!src/data/.gitkeep
-!src/data/debugRoutes.json
+src/data/generated/*
 public/images/*
 public/favicons/*
-/src/data/generated/*
 src/lib/locales/generated/
 
 
