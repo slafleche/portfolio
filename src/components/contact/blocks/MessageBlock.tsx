@@ -145,7 +145,10 @@ export function MessageBlock({
   );
   const liveValidationRegistration = hasBlurred;
 
-  const { continuousValidation } = useFormBlock(
+  const {
+    continuousValidation,
+    recordValidationResult,
+  } = useFormBlock(
     useMemo(() => {
       const baseContract = buildMessageContract(
         id,
@@ -163,7 +166,11 @@ export function MessageBlock({
         key: 'message',
         focus: contract.focus,
         getValue: () => value,
-        validate: () => contract.validate().valid,
+        validate: () => {
+          const result = contract.validate();
+          recordValidationResult(result);
+          return result.valid;
+        },
         getValidationSummary: () => {
           if (evaluation.validation.ok) return null;
           const reason = evaluation.validation.reason;
@@ -185,8 +192,8 @@ export function MessageBlock({
       copy,
       evaluation,
       id,
-      value,
       liveValidationRegistration,
+      value,
     ]),
   );
 
@@ -227,6 +234,15 @@ export function MessageBlock({
     } else {
       localErrorText = copy.errors.required;
     }
+  }
+
+  if (liveValidation) {
+    const result = buildMessageValidationResult(
+      id,
+      evaluation,
+      copy,
+    );
+    recordValidationResult(result);
   }
 
   const effectiveErrorText = errorText ?? localErrorText;

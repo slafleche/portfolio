@@ -10,7 +10,10 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import type { ContactFormBlockContract } from './types/form.types';
+import type {
+  ContactFormBlockContract,
+  ContactFormBlockValidationResult,
+} from './types/form.types';
 
 export type FormBlockRegistration = {
   key: string;
@@ -35,6 +38,10 @@ type FormBlocksContextValue = {
   continuousValidation: boolean;
   enableContinuousValidation: () => void;
   getRegistrationsSnapshot: () => FormBlockRegistration[];
+  recordValidationResult: (
+    result: ContactFormBlockValidationResult,
+  ) => void;
+  getValidationResultsSnapshot: () => ContactFormBlockValidationResult[];
 };
 
 const FormBlocksContext =
@@ -50,6 +57,9 @@ export function FormBlocksProvider({
     setContinuousValidation,
   ] = useState<boolean>(false);
   const blocksRef = useRef(new Map<string, FormBlockRegistration>());
+  const validationResultsRef = useRef(
+    new Map<string, ContactFormBlockValidationResult>(),
+  );
 
   const registerBlock = useCallback(
     (registration: FormBlockRegistration) => {
@@ -68,6 +78,11 @@ export function FormBlocksProvider({
       enableContinuousValidation: () => setContinuousValidation(true),
       getRegistrationsSnapshot: () =>
         Array.from(blocksRef.current.values()),
+      recordValidationResult: (result) => {
+        validationResultsRef.current.set(result.id, result);
+      },
+      getValidationResultsSnapshot: () =>
+        Array.from(validationResultsRef.current.values()),
     }),
     [
       continuousValidation,
@@ -96,6 +111,9 @@ export function TestFormBlocksProvider({
     setContinuousValidation,
   ] = useState<boolean>(false);
   const blocksRef = useRef(new Map<string, FormBlockRegistration>());
+  const validationResultsRef = useRef(
+    new Map<string, ContactFormBlockValidationResult>(),
+  );
 
   const registerBlock = useCallback(
     (registration: FormBlockRegistration) => {
@@ -119,6 +137,11 @@ export function TestFormBlocksProvider({
       enableContinuousValidation: () => setContinuousValidation(true),
       getRegistrationsSnapshot: () =>
         Array.from(blocksRef.current.values()),
+      recordValidationResult: (result) => {
+        validationResultsRef.current.set(result.id, result);
+      },
+      getValidationResultsSnapshot: () =>
+        Array.from(validationResultsRef.current.values()),
     }),
     [
       continuousValidation,
@@ -154,5 +177,6 @@ export const useFormBlock = (registration: FormBlockRegistration) => {
   return {
     continuousValidation: context.continuousValidation,
     enableContinuousValidation: context.enableContinuousValidation,
+    recordValidationResult: context.recordValidationResult,
   };
 };

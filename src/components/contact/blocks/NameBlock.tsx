@@ -103,7 +103,10 @@ export function NameBlock({
 
   const liveValidationRegistration = hasBlurred;
 
-  const { continuousValidation } = useFormBlock(
+  const {
+    continuousValidation,
+    recordValidationResult,
+  } = useFormBlock(
     useMemo(() => {
       const baseContract = buildNameContract(
         id,
@@ -121,7 +124,11 @@ export function NameBlock({
         key: 'name',
         focus: contract.focus,
         getValue: () => value,
-        validate: () => contract.validate().valid,
+        validate: () => {
+          const result = contract.validate();
+          recordValidationResult(result);
+          return result.valid;
+        },
         getValidationSummary: () => {
           if (evaluation.validation.ok) return null;
           if (evaluation.validation.reason === 'too_long') {
@@ -150,6 +157,11 @@ export function NameBlock({
     } else {
       localErrorText = copy.errors.required;
     }
+  }
+
+  if (liveValidation) {
+    const result = buildNameValidationResult(id, evaluation, copy);
+    recordValidationResult(result);
   }
 
   return (
