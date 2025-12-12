@@ -33,7 +33,7 @@ export const MessageCentreBlock = forwardRef<
     ],
   );
 
-  const toastMessage = useMemo(() => {
+  const globalMessage = useMemo(() => {
     if (messages.globals.length > 0) return messages.globals[0];
     if (messages.blocks.length === 1) return messages.blocks[0];
     if (messages.blocks.length > 1 && messages.toastFallback) {
@@ -53,6 +53,11 @@ export const MessageCentreBlock = forwardRef<
       aria-atomic="true"
       data-form="messages"
     >
+      {globalMessage ? (
+        <div className={s.toastRoot} role="status" aria-live="polite">
+          <span className={s.toastTitle}>{globalMessage}</span>
+        </div>
+      ) : null}
       <div
         className={s.statusWrapper}
         data-visible={inlineMessages.length ? 'true' : 'false'}
@@ -74,11 +79,6 @@ export const MessageCentreBlock = forwardRef<
           </div>
         ) : null}
       </div>
-      {toastMessage ? (
-        <div className={s.toastRoot} role="status" aria-live="polite">
-          <span className={s.toastTitle}>{toastMessage}</span>
-        </div>
-      ) : null}
     </div>
   );
 });

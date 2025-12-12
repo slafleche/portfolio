@@ -107,6 +107,9 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   role’s behavior for the chat in addition to these rules. When a role tag is
   active, treat that role as active for the chat until the user explicitly
   switches hats. Can be reset to nothing with `#none`
+- Should: When the user calls `#tldr`it means: rework reply to only show what's
+  missing or needs editing. Cut out all summary info, or confirmations of what
+  was already done.
 - Must: When the user deletes or asks to delete a section, heading, or list item
   in a markdown file, do not reintroduce that content (or a similar replacement)
   in later edits unless the user clearly requests it again in the current chat.

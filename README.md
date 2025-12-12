@@ -15,14 +15,6 @@
 
 ### Contact dialog debugging
 
-- `ContactDialogProvider` accepts an optional `toastDebugScenario` prop so you
-  can pin a specific toast while tweaking styles (e.g.,
-  `toastDebugScenario="service_unavailable"` or
-  `{ code: 'generic_error', message: 'Custom copy' }`). The provider threads the
-  prop through to `ContactForm`.
-- Success scenarios never enqueue toasts; the prop only affects error/guard
-  states so you can inspect rate-limit, validation, or outage banners without
-  wiring up fake submissions.
 - For deeper wiring bugs, you can enable dev-only contact form logging by
   setting `NEXT_PUBLIC_CONTACT_FORM_DEBUG=1` in your environment. With the flag
   on (and never in production), each submission logs `[contact][form-debug]`
