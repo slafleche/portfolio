@@ -1,5 +1,7 @@
 export const enFormCopy = {
   'form-heading': "Let's work together",
+  'form-success-heading': 'Message sent',
+  'form-error-heading': "We couldn't send your message",
   'form-success-body': "I'll get back to you as soon as possible.",
   'form-name-label': 'Name',
   'form-email-label': 'Email',

@@ -100,6 +100,9 @@ const enBaseData = {
   'contact-href': 'contact',
   'contact-content': "Think we'd work well together?",
   'contact-email-label': 'Shoot me an email!',
+
+  ...markdownRefs('forms-form-success-body', 'forms-form-error-body'),
+
   'privacy-title': 'Privacy Policy',
   'privacy-href': 'privacy',
   'privacy-updated': '',

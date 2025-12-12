@@ -176,15 +176,19 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       await userEvent.click(submitButton);
 
-      const inlineRegion = container.querySelector(
-        '[role="status"][aria-atomic="true"]',
-      ) as HTMLElement | null;
-      expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
-
       // Key assertion: the submission went through once.
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      const successPanel = container.querySelector(
+        '[data-form="success"]',
+      ) as HTMLElement | null;
+      expect(successPanel).not.toBeNull();
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).toBeNull();
 
       const toastRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
@@ -341,20 +345,17 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       });
 
       await waitFor(() => {
-        const inlineRegion = container.querySelector(
-          '[role="status"][aria-atomic="true"]',
+        const successPanel = container.querySelector(
+          '[data-form="success"]',
         ) as HTMLElement | null;
-        expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
-        const lines = Array.from(
-          inlineRegion.querySelectorAll('[data-error]'),
-        ) as HTMLElement[];
-        const codes = lines.map((el) => el.dataset.error);
-        expect(codes.filter(Boolean)).toHaveLength(0);
-        expect(
-          inlineRegion.textContent?.trim() ?? '',
-        ).toBe('');
+        expect(successPanel).not.toBeNull();
       });
+
+      expect(
+        container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ),
+      ).toBeNull();
 
       expect(
         container.querySelector('[data-testid="jump-to-first-issue"]'),
@@ -581,85 +582,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ),
       ).toBe(true);
     });
-  });
-
-  it('treats not_configured as catastrophic: disables fields and scrolls to the message centre', async () => {
-    const copy = buildCopy();
-    const statusMessages = buildStatusMessages(copy);
-
-    const originalFetch = global.fetch;
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: false,
-      json: async () => ({
-        ok: false,
-        code: 'not_configured',
-        message: statusMessages.not_configured,
-      }),
-    } as Response);
-
-    global.fetch = fetchMock;
-
-    try {
-      const { container } = renderWrappedContactForm(
-        copy,
-        '/api/contact',
-      );
-
-      const nameInput = screen.getByLabelText(
-        copy.blocks.name.label,
-        { exact: false },
-      ) as HTMLInputElement;
-      const emailInput = screen.getByLabelText(
-        copy.blocks.email.label,
-        { exact: false },
-      ) as HTMLInputElement;
-      const messageInput = screen.getByLabelText(
-        copy.blocks.message.label,
-        { exact: false },
-      ) as HTMLTextAreaElement;
-
-      await userEvent.type(nameInput, 'Jane Doe');
-      await userEvent.type(emailInput, 'example@example.com');
-      await userEvent.type(
-        messageInput,
-        'This is a sufficiently long message for validation.',
-      );
-
-      const messageCentreRoot = container.querySelector(
-        '[data-form="messages"]',
-      ) as HTMLElement | null;
-      expect(messageCentreRoot).not.toBeNull();
-      if (!messageCentreRoot) return;
-      const scrollSpy = vi.fn();
-      messageCentreRoot.scrollIntoView = scrollSpy;
-
-      const submitButton = screen.getByRole('button', {
-        name: copy.submitLabel,
-      });
-
-      await userEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(fetchMock).toHaveBeenCalledTimes(1);
-      });
-
-      await waitFor(() => {
-        expect(messageCentreRoot.textContent ?? '').toContain(
-          statusMessages.not_configured,
-        );
-      });
-
-      expect(scrollSpy).toHaveBeenCalled();
-
-      expect(nameInput).toBeDisabled();
-      expect(emailInput).toBeDisabled();
-      expect(messageInput).toBeDisabled();
-      expect(submitButton).toBeDisabled();
-
-      expect(screen.queryByTestId('jump-to-first-issue')).toBeNull();
-    } finally {
-      global.fetch = originalFetch;
-    }
   });
 
   it('shifts priority and clears stale errors as different fields become invalid and then recover', async () => {

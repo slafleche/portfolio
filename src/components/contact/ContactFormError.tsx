@@ -1,20 +1,20 @@
 import * as s from '@/styles/components/forms.css';
 import { Markdown } from '../Markdown';
-import CircledCheckIcon from '../icons/CircledCheckIcon';
+import CircledPauseIcon from '../icons/CircledPauseIcon';
 
-type ContactFormSuccessProps = {
+type ContactFormErrorProps = {
   title: string;
   description: string;
 };
 
-export default function ContactFormSuccess({
+export default function ContactFormError({
   title,
   description,
-}: ContactFormSuccessProps) {
+}: ContactFormErrorProps) {
   return (
-    <div className={s.successPanel} data-form="success">
+    <div className={s.successPanel} data-form="error">
       <div className={s.successIconWrapper} aria-hidden="true">
-        <CircledCheckIcon className={s.successIcon} />
+        <CircledPauseIcon className={s.failIcon} />
       </div>
       <div className={s.successCopy}>
         <h1 className={s.successHeading}>{title}</h1>

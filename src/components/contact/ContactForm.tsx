@@ -15,10 +15,6 @@ import { SubmitButton } from './primitives/SubmitButton';
 import { ContactPrivacy } from './ContactPrivacy';
 import { useContactFormFlow } from './useContactFormFlow';
 import { useContactFormOutcome } from './useContactFormOutcome';
-import {
-  buildInvalidFieldSummary,
-  logContactFormDebugEvent,
-} from './contactFormDebugLogger';
 import * as s from '@/styles/components/forms.css';
 import type {
   ContactFormBlockBaseProps,
@@ -31,6 +27,9 @@ import type {
   ContactFormResponse,
 } from '@/modules/contactForm/mockSubmit';
 import { useSafeId } from '../../lib/dom';
+import { logContactFormDebugEvent } from './contactFormDebugLogger';
+import ContactFormSuccess from './ContactFormSuccess';
+import ContactFormError from './ContactFormError';
 
 const DEFAULT_ACTION_URL = '/api/contact';
 
@@ -74,6 +73,7 @@ type ContactFormInnerProps = {
   formMembers: ContactFormBlockBaseProps[];
   submitHelper: ContactFormFlowSubmitHelper;
   onSuccessStateChange?: (visible: boolean) => void;
+  onViewChange?: (view: 'form' | 'success' | 'error') => void;
 };
 
 function ContactFormInner({
@@ -82,6 +82,7 @@ function ContactFormInner({
   formMembers,
   submitHelper,
   onSuccessStateChange,
+  onViewChange,
 }: ContactFormInnerProps) {
   const { getRegistrationsSnapshot } = useFormBlocksContext();
 
@@ -114,7 +115,10 @@ function ContactFormInner({
         const messageCentre = document.querySelector<HTMLElement>(
           '[data-form="messages"]',
         );
-        if (messageCentre) {
+        if (
+          messageCentre &&
+          typeof messageCentre.scrollIntoView === 'function'
+        ) {
           messageCentre.scrollIntoView({
             block: 'start',
             behavior: 'smooth',
@@ -162,10 +166,14 @@ function ContactFormInner({
   useEffect(() => {
     if (isCatastrophic && !wasCatastrophicRef.current) {
       scrollToPriorityTarget({ catastrophic: true });
+      if (onViewChange) {
+        onViewChange('error');
+      }
     }
     wasCatastrophicRef.current = isCatastrophic;
   }, [
     isCatastrophic,
+    onViewChange,
     scrollToPriorityTarget,
   ]);
 
@@ -176,31 +184,6 @@ function ContactFormInner({
     isInvalid,
     isCatastrophic,
     scrollToPriorityTarget,
-  ]);
-
-  const lastLoggedStatusRef = useRef(flow.submitStatus);
-
-  useEffect(() => {
-    const nextStatus = flow.submitStatus;
-    if (nextStatus === 'idle') {
-      lastLoggedStatusRef.current = nextStatus;
-      return;
-    }
-    if (lastLoggedStatusRef.current === nextStatus) {
-      return;
-    }
-    lastLoggedStatusRef.current = nextStatus;
-
-    logContactFormDebugEvent('submit_result', {
-      submitStatus: nextStatus,
-      code: nextStatus,
-      invalidFields: buildInvalidFieldSummary(
-        flow.latestValidationResults,
-      ),
-    });
-  }, [
-    flow.latestValidationResults,
-    flow.submitStatus,
   ]);
 
   return (
@@ -289,6 +272,8 @@ export default function ContactForm({
   void rest;
   const idPrefix = useSafeId('contact-form-');
 
+  type ContactFormView = 'form' | 'success' | 'error';
+
   const [
     formMembers,
   ] = useState<ContactFormBlockBaseProps[]>(() => [
@@ -317,6 +302,23 @@ export default function ContactForm({
       required: true,
     },
   ]);
+
+  const [
+    view,
+    setView,
+  ] = useState<ContactFormView>('form');
+
+  const handleSuccessStateChange = useCallback(
+    (visible: boolean) => {
+      setView(visible ? 'success' : 'form');
+      if (onSuccessStateChange) {
+        onSuccessStateChange(visible);
+      }
+    },
+    [
+      onSuccessStateChange,
+    ],
+  );
 
   const submitHelper = useCallback<ContactFormFlowSubmitHelper>(
     async (blockPayloads) => {
@@ -349,13 +351,26 @@ export default function ContactForm({
 
   return (
     <FormBlocksProvider>
-      <ContactFormInner
-        actionUrl={actionUrl}
-        copy={copy}
-        formMembers={formMembers}
-        submitHelper={submitHelper}
-        onSuccessStateChange={onSuccessStateChange}
-      />
+      {view === 'success' ? (
+        <ContactFormSuccess
+          title={copy.headings.success}
+          description={copy.successBody}
+        />
+      ) : view === 'error' ? (
+        <ContactFormError
+          title={copy.headings.error}
+          description={copy.errorBody}
+        />
+      ) : (
+        <ContactFormInner
+          actionUrl={actionUrl}
+          copy={copy}
+          formMembers={formMembers}
+          submitHelper={submitHelper}
+          onSuccessStateChange={handleSuccessStateChange}
+          onViewChange={setView}
+        />
+      )}
     </FormBlocksProvider>
   );
 }

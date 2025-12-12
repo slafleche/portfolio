@@ -17,7 +17,6 @@ import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { Markdown } from '@/components/Markdown';
 import { sharedStrings } from '@/lib/sharedStrings';
-import ContactFormSuccess from './ContactFormSuccess';
 import ContactForm from './ContactForm';
 import { CloseButton } from './CloseButton';
 
@@ -118,10 +117,6 @@ export function ContactDialogProvider({
   const baseHistorySeededRef = useRef(false);
   const previousIntentRef = useRef<ModalIntent>('none');
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  const [
-    successVisible,
-    setSuccessVisible,
-  ] = useState(false);
 
   const captureFocusAnchor = useCallback(() => {
     if (typeof document === 'undefined') return;
@@ -251,7 +246,6 @@ export function ContactDialogProvider({
   const openContact = useCallback(() => {
     captureFocusAnchor();
     applyIntent('contact', { history: 'push' });
-    setSuccessVisible(false);
   }, [
     applyIntent,
     captureFocusAnchor,
@@ -260,7 +254,6 @@ export function ContactDialogProvider({
   const closeContact = useCallback(() => {
     applyIntent('none', { history: 'replace' });
     setTimeout(restoreFocusAnchor, 0);
-    setSuccessVisible(false);
   }, [
     applyIntent,
     restoreFocusAnchor,
@@ -353,22 +346,10 @@ export function ContactDialogProvider({
                     className={dialogStyles.closeButton}
                   />
                 </Dialog.Close>
-                {!successVisible ? (
-                  <>
-                    <Dialog.Title className={dialogStyles.heading}>
-                      {formCopy.heading}
-                    </Dialog.Title>
-                    <ContactForm
-                      copy={formCopy}
-                      onSuccessStateChange={setSuccessVisible}
-                    />
-                  </>
-                ) : (
-                  <ContactFormSuccess
-                    title={formCopy.heading}
-                    description={formCopy.successBody}
-                  />
-                )}
+                <Dialog.Title className={dialogStyles.heading}>
+                  {formCopy.heading}
+                </Dialog.Title>
+                <ContactForm copy={formCopy} />
               </div>
             </div>
           </Dialog.Content>

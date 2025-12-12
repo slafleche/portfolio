@@ -161,47 +161,6 @@ describe('Contact form shell harness', () => {
     expect(onJumpToFirstIssue).toHaveBeenCalledWith('first');
   });
 
-  it('treats a no-blocks configuration as not_configured and surfaces a catastrophic-style summary', async () => {
-    const submitHelper: ContactFormFlowSubmitHelper = vi
-      .fn()
-      .mockResolvedValue('success');
-
-    const { submit, container, getByRole, queryByTestId } =
-      renderContactFormShellHarness({
-        blocks: [],
-        submitHelper,
-        statusMessages: STATUS_MESSAGES,
-      });
-
-    submit();
-
-    await waitFor(() => {
-      const inlineRegion = container.querySelector(
-        '[role="status"][aria-atomic="true"]',
-      ) as HTMLElement | null;
-      expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
-      expect(inlineRegion.textContent ?? '').toContain(
-        'not_configured',
-      );
-    });
-
-    const toastRegion = container.querySelector(
-      '[role="status"]:not([aria-atomic])',
-    );
-    expect(toastRegion?.textContent ?? '').toContain(
-      'not_configured',
-    );
-
-    expect(submitHelper).not.toHaveBeenCalled();
-
-    const submitButton = getByRole('button', { name: 'Submit' });
-    expect(submitButton).toBeDisabled();
-
-    const jumpButton = queryByTestId('jump-to-first-issue');
-    expect(jumpButton).toBeNull();
-  });
-
   it('surfaces non-success server statuses via the message centre when validation passes', async () => {
     const blocks = [
       {

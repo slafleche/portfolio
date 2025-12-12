@@ -561,6 +561,12 @@ export const successIcon = style({
   color: formTokens.successPanel.icon.color.css(),
 });
 
+export const failIcon = style({
+  width: '36px',
+  height: '36px',
+  color: formTokens.successPanel.icon.color.css(),
+});
+
 export const successCopy = style({
   display: 'grid',
   gap: '8px',

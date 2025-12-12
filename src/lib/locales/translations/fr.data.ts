@@ -104,6 +104,8 @@ const frBaseData = {
   'contact-content': 'Envie de collaborer ?',
   'contact-email-label': 'Envoyez-moi un email !',
 
+  ...markdownRefs('forms-form-success-body', 'forms-form-error-body'),
+
   'privacy-title': 'Politique de confidentialité',
   'privacy-href': 'confidentialite',
   'privacy-updated': '',

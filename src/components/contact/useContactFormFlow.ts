@@ -3,6 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useFormBlocksContext } from './formBlocks.context';
+import {
+  buildInvalidFieldSummary,
+  logContactFormDebugEvent,
+} from './contactFormDebugLogger';
 import type {
   ContactFormBlockPayload,
   ContactFormBlockValidationResult,
@@ -64,6 +68,32 @@ export function useContactFormFlow(
 
   const inFlightRef = useRef(false);
   const hadInvalidSnapshotRef = useRef(false);
+  const lastLoggedStatusRef = useRef<ContactFormSubmitStatus>('idle');
+
+  const logSubmitResult = useCallback(
+    (
+      status: ContactFormSubmitStatus,
+      validationResults: ContactFormBlockValidationResult[],
+    ) => {
+      if (status === 'idle') {
+        lastLoggedStatusRef.current = status;
+        return;
+      }
+      if (lastLoggedStatusRef.current === status) {
+        return;
+      }
+      lastLoggedStatusRef.current = status;
+
+      logContactFormDebugEvent('submit_result', {
+        submitStatus: status,
+        code: status,
+        invalidFields: buildInvalidFieldSummary(
+          validationResults.filter((result) => !result.valid),
+        ),
+      });
+    },
+    [],
+  );
 
   const validateAll =
     useCallback((): ContactFormBlockValidationResult[] => {
@@ -144,6 +174,7 @@ export function useContactFormFlow(
           setInvalid(false);
           setLatestPayload(null);
           setSubmitStatus('not_configured');
+          logSubmitResult('not_configured', validationResults);
           if (onSuccessStateChange) {
             onSuccessStateChange(false);
           }
@@ -157,6 +188,7 @@ export function useContactFormFlow(
         if (!allValid) {
           setInvalid(true);
           setSubmitStatus('validation_error');
+          logSubmitResult('validation_error', validationResults);
           enableContinuousValidation();
           return;
         }
@@ -177,6 +209,8 @@ export function useContactFormFlow(
             setInvalid(true);
             enableContinuousValidation();
           }
+
+          logSubmitResult(code, validationResults);
 
           if (onSuccessStateChange) {
             onSuccessStateChange(success);

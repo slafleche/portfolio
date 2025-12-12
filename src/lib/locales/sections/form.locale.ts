@@ -12,7 +12,11 @@ import {
 
 export const FORM_KEYS = {
   heading: 'form-heading',
-  successBody: 'form-success-body',
+  formHeading: 'form-heading',
+  successHeading: 'form-success-heading',
+  errorHeading: 'form-error-heading',
+  successBody: 'forms-form-success-body',
+  errorBody: 'forms-form-error-body',
   requiredIndicator: 'form-required-indicator',
   privacyText: 'form-privacy-text',
   privacyLinkLabel: 'form-privacy-link-label',
@@ -54,7 +58,13 @@ export type FormErrorKey = (typeof FORM_ERROR_KEY_LIST)[number];
 
 export type ContactFormCopy = {
   heading: string;
+  headings: {
+    form: string;
+    success: string;
+    error: string;
+  };
   successBody: string;
+  errorBody: string;
   requiredIndicator: string;
   submitLabel: string;
   privacy: {
@@ -82,7 +92,13 @@ export const buildContactFormCopy = (
       : value;
   return {
     heading: t(FORM_KEYS.heading),
+    headings: {
+      form: t(FORM_KEYS.formHeading),
+      success: t(FORM_KEYS.successHeading),
+      error: t(FORM_KEYS.errorHeading),
+    },
     successBody: t(FORM_KEYS.successBody),
+    errorBody: t(FORM_KEYS.errorBody),
     requiredIndicator: t(FORM_KEYS.requiredIndicator),
     submitLabel: t(FORM_KEYS.submitLabel),
     privacy: {
