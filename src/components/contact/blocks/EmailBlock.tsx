@@ -2,7 +2,10 @@ import { useMemo, useRef, useState } from 'react';
 import type { ChangeEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
-import { evaluateEmailField } from '@/modules/contactForm/validation';
+import {
+  evaluateEmailField,
+  type EmailValidationReason,
+} from '@/modules/contactForm/validation';
 import { EMAIL_MAX_LENGTH } from '@/modules/contactForm/validation.constants';
 import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
 import type {
@@ -21,13 +24,51 @@ export type EmailBlockProps = ContactFormBlockBaseProps & {
   onFocusAfter?: () => void;
 };
 
+const EMAIL_ERRORS = {
+  empty: {
+    code: 'form-error-email-invalid' as const,
+    getText: (copy: EmailBlockLocale) => copy.errors.invalid,
+  },
+  invalid: {
+    code: 'form-error-email-invalid' as const,
+    getText: (copy: EmailBlockLocale) => copy.errors.invalid,
+  },
+} as const satisfies Record<
+  EmailValidationReason,
+  {
+    code: string;
+    getText: (copy: EmailBlockLocale) => string;
+  }
+>;
+
+type EmailErrorKey = keyof typeof EMAIL_ERRORS;
+type EmailErrorCode =
+  (typeof EMAIL_ERRORS)[EmailErrorKey]['code'];
+
+const getEmailError = (
+  evaluation: ReturnType<typeof evaluateEmailField>,
+  copy: EmailBlockLocale,
+): { code: EmailErrorCode; text: string } | null => {
+  const { validation } = evaluation;
+  if (validation.ok) {
+    return null;
+  }
+
+  const config = EMAIL_ERRORS[validation.reason];
+
+  return {
+    code: config.code,
+    text: config.getText(copy),
+  };
+};
+
 const buildEmailValidationResult = (
   id: string,
   evaluation: ReturnType<typeof evaluateEmailField>,
   copy: EmailBlockLocale,
 ): ContactFormBlockValidationResult => {
-  const valid = evaluation.validation.ok;
-  if (valid) {
+  const error = getEmailError(evaluation, copy);
+  if (!error) {
     return {
       id,
       valid: true,
@@ -35,17 +76,14 @@ const buildEmailValidationResult = (
     };
   }
 
-  const code = 'form-error-email-invalid';
-  const text = copy.errors.invalid;
-
   return {
     id,
     valid: false,
     messages: [
       {
         type: 'error',
-        code,
-        text,
+        code: error.code,
+        text: error.text,
         scrollTarget: id,
       },
     ],
@@ -117,8 +155,8 @@ export function EmailBlock({
         getValue: () => value,
         validate: () => contract.validate().valid,
         getValidationSummary: () => {
-          if (evaluation.validation.ok) return null;
-          return copy.errors.invalid;
+          const error = getEmailError(evaluation, copy);
+          return error ? error.text : null;
         },
         liveValidation: liveValidationRegistration,
         getContract: () => contract,
@@ -139,10 +177,9 @@ export function EmailBlock({
   } = useFormBlock(registration);
 
   const liveValidation = hasBlurred || continuousValidation;
-  const localErrorText =
-    !evaluation.validation.ok && liveValidation
-      ? copy.errors.invalid
-      : null;
+  const localErrorText = liveValidation
+    ? getEmailError(evaluation, copy)?.text ?? null
+    : null;
 
   if (liveValidation) {
     const result = buildEmailValidationResult(id, evaluation, copy);

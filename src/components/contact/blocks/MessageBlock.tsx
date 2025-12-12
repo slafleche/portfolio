@@ -10,7 +10,10 @@ import {
   MESSAGE_MIN_LENGTH,
   MESSAGE_MAX_LENGTH,
 } from '@/modules/contactForm/validation.constants';
-import { evaluateMessageField } from '@/modules/contactForm/validation';
+import {
+  evaluateMessageField,
+  type MessageValidationReason,
+} from '@/modules/contactForm/validation';
 import type { MessageBlockLocale } from '@/lib/locales/form/form.message';
 import type {
   ContactFormBlockBaseProps,
@@ -31,13 +34,60 @@ export type MessageBlockProps = ContactFormBlockBaseProps & {
   onFocusAfter?: () => void;
 };
 
+const MESSAGE_ERRORS = {
+  empty: {
+    code: 'form-error-message-required' as const,
+    getText: (copy: MessageBlockLocale) => copy.errors.required,
+  },
+  too_short: {
+    code: 'form-error-message-too_short' as const,
+    getText: (copy: MessageBlockLocale) => copy.errors.tooShort,
+  },
+  too_long: {
+    code: 'form-error-message-too_long' as const,
+    getText: (copy: MessageBlockLocale) => copy.errors.tooLong,
+  },
+  too_many_links: {
+    code: 'form-error-message-too_many_links' as const,
+    getText: (copy: MessageBlockLocale) => copy.errors.tooManyLinks,
+  },
+} as const satisfies Record<
+  MessageValidationReason,
+  {
+    code: string;
+    getText: (copy: MessageBlockLocale) => string;
+  }
+>;
+
+type MessageErrorKey = keyof typeof MESSAGE_ERRORS;
+type MessageErrorCode =
+  (typeof MESSAGE_ERRORS)[MessageErrorKey]['code'];
+
+const getMessageError = (
+  evaluation: ReturnType<typeof evaluateMessageField>,
+  copy: MessageBlockLocale,
+): { code: MessageErrorCode; text: string } | null => {
+  const { validation } = evaluation;
+  if (validation.ok) {
+    return null;
+  }
+
+  const config = MESSAGE_ERRORS[validation.reason];
+  const text = config.getText(copy);
+
+  return {
+    code: config.code,
+    text,
+  };
+};
+
 const buildMessageValidationResult = (
   id: string,
   evaluation: ReturnType<typeof evaluateMessageField>,
   copy: MessageBlockLocale,
 ): ContactFormBlockValidationResult => {
-  const valid = evaluation.validation.ok;
-  if (valid) {
+  const error = getMessageError(evaluation, copy);
+  if (!error) {
     return {
       id,
       valid: true,
@@ -45,34 +95,14 @@ const buildMessageValidationResult = (
     };
   }
 
-  const reason = evaluation.validation.reason;
-
-  const code =
-    reason === 'too_short'
-      ? 'form-error-message-too_short'
-      : reason === 'too_long'
-        ? 'form-error-message-too_long'
-        : reason === 'too_many_links'
-          ? 'form-error-message-too_many_links'
-          : 'form-error-message-required';
-
-  const text =
-    reason === 'too_short'
-      ? copy.errors.tooShort
-      : reason === 'too_long'
-        ? copy.errors.tooLong
-        : reason === 'too_many_links'
-          ? copy.errors.tooManyLinks
-          : copy.errors.required;
-
   return {
     id,
     valid: false,
     messages: [
       {
         type: 'error',
-        code,
-        text,
+        code: error.code,
+        text: error.text,
         scrollTarget: id,
       },
     ],
@@ -165,18 +195,8 @@ export function MessageBlock({
         getValue: () => value,
         validate: () => contract.validate().valid,
         getValidationSummary: () => {
-          if (evaluation.validation.ok) return null;
-          const reason = evaluation.validation.reason;
-          if (reason === 'too_short') {
-            return copy.errors.tooShort;
-          }
-          if (reason === 'too_long') {
-            return copy.errors.tooLong;
-          }
-          if (reason === 'too_many_links') {
-            return copy.errors.tooManyLinks;
-          }
-          return copy.errors.required;
+          const error = getMessageError(evaluation, copy);
+          return error ? error.text : null;
         },
         liveValidation: liveValidationRegistration,
         getContract: () => contract,
@@ -222,17 +242,9 @@ export function MessageBlock({
     : characterHintId;
 
   let localErrorText: string | null = null;
-  if (!evaluation.validation.ok && liveValidation) {
-    const reason = evaluation.validation.reason;
-    if (reason === 'too_short') {
-      localErrorText = copy.errors.tooShort;
-    } else if (reason === 'too_long') {
-      localErrorText = copy.errors.tooLong;
-    } else if (reason === 'too_many_links') {
-      localErrorText = copy.errors.tooManyLinks;
-    } else {
-      localErrorText = copy.errors.required;
-    }
+  if (liveValidation) {
+    const error = getMessageError(evaluation, copy);
+    localErrorText = error ? error.text : null;
   }
 
   if (liveValidation) {
