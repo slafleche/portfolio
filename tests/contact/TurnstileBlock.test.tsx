@@ -14,6 +14,7 @@ import { TurnstileBlock } from '@/components/contact/blocks/TurnstileBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
+import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
 
 type TurnstileApi = NonNullable<Window['turnstile']>;
 type TurnstileApiOptions = Parameters<TurnstileApi['render']>[1];
@@ -425,6 +426,109 @@ describe('Contact form block tests: TurnstileBlock', () => {
         /^(loading|ready|error)$/,
       );
       expect(tokenInput.value).toBe(initialToken);
+    });
+  });
+
+  describe('validation and live behaviour', () => {
+    it('renders required helper hint and ARIA wiring before validation', () => {
+      const { container } = render(
+        <FormBlocksProvider>
+          <TurnstileBlock
+            id="test-turnstile-block"
+            order={0}
+            disabled={false}
+            copy={turnstileCopy}
+          />
+        </FormBlocksProvider>,
+      );
+
+      const wrapper = container.querySelector(
+        '#test-turnstile-block',
+      ) as HTMLDivElement | null;
+
+      expect(wrapper).not.toBeNull();
+      if (!wrapper) return;
+
+      const widgetContainer = wrapper.querySelector(
+        '[data-rendered]',
+      ) as HTMLDivElement | null;
+      expect(widgetContainer).not.toBeNull();
+      if (!widgetContainer) return;
+
+      const helperHint = wrapper.querySelector(
+        '[data-form-hint]',
+      ) as HTMLElement | null;
+      expect(helperHint).not.toBeNull();
+      if (!helperHint) return;
+
+      expect(helperHint.getAttribute('data-form-hint')).toBe(
+        'helper',
+      );
+      expect(helperHint.textContent).toBe(
+        turnstileCopy.requiredText,
+      );
+      expect(
+        checkMatchingId(
+          helperHint,
+          widgetContainer,
+          'describedby',
+        ),
+      ).toBe(true);
+    });
+
+    it('switches from helper hint to missing error when continuous validation is enabled', async () => {
+      const {
+        container,
+        enableContinuousValidation,
+        getRegistration,
+      } = renderTurnstileBlockWithFormBlocks({
+        id: 'test-turnstile-block',
+        order: 0,
+        disabled: false,
+        copy: turnstileCopy,
+      });
+
+      const wrapper = container.querySelector(
+        '#test-turnstile-block',
+      ) as HTMLDivElement | null;
+
+      expect(wrapper).not.toBeNull();
+      if (!wrapper) return;
+
+      const hintBefore = wrapper.querySelector(
+        '[data-form-hint]',
+      ) as HTMLElement | null;
+      expect(hintBefore).not.toBeNull();
+      if (!hintBefore) return;
+
+      expect(hintBefore.getAttribute('data-form-hint')).toBe(
+        'helper',
+      );
+      expect(hintBefore.textContent).toBe(
+        turnstileCopy.requiredText,
+      );
+
+      enableContinuousValidation();
+
+      await waitFor(() => {
+        const hintAfter = wrapper.querySelector(
+          '[data-form-hint]',
+        ) as HTMLElement | null;
+        expect(hintAfter).not.toBeNull();
+        if (!hintAfter) return;
+
+        expect(hintAfter.getAttribute('data-form-hint')).toBe(
+          'error',
+        );
+        expect(hintAfter.textContent).toBe(
+          turnstileCopy.summary.missing,
+        );
+      });
+
+      const registration = getRegistration();
+      expect(
+        registration?.getValidationSummary?.(),
+      ).toBe(turnstileCopy.summary.missing);
     });
   });
 });
