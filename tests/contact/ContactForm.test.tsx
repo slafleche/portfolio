@@ -184,6 +184,18 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         '[data-form="success"]',
       ) as HTMLElement | null;
       expect(successPanel).not.toBeNull();
+      const successHeading = successPanel?.querySelector(
+        'h1',
+      ) as HTMLElement | null;
+      expect(successHeading).not.toBeNull();
+      if (successHeading) {
+        expect(successHeading.getAttribute('tabindex')).toBe('-1');
+        expect(document.activeElement).toBe(successHeading);
+      }
+
+      expect(
+        container.querySelector('[data-form="loading"]'),
+      ).toBeNull();
 
       const inlineRegion = container.querySelector(
         '[role="status"][aria-atomic="true"]',
@@ -194,6 +206,165 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         '[role="status"]:not([aria-atomic])',
       );
       expect(toastRegion).toBeNull();
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('renders a single Turnstile widget instance even after a failed submit', async () => {
+    const copy = buildCopy();
+
+    const originalEnv = { ...process.env };
+    process.env = {
+      ...process.env,
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: 'test-site-key',
+    };
+
+    const originalTurnstile = (window as typeof window & {
+      turnstile?: {
+        render: (
+          container: HTMLElement,
+          options: { [key: string]: unknown },
+        ) => string;
+        reset: (id?: string) => void;
+      };
+    }).turnstile;
+
+    let renderCount = 0;
+
+    (window as typeof window & {
+      turnstile?: {
+        render: (
+          container: HTMLElement,
+          options: { [key: string]: unknown },
+        ) => string;
+        reset: (id?: string) => void;
+      };
+    }).turnstile = {
+      render: (container) => {
+        renderCount += 1;
+        const marker = document.createElement('div');
+        marker.dataset.testid = 'turnstile-instance';
+        container.appendChild(marker);
+        return `widget-${renderCount}`;
+      },
+      reset: () => {},
+    };
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'validation_error',
+        message: copy.blocks.messageCentre.statuses.validation_error,
+      }),
+    } as Response);
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      const turnstileSection = container.querySelector(
+        '[data-form-turnstile="status"]',
+      )?.closest('[data-order]');
+      expect(turnstileSection).not.toBeNull();
+
+      await waitFor(() => {
+        const instances = container.querySelectorAll(
+          '[data-testid="turnstile-instance"]',
+        );
+        expect(instances.length).toBe(1);
+      });
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        const instances = container.querySelectorAll(
+          '[data-testid="turnstile-instance"]',
+        );
+        expect(instances.length).toBe(1);
+      });
+    } finally {
+      global.fetch = originalFetch;
+      process.env = originalEnv;
+      (window as typeof window & { turnstile?: unknown }).turnstile =
+        originalTurnstile;
+    }
+  });
+
+  it('restores focus to the last focused field after a recoverable server error', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'validation_error',
+        message: statusMessages.validation_error,
+      }),
+    } as Response);
+
+    global.fetch = fetchMock;
+
+    try {
+      renderWrappedContactForm(copy, '/api/contact');
+
+      const nameInput = screen.getByLabelText(
+        copy.blocks.name.label,
+        { exact: false },
+      ) as HTMLInputElement;
+      const emailInput = screen.getByLabelText(
+        copy.blocks.email.label,
+        { exact: false },
+      ) as HTMLInputElement;
+      const messageInput = screen.getByLabelText(
+        copy.blocks.message.label,
+        { exact: false },
+      ) as HTMLTextAreaElement;
+
+      await userEvent.type(nameInput, 'Jane Doe');
+      await userEvent.type(emailInput, 'example@example.com');
+      await userEvent.type(
+        messageInput,
+        'This is a sufficiently long message.',
+      );
+
+      messageInput.focus();
+      expect(document.activeElement).toBe(messageInput);
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        const inlineRegion = document.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) return;
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.validation_error,
+        );
+      });
+
+      expect(document.activeElement).toBe(messageInput);
     } finally {
       global.fetch = originalFetch;
     }

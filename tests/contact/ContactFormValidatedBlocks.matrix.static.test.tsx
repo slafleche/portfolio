@@ -353,7 +353,7 @@ describe('ContactForm validated blocks — static matrix', () => {
     expect(onJumpToFirstIssue).toHaveBeenCalledWith('name');
   });
 
-  it('treats a verification failure (blocked) as a non-field error with no jump-to-first-issue', async () => {
+  it('treats a verification failure (blocked) as a catastrophic non-field error with no jump-to-first-issue', async () => {
     const blocks = [
       {
         key: 'name',
@@ -399,6 +399,6 @@ describe('ContactForm validated blocks — static matrix', () => {
     expect(queryByTestId('jump-to-first-issue')).toBeNull();
 
     const submitButton = getByRole('button', { name: 'Submit' });
-    expect(submitButton).not.toBeDisabled();
+    expect(submitButton).toBeDisabled();
   });
 });

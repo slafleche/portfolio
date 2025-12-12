@@ -349,6 +349,11 @@ export function ContactDialogProvider({
                 <Dialog.Title className={dialogStyles.heading}>
                   {formCopy.heading}
                 </Dialog.Title>
+                <Dialog.Description asChild>
+                  <p className={formStyles.visuallyHidden}>
+                    {formCopy.heading}
+                  </p>
+                </Dialog.Description>
                 <ContactForm copy={formCopy} />
               </div>
             </div>

@@ -15,6 +15,7 @@ import { SubmitButton } from './primitives/SubmitButton';
 import { ContactPrivacy } from './ContactPrivacy';
 import { useContactFormFlow } from './useContactFormFlow';
 import { useContactFormOutcome } from './useContactFormOutcome';
+import ContactFormLoading from './ContactFormLoading';
 import * as s from '@/styles/components/forms.css';
 import type {
   ContactFormBlockBaseProps,
@@ -106,6 +107,10 @@ function ContactFormInner({
   const disableFields = isSubmitting || isCatastrophic;
   const disableSubmit = isSubmitting || isInvalid || isCatastrophic;
 
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const lastFocusedElementRef = useRef<HTMLElement | null>(null);
+  const wasSubmittingRef = useRef(isSubmitting);
+
   const scrollToPriorityTarget = useCallback(() => {
     if (typeof document === 'undefined') return;
     const priorityMessage = outcome.priority.message;
@@ -170,12 +175,47 @@ function ContactFormInner({
     scrollToPriorityTarget,
   ]);
 
+  useEffect(() => {
+    const wasSubmitting = wasSubmittingRef.current;
+    if (
+      wasSubmitting &&
+      !isSubmitting &&
+      !isCatastrophic &&
+      flow.submitStatus !== 'success'
+    ) {
+      const target = lastFocusedElementRef.current;
+      if (target && typeof target.focus === 'function') {
+        target.focus();
+      }
+    }
+    wasSubmittingRef.current = isSubmitting;
+  }, [
+    flow.submitStatus,
+    isCatastrophic,
+    isSubmitting,
+  ]);
+
   return (
     <form
+      ref={formRef}
       className={s.form}
       action={actionUrl}
       noValidate
       data-form="form"
+      onFocusCapture={(event) => {
+        const target = event.target as HTMLElement | null;
+        if (!target) return;
+        if (!formRef.current || !formRef.current.contains(target)) {
+          return;
+        }
+        const tagName = target.tagName.toLowerCase();
+        const isFormControl =
+          tagName === 'input' ||
+          tagName === 'textarea' ||
+          tagName === 'select';
+        if (!isFormControl) return;
+        lastFocusedElementRef.current = target;
+      }}
       onSubmit={(event) => {
         const registrations = getRegistrationsSnapshot();
         const payloads: ContactFormBlockPayload<unknown>[] = [];
@@ -208,6 +248,11 @@ function ContactFormInner({
         void flow.handleSubmit(event);
       }}
     >
+      {isSubmitting && !isCatastrophic ? (
+        <ContactFormLoading
+          message={copy.blocks.messageCentre.statuses.sending}
+        />
+      ) : null}
       <MessageCentreBlock messages={outcome.messagesForUi} />
       <NameBlock
         {...formMembers[0]}

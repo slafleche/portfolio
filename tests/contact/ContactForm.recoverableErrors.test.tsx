@@ -1,4 +1,15 @@
-import { describe } from 'vitest';
+import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import ContactForm from '@/components/contact/ContactForm';
+import {
+  buildContactFormCopy,
+  type FormStatusKey,
+} from '@/lib/locales/sections/form.locale';
+import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
+import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
+import type { Translator } from '@/lib/locales/sections/helpers.locale';
 
 // NOTE:
 // These tests will cover *recoverable* error states for the contact form —
@@ -10,69 +21,556 @@ import { describe } from 'vitest';
 // - Appropriate status / banner messages are shown.
 // - The submit helper is called (or not) according to the error type.
 // - Retryability (e.g., after fixing fields or waiting) behaves as expected.
+// - The loading UI (`data-form="loading"`) appears only while a submit is
+//   in-flight and never persists once a response has completed.
 
-describe.skip('ContactForm — recoverable error flows (form view)', () => {
-  /*
-   * TODO: client-side validation_error (invalid fields)
-   *
-   * Scenario:
-   * - Leave required fields empty and submit.
-   *
-   * Expectations:
-   * - No fetch call is made.
-   * - Message centre shows validation_error summary.
-   * - Jump-to-first-issue control appears and focuses the priority field.
-   * - Form remains on screen and can be corrected.
-   */
+const buildCopy = () =>
+  buildContactFormCopy(
+    ((key: string) =>
+      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
+  );
 
-  /*
-   * TODO: server-side validation_error
-   *
-   * Scenario:
-   * - Fill fields with values that are invalid only from the server
-   *   perspective (e.g., Brevo validation error mapped to validation_error).
-   *
-   * Expectations:
-   * - fetchMock is called once and returns validation_error.
-   * - Message centre shows the server-provided validation_error summary.
-   * - Form remains visible with updated inline field errors.
-   */
+const buildStatusMessages = (copy = buildCopy()) =>
+  copy.blocks.messageCentre.statuses as Record<FormStatusKey, string>;
 
-  /*
-   * TODO: rate_limited
-   *
-   * Scenario:
-   * - Mock /api/contact to return { code: 'rate_limited' }.
-   *
-   * Expectations:
-   * - The form view stays visible.
-   * - Status text matches copy.statuses.rate_limited and/or countdown copy.
-   * - Submit button is disabled while rate-limited, but the error view
-   *   is NOT shown.
-   */
+function renderWrappedContactForm(
+  copy = buildCopy(),
+  actionUrl = '/api/contact',
+) {
+  const dialogValue = {
+    open: () => {},
+    close: () => {},
+    isOpen: false,
+    openPrivacy: () => {},
+    closePrivacy: () => {},
+    isPrivacyOpen: false,
+  };
 
-  /*
-   * TODO: service_unavailable
-   *
-   * Scenario:
-   * - Mock /api/contact to return { code: 'service_unavailable' }.
-   *
-   * Expectations:
-   * - Form remains visible.
-   * - A service_unavailable status message is rendered in the message centre.
-   * - The user can attempt to submit again later (no catastrophic view).
-   */
+  return render(
+    <ContactDialogContext.Provider value={dialogValue}>
+      <ContactForm copy={copy} actionUrl={actionUrl} />
+    </ContactDialogContext.Provider>,
+  );
+}
 
-  /*
-   * TODO: generic_error
-   *
-   * Scenario:
-   * - Mock /api/contact to return { code: 'generic_error' }, or throw from
-   *   submitHelper.
-   *
-   * Expectations:
-   * - Form view remains visible.
-   * - A generic_error status message is shown.
-   * - No error view is displayed; the user can try again.
-   */
+describe('ContactForm — recoverable error flows (form view)', () => {
+  it('handles client-side validation_error without calling the server or showing the loader', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn();
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      // Submit immediately with empty fields.
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+      await userEvent.click(submitButton);
+
+      // No fetch should happen for purely client-side validation errors.
+      expect(fetchMock).not.toHaveBeenCalled();
+
+      // Loader should never appear.
+      expect(
+        container.querySelector('[data-form="loading"]'),
+      ).toBeNull();
+
+      // Form view remains on screen.
+      expect(
+        container.querySelector('[data-form="form"]'),
+      ).not.toBeNull();
+      expect(
+        container.querySelector('[data-form="error"]'),
+      ).toBeNull();
+      expect(
+        container.querySelector('[data-form="success"]'),
+      ).toBeNull();
+
+      // Message centre shows validation_error summary.
+      await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) return;
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.validation_error,
+        );
+      });
+
+      // Jump-to-first-issue control appears and focuses the priority field.
+      const jumpButton = await screen.findByTestId(
+        'jump-to-first-issue',
+      );
+      const nameInput = screen.getByLabelText(
+        copy.blocks.name.label,
+        { exact: false },
+      ) as HTMLInputElement;
+      expect(document.activeElement).not.toBe(nameInput);
+
+      await userEvent.click(jumpButton);
+
+      await waitFor(() => {
+        expect(document.activeElement).toBe(nameInput);
+      });
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('surfaces a server-side validation_error while keeping the form visible', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'validation_error',
+        message: statusMessages.validation_error,
+      }),
+    } as Response);
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      // After the response, we see the validation_error summary,
+      // loader is gone, and the form view remains.
+      await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) return;
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.validation_error,
+        );
+        expect(
+          container.querySelector('[data-form="loading"]'),
+        ).toBeNull();
+        expect(
+          container.querySelector('[data-form="form"]'),
+        ).not.toBeNull();
+        expect(
+          container.querySelector('[data-form="error"]'),
+        ).toBeNull();
+        expect(
+          container.querySelector('[data-form="success"]'),
+        ).toBeNull();
+      });
+
+      // Submit is disabled until the user updates fields under continuous validation.
+      expect(submitButton).toBeDisabled();
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('surfaces a rate_limited status while keeping the form visible and loader non-sticky', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'rate_limited',
+        message: statusMessages.rate_limited,
+        retryAfterSeconds: 60,
+      }),
+    } as Response);
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      // After the response, show rate_limited summary, remove loader,
+      // keep the form view, and do not switch to catastrophic or success.
+      await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) return;
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.rate_limited,
+        );
+        expect(
+          container.querySelector('[data-form="loading"]'),
+        ).toBeNull();
+        expect(
+          container.querySelector('[data-form="form"]'),
+        ).not.toBeNull();
+        expect(
+          container.querySelector('[data-form="error"]'),
+        ).toBeNull();
+        expect(
+          container.querySelector('[data-form="success"]'),
+        ).toBeNull();
+      });
+
+      // User is still able to interact with the form (submit is not
+      // permanently disabled by the rate limit).
+      expect(submitButton).not.toBeDisabled();
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('surfaces a service_unavailable status while keeping the form visible and loader non-sticky', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'service_unavailable',
+        message: statusMessages.service_unavailable,
+      }),
+    } as Response);
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      // After the response, show service_unavailable summary, remove loader,
+      // keep the form view, and do not switch to catastrophic or success.
+      await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) return;
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.service_unavailable,
+        );
+        expect(
+          container.querySelector('[data-form="loading"]'),
+        ).toBeNull();
+        expect(
+          container.querySelector('[data-form="form"]'),
+        ).not.toBeNull();
+        expect(
+          container.querySelector('[data-form="error"]'),
+        ).toBeNull();
+        expect(
+          container.querySelector('[data-form="success"]'),
+        ).toBeNull();
+      });
+
+      expect(submitButton).not.toBeDisabled();
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('surfaces a generic_error and then clears it after a subsequent successful submit', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockImplementation(async () => {
+      const callIndex = fetchMock.mock.calls.length;
+      if (callIndex === 1) {
+        return {
+          ok: true,
+          json: async () => ({
+            ok: false,
+            code: 'generic_error',
+            message: statusMessages.generic,
+          }),
+        } as Response;
+      }
+      return {
+        ok: true,
+        json: async () => ({
+          ok: true,
+          code: 'success',
+          message: statusMessages.success,
+        }),
+      } as Response;
+    });
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      // First submit: generic_error.
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) return;
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.generic,
+        );
+        expect(
+          container.querySelector('[data-form="loading"]'),
+        ).toBeNull();
+        expect(
+          container.querySelector('[data-form="form"]'),
+        ).not.toBeNull();
+      });
+
+      // Second submit: success, clears generic error.
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+      });
+
+      await waitFor(() => {
+        const successPanel = container.querySelector(
+          '[data-form="success"]',
+        ) as HTMLElement | null;
+        expect(successPanel).not.toBeNull();
+
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(
+          inlineRegion?.textContent?.includes(
+            statusMessages.generic,
+          ) ?? false,
+        ).toBe(false);
+      });
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('shows the loading UI while a recoverable server submit is in-flight and removes it afterwards', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockImplementation(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      return {
+        ok: true,
+        json: async () => ({
+          ok: false,
+          code: 'generic_error',
+          message: statusMessages.generic,
+        }),
+      } as Response;
+    });
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        const loading = container.querySelector(
+          '[data-form="loading"]',
+        );
+        expect(loading).not.toBeNull();
+      });
+
+      await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) return;
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.generic,
+        );
+        expect(
+          container.querySelector('[data-form="loading"]'),
+        ).toBeNull();
+        expect(
+          container.querySelector('[data-form="form"]'),
+        ).not.toBeNull();
+        expect(
+          container.querySelector('[data-form="error"]'),
+        ).toBeNull();
+        expect(
+          container.querySelector('[data-form="success"]'),
+        ).toBeNull();
+      });
+
+      expect(submitButton).not.toBeDisabled();
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
 });

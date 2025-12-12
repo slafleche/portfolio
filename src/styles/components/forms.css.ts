@@ -197,6 +197,11 @@ export const statusText = style({
   flex: 1,
 });
 
+export const loader = style({
+  width: '100px',
+  height: 'auto',
+});
+
 export const statusWrapper = style({
   minHeight: '6px',
   transition: 'opacity 220ms ease, transform 220ms ease',

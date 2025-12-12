@@ -224,6 +224,9 @@ export function TurnstileBlock({
     let cancelled = false;
     setStatus('loading');
     const mountWidget = async () => {
+      if (widgetIdRef.current) {
+        return;
+      }
       try {
         await loadTurnstileScript();
         if (cancelled) return;
@@ -235,6 +238,9 @@ export function TurnstileBlock({
             'Turnstile unavailable: missing API or container.',
           );
           throw new Error('Turnstile unavailable');
+        }
+        if (container.childNodes.length > 0) {
+          return;
         }
         const widgetId = turnstileApi.render(container, {
           sitekey: turnstileSiteKey,

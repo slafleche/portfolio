@@ -175,7 +175,18 @@ describe('ContactForm — catastrophic failures (error view)', () => {
           '[data-form="error"]',
         ) as HTMLElement | null;
         expect(errorPanel).not.toBeNull();
+        const errorHeading = errorPanel?.querySelector(
+          'h1',
+        ) as HTMLElement | null;
+        expect(errorHeading).not.toBeNull();
+        if (!errorHeading) return;
+        expect(errorHeading.getAttribute('tabindex')).toBe('-1');
+        expect(document.activeElement).toBe(errorHeading);
       });
+
+      expect(
+        container.querySelector('[data-form="loading"]'),
+      ).toBeNull();
 
       expect(
         container.querySelector('[data-form="form"]'),
@@ -261,14 +272,21 @@ describe('ContactForm — catastrophic failures (error view)', () => {
           '[data-form="error"]',
         ) as HTMLElement | null;
         expect(errorPanel).not.toBeNull();
-        if (!errorPanel) return;
-        expect(errorPanel.textContent ?? '').toContain(
-          copy.statuses.blocked,
-        );
+        const errorHeading = errorPanel?.querySelector(
+          'h1',
+        ) as HTMLElement | null;
+        expect(errorHeading).not.toBeNull();
+        if (!errorHeading) return;
+        expect(errorHeading.getAttribute('tabindex')).toBe('-1');
+        expect(document.activeElement).toBe(errorHeading);
       });
 
       expect(
         container.querySelector('[data-form="form"]'),
+      ).toBeNull();
+
+      expect(
+        container.querySelector('[data-form="loading"]'),
       ).toBeNull();
 
       expect(
@@ -357,7 +375,8 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         '[contact][catastrophic-view]',
         {
-          reason: 'form.idle',
+          reason:
+            'Turnstile script failed to load or initialise.',
         },
       );
     } finally {

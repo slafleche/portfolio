@@ -161,7 +161,7 @@ describe('ContactForm — full stack happy path', () => {
       expect(inlineRegion.textContent ?? '').toBe('');
 
       const toastRegion = container.querySelector(
-        '[role="status"]:not([aria-atomic])',
+        '[role="status"]:not([aria-atomic]):not([data-form="loading"])',
       ) as HTMLElement | null;
       expect(toastRegion).toBeNull();
 

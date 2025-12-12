@@ -11,10 +11,10 @@ import type {
 } from './messageCentre.types';
 import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
 
-type PriorityType = 'catastrophic' | MessageBase['type'];
+type PrioritySeverity = 'info' | 'warning' | 'error' | 'urgent';
 
 export type ContactFormOutcomePriorityMessage = {
-  type: PriorityType;
+  type: PrioritySeverity;
   text: string;
   scrollTarget?: string;
 };
@@ -42,8 +42,10 @@ type OutcomeBuildInput = {
   latestValidationResults: ContactFormBlockValidationResult[];
 };
 
-const severityRank = (type: MessageBase['type']): number => {
+const severityRank = (type: PrioritySeverity): number => {
   switch (type) {
+    case 'urgent':
+      return 3;
     case 'error':
       return 2;
     case 'warning':
@@ -187,10 +189,10 @@ export function buildContactFormOutcome(
     submitStatus !== 'success' &&
     submitStatus !== 'idle'
   ) {
-    const type: PriorityType =
+    const type: PrioritySeverity =
       submitStatus === 'not_configured' ||
       submitStatus === 'blocked'
-        ? 'catastrophic'
+        ? 'urgent'
         : 'error';
     priorityMessage = {
       type,
@@ -207,11 +209,12 @@ export function buildContactFormOutcome(
     ) ||
     (!!priorityMessage &&
       [
-        'catastrophic',
+        'urgent',
         'error',
       ].includes(priorityMessage.type));
 
-  const isCatastrophic = priorityMessage?.type === 'catastrophic';
+  const isCatastrophic =
+    submitStatus === 'not_configured' || submitStatus === 'blocked';
 
   const priority: ContactFormOutcomePriority = {
     message: priorityMessage,

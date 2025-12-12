@@ -183,8 +183,34 @@ describe('ContactFormOutcome', () => {
     expect(outcome.priority.message).not.toBeNull();
     if (!outcome.priority.message) return;
 
-    expect(outcome.priority.message.type).toBe('catastrophic');
+    expect(outcome.priority.message.type).toBe('urgent');
     expect(outcome.priority.message.text).toBe('not_configured');
+    expect(outcome.hasErrors).toBe(true);
+    expect(outcome.isCatastrophic).toBe(true);
+  });
+
+  it('treats blocked as catastrophic when there are no block messages', () => {
+    const snapshot: ContactFormFlowSnapshot = makeFlowSnapshot({
+      submitStatus: 'blocked',
+      latestValidationResults: [],
+    });
+
+    const { getLatestOutcome } = renderOutcomeHook(
+      useTestOutcome,
+      snapshot,
+    );
+
+    const outcome = getLatestOutcome();
+
+    expect(outcome.messagesForUi.globals).toEqual(['blocked']);
+    expect(outcome.messagesForUi.blocks).toEqual([]);
+    expect(outcome.messagesForUi.toastFallback).toBe('blocked');
+
+    expect(outcome.priority.message).not.toBeNull();
+    if (!outcome.priority.message) return;
+
+    expect(outcome.priority.message.type).toBe('urgent');
+    expect(outcome.priority.message.text).toBe('blocked');
     expect(outcome.hasErrors).toBe(true);
     expect(outcome.isCatastrophic).toBe(true);
   });
@@ -255,4 +281,5 @@ describe('ContactFormOutcome', () => {
     expect(outcome.hasErrors).toBe(false);
     expect(outcome.isCatastrophic).toBe(false);
   });
+
 });
