@@ -1,6 +1,7 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import {
+  act,
   render,
   screen,
   waitFor,
@@ -47,6 +48,64 @@ const STATUS_MESSAGES: Record<FormStatusKey, string> = {
   service_unavailable: 'service_unavailable',
   not_configured: 'not_configured',
   blocked: 'blocked',
+};
+
+type TurnstileApiOptions = {
+  callback?: (token: string) => void;
+  'expired-callback'?: () => void;
+  'error-callback'?: () => void;
+  // Allow additional keys without over-specifying the shape.
+  [key: string]: unknown;
+};
+
+type MockTurnstileApi = {
+  lastOptions: TurnstileApiOptions | null;
+  render: (container: HTMLElement, options: TurnstileApiOptions) => string;
+  reset: (id?: string) => void;
+};
+
+const enableTurnstileForTest = () => {
+  const originalEnv = { ...process.env };
+  const extendedWindow = window as typeof window & {
+    turnstile?: MockTurnstileApi;
+  };
+  const originalTurnstile = extendedWindow.turnstile;
+
+  process.env = {
+    ...process.env,
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: 'test-site-key',
+  };
+
+  const mockTurnstile: MockTurnstileApi = {
+    lastOptions: null,
+    render: (container, options) => {
+      if (!container || typeof container === 'string') {
+        throw new Error('Missing container');
+      }
+      mockTurnstile.lastOptions = options;
+      return 'mock-widget-id';
+    },
+    reset: () => {},
+  };
+
+  extendedWindow.turnstile = mockTurnstile;
+
+  return {
+    originalEnv,
+    originalTurnstile,
+    mockTurnstile,
+  };
+};
+
+const restoreTurnstileForTest = (
+  originalEnv: NodeJS.ProcessEnv,
+  originalTurnstile: MockTurnstileApi | undefined,
+) => {
+  process.env = originalEnv;
+  const extendedWindow = window as typeof window & {
+    turnstile?: MockTurnstileApi;
+  };
+  extendedWindow.turnstile = originalTurnstile;
 };
 
 function renderWrappedContactForm(
@@ -135,11 +194,25 @@ describe('ContactForm — catastrophic failures (error view)', () => {
 
     global.fetch = fetchMock;
 
+    const {
+      originalEnv,
+      originalTurnstile,
+      mockTurnstile,
+    } = enableTurnstileForTest();
+
     try {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
       );
+
+      await waitFor(() => {
+        expect(mockTurnstile.lastOptions).not.toBeNull();
+      });
+
+      await act(async () => {
+        mockTurnstile.lastOptions?.callback?.('test-token');
+      });
 
       await userEvent.type(
         screen.getByLabelText(copy.blocks.name.label, {
@@ -210,6 +283,7 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       );
     } finally {
       global.fetch = originalFetch;
+      restoreTurnstileForTest(originalEnv, originalTurnstile);
       consoleErrorSpy.mockRestore();
     }
   });
@@ -232,11 +306,25 @@ describe('ContactForm — catastrophic failures (error view)', () => {
 
     global.fetch = fetchMock;
 
+    const {
+      originalEnv,
+      originalTurnstile,
+      mockTurnstile,
+    } = enableTurnstileForTest();
+
     try {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
       );
+
+      await waitFor(() => {
+        expect(mockTurnstile.lastOptions).not.toBeNull();
+      });
+
+      await act(async () => {
+        mockTurnstile.lastOptions?.callback?.('test-token');
+      });
 
       await userEvent.type(
         screen.getByLabelText(copy.blocks.name.label, {
@@ -307,6 +395,7 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       );
     } finally {
       global.fetch = originalFetch;
+      restoreTurnstileForTest(originalEnv, originalTurnstile);
       consoleErrorSpy.mockRestore();
     }
   });

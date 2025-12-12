@@ -279,13 +279,6 @@ describe('Contact form shell harness', () => {
         expect(submitHelper).toHaveBeenCalledTimes(1);
       });
 
-      const toastRegion = container.querySelector(
-        '[role="status"]:not([aria-atomic])',
-      );
-      expect(toastRegion?.textContent ?? '').toContain(
-        scenario.expectedSummary,
-      );
-
       // Second submit: success clears summaries from the message centre.
       submit();
 

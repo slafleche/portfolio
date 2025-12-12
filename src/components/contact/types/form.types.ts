@@ -46,6 +46,53 @@ export type ContactFormBlockInitialConfig<Value> = {
   validateOnMount?: boolean;
 };
 
+export type ContactFormBlockInitialValues = {
+  /**
+   * Initial configuration for the Name block.
+   */
+  name?: ContactFormBlockInitialConfig<string>;
+  /**
+   * Initial configuration for the Email block.
+   */
+  email?: ContactFormBlockInitialConfig<string>;
+  /**
+   * Initial configuration for the Message block.
+   */
+  message?: ContactFormBlockInitialConfig<string>;
+  /**
+   * Initial configuration for the Turnstile block.
+   *
+   * For now this mirrors the token payload shape; it can be
+   * widened later if the block stores richer data.
+   */
+  turnstile?: ContactFormBlockInitialConfig<string>;
+  /**
+   * Initial configuration for the honeypot field.
+   */
+  honeypot?: ContactFormBlockInitialConfig<string>;
+  /**
+   * Optional initial flow-level state for the form itself.
+   * These values are intended only for first-render seeding
+   * (for example, styling scenarios) and must not be treated
+   * as live overrides once the internal state has changed.
+   */
+  form?: {
+    server?: {
+      /**
+       * Initial server-style submit status to surface in the
+       * message centre (success, validation_error, rate_limited,
+       * service_unavailable, not_configured, blocked, etc.).
+       */
+      submitStatus?: FormServerResponseCode;
+      /**
+       * Whether the form should appear to be in a submitting /
+       * loading state on first render.
+       */
+      isSubmitting?: boolean;
+    };
+  };
+};
+
 export type ContactFormDebugFieldState = {
   disabled: boolean;
 };
@@ -54,6 +101,12 @@ export type ContactFormProps = {
   copy: ContactFormCopy;
   actionUrl?: string;
   onSuccessStateChange?: (visible: boolean) => void;
+  /**
+   * Optional initial values for individual form blocks. This is a
+   * generic data shape for consumers (scenarios, tests, or other
+   * hosts) to prefill and optionally validate blocks on mount.
+   */
+  initialBlocks?: ContactFormBlockInitialValues;
 };
 
 export type BlockMessage = Omit<MessageBase, 'code'> & {

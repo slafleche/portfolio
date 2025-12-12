@@ -430,7 +430,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
   });
 
   describe('validation and live behaviour', () => {
-    it('renders required helper hint and ARIA wiring before validation', () => {
+    it('renders required helper hint and ARIA wiring before validation', async () => {
       const { container } = render(
         <FormBlocksProvider>
           <TurnstileBlock
@@ -446,34 +446,32 @@ describe('Contact form block tests: TurnstileBlock', () => {
         '#test-turnstile-block',
       ) as HTMLDivElement | null;
 
-      expect(wrapper).not.toBeNull();
-      if (!wrapper) return;
+      await waitFor(() => {
+        expect(wrapper).not.toBeNull();
+        const widgetContainer = wrapper?.querySelector(
+          '[data-rendered]',
+        ) as HTMLDivElement | null;
+        expect(widgetContainer).not.toBeNull();
 
-      const widgetContainer = wrapper.querySelector(
-        '[data-rendered]',
-      ) as HTMLDivElement | null;
-      expect(widgetContainer).not.toBeNull();
-      if (!widgetContainer) return;
+        const helperHint = wrapper?.querySelector(
+          '[data-form-hint]',
+        ) as HTMLElement | null;
+        expect(helperHint).not.toBeNull();
 
-      const helperHint = wrapper.querySelector(
-        '[data-form-hint]',
-      ) as HTMLElement | null;
-      expect(helperHint).not.toBeNull();
-      if (!helperHint) return;
-
-      expect(helperHint.getAttribute('data-form-hint')).toBe(
-        'helper',
-      );
-      expect(helperHint.textContent).toBe(
-        turnstileCopy.requiredText,
-      );
-      expect(
-        checkMatchingId(
-          helperHint,
-          widgetContainer,
-          'describedby',
-        ),
-      ).toBe(true);
+        expect(helperHint?.getAttribute('data-form-hint')).toBe(
+          'helper',
+        );
+        expect(helperHint?.textContent).toBe(
+          turnstileCopy.requiredText,
+        );
+        expect(
+          checkMatchingId(
+            helperHint,
+            widgetContainer,
+            'describedby',
+          ),
+        ).toBe(true);
+      });
     });
 
     it('switches from helper hint to missing error when continuous validation is enabled', async () => {

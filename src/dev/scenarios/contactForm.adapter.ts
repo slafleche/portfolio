@@ -1,7 +1,5 @@
 import { sharedStrings } from '@/lib/sharedStrings';
 
-let contactFormScenarioConsumed = false;
-
 const stripScenarioParamFromUrl = (scenarioId: string) => {
   try {
     if (typeof window === 'undefined') return;
@@ -37,7 +35,6 @@ export function resolveContactFormScenarioIdFromLocation():
   | null {
   if (process.env.NODE_ENV === 'production') return null;
   if (typeof window === 'undefined') return null;
-  if (contactFormScenarioConsumed) return null;
 
   const { hash, search } = window.location;
   const normalizedHash =
@@ -55,8 +52,6 @@ export function resolveContactFormScenarioIdFromLocation():
   const trimmed = rawId.trim();
   if (!trimmed) return null;
 
-  contactFormScenarioConsumed = true;
   stripScenarioParamFromUrl(trimmed);
   return trimmed;
 }
-

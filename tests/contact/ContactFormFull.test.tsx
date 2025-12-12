@@ -90,7 +90,9 @@ describe('ContactForm — full stack happy path', () => {
     mockedDeliver.mockResolvedValue(buildDeliveryResult());
   });
 
-  it('submits successfully through the real /api/contact route and shows success status', async () => {
+  it(
+    'submits successfully through the real /api/contact route and shows success status',
+    async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
 
@@ -171,5 +173,6 @@ describe('ContactForm — full stack happy path', () => {
     } finally {
       global.fetch = originalFetch;
     }
-  });
+    },
+  );
 });

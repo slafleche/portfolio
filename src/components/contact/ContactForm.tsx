@@ -22,6 +22,7 @@ import type {
   ContactFormBlockPayload,
   ContactFormFlowSubmitHelper,
   ContactFormProps,
+  ContactFormBlockInitialValues,
 } from './types/form.types';
 import type {
   ContactFormPayload,
@@ -77,6 +78,7 @@ type ContactFormInnerProps = {
   submitHelper: ContactFormFlowSubmitHelper;
   onSuccessStateChange?: (visible: boolean) => void;
   onCatastrophic?: (source: string, reason: string) => void;
+  initialBlocks?: ContactFormBlockInitialValues | null;
 };
 
 function ContactFormInner({
@@ -86,7 +88,11 @@ function ContactFormInner({
   submitHelper,
   onSuccessStateChange,
   onCatastrophic,
+  initialBlocks,
 }: ContactFormInnerProps) {
+  const [initialBlocksSnapshot] = useState<
+    ContactFormBlockInitialValues | null | undefined
+  >(() => initialBlocks ?? null);
   const { getRegistrationsSnapshot } = useFormBlocksContext();
 
   const flow = useContactFormFlow({
@@ -275,16 +281,19 @@ function ContactFormInner({
         {...formMembers[0]}
         disabled={disableFields}
         copy={copy.blocks.name}
+        initialConfig={initialBlocksSnapshot?.name}
       />
       <EmailBlock
         {...formMembers[1]}
         disabled={disableFields}
         copy={copy.blocks.email}
+        initialConfig={initialBlocksSnapshot?.email}
       />
       <MessageBlock
         {...formMembers[2]}
         disabled={disableFields}
         copy={copy.blocks.message}
+        initialConfig={initialBlocksSnapshot?.message}
       />
       <TurnstileBlock
         {...formMembers[3]}
@@ -313,9 +322,8 @@ export default function ContactForm({
   actionUrl = DEFAULT_ACTION_URL,
   copy,
   onSuccessStateChange,
-  ...rest
+  initialBlocks,
 }: ContactFormProps) {
-  void rest;
   const idPrefix = useSafeId('contact-form-');
   const { setTitleKey } = useContactDialogTitle();
 
@@ -507,6 +515,7 @@ export default function ContactForm({
           submitHelper={submitHelper}
           onSuccessStateChange={handleSuccessStateChange}
           onCatastrophic={handleCatastrophic}
+          initialBlocks={initialBlocks ?? null}
         />
       )}
     </FormBlocksProvider>
