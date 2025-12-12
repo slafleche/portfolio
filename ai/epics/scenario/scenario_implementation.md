@@ -13,17 +13,16 @@
 
 ## Hash parsing design
 
-- Support patterns like:
-  - `#contact-form&scenario=<id>`
-  - Optionally, future variants like `#some-target&scenario=<id>&debug=1`.
-- Basic parsing steps:
-  - Strip leading `#`.
-  - Split on `&` into segments.
-  - First segment must match a target id (for example, `contact-form`).
-  - Remaining segments are treated as simple `key=value` pairs; extract `scenario`.
-- Exposed API (conceptual):
-  - `parseHashForTarget(targetId: string, hash: string): { scenarioId: string | null }`
-  - Generic enough to be reused by other features that adopt the same pattern.
+## URL parsing design
+
+- For the contact form, use a query + hash convention:
+  - `/en?scenario=<id>#contact-form`
+  - The `scenario` id lives in the **query string**, and the hash `#contact-form` gates whether the scenario should apply.
+- Basic parsing steps for contact-form scenarios:
+  - Read `window.location.hash` and confirm it resolves to the contact intent (for example, `#contact-form`).
+  - If the hash does not point at `contact-form`, ignore any scenario id entirely.
+  - If the hash matches, read `window.location.search`, parse simple `key=value` pairs, and extract `scenario=<id>`.
+- The generic helper in `src/dev/scenarios/hashRouting.ts` can still support hash-only patterns (for example, `#feature-x-panel&scenario=<id>`) for other dev features that prefer fragment-based scenarios, but the contact form uses the query-based pattern above.
 
 ## Scenario types and map
 
@@ -52,9 +51,9 @@
 
 - In `ContactForm` (or a small wrapper), add a dev-only hook:
   - On client mount, check `process.env.NODE_ENV !== 'production'`.
-  - Read `window.location.hash`.
-  - Call `parseHashForTarget('contact-form', hash)` to extract `scenarioId`.
-  - If present, look up `contactFormScenarios[scenarioId]`.
+  - Read `window.location.hash` and `window.location.search`.
+  - Confirm the hash points at the contact intent (for example, `#contact-form`).
+  - If so, read `scenario=<id>` from the query string and look it up in the flattened `contactFormScenarioMap`.
   - If found, derive `initialValues` and pass them to the form via props.
 - Form behaviour:
   - Accept an optional `initialValues` prop and seed local state (name/email/message/turnstile/honeypot) from it instead of empty strings.
@@ -74,6 +73,7 @@
 - Other components that want scenarios can:
   - Choose their own `targetId` (for example, `feature-x-panel`).
   - Create `src/dev/scenarios/featureX.scenarios.ts` with their own config type.
-  - Use the same `parseHashForTarget` helper and URL convention `#feature-x-panel&scenario=<id>`.
+  - Either:
+    - Reuse the **query + hash** convention (`?scenario=<id>#feature-x-panel`), or
+    - Opt into a **hash-only** fragment convention (for example, `#feature-x-panel&scenario=<id>`) and use a helper like `parseHashForTarget` for parsing.
 - This epic will implement the pattern for the contact form and document the convention so other epics can opt in later without redefining the infrastructure.
-

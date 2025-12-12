@@ -11,7 +11,7 @@
 
 ## Goals
 
-- Allow developers to open the real app (for example, `/en`) with a **hash-based scenario identifier** and have a target UI (for example, the contact form) load a predefined state **before first render**.
+- Allow developers to open the real app (for example, `/en`) with a **URL-based scenario identifier** (for example, `?scenario=<id>#contact-form`) and have a target UI (for example, the contact form) load a predefined state **before first render**.
 - Keep the mechanism **generic** so other features can opt in using their own target ids and scenario maps.
 - Keep scenario definitions in **TypeScript**, so tests and dev UI can share them without duplicating state descriptions.
 - Ensure the system is **no-op in production** and when no scenario is specified.
@@ -24,7 +24,7 @@
 
 ## Success criteria
 
-- In development, when the URL hash contains a pattern like `#contact-form&scenario=<id>`, the contact form:
+- In development, when the URL looks like `/en?scenario=<id>#contact-form`, the contact form:
   - Detects the `scenario` id, looks it up in a TS scenario map, and
   - Prefills the form (or otherwise configures it) according to that scenario **before the user interacts**.
 - The same scenario map can be imported in tests to drive high-level, named scenarios where useful, without being mandatory.
@@ -32,4 +32,3 @@
 - In production builds:
   - Scenario parsing and application are effectively disabled or compiled out.
   - Normal behaviour is unchanged when no scenario id is provided.
-

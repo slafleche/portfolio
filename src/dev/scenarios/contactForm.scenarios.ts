@@ -22,6 +22,61 @@ export type ContactFormScenarioConfig = {
   variants?: Record<string, ContactFormScenarioConfig>;
 };
 
+const composeScenarioIdFromPath = (segments: string[]): string => {
+  if (segments.length === 0) return '';
+  if (segments.length === 1) return segments[0];
+
+  const [
+    root,
+    firstVariant,
+    ...rest
+  ] = segments;
+
+  let id = `${root}-${firstVariant}`;
+  if (rest.length === 0) {
+    return id;
+  }
+
+  for (const segment of rest) {
+    id += `__${segment}`;
+  }
+
+  return id;
+};
+
+export const flattenContactFormScenarios = (
+  tree: Record<string, ContactFormScenarioConfig>,
+): Record<string, ContactFormScenarioConfig> => {
+  const flat: Record<string, ContactFormScenarioConfig> = {};
+
+  const visit = (
+    node: ContactFormScenarioConfig,
+    path: string[],
+  ) => {
+    const effectivePath = path.length ? path : [node.id];
+    const composedId = composeScenarioIdFromPath(effectivePath);
+    if (!composedId) return;
+    flat[composedId] = node;
+
+    if (node.variants) {
+      Object.values(node.variants).forEach((variant) => {
+        if (!variant.id) return;
+        visit(variant, [
+          ...effectivePath,
+          variant.id,
+        ]);
+      });
+    }
+  };
+
+  Object.values(tree).forEach((node) => {
+    if (!node.id) return;
+    visit(node, [node.id]);
+  });
+
+  return flat;
+};
+
 export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
   loading: {
     id: 'loading',
@@ -45,14 +100,14 @@ export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
     },
     variants: {
       blocked: {
-        id: 'failure_blocked',
+        id: 'blocked',
         label: 'Contact form – failure (blocked)',
         devState: {
           forcedSubmitStatus: 'blocked',
         },
       },
       service_unavailable: {
-        id: 'failure_service_unavailable',
+        id: 'service_unavailable',
         label: 'Contact form – failure (service unavailable)',
         devState: {
           forcedSubmitStatus: 'service_unavailable',
@@ -61,3 +116,8 @@ export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
     },
   },
 };
+
+export const contactFormScenarioMap: Record<
+  string,
+  ContactFormScenarioConfig
+> = flattenContactFormScenarios(contactFormScenarios);
