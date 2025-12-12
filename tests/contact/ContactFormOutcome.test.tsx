@@ -194,7 +194,6 @@ describe('ContactFormOutcome', () => {
       [
         'rate_limited',
         'service_unavailable',
-        'blocked',
         'generic_error',
       ];
 

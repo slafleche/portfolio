@@ -292,4 +292,79 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       consoleErrorSpy.mockRestore();
     }
   });
+
+  it('switches to the catastrophic error view when Turnstile reports an unrecoverable error before any submit', async () => {
+    const copy = buildCopy();
+
+    const originalEnv = { ...process.env };
+    const originalTurnstile = (window as typeof window & { turnstile?: unknown }).turnstile;
+
+    process.env = {
+      ...process.env,
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: 'test-site-key',
+    };
+
+    const mockTurnstile = {
+      render: () => {
+        throw new Error('Render failed');
+      },
+      reset: () => {},
+    };
+
+    (window as typeof window & { turnstile?: unknown }).turnstile =
+      mockTurnstile;
+
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      await waitFor(() => {
+        const errorPanel = container.querySelector(
+          '[data-form="error"]',
+        ) as HTMLElement | null;
+        expect(errorPanel).not.toBeNull();
+      });
+
+      expect(
+        container.querySelector('[data-form="form"]'),
+      ).toBeNull();
+
+      expect(
+        container.querySelector('[data-testid="jump-to-first-issue"]'),
+      ).toBeNull();
+
+      expect(
+        screen.queryByRole('button', {
+          name: copy.submitLabel,
+        }),
+      ).toBeNull();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[contact][catastrophic]',
+        {
+          source: 'turnstile',
+          reason:
+            'Turnstile script failed to load or initialise.',
+        },
+      );
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[contact][catastrophic-view]',
+        {
+          reason: 'form.idle',
+        },
+      );
+    } finally {
+      process.env = originalEnv;
+      (window as typeof window & { turnstile?: unknown }).turnstile =
+        originalTurnstile;
+      consoleErrorSpy.mockRestore();
+    }
+  });
 });

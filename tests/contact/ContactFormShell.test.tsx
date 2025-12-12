@@ -161,7 +161,7 @@ describe('Contact form shell harness', () => {
     expect(onJumpToFirstIssue).toHaveBeenCalledWith('first');
   });
 
-  it('surfaces non-success server statuses via the message centre when validation passes', async () => {
+  it('surfaces non-success recoverable server statuses via the message centre when validation passes', async () => {
     const blocks = [
       {
         key: 'first',
@@ -174,14 +174,12 @@ describe('Contact form shell harness', () => {
     const nonSuccessStatuses: ContactFormFlowSubmitHelper[] = [
       vi.fn().mockResolvedValue('rate_limited'),
       vi.fn().mockResolvedValue('service_unavailable'),
-      vi.fn().mockResolvedValue('blocked'),
       vi.fn().mockResolvedValue('generic_error'),
     ];
 
     const expectedSummaries = [
       'rate_limited',
       'service_unavailable',
-      'blocked',
       'generic',
     ];
 
