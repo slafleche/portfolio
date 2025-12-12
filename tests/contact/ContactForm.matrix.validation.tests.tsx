@@ -214,7 +214,7 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
     expect(submitButton).not.toBeDisabled();
   });
 
-  it('shows a catastrophic banner and no jump button when not_configured is returned', async () => {
+  it('shows a not_configured summary and no jump button when not_configured is returned', async () => {
     const blocks = [
       {
         key: 'name',
@@ -265,4 +265,3 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
     expect(submitButton).toBeDisabled();
   });
 });
-

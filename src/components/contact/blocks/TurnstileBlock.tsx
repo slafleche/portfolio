@@ -189,6 +189,36 @@ export function TurnstileBlock({
 
   const shouldRenderTurnstileWidget = hasTurnstileConfig;
 
+  const { reportCatastrophic } = useFormBlock(
+    useMemo(() => {
+      const contract = buildTurnstileContract(
+        id,
+        status,
+        copy,
+        token,
+      );
+      return {
+        key: 'turnstile',
+        getValue: () => token,
+        validate: () => contract.validate().valid,
+        getValidationSummary: () => {
+          if (COMPLETED_STATUSES.includes(status)) return null;
+          if (status === 'expired') return copy.summary.expired;
+          if (status === 'error') return copy.summary.error;
+          return copy.summary.missing;
+        },
+        focus: contract.focus,
+        liveValidation: false,
+        getContract: () => contract,
+      };
+    }, [
+      copy,
+      id,
+      status,
+      token,
+    ]),
+  );
+
   useEffect(() => {
     if (!shouldRenderTurnstileWidget || !turnstileSiteKey) return;
     let cancelled = false;
@@ -201,6 +231,9 @@ export function TurnstileBlock({
         const turnstileApi = extendedWindow.turnstile;
         const container = widgetRef.current;
         if (!turnstileApi || !container) {
+          reportCatastrophic(
+            'Turnstile unavailable: missing API or container.',
+          );
           throw new Error('Turnstile unavailable');
         }
         const widgetId = turnstileApi.render(container, {
@@ -218,6 +251,9 @@ export function TurnstileBlock({
           'error-callback': () => {
             if (cancelled) return;
             setStatus('error');
+            reportCatastrophic(
+              'Turnstile reported an error via error-callback.',
+            );
           },
         });
         widgetIdRef.current = widgetId;
@@ -225,6 +261,9 @@ export function TurnstileBlock({
       } catch {
         if (!cancelled) {
           setStatus('error');
+          reportCatastrophic(
+            'Turnstile script failed to load or initialise.',
+          );
         }
       }
     };
@@ -239,6 +278,7 @@ export function TurnstileBlock({
       widgetIdRef.current = null;
     };
   }, [
+    reportCatastrophic,
     shouldRenderTurnstileWidget,
     turnstileSiteKey,
   ]);
@@ -252,42 +292,6 @@ export function TurnstileBlock({
     copy.summary,
     status,
   ]);
-
-  const validationSummary = useMemo(() => {
-    if (COMPLETED_STATUSES.includes(status)) return null;
-    if (status === 'expired') return copy.summary.expired;
-    if (status === 'error') return copy.summary.error;
-    return copy.summary.missing;
-  }, [
-    copy.summary,
-    status,
-  ]);
-
-  useFormBlock(
-    useMemo(() => {
-      const contract = buildTurnstileContract(
-        id,
-        status,
-        copy,
-        token,
-      );
-      return {
-        key: 'turnstile',
-        getValue: () => token,
-        validate: () => contract.validate().valid,
-        getValidationSummary: () => validationSummary,
-        focus: contract.focus,
-        liveValidation: false,
-        getContract: () => contract,
-      };
-    }, [
-      copy,
-      id,
-      status,
-      token,
-      validationSummary,
-    ]),
-  );
 
   return (
     <div
@@ -321,7 +325,9 @@ export function TurnstileBlock({
       </div>
       <input type="hidden" name="token" value={token} />
       {statusMessage ? (
-        <p data-form-turnstile="status" className={s.turnstileStatus}>{statusMessage}</p>
+        <p data-form-turnstile="status" className={s.turnstileStatus}>
+          {statusMessage}
+        </p>
       ) : null}
     </div>
   );

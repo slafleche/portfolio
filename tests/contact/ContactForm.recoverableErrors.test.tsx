@@ -11,7 +11,7 @@ import { describe } from 'vitest';
 // - The submit helper is called (or not) according to the error type.
 // - Retryability (e.g., after fixing fields or waiting) behaves as expected.
 
-describe('ContactForm — recoverable error flows (form view)', () => {
+describe.skip('ContactForm — recoverable error flows (form view)', () => {
   /*
    * TODO: client-side validation_error (invalid fields)
    *
@@ -76,4 +76,3 @@ describe('ContactForm — recoverable error flows (form view)', () => {
    * - No error view is displayed; the user can try again.
    */
 });
-

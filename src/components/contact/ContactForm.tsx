@@ -73,7 +73,7 @@ type ContactFormInnerProps = {
   formMembers: ContactFormBlockBaseProps[];
   submitHelper: ContactFormFlowSubmitHelper;
   onSuccessStateChange?: (visible: boolean) => void;
-  onViewChange?: (view: 'form' | 'success' | 'error') => void;
+  onCatastrophic?: (reason: string) => void;
 };
 
 function ContactFormInner({
@@ -82,7 +82,7 @@ function ContactFormInner({
   formMembers,
   submitHelper,
   onSuccessStateChange,
-  onViewChange,
+  onCatastrophic,
 }: ContactFormInnerProps) {
   const { getRegistrationsSnapshot } = useFormBlocksContext();
 
@@ -106,80 +106,64 @@ function ContactFormInner({
   const disableFields = isSubmitting || isCatastrophic;
   const disableSubmit = isSubmitting || isInvalid || isCatastrophic;
 
-  const scrollToPriorityTarget = useCallback(
-    (options: { catastrophic: boolean }) => {
-      if (typeof document === 'undefined') return;
-      const priorityMessage = outcome.priority.message;
+  const scrollToPriorityTarget = useCallback(() => {
+    if (typeof document === 'undefined') return;
+    const priorityMessage = outcome.priority.message;
 
-      if (options.catastrophic) {
-        const messageCentre = document.querySelector<HTMLElement>(
-          '[data-form="messages"]',
-        );
-        if (
-          messageCentre &&
-          typeof messageCentre.scrollIntoView === 'function'
-        ) {
-          messageCentre.scrollIntoView({
-            block: 'start',
-            behavior: 'smooth',
-          });
-        }
+    const scrollTarget = priorityMessage?.scrollTarget;
+    if (!scrollTarget) return;
+
+    const element = document.getElementById(scrollTarget);
+    if (element && typeof element.scrollIntoView === 'function') {
+      element.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth',
+      });
+    }
+
+    const registrations = getRegistrationsSnapshot();
+    registrations.forEach((registration) => {
+      if (!registration.getContract || !registration.focus) {
         return;
       }
-
-      const scrollTarget = priorityMessage?.scrollTarget;
-      if (!scrollTarget) return;
-
-      const element = document.getElementById(scrollTarget);
-      if (element && typeof element.scrollIntoView === 'function') {
-        element.scrollIntoView({
-          block: 'start',
-          behavior: 'smooth',
-        });
+      try {
+        const contract = registration.getContract();
+        if (!contract) return;
+        const result = contract.validate();
+        if (result.id === scrollTarget) {
+          registration.focus();
+        }
+      } catch {
+        // Ignore focus failures in recovery helper.
       }
-
-      const registrations = getRegistrationsSnapshot();
-      registrations.forEach((registration) => {
-        if (!registration.getContract || !registration.focus) {
-          return;
-        }
-        try {
-          const contract = registration.getContract();
-          if (!contract) return;
-          const result = contract.validate();
-          if (result.id === scrollTarget) {
-            registration.focus();
-          }
-        } catch {
-          // Ignore focus failures in recovery helper.
-        }
-      });
-    },
-    [
-      getRegistrationsSnapshot,
-      outcome.priority.message,
-    ],
-  );
+    });
+  }, [
+    getRegistrationsSnapshot,
+    outcome.priority.message,
+  ]);
 
   const wasCatastrophicRef = useRef(isCatastrophic);
 
   useEffect(() => {
     if (isCatastrophic && !wasCatastrophicRef.current) {
-      scrollToPriorityTarget({ catastrophic: true });
-      if (onViewChange) {
-        onViewChange('error');
+      if (onCatastrophic) {
+        const reason =
+          flow.submitStatus === 'not_configured'
+            ? 'form.not_configured'
+            : `form.${flow.submitStatus}`;
+        onCatastrophic(reason);
       }
     }
     wasCatastrophicRef.current = isCatastrophic;
   }, [
+    flow.submitStatus,
     isCatastrophic,
-    onViewChange,
-    scrollToPriorityTarget,
+    onCatastrophic,
   ]);
 
   const handleJumpToFirstIssue = useCallback(() => {
     if (!isInvalid || isCatastrophic) return;
-    scrollToPriorityTarget({ catastrophic: false });
+    scrollToPriorityTarget();
   }, [
     isInvalid,
     isCatastrophic,
@@ -247,7 +231,7 @@ function ContactFormInner({
       />
       <ContactPrivacy copy={copy.privacy} />
       <HoneypotBlock copy={copy.blocks.honeypot} />
-      {isInvalid && !isCatastrophic ? (
+      {isInvalid ? (
         <button
           type="button"
           data-testid="jump-to-first-issue"
@@ -272,7 +256,7 @@ export default function ContactForm({
   void rest;
   const idPrefix = useSafeId('contact-form-');
 
-  type ContactFormView = 'form' | 'success' | 'error';
+  type ContactFormView = 'form' | 'success';
 
   const [
     formMembers,
@@ -307,6 +291,11 @@ export default function ContactForm({
     view,
     setView,
   ] = useState<ContactFormView>('form');
+
+  const [
+    catastrophicReason,
+    setCatastrophicReason,
+  ] = useState<string | null>(null);
 
   const handleSuccessStateChange = useCallback(
     (visible: boolean) => {
@@ -349,17 +338,28 @@ export default function ContactForm({
     ],
   );
 
+  const handleCatastrophic = useCallback((reason: string) => {
+    // Log catastrophic transitions with an explicit reason, then mark
+    // the catastrophic view as active. This is the only way the error
+    // view should be activated.
+    // eslint-disable-next-line no-console
+    console.error('[contact][catastrophic-view]', {
+      reason,
+    });
+    setCatastrophicReason(reason);
+  }, []);
+
   return (
     <FormBlocksProvider>
-      {view === 'success' ? (
-        <ContactFormSuccess
-          title={copy.headings.success}
-          description={copy.successBody}
-        />
-      ) : view === 'error' ? (
+      {catastrophicReason ? (
         <ContactFormError
           title={copy.headings.error}
           description={copy.errorBody}
+        />
+      ) : view === 'success' ? (
+        <ContactFormSuccess
+          title={copy.headings.success}
+          description={copy.successBody}
         />
       ) : (
         <ContactFormInner
@@ -368,7 +368,7 @@ export default function ContactForm({
           formMembers={formMembers}
           submitHelper={submitHelper}
           onSuccessStateChange={handleSuccessStateChange}
-          onViewChange={setView}
+          onCatastrophic={handleCatastrophic}
         />
       )}
     </FormBlocksProvider>

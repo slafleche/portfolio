@@ -1,7 +1,6 @@
 import type { ContactFormPayload } from '@/modules/contactForm/mockSubmit';
 
 type BannerTone =
-  | 'catastrophic'
   | 'info'
   | 'success'
   | 'warning'
@@ -339,7 +338,7 @@ export const apiScenarios: readonly ApiScenario[] = [
     banner: {
       tone: 'warning',
       title: 'Email service unavailable',
-      body: 'This environment is not wired to Brevo yet.',
+      body: 'Email service is temporarily unavailable. Please try again later.',
     },
     cta: {
       label: 'Unavailable',
@@ -354,7 +353,7 @@ export const apiScenarios: readonly ApiScenario[] = [
       hp: '',
     }),
     accessibilityNotes: [
-      'Explain configuration issue in the banner, not inline errors.',
+      'Explain that the email service is unavailable in the banner, not inline errors.',
       'Form controls expose `aria-disabled="true"` so screen readers know it is locked.',
     ],
     focusManagement:

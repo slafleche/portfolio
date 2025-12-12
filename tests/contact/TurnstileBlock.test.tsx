@@ -1,5 +1,12 @@
 import React from 'react';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+} from 'vitest';
 import { render, screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderTurnstileBlockWithFormBlocks } from './helpers/turnstileBlock.harness';
@@ -286,7 +293,11 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(tokenInput.value).toBe('');
     });
 
-    it('moves to error state and shows error summary when the error callback is invoked', async () => {
+    it('moves to error state, shows error summary, and logs a catastrophic reason when the error callback is invoked', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       const { container } = render(
         <FormBlocksProvider>
           <TurnstileBlock
@@ -326,9 +337,24 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(tokenInput).not.toBeNull();
       if (!tokenInput) return;
       expect(tokenInput.value).toBe('');
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[contact][catastrophic]',
+        {
+          source: 'turnstile',
+          reason:
+            'Turnstile reported an error via error-callback.',
+        },
+      );
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('enters error state when the widget render throws', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       window.turnstile = createMockTurnstile(true);
 
       const { container } = render(
@@ -349,13 +375,24 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
       if (!wrapper) return;
 
-      const status = wrapper.querySelector(
-        '[data-form-turnstile="status"]',
-      ) as HTMLElement | null;
       await waitFor(() => {
+        const status = wrapper.querySelector(
+          '[data-form-turnstile="status"]',
+        ) as HTMLElement | null;
         expect(status).not.toBeNull();
+        expect(wrapper).toHaveAttribute('data-state', 'error');
       });
-      expect(wrapper).toHaveAttribute('data-state', 'error');
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[contact][catastrophic]',
+        {
+          source: 'turnstile',
+          reason:
+            'Turnstile script failed to load or initialise.',
+        },
+      );
+
+      consoleErrorSpy.mockRestore();
     });
   });
 

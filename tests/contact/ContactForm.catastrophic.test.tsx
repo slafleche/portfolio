@@ -1,6 +1,19 @@
+import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { waitFor } from '@testing-library/react';
-import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+import {
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import ContactForm from '@/components/contact/ContactForm';
+import {
+  buildContactFormCopy,
+  type FormStatusKey,
+} from '@/lib/locales/sections/form.locale';
+import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
+import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
+import type { Translator } from '@/lib/locales/sections/helpers.locale';
 import type {
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
@@ -16,6 +29,15 @@ import { renderContactFormShellHarness } from './helpers/contactFormShell.harnes
 // - Retry affordances (submit button, jump-to-first-issue) are not shown.
 // - The error copy matches the appropriate status message.
 
+const buildCopy = () =>
+  buildContactFormCopy(
+    ((key: string) =>
+      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
+  );
+
+const buildStatusMessages = (copy = buildCopy()) =>
+  copy.blocks.messageCentre.statuses as Record<FormStatusKey, string>;
+
 const STATUS_MESSAGES: Record<FormStatusKey, string> = {
   sending: 'sending',
   success: 'success',
@@ -26,6 +48,26 @@ const STATUS_MESSAGES: Record<FormStatusKey, string> = {
   not_configured: 'not_configured',
   blocked: 'blocked',
 };
+
+function renderWrappedContactForm(
+  copy = buildCopy(),
+  actionUrl = '/api/contact',
+) {
+  const dialogValue = {
+    open: () => {},
+    close: () => {},
+    isOpen: false,
+    openPrivacy: () => {},
+    closePrivacy: () => {},
+    isPrivacyOpen: false,
+  };
+
+  return render(
+    <ContactDialogContext.Provider value={dialogValue}>
+      <ContactForm copy={copy} actionUrl={actionUrl} />
+    </ContactDialogContext.Provider>,
+  );
+}
 
 describe('ContactForm — catastrophic failures (error view)', () => {
   it('treats a no-blocks configuration as not_configured and surfaces a catastrophic-style summary', async () => {
@@ -73,20 +115,95 @@ describe('ContactForm — catastrophic failures (error view)', () => {
     expect(jumpButton).toBeNull();
   });
 
-  /*
-   * TODO: not_configured
-   *
-   * Scenario:
-   * - Mock /api/contact to return { ok: false, code: 'not_configured' }.
-   * - Fill all fields with valid values and submit once.
-   *
-   * Expectations:
-   * - fetchMock called exactly once.
-   * - The error view is rendered: container.querySelector('[data-form="error"]') is not null.
-   * - The error view text contains copy.statuses.not_configured.
-   * - The live form is gone: container.querySelector('[data-form="form"]') is null.
-   * - No jump-to-first-issue button or submit button is visible.
-   */
+  it('switches to the error view, hides the form, and logs a catastrophic-view reason when the server returns not_configured', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'not_configured',
+        message: statusMessages.not_configured,
+      }),
+    } as Response);
+
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        const errorPanel = container.querySelector(
+          '[data-form="error"]',
+        ) as HTMLElement | null;
+        expect(errorPanel).not.toBeNull();
+      });
+
+      expect(
+        container.querySelector('[data-form="form"]'),
+      ).toBeNull();
+
+      expect(
+        container.querySelector('[data-testid="jump-to-first-issue"]'),
+      ).toBeNull();
+
+      expect(
+        screen.queryByRole('button', {
+          name: copy.submitLabel,
+        }),
+      ).toBeNull();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[contact][catastrophic-view]',
+        {
+          reason: 'form.not_configured',
+        },
+      );
+    } finally {
+      global.fetch = originalFetch;
+      consoleErrorSpy.mockRestore();
+    }
+  });
+
+
 
   /*
    * TODO: blocked

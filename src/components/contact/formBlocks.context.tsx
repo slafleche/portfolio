@@ -43,6 +43,7 @@ type FormBlocksContextValue = {
   ) => void;
   getValidationResultsSnapshot: () => ContactFormBlockValidationResult[];
   validationResultsVersion: number;
+  reportCatastrophic: (source: string, reason: string) => void;
 };
 
 const FormBlocksContext =
@@ -90,6 +91,16 @@ export function FormBlocksProvider({
       getValidationResultsSnapshot: () =>
         Array.from(validationResultsRef.current.values()),
       validationResultsVersion,
+      reportCatastrophic: (source, reason) => {
+        // Helper for investigating catastrophic failures.
+        // Source is the block key (for example, 'turnstile').
+        // Reason is a free-form string for debugging.
+        // eslint-disable-next-line no-console
+        console.error('[contact][catastrophic]', {
+          source,
+          reason,
+        });
+      },
     }),
     [
       continuousValidation,
@@ -156,6 +167,13 @@ export function TestFormBlocksProvider({
       getValidationResultsSnapshot: () =>
         Array.from(validationResultsRef.current.values()),
       validationResultsVersion,
+      reportCatastrophic: (source, reason) => {
+        // eslint-disable-next-line no-console
+        console.error('[contact][catastrophic]', {
+          source,
+          reason,
+        });
+      },
     }),
     [
       continuousValidation,
@@ -189,9 +207,21 @@ export const useFormBlock = (registration: FormBlockRegistration) => {
     context,
     registration,
   ]);
+
+  const reportCatastrophic = useCallback(
+    (reason: string) => {
+      context.reportCatastrophic(registration.key, reason);
+    },
+    [
+      context,
+      registration.key,
+    ],
+  );
+
   return {
     continuousValidation: context.continuousValidation,
     enableContinuousValidation: context.enableContinuousValidation,
     recordValidationResult: context.recordValidationResult,
+    reportCatastrophic,
   };
 };

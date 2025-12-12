@@ -12,7 +12,6 @@ import borders from '../../../../src/styles/helpers/borders.helper';
 
 export type Tone =
   | 'default'
-  | 'catastrophic'
   | 'info'
   | 'success'
   | 'warning'
