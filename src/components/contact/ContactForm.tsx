@@ -29,8 +29,10 @@ import type {
 } from '@/modules/contactForm/mockSubmit';
 import { useSafeId } from '../../lib/dom';
 import { logContactFormDebugEvent } from './contactFormDebugLogger';
+import { useContactDialogTitle } from './contactDialogTitle.context';
 import ContactFormSuccess from './ContactFormSuccess';
 import ContactFormError from './ContactFormError';
+import { resolveContactFormScenarioIdFromLocation } from '@/dev/scenarios/contactForm.adapter';
 
 const DEFAULT_ACTION_URL = '/api/contact';
 
@@ -107,6 +109,8 @@ function ContactFormInner({
   const disableFields = isSubmitting || isCatastrophic;
   const disableSubmit = isSubmitting || isInvalid || isCatastrophic;
 
+  const { setTitleKey } = useContactDialogTitle();
+
   const formRef = useRef<HTMLFormElement | null>(null);
   const lastFocusedElementRef = useRef<HTMLElement | null>(null);
   const wasSubmittingRef = useRef(isSubmitting);
@@ -148,6 +152,19 @@ function ContactFormInner({
   ]);
 
   const wasCatastrophicRef = useRef(isCatastrophic);
+
+  useEffect(() => {
+    if (isCatastrophic) return;
+    if (isSubmitting) {
+      setTitleKey('loading');
+    } else {
+      setTitleKey('form');
+    }
+  }, [
+    isCatastrophic,
+    isSubmitting,
+    setTitleKey,
+  ]);
 
   useEffect(() => {
     if (isCatastrophic && !wasCatastrophicRef.current) {
@@ -300,6 +317,18 @@ export default function ContactForm({
 }: ContactFormProps) {
   void rest;
   const idPrefix = useSafeId('contact-form-');
+  const { setTitleKey } = useContactDialogTitle();
+
+  const [devScenarioId, setDevScenarioId] = useState<string | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const id = resolveContactFormScenarioIdFromLocation();
+    if (id) {
+      setDevScenarioId(id);
+    }
+  }, []);
 
   type ContactFormView = 'form' | 'success';
 
@@ -402,9 +431,65 @@ export default function ContactForm({
     [],
   );
 
+  const isDevScenarioActive =
+    process.env.NODE_ENV !== 'production' && devScenarioId != null;
+  const isDevLoadingScenario =
+    isDevScenarioActive && devScenarioId === 'loading';
+  const isDevSuccessScenario =
+    isDevScenarioActive && devScenarioId === 'success';
+  const isDevFailureScenario =
+    isDevScenarioActive && devScenarioId.startsWith('failure');
+
+  useEffect(() => {
+    if (isDevLoadingScenario) {
+      setTitleKey('loading');
+      return;
+    }
+    if (isDevSuccessScenario) {
+      setTitleKey('success');
+      return;
+    }
+    if (isDevFailureScenario) {
+      setTitleKey('failure');
+      return;
+    }
+    if (catastrophicReason) {
+      setTitleKey('catastrophic');
+      return;
+    }
+    if (view === 'success') {
+      setTitleKey('success');
+      return;
+    }
+    // When none of the specific view states apply, the inner form
+    // layer is responsible for keeping the title aligned with the
+    // idle vs loading states.
+  }, [
+    catastrophicReason,
+    isDevFailureScenario,
+    isDevLoadingScenario,
+    isDevSuccessScenario,
+    setTitleKey,
+    view,
+  ]);
+
   return (
     <FormBlocksProvider onCatastrophic={handleCatastrophic}>
-      {catastrophicReason ? (
+      {isDevLoadingScenario ? (
+        <ContactFormLoading
+          message={copy.blocks.messageCentre.statuses.sending}
+        />
+      ) : isDevSuccessScenario ? (
+        <ContactFormSuccess
+          title={copy.headings.success}
+          description={copy.successBody}
+        />
+      ) : isDevFailureScenario ? (
+        <ContactFormError
+          title={copy.headings.error}
+          description={copy.errorBody}
+        />
+      ) : catastrophicReason ? (
         <ContactFormError
           title={copy.headings.error}
           description={copy.errorBody}

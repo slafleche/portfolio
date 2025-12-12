@@ -8,6 +8,7 @@ import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+import { sharedStrings } from '@/lib/sharedStrings';
 
 const buildFormCopy = () =>
   buildContactFormCopy(
@@ -44,6 +45,8 @@ describe('ContactDialogProvider', () => {
     global.fetch = fetchMock;
 
     try {
+      window.location.hash = '#contact-form';
+
       render(
         <ContactDialogProvider
           formCopy={formCopy}
@@ -54,9 +57,13 @@ describe('ContactDialogProvider', () => {
         </ContactDialogProvider>,
       );
 
-      await userEvent.click(
-        screen.getByRole('button', { name: 'Open contact' }),
-      );
+      await waitFor(() => {
+        const title = document.querySelector(
+          '[data-modal="title"]',
+        ) as HTMLElement | null;
+        expect(title).not.toBeNull();
+        expect(title?.textContent).toBe(formCopy.headings.form);
+      });
 
       const nameInput = await screen.findByLabelText(
         formCopy.blocks.name.label,
@@ -97,6 +104,209 @@ describe('ContactDialogProvider', () => {
 
       const liveForm = document.querySelector('[data-form="form"]');
       expect(liveForm).toBeNull();
+
+      await waitFor(() => {
+        const title = document.querySelector(
+          '[data-modal="title"]',
+        ) as HTMLElement | null;
+        expect(title).not.toBeNull();
+        expect(title?.textContent).toBe(formCopy.headings.success);
+      });
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('uses the error heading for catastrophic error view', async () => {
+    const formCopy = buildFormCopy();
+    const privacyCopy = buildPrivacy();
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'not_configured',
+        message: formCopy.statuses.not_configured,
+      }),
+    } as Response);
+
+    global.fetch = fetchMock;
+
+    try {
+      window.location.hash = '#contact-form';
+
+      render(
+        <ContactDialogProvider
+          formCopy={formCopy}
+          privacyCopy={privacyCopy}
+          closeLabel="Close"
+        >
+          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+        </ContactDialogProvider>,
+      );
+
+      const nameInput = await screen.findByLabelText(
+        formCopy.blocks.name.label,
+        { exact: false },
+      );
+      const emailInput = screen.getByLabelText(
+        formCopy.blocks.email.label,
+        { exact: false },
+      );
+      const messageInput = screen.getByLabelText(
+        formCopy.blocks.message.label,
+        { exact: false },
+      );
+
+      await userEvent.type(nameInput, 'Jane Doe');
+      await userEvent.type(emailInput, 'example@example.com');
+      await userEvent.type(
+        messageInput,
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: formCopy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        const errorPanel = document.querySelector(
+          '[data-form="error"]',
+        );
+        expect(errorPanel).not.toBeNull();
+        const liveForm = document.querySelector('[data-form="form"]');
+        expect(liveForm).toBeNull();
+        const title = document.querySelector(
+          '[data-modal="title"]',
+        ) as HTMLElement | null;
+        expect(title).not.toBeNull();
+        expect(title?.textContent).toBe(formCopy.headings.error);
+      });
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('keeps the form heading for recoverable server-side validation errors', async () => {
+    const formCopy = buildFormCopy();
+    const privacyCopy = buildPrivacy();
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'validation_error',
+        message: formCopy.statuses.validation_error,
+      }),
+    } as Response);
+
+    global.fetch = fetchMock;
+
+    try {
+      window.location.hash = '#contact-form';
+
+      render(
+        <ContactDialogProvider
+          formCopy={formCopy}
+          privacyCopy={privacyCopy}
+          closeLabel="Close"
+        >
+          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+        </ContactDialogProvider>,
+      );
+
+      const nameInput = await screen.findByLabelText(
+        formCopy.blocks.name.label,
+        { exact: false },
+      );
+      const emailInput = screen.getByLabelText(
+        formCopy.blocks.email.label,
+        { exact: false },
+      );
+      const messageInput = screen.getByLabelText(
+        formCopy.blocks.message.label,
+        { exact: false },
+      );
+
+      await userEvent.type(nameInput, 'Jane Doe');
+      await userEvent.type(emailInput, 'example@example.com');
+      await userEvent.type(
+        messageInput,
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: formCopy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        const formPanel = document.querySelector('[data-form="form"]');
+        expect(formPanel).not.toBeNull();
+        const errorPanel = document.querySelector(
+          '[data-form="error"]',
+        );
+        expect(errorPanel).toBeNull();
+        const title = document.querySelector(
+          '[data-modal="title"]',
+        ) as HTMLElement | null;
+        expect(title).not.toBeNull();
+        expect(title?.textContent).toBe(formCopy.headings.form);
+      });
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('applies the dev success scenario from the URL and uses the success heading', async () => {
+    const formCopy = buildFormCopy();
+    const privacyCopy = buildPrivacy();
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn();
+    global.fetch = fetchMock as unknown as typeof fetch;
+
+    try {
+      const basePath = '/en';
+      const scenarioUrl = `${basePath}?scenario=success${sharedStrings.contactFormHash}`;
+      window.history.pushState({}, '', scenarioUrl);
+
+      render(
+        <ContactDialogProvider
+          formCopy={formCopy}
+          privacyCopy={privacyCopy}
+          closeLabel="Close"
+        >
+          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+        </ContactDialogProvider>,
+      );
+
+      await waitFor(() => {
+        const successPanel = document.querySelector(
+          '[data-form="success"]',
+        );
+        expect(successPanel).not.toBeNull();
+        const formPanel = document.querySelector('[data-form="form"]');
+        expect(formPanel).toBeNull();
+        const title = document.querySelector(
+          '[data-modal="title"]',
+        ) as HTMLElement | null;
+        expect(title).not.toBeNull();
+        expect(title?.textContent).toBe(formCopy.headings.success);
+      });
     } finally {
       global.fetch = originalFetch;
     }

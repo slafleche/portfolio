@@ -1,6 +1,13 @@
+import { useEffect, useState } from 'react';
+
 type BasePulseLoaderProps = {
   speedMs?: number;
   className?: string;
+  /**
+   * Thickness of the rings as a fraction of the logical icon width
+   * (viewBox), for example 0.08 ≈ 2px on a 24px icon.
+   */
+  thicknessRatio?: number;
   /**
    * When true (default), the loader will disable its SVG animation
    * for users who prefer reduced motion.
@@ -65,19 +72,36 @@ function usePrefersReducedMotion(): boolean {
 
 export default function PulseLoader(props: PulseLoaderProps) {
   const {
-    speedMs = 1200,
+    speedMs = 2400,
+    thicknessRatio,
     ariaHidden = true,
     title,
     ariaLabel,
   } = props;
-  const dur = `${speedMs / 1000}s`;
+  const durSeconds = speedMs / 1000;
+  const dur = `${durSeconds}s`;
+  const offset1 = `${durSeconds / 6}s`;
+  const offset2 = `${(durSeconds * 2) / 6}s`;
   const prefersReducedMotion = usePrefersReducedMotion();
+
+  const strokeWidth = (() => {
+    const FALLBACK_RATIO = 1 / 24; // 24-unit viewBox
+    const ratio =
+      typeof thicknessRatio === 'number' &&
+      Number.isFinite(thicknessRatio)
+        ? Math.max(0, Math.min(thicknessRatio, 1))
+        : FALLBACK_RATIO;
+    return ratio * 24;
+  })();
 
   const shouldAnimate = (() => {
     if (typeof props.animated === 'boolean') {
       return props.animated;
     }
-    if (props.respectReducedMotion !== false && prefersReducedMotion) {
+    if (
+      props.respectReducedMotion !== false &&
+      prefersReducedMotion
+    ) {
       return false;
     }
     return true;
@@ -85,7 +109,7 @@ export default function PulseLoader(props: PulseLoaderProps) {
 
   return (
     <svg
-      viewBox="0 0 32 32"
+      viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
       className={props.className}
       aria-hidden={ariaHidden ? 'true' : undefined}
@@ -93,54 +117,91 @@ export default function PulseLoader(props: PulseLoaderProps) {
       aria-label={ariaHidden ? undefined : ariaLabel}
     >
       {!ariaHidden && title ? <title>{title}</title> : null}
-      <circle
-        cx="16"
-        cy="16"
-        r="6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        {shouldAnimate ? (
-          <>
+      {shouldAnimate ? (
+        <>
+          <circle
+            cx="12"
+            cy="12"
+            r="0"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={strokeWidth}
+          >
             <animate
               attributeName="r"
-              from="4"
-              to="10"
+              calcMode="spline"
               dur={dur}
+              values="0;11"
+              keySplines=".52,.6,.25,.99"
               repeatCount="indefinite"
+              begin="0s"
             />
             <animate
               attributeName="opacity"
-              from="1"
-              to="0"
+              calcMode="spline"
               dur={dur}
+              values="1;0"
+              keySplines=".52,.6,.25,.99"
               repeatCount="indefinite"
+              begin="0s"
             />
-          </>
-        ) : null}
-      </circle>
-      <circle cx="16" cy="16" r="4" fill="currentColor">
-        {shouldAnimate ? (
-          <>
+          </circle>
+          <circle
+            cx="12"
+            cy="12"
+            r="0"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={strokeWidth}
+          >
             <animate
               attributeName="r"
-              from="2"
-              to="4"
+              calcMode="spline"
               dur={dur}
+              values="0;11"
+              keySplines=".52,.6,.25,.99"
               repeatCount="indefinite"
+              begin={offset1}
             />
             <animate
               attributeName="opacity"
-              from="0.7"
-              to="1"
+              calcMode="spline"
               dur={dur}
+              values="1;0"
+              keySplines=".52,.6,.25,.99"
               repeatCount="indefinite"
+              begin={offset1}
             />
-          </>
-        ) : null}
-      </circle>
+          </circle>
+          <circle
+            cx="12"
+            cy="12"
+            r="0"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={strokeWidth}
+          >
+            <animate
+              attributeName="r"
+              calcMode="spline"
+              dur={dur}
+              values="0;11"
+              keySplines=".52,.6,.25,.99"
+              repeatCount="indefinite"
+              begin={offset2}
+            />
+            <animate
+              attributeName="opacity"
+              calcMode="spline"
+              dur={dur}
+              values="1;0"
+              keySplines=".52,.6,.25,.99"
+              repeatCount="indefinite"
+              begin={offset2}
+            />
+          </circle>
+        </>
+      ) : null}
     </svg>
   );
 }
-import { useEffect, useState } from 'react';

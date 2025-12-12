@@ -19,6 +19,10 @@ import { Markdown } from '@/components/Markdown';
 import { sharedStrings } from '@/lib/sharedStrings';
 import ContactForm from './ContactForm';
 import { CloseButton } from './CloseButton';
+import {
+  ContactDialogTitleContext,
+  type ContactDialogTitleKey,
+} from './contactDialogTitle.context';
 
 type ModalIntent = 'none' | 'contact' | 'contact-policy';
 
@@ -59,8 +63,25 @@ Object.assign(HASH_TO_INTENT, HASH_ALIASES);
 const normalizeHash = (hash?: string | null) =>
   typeof hash === 'string' ? hash.trim().toLowerCase() : '';
 
-const resolveIntentFromHash = (hash?: string | null): ModalIntent =>
-  HASH_TO_INTENT[normalizeHash(hash)] ?? 'none';
+const resolveIntentFromHash = (hash?: string | null): ModalIntent => {
+  const normalized = normalizeHash(hash);
+  if (!normalized) return 'none';
+
+  const direct = HASH_TO_INTENT[normalized];
+  if (direct) return direct;
+
+  const entries = Object.entries(HASH_TO_INTENT).sort(
+    ([a], [b]) => b.length - a.length,
+  );
+
+  for (const [key, intent] of entries) {
+    if (normalized.startsWith(key)) {
+      return intent;
+    }
+  }
+
+  return 'none';
+};
 
 const buildUrlForIntent = (intent: ModalIntent) => {
   if (typeof window === 'undefined') return '';
@@ -72,6 +93,38 @@ const getCurrentUrl = () => {
   if (typeof window === 'undefined') return '';
   const { pathname, search, hash } = window.location;
   return `${pathname}${search}${hash}`;
+};
+
+const resolveTitleKey = (
+  rawKey: ContactDialogTitleKey | null,
+): ContactDialogTitleKey => {
+  if (
+    rawKey === 'loading' ||
+    rawKey === 'success' ||
+    rawKey === 'failure' ||
+    rawKey === 'catastrophic'
+  ) {
+    return rawKey;
+  }
+  return 'form';
+};
+
+const resolveDialogTitle = (
+  copy: ContactFormCopy,
+  key: ContactDialogTitleKey,
+) => {
+  switch (key) {
+    case 'loading':
+      return copy.statuses.sending;
+    case 'success':
+      return copy.headings.success;
+    case 'failure':
+    case 'catastrophic':
+      return copy.headings.error;
+    case 'form':
+    default:
+      return copy.headings.form;
+  }
 };
 
 export type ContactDialogContextValue = {
@@ -113,6 +166,10 @@ export function ContactDialogProvider({
     intent,
     setIntent,
   ] = useState<ModalIntent>('none');
+  const [
+    titleKey,
+    setTitleKey,
+  ] = useState<ContactDialogTitleKey | null>(null);
   const intentRef = useRef<ModalIntent>('none');
   const baseHistorySeededRef = useRef(false);
   const previousIntentRef = useRef<ModalIntent>('none');
@@ -245,17 +302,21 @@ export function ContactDialogProvider({
 
   const openContact = useCallback(() => {
     captureFocusAnchor();
+    setTitleKey('form');
     applyIntent('contact', { history: 'push' });
   }, [
     applyIntent,
     captureFocusAnchor,
+    setTitleKey,
   ]);
 
   const closeContact = useCallback(() => {
     applyIntent('none', { history: 'replace' });
+    setTitleKey(null);
     setTimeout(restoreFocusAnchor, 0);
   }, [
     applyIntent,
+    setTitleKey,
     restoreFocusAnchor,
   ]);
 
@@ -328,6 +389,20 @@ export function ContactDialogProvider({
     ],
   );
 
+  const effectiveTitleKey = resolveTitleKey(titleKey);
+  const dialogTitle = resolveDialogTitle(formCopy, effectiveTitleKey);
+
+  const titleContextValue = useMemo(
+    () => ({
+      titleKey,
+      setTitleKey,
+    }),
+    [
+      titleKey,
+      setTitleKey,
+    ],
+  );
+
   return (
     <ContactDialogContext.Provider value={contextValue}>
       <Dialog.Root
@@ -346,15 +421,22 @@ export function ContactDialogProvider({
                     className={dialogStyles.closeButton}
                   />
                 </Dialog.Close>
-                <Dialog.Title className={dialogStyles.heading}>
-                  {formCopy.heading}
+                <Dialog.Title
+                  className={dialogStyles.heading}
+                  data-modal="title"
+                >
+                  {dialogTitle}
                 </Dialog.Title>
                 <Dialog.Description asChild>
                   <p className={formStyles.visuallyHidden}>
-                    {formCopy.heading}
+                    {dialogTitle}
                   </p>
                 </Dialog.Description>
-                <ContactForm copy={formCopy} />
+                <ContactDialogTitleContext.Provider
+                  value={titleContextValue}
+                >
+                  <ContactForm copy={formCopy} />
+                </ContactDialogTitleContext.Provider>
               </div>
             </div>
           </Dialog.Content>
@@ -368,7 +450,7 @@ export function ContactDialogProvider({
           <Dialog.Overlay className={formStyles.privacyOverlay} />
           <Dialog.Content className={formStyles.privacyDialog}>
             <div className={formStyles.privacyPanel}>
-              <Dialog.Title className={formStyles.privacyTitle}>
+              <Dialog.Title className={formStyles.privacyTitle} data-modal="title">
                 {privacyCopy.title}
               </Dialog.Title>
               {privacyUpdated ? (

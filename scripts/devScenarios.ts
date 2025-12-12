@@ -42,10 +42,6 @@ export function buildContactFormScenarioOptions(): ScenarioOption[] {
     },
   );
 
-  options.sort((a, b) =>
-    a.label.toLowerCase().localeCompare(b.label.toLowerCase()),
-  );
-
   return options;
 }
 

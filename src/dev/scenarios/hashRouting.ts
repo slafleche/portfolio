@@ -10,6 +10,11 @@ type ParsedTargetScenario = {
  *
  * For example:
  *   #contact-form&scenario=visualtest_name
+ *
+ * Note: the contact form now uses a query + hash convention
+ * (`?scenario=<id>#contact-form`) instead of embedding `scenario`
+ * inside the hash. This helper remains available for other dev
+ * features that choose a hash-only fragment pattern.
  */
 export function parseHashForTarget(
   targetId: string,
@@ -50,4 +55,3 @@ export function parseHashForTarget(
 
   return { scenarioId };
 }
-
