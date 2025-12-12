@@ -51,8 +51,10 @@ const FormBlocksContext =
 
 export function FormBlocksProvider({
   children,
+  onCatastrophic,
 }: {
   children: ReactNode;
+  onCatastrophic?: (source: string, reason: string) => void;
 }) {
   const [
     continuousValidation,
@@ -92,20 +94,25 @@ export function FormBlocksProvider({
         Array.from(validationResultsRef.current.values()),
       validationResultsVersion,
       reportCatastrophic: (source, reason) => {
-        // Helper for investigating catastrophic failures.
-        // Source is the block key (for example, 'turnstile').
-        // Reason is a free-form string for debugging.
-        // eslint-disable-next-line no-console
-        console.error('[contact][catastrophic]', {
-          source,
-          reason,
-        });
+        if (onCatastrophic) {
+          onCatastrophic(source, reason);
+        } else {
+          // Helper for investigating catastrophic failures.
+          // Source is the block key (for example, 'turnstile').
+          // Reason is a free-form string for debugging.
+          // eslint-disable-next-line no-console
+          console.error('[contact][catastrophic]', {
+            source,
+            reason,
+          });
+        }
       },
     }),
     [
       continuousValidation,
       registerBlock,
       validationResultsVersion,
+      onCatastrophic,
     ],
   );
 

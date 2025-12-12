@@ -73,7 +73,7 @@ type ContactFormInnerProps = {
   formMembers: ContactFormBlockBaseProps[];
   submitHelper: ContactFormFlowSubmitHelper;
   onSuccessStateChange?: (visible: boolean) => void;
-  onCatastrophic?: (reason: string) => void;
+  onCatastrophic?: (source: string, reason: string) => void;
 };
 
 function ContactFormInner({
@@ -151,7 +151,7 @@ function ContactFormInner({
           flow.submitStatus === 'not_configured'
             ? 'form.not_configured'
             : `form.${flow.submitStatus}`;
-        onCatastrophic(reason);
+        onCatastrophic('form', reason);
       }
     }
     wasCatastrophicRef.current = isCatastrophic;
@@ -338,19 +338,27 @@ export default function ContactForm({
     ],
   );
 
-  const handleCatastrophic = useCallback((reason: string) => {
-    // Log catastrophic transitions with an explicit reason, then mark
-    // the catastrophic view as active. This is the only way the error
-    // view should be activated.
-    // eslint-disable-next-line no-console
-    console.error('[contact][catastrophic-view]', {
-      reason,
-    });
-    setCatastrophicReason(reason);
-  }, []);
+  const handleCatastrophic = useCallback(
+    (source: string, reason: string) => {
+      // Log catastrophic transitions with an explicit reason and
+      // mark the catastrophic view as active. This is the only way
+      // the error view should be activated.
+      // eslint-disable-next-line no-console
+      console.error('[contact][catastrophic]', {
+        source,
+        reason,
+      });
+      // eslint-disable-next-line no-console
+      console.error('[contact][catastrophic-view]', {
+        reason,
+      });
+      setCatastrophicReason(reason);
+    },
+    [],
+  );
 
   return (
-    <FormBlocksProvider>
+    <FormBlocksProvider onCatastrophic={handleCatastrophic}>
       {catastrophicReason ? (
         <ContactFormError
           title={copy.headings.error}

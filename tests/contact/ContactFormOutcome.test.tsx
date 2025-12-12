@@ -121,51 +121,6 @@ describe('ContactFormOutcome', () => {
     expect(outcome.isCatastrophic).toBe(false);
   });
 
-  it('prefers catastrophic messages over error messages when selecting priority', () => {
-    const snapshot: ContactFormFlowSnapshot = makeFlowSnapshot({
-      submitStatus: 'validation_error',
-      latestValidationResults: [
-        makeValidationResult({
-          id: 'first',
-          messages: [
-            makeMessageBase({
-              type: 'error',
-              text: 'First field error',
-              scrollTarget: 'first',
-            }),
-          ],
-        }),
-        makeValidationResult({
-          id: 'token',
-          messages: [
-            makeMessageBase({
-              type: 'catastrophic',
-              text: 'Verification unavailable',
-              scrollTarget: 'token',
-            }),
-          ],
-        }),
-      ],
-    });
-
-    const { getLatestOutcome } = renderOutcomeHook(
-      useTestOutcome,
-      snapshot,
-    );
-
-    const outcome = getLatestOutcome();
-
-    expect(outcome.priority.message).not.toBeNull();
-    if (!outcome.priority.message) return;
-
-    expect(outcome.priority.message.type).toBe('catastrophic');
-    expect(outcome.priority.message.text).toBe(
-      'Verification unavailable',
-    );
-    expect(outcome.priority.message.scrollTarget).toBe('token');
-    expect(outcome.isCatastrophic).toBe(true);
-  });
-
   it('uses block order as a tiebreaker when severity is equal', () => {
     const snapshot: ContactFormFlowSnapshot = makeFlowSnapshot({
       submitStatus: 'validation_error',

@@ -203,19 +203,93 @@ describe('ContactForm — catastrophic failures (error view)', () => {
     }
   });
 
+  it('switches to the error view and hides the form when the server reports the request is blocked', async () => {
+    const copy = buildCopy();
 
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: false,
+        code: 'blocked',
+      }),
+    } as Response);
 
-  /*
-   * TODO: blocked
-   *
-   * Scenario:
-   * - Mock /api/contact to return { ok: false, code: 'blocked' }.
-   * - Fill all fields with valid values and submit once.
-   *
-   * Expectations:
-   * - fetchMock called exactly once.
-   * - The error view is rendered with data-form="error".
-   * - The error view text contains copy.statuses.blocked.
-   * - The form view is removed and no retry controls are available.
-   */
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      await waitFor(() => {
+        const errorPanel = container.querySelector(
+          '[data-form="error"]',
+        ) as HTMLElement | null;
+        expect(errorPanel).not.toBeNull();
+        if (!errorPanel) return;
+        expect(errorPanel.textContent ?? '').toContain(
+          copy.statuses.blocked,
+        );
+      });
+
+      expect(
+        container.querySelector('[data-form="form"]'),
+      ).toBeNull();
+
+      expect(
+        container.querySelector('[data-testid="jump-to-first-issue"]'),
+      ).toBeNull();
+
+      expect(
+        screen.queryByRole('button', {
+          name: copy.submitLabel,
+        }),
+      ).toBeNull();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[contact][catastrophic-view]',
+        {
+          reason: 'form.blocked',
+        },
+      );
+    } finally {
+      global.fetch = originalFetch;
+      consoleErrorSpy.mockRestore();
+    }
+  });
 });

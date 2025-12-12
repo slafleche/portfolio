@@ -42,10 +42,8 @@ type OutcomeBuildInput = {
   latestValidationResults: ContactFormBlockValidationResult[];
 };
 
-const severityRank = (type: PriorityType): number => {
+const severityRank = (type: MessageBase['type']): number => {
   switch (type) {
-    case 'catastrophic':
-      return 3;
     case 'error':
       return 2;
     case 'warning':
@@ -107,7 +105,6 @@ export function buildContactFormOutcome(
 
     const blockMessage = result.messages.find((message) =>
       [
-        'catastrophic',
         'error',
         'warning',
       ].includes(message.type),
@@ -191,7 +188,10 @@ export function buildContactFormOutcome(
     submitStatus !== 'idle'
   ) {
     const type: PriorityType =
-      submitStatus === 'not_configured' ? 'catastrophic' : 'error';
+      submitStatus === 'not_configured' ||
+      submitStatus === 'blocked'
+        ? 'catastrophic'
+        : 'error';
     priorityMessage = {
       type,
       text: statusSummary,
