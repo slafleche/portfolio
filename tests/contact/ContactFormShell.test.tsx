@@ -225,4 +225,98 @@ describe('Contact form shell harness', () => {
       unmount();
     }
   });
+
+  it('surfaces then clears recoverable server status summaries after a subsequent successful submit', async () => {
+    const blocks = [
+      {
+        key: 'first',
+        id: 'first',
+        validationResult: makeValidation('first', true),
+        payload: makePayload('first', 'value-1'),
+      },
+    ];
+
+    const scenarios: Array<{
+      status: 'rate_limited' | 'service_unavailable' | 'generic_error';
+      expectedSummary: string;
+    }> = [
+      {
+        status: 'rate_limited',
+        expectedSummary: 'rate_limited',
+      },
+      {
+        status: 'service_unavailable',
+        expectedSummary: 'service_unavailable',
+      },
+      {
+        status: 'generic_error',
+        expectedSummary: 'generic',
+      },
+    ];
+
+    for (const scenario of scenarios) {
+      const submitHelper = vi.fn<ContactFormFlowSubmitHelper>();
+
+      submitHelper.mockImplementation(async () => {
+        const callCount = submitHelper.mock.calls.length;
+        return callCount === 0 ? scenario.status : 'success';
+      });
+
+      const { submit, container, unmount } =
+        renderContactFormShellHarness({
+          blocks,
+          submitHelper,
+          statusMessages: STATUS_MESSAGES,
+          blockOrder: [
+            'first',
+          ],
+        });
+
+      // First submit: non-success recoverable status surfaces in the message centre.
+      submit();
+
+      await waitFor(() => {
+        expect(submitHelper).toHaveBeenCalledTimes(1);
+      });
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      if (!inlineRegion) return;
+
+      const inlineText = inlineRegion.textContent ?? '';
+      expect(inlineText).toContain(scenario.expectedSummary);
+
+      const toastRegion = container.querySelector(
+        '[role="status"]:not([aria-atomic])',
+      );
+      expect(toastRegion?.textContent ?? '').toContain(
+        scenario.expectedSummary,
+      );
+
+      // Second submit: success clears summaries from the message centre.
+      submit();
+
+      await waitFor(() => {
+        expect(submitHelper).toHaveBeenCalledTimes(2);
+      });
+
+      await waitFor(() => {
+        const clearedInlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(
+          (clearedInlineRegion?.textContent ?? '').trim(),
+        ).toBe('');
+
+        const clearedToastRegion = container.querySelector(
+          '[role="status"]:not([aria-atomic])',
+        );
+        expect(clearedToastRegion).toBeNull();
+      });
+
+      unmount();
+    }
+  });
 });
