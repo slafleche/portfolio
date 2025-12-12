@@ -7,6 +7,10 @@ import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
+import {
+  enData,
+  type EnData,
+} from '@/lib/locales/translations/en.data';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
 import { sharedStrings } from '@/lib/sharedStrings';
 
@@ -18,13 +22,8 @@ const buildFormCopy = () =>
 
 const buildPrivacy = () =>
   buildPrivacyCopy(
-    ((key: string) => {
-      if (key === 'privacy-title') return 'Privacy';
-      if (key === 'privacy-href') return '#privacy';
-      if (key === 'privacy-updated') return '';
-      if (key === 'privacy-content') return 'Privacy content.';
-      return key;
-    }) as unknown as Translator,
+    ((key: string) =>
+      enData[key as keyof EnData] ?? key) as unknown as Translator,
   );
 
 describe('ContactDialogProvider', () => {

@@ -245,7 +245,9 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         renderCount += 1;
         const marker = document.createElement('div');
         marker.dataset.testid = 'turnstile-instance';
-        container.appendChild(marker);
+        if (container instanceof HTMLElement) {
+          container.appendChild(marker);
+        }
         return `widget-${renderCount}`;
       },
       reset: () => {},

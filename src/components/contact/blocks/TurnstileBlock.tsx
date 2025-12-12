@@ -8,6 +8,7 @@ import {
 import clsx from 'clsx';
 import * as s from '@/styles/components/forms.css';
 import { useFormBlock } from '../formBlocks.context';
+import { FormHint } from '@/components/contact/primitives/FormHint';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
 import type {
   ContactFormBlockBaseProps,
@@ -24,19 +25,14 @@ export type TurnstileBlockProps = Omit<
 };
 
 export type TurnstileState =
-  | 'bypassed'
   | 'loading'
   | 'ready'
   | 'verified'
   | 'expired'
   | 'error';
 
-const COMPLETED_STATUSES: TurnstileState[] = [
-  'verified',
-  'bypassed',
-];
+const COMPLETED_STATUSES: TurnstileState[] = ['verified'];
 
-const DEFAULT_TURNSTILE_TOKEN = 'mock-turnstile-token';
 const TURNSTILE_SCRIPT_SRC =
   'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
@@ -174,50 +170,49 @@ export function TurnstileBlock({
   const [
     status,
     setStatus,
-  ] = useState<TurnstileState>(
-    hasTurnstileConfig ? 'loading' : 'bypassed',
-  );
+  ] = useState<TurnstileState>('loading');
   const [
     token,
     setToken,
-  ] = useState<string>(
-    hasTurnstileConfig ? '' : DEFAULT_TURNSTILE_TOKEN,
-  );
+  ] = useState<string>('');
 
   const widgetRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
 
   const shouldRenderTurnstileWidget = hasTurnstileConfig;
 
-  const { reportCatastrophic } = useFormBlock(
-    useMemo(() => {
-      const contract = buildTurnstileContract(
-        id,
-        status,
-        copy,
-        token,
-      );
-      return {
-        key: 'turnstile',
-        getValue: () => token,
-        validate: () => contract.validate().valid,
-        getValidationSummary: () => {
-          if (COMPLETED_STATUSES.includes(status)) return null;
-          if (status === 'expired') return copy.summary.expired;
-          if (status === 'error') return copy.summary.error;
-          return copy.summary.missing;
-        },
-        focus: contract.focus,
-        liveValidation: false,
-        getContract: () => contract,
-      };
-    }, [
-      copy,
+  const registration = useMemo(() => {
+    const contract = buildTurnstileContract(
       id,
       status,
+      copy,
       token,
-    ]),
-  );
+    );
+    return {
+      key: 'turnstile',
+      getValue: () => token,
+      validate: () => contract.validate().valid,
+      getValidationSummary: () => {
+        if (COMPLETED_STATUSES.includes(status)) return null;
+        if (status === 'expired') return copy.summary.expired;
+        if (status === 'error') return copy.summary.error;
+        return copy.summary.missing;
+      },
+      focus: contract.focus,
+      // Turnstile participates in validation only via the
+      // continuous-validation flow after the first failed submit.
+      liveValidation: false,
+      getContract: () => contract,
+    };
+  }, [
+    copy,
+    id,
+    status,
+    token,
+  ]);
+
+  const { continuousValidation, reportCatastrophic } =
+    useFormBlock(registration);
 
   useEffect(() => {
     if (!shouldRenderTurnstileWidget || !turnstileSiteKey) return;
@@ -289,15 +284,18 @@ export function TurnstileBlock({
     turnstileSiteKey,
   ]);
 
-  const statusMessage = useMemo(() => {
-    if (COMPLETED_STATUSES.includes(status)) return null;
-    if (status === 'expired') return copy.summary.expired;
-    if (status === 'error') return copy.summary.error;
-    return copy.summary.missing;
-  }, [
-    copy.summary,
-    status,
-  ]);
+  const isComplete = COMPLETED_STATUSES.includes(status);
+  const summaryText = !isComplete
+    ? status === 'expired'
+      ? copy.summary.expired
+      : status === 'error'
+        ? copy.summary.error
+        : copy.summary.missing
+    : null;
+  const helperText = !isComplete ? copy.requiredText : null;
+  const showError = Boolean(summaryText && continuousValidation);
+  const hintText = showError ? summaryText : helperText;
+  const hintId = `${id}-turnstile-hint`;
 
   return (
     <div
@@ -318,22 +316,23 @@ export function TurnstileBlock({
       <div
         ref={widgetRef}
         className={s.turnstileWidget}
-        data-rendered={status !== 'bypassed'}
+        aria-describedby={hintText ? hintId : undefined}
+        data-rendered="true"
       >
-        {status === 'bypassed' ? (
-          <span
-            className={s.turnstilePlaceholder}
-            data-form-turnstile="preview"
-          >
-            {copy.preview}
-          </span>
-        ) : null}
       </div>
       <input type="hidden" name="token" value={token} />
-      {statusMessage ? (
-        <p data-form-turnstile="status" className={s.turnstileStatus}>
-          {statusMessage}
-        </p>
+      {hintText ? (
+        <div
+          data-form-turnstile="status"
+          className={s.turnstileStatus}
+        >
+          <FormHint
+            id={hintId}
+            tone={showError ? 'error' : 'helper'}
+          >
+            {hintText}
+          </FormHint>
+        </div>
       ) : null}
     </div>
   );

@@ -20,7 +20,9 @@ import type {
   ContactFormBlockValidationResult,
   ContactFormBlockContract,
   ContactFormBlockPayload,
+  ContactFormBlockInitialConfig,
 } from '../types/form.types';
+
 
 export type MessageBlockProps = ContactFormBlockBaseProps & {
   id: string;
@@ -32,6 +34,7 @@ export type MessageBlockProps = ContactFormBlockBaseProps & {
   disabled?: boolean;
   onFocusBefore?: () => void;
   onFocusAfter?: () => void;
+  initialConfig?: ContactFormBlockInitialConfig<string>;
 };
 
 const MESSAGE_ERRORS = {
@@ -130,15 +133,16 @@ export function MessageBlock({
   errorText,
   readOnly,
   disabled,
+  initialConfig,
 }: MessageBlockProps) {
   const [
     value,
     setValue,
-  ] = useState('');
+  ] = useState(() => initialConfig?.initialData ?? '');
   const [
     hasBlurred,
     setHasBlurred,
-  ] = useState(false);
+  ] = useState(() => Boolean(initialConfig?.validateOnMount));
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const baseHeightRef = useRef<number | null>(null);
   const lastValidationStateRef = useRef<{

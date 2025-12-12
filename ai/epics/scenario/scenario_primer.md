@@ -11,7 +11,7 @@
 
 ## Goals
 
-- Allow developers to open the real app (for example, `/en`) with a **URL-based scenario identifier** (for example, `?scenario=<id>#contact-form`) and have a target UI (for example, the contact form) load a predefined state **before first render**.
+- Allow developers to open the real app (for example, `/en`) with a **URL-based scenario identifier** (for example, `?scenario=<id>#contact-form`) and have a target UI (for example, the contact form) load a predefined **dev scenario** (for example, loading/success/failure shell states) without manual reproduction.
 - Keep the mechanism **generic** so other features can opt in using their own target ids and scenario maps.
 - Keep scenario definitions in **TypeScript**, so tests and dev UI can share them without duplicating state descriptions.
 - Ensure the system is **no-op in production** and when no scenario is specified.
@@ -24,11 +24,11 @@
 
 ## Success criteria
 
-- In development, when the URL looks like `/en?scenario=<id>#contact-form`, the contact form:
-  - Detects the `scenario` id, looks it up in a TS scenario map, and
-  - Prefills the form (or otherwise configures it) according to that scenario **before the user interacts**.
-- The same scenario map can be imported in tests to drive high-level, named scenarios where useful, without being mandatory.
-- The core parsing and scenario plumbing live in a **generic dev namespace** (for example, `src/dev/scenarios/`) and can be reused by other features with minimal wiring.
+- In development, when the URL looks like `/en?scenario=<id>#contact-form`, the contact form layer:
+  - Detects the `scenario` id from the query string when the hash matches the contact form target, and
+  - Applies a matching **dev scenario** (for example, loading/success/failure shell views) without requiring manual interaction.
+- The contact form scenarios and helpers live in a **generic dev namespace** (for example, `src/dev/scenarios/`) and can be reused by other features with minimal wiring.
+- The scenario map for the contact form is defined in TypeScript and can be imported from `src/dev/scenarios/contactForm.scenarios.ts`; future work may use this map to drive richer state (for example, initial field values) once the wiring is in place.
 - In production builds:
   - Scenario parsing and application are effectively disabled or compiled out.
   - Normal behaviour is unchanged when no scenario id is provided.

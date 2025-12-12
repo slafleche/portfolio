@@ -13,6 +13,7 @@ import type {
   ContactFormBlockValidationResult,
   ContactFormBlockContract,
   ContactFormBlockPayload,
+  ContactFormBlockInitialConfig,
 } from '../types/form.types';
 
 export type EmailBlockProps = ContactFormBlockBaseProps & {
@@ -22,6 +23,7 @@ export type EmailBlockProps = ContactFormBlockBaseProps & {
   maxLength?: number;
   onFocusBefore?: () => void;
   onFocusAfter?: () => void;
+  initialConfig?: ContactFormBlockInitialConfig<string>;
 };
 
 const EMAIL_ERRORS = {
@@ -42,8 +44,7 @@ const EMAIL_ERRORS = {
 >;
 
 type EmailErrorKey = keyof typeof EMAIL_ERRORS;
-type EmailErrorCode =
-  (typeof EMAIL_ERRORS)[EmailErrorKey]['code'];
+type EmailErrorCode = (typeof EMAIL_ERRORS)[EmailErrorKey]['code'];
 
 const getEmailError = (
   evaluation: ReturnType<typeof evaluateEmailField>,
@@ -110,15 +111,16 @@ export function EmailBlock({
   disabled,
   maxLength,
   copy,
+  initialConfig,
 }: EmailBlockProps) {
   const [
     value,
     setValue,
-  ] = useState('');
+  ] = useState(() => initialConfig?.initialData ?? '');
   const [
     hasBlurred,
     setHasBlurred,
-  ] = useState(false);
+  ] = useState(() => Boolean(initialConfig?.validateOnMount));
   const inputRef = useRef<HTMLInputElement | null>(null);
   const lastValidationStateRef = useRef<{
     valid: boolean;
@@ -139,46 +141,41 @@ export function EmailBlock({
 
   const liveValidationRegistration = hasBlurred;
 
-  const registration = useMemo(
-    () => {
-      const baseContract = buildEmailContract(
-        id,
-        value,
-        evaluation,
-        copy,
-      );
-      const contract: ContactFormBlockContract<string> = {
-        ...baseContract,
-        focus: () => {
-          inputRef.current?.focus();
-        },
-      };
-      return {
-        key: 'email',
-        focus: contract.focus,
-        getValue: () => value,
-        validate: () => contract.validate().valid,
-        getValidationSummary: () => {
-          const error = getEmailError(evaluation, copy);
-          return error ? error.text : null;
-        },
-        liveValidation: liveValidationRegistration,
-        getContract: () => contract,
-      };
-    },
-    [
-      copy,
-      evaluation,
+  const registration = useMemo(() => {
+    const baseContract = buildEmailContract(
       id,
       value,
-      liveValidationRegistration,
-    ],
-  );
+      evaluation,
+      copy,
+    );
+    const contract: ContactFormBlockContract<string> = {
+      ...baseContract,
+      focus: () => {
+        inputRef.current?.focus();
+      },
+    };
+    return {
+      key: 'email',
+      focus: contract.focus,
+      getValue: () => value,
+      validate: () => contract.validate().valid,
+      getValidationSummary: () => {
+        const error = getEmailError(evaluation, copy);
+        return error ? error.text : null;
+      },
+      liveValidation: liveValidationRegistration,
+      getContract: () => contract,
+    };
+  }, [
+    copy,
+    evaluation,
+    id,
+    value,
+    liveValidationRegistration,
+  ]);
 
-  const {
-    continuousValidation,
-    recordValidationResult,
-  } = useFormBlock(registration);
+  const { continuousValidation, recordValidationResult } =
+    useFormBlock(registration);
 
   const liveValidation = hasBlurred || continuousValidation;
   const emailError = getEmailError(evaluation, copy);

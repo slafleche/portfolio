@@ -1,18 +1,21 @@
 # Scenario epic — plan
 
 - [ ] Define dev-only scenarios namespace and types
-  - [ ] Add `src/dev/scenarios/hashRouting.ts` with `parseHashForTarget`.
-  - [ ] Add `src/dev/scenarios/types.ts` with shared `DevScenario*` types.
+  - [x] Add `src/dev/scenarios/hashRouting.ts` with `parseHashForTarget`.
+  - [ ] (Optional) Extract shared `DevScenario*` types if/when more features adopt scenarios; for now, the contact form uses `ContactFormScenarioConfig` inline.
 - [ ] Implement contact form scenarios for v1
-  - [ ] Define `ContactFormScenarioConfig` and `contactFormScenarios` map.
-  - [ ] Seed a small set of visual scenarios (empty, email-invalid, message-too-short, etc.).
+  - [x] Define `ContactFormScenarioConfig` and `contactFormScenarios` tree, plus `contactFormScenarioMap` for lookups.
+  - [x] Seed a small set of outcome-focused scenarios for shell states (loading/success/failure and a couple of failure variants).
+  - [ ] Add richer field-level scenarios (for example, invalid email, short message, too many links) using the existing `initialValues` support in `ContactFormScenarioConfig`.
 - [ ] Wire scenarios into the contact form
-  - [ ] Add a dev-only hook/adapter in the contact form layer to:
-    - [ ] Read the hash and extract `scenario` when the target is `contact-form`.
-    - [ ] Look up the scenario and build `initialValues`.
-    - [ ] Pass `initialValues` into `ContactForm` and seed field state.
+  - [x] Add a dev-only hook/adapter in the contact form layer to:
+    - [x] Read the hash and query string and extract `scenario` when the target is `contact-form`.
+    - [x] Use the `scenario` id to drive dev-only shell views (loading/success/failure) in the contact dialog.
+  - [ ] Wire `contactFormScenarioMap` into the form to:
+    - [ ] Look up the scenario config by id.
+    - [ ] Build `initialValues` and pass them into the form layer.
+    - [ ] Seed field state (name/email/message/turnstile/honeypot) from `initialValues` while keeping validation logic unchanged.
 - [ ] Add basic tests and docs
   - [ ] Add unit tests for `parseHashForTarget`.
   - [ ] Add at least one integration test that uses a scenario to prefill the contact form.
   - [ ] Document the URL convention and scenario usage in tests (for example, in a short note under `tests/contact/` and/or an AGENTS file).
-

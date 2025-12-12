@@ -128,7 +128,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(tokenInput.value).toBe('');
     });
 
-    it('shows bypass preview and default token when no site key is configured', () => {
+    it('does not bypass when no site key is configured', () => {
       setTurnstileEnv(null);
       window.turnstile = undefined;
 
@@ -150,32 +150,16 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
       if (!wrapper) return;
 
-      expect(wrapper).toHaveAttribute('data-state', 'bypassed');
       expect(wrapper).toHaveAttribute('data-disabled', 'false');
-
-      const widgetContainer = wrapper.querySelector(
-        '[data-rendered]',
-      ) as HTMLDivElement | null;
-      expect(widgetContainer).not.toBeNull();
-      if (!widgetContainer) return;
-      expect(widgetContainer).toHaveAttribute(
-        'data-rendered',
-        'false',
-      );
-
-      const preview = wrapper.querySelector(
-        '[data-form-turnstile="preview"]',
-      ) as HTMLElement | null;
-      expect(preview).not.toBeNull();
-      if (!preview) return;
-
+      // We should not silently bypass Turnstile; in the absence of a site key
+      // the widget is not rendered and no default token is injected.
       const tokenInput = wrapper.querySelector(
         'input[name="token"][type="hidden"]',
       ) as HTMLInputElement | null;
       expect(tokenInput).not.toBeNull();
       if (!tokenInput) return;
 
-      expect(tokenInput.value).toBe('mock-turnstile-token');
+      expect(tokenInput.value).toBe('');
     });
   });
 
@@ -438,7 +422,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
       const api = window.turnstile as MockTurnstileApi | undefined;
       expect(api?.lastOptions).not.toBeNull();
       expect(wrapper.getAttribute('data-state')).toMatch(
-        /^(loading|ready|bypassed|error)$/,
+        /^(loading|ready|error)$/,
       );
       expect(tokenInput.value).toBe(initialToken);
     });
@@ -482,7 +466,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
     expect(typeof registration.getContract).toBe('function');
   });
 
-  it('getValue reflects the current token for verified and bypassed states', async () => {
+  it('getValue reflects the current token for verified state', async () => {
     const { getRegistration } = renderTurnstileBlockWithFormBlocks({
       id: 'test-turnstile-block',
       order: 0,
@@ -505,22 +489,9 @@ describe('Contact form block contract: TurnstileBlock', () => {
     registration = getRegistration();
     expect(registration?.getValue?.()).toBe('verified-token');
 
-    setTurnstileEnv(null);
-    window.turnstile = undefined;
-
-    const { getRegistration: getBypassedRegistration } =
-      renderTurnstileBlockWithFormBlocks({
-        id: 'test-turnstile-bypassed',
-        order: 0,
-        disabled: false,
-        copy: turnstileCopy,
-      });
-
-    registration = getBypassedRegistration();
-    expect(registration?.getValue?.()).toBe('mock-turnstile-token');
   });
 
-  it('validate returns true for verified and bypassed, false for missing/expired/error', async () => {
+  it('validate returns true for verified and false for missing/expired/error', async () => {
     const { getRegistration } = renderTurnstileBlockWithFormBlocks({
       id: 'test-turnstile-block',
       order: 0,
@@ -555,19 +526,6 @@ describe('Contact form block contract: TurnstileBlock', () => {
     registration = getRegistration();
     expect(registration?.validate?.()).toBe(false);
 
-    setTurnstileEnv(null);
-    window.turnstile = undefined;
-
-    const { getRegistration: getBypassedRegistration } =
-      renderTurnstileBlockWithFormBlocks({
-        id: 'test-turnstile-bypassed',
-        order: 0,
-        disabled: false,
-        copy: turnstileCopy,
-      });
-
-    registration = getBypassedRegistration();
-    expect(registration?.validate?.()).toBe(true);
   });
 
   it('getValidationSummary matches the status summary for non-completed states', async () => {
@@ -671,24 +629,5 @@ describe('Contact form block contract: TurnstileBlock', () => {
     expect(result.messages[0].scrollTarget).toBe(blockId);
   });
 
-  it('contract validate returns valid with no messages in bypassed state', () => {
-    setTurnstileEnv(null);
-    window.turnstile = undefined;
-
-    const { getTurnstileContract } =
-      renderTurnstileBlockWithFormBlocks({
-        id: 'test-turnstile-bypassed',
-        order: 0,
-        disabled: false,
-        copy: turnstileCopy,
-      });
-
-    const contract = getTurnstileContract();
-    expect(contract).not.toBeNull();
-    if (!contract) return;
-
-    const result = contract.validate();
-    expect(result.valid).toBe(true);
-    expect(result.messages).toHaveLength(0);
-  });
+  // No bypass path: all validation success must come from real verification.
 });

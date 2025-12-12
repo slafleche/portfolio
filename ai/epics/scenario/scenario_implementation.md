@@ -4,11 +4,11 @@
 
 - Introduce a **dev-only scenarios layer** under a dedicated namespace:
   - `src/dev/scenarios/hashRouting.ts` — generic hash parsing helpers.
-  - `src/dev/scenarios/types.ts` — shared types for scenario ids and loaders.
-  - `src/dev/scenarios/contactForm.scenarios.ts` — contact-form specific scenarios for v1.
+  - `src/dev/scenarios/contactForm.scenarios.ts` — contact-form specific scenarios and helpers for v1.
+  - `src/dev/scenarios/contactForm.adapter.ts` — contact-form specific URL adapter.
 - Integrate with the contact form via a **thin adapter**:
-  - Read the hash on the client in dev.
-  - If it matches the `contact-form` target and includes a `scenario` id, look it up and pass initial values / flags into `ContactForm` as an optional prop.
+  - Read the hash + query string on the client in dev.
+  - If the hash matches the `contact-form` target and includes a `scenario` id, resolve the id and let the contact form shell derive its dev state (for example, loading/success/failure).
   - Keep the adapter small and clearly dev-only.
 
 ## Hash parsing design
@@ -26,38 +26,50 @@
 
 ## Scenario types and map
 
-- Define shared types in `src/dev/scenarios/types.ts`, for example:
-  - `DevScenarioId = string`.
-  - `DevScenario<TConfig> = { id: DevScenarioId; label: string; config: TConfig }`.
-  - `DevScenarioMap<TConfig> = Record<DevScenarioId, DevScenario<TConfig>>`.
-- For the contact form, define a focused config type in `contactForm.scenarios.ts`, for v1:
-  - `initialValues`:
-    - `name?: string`
-    - `email?: string`
-    - `message?: string`
-    - `token?: string` (turnstile)
-    - `honeypot?: string`
-  - Optional shell flags (future extension, but keep the type ready):
-    - `startWithContinuousValidation?: boolean`
-    - `forceSubmitStatus?: 'success' | 'validation_error' | 'rate_limited' | 'service_unavailable' | 'not_configured' | 'blocked' | 'generic_error'`
-- Export a simple map for v1:
-  - `contactFormScenarios: DevScenarioMap<ContactFormScenarioConfig>`.
-  - A handful of hand-picked entries, for example:
-    - `visualtest_empty` — all fields empty.
-    - `visualtest_email_invalid` — prefilled invalid email.
-    - `visualtest_message_too_short` — short message to show error copy.
+- For the contact form, define a focused config type in `contactForm.scenarios.ts`:
+  - `ContactFormScenarioConfig`:
+    - `id: string`
+    - `label: string`
+    - Optional `initialValues` for field prefills:
+      - `name?: string`
+      - `email?: string`
+      - `message?: string`
+      - `token?: string` (Turnstile)
+      - `honeypot?: string`
+    - Optional `devState` shell flags to influence the form shell:
+      - `isSubmitting?: boolean`
+      - `forcedSubmitStatus?: 'success' | 'validation_error' | 'rate_limited' | 'service_unavailable' | 'not_configured' | 'blocked' | 'generic_error'`
+    - Optional `variants?: Record<string, ContactFormScenarioConfig>` for nested variant trees.
+- Export a simple tree for v1 in `contactForm.scenarios.ts`:
+  - `contactFormScenarios: Record<string, ContactFormScenarioConfig>` with entries such as:
+    - `loading` — loading shell state.
+    - `success` — success shell state.
+    - `failure` — generic failure shell state, with nested variants for `blocked` and `service_unavailable`.
+- Flatten the tree into a map:
+  - `contactFormScenarioMap: Record<string, ContactFormScenarioConfig>`.
+  - Variant ids are composed from the path, for example `failure-blocked`, `failure-service_unavailable`.
+  - In the current v1 wiring, the contact form shell uses the `scenario` id directly (for example, `loading`, `success`, `failure-*`) and the map is available for future, richer scenarios (for example, field prefills).
 
 ## Contact form integration
 
-- In `ContactForm` (or a small wrapper), add a dev-only hook:
-  - On client mount, check `process.env.NODE_ENV !== 'production'`.
+- In `src/dev/scenarios/contactForm.adapter.ts`, add a dev-only helper:
+  - On the client, check `process.env.NODE_ENV !== 'production'`.
   - Read `window.location.hash` and `window.location.search`.
-  - Confirm the hash points at the contact intent (for example, `#contact-form`).
-  - If so, read `scenario=<id>` from the query string and look it up in the flattened `contactFormScenarioMap`.
-  - If found, derive `initialValues` and pass them to the form via props.
+  - Confirm the hash points at the contact intent (for example, `#contact-form`) using a shared string constant.
+  - If so, read `scenario=<id>` from the query string, normalise it, and return the id.
+  - Ensure the helper is idempotent per page load (only the first consumer wins) to avoid duplicate scenario application.
+- In `ContactForm`, use the adapter to drive dev-only shell states:
+  - On mount, call `resolveContactFormScenarioIdFromLocation` and store the id in local state.
+  - Derive simple booleans such as:
+    - `isDevLoadingScenario` — `scenarioId === 'loading'`.
+    - `isDevSuccessScenario` — `scenarioId === 'success'`.
+    - `isDevFailureScenario` — `scenarioId` starts with `failure`.
+  - Use these flags to:
+    - Select between loading/success/failure panels in the contact dialog shell.
+    - Keep the dialog title in sync with the current dev scenario.
 - Form behaviour:
-  - Accept an optional `initialValues` prop and seed local state (name/email/message/turnstile/honeypot) from it instead of empty strings.
-  - Do not change validation logic; scenarios only influence starting state in v1.
+  - Validation and submission logic remain unchanged; scenarios currently influence only the shell view (loading/success/failure).
+  - Future work can use `contactFormScenarioMap` and `initialValues` to seed field state without changing validation rules.
 
 ## Safety and dev-only guarantees
 

@@ -11,6 +11,7 @@ import type {
   ContactFormBlockValidationResult,
   ContactFormBlockContract,
   ContactFormBlockPayload,
+  ContactFormBlockInitialConfig,
 } from '../types/form.types';
 
 export type NameBlockProps = ContactFormBlockBaseProps & {
@@ -19,6 +20,7 @@ export type NameBlockProps = ContactFormBlockBaseProps & {
   minLength?: number;
   onFocusBefore?: () => void;
   onFocusAfter?: () => void;
+  initialConfig?: ContactFormBlockInitialConfig<string>;
 };
 
 const NAME_ERRORS = {
@@ -43,8 +45,7 @@ const NAME_ERRORS = {
 >;
 
 type NameErrorKey = keyof typeof NAME_ERRORS;
-type NameErrorCode =
-  (typeof NAME_ERRORS)[NameErrorKey]['code'];
+type NameErrorCode = (typeof NAME_ERRORS)[NameErrorKey]['code'];
 
 const getNameError = (
   evaluation: ReturnType<typeof evaluateNameField>,
@@ -113,15 +114,16 @@ export function NameBlock({
   maxLength,
   minLength,
   copy,
+  initialConfig,
 }: NameBlockProps) {
   const [
     value,
     setValue,
-  ] = useState('');
+  ] = useState(() => initialConfig?.initialData ?? '');
   const [
     hasBlurred,
     setHasBlurred,
-  ] = useState(false);
+  ] = useState(() => Boolean(initialConfig?.validateOnMount));
   const inputRef = useRef<HTMLInputElement | null>(null);
   const lastValidationStateRef = useRef<{
     valid: boolean;

@@ -31,6 +31,21 @@ export type ContactFormBlockContract<Value> = {
   getPayload: () => ContactFormBlockPayload<Value>;
 };
 
+export type ContactFormBlockInitialConfig<Value> = {
+  /**
+   * Initial data for a block, mirroring the value stored in its payload.
+   * For simple fields this is typically a string; for richer blocks it can
+   * be an object containing multiple related values.
+   */
+  initialData?: Value;
+  /**
+   * When true, the block should run its validation logic on mount using
+   * the initial data, so any relevant errors are visible without user
+   * interaction.
+   */
+  validateOnMount?: boolean;
+};
+
 export type ContactFormDebugFieldState = {
   disabled: boolean;
 };
