@@ -118,6 +118,7 @@
     "test:brevo": "vitest run tests/server/deliverContactMessage.test.ts tests/api/contact.route.test.ts tests/api/contact.health.route.test.ts",
     "test:watch": "vitest --watch",
     "scenarios": "tsx scripts/devScenarios.ts",
+    "scenarios:reset": "tsx scripts/devScenarios.ts --reset",
     "upgrade:latest": "yarn up \"*@latest\" \"@*/*@latest\" && yarn dedupe"
   }
 }

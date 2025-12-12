@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import readline from 'node:readline';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -17,8 +18,118 @@ type ScenarioOption = {
   url: string;
 };
 
+type ScenarioState = {
+  doneIds: string[];
+};
+
 const LOCAL_BASE_ORIGIN = 'http://localhost:3000';
 const CONTACT_FORM_TARGET_ID = 'contact-form';
+const SCENARIO_STATE_FILE = path.join(
+  process.cwd(),
+  'tmp',
+  'contactForm.scenarios.state.json',
+);
+
+type CliFlags = {
+  showAll: boolean;
+  reset: boolean;
+};
+
+function parseCliFlags(argv: string[]): CliFlags {
+  const flags: CliFlags = {
+    showAll: false,
+    reset: false,
+  };
+  for (const arg of argv) {
+    if (arg === '--all') {
+      flags.showAll = true;
+    } else if (arg === '--reset') {
+      flags.reset = true;
+    }
+  }
+  return flags;
+}
+
+function loadScenarioState(): ScenarioState {
+  try {
+    if (!fs.existsSync(SCENARIO_STATE_FILE)) {
+      return { doneIds: [] };
+    }
+    const raw = fs.readFileSync(SCENARIO_STATE_FILE, 'utf8');
+    const parsed = JSON.parse(raw) as Partial<ScenarioState> | undefined;
+    const doneIds = Array.isArray(parsed?.doneIds)
+      ? parsed!.doneIds.filter((id): id is string => typeof id === 'string')
+      : [];
+    return { doneIds };
+  } catch {
+    return { doneIds: [] };
+  }
+}
+
+function saveScenarioState(state: ScenarioState): void {
+  try {
+    const dir = path.dirname(SCENARIO_STATE_FILE);
+    fs.mkdirSync(dir, { recursive: true });
+    const uniqueIds = Array.from(new Set(state.doneIds));
+    const payload: ScenarioState = { doneIds: uniqueIds };
+    fs.writeFileSync(
+      SCENARIO_STATE_FILE,
+      JSON.stringify(payload, null, 2),
+      'utf8',
+    );
+  } catch {
+    // Swallow persistence errors; this file is a local convenience only.
+  }
+}
+
+function resetScenarioState(): void {
+  try {
+    if (fs.existsSync(SCENARIO_STATE_FILE)) {
+      fs.unlinkSync(SCENARIO_STATE_FILE);
+      console.log(
+        'Contact form scenario progress reset (temporary state file removed).',
+      );
+    } else {
+      console.log('No contact form scenario state file to reset.');
+    }
+  } catch (error) {
+    console.warn('Failed to reset contact form scenario state file.', error);
+  }
+}
+
+function markScenarioDone(id: string): void {
+  const state = loadScenarioState();
+  if (!state.doneIds.includes(id)) {
+    state.doneIds.push(id);
+    saveScenarioState(state);
+  }
+}
+
+async function askMarkScenarioDone(
+  selected: ScenarioOption,
+): Promise<boolean> {
+  const stdin = process.stdin;
+  const stdout = process.stdout;
+
+  const rl = readline.createInterface({
+    input: stdin,
+    output: stdout,
+  });
+
+  const question = `Mark scenario "${selected.id}" as done? (Y/n) `;
+
+  return new Promise<boolean>((resolve) => {
+    rl.question(question, (answer) => {
+      rl.close();
+      const trimmed = answer.trim().toLowerCase();
+      if (!trimmed || trimmed === 'y' || trimmed === 'yes') {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  });
+}
 
 function resolveBaseUrl(): string {
   const baseLocale = debugRoutes.baseLocale || 'en';
@@ -190,7 +301,33 @@ async function selectScenarioOption(
 }
 
 export async function runScenariosCli() {
-  const options = buildContactFormScenarioOptions();
+  const flags = parseCliFlags(process.argv.slice(2));
+
+  if (flags.reset) {
+    resetScenarioState();
+  }
+
+  const allOptions = buildContactFormScenarioOptions();
+  const state = loadScenarioState();
+
+  const options =
+    flags.showAll || state.doneIds.length === 0
+      ? allOptions
+      : allOptions.filter((option) => !state.doneIds.includes(option.id));
+
+  if (!options.length) {
+    if (allOptions.length > 0) {
+      console.log(
+        'All contact form scenarios are currently marked as done. Use `yarn scenarios --all` or `yarn scenarios --reset` to see them again.',
+      );
+    } else {
+      console.log(
+        'No scenarios are currently defined for the contact form.',
+      );
+    }
+    return;
+  }
+
   const selected = await selectScenarioOption(options);
 
   if (!selected) {
@@ -220,6 +357,11 @@ export async function runScenariosCli() {
     if (error instanceof Error && error.message) {
       console.warn(`Reason: ${error.message}`);
     }
+  }
+
+  const markDone = await askMarkScenarioDone(selected);
+  if (markDone) {
+    markScenarioDone(selected.id);
   }
 }
 
