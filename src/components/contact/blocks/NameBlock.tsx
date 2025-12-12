@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
@@ -123,6 +123,10 @@ export function NameBlock({
     setHasBlurred,
   ] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const lastValidationStateRef = useRef<{
+    valid: boolean;
+    errorCode: NameErrorCode | null;
+  } | null>(null);
 
   const evaluation = useMemo(
     () => evaluateNameField(value),
@@ -177,16 +181,41 @@ export function NameBlock({
 
   const liveValidation = hasBlurred || continuousValidation;
 
-  let localErrorText: string | null = null;
-  if (liveValidation) {
-    const error = getNameError(evaluation, copy);
-    localErrorText = error ? error.text : null;
-  }
+  const nameError = getNameError(evaluation, copy);
+  const localErrorText =
+    liveValidation && nameError ? nameError.text : null;
 
-  if (liveValidation) {
+  useEffect(() => {
+    if (!liveValidation) {
+      lastValidationStateRef.current = null;
+      return;
+    }
+
+    const nextState = {
+      valid: !nameError,
+      errorCode: nameError ? nameError.code : null,
+    };
+
+    const previousState = lastValidationStateRef.current;
+    if (
+      previousState &&
+      previousState.valid === nextState.valid &&
+      previousState.errorCode === nextState.errorCode
+    ) {
+      return;
+    }
+
+    lastValidationStateRef.current = nextState;
     const result = buildNameValidationResult(id, evaluation, copy);
     recordValidationResult(result);
-  }
+  }, [
+    copy,
+    evaluation,
+    id,
+    liveValidation,
+    nameError,
+    recordValidationResult,
+  ]);
 
   return (
     <div id={id} data-order={order}>
@@ -202,6 +231,7 @@ export function NameBlock({
           }
         }}
         errorText={localErrorText}
+        helperText={copy.requiredText}
         requiredText={copy.requiredText}
         disabled={disabled}
         maxLength={maxLength ?? NAME_LIMIT.max}

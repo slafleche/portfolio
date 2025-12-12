@@ -1,4 +1,4 @@
-import { useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { TextareaInput } from '@/components/contact/primitives/TextareaInput';
 import { FormHint } from '@/components/contact/primitives/FormHint';
@@ -141,6 +141,10 @@ export function MessageBlock({
   ] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const baseHeightRef = useRef<number | null>(null);
+  const lastValidationStateRef = useRef<{
+    valid: boolean;
+    errorCode: MessageErrorCode | null;
+  } | null>(null);
   const generatedId = useId();
   const blockId = id ?? generatedId;
   const textareaId = `${blockId}-input`;
@@ -218,6 +222,8 @@ export function MessageBlock({
 
   const liveValidation = hasBlurred || continuousValidation;
 
+  const messageError = getMessageError(evaluation, copy);
+
   const remainingCharacters = evaluation.remainingCharacters;
 
   const counterText = copy.counterTemplate.replace(
@@ -241,20 +247,45 @@ export function MessageBlock({
     ? `${characterHintId} ${linksHintId}`
     : characterHintId;
 
-  let localErrorText: string | null = null;
-  if (liveValidation) {
-    const error = getMessageError(evaluation, copy);
-    localErrorText = error ? error.text : null;
-  }
+  const localErrorText =
+    liveValidation && messageError ? messageError.text : null;
 
-  if (liveValidation) {
+  useEffect(() => {
+    if (!liveValidation) {
+      lastValidationStateRef.current = null;
+      return;
+    }
+
+    const nextState = {
+      valid: !messageError,
+      errorCode: messageError ? messageError.code : null,
+    };
+
+    const previousState = lastValidationStateRef.current;
+    if (
+      previousState &&
+      previousState.valid === nextState.valid &&
+      previousState.errorCode === nextState.errorCode
+    ) {
+      return;
+    }
+
+    lastValidationStateRef.current = nextState;
+
     const result = buildMessageValidationResult(
       id,
       evaluation,
       copy,
     );
     recordValidationResult(result);
-  }
+  }, [
+    copy,
+    evaluation,
+    id,
+    liveValidation,
+    messageError,
+    recordValidationResult,
+  ]);
 
   const effectiveErrorText = errorText ?? localErrorText;
 
@@ -295,7 +326,7 @@ export function MessageBlock({
       </FormHint>
       {showLinksHint && linksHint ? (
         <FormHint
-          tone={urlCount >= MESSAGE_URL_LIMIT ? 'error' : 'helper'}
+          tone="helper"
           id={linksHintId}
         >
           {linksHint}

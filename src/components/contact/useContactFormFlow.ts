@@ -63,6 +63,7 @@ export function useContactFormFlow(
   ] = useState<ContactFormBlockPayload<unknown>[] | null>(null);
 
   const inFlightRef = useRef(false);
+  const hadInvalidSnapshotRef = useRef(false);
 
   const validateAll =
     useCallback((): ContactFormBlockValidationResult[] => {
@@ -84,9 +85,26 @@ export function useContactFormFlow(
     ]);
 
   useEffect(() => {
-    setLatestValidationResults(getValidationResultsSnapshot());
+    const snapshot = getValidationResultsSnapshot();
+    setLatestValidationResults(snapshot);
+
+    if (snapshot.some((result) => !result.valid)) {
+      hadInvalidSnapshotRef.current = true;
+    }
+
+    if (
+      submitStatus === 'validation_error' &&
+      hadInvalidSnapshotRef.current &&
+      snapshot.length > 0 &&
+      snapshot.every((result) => result.valid)
+    ) {
+      setInvalid(false);
+      setSubmitStatus('idle');
+      hadInvalidSnapshotRef.current = false;
+    }
   }, [
     getValidationResultsSnapshot,
+    submitStatus,
     validationResultsVersion,
   ]);
 

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEventHandler } from 'react';
 import { TextInputBlock } from './TextInputBlock';
 import { useFormBlock } from '../formBlocks.context';
@@ -120,6 +120,10 @@ export function EmailBlock({
     setHasBlurred,
   ] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const lastValidationStateRef = useRef<{
+    valid: boolean;
+    errorCode: EmailErrorCode | null;
+  } | null>(null);
   const evaluation = useMemo(
     () => evaluateEmailField(value),
     [
@@ -177,14 +181,41 @@ export function EmailBlock({
   } = useFormBlock(registration);
 
   const liveValidation = hasBlurred || continuousValidation;
-  const localErrorText = liveValidation
-    ? getEmailError(evaluation, copy)?.text ?? null
-    : null;
+  const emailError = getEmailError(evaluation, copy);
+  const localErrorText =
+    liveValidation && emailError ? emailError.text : null;
 
-  if (liveValidation) {
+  useEffect(() => {
+    if (!liveValidation) {
+      lastValidationStateRef.current = null;
+      return;
+    }
+
+    const nextState = {
+      valid: !emailError,
+      errorCode: emailError ? emailError.code : null,
+    };
+
+    const previousState = lastValidationStateRef.current;
+    if (
+      previousState &&
+      previousState.valid === nextState.valid &&
+      previousState.errorCode === nextState.errorCode
+    ) {
+      return;
+    }
+
+    lastValidationStateRef.current = nextState;
     const result = buildEmailValidationResult(id, evaluation, copy);
     recordValidationResult(result);
-  }
+  }, [
+    copy,
+    emailError,
+    evaluation,
+    id,
+    liveValidation,
+    recordValidationResult,
+  ]);
 
   return (
     <div id={id} data-order={order}>
@@ -200,6 +231,7 @@ export function EmailBlock({
           }
         }}
         errorText={localErrorText}
+        helperText={copy.requiredText}
         requiredText={copy.requiredText}
         readOnly={readOnly}
         disabled={disabled}

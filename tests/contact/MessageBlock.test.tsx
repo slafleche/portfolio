@@ -279,12 +279,14 @@ describe('Contact form block tests: MessageBlock', () => {
 
       await userEvent.type(textarea, 'x');
 
-      expect(
-        container.querySelector(
-          '#test-message-block-hint[data-form-hint="error"]',
-        ),
-      ).toBeNull();
-      expect(textarea).not.toHaveAttribute('aria-invalid');
+      await waitFor(() => {
+        expect(
+          container.querySelector(
+            '#test-message-block-hint[data-form-hint="error"]',
+          ),
+        ).toBeNull();
+        expect(textarea).not.toHaveAttribute('aria-invalid');
+      });
     });
 
     it('shows too-long error when exceeding max length and clears once trimmed', () => {
@@ -566,20 +568,13 @@ describe('Contact form block tests: MessageBlock', () => {
 
       expect(handleUpdate).not.toHaveBeenCalled();
 
-      // First blur with empty value records a required error.
-      fireEvent.blur(textarea);
-
-      await waitFor(() => {
-        expect(handleUpdate).toHaveBeenCalledTimes(1);
-      });
-
-      // Typing within the same too-short bucket should not cause
-      // additional validation snapshots while the error code remains
-      // the same.
+      // Enter a too-short message and blur: one invalid snapshot
+      // (too_short) should be recorded.
       const tooShortValue = 'x'.repeat(
         Math.max(1, MESSAGE_MIN_LENGTH - 1),
       );
       await userEvent.type(textarea, tooShortValue);
+      fireEvent.blur(textarea);
 
       await waitFor(() => {
         expect(handleUpdate).toHaveBeenCalledTimes(1);

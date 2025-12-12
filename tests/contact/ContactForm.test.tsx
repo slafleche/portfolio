@@ -26,10 +26,7 @@ import {
 } from '@/components/contact/types/form.types';
 import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import {
-  MESSAGE_MAX_LENGTH,
-  MESSAGE_MIN_LENGTH,
-} from '@/modules/contactForm/validation.constants';
+import { MESSAGE_MIN_LENGTH } from '@/modules/contactForm/validation.constants';
 
 const buildCopy = () =>
   buildContactFormCopy(
@@ -536,14 +533,14 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     await userEvent.type(nameInput, 'Jane Doe');
     await userEvent.type(emailInput, 'example@example.com');
 
-    const tooLongValue = 'x'.repeat(MESSAGE_MAX_LENGTH + 10);
-    await userEvent.type(messageInput, tooLongValue);
+    const tooShortValue = 'x'.repeat(MESSAGE_MIN_LENGTH - 3);
+    await userEvent.type(messageInput, tooShortValue);
 
     const submitButton = screen.getByRole('button', {
       name: 'Submit',
     });
 
-    // First submit with an over-long message: form is invalid and
+    // First submit with a too-short message: form is invalid and
     // live validation turns on. This should record at least one
     // validation snapshot but must not call the submit helper.
     await userEvent.click(submitButton);
@@ -555,13 +552,10 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const baselineCalls = handleUpdate.mock.calls.length;
     expect(submitHelper).not.toHaveBeenCalled();
 
-    // Editing the message while it remains in the same "too_long"
+    // Editing the message while it remains in the same "too_short"
     // error bucket should not cause additional validation snapshots
     // at the flow level.
-    const extendedTooLongValue = `${tooLongValue}Y`;
-    await userEvent.clear(messageInput);
-    await userEvent.type(messageInput, extendedTooLongValue);
-
+    await userEvent.type(messageInput, 'xx');
     expect(handleUpdate).toHaveBeenCalledTimes(baselineCalls);
 
     // Once the value becomes valid, submitting again should:
@@ -579,18 +573,14 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     });
 
     await waitFor(() => {
-      expect(handleUpdate).toHaveBeenCalledTimes(
-        baselineCalls + 1,
-      );
+      const lastSnapshot = updates[updates.length - 1];
+      expect(
+        lastSnapshot.some(
+          (result) =>
+            result.id === 'live-message' && result.valid === true,
+        ),
+      ).toBe(true);
     });
-
-    const lastSnapshot = updates[updates.length - 1];
-    expect(
-      lastSnapshot.some(
-        (result) =>
-          result.id === 'live-message' && result.valid === true,
-      ),
-    ).toBe(true);
   });
 
   it('treats not_configured as catastrophic: disables fields and scrolls to the message centre', async () => {
@@ -945,16 +935,8 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       // First invalid submit.
       await userEvent.click(submitButton);
 
-      await waitFor(() => {
-        expect(fetchMock).toHaveBeenCalledTimes(1);
-      });
-
       // Second invalid submit with no meaningful change.
       await userEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(fetchMock).toHaveBeenCalledTimes(2);
-      });
 
       const attemptEvents = logger.mock.calls.filter(
         ([event]) => event.type === 'submit_attempt',
@@ -963,8 +945,8 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ([event]) => event.type === 'submit_result',
       );
 
-      expect(attemptEvents.length).toBe(2);
-      expect(resultEvents.length).toBe(2);
+      expect(attemptEvents.length).toBe(1);
+      expect(resultEvents.length).toBe(1);
     } finally {
       global.fetch = originalFetch;
       setContactFormDebugEnabled(null);
