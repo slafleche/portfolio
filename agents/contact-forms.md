@@ -18,3 +18,6 @@ localization layers.
   inlining it directly in components.
 - Preserve accessibility: forms, dialogs, and focus management should remain
   screen-reader and keyboard friendly.
+- When you see a warning about “missing markdown copy” for a key, add the
+  corresponding `.md` file under `src/lib/locales/translations/markdown` and
+  wire it via `markdownRefs('<key>')` in each locale’s `*.data.ts` file.

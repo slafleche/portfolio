@@ -80,7 +80,9 @@ export async function loadMessages(
       const value = typed[key];
       if (value === undefined || value === fallback[key]) {
         console.error(
-          `[locales] Locale "${locale}" is missing markdown copy for "${key}". Falling back to default locale.`,
+          `[locales] Locale "${locale}" is missing markdown copy for "${key}". ` +
+            'Check for a matching ".md" file in src/lib/locales/translations/markdown ' +
+            'and a markdownRefs("<key>") entry in the per-locale data files.',
         );
       }
     }
