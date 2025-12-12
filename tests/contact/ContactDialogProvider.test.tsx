@@ -1,7 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import './helpers/mockTurnstileAlwaysValid';
 import userEvent from '@testing-library/user-event';
 import { ContactDialogProvider } from '@/components/contact/ContactDialogProvider';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
@@ -14,6 +13,10 @@ import {
 } from '@/lib/locales/translations/en.data';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
 import { sharedStrings } from '@/lib/sharedStrings';
+import {
+  enableTurnstileHarness,
+  type TurnstileHarnessController,
+} from './helpers/turnstileTestHarness';
 
 const buildFormCopy = () =>
   buildContactFormCopy(
@@ -31,6 +34,11 @@ describe('ContactDialogProvider', () => {
   it('shows the success panel after a successful form submission inside the dialog', async () => {
     const formCopy = buildFormCopy();
     const privacyCopy = buildPrivacy();
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -114,12 +122,18 @@ describe('ContactDialogProvider', () => {
       });
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
   it('uses the error heading for catastrophic error view', async () => {
     const formCopy = buildFormCopy();
     const privacyCopy = buildPrivacy();
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -191,12 +205,18 @@ describe('ContactDialogProvider', () => {
       });
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
   it('keeps the form heading for recoverable server-side validation errors', async () => {
     const formCopy = buildFormCopy();
     const privacyCopy = buildPrivacy();
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -268,6 +288,7 @@ describe('ContactDialogProvider', () => {
       });
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 

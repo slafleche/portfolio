@@ -12,18 +12,10 @@ export type TurnstileVerificationResult = {
 const TURNSTILE_ENDPOINT =
   'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
-const isTrue = (value: string | undefined | null) =>
-  value === '1' || value?.toLowerCase() === 'true';
-
 export async function verifyTurnstileToken(
   token: string | null | undefined,
   remoteIp?: string | null,
 ): Promise<TurnstileVerificationResult> {
-  const bypass = isTrue(process.env.TURNSTILE_BYPASS);
-  if (bypass) {
-    return { ok: true, reason: 'bypass' };
-  }
-
   const secret = process.env.TURNSTILE_SECRET;
   if (!secret) {
     return {

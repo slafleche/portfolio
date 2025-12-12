@@ -34,6 +34,7 @@ import { useContactDialogTitle } from './contactDialogTitle.context';
 import ContactFormSuccess from './ContactFormSuccess';
 import ContactFormError from './ContactFormError';
 import { resolveContactFormScenarioIdFromLocation } from '@/dev/scenarios/contactForm.adapter';
+import { contactFormScenarioMap } from '@/dev/scenarios/contactForm.scenarios';
 
 const DEFAULT_ACTION_URL = '/api/contact';
 
@@ -93,15 +94,38 @@ function ContactFormInner({
   const [initialBlocksSnapshot] = useState<
     ContactFormBlockInitialValues | null | undefined
   >(() => initialBlocks ?? null);
-  const { getRegistrationsSnapshot } = useFormBlocksContext();
+  const {
+    getRegistrationsSnapshot,
+    recordValidationResult,
+  } = useFormBlocksContext();
 
   const flow = useContactFormFlow({
     submitHelper,
     onSuccessStateChange,
   });
 
+  const initialServerState = initialBlocksSnapshot?.form?.server;
+
+  const [
+    useInitialServerState,
+    setUseInitialServerState,
+  ] = useState(() =>
+    Boolean(initialServerState),
+  );
+
+  const submitStatusForUi =
+    useInitialServerState && initialServerState?.submitStatus
+      ? initialServerState.submitStatus
+      : flow.submitStatus;
+
+  const isSubmittingForUi =
+    useInitialServerState &&
+    typeof initialServerState?.isSubmitting !== 'undefined'
+      ? Boolean(initialServerState.isSubmitting)
+      : flow.isSubmitting;
+
   const outcome = useContactFormOutcome({
-    submitStatus: flow.submitStatus,
+    submitStatus: submitStatusForUi,
     latestValidationResults: flow.latestValidationResults,
     config: {
       statusMessages: copy.blocks.messageCentre.statuses,
@@ -111,15 +135,28 @@ function ContactFormInner({
 
   const isCatastrophic = outcome.isCatastrophic;
   const isInvalid = flow.invalid;
-  const isSubmitting = flow.isSubmitting;
-  const disableFields = isSubmitting || isCatastrophic;
-  const disableSubmit = isSubmitting || isInvalid || isCatastrophic;
+  const hasInitialMockData =
+    Boolean(initialBlocksSnapshot?.name) ||
+    Boolean(initialBlocksSnapshot?.email) ||
+    Boolean(initialBlocksSnapshot?.message) ||
+    Boolean(initialBlocksSnapshot?.turnstile) ||
+    Boolean(initialBlocksSnapshot?.honeypot) ||
+    Boolean(initialServerState);
+
+  const [isInitialising, setIsInitialising] = useState(
+    hasInitialMockData,
+  );
+
+  const disableFields =
+    isSubmittingForUi || isCatastrophic || isInitialising;
+  const disableSubmit =
+    isSubmittingForUi || isInvalid || isCatastrophic || isInitialising;
 
   const { setTitleKey } = useContactDialogTitle();
 
   const formRef = useRef<HTMLFormElement | null>(null);
   const lastFocusedElementRef = useRef<HTMLElement | null>(null);
-  const wasSubmittingRef = useRef(isSubmitting);
+  const wasSubmittingRef = useRef(isSubmittingForUi);
 
   const scrollToPriorityTarget = useCallback(() => {
     if (typeof document === 'undefined') return;
@@ -160,15 +197,42 @@ function ContactFormInner({
   const wasCatastrophicRef = useRef(isCatastrophic);
 
   useEffect(() => {
+    if (!isInitialising) return;
+    if (!hasInitialMockData) {
+      setIsInitialising(false);
+      return;
+    }
+
+    const registrations = getRegistrationsSnapshot();
+    registrations.forEach((registration) => {
+      const contract = registration.getContract?.();
+      if (!contract) return;
+      try {
+        const result = contract.validate();
+        recordValidationResult(result);
+      } catch {
+        // Ignore validation failures in initialisation helper.
+      }
+    });
+
+    setIsInitialising(false);
+  }, [
+    getRegistrationsSnapshot,
+    hasInitialMockData,
+    isInitialising,
+    recordValidationResult,
+  ]);
+
+  useEffect(() => {
     if (isCatastrophic) return;
-    if (isSubmitting) {
+    if (isSubmittingForUi) {
       setTitleKey('loading');
     } else {
       setTitleKey('form');
     }
   }, [
     isCatastrophic,
-    isSubmitting,
+    isSubmittingForUi,
     setTitleKey,
   ]);
 
@@ -202,7 +266,7 @@ function ContactFormInner({
     const wasSubmitting = wasSubmittingRef.current;
     if (
       wasSubmitting &&
-      !isSubmitting &&
+      !isSubmittingForUi &&
       !isCatastrophic &&
       flow.submitStatus !== 'success'
     ) {
@@ -211,11 +275,11 @@ function ContactFormInner({
         target.focus();
       }
     }
-    wasSubmittingRef.current = isSubmitting;
+    wasSubmittingRef.current = isSubmittingForUi;
   }, [
     flow.submitStatus,
     isCatastrophic,
-    isSubmitting,
+    isSubmittingForUi,
   ]);
 
   return (
@@ -240,6 +304,10 @@ function ContactFormInner({
         lastFocusedElementRef.current = target;
       }}
       onSubmit={(event) => {
+        if (useInitialServerState) {
+          setUseInitialServerState(false);
+        }
+
         const registrations = getRegistrationsSnapshot();
         const payloads: ContactFormBlockPayload<unknown>[] = [];
         registrations.forEach((registration) => {
@@ -271,7 +339,7 @@ function ContactFormInner({
         void flow.handleSubmit(event);
       }}
     >
-      {isSubmitting && !isCatastrophic ? (
+      {isSubmittingForUi && !isCatastrophic ? (
         <ContactFormLoading
           message={copy.blocks.messageCentre.statuses.sending}
         />
@@ -327,16 +395,9 @@ export default function ContactForm({
   const idPrefix = useSafeId('contact-form-');
   const { setTitleKey } = useContactDialogTitle();
 
-  const [devScenarioId, setDevScenarioId] = useState<string | null>(
-    null,
+  const [devScenarioId] = useState<string | null>(() =>
+    resolveContactFormScenarioIdFromLocation(),
   );
-
-  useEffect(() => {
-    const id = resolveContactFormScenarioIdFromLocation();
-    if (id) {
-      setDevScenarioId(id);
-    }
-  }, []);
 
   type ContactFormView = 'form' | 'success';
 
@@ -448,6 +509,64 @@ export default function ContactForm({
   const isDevFailureScenario =
     isDevScenarioActive && devScenarioId.startsWith('failure');
 
+  const scenarioInitialBlocks: ContactFormBlockInitialValues | null =
+    isDevScenarioActive && devScenarioId
+      ? (() => {
+          const config = contactFormScenarioMap[devScenarioId];
+          if (!config) return null;
+          const { initialValues, devState } = config;
+          const blocks: ContactFormBlockInitialValues = {};
+
+          if (initialValues) {
+            if (initialValues.name !== undefined) {
+              blocks.name = {
+                initialData: initialValues.name,
+              };
+            }
+
+            if (initialValues.email !== undefined) {
+              blocks.email = {
+                initialData: initialValues.email,
+              };
+            }
+
+            if (initialValues.message !== undefined) {
+              blocks.message = {
+                initialData: initialValues.message,
+              };
+            }
+          }
+
+          if (devState) {
+            const server: NonNullable<
+              NonNullable<ContactFormBlockInitialValues['form']>['server']
+            > = {};
+
+            if (devState.forcedSubmitStatus) {
+              server.submitStatus = devState.forcedSubmitStatus;
+            }
+
+            if (typeof devState.isSubmitting === 'boolean') {
+              server.isSubmitting = devState.isSubmitting;
+            }
+
+            if (
+              typeof server.submitStatus !== 'undefined' ||
+              typeof server.isSubmitting !== 'undefined'
+            ) {
+              blocks.form = { server };
+            }
+          }
+
+          // Turnstile and honeypot initial values are currently unused
+          // by the form blocks. They are available here for future
+          // wiring once the Turnstile and honeypot helpers support
+          // dev initialisation.
+
+          return blocks;
+        })()
+      : null;
+
   useEffect(() => {
     if (isDevLoadingScenario) {
       setTitleKey('loading');
@@ -515,7 +634,7 @@ export default function ContactForm({
           submitHelper={submitHelper}
           onSuccessStateChange={handleSuccessStateChange}
           onCatastrophic={handleCatastrophic}
-          initialBlocks={initialBlocks ?? null}
+          initialBlocks={initialBlocks ?? scenarioInitialBlocks}
         />
       )}
     </FormBlocksProvider>

@@ -23,45 +23,7 @@ describe('verifyTurnstileToken', () => {
     vi.unstubAllGlobals();
   });
 
-  it('short-circuits with bypass reason when TURNSTILE_BYPASS is truthy and never calls fetch', async () => {
-    process.env.TURNSTILE_BYPASS = '1';
-    process.env.TURNSTILE_SECRET = 'ignored-secret';
-
-    const fetchMock = vi.fn();
-    vi.stubGlobal('fetch', fetchMock);
-
-    const result = await verifyTurnstileToken(
-      'any-token',
-      '203.0.113.10',
-    );
-
-    expect(result).toEqual({ ok: true, reason: 'bypass' });
-    expect(fetchMock).not.toHaveBeenCalled();
-
-    process.env.TURNSTILE_BYPASS = 'TRUE';
-    const second = await verifyTurnstileToken('another-token', null);
-    expect(second).toEqual({ ok: true, reason: 'bypass' });
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it('treats TURNSTILE_BYPASS=\"true\" as truthy and never calls fetch', async () => {
-    process.env.TURNSTILE_BYPASS = 'true';
-    process.env.TURNSTILE_SECRET = 'ignored-secret';
-
-    const fetchMock = vi.fn();
-    vi.stubGlobal('fetch', fetchMock);
-
-    const result = await verifyTurnstileToken(
-      'any-token',
-      '203.0.113.10',
-    );
-
-    expect(result).toEqual({ ok: true, reason: 'bypass' });
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
   it('returns missing-secret without calling fetch when secret is absent', async () => {
-    process.env.TURNSTILE_BYPASS = '0';
     delete process.env.TURNSTILE_SECRET;
 
     const fetchMock = vi.fn();

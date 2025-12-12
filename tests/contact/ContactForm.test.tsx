@@ -1,7 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import './helpers/mockTurnstileAlwaysValid';
 import userEvent from '@testing-library/user-event';
 import ContactForm from '@/components/contact/ContactForm';
 import {
@@ -28,6 +27,10 @@ import {
 import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
 import { MESSAGE_MIN_LENGTH } from '@/modules/contactForm/validation.constants';
+import {
+  enableTurnstileHarness,
+  type TurnstileHarnessController,
+} from './helpers/turnstileTestHarness';
 
 const buildCopy = () =>
   buildContactFormCopy(
@@ -134,6 +137,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
 
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
+
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
@@ -209,6 +217,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(toastRegion).toBeNull();
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 

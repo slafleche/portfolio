@@ -258,7 +258,9 @@ export function TurnstileBlock({
           },
         });
         widgetIdRef.current = widgetId;
-        setStatus('ready');
+        setStatus((previous) =>
+          previous === 'verified' ? 'verified' : 'ready',
+        );
       } catch {
         if (!cancelled) {
           setStatus('error');

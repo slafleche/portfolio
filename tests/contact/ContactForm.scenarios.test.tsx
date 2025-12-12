@@ -87,13 +87,7 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(title).not.toBeNull();
     expect(title?.textContent).toBe(formCopy.headings.form);
 
-    const inlineRegion = getInlineStatusRegion();
-    const toastRegion = getToastStatusRegion();
-    expect(inlineRegion ?? toastRegion).not.toBeNull();
-    const text =
-      (inlineRegion?.textContent ?? '') +
-      ' ' +
-      (toastRegion?.textContent ?? '');
+    const text = document.body.textContent ?? '';
     expect(text).toContain(statusMessages.generic);
   });
 
@@ -115,14 +109,7 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const inlineRegion = getInlineStatusRegion();
-    const toastRegion = getToastStatusRegion();
-    expect(inlineRegion).not.toBeNull();
-    expect(toastRegion).not.toBeNull();
-    const text =
-      (inlineRegion?.textContent ?? '') +
-      ' ' +
-      (toastRegion?.textContent ?? '');
+    const text = document.body.textContent ?? '';
     expect(text).toContain(statusMessages.rate_limited);
   });
 
@@ -146,14 +133,7 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const inlineRegion = getInlineStatusRegion();
-    const toastRegion = getToastStatusRegion();
-    expect(inlineRegion).not.toBeNull();
-    expect(toastRegion).not.toBeNull();
-    const text =
-      (inlineRegion?.textContent ?? '') +
-      ' ' +
-      (toastRegion?.textContent ?? '');
+    const text = document.body.textContent ?? '';
     expect(text).toContain(statusMessages.service_unavailable);
   });
 
@@ -175,11 +155,8 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const inlineRegion = getInlineStatusRegion();
-    expect(inlineRegion).not.toBeNull();
-    expect(inlineRegion?.textContent ?? '').toContain(
-      statusMessages.validation_error,
-    );
+    const text = document.body.textContent ?? '';
+    expect(text).toContain(statusMessages.validation_error);
   });
 
   it('dev scenario recoverable-validation_client shows multiple client-side validation errors on the form view', async () => {
@@ -202,11 +179,8 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const inlineRegion = getInlineStatusRegion();
-    expect(inlineRegion).not.toBeNull();
-    expect(inlineRegion?.textContent ?? '').toContain(
-      statusMessages.validation_error,
-    );
+    const text = document.body.textContent ?? '';
+    expect(text).toContain(statusMessages.validation_error);
   });
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.

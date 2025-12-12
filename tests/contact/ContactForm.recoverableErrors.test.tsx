@@ -1,7 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import './helpers/mockTurnstileAlwaysValid';
 import userEvent from '@testing-library/user-event';
 import ContactForm from '@/components/contact/ContactForm';
 import {
@@ -11,6 +10,10 @@ import {
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+import {
+  enableTurnstileHarness,
+  type TurnstileHarnessController,
+} from './helpers/turnstileTestHarness';
 
 // NOTE:
 // These tests will cover *recoverable* error states for the contact form —
@@ -130,6 +133,11 @@ describe('ContactForm — recoverable error flows (form view)', () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
 
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
+
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
@@ -206,12 +214,18 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       expect(submitButton).toBeDisabled();
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
   it('surfaces a rate_limited status while keeping the form visible and loader non-sticky', async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -291,12 +305,18 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       expect(submitButton).not.toBeDisabled();
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
   it('surfaces a service_unavailable status while keeping the form visible and loader non-sticky', async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -373,12 +393,18 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       expect(submitButton).not.toBeDisabled();
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
   it('surfaces a generic_error and then clears it after a subsequent successful submit', async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockImplementation(async () => {
@@ -482,12 +508,18 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       });
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
   it('shows the loading UI while a recoverable server submit is in-flight and removes it afterwards', async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockImplementation(async () => {
@@ -572,6 +604,7 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       expect(submitButton).not.toBeDisabled();
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 });
