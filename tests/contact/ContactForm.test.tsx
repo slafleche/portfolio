@@ -317,6 +317,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
 
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
+
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
@@ -379,6 +384,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(document.activeElement).toBe(messageInput);
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
@@ -425,6 +431,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
   it('clears validation banners and jump button as fields recover under live feedback, and submits once all fields are valid', async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -545,6 +556,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       ).toBeNull();
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
@@ -770,6 +782,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
   it('shifts priority and clears stale errors as different fields become invalid and then recover', async () => {
     const copy = buildCopy();
 
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
+
     const originalFetch = global.fetch;
     const fetchMock = vi.fn();
 
@@ -881,6 +898,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       ).toBeNull();
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
@@ -890,6 +908,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
     const logger = vi.fn();
     setContactFormDebugLogger(logger);
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -938,6 +961,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(logger).not.toHaveBeenCalled();
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 
@@ -948,6 +972,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const logger = vi.fn();
     setContactFormDebugEnabled(true);
     setContactFormDebugLogger(logger);
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -1007,6 +1036,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(types).toContain('submit_result');
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
   });
 

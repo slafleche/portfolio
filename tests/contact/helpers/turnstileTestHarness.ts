@@ -109,6 +109,7 @@ export function enableTurnstileHarness(
 
         if (
           mode === 'autoVerify' &&
+          process.env.NODE_ENV !== 'production' &&
           typeof renderOptions.callback === 'function'
         ) {
           renderOptions.callback(CLOUDFLARE_TEST_TOKEN);

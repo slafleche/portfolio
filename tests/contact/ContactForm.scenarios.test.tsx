@@ -394,7 +394,8 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const tokenMissingText = formCopy.errors.token.missing;
+    const tokenMissingText =
+      formCopy.blocks.turnstile.summary.missing;
 
     const text = document.body.textContent ?? '';
     expect(text).toContain(tokenMissingText);

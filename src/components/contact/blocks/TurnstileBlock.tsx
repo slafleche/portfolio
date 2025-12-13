@@ -36,20 +36,7 @@ const COMPLETED_STATUSES: TurnstileState[] = ['verified'];
 const TURNSTILE_SCRIPT_SRC =
   'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
-type TurnstileApi = {
-  render: (
-    container: HTMLElement,
-    options: {
-      sitekey: string;
-      callback: (token: string) => void;
-      'expired-callback': () => void;
-      'error-callback': () => void;
-    },
-  ) => string;
-  reset: (id?: string) => void;
-};
-
-type ExtendedWindow = Window & { turnstile?: TurnstileApi };
+type ExtendedWindow = Window & { turnstile?: Window['turnstile'] };
 
 let turnstileScriptPromise: Promise<void> | null = null;
 
@@ -103,8 +90,12 @@ const buildTurnstileValidationResult = (
   id: string,
   status: TurnstileState,
   copy: TurnstileBlockLocale,
+  token: string,
 ): ContactFormBlockValidationResult => {
-  const valid = COMPLETED_STATUSES.includes(status);
+  const hasToken = token.trim().length > 0;
+  const valid =
+    COMPLETED_STATUSES.includes(status) ||
+    (hasToken && status !== 'expired' && status !== 'error');
   if (valid) {
     return {
       id,
@@ -147,7 +138,8 @@ const buildTurnstileContract = (
   copy: TurnstileBlockLocale,
   token: string,
 ): ContactFormBlockContract<string> => ({
-  validate: () => buildTurnstileValidationResult(id, status, copy),
+  validate: () =>
+    buildTurnstileValidationResult(id, status, copy, token),
   getPayload: (): ContactFormBlockPayload<string> => ({
     id,
     value: token,
@@ -167,6 +159,10 @@ export function TurnstileBlock({
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? null;
   const hasTurnstileConfig = Boolean(turnstileSiteKey);
 
+  const hasInlineTurnstile =
+    typeof window !== 'undefined' &&
+    Boolean((window as ExtendedWindow).turnstile);
+
   const [
     status,
     setStatus,
@@ -179,7 +175,8 @@ export function TurnstileBlock({
   const widgetRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
 
-  const shouldRenderTurnstileWidget = hasTurnstileConfig;
+  const shouldRenderTurnstileWidget =
+    hasTurnstileConfig || hasInlineTurnstile;
 
   const registration = useMemo(() => {
     const contract = buildTurnstileContract(
@@ -213,6 +210,15 @@ export function TurnstileBlock({
 
   const { continuousValidation, reportCatastrophic } =
     useFormBlock(registration);
+
+  useEffect(() => {
+    if (!token) return;
+    if (status === 'verified') return;
+    setStatus('verified');
+  }, [
+    status,
+    token,
+  ]);
 
   useEffect(() => {
     if (!shouldRenderTurnstileWidget || !turnstileSiteKey) return;

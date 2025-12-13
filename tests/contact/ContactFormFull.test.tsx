@@ -18,6 +18,10 @@ import {
 } from '@/lib/locales/sections/form.locale';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+import {
+  enableTurnstileHarness,
+  type TurnstileHarnessController,
+} from './helpers/turnstileTestHarness';
 
 vi.mock('@/server/turnstile/verifyTurnstileToken', () => ({
   verifyTurnstileToken: vi.fn(),
@@ -96,6 +100,11 @@ describe('ContactForm — full stack happy path', () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
 
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
+
     const originalFetch = global.fetch;
 
     const fetchMock = vi.fn(
@@ -172,6 +181,7 @@ describe('ContactForm — full stack happy path', () => {
       expect(queryByTestId('jump-to-first-issue')).toBeNull();
     } finally {
       global.fetch = originalFetch;
+      turnstileHarness.restore();
     }
     },
   );
