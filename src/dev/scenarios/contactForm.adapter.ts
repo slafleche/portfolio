@@ -1,5 +1,30 @@
 import { sharedStrings } from '@/lib/sharedStrings';
 
+export function resolveContactFormScenarioIdFromLocation():
+  | string
+  | null {
+  if (process.env.NODE_ENV === 'production') return null;
+  if (typeof window === 'undefined') return null;
+
+  const { hash, search } = window.location;
+  const normalizedHash =
+    typeof hash === 'string' ? hash.trim().toLowerCase() : '';
+
+  const contactHash = sharedStrings.contactFormHash.toLowerCase();
+  if (!normalizedHash || !normalizedHash.startsWith(contactHash)) {
+    return null;
+  }
+
+  const params = new URLSearchParams(search || '');
+  const rawId = params.get('scenario');
+  if (!rawId) return null;
+
+  const trimmed = rawId.trim();
+  if (!trimmed) return null;
+
+  return trimmed;
+}
+
 const stripScenarioParamFromUrl = (scenarioId: string) => {
   try {
     if (typeof window === 'undefined') return;
@@ -29,28 +54,19 @@ const stripScenarioParamFromUrl = (scenarioId: string) => {
   }
 };
 
-export function resolveContactFormScenarioIdFromLocation():
-  | string
-  | null {
-  if (process.env.NODE_ENV === 'production') return null;
-  if (typeof window === 'undefined') return null;
+export function stripContactFormScenarioFromLocation(): void {
+  if (process.env.NODE_ENV === 'production') return;
+  if (typeof window === 'undefined') return;
 
-  const { hash, search } = window.location;
-  const normalizedHash =
-    typeof hash === 'string' ? hash.trim().toLowerCase() : '';
-
-  const contactHash = sharedStrings.contactFormHash.toLowerCase();
-  if (!normalizedHash || !normalizedHash.startsWith(contactHash)) {
-    return null;
+  try {
+    const { search } = window.location;
+    const params = new URLSearchParams(search || '');
+    const rawId = params.get('scenario');
+    if (!rawId) return;
+    const trimmed = rawId.trim();
+    if (!trimmed) return;
+    stripScenarioParamFromUrl(trimmed);
+  } catch {
+    // Ignore URL parsing failures; stripping is best-effort only.
   }
-
-  const params = new URLSearchParams(search || '');
-  const rawId = params.get('scenario');
-  if (!rawId) return null;
-
-  const trimmed = rawId.trim();
-  if (!trimmed) return null;
-
-  stripScenarioParamFromUrl(trimmed);
-  return trimmed;
 }
