@@ -119,6 +119,7 @@
     "test:watch": "vitest --watch",
     "scenarios": "tsx scripts/devScenarios.ts",
     "scenarios:reset": "tsx scripts/devScenarios.ts --reset",
+    "scenarios:all": "tsx scripts/devScenarios.ts --all --open-all",
     "upgrade:latest": "yarn up \"*@latest\" \"@*/*@latest\" && yarn dedupe"
   }
 }

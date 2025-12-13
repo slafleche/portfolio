@@ -23,6 +23,7 @@ import {
   ContactDialogTitleContext,
   type ContactDialogTitleKey,
 } from './contactDialogTitle.context';
+import { stripContactFormScenarioFromLocation } from '@/dev/scenarios/contactForm.adapter';
 
 type ModalIntent = 'none' | 'contact' | 'contact-policy';
 
@@ -312,6 +313,7 @@ export function ContactDialogProvider({
 
   const closeContact = useCallback(() => {
     applyIntent('none', { history: 'replace' });
+    stripContactFormScenarioFromLocation();
     setTitleKey(null);
     setTimeout(restoreFocusAnchor, 0);
   }, [
