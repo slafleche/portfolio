@@ -100,7 +100,6 @@ export function FormBlocksProvider({
           // Helper for investigating catastrophic failures.
           // Source is the block key (for example, 'turnstile').
           // Reason is a free-form string for debugging.
-          // eslint-disable-next-line no-console
           console.error('[contact][catastrophic]', {
             source,
             reason,
@@ -175,7 +174,6 @@ export function TestFormBlocksProvider({
         Array.from(validationResultsRef.current.values()),
       validationResultsVersion,
       reportCatastrophic: (source, reason) => {
-        // eslint-disable-next-line no-console
         console.error('[contact][catastrophic]', {
           source,
           reason,

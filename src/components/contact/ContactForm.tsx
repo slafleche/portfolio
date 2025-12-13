@@ -143,14 +143,12 @@ function ContactFormInner({
     Boolean(initialBlocksSnapshot?.honeypot) ||
     Boolean(initialServerState);
 
-  const [isInitialising, setIsInitialising] = useState(
-    hasInitialMockData,
-  );
+  const hasRunInitialMockValidationRef = useRef(false);
 
   const disableFields =
-    isSubmittingForUi || isCatastrophic || isInitialising;
+    isSubmittingForUi || isCatastrophic;
   const disableSubmit =
-    isSubmittingForUi || isInvalid || isCatastrophic || isInitialising;
+    isSubmittingForUi || isInvalid || isCatastrophic;
 
   const { setTitleKey } = useContactDialogTitle();
 
@@ -197,12 +195,9 @@ function ContactFormInner({
   const wasCatastrophicRef = useRef(isCatastrophic);
 
   useEffect(() => {
-    if (!isInitialising) return;
-    if (!hasInitialMockData) {
-      setIsInitialising(false);
+    if (!hasInitialMockData || hasRunInitialMockValidationRef.current) {
       return;
     }
-
     const registrations = getRegistrationsSnapshot();
     registrations.forEach((registration) => {
       const contract = registration.getContract?.();
@@ -214,12 +209,10 @@ function ContactFormInner({
         // Ignore validation failures in initialisation helper.
       }
     });
-
-    setIsInitialising(false);
+    hasRunInitialMockValidationRef.current = true;
   }, [
     getRegistrationsSnapshot,
     hasInitialMockData,
-    isInitialising,
     recordValidationResult,
   ]);
 
@@ -486,12 +479,10 @@ export default function ContactForm({
       // Log catastrophic transitions with an explicit reason and
       // mark the catastrophic view as active. This is the only way
       // the error view should be activated.
-      // eslint-disable-next-line no-console
       console.error('[contact][catastrophic]', {
         source,
         reason,
       });
-      // eslint-disable-next-line no-console
       console.error('[contact][catastrophic-view]', {
         reason,
       });

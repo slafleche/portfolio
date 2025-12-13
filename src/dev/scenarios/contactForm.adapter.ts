@@ -18,7 +18,6 @@ const stripScenarioParamFromUrl = (scenarioId: string) => {
 
     if (process.env.NODE_ENV !== 'production') {
       // Dev-only debug log so scenarios remain traceable when they are stripped.
-      // eslint-disable-next-line no-console
       console.log('[contact][dev-scenario][stripped]', {
         scenarioId,
         previousHref,

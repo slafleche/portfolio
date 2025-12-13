@@ -229,6 +229,7 @@ export function useContactFormFlow(
     [
       collectPayload,
       enableContinuousValidation,
+      logSubmitResult,
       onSuccessStateChange,
       submitHelper,
       validateAll,
