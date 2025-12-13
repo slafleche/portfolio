@@ -32,17 +32,21 @@ const SCENARIO_STATE_FILE = path.join(
 
 type CliFlags = {
   showAll: boolean;
+  openAll: boolean;
   reset: boolean;
 };
 
 function parseCliFlags(argv: string[]): CliFlags {
   const flags: CliFlags = {
     showAll: false,
+    openAll: false,
     reset: false,
   };
   for (const arg of argv) {
     if (arg === '--all') {
       flags.showAll = true;
+    } else if (arg === '--open-all') {
+      flags.openAll = true;
     } else if (arg === '--reset') {
       flags.reset = true;
     }
@@ -154,6 +158,57 @@ export function buildContactFormScenarioOptions(): ScenarioOption[] {
   );
 
   return options;
+}
+
+async function openAllScenariosInSingleWindow(
+  options: ScenarioOption[],
+): Promise<boolean> {
+  if (options.length === 0) return true;
+
+  if (process.platform !== 'darwin') {
+    return false;
+  }
+
+  try {
+    const first = options[0];
+    await execa(
+      'open',
+      [
+        '-na',
+        'Google Chrome',
+        '--args',
+        '--new-window',
+        first.url,
+      ],
+      {
+        stdio: 'ignore',
+      },
+    );
+
+    for (const option of options.slice(1)) {
+      await execa(
+        'open',
+        [
+          '-a',
+          'Google Chrome',
+          option.url,
+        ],
+        {
+          stdio: 'ignore',
+        },
+      );
+    }
+
+    return true;
+  } catch (error) {
+    console.warn(
+      'Failed to open scenarios in a single Google Chrome window. Falling back to default behaviour.',
+    );
+    if (error instanceof Error && error.message) {
+      console.warn(`Reason: ${error.message}`);
+    }
+    return false;
+  }
 }
 
 async function selectScenarioOption(
@@ -308,6 +363,54 @@ export async function runScenariosCli() {
   }
 
   const allOptions = buildContactFormScenarioOptions();
+
+  if (flags.openAll) {
+    if (!allOptions.length) {
+      console.log(
+        'No scenarios are currently defined for the contact form.',
+      );
+      return;
+    }
+
+    console.log('Opening all contact form scenarios:');
+
+    const openedInSingleWindow =
+      await openAllScenariosInSingleWindow(allOptions);
+
+    if (!openedInSingleWindow) {
+      for (const option of allOptions) {
+        console.log(` > ${option.label} (${option.id})`);
+        console.log(`   ${option.url}`);
+        try {
+          await execa(
+            'open-cli',
+            [
+              option.url,
+            ],
+            {
+              stdio: 'ignore',
+            },
+          );
+        } catch (error) {
+          console.warn(
+            'Failed to open the browser via open-cli for this scenario. You can open the URL manually:',
+          );
+          console.warn(`  ${option.url}`);
+          if (error instanceof Error && error.message) {
+            console.warn(`Reason: ${error.message}`);
+          }
+        }
+      }
+    } else {
+      allOptions.forEach((option) => {
+        console.log(` > ${option.label} (${option.id})`);
+        console.log(`   ${option.url}`);
+      });
+    }
+
+    return;
+  }
+
   const state = loadScenarioState();
 
   const options =
