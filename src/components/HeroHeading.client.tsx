@@ -54,12 +54,6 @@ export default function HeroHeading({
     setStaticReady,
   ] = useState<boolean>(shouldAnimate);
 
-  if (shouldAnimate) {
-    console.log('[HeroHeading] render', {
-      childrenCount: Children.count(children),
-    });
-  }
-
   const onRevealRef = useRef(onReveal);
   useEffect(() => {
     onRevealRef.current = onReveal;
@@ -201,12 +195,6 @@ export default function HeroHeading({
     const master = masterRef.current;
     const ghost = ghostRef.current;
     if (!master || !ghost) return;
-
-    console.log('[HeroHeading] useEffect', {
-      master,
-      ghost,
-      prefersReducedMotion,
-    });
 
     let cancelled = false;
     let playHandle: ReturnType<typeof playProjectorText> | null =

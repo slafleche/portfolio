@@ -5,16 +5,11 @@ const nextTabbable = (
   loop: boolean = true,
 ): HTMLElement | null => {
   if (!(startingElement instanceof HTMLElement)) {
-    console.log('Bad starting element: ', startingElement);
     return null;
   }
   const currentTabIndex = tabbables.indexOf(startingElement);
 
   if (currentTabIndex < 0) {
-    console.log(
-      'Current Element not in tabbable elements: ',
-      tabbables,
-    );
     return null;
   }
 
@@ -38,7 +33,6 @@ const allTabbable = (
   tabbableElements: HTMLElement[],
 ) => {
   if (!(startingElement instanceof HTMLElement)) {
-    console.log('Bad starting element: ', startingElement);
     return null;
   }
   return tabbableElements;

@@ -381,28 +381,9 @@ export function playProjectorText(
   let startTime: number | null = null;
   let resolved = false;
 
-  let loggedInitial = false;
-  let loggedWaypoint = false;
-  let loggedFocus = false;
-
   const firstChannel = projectorChannels[0];
   const firstChannelState = channelStates[firstChannel];
   const baseGhostOpacity = firstChannelState?.opacity ?? 0.85;
-
-  const logOnce = (stage: 'initial' | 'waypoint' | 'focus') => {
-    if (stage === 'initial' && !loggedInitial) {
-      loggedInitial = true;
-      console.log('[projector] stage: initial');
-    }
-    if (stage === 'waypoint' && !loggedWaypoint) {
-      loggedWaypoint = true;
-      console.log('[projector] stage: waypoint');
-    }
-    if (stage === 'focus' && !loggedFocus) {
-      loggedFocus = true;
-      console.log('[projector] stage: focus');
-    }
-  };
 
   const applyInitialState = () => {
     masterEl.style.opacity = '0';
@@ -455,8 +436,6 @@ export function playProjectorText(
         currentStage = 'focus';
       }
     });
-
-    logOnce(currentStage);
 
     let masterOpacity = 0;
     let ghostOpacity = baseGhostOpacity;
