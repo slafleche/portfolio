@@ -1,6 +1,9 @@
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
 import { FORM_REQUIRED_INDICATOR_KEY } from './shared';
-import { MESSAGE_MIN_LENGTH } from '@/modules/contactForm/validation.constants';
+import {
+  MESSAGE_MIN_LENGTH,
+  MESSAGE_URL_LIMIT,
+} from '@/modules/contactForm/validation.constants';
 
 export type MessageBlockLocale = {
   label: string;
@@ -38,6 +41,11 @@ export function buildMessageBlockLocale(
   const min = MESSAGE_MIN_LENGTH.toString();
   const withMin = (value: string) =>
     value.includes('{min}') ? value.replace('{min}', min) : value;
+  const urlLimit = MESSAGE_URL_LIMIT.toString();
+  const withLimit = (value: string) =>
+    value.includes('{limit}')
+      ? value.replace('{limit}', urlLimit)
+      : value;
   return {
     label: translator(LABEL_KEY),
     requiredText: translator(FORM_REQUIRED_INDICATOR_KEY),
@@ -49,7 +57,7 @@ export function buildMessageBlockLocale(
       required: translator(ERROR_KEYS.required),
       tooShort: withMin(translator(ERROR_KEYS.tooShort)),
       tooLong: translator(ERROR_KEYS.tooLong),
-      tooManyLinks: translator(ERROR_KEYS.tooManyLinks),
+      tooManyLinks: withLimit(translator(ERROR_KEYS.tooManyLinks)),
     },
   };
 }

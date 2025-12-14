@@ -1,3 +1,8 @@
+import {
+  NAME_LIMIT,
+  MESSAGE_MAX_LENGTH,
+} from '@/modules/contactForm/validation.constants';
+
 export type ContactFormScenarioConfig = {
   id: string;
   label: string;
@@ -26,6 +31,11 @@ export type ContactFormScenarioConfig = {
   };
   variants?: Record<string, ContactFormScenarioConfig>;
 };
+
+const LONG_NAME_FOR_VALIDATION = 'X'.repeat(NAME_LIMIT.max + 10);
+const LONG_MESSAGE_FOR_VALIDATION = 'X'.repeat(
+  MESSAGE_MAX_LENGTH + 10,
+);
 
 const composeScenarioIdFromPath = (segments: string[]): string => {
   if (segments.length === 0) return '';
@@ -123,6 +133,12 @@ export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
   recoverable: {
     id: 'recoverable',
     label: 'Contact form – recoverable (generic_error)',
+    initialValues: {
+      name: 'Jane Doe',
+      email: 'example@example.com',
+      message:
+        'This is a sufficiently long message for validation.',
+    },
     devState: {
       isSubmitting: false,
       forcedSubmitStatus: 'generic_error',
@@ -131,6 +147,12 @@ export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
       rate_limited: {
         id: 'rate_limited',
         label: 'Contact form – recoverable (rate_limited)',
+        initialValues: {
+          name: 'Jane Doe',
+          email: 'example@example.com',
+          message:
+            'This is a sufficiently long message for validation.',
+        },
         devState: {
           isSubmitting: false,
           forcedSubmitStatus: 'rate_limited',
@@ -139,6 +161,12 @@ export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
       service_unavailable: {
         id: 'service_unavailable',
         label: 'Contact form – recoverable (service_unavailable)',
+        initialValues: {
+          name: 'Jane Doe',
+          email: 'example@example.com',
+          message:
+            'This is a sufficiently long message for validation.',
+        },
         devState: {
           isSubmitting: false,
           forcedSubmitStatus: 'service_unavailable',
@@ -213,6 +241,22 @@ export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
           forcedSubmitStatus: 'validation_error',
         },
       },
+      name_too_long: {
+        id: 'name_too_long',
+        label: 'Contact form – field error (name too long)',
+        initialValues: {
+          name: LONG_NAME_FOR_VALIDATION,
+          email: 'example@example.com',
+          message:
+            'This is a sufficiently long message for validation.',
+          token: 'turnstile-token',
+          honeypot: '',
+        },
+        devState: {
+          isSubmitting: false,
+          forcedSubmitStatus: 'validation_error',
+        },
+      },
       message_too_short: {
         id: 'message_too_short',
         label: 'Contact form – field error (message too short)',
@@ -244,6 +288,21 @@ export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
           forcedSubmitStatus: 'validation_error',
         },
       },
+      message_too_long: {
+        id: 'message_too_long',
+        label: 'Contact form – field error (message too long)',
+        initialValues: {
+          name: 'Jane Doe',
+          email: 'example@example.com',
+          message: LONG_MESSAGE_FOR_VALIDATION,
+          token: 'turnstile-token',
+          honeypot: '',
+        },
+        devState: {
+          isSubmitting: false,
+          forcedSubmitStatus: 'validation_error',
+        },
+      },
       token_missing: {
         id: 'token_missing',
         label: 'Contact form – field error (token missing)',
@@ -252,6 +311,21 @@ export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
           email: 'example@example.com',
           message:
             'This is a sufficiently long message for validation.',
+          token: '',
+          honeypot: '',
+        },
+        devState: {
+          isSubmitting: false,
+          forcedSubmitStatus: 'validation_error',
+        },
+      },
+      all_fields_invalid: {
+        id: 'all_fields_invalid',
+        label: 'Contact form – field error (all fields invalid)',
+        initialValues: {
+          name: '',
+          email: 'invalid-email',
+          message: 'short',
           token: '',
           honeypot: '',
         },

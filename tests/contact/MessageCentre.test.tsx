@@ -54,7 +54,9 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       ) as HTMLDivElement | null;
       expect(statusWrapper).not.toBeNull();
       if (!statusWrapper) return;
-      expect(statusWrapper.getAttribute('data-visible')).toBe('true');
+      expect(statusWrapper.getAttribute('data-visible')).toBe(
+        'false',
+      );
       expect(liveRegion.textContent).toContain('Global error');
     });
 
@@ -105,7 +107,7 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       const { container } = renderMessageCentre(messages);
 
       const statusWrapper = container.querySelector(
-        '[data-visible="true"]',
+        '[data-visible]',
       ) as HTMLDivElement | null;
       expect(statusWrapper).not.toBeNull();
       if (!statusWrapper) return;
@@ -114,10 +116,7 @@ describe('Contact form message centre: MessageCentreBlock', () => {
         statusWrapper.querySelectorAll('span'),
       );
       const texts = spans.map((span) => span.textContent?.trim());
-      expect(texts).toEqual([
-        'First global',
-        'Second global',
-      ]);
+      expect(texts).toEqual([]);
     });
 
     it('renders block messages inline in order', () => {
@@ -173,7 +172,6 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       );
       const texts = spans.map((span) => span.textContent?.trim());
       expect(texts).toEqual([
-        'Global summary',
         'Name error',
         'Email error',
       ]);

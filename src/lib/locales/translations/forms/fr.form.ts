@@ -28,7 +28,7 @@ export const frFormCopy = {
     'Écrivez un message un peu plus long (au moins {min} caractères).',
   'form-error-message-too_long': 'Le message est trop long.',
   'form-error-message-too_many_links':
-    'Veuillez retirer quelques liens (maximum deux [abbr:URL]).',
+    'Veuillez retirer quelques liens (maximum {limit} liens).',
   'form-error-token-missing':
     "Veuillez confirmer que vous n'êtes pas un robot.",
   'form-status-sending': 'Envoi du message…',

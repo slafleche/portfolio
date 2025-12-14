@@ -26,7 +26,7 @@ export const enFormCopy = {
     'Please write a longer message (at least {min} characters).',
   'form-error-message-too_long': 'Message is too long.',
   'form-error-message-too_many_links':
-    'Please remove extra links (limit two [abbr:URL]s).',
+    'Please remove extra links (maximum {limit} links).',
   'form-error-token-missing': "Please confirm you're not a bot.",
   'form-status-sending': 'Sending your message…',
   'form-status-success': 'Message sent!',

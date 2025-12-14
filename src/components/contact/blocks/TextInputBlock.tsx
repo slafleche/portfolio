@@ -57,6 +57,7 @@ export const TextInputBlock = forwardRef<
   ) => {
     const inputId = useId();
     const hintId = `${blockKey}-hint`;
+    const hasHint = Boolean(errorText || helperText);
     return (
       <div id={id} className={clsx(s.fieldGroup, className)}>
         <FormLabel
@@ -78,10 +79,13 @@ export const TextInputBlock = forwardRef<
           minLength={minLength}
           type={type}
           autoComplete={autoComplete}
-          aria-describedby={hintId}
+          aria-describedby={hasHint ? hintId : undefined}
           aria-invalid={errorText ? 'true' : undefined}
         />
-        <FormHint tone={errorText ? 'error' : 'helper'} id={hintId}>
+        <FormHint
+          tone={errorText ? 'error' : 'helper'}
+          id={hasHint ? hintId : undefined}
+        >
           {errorText || helperText}
         </FormHint>
       </div>

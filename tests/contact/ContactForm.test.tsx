@@ -428,6 +428,88 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     }
   });
 
+  it('does not duplicate the global status message in the inline message list', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({
+        ok: false,
+        code: 'service_unavailable',
+        message: statusMessages.service_unavailable,
+      }),
+    } as Response);
+
+    global.fetch = fetchMock;
+
+    try {
+      const { container } = renderWrappedContactForm(
+        copy,
+        '/api/contact',
+      );
+
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.name.label, {
+          exact: false,
+        }),
+        'Jane Doe',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.email.label, {
+          exact: false,
+        }),
+        'example@example.com',
+      );
+      await userEvent.type(
+        screen.getByLabelText(copy.blocks.message.label, {
+          exact: false,
+        }),
+        'This is a sufficiently long message for validation.',
+      );
+
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      });
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      if (!inlineRegion) return;
+
+      const globalText =
+        statusMessages.service_unavailable;
+      const inlineLines = Array.from(
+        inlineRegion.querySelectorAll('[data-error]'),
+      ) as HTMLElement[];
+      const inlineTexts = inlineLines.map(
+        (el) => el.textContent ?? '',
+      );
+
+      expect(inlineRegion.textContent ?? '').toContain(globalText);
+      expect(
+        inlineTexts.filter((text) => text.includes(globalText))
+          .length,
+      ).toBe(0);
+    } finally {
+      global.fetch = originalFetch;
+      turnstileHarness.restore();
+    }
+  });
+
   it('clears validation banners and jump button as fields recover under live feedback, and submits once all fields are valid', async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
@@ -484,11 +566,13 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
         if (!inlineRegion) return;
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.validation_error,
+        );
         const lines = Array.from(
           inlineRegion.querySelectorAll('[data-error]'),
         ) as HTMLElement[];
         const codes = lines.map((el) => el.dataset.error);
-        expect(codes).toContain('validation_error');
         expect(codes).toContain('form-error-email-invalid');
         expect(
           codes.some((code) =>
@@ -513,11 +597,13 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
         if (!inlineRegion) return;
+         expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.validation_error,
+        );
         const lines = Array.from(
           inlineRegion.querySelectorAll('[data-error]'),
         ) as HTMLElement[];
         const codes = lines.map((el) => el.dataset.error);
-        expect(codes).toContain('validation_error');
         expect(
           codes.some((code) =>
             code?.startsWith('form-error-message-'),
@@ -781,6 +867,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
   it('shifts priority and clears stale errors as different fields become invalid and then recover', async () => {
     const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
 
     const turnstileHarness: TurnstileHarnessController =
       enableTurnstileHarness({
@@ -828,7 +915,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
           inlineRegion.querySelectorAll('[data-error]'),
         ) as HTMLElement[];
         const codes = lines.map((el) => el.dataset.error);
-        expect(codes).toContain('validation_error');
         expect(
           codes.some((code) =>
             code?.startsWith('form-error-name-'),
@@ -841,11 +927,13 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       await userEvent.type(nameInput, 'Jane Doe');
 
       await waitFor(() => {
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.validation_error,
+        );
         const lines = Array.from(
           inlineRegion.querySelectorAll('[data-error]'),
         ) as HTMLElement[];
         const codes = lines.map((el) => el.dataset.error);
-        expect(codes).toContain('validation_error');
         expect(codes).toContain('form-error-email-invalid');
         expect(
           codes.some((code) =>
@@ -858,11 +946,13 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       await userEvent.type(emailInput, 'example@example.com');
 
       await waitFor(() => {
+        expect(inlineRegion.textContent ?? '').toContain(
+          statusMessages.validation_error,
+        );
         const lines = Array.from(
           inlineRegion.querySelectorAll('[data-error]'),
         ) as HTMLElement[];
         const codes = lines.map((el) => el.dataset.error);
-        expect(codes).toContain('validation_error');
         expect(
           codes.some((code) =>
             code?.startsWith('form-error-message-'),

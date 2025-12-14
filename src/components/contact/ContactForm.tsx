@@ -97,6 +97,7 @@ function ContactFormInner({
   const {
     getRegistrationsSnapshot,
     recordValidationResult,
+    enableContinuousValidation,
   } = useFormBlocksContext();
 
   const flow = useContactFormFlow({
@@ -210,7 +211,11 @@ function ContactFormInner({
       }
     });
     hasRunInitialMockValidationRef.current = true;
+    if (initialServerState?.submitStatus === 'validation_error') {
+      enableContinuousValidation();
+    }
   }, [
+    enableContinuousValidation,
     getRegistrationsSnapshot,
     hasInitialMockData,
     recordValidationResult,

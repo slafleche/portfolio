@@ -27,12 +27,28 @@ export function FormLabel({
     );
   }
   return (
-    <label data-form="label" className={clsx(s.labelRow, className)} htmlFor={htmlFor}>
+    <label
+      data-form="label"
+      className={clsx(s.labelRow, className)}
+      htmlFor={htmlFor}
+    >
       <span data-form="label-text">{label}</span>
       {required ? (
         <span data-form="label-required" className={s.required}>
-          <span aria-hidden="true">*</span>
-          <span data-visible="sc-only">{requiredText}</span>
+          {requiredText ? (
+            <>
+              <span aria-hidden="true">
+                {requiredText}
+              </span>
+              <span data-visible="sc-only">{requiredText}</span>
+              <span aria-hidden="true">
+                {' '}
+                *
+              </span>
+            </>
+          ) : (
+            <span aria-hidden="true">*</span>
+          )}
         </span>
       ) : null}
     </label>

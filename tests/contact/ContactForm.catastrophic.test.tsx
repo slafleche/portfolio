@@ -50,18 +50,11 @@ const STATUS_MESSAGES: Record<FormStatusKey, string> = {
   blocked: 'blocked',
 };
 
-type TurnstileApiOptions = {
-  callback?: (token: string) => void;
-  'expired-callback'?: () => void;
-  'error-callback'?: () => void;
-  // Allow additional keys without over-specifying the shape.
-  [key: string]: unknown;
-};
+type TurnstileApi = NonNullable<Window['turnstile']>;
+type TurnstileApiOptions = Parameters<TurnstileApi['render']>[1];
 
-type MockTurnstileApi = {
+type MockTurnstileApi = TurnstileApi & {
   lastOptions: TurnstileApiOptions | null;
-  render: (container: HTMLElement, options: TurnstileApiOptions) => string;
-  reset: (id?: string) => void;
 };
 
 const enableTurnstileForTest = () => {

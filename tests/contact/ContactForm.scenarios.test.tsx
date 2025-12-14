@@ -365,7 +365,144 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
   });
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
-  it('dev scenario field_errors-token_missing shows only the token missing error', async () => {
+  it('dev scenario field_errors-name_too_long shows only the name too_long error', async () => {
+    const scenarioUrl = buildScenarioUrl(
+      'field_errors-name_too_long',
+    );
+    window.history.pushState({}, '', scenarioUrl);
+
+    const { formCopy } = renderScenarioDialog();
+
+    await waitFor(() => {
+      const formPanel = document.querySelector(
+        '[data-form="form"]',
+      );
+      expect(formPanel).not.toBeNull();
+    });
+
+    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const errorPanel = document.querySelector('[data-form="error"]');
+    expect(loadingPanel).toBeNull();
+    expect(errorPanel).toBeNull();
+
+    const nameErrorText = formCopy.blocks.name.errors.tooLong;
+    const emailErrorText =
+      formCopy.blocks.email.errors?.invalid ??
+      formCopy.blocks.email.label;
+    const messageErrors = formCopy.blocks.message.errors;
+
+    const text = document.body.textContent ?? '';
+    expect(text).toContain(nameErrorText);
+    expect(text).not.toContain(emailErrorText);
+    expect(text).not.toContain(messageErrors.required);
+    expect(text).not.toContain(messageErrors.tooShort);
+    expect(text).not.toContain(messageErrors.tooManyLinks);
+  });
+
+  // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
+  it('dev scenario field_errors-message_too_long shows only the message too_long error', async () => {
+    const scenarioUrl = buildScenarioUrl(
+      'field_errors-message_too_long',
+    );
+    window.history.pushState({}, '', scenarioUrl);
+
+    const { formCopy } = renderScenarioDialog();
+
+    await waitFor(() => {
+      const formPanel = document.querySelector(
+        '[data-form="form"]',
+      );
+      expect(formPanel).not.toBeNull();
+    });
+
+    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const errorPanel = document.querySelector('[data-form="error"]');
+    expect(loadingPanel).toBeNull();
+    expect(errorPanel).toBeNull();
+
+    const nameErrorText =
+      formCopy.blocks.name.errors.required ??
+      formCopy.blocks.name.label;
+    const emailErrorText =
+      formCopy.blocks.email.errors?.invalid ??
+      formCopy.blocks.email.label;
+    const messageErrors = formCopy.blocks.message.errors;
+
+    const text = document.body.textContent ?? '';
+    expect(text).not.toContain(nameErrorText);
+    expect(text).not.toContain(emailErrorText);
+    expect(text).not.toContain(messageErrors.required);
+    expect(text).not.toContain(messageErrors.tooShort);
+    expect(text).toContain(messageErrors.tooLong);
+    expect(text).not.toContain(messageErrors.tooManyLinks);
+  });
+
+  // NOTE: This scenario models a server-driven validation_error where
+  // all fields, including token, are invalid.
+  it('dev scenario field_errors-all_fields_invalid shows name, email, message, and token errors', async () => {
+    const scenarioUrl = buildScenarioUrl(
+      'field_errors-all_fields_invalid',
+    );
+    window.history.pushState({}, '', scenarioUrl);
+
+    const formCopy = buildFormCopy();
+    const privacyCopy = buildPrivacy();
+
+    render(
+      <ContactDialogProvider
+        formCopy={formCopy}
+        privacyCopy={privacyCopy}
+        closeLabel="Close"
+      >
+        <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+      </ContactDialogProvider>,
+    );
+
+    await waitFor(() => {
+      const formPanel = document.querySelector(
+        '[data-form="form"]',
+      );
+      expect(formPanel).not.toBeNull();
+    });
+
+    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const errorPanel = document.querySelector('[data-form="error"]');
+    expect(loadingPanel).toBeNull();
+    expect(errorPanel).toBeNull();
+
+    const messageErrors = formCopy.blocks.message.errors;
+    const nameErrorText =
+      formCopy.blocks.name.errors.required ??
+      formCopy.blocks.name.label;
+    const emailErrorText =
+      formCopy.blocks.email.errors?.invalid ??
+      formCopy.blocks.email.label;
+    const tokenMissingText =
+      formCopy.blocks.turnstile.summary.missing;
+
+    const text = document.body.textContent ?? '';
+    expect(text).toContain(nameErrorText);
+    expect(text).toContain(emailErrorText);
+    expect(text).toContain(messageErrors.tooShort);
+    expect(text).toContain(tokenMissingText);
+
+    const turnstileStatus = document.querySelector(
+      '[data-form-turnstile="status"]',
+    ) as HTMLElement | null;
+    expect(turnstileStatus).not.toBeNull();
+    if (!turnstileStatus) return;
+    const turnstileHint = turnstileStatus.querySelector(
+      '[data-form-hint]',
+    ) as HTMLElement | null;
+    expect(turnstileHint).not.toBeNull();
+    if (!turnstileHint) return;
+    expect(turnstileHint.dataset.formHint).toBe('error');
+    expect(turnstileHint.textContent ?? '').toContain(tokenMissingText);
+  });
+
+  // NOTE: This scenario models a server-driven validation_error where
+  // only the Turnstile token is invalid while all fields remain valid.
+  it('dev scenario field_errors-token_missing shows only the token missing error while fields stay valid', async () => {
     const scenarioUrl = buildScenarioUrl('field_errors-token_missing');
     window.history.pushState({}, '', scenarioUrl);
 
@@ -394,12 +531,6 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const tokenMissingText =
-      formCopy.blocks.turnstile.summary.missing;
-
-    const text = document.body.textContent ?? '';
-    expect(text).toContain(tokenMissingText);
-
     const messageErrors = formCopy.blocks.message.errors;
     const nameErrorText =
       formCopy.blocks.name.errors.required ??
@@ -407,11 +538,28 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const emailErrorText =
       formCopy.blocks.email.errors?.invalid ??
       formCopy.blocks.email.label;
+    const tokenMissingText =
+      formCopy.blocks.turnstile.summary.missing;
 
+    const text = document.body.textContent ?? '';
     expect(text).not.toContain(nameErrorText);
     expect(text).not.toContain(emailErrorText);
+    expect(text).toContain(tokenMissingText);
     expect(text).not.toContain(messageErrors.required);
     expect(text).not.toContain(messageErrors.tooShort);
     expect(text).not.toContain(messageErrors.tooManyLinks);
+
+    const turnstileStatus = document.querySelector(
+      '[data-form-turnstile="status"]',
+    ) as HTMLElement | null;
+    expect(turnstileStatus).not.toBeNull();
+    if (!turnstileStatus) return;
+    const turnstileHint = turnstileStatus.querySelector(
+      '[data-form-hint]',
+    ) as HTMLElement | null;
+    expect(turnstileHint).not.toBeNull();
+    if (!turnstileHint) return;
+    expect(turnstileHint.dataset.formHint).toBe('error');
+    expect(turnstileHint.textContent ?? '').toContain(tokenMissingText);
   });
 });

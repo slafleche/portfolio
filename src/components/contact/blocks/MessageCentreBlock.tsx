@@ -12,25 +12,13 @@ export const MessageCentreBlock = forwardRef<
   MessageCentreBlockProps
 >(function MessageCentreBlock({ messages }, ref) {
   const inlineMessages = useMemo(
-    () => [
-      ...messages.globals,
-      ...messages.blocks,
-    ],
-    [
-      messages.blocks,
-      messages.globals,
-    ],
+    () => [...messages.blocks],
+    [messages.blocks],
   );
 
   const inlineCodes = useMemo(
-    () => [
-      ...(messages.globalCodes ?? []),
-      ...(messages.blockCodes ?? []),
-    ],
-    [
-      messages.globalCodes,
-      messages.blockCodes,
-    ],
+    () => [...(messages.blockCodes ?? [])],
+    [messages.blockCodes],
   );
 
   const globalMessage = useMemo(() => {

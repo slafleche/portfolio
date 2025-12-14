@@ -233,7 +233,6 @@ export function NameBlock({
           }
         }}
         errorText={localErrorText}
-        helperText={copy.requiredText}
         requiredText={copy.requiredText}
         disabled={disabled}
         maxLength={maxLength ?? NAME_LIMIT.max}

@@ -228,7 +228,6 @@ export function EmailBlock({
           }
         }}
         errorText={localErrorText}
-        helperText={copy.requiredText}
         requiredText={copy.requiredText}
         readOnly={readOnly}
         disabled={disabled}
