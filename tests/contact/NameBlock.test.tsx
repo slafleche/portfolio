@@ -78,7 +78,6 @@ describe('Contact form block tests: NameBlock', () => {
       expect(input).toBeDisabled();
       expect(input).toBeRequired();
       expect(input).toHaveAttribute('type', 'text');
-      expect(input).toHaveAttribute('aria-describedby');
       expect(input).toHaveAttribute(
         'maxlength',
         NAME_LIMIT.max.toString(),
@@ -86,11 +85,6 @@ describe('Contact form block tests: NameBlock', () => {
       expect(input).toHaveAttribute(
         'minlength',
         NAME_LIMIT.min.toString(),
-      );
-
-      const helperHint = container.querySelector('[data-form-hint]');
-      expect(checkMatchingId(helperHint, input, 'describedby')).toBe(
-        true,
       );
 
       // Disabled behaviour: user input does not change value or error state

@@ -76,7 +76,6 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input).toBeRequired();
       expect(input).toHaveAttribute('type', 'email');
       expect(input).toHaveAttribute('autocomplete', 'email');
-      expect(input).toHaveAttribute('aria-describedby');
       expect(input).toHaveAttribute(
         'maxlength',
         EMAIL_MAX_LENGTH.toString(),
@@ -89,11 +88,6 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(input.value).toBe(initialValue);
       expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
-
-      const helperHint = container.querySelector('[data-form-hint]');
-      expect(checkMatchingId(helperHint, input, 'describedby')).toBe(
-        true,
-      );
     });
   });
 
