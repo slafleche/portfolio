@@ -448,8 +448,6 @@ export function useMenuHighlight({
       cancelAnimationFrame(animationFrameRef.current);
       animationFrameRef.current = null;
     }
-    lastMetricRef.current = null;
-    setActiveIndex(null);
     setHighlight((prev) =>
       prev.visible ? { ...prev, visible: false } : prev,
     );

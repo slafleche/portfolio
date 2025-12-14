@@ -578,8 +578,10 @@ export default function Menu({
 
   const handleLogoMouseLeave = useCallback(() => {
     pointerInsideLogoRef.current = false;
+    hideHighlight();
     triggerLogoLeave();
   }, [
+    hideHighlight,
     triggerLogoLeave,
   ]);
 
