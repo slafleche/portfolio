@@ -48,6 +48,7 @@ import { fontVariants } from '../tokens/fontVariants.tokens';
 import { menuVars } from '../styles/componentTokens/menu.componentTokens';
 import { m } from 'css-calipers';
 import { sharedStrings } from '@/lib/sharedStrings';
+import { useElementOffscreen } from '@/lib/useElementOffscreen';
 
 type FocusDebugOptions = {
   lockTo?: 'logo' | number;
@@ -249,6 +250,11 @@ export default function Menu({
   ] = useState(() => {
     const { fonts } = collectWaitForFonts(fontVariants.menu);
     return fonts.length === 0;
+  });
+
+  const heroOffscreen = useElementOffscreen(sharedStrings.heroWaypointId, {
+    debounceMs: 0,
+    mode: 'above',
   });
 
   useEffect(() => {
@@ -902,7 +908,11 @@ export default function Menu({
           targetHref={curiosityMessages.targetHref}
         />
       ) : null}
-      <div className={s.root} data-mounted={mounted}>
+      <div
+        className={s.root}
+        data-mounted={mounted}
+        data-offscreen={heroOffscreen ? 'true' : 'false'}
+      >
         <SkipNavLink contentId="body" className={skipNavStyles.link}>
           {skipNavLabel}
         </SkipNavLink>

@@ -7,6 +7,7 @@ import { Markdown } from '@/components/Markdown';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
 import Menu from '@/components/Menu';
+import HeroWaypoint from '@/components/HeroWaypoint';
 import * as layoutStyles from '@/styles/layout.css';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
@@ -22,6 +23,7 @@ import {
 } from '@/lib/locales/sections/menuSections';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
+import { sharedStrings } from '@/lib/sharedStrings';
 import { resolveLocale } from '@/lib/locales/locale';
 
 interface PageParams {
@@ -105,6 +107,7 @@ export default async function HomePage({
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
           <Hero id="hero" copy={heroCopy} />
+          <HeroWaypoint />
           <Content
             id={approach.href}
             title={approach.title}
@@ -168,7 +171,10 @@ export default async function HomePage({
           systemsLink={systemsLink}
         />
         {heroCopy.ctaLabel ? (
-          <ContactButton watchId="hero" label={heroCopy.ctaLabel} />
+          <ContactButton
+            watchId={sharedStrings.heroWaypointId}
+            label={heroCopy.ctaLabel}
+          />
         ) : null}
       </div>
     </>

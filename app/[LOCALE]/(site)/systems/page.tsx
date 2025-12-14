@@ -3,6 +3,7 @@ import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
 import Content from '@/components/responsive/Content';
 import Menu from '@/components/Menu';
+import HeroWaypoint from '@/components/HeroWaypoint';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
@@ -17,6 +18,7 @@ import {
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { resolveLocale } from '@/lib/locales/locale';
+import { sharedStrings } from '@/lib/sharedStrings';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -132,6 +134,7 @@ export default async function SystemsPage({
             withVideo={false}
             headingAnimated={false}
           />
+          <HeroWaypoint />
           <Content title={systemsTitle} markdown={systemsIntro} />
           {systemsSections.map((section) => (
             <Content
@@ -149,7 +152,7 @@ export default async function SystemsPage({
         />
         {heroCopy.ctaLabel ? (
           <ContactButton
-            watchId="systems-hero"
+            watchId={sharedStrings.heroWaypointId}
             label={heroCopy.ctaLabel}
           />
         ) : null}

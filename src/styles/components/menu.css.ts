@@ -87,22 +87,24 @@ if (process.env.NODE_ENV !== 'production') {
   assertUnit(menuVars.skew, 'deg', 'menu skew');
 }
 
+const hiddenMenuTransform = transforms.value({
+  translate: {
+    y: archVars.top
+      .add(archVars.curveHeight)
+      .add(dropShadowVars.offsetY)
+      .add(dropShadowVars.blur)
+      .multiply(1.5)
+      .negation(),
+  },
+});
+
 export const root = style({
   position: 'fixed',
   top: 0,
   left: 0,
   width: '100%',
   zIndex: 100,
-  transform: transforms.value({
-    translate: {
-      y: archVars.top
-        .add(archVars.curveHeight)
-        .add(dropShadowVars.offsetY)
-        .add(dropShadowVars.blur)
-        .multiply(1.5)
-        .negation(),
-    },
-  }),
+  transform: hiddenMenuTransform,
   transition: 'transform 0.8s cubic-bezier(0.69, 0.42, 0.01, 1) 0.3s',
   willChange: 'transform',
   backfaceVisibility: 'hidden',
@@ -112,6 +114,9 @@ export const root = style({
       transform: transforms.value({
         translate: { y: m(0) },
       }),
+    },
+    '&[data-mounted="true"][data-offscreen="true"]': {
+      transform: hiddenMenuTransform,
     },
   },
 });

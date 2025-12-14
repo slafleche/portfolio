@@ -175,6 +175,7 @@ export function ContactDialogProvider({
   const baseHistorySeededRef = useRef(false);
   const previousIntentRef = useRef<ModalIntent>('none');
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const lastNonModalHashRef = useRef<string | null>(null);
 
   const captureFocusAnchor = useCallback(() => {
     if (typeof document === 'undefined') return;
@@ -286,7 +287,11 @@ export function ContactDialogProvider({
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const syncFromLocation = () => {
-      const hashIntent = resolveIntentFromHash(window.location.hash);
+      const { hash } = window.location;
+      const hashIntent = resolveIntentFromHash(hash);
+      if (hash && hashIntent === 'none') {
+        lastNonModalHashRef.current = hash;
+      }
       applyIntent(hashIntent, { history: 'none' });
     };
 
@@ -304,6 +309,14 @@ export function ContactDialogProvider({
   const openContact = useCallback(() => {
     captureFocusAnchor();
     setTitleKey('form');
+    if (typeof window !== 'undefined') {
+      const { hash } = window.location;
+      const normalizedHash = normalizeHash(hash);
+      const intentForCurrent = resolveIntentFromHash(normalizedHash);
+      if (hash && intentForCurrent === 'none') {
+        lastNonModalHashRef.current = hash;
+      }
+    }
     applyIntent('contact', { history: 'push' });
   }, [
     applyIntent,
@@ -312,7 +325,22 @@ export function ContactDialogProvider({
   ]);
 
   const closeContact = useCallback(() => {
-    applyIntent('none', { history: 'replace' });
+    applyIntent('none', { history: 'none' });
+    if (typeof window !== 'undefined') {
+      const { pathname, search } = window.location;
+      const previousHash = lastNonModalHashRef.current;
+      const intentForPrevious = resolveIntentFromHash(previousHash);
+      const shouldRestoreHash =
+        Boolean(previousHash) && intentForPrevious === 'none';
+      const nextUrl = shouldRestoreHash
+        ? `${pathname}${search}${previousHash}`
+        : `${pathname}${search}`;
+      window.history.replaceState(
+        window.history.state,
+        '',
+        nextUrl,
+      );
+    }
     stripContactFormScenarioFromLocation();
     setTitleKey(null);
     setTimeout(restoreFocusAnchor, 0);

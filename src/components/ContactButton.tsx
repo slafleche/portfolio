@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 
@@ -13,6 +13,7 @@ import {
   shuttleExitDurationMs,
   exitTranslationDelayMs,
 } from '@/styles/components/contactButton.vars';
+import { useElementOffscreen } from '@/lib/useElementOffscreen';
 
 type Phase = 'hidden' | 'entering' | 'shown' | 'exiting';
 
@@ -49,16 +50,11 @@ export default function ContactButton({
   const shuttleRef = useRef<HTMLDivElement | null>(null);
   const linkRef = useRef<HTMLButtonElement | null>(null);
 
-  const tDebounceRef = useRef<number | null>(null);
-  const scrollRafRef = useRef<number | null>(null);
   const wantVisibleRef = useRef<boolean>(false);
 
   const enterFallbackRef = useRef<number | null>(null);
   const exitFallbackRef = useRef<number | null>(null);
 
-  const lastIOSampleRef = useRef<number>(0);
-  const IO_AUTHORITY_MS = 300;
-  const VISIBLE_DEBOUNCE_MS = 80;
   const MIN_SHOWN_DWELL_MS = 200;
 
   const T0 = useRef<number | null>(null);
@@ -139,6 +135,11 @@ export default function ContactButton({
       setPhase,
     ],
   );
+
+  const offscreen = useElementOffscreen(watchId, {
+    debounceMs: 0,
+    mode: 'above',
+  });
 
   /* keep phase dataset on shuttle + button (for CSS-driven keyframes) */
   useEffect(() => {
@@ -258,93 +259,26 @@ export default function ContactButton({
     requestExitIfAllowed,
     L,
   ]);
-
-  const applySignal = useCallback(
-    (wantVisible: boolean, src: 'IO' | 'poll') => {
-      if (
-        src === 'poll' &&
-        performance.now() - lastIOSampleRef.current < IO_AUTHORITY_MS
-      )
-        return;
-
-      wantVisibleRef.current = wantVisible;
-      L('applySignal', { src, wantVisible, phase: phaseRef.current });
-
-      if (tDebounceRef.current)
-        window.clearTimeout(tDebounceRef.current);
-      tDebounceRef.current = window.setTimeout(() => {
-        const p = phaseRef.current;
-        if (p === 'hidden' && wantVisible) {
-          L('→ signal enter');
-          setPhase('entering', 'signal->enter');
-        }
-        if (p === 'shown' && !wantVisible) {
-          L('→ signal exit (request)');
-          requestExitIfAllowed('signal->exit');
-        }
-      }, VISIBLE_DEBOUNCE_MS);
-    },
-    [
-      L,
-      setPhase,
-      requestExitIfAllowed,
-    ],
-  );
-
   useEffect(() => {
-    const target = document.getElementById(watchId);
-    if (!target) return;
+    wantVisibleRef.current = offscreen;
 
-    const io = new IntersectionObserver(
-      ([
-        entry,
-      ]) => {
-        const off = !entry.isIntersecting;
-        lastIOSampleRef.current = performance.now();
-        applySignal(off, 'IO');
-      },
-      { root: null, threshold: 0 },
-    );
-    io.observe(target);
+    const currentPhase = phaseRef.current;
 
-    const poll = () => {
-      const rect = target.getBoundingClientRect();
-      const off = rect.bottom <= 0 || rect.top >= window.innerHeight;
-      applySignal(off, 'poll');
-    };
+    if (currentPhase === 'hidden' && offscreen) {
+      L('→ signal enter (offscreen hook)');
+      setPhase('entering', 'signal->enter');
+      return;
+    }
 
-    const onScrollOrResize = () => {
-      if (scrollRafRef.current)
-        cancelAnimationFrame(scrollRafRef.current);
-      scrollRafRef.current = requestAnimationFrame(poll);
-    };
-
-    window.addEventListener('scroll', onScrollOrResize, {
-      passive: true,
-    });
-    window.addEventListener('resize', onScrollOrResize);
-    poll();
-
-    return () => {
-      io.disconnect();
-      window.removeEventListener('scroll', onScrollOrResize);
-      window.removeEventListener('resize', onScrollOrResize);
-      if (scrollRafRef.current)
-        cancelAnimationFrame(scrollRafRef.current);
-      if (tDebounceRef.current)
-        window.clearTimeout(tDebounceRef.current);
-      if (enterFallbackRef.current)
-        window.clearTimeout(enterFallbackRef.current);
-      if (exitFallbackRef.current)
-        window.clearTimeout(exitFallbackRef.current);
-      scrollRafRef.current = null;
-      tDebounceRef.current = null;
-      enterFallbackRef.current = null;
-      exitFallbackRef.current = null;
-    };
+    if (currentPhase === 'shown' && !offscreen) {
+      L('→ signal exit (offscreen hook)');
+      requestExitIfAllowed('signal->exit');
+    }
   }, [
-    watchId,
-    applySignal,
+    offscreen,
+    L,
+    setPhase,
+    requestExitIfAllowed,
   ]);
 
   const exiting = phase === 'exiting';

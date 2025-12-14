@@ -4,4 +4,5 @@ export const sharedStrings = {
   authorName: 'Stéphane L.',
   contactFormHash: '#contact-form',
   contactFormPolicyHash: '#contact-form-policy',
+  heroWaypointId: 'hero-waypoint',
 } as const;
