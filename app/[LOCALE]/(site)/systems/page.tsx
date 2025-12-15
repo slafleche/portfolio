@@ -36,43 +36,17 @@ export default async function SystemsPage({
   const systemsLink = buildSystemsLink(locale, translator);
   const systemsTitle = translator('systems-title');
   const systemsIntro = translator('systems-intro');
-  const systemsSections = [
-    {
-      id: translator('systems-process-href'),
-      title: translator('systems-process'),
-      markdown: translator('systems-process-content'),
-    },
-    {
-      id: translator('systems-describe-href'),
-      title: translator('systems-describe'),
-      markdown: translator('systems-describe-content'),
-    },
-    {
-      id: translator('systems-architecture-href'),
-      title: translator('systems-architecture'),
-      markdown: translator('systems-architecture-content'),
-    },
-    {
-      id: translator('systems-express-href'),
-      title: translator('systems-express'),
-      markdown: translator('systems-express-content'),
-    },
-    {
-      id: translator('systems-integrate-href'),
-      title: translator('systems-integrate'),
-      markdown: translator('systems-integrate-content'),
-    },
-    {
-      id: translator('systems-resilience-href'),
-      title: translator('systems-resilience'),
-      markdown: translator('systems-resilience-content'),
-    },
-    {
-      id: translator('systems-ai-href'),
-      title: translator('systems-ai'),
-      markdown: translator('systems-ai-content'),
-    },
-  ];
+  const systemsIntroId = translator('systems-intro-href');
+  const systemsPrinciplesId = translator('systems-principles-href');
+  const systemsPrinciplesTitle = translator('systems-principles');
+  const systemsPrinciplesMarkdown = translator(
+    'systems-principles-content',
+  );
+  const systemsShapeId = translator('systems-system-shape-href');
+  const systemsShapeTitle = translator('systems-system-shape');
+  const systemsShapeMarkdown = translator(
+    'systems-system-shape-content',
+  );
 
   const heroCopy = {
     ...heroCopyBase,
@@ -135,15 +109,21 @@ export default async function SystemsPage({
             headingAnimated={false}
           />
           <HeroWaypoint />
-          <Content title={systemsTitle} markdown={systemsIntro} />
-          {systemsSections.map((section) => (
-            <Content
-              key={section.id}
-              id={section.id}
-              title={section.title}
-              markdown={section.markdown}
-            />
-          ))}
+          <Content
+            id={systemsIntroId}
+            title={systemsTitle}
+            markdown={systemsIntro}
+          />
+          <Content
+            id={systemsPrinciplesId}
+            title={systemsPrinciplesTitle}
+            markdown={systemsPrinciplesMarkdown}
+          />
+          <Content
+            id={systemsShapeId}
+            title={systemsShapeTitle}
+            markdown={systemsShapeMarkdown}
+          />
         </main>
         <Footer
           contact={contactCopy}

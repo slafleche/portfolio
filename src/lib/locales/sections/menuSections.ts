@@ -30,19 +30,19 @@ export const buildSystemsMenuSections = (
   t: Translator,
 ): MenuSection[] => [
   {
-    id: t('systems-process-href'),
-    label: t('systems-process'),
+    id: t('systems-intro-href'),
+    label: t('systems-title'),
   },
   {
-    id: t('systems-describe-href'),
-    label: t('systems-describe'),
+    id: t('systems-principles-href'),
+    label: t('systems-principles'),
   },
   {
-    id: t('systems-express-href'),
-    label: t('systems-express'),
+    id: t('systems-system-shape-href'),
+    label: t('systems-system-shape'),
   },
   {
-    id: t('systems-integrate-href'),
-    label: t('systems-integrate'),
+    id: t('contact-href'),
+    label: t('contact'),
   },
 ];
