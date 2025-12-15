@@ -98,6 +98,8 @@ const frBaseData = {
   'systems-ai-href': 'systems-ia',
   ...markdownRefs('systems-ai-content'),
   'systems-link-label': 'Systèmes',
+  'footer-systems-snippet-label':
+    'Extrait HTML décoratif inspiré des outils de développement, qui montre la fin du code de la page.',
 
   contact: 'contact',
   'contact-href': 'contact',

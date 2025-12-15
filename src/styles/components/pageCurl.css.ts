@@ -73,27 +73,12 @@ export const cornerBase = style({
 
 export const behindCode = style({
   position: 'absolute',
-  width: '100%',
-  height: '200px',
-  overflow: 'hidden',
   bottom: 0,
   left: 0,
   right: 0,
-  backgroundColor: '#202124',
-  borderTop: '1px solid #3c4043',
-});
-
-export const behindCodeBlock = style({
   width: '100%',
-  height: '100%',
+  height: '200px',
   overflow: 'hidden',
-  fontFamily:
-    'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-  fontSize: '11px',
-  lineHeight: 1.5,
-  color: '#e8eaed',
-  whiteSpace: 'pre',
-  margin: 0,
 });
 
 export const cornerButton = style({

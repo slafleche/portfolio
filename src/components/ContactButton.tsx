@@ -263,17 +263,25 @@ export default function ContactButton({
     wantVisibleRef.current = offscreen;
 
     const currentPhase = phaseRef.current;
+    let enterTimeout: number | null = null;
 
     if (currentPhase === 'hidden' && offscreen) {
       L('→ signal enter (offscreen hook)');
-      setPhase('entering', 'signal->enter');
-      return;
+      enterTimeout = window.setTimeout(() => {
+        setPhase('entering', 'signal->enter');
+      }, 0);
     }
 
     if (currentPhase === 'shown' && !offscreen) {
       L('→ signal exit (offscreen hook)');
       requestExitIfAllowed('signal->exit');
     }
+
+    return () => {
+      if (enterTimeout !== null) {
+        window.clearTimeout(enterTimeout);
+      }
+    };
   }, [
     offscreen,
     L,

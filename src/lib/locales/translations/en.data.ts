@@ -95,6 +95,8 @@ const enBaseData = {
   'systems-ai-href': 'systems-ai',
   ...markdownRefs('systems-ai-content'),
   'systems-link-label': 'Systems',
+  'footer-systems-snippet-label':
+    'Decorative devtools-style HTML showing the end of the page source.',
 
   contact: 'Contact',
   'contact-href': 'contact',

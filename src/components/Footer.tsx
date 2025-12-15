@@ -8,7 +8,6 @@ import ContactIcon from './icons/SendIcon';
 import SocialLinkedInIcon from './icons/SocialLinkedInIcon';
 import SocialGitHubIcon from './icons/SocialGitHubIcon';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
-import Link from 'next/link';
 import PageCurl from './PageCurl';
 
 type FooterProps = {
@@ -74,7 +73,12 @@ export default function Footer({
           <SocialGitHubIcon className={s.gitHubIcon} />
         </GlassyLink>
       </div>
-      {systemsLink ? <PageCurl href={systemsLink.href} /> : null}
+      {systemsLink ? (
+        <PageCurl
+          href={systemsLink.href}
+          mockEndHtmlLabel={contact.systemsSnippetLabel}
+        />
+      ) : null}
     </footer>
   );
 }

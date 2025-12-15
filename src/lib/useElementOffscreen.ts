@@ -4,14 +4,14 @@ export type UseElementOffscreenOptions = {
   debounceMs?: number;
   ioAuthorityMs?: number;
   rootMargin?: string;
-  threshold?: number | ReadonlyArray<number>;
+  threshold?: number | number[];
   mode?: 'outside' | 'above' | 'below';
 };
 
 const DEFAULT_DEBOUNCE_MS = 80;
 const DEFAULT_IO_AUTHORITY_MS = 300;
 const DEFAULT_ROOT_MARGIN = '0px';
-const DEFAULT_THRESHOLD: number | ReadonlyArray<number> = 0;
+const DEFAULT_THRESHOLD = 0;
 const DEFAULT_MODE: UseElementOffscreenOptions['mode'] = 'outside';
 
 const computeOffscreen = (
@@ -101,14 +101,32 @@ export function useElementOffscreen(
     }
 
     if (!watchId) {
-      setOffscreen(false);
-      return undefined;
+      let resetTimeout: number | null = null;
+      if (typeof window !== 'undefined') {
+        resetTimeout = window.setTimeout(() => {
+          applySignal(false, 'poll');
+        }, 0);
+      }
+      return () => {
+        if (resetTimeout !== null && typeof window !== 'undefined') {
+          window.clearTimeout(resetTimeout);
+        }
+      };
     }
 
     const target = document.getElementById(watchId);
     if (!target) {
-      setOffscreen(false);
-      return undefined;
+      let resetTimeout: number | null = null;
+      if (typeof window !== 'undefined') {
+        resetTimeout = window.setTimeout(() => {
+          applySignal(false, 'poll');
+        }, 0);
+      }
+      return () => {
+        if (resetTimeout !== null && typeof window !== 'undefined') {
+          window.clearTimeout(resetTimeout);
+        }
+      };
     }
 
     const io = new IntersectionObserver(

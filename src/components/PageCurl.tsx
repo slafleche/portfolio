@@ -1,11 +1,16 @@
 import Link from 'next/link';
 import * as s from '@/styles/components/pageCurl.css';
+import MockEndHTML from './MockEndHTML';
 
 type PageCurlProps = {
   href: string;
+  mockEndHtmlLabel: string;
 };
 
-export default function PageCurl({ href }: PageCurlProps) {
+export default function PageCurl({
+  href,
+  mockEndHtmlLabel,
+}: PageCurlProps) {
   return (
     <Link href={href} className={s.root} data-ui="link">
       <div className={s.box}>
@@ -29,14 +34,7 @@ export default function PageCurl({ href }: PageCurlProps) {
           <div className={s.cornerContents}>
             <div className={s.cornerBase} />
             <div className={s.behindCode}>
-              <pre className={s.behindCodeBlock}>
-                {/* prettier-ignore */}
-                {`  <footer class="site-footer">
-    <!-- ... footer content ... -->
-  </footer>
-</body>
-</html>`}
-              </pre>
+              <MockEndHTML ariaLabel={mockEndHtmlLabel} />
             </div>
             {/* <div className={s.cornerHighlight} /> */}
           </div>
