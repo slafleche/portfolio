@@ -25,6 +25,7 @@ import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { resolveLocale } from '@/lib/locales/locale';
+import VanillaCaseStudyTitle from '../../../src/components/VanillaCaseStudyTitle';
 
 interface PageParams {
   LOCALE: string;
@@ -118,7 +119,12 @@ export default async function HomePage({
             title={about.title}
             markdown={about.content}
           />
-          <Content id={caseStudies.href} title={caseStudies.title}>
+          <Content id={caseStudies.href}>
+            <VanillaCaseStudyTitle
+              id={caseStudies.href}
+              headingTextNoLogo={caseStudies.title}
+              logoBefore={locale === 'en'}
+            />
             <CaseStudy
               id={caseStudies.href}
               intro={caseStudies.intro}

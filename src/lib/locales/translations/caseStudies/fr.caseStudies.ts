@@ -1,7 +1,7 @@
 import { markdownRefs } from '../markdownRefs';
 
 export const frCaseStudies = {
-  case_study: 'Études de cas',
+  case_study: 'Mon parcours chez',
   'case_study-href': 'etudes-de-cas',
   ...markdownRefs('case-study-00-intro'),
   'case-study-01-title': 'Débuter comme intégrateur de thèmes',

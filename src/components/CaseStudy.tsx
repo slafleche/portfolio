@@ -38,6 +38,7 @@ export default function CaseStudy({
           subHeading: study.subTitle,
           content: <Markdown source={study.content} />,
           id: `${baseId}-${index}`,
+          defaultOpen: index === 0,
         }))}
       />
     </div>
