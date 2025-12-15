@@ -413,8 +413,6 @@ export function playProjectorText(
   };
 
   const updateFrame = (elapsed: number) => {
-    let currentStage: 'initial' | 'waypoint' | 'focus' = 'focus';
-
     projectorChannels.forEach((channel) => {
       const state = sampleStage(
         elapsed,
@@ -428,13 +426,6 @@ export function playProjectorText(
         blur,
       });
 
-      if (elapsed <= timings.initialHoldEnd) {
-        currentStage = 'initial';
-      } else if (elapsed <= timings.toWayPointEnd) {
-        currentStage = 'waypoint';
-      } else if (elapsed <= timings.toFocusEnd) {
-        currentStage = 'focus';
-      }
     });
 
     let masterOpacity = 0;

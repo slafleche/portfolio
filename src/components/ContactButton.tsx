@@ -264,6 +264,7 @@ export default function ContactButton({
 
     const currentPhase = phaseRef.current;
     let enterTimeout: number | null = null;
+    let exitTimeout: number | null = null;
 
     if (currentPhase === 'hidden' && offscreen) {
       L('→ signal enter (offscreen hook)');
@@ -274,12 +275,17 @@ export default function ContactButton({
 
     if (currentPhase === 'shown' && !offscreen) {
       L('→ signal exit (offscreen hook)');
-      requestExitIfAllowed('signal->exit');
+      exitTimeout = window.setTimeout(() => {
+        requestExitIfAllowed('signal->exit');
+      }, 0);
     }
 
     return () => {
       if (enterTimeout !== null) {
         window.clearTimeout(enterTimeout);
+      }
+      if (exitTimeout !== null) {
+        window.clearTimeout(exitTimeout);
       }
     };
   }, [

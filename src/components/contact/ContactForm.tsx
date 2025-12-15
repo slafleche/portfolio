@@ -194,6 +194,7 @@ function ContactFormInner({
   ]);
 
   const wasCatastrophicRef = useRef(isCatastrophic);
+  const initialSubmitStatus = initialServerState?.submitStatus;
 
   useEffect(() => {
     if (!hasInitialMockData || hasRunInitialMockValidationRef.current) {
@@ -211,13 +212,14 @@ function ContactFormInner({
       }
     });
     hasRunInitialMockValidationRef.current = true;
-    if (initialServerState?.submitStatus === 'validation_error') {
+    if (initialSubmitStatus === 'validation_error') {
       enableContinuousValidation();
     }
   }, [
     enableContinuousValidation,
     getRegistrationsSnapshot,
     hasInitialMockData,
+    initialSubmitStatus,
     recordValidationResult,
   ]);
 
