@@ -35,3 +35,13 @@ bug fixes without risking formatter instability.
 - See `ai/epics/blockedUpgrades/prettierUpgrade/prettierUpgrade_requirements.md`
   for the concrete conditions that must be satisfied before we attempt the
   upgrade implementation and plan.
+
+## Security note
+
+- `npm audit` currently reports a moderate vulnerability in `fast-xml-parser`
+  pulled in by `prettier-plugin-xml`, with "No fix available" for the versions
+  in this repo.
+- This affects only the formatting toolchain (dev-time), not the built app.
+- When revisiting the Prettier stack for this epic, either upgrade to a
+  `prettier-plugin-xml` version that depends on a fixed `fast-xml-parser`, or
+  decide to drop `prettier-plugin-xml` if XML formatting is no longer needed.
