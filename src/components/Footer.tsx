@@ -2,13 +2,14 @@ import type { ContactCopy } from '@/lib/locales/sections/contact.locale';
 import { Markdown } from '@/components/Markdown';
 import * as s from '@/styles/components/footer.css';
 import Heading from './Heading';
-import Link from 'next/link';
 import { sharedStrings } from '@/lib/sharedStrings';
 import GlassyLink from './GlassyLink';
 import ContactIcon from './icons/SendIcon';
 import SocialLinkedInIcon from './icons/SocialLinkedInIcon';
 import SocialGitHubIcon from './icons/SocialGitHubIcon';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
+import Link from 'next/link';
+import PageCurl from './PageCurl';
 
 type FooterProps = {
   contact: ContactCopy;
@@ -78,6 +79,8 @@ export default function Footer({
       {systemsLink ? (
         <Link href={systemsLink.href}>{systemsLink.label}</Link>
       ) : null}
+
+      {systemsLink ? <PageCurl href={systemsLink.href} /> : null}
     </footer>
   );
 }
