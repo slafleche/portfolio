@@ -186,6 +186,13 @@ const SINGLE_LAYER_HELPER_RULES = {
   backdropFilters: BACKDROP_FILTERS_SINGLE_LAYER_RULE,
 };
 
+const BORDERS_RADII_SHORTHAND_RULE = {
+  id: 'borders-radii-shorthand',
+  groupTitle: 'Prefer shorthand radii helpers.',
+  solution:
+    'When using shared border radius tokens (for example, borderVars.radius), call borders.radii(borderVars) instead of wrapping radius values in { all: ... } or { radius: ... } objects.',
+};
+
 const ALL_RULES = [
   ...FORBIDDEN_PATTERNS,
   ...MEASUREMENT_RULES,
@@ -197,6 +204,7 @@ const ALL_RULES = [
   MARGINS_SINGLE_LAYER_RULE,
   BACKGROUNDS_SINGLE_LAYER_RULE,
   BACKDROP_FILTERS_SINGLE_LAYER_RULE,
+  BORDERS_RADII_SHORTHAND_RULE,
 ];
 
 function isPlainMode() {
@@ -480,6 +488,42 @@ function scanSpacingSimplifications(filePath, content) {
   return violations;
 }
 
+export function scanBordersRadiiShorthand(filePath, content) {
+  const posix = filePath.split(path.sep).join('/');
+
+  // Only enforce in style-layer component files.
+  if (!posix.startsWith('src/styles/components')) {
+    return [];
+  }
+
+  const violations = [];
+  const pattern = /borders\.radii\(\s*\{/g;
+
+  let match;
+  while ((match = pattern.exec(content)) !== null) {
+    const startIndex = match.index;
+    const snippet = content.slice(startIndex, startIndex + 200);
+
+    const usesBorderVarsRadius =
+      /all\s*:\s*borderVars\.radius/.test(snippet) ||
+      /radius\s*:\s*borderVars\.radius/.test(snippet);
+
+    if (!usesBorderVarsRadius) continue;
+
+    const lineNumber = content
+      .slice(0, startIndex)
+      .split('\n').length;
+
+    violations.push({
+      filePath,
+      lineNumber,
+      rule: BORDERS_RADII_SHORTHAND_RULE,
+    });
+  }
+
+  return violations;
+}
+
 function scanSingleLayerHelpers(filePath, content) {
   const posix = filePath.split(path.sep).join('/');
 
@@ -730,6 +774,9 @@ function main() {
       ...scanSpacingSimplifications(relativePath, content),
     );
     violations.push(...scanSingleLayerHelpers(relativePath, content));
+    violations.push(
+      ...scanBordersRadiiShorthand(relativePath, content),
+    );
   }
 
   if (violations.length) {

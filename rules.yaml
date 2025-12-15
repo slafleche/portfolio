@@ -72,6 +72,7 @@ layers:
     rules:
       use_helpers: true
       no_measurement_css: true
+      prefer_radii_shorthand: true
       forbidden_properties:
         - name: backdropFilter
           message:

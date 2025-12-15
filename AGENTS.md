@@ -116,3 +116,8 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Should: If you believe a removed markdown section is still useful (for
   example, a checklist or plan), propose the new structure in chat and wait for
   explicit approval instead of silently restoring it.
+
+## Linting and guardrails (`linting`)
+
+- Must: When you make non-trivial changes to application code, run `yarn lint` before considering the work complete.
+- Must: When you touch style-layer files under `src/styles` (including `*.css.ts`), run `yarn lint:rules` after your changes to ensure architecture guardrails still hold.
