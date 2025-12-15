@@ -38,8 +38,7 @@ export const cornerBox = style({
   width: '20px',
   height: '20px',
   overflow: 'visible',
-  transition:
-    'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
+  transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
 export const pageTip = style({
@@ -48,8 +47,7 @@ export const pageTip = style({
   background:
     'linear-gradient(225deg, #ddd 17%, #dfdfdf 18%, #f5f5f5 30%, #f8f8f8 34%, #eee 39%, rgba(200, 200, 200, 0) 41%)',
   borderBottomLeftRadius: '60%',
-  transition:
-    'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
+  transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
 export const cornerContents = style({
@@ -61,8 +59,7 @@ export const cornerContents = style({
   overflow: 'hidden',
   mask: 'linear-gradient(225deg, transparent 49%, #000 53%)',
   WebkitMask: 'linear-gradient(225deg, transparent 49%, #000 53%)',
-  transition:
-    'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
+  transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
 export const cornerBase = style({
@@ -74,14 +71,29 @@ export const cornerBase = style({
   backgroundColor: '#eeeef4',
 });
 
-export const cornerHighlight = style({
+export const behindCode = style({
   position: 'absolute',
+  width: '100%',
+  height: '200px',
+  overflow: 'hidden',
   bottom: 0,
   left: 0,
-  width: '133%',
-  height: '133%',
-  background:
-    'linear-gradient(225deg, rgba(255,255,255,0) 37%, #ddd 62%, rgba(230,230,230,0.1) 64%, rgba(255,255,255,0) 67%), radial-gradient(circle at 150% -150%, transparent 74%, rgba(0,0,0,0.2) 74%, transparent 81%)',
+  right: 0,
+  backgroundColor: '#202124',
+  borderTop: '1px solid #3c4043',
+});
+
+export const behindCodeBlock = style({
+  width: '100%',
+  height: '100%',
+  overflow: 'hidden',
+  fontFamily:
+    'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+  fontSize: '11px',
+  lineHeight: 1.5,
+  color: '#e8eaed',
+  whiteSpace: 'pre',
+  margin: 0,
 });
 
 export const cornerButton = style({
@@ -97,6 +109,16 @@ export const cornerButton = style({
   fontSize: '11px',
   fontFamily: 'Verdana, Geneva, sans-serif',
   display: 'inline-block',
+});
+
+export const cornerHighlight = style({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  width: '133%',
+  height: '133%',
+  background:
+    'linear-gradient(225deg, rgba(255,255,255,0) 37%, #ddd 62%, rgba(230,230,230,0.1) 64%, rgba(255,255,255,0) 67%), radial-gradient(circle at 150% -150%, transparent 74%, rgba(0,0,0,0.2) 74%, transparent 81%)',
 });
 
 export const cornerButtonLabel = style({
@@ -116,8 +138,7 @@ export const pageTipShadeRight = style({
     'radial-gradient(circle at 180% -200%, rgba(255,255,255,0) 80%, rgba(0,0,0,0.2) 100%)',
   backgroundColor: '#ffffff',
   zIndex: 2,
-  transition:
-    'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
+  transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
 export const pageTipShadeTop = style({
@@ -131,20 +152,19 @@ export const pageTipShadeTop = style({
     'radial-gradient(circle at 250% -320%, rgba(255,255,255,0) 80%, rgba(0,0,0,0.2) 100%)',
   backgroundColor: '#ffffff',
   zIndex: 2,
-  transition:
-    'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
+  transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
 // Hover interactions: grow the corner and accent the curl when the box is hovered
-globalStyle(`.${box}:hover .${cornerBox}`, {
+globalStyle(`.${root}:hover .${cornerBox}`, {
   width: '100px',
   height: '100px',
 });
 
-globalStyle(`.${box}:hover .${pageTipShadeRight}`, {
+globalStyle(`.${root}:hover .${pageTipShadeRight}`, {
   borderLeft: '2px solid #ffffff',
 });
 
-globalStyle(`.${box}:hover .${pageTipShadeTop}`, {
+globalStyle(`.${root}:hover .${pageTipShadeTop}`, {
   borderBottom: '2px solid #ffffff',
 });

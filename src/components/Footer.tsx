@@ -74,12 +74,6 @@ export default function Footer({
           <SocialGitHubIcon className={s.gitHubIcon} />
         </GlassyLink>
       </div>
-
-      {/* Leave for now, i'll be refactoring this link later */}
-      {systemsLink ? (
-        <Link href={systemsLink.href}>{systemsLink.label}</Link>
-      ) : null}
-
       {systemsLink ? <PageCurl href={systemsLink.href} /> : null}
     </footer>
   );

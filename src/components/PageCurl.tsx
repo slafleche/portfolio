@@ -12,13 +12,13 @@ export default function PageCurl({ href }: PageCurlProps) {
         <div className={s.content}>
           <h2 className={s.title}>Titolo</h2>
           <p className={s.text}>
-            Testo di esempio per dimostrare l&apos;effetto di piega della
-            pagina. Passa il mouse sull&apos;angolo in basso a sinistra per
-            vedere l&apos;animazione.
+            Testo di esempio per dimostrare l&apos;effetto di piega
+            della pagina. Passa il mouse sull&apos;angolo in basso a
+            sinistra per vedere l&apos;animazione.
           </p>
           <p className={s.text}>
-            Questo è un secondo paragrafo per aggiungere più contenuto alla
-            pagina.
+            Questo è un secondo paragrafo per aggiungere più contenuto
+            alla pagina.
           </p>
         </div>
         <div className={s.cornerBox} aria-hidden="true">
@@ -28,10 +28,17 @@ export default function PageCurl({ href }: PageCurlProps) {
           </div>
           <div className={s.cornerContents}>
             <div className={s.cornerBase} />
-            <div className={s.cornerHighlight} />
-            <div className={s.cornerButton}>
-              <strong className={s.cornerButtonLabel}>Click</strong>
+            <div className={s.behindCode}>
+              <pre className={s.behindCodeBlock}>
+                {/* prettier-ignore */}
+                {`  <footer class="site-footer">
+    <!-- ... footer content ... -->
+  </footer>
+</body>
+</html>`}
+              </pre>
             </div>
+            {/* <div className={s.cornerHighlight} /> */}
           </div>
         </div>
       </div>
