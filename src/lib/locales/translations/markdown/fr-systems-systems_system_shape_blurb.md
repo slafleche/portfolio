@@ -1,0 +1,4 @@
+---
+
+Un extrait concret de cette approche est publié sous le nom **css-calipers**, la couche de valeurs typées utilisée dans tout ce système.  
+npm : https://www.npmjs.com/package/css-calipers

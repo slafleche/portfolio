@@ -142,6 +142,16 @@ export const bridge = style({
   alignItems: 'center',
 });
 
+export const subtitle = style({
+  opacity: 0,
+  transition: 'opacity 220ms ease',
+  selectors: {
+    '&[data-ready="true"]': {
+      opacity: 1,
+    },
+  },
+});
+
 // export const paragraph = style({
 //   position: 'relative',
 //   textAlign: 'center',

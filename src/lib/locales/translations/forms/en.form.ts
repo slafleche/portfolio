@@ -45,7 +45,7 @@ export const enFormCopy = {
   'form-turnstile-loading': 'Loading human verification…',
   'form-turnstile-ready':
     'Complete the verification above to enable submission.',
-  'form-turnstile-verified': 'Verified — you can send your message.',
+  'form-turnstile-verified': 'Verified! you can send your message.',
   'form-turnstile-expired': 'Verification expired. Please try again.',
   'form-turnstile-error':
     'Verification is unavailable. Please retry.',

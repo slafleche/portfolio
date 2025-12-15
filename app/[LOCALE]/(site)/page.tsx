@@ -40,7 +40,11 @@ export default async function HomePage({
   const locale = resolveLocale(LOCALE);
   const translator = await loadTranslator(locale);
 
-  const heroCopy = buildHeroCopy(translator);
+  const heroCopyBase = buildHeroCopy(translator);
+  const heroCopy = {
+    ...heroCopyBase,
+    subtitle: translator('hero-subTitle'),
+  };
   const [
     approach,
     about,

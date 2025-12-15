@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { paddings } from '../helpers/spacing.helper';
+import { paddings, margins } from '../helpers/spacing.helper';
 import { borders } from '../helpers/borders.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { m, mPercent } from 'css-calipers';
@@ -38,14 +38,20 @@ export const row = style({
 
 export const indent = style({
   display: 'inline-block',
-  width: m(16).css(),
+  width: '16px',
 });
 
 export const guide = style({
   display: 'inline-block',
-  height: m(14).css(),
-  borderLeft: '1px dotted rgba(255, 255, 255, 0.12)',
-  marginRight: '-1px',
+  height: '14px',
+  ...borders.left({
+    width: m(1),
+    color: 'rgba(255, 255, 255, 0.12)',
+    style: 'dotted',
+  }),
+  ...margins({
+    right: m(-1),
+  }),
   verticalAlign: '-2px',
 });
 
@@ -71,7 +77,7 @@ export const text = style({
 
 export const disc = style({
   display: 'inline-block',
-  width: m(12).css(),
+  width: '12px',
   color: 'rgba(201, 209, 217, 0.55)',
 });
 
@@ -81,19 +87,20 @@ export const ellipsis = style({
 
 export const hint = style({
   display: 'inline-block',
-  marginLeft: m(8).css(),
+  ...margins({
+    left: m(8),
+  }),
   ...paddings({
     horizontal: m(6),
   }),
-  ...borders.radii({
-    radius: {
-      all: mPercent(50),
-    },
+  ...borders({
+    radius: mPercent(50),
+    width: m(1),
+    color: 'rgba(255, 255, 255, 0.1)',
   }),
-  borderWidth: m(1).css(),
-  borderStyle: 'solid',
-  borderColor: 'rgba(255, 255, 255, 0.1)',
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+  ...backgrounds({
+    color: 'rgba(255, 255, 255, 0.03)',
+  }),
   color: 'rgba(201, 209, 217, 0.72)',
   fontSize: '11px',
   lineHeight: '16px',

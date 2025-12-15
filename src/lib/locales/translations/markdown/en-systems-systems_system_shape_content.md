@@ -12,8 +12,3 @@ The middle layer is intentionally non-prescriptive. It makes minimal assumptions
 
 ### Designed to be inspected and replaced
 The resulting system is meant to be inspected, debugged, and changed. Parts can be swapped or retired over time without destabilizing the whole, and no single framework or authoring pattern is required.
-
----
-
-A concrete slice of this approach is published as **css-calipers**, the typed value boundary used throughout this system.  
-npm: https://www.npmjs.com/package/css-calipers

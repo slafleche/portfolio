@@ -1,5 +1,7 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { paddings } from '../helpers/spacing.helper';
+import { paddings, margins } from '../helpers/spacing.helper';
+import { backgrounds } from '../helpers/background.helper';
+import { borders } from '../helpers/borders.helper';
 import { m } from 'css-calipers';
 
 export const root = style({
@@ -13,8 +15,10 @@ export const box = style({
   width: '500px',
   maxWidth: '100%',
   height: '500px',
-  backgroundColor: '#ffffff',
   overflow: 'hidden',
+  ...backgrounds({
+    color: '#ffffff',
+  }),
 });
 
 export const content = style({
@@ -22,13 +26,17 @@ export const content = style({
 });
 
 export const title = style({
-  margin: '0 0 15px 0',
+  ...margins({
+    bottom: m(15),
+  }),
   color: '#900',
   fontSize: '16pt',
 });
 
 export const text = style({
-  margin: '0 0 8px 0',
+  ...margins({
+    bottom: m(8),
+  }),
 });
 
 export const cornerBox = style({
@@ -44,9 +52,15 @@ export const cornerBox = style({
 export const pageTip = style({
   position: 'absolute',
   inset: 0,
-  background:
-    'linear-gradient(225deg, #ddd 17%, #dfdfdf 18%, #f5f5f5 30%, #f8f8f8 34%, #eee 39%, rgba(200, 200, 200, 0) 41%)',
-  borderBottomLeftRadius: '60%',
+  ...backgrounds({
+    image:
+      'linear-gradient(225deg, #ddd 17%, #dfdfdf 18%, #f5f5f5 30%, #f8f8f8 34%, #eee 39%, rgba(200, 200, 200, 0) 41%)',
+  }),
+  ...borders.radii({
+    radius: {
+      sw: m(60, '%'),
+    },
+  }),
   transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
@@ -68,7 +82,9 @@ export const cornerBase = style({
   left: 0,
   width: '100%',
   height: '100%',
-  backgroundColor: '#eeeef4',
+  ...backgrounds({
+    color: '#eeeef4',
+  }),
 });
 
 export const behindCode = style({
@@ -86,11 +102,20 @@ export const cornerButton = style({
   bottom: 0,
   left: 0,
   width: '7em',
-  padding: '8px 5px',
-  backgroundColor: '#900',
+  ...paddings({
+    vertical: m(8),
+    horizontal: m(5),
+  }),
+  ...backgrounds({
+    color: '#900',
+  }),
   color: '#fff',
   textAlign: 'center',
-  borderRadius: '5px',
+  ...borders.radii({
+    radius: {
+      all: m(5),
+    },
+  }),
   fontSize: '11px',
   fontFamily: 'Verdana, Geneva, sans-serif',
   display: 'inline-block',
@@ -102,8 +127,10 @@ export const cornerHighlight = style({
   left: 0,
   width: '133%',
   height: '133%',
-  background:
-    'linear-gradient(225deg, rgba(255,255,255,0) 37%, #ddd 62%, rgba(230,230,230,0.1) 64%, rgba(255,255,255,0) 67%), radial-gradient(circle at 150% -150%, transparent 74%, rgba(0,0,0,0.2) 74%, transparent 81%)',
+  ...backgrounds({
+    image:
+      'linear-gradient(225deg, rgba(255,255,255,0) 37%, #ddd 62%, rgba(230,230,230,0.1) 64%, rgba(255,255,255,0) 67%), radial-gradient(circle at 150% -150%, transparent 74%, rgba(0,0,0,0.2) 74%, transparent 81%)',
+  }),
 });
 
 export const cornerButtonLabel = style({
@@ -118,10 +145,16 @@ export const pageTipShadeRight = style({
   bottom: 0,
   width: '50%',
   height: '50%',
-  borderBottomLeftRadius: '60%',
-  background:
-    'radial-gradient(circle at 180% -200%, rgba(255,255,255,0) 80%, rgba(0,0,0,0.2) 100%)',
-  backgroundColor: '#ffffff',
+  ...borders.radii({
+    radius: {
+      sw: m(60, '%'),
+    },
+  }),
+  ...backgrounds({
+    color: '#ffffff',
+    image:
+      'linear-gradient(0deg, rgba(255,255,255,0), rgba(255,255,255,0)), radial-gradient(circle at 180% -200%, rgba(255,255,255,0) 80%, rgba(0,0,0,0.2) 100%)',
+  }),
   zIndex: 2,
   transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
@@ -132,10 +165,16 @@ export const pageTipShadeTop = style({
   left: 0,
   width: '50%',
   height: '50%',
-  borderBottomLeftRadius: '60%',
-  background:
-    'radial-gradient(circle at 250% -320%, rgba(255,255,255,0) 80%, rgba(0,0,0,0.2) 100%)',
-  backgroundColor: '#ffffff',
+  ...borders.radii({
+    radius: {
+      sw: m(60, '%'),
+    },
+  }),
+  ...backgrounds({
+    color: '#ffffff',
+    image:
+      'linear-gradient(0deg, rgba(255,255,255,0), rgba(255,255,255,0)), radial-gradient(circle at 250% -320%, rgba(255,255,255,0) 80%, rgba(0,0,0,0.2) 100%)',
+  }),
   zIndex: 2,
   transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
@@ -147,9 +186,15 @@ globalStyle(`.${root}:hover .${cornerBox}`, {
 });
 
 globalStyle(`.${root}:hover .${pageTipShadeRight}`, {
-  borderLeft: '2px solid #ffffff',
+  ...borders.left({
+    width: m(2),
+    color: '#ffffff',
+  }),
 });
 
 globalStyle(`.${root}:hover .${pageTipShadeTop}`, {
-  borderBottom: '2px solid #ffffff',
+  ...borders.bottom({
+    width: m(2),
+    color: '#ffffff',
+  }),
 });

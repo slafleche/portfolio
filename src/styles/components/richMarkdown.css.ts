@@ -1,13 +1,18 @@
 import { style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
+import { margins } from '../helpers/spacing.helper';
 
 export const caseStudyNoLogoText = style({
   selectors: {
     '&[data-position="before"]': {
-      marginLeft: m(0.5, 'em').css(),
+      ...margins({
+        left: m(0.5, 'em'),
+      }),
     },
     '&[data-position="after"]': {
-      marginRight: m(0.5, 'em').css(),
+      ...margins({
+        right: m(0.5, 'em'),
+      }),
     },
   },
 });

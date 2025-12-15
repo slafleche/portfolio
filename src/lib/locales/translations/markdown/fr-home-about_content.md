@@ -1,10 +1,9 @@
-J'ai commencé par l'animation et la modélisation 3D — créer des objets qui
-devaient concilier vision artistique et contraintes techniques. Cette expérience
-m'a appris à repérer les systèmes qui se cachent sous la surface.
+J’ai commencé en animation et en modélisation 3D, dans des contextes où le
+travail devait répondre à la fois à une intention créative et à des contraintes
+techniques. Cette expérience m’a amené à m’intéresser davantage à la structure
+qu’à la surface.
 
-Quand je suis passé au développement front-end, je me suis naturellement tourné
-vers l'infrastructure : thématisation, tokens, [abbr:API] de composants. J'ai
-bâti des systèmes capables de servir plusieurs produits tout en gardant le
-design cohérent et le développement maintenable. Je pense à l'expérience
-développeur comme les designers pensent à l'expérience utilisateur — des
-systèmes clairs permettent d'expédier de bonnes idées plus facilement.
+En passant au développement front-end, je me suis progressivement concentré sur
+l’infrastructure : thématisation, tokens, APIs de composants. J’ai travaillé sur
+des systèmes partagés entre plusieurs produits, avec l’objectif de les garder
+compréhensibles, maintenables et capables d’évoluer dans le temps.

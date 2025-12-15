@@ -51,7 +51,7 @@ export const frFormCopy = {
   'form-turnstile-ready':
     "Complétez la vérification ci-dessus pour activer l'envoi.",
   'form-turnstile-verified':
-    'Vérification réussie — vous pouvez envoyer votre message.',
+    'Vérification réussie! Vous pouvez envoyer votre message.',
   'form-turnstile-expired':
     'La vérification a expiré. Veuillez réessayer.',
   'form-turnstile-error':

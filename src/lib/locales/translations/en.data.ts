@@ -8,9 +8,9 @@ const enBaseData = {
   label: 'English',
   'abbreviated-label': 'EN',
   redirecting: 'Redirecting...',
-  title: 'Front-End Developer | Stéphane L. Portfolio',
+  title: "Front-End Developer | Stéphane/'s Developer Portfolio",
   description:
-    'Stéphane L. builds reusable components, responsive experiences, and brand-faithful interfaces — elevating projects beyond the handoff between design and development.',
+    'Front‑end developer Stéphane builds UI systems, reusable components, and accessible interfaces that keep design and engineering aligned over time',
 
   'menu-skip_nav': 'Skip to content',
   'menu-left_label': 'About Me',
@@ -19,8 +19,8 @@ const enBaseData = {
   'close-label': 'Close',
   'scroll-cue': 'Scroll to content',
 
-  'manifest-name': 'Portfolio — Stéphane L.',
-  'manifest-short-name': 'Stéphane L.',
+  'manifest-name': "Stéphane/'s Developer Portfolio",
+  'manifest-short-name': "Stéphane/'s Developer Portfolio",
   'manifest-description': 'Personal portfolio progressive web app.',
   'manifest-categories': [
     'portfolio',
@@ -30,15 +30,17 @@ const enBaseData = {
   'error-video': 'Sorry, your browser cannot play this video',
 
   'favicon-meta-description':
-    "Metadata describing the favicon and manifest assets for Stéphane L.'s portfolio.",
-  'favicon-meta-keywords': 'favicon, icon, manifest, Stéphane L.',
-  'favicon-meta-author': 'Stéphane L.',
+    "Metadata describing the favicon and manifest assets for Stéphane's portfolio.",
+  'favicon-meta-keywords': 'favicon, icon, manifest, Stéphane',
+  'favicon-meta-author': 'Stéphane',
 
-  'hero-title': 'Blue–magenta gradient rotation background',
+  'hero-title': 'Blue-magenta gradient rotation background',
   'hero-alt':
     'Slowly rotating diagonal gradient blending cool blue and soft magenta tones with subtle light bands',
-  'hero-title_a': 'Design systems built',
-  'hero-title_b': 'to evolve',
+  'hero-title_a': 'Design systems',
+  'hero-title_b': 'built to evolve',
+  'hero-subTitle': "Stéphane's Developer Portfolio",
+
   'hero-console_description': 'Decorative code backdrop',
   'hero-cta': "Let's connect!",
 
@@ -69,9 +71,11 @@ const enBaseData = {
   'projects-05-king-games-title': 'King Games',
   ...markdownRefs('projects-05-king-games-content'),
 
+  'systems-hero-title': 'Interfaces designed for composition',
+  'systems-hero-subTitle':
+    'Type-safe CSS primitives for building **your** design system',
+
   'systems-title': 'Expertise',
-  'systems-title_a': 'UI systems designed for',
-  'systems-title_b': 'composition',
   ...markdownRefs('systems-intro'),
   'systems-intro-href': 'systems-expertise',
   'systems-principles': 'Principles',
@@ -79,7 +83,11 @@ const enBaseData = {
   ...markdownRefs('systems-principles-content'),
   'systems-system-shape': 'System Shape',
   'systems-system-shape-href': 'systems-system-shape',
-  ...markdownRefs('systems-system-shape-content'),
+  ...markdownRefs(
+    'systems-system-shape-content',
+    'systems-system-shape-blurb',
+  ),
+  'systems-back-home-label': 'Back to home',
   'systems-link-label': 'Systems',
   'footer-systems-snippet-label':
     'Decorative devtools-style HTML showing the end of the page source.',

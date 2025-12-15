@@ -8,9 +8,8 @@ const frBaseData = {
   label: 'Français',
   'abbreviated-label': 'FR',
   redirecting: 'Redirection...',
-  title: 'Développeur Front-End | Portfolio de Stéphane L.',
-  description:
-    'Stéphane L. développe des composants réutilisables, des expériences responsives et des interfaces fidèles aux marques — pour élever les projets au-delà du simple passage entre design et développement.',
+  title: 'Développeur Front-End | Portfolio par Stéphane',
+  description: '',
 
   'menu-skip_nav': 'Aller au contenu',
   'menu-left_label': 'À propos de moi',
@@ -19,8 +18,8 @@ const frBaseData = {
   'close-label': 'Fermer',
   'scroll-cue': 'Défiler vers le contenu',
 
-  'manifest-name': 'Portfolio — Stéphane L.',
-  'manifest-short-name': 'Stéphane L.',
+  'manifest-name': 'Portfolio | Stéphane',
+  'manifest-short-name': 'Stéphane',
   'manifest-description':
     'Application web progressive du portfolio personnel.',
   'manifest-categories': [
@@ -32,15 +31,18 @@ const frBaseData = {
     'Désolé, votre navigateur ne peut pas lire cette vidéo.',
 
   'favicon-meta-description':
-    'Métadonnées décrivant les favicons et manifestes du portfolio de Stéphane L.',
-  'favicon-meta-keywords': 'favicon, icône, manifeste, Stéphane L.',
-  'favicon-meta-author': 'Stéphane L.',
+    'Métadonnées décrivant les favicons et manifestes du portfolio par Stéphane',
+  'favicon-meta-keywords': 'favicon, icône, manifeste, Stéphane',
+  'favicon-meta-author': 'Stéphane',
 
   'hero-title': 'Fond dégradé bleu et magenta en rotation',
   'hero-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
-  'hero-title_a': 'Systèmes de design pensés',
-  'hero-title_b': 'pour évoluer',
+
+  'hero-title_a': 'Systèmes de design',
+  'hero-title_b': 'pensés pour évoluer',
+  'hero-subTitle': 'Portfolio de développeur par Stéphane',
+
   'hero-console_description': 'Arrière-plan de code décoratif',
   'hero-cta': 'Prenons contact !',
 
@@ -71,9 +73,11 @@ const frBaseData = {
   'projects-05-king-games-title': 'King Games',
   ...markdownRefs('projects-05-king-games-content'),
 
+  'systems-hero-title': 'Interfaces conçues pour la composition',
+  'systems-hero-subTitle':
+    'Primitives CSS typées pour structurer **votre** système de design',
+
   'systems-title': 'Expertise',
-  'systems-title_a': 'Des systèmes [abbr:UI] conçus',
-  'systems-title_b': 'pour la composition',
   ...markdownRefs('systems-intro'),
   'systems-intro-href': 'systems-expertise',
   'systems-principles': 'Principes',
@@ -81,7 +85,11 @@ const frBaseData = {
   ...markdownRefs('systems-principles-content'),
   'systems-system-shape': 'Forme du système',
   'systems-system-shape-href': 'systems-forme-du-systeme',
-  ...markdownRefs('systems-system-shape-content'),
+  ...markdownRefs(
+    'systems-system-shape-content',
+    'systems-system-shape-blurb',
+  ),
+  'systems-back-home-label': 'Retour à la page d’accueil',
   'systems-link-label': 'Systèmes',
   'footer-systems-snippet-label':
     'Extrait HTML décoratif inspiré des outils de développement, qui montre la fin du code de la page.',

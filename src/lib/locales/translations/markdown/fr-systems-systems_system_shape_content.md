@@ -12,8 +12,3 @@ La couche intermédiaire est volontairement peu prescriptive. Elle fait un minim
 
 ### Conçu pour être inspecté et remplacé
 Le système résultant est fait pour être inspecté, débogué et modifié. Les parties peuvent être remplacées ou retirées avec le temps sans déstabiliser l’ensemble, et aucun framework ou modèle d’écriture unique n’est requis.
-
----
-
-Un extrait concret de cette approche est publié sous le nom **css-calipers**, la couche de valeurs typées utilisée dans tout ce système.  
-npm : https://www.npmjs.com/package/css-calipers

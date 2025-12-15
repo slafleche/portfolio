@@ -1,9 +1,10 @@
 import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
-import Content from '@/components/responsive/Content';
 import Menu from '@/components/Menu';
 import HeroWaypoint from '@/components/HeroWaypoint';
+import ContentAsTiles from '@/components/responsive/ContentAsTiles';
+import { Markdown } from '@/components/Markdown';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
@@ -19,6 +20,7 @@ import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { resolveLocale } from '@/lib/locales/locale';
 import { sharedStrings } from '@/lib/sharedStrings';
+import { userContent } from '@/styles/typography.css';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -35,7 +37,7 @@ export default async function SystemsPage({
   const contactCopy = buildContactCopy(translator);
   const systemsLink = buildSystemsLink(locale, translator);
   const systemsTitle = translator('systems-title');
-  const systemsIntro = translator('systems-intro');
+  const systemsIntroMarkdown = translator('systems-intro');
   const systemsIntroId = translator('systems-intro-href');
   const systemsPrinciplesId = translator('systems-principles-href');
   const systemsPrinciplesTitle = translator('systems-principles');
@@ -47,11 +49,15 @@ export default async function SystemsPage({
   const systemsShapeMarkdown = translator(
     'systems-system-shape-content',
   );
+  const systemsShapeBlurbMarkdown = translator(
+    'systems-system-shape-blurb',
+  );
 
   const heroCopy = {
     ...heroCopyBase,
-    headingFirstLine: translator('systems-title_a'),
-    headingLastLine: translator('systems-title_b'),
+    headingFirstLine: translator('systems-hero-title'),
+    headingLastLine: '',
+    subtitle: translator('systems-hero-subTitle'),
     ctaLabel: contactCopy.title,
   };
 
@@ -67,6 +73,7 @@ export default async function SystemsPage({
   const systemsSlug =
     canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
   const curiosityTarget = `/${locale}/${systemsSlug}`;
+  const homeHref = `/${locale}`;
 
   const menuProps = {
     root: `/${locale}`,
@@ -109,21 +116,27 @@ export default async function SystemsPage({
             headingAnimated={false}
           />
           <HeroWaypoint />
-          <Content
+          <ContentAsTiles
             id={systemsIntroId}
             title={systemsTitle}
-            markdown={systemsIntro}
+            markdown={systemsIntroMarkdown}
           />
-          <Content
+          <ContentAsTiles
             id={systemsPrinciplesId}
             title={systemsPrinciplesTitle}
             markdown={systemsPrinciplesMarkdown}
           />
-          <Content
+          <ContentAsTiles
             id={systemsShapeId}
             title={systemsShapeTitle}
             markdown={systemsShapeMarkdown}
           />
+          <div className={layoutStyles.content}>
+            <Markdown
+              source={systemsShapeBlurbMarkdown}
+              className={userContent}
+            />
+          </div>
         </main>
         <Footer
           contact={contactCopy}

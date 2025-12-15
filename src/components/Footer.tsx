@@ -9,6 +9,7 @@ import SocialLinkedInIcon from './icons/SocialLinkedInIcon';
 import SocialGitHubIcon from './icons/SocialGitHubIcon';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import PageCurl from './PageCurl';
+import BackButton from './BackButton';
 
 type FooterProps = {
   contact: ContactCopy;
@@ -17,12 +18,18 @@ type FooterProps = {
     href: string;
     label: string;
   };
+  hideSystemsLink?: boolean;
+  backHref?: string;
+  backLabel?: string;
 };
 
 export default function Footer({
   contact,
   id,
   systemsLink,
+  hideSystemsLink,
+  backHref,
+  backLabel,
 }: FooterProps) {
   const footerId = id ?? contact.href;
   const headingId = `${footerId}-title`;
@@ -73,7 +80,7 @@ export default function Footer({
           <SocialGitHubIcon className={s.gitHubIcon} />
         </GlassyLink>
       </div>
-      {systemsLink ? (
+      {systemsLink && !hideSystemsLink ? (
         <PageCurl
           href={systemsLink.href}
           mockEndHtmlLabel={contact.systemsSnippetLabel}
