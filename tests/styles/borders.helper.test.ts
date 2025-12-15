@@ -41,6 +41,20 @@ describe('borders.helper', () => {
     expect(result).toEqual({ borderRadius: '8px 8px 0 0' });
   });
 
+  it('resolves radius-only all-intents from shorthand measurement', () => {
+    const result = borders.radii({
+      radius: m(10),
+    });
+    expect(result).toEqual({});
+  });
+
+  it('resolves radius-only all-intents from explicit all compass', () => {
+    const result = borders.radii({
+      radius: { all: m(12) },
+    });
+    expect(result).toEqual({ borderRadius: '12px' });
+  });
+
   it('accepts per-edge color + radius details', () => {
     const result = borders({
       top: { color: 'blue', width: m(1) },

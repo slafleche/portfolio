@@ -186,6 +186,13 @@ const SINGLE_LAYER_HELPER_RULES = {
   backdropFilters: BACKDROP_FILTERS_SINGLE_LAYER_RULE,
 };
 
+const BORDERS_RADII_INTENT_RULE = {
+  id: 'borders-radii-intent-redundant',
+  groupTitle: 'Avoid redundant radius intent combinations.',
+  solution:
+    "In style-layer callers of borders(...)/borders.radii(...), do not use radius objects with an 'all' key or combine overlapping compass regions and corners; express the shape with the minimal radius intent set or scalar radius shorthand.",
+};
+
 const BORDERS_RADII_SHORTHAND_RULE = {
   id: 'borders-radii-shorthand',
   groupTitle: 'Prefer shorthand radii helpers.',
@@ -204,6 +211,7 @@ const ALL_RULES = [
   MARGINS_SINGLE_LAYER_RULE,
   BACKGROUNDS_SINGLE_LAYER_RULE,
   BACKDROP_FILTERS_SINGLE_LAYER_RULE,
+  BORDERS_RADII_INTENT_RULE,
   BORDERS_RADII_SHORTHAND_RULE,
 ];
 
@@ -482,6 +490,182 @@ function scanSpacingSimplifications(filePath, content) {
       filePath,
       lineNumber,
       rule: SPACING_SIMPLIFY_RULE,
+    });
+  }
+
+  return violations;
+}
+
+
+export function scanBordersRadiiIntent(filePath, content) {
+  const posix = filePath.split(path.sep).join('/');
+
+  // Skip token/config and built artefact files; radius intent simplifications
+  // are only enforced in style-layer sources.
+  if (STYLE_RULE_SKIP_PATHS.some((prefix) => posix.startsWith(prefix))) {
+    return [];
+  }
+
+  if (!posix.startsWith('src/styles/')) {
+    return [];
+  }
+
+  const violations = [];
+  const callPattern =
+    /\bborders(?:\.radii)?\(\s*\{([\s\S]*?)\}\s*\)/g;
+
+  let match;
+  while ((match = callPattern.exec(content)) !== null) {
+    const callBody = match[1];
+
+    // Optional radius object: radius: { ... }
+    const radiusMatch = /radius\s*:\s*{([\s\S]*?)}/.exec(callBody);
+    const radiusKeys = new Set();
+
+    if (radiusMatch) {
+      const radiusBody = radiusMatch[1];
+      const lines = radiusBody.split('\n');
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line || line.startsWith('//')) continue;
+        const propMatch = /^([a-zA-Z]+)\s*:\s*/.exec(line);
+        if (!propMatch) continue;
+        const key = propMatch[1];
+        // Only care about compass / shorthand keys.
+        if (
+          key === 'all' ||
+          key === 'north' ||
+          key === 'south' ||
+          key === 'east' ||
+          key === 'west' ||
+          key === 'nw' ||
+          key === 'ne' ||
+          key === 'se' ||
+          key === 'sw'
+        ) {
+          radiusKeys.add(key);
+        }
+      }
+    }
+
+    const hasRadiusKeys = radiusKeys.size > 0;
+    const hasRadiusAll = radiusKeys.has('all');
+    const hasNorth = radiusKeys.has('north');
+    const hasSouth = radiusKeys.has('south');
+    const hasEast = radiusKeys.has('east');
+    const hasWest = radiusKeys.has('west');
+    const hasNw = radiusKeys.has('nw');
+    const hasNe = radiusKeys.has('ne');
+    const hasSe = radiusKeys.has('se');
+    const hasSw = radiusKeys.has('sw');
+
+    // Detect use of edge-level `all` intent and overlapping axis/side
+    // combinations in the borders(...) call by looking outside of the
+    // radius block (if present).
+    let edgeBody = callBody;
+    if (radiusMatch) {
+      const start = radiusMatch.index;
+      const length = radiusMatch[0].length;
+      edgeBody =
+        callBody.slice(0, start) +
+        ' '.repeat(length) +
+        callBody.slice(start + length);
+    }
+    const hasEdgeAllIntent = /\ball\s*:\s*{/.test(edgeBody);
+    const extractObjectBody = (body, key) => {
+      const re = new RegExp(
+        `${key}\\s*:\\s*\\{([\\s\\S]*?)\\}`,
+        'm',
+      );
+      const matchObj = re.exec(body);
+      return matchObj ? matchObj[1] : undefined;
+    };
+    const normalizeBlock = (src) =>
+      src
+        .replace(/\/\/.*$/gm, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    const verticalBody = extractObjectBody(edgeBody, 'vertical');
+    const horizontalBody = extractObjectBody(edgeBody, 'horizontal');
+    const leftBody = extractObjectBody(edgeBody, 'left');
+    const rightBody = extractObjectBody(edgeBody, 'right');
+    const topBody = extractObjectBody(edgeBody, 'top');
+    const bottomBody = extractObjectBody(edgeBody, 'bottom');
+
+    const hasAxisRedundancy =
+      verticalBody &&
+      horizontalBody &&
+      normalizeBlock(verticalBody) &&
+      normalizeBlock(verticalBody) === normalizeBlock(horizontalBody);
+
+    const hasSidePairRedundancy =
+      ((leftBody &&
+        rightBody &&
+        normalizeBlock(leftBody) &&
+        normalizeBlock(leftBody) === normalizeBlock(rightBody)) ||
+        (topBody &&
+          bottomBody &&
+          normalizeBlock(topBody) &&
+          normalizeBlock(topBody) === normalizeBlock(bottomBody)));
+
+    // If there is neither radius intent, nor edge `all`, nor overlapping
+    // axis/side combinations, nothing to do.
+    if (
+      !hasRadiusKeys &&
+      !hasEdgeAllIntent &&
+      !hasAxisRedundancy &&
+      !hasSidePairRedundancy
+    )
+      continue;
+
+    let redundant = false;
+
+    // 1) Any use of radius `all` at the call site is considered redundant;
+    // prefer scalar radius shorthand instead.
+    if (hasRadiusAll) {
+      redundant = true;
+    }
+
+    // 2) Region + overlapping corner combinations.
+    if (
+      (hasNorth && (hasNw || hasNe)) ||
+      (hasSouth && (hasSw || hasSe)) ||
+      (hasEast && (hasNe || hasSe)) ||
+      (hasWest && (hasNw || hasSw))
+    ) {
+      redundant = true;
+    }
+
+    // 3) Opposite corner pairs (e.g., nw + se, ne + sw) are treated as
+    // overly-specific and should be modeled with a simpler intent.
+    if ((hasNw && hasSe) || (hasNe && hasSw)) {
+      redundant = true;
+    }
+
+    // 4) Edge-level all intent (`all: { ... }`) is reserved for internal
+    // helpers; callers in style-layer sources should not use it.
+    if (hasEdgeAllIntent) {
+      redundant = true;
+    }
+
+    // 5) Axis and side overlaps (for example, vertical + horizontal, or
+    // left + right) that restate the same border intent are treated as
+    // redundant; prefer a single shorthand (width/color/style or an
+    // appropriate axis helper) instead of repeating the same spec.
+    if (hasAxisRedundancy || hasSidePairRedundancy) {
+      redundant = true;
+    }
+
+    if (!redundant) continue;
+
+    const lineNumber = content
+      .slice(0, match.index)
+      .split('\n').length;
+    violations.push({
+      filePath,
+      lineNumber,
+      rule: BORDERS_RADII_INTENT_RULE,
     });
   }
 
@@ -774,6 +958,9 @@ function main() {
       ...scanSpacingSimplifications(relativePath, content),
     );
     violations.push(...scanSingleLayerHelpers(relativePath, content));
+    violations.push(
+      ...scanBordersRadiiIntent(relativePath, content),
+    );
     violations.push(
       ...scanBordersRadiiShorthand(relativePath, content),
     );

@@ -112,9 +112,7 @@ export const cornerButton = style({
   color: '#fff',
   textAlign: 'center',
   ...borders.radii({
-    radius: {
-      all: m(5),
-    },
+    radius: m(5),
   }),
   fontSize: '11px',
   fontFamily: 'Verdana, Geneva, sans-serif',

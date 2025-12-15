@@ -39,6 +39,12 @@ export default function Footer({
       id={footerId}
       aria-labelledby={headingId}
     >
+      {backHref ? (
+        <BackButton
+          href={backHref}
+          label={backLabel ?? 'Back to home'}
+        />
+      ) : null}
       {/* Put gradient on overlay */}
       <div className={s.overlay}></div>
       <Heading

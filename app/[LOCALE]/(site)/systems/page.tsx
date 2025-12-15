@@ -55,8 +55,7 @@ export default async function SystemsPage({
 
   const heroCopy = {
     ...heroCopyBase,
-    headingFirstLine: translator('systems-hero-title'),
-    headingLastLine: '',
+    title: translator('systems-hero-title'),
     subtitle: translator('systems-hero-subTitle'),
     ctaLabel: contactCopy.title,
   };
@@ -142,6 +141,9 @@ export default async function SystemsPage({
           contact={contactCopy}
           id={contactCopy.href}
           systemsLink={systemsLink}
+          hideSystemsLink
+          backHref={homeHref}
+          backLabel={translator('systems-back-home-label')}
         />
         {heroCopy.ctaLabel ? (
           <ContactButton

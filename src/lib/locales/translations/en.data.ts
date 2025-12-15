@@ -34,11 +34,11 @@ const enBaseData = {
   'favicon-meta-keywords': 'favicon, icon, manifest, Stéphane',
   'favicon-meta-author': 'Stéphane',
 
-  'hero-title': 'Blue-magenta gradient rotation background',
-  'hero-alt':
+  'hero-video-title': 'Blue-magenta gradient rotation background',
+  'hero-video-alt':
     'Slowly rotating diagonal gradient blending cool blue and soft magenta tones with subtle light bands',
-  'hero-title_a': 'Design systems',
-  'hero-title_b': 'built to evolve',
+
+  'hero-title': 'Design systems [split] built to evolve',
   'hero-subTitle': "Stéphane's Developer Portfolio",
 
   'hero-console_description': 'Decorative code backdrop',
@@ -71,7 +71,7 @@ const enBaseData = {
   'projects-05-king-games-title': 'King Games',
   ...markdownRefs('projects-05-king-games-content'),
 
-  'systems-hero-title': 'Interfaces designed for composition',
+  'systems-hero-title': 'Interfaces designed [split] for composition',
   'systems-hero-subTitle':
     'Type-safe CSS primitives for building **your** design system',
 

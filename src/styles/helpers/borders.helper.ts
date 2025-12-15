@@ -553,6 +553,26 @@ const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
   if (!intent) return {};
   if (!hasRadiusIntent(intent) || hasEdgeIntent(intent)) return {};
 
+  const radius = intent.radius;
+
+  // Fast-path radius-only shorthand where the intent is "all corners get the
+  // same radius" and no edge intent is present. This avoids relying on edge
+  // adjacency and keeps the mental model aligned with radius: m(...) or
+  // radius: { all: m(...) } meaning "uniform rounded corners".
+  if (radius && typeof radius === 'object') {
+    const keys = Object.keys(radius);
+    if (
+      Object.prototype.hasOwnProperty.call(radius, 'all') &&
+      keys.length === 1
+    ) {
+      const allVal = asRadius((radius as Record<'all', BorderRadiusInput>).all);
+      if (!allVal || allVal === '0' || allVal === '0px') {
+        return {};
+      }
+      return { borderRadius: allVal };
+    }
+  }
+
   const edges = resolveIntentToEdges(intent);
   const radiusVal = resolveRadiusCompass(intent.radius, edges);
 

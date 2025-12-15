@@ -35,12 +35,11 @@ const frBaseData = {
   'favicon-meta-keywords': 'favicon, icône, manifeste, Stéphane',
   'favicon-meta-author': 'Stéphane',
 
-  'hero-title': 'Fond dégradé bleu et magenta en rotation',
-  'hero-alt':
+  'hero-video-title': 'Fond dégradé bleu et magenta en rotation',
+  'hero-video-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
 
-  'hero-title_a': 'Systèmes de design',
-  'hero-title_b': 'pensés pour évoluer',
+  'hero-title': 'Systèmes de design [split] pensés pour évoluer',
   'hero-subTitle': 'Portfolio de développeur par Stéphane',
 
   'hero-console_description': 'Arrière-plan de code décoratif',
@@ -73,7 +72,8 @@ const frBaseData = {
   'projects-05-king-games-title': 'King Games',
   ...markdownRefs('projects-05-king-games-content'),
 
-  'systems-hero-title': 'Interfaces conçues pour la composition',
+  'systems-hero-title':
+    'Interfaces conçues pour [split] la composition',
   'systems-hero-subTitle':
     'Primitives CSS typées pour structurer **votre** système de design',
 

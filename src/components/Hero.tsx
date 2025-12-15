@@ -7,6 +7,7 @@ import * as s from '@/styles/components/hero.css';
 import VideoByName from './VideoByName';
 import HeroHeading from './HeroHeading.client';
 import { toTrimmedOrNull } from '@/lib/stringUtils';
+import { parseSplit } from '@/lib/locales/translations/splitShortcodes';
 import SendIcon from '@/components/icons/SendIcon';
 import { collectWaitForFonts, waitForFonts } from '@/lib/fontLoading';
 import { fontVariants } from '../tokens/fontVariants.tokens';
@@ -15,15 +16,17 @@ import { projectorVars } from '../styles/componentTokens/projector.componentToke
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import ImageByName from './ImageByName';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
+import { Markdown } from '@/components/Markdown';
+import { userContent } from '@/styles/typography.css';
 
 type HeroCopy = {
   videoTitle: string;
   videoLabel: string;
-  headingFirstLine: string;
-  headingLastLine: string;
+  title: string;
   consoleDescription: string;
   videoErrorMessage: string;
   ctaLabel?: string;
+  subtitle?: string;
 };
 
 type Props = {
@@ -54,14 +57,19 @@ export default function Hero({
     setWaitingForReveal,
   ] = useState(false);
 
+  const { first: headingFirstLine, second: headingLastLine } =
+    useMemo(
+      () => parseSplit(copy.title),
+      [
+        copy.title,
+      ],
+    );
+
   const headingLabel = useMemo(
-    () =>
-      toTrimmedOrNull(
-        `${copy.headingFirstLine} ${copy.headingLastLine}`,
-      ),
+    () => toTrimmedOrNull(`${headingFirstLine} ${headingLastLine}`),
     [
-      copy.headingFirstLine,
-      copy.headingLastLine,
+      headingFirstLine,
+      headingLastLine,
     ],
   );
   const showVideo = withVideo && !prefersReducedMotion;
@@ -245,20 +253,35 @@ export default function Hero({
             >
               <span
                 className={s.line}
-                data-position="first"
-                data-text={copy.headingFirstLine}
+                data-position={headingLastLine ? 'first' : 'single'}
+                data-text={headingFirstLine}
               >
-                {copy.headingFirstLine}
+                {headingFirstLine}
               </span>
-              <br className={s.title_break} />
-              <span
-                className={s.line}
-                data-position="last"
-                data-text={copy.headingLastLine}
-              >
-                {copy.headingLastLine}
-              </span>
+              {headingLastLine ? (
+                <>
+                  <br className={s.title_break} />
+                  <span
+                    className={s.line}
+                    data-position="last"
+                    data-text={headingLastLine}
+                  >
+                    {headingLastLine}
+                  </span>
+                </>
+              ) : null}
             </HeroHeading>
+            {copy.subtitle ? (
+              <div
+                className={s.subtitle}
+                data-ready={ctaVisible ? 'true' : 'false'}
+              >
+                <Markdown
+                  source={copy.subtitle}
+                  className={userContent}
+                />
+              </div>
+            ) : null}
             {showCta ? (
               <ContactDialogTrigger
                 className={s.cta}
