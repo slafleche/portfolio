@@ -36,10 +36,9 @@ describe('Contact form block tests: EmailBlock', () => {
   ) => {
     const errorHint = getErrorHint(container);
     expect(errorHint).not.toBeNull();
-    if (!errorHint) return;
-    expect(errorHint.id).toBeTruthy();
+    expect(errorHint!.id).toBeTruthy();
     const describedBy = input.getAttribute('aria-describedby');
-    expect(describedBy).toBe(errorHint.id);
+    expect(describedBy).toBe(errorHint!.id);
   };
 
   describe('wiring and ARIA', () => {
@@ -57,10 +56,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       const label = container.querySelector('label');
       expect(label).not.toBeNull();
@@ -107,10 +105,9 @@ describe('Contact form block tests: EmailBlock', () => {
       const handles = createFocusSentinelHandles(getByTestId);
       const emailInput = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(emailInput).not.toBeNull();
-      if (!emailInput) return;
 
       handles.focusBefore();
       expect(handles.isFocusOnBefore()).toBe(true);
@@ -144,10 +141,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const emailInput = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(emailInput).not.toBeNull();
-      if (!emailInput) return;
 
       await userEvent.type(emailInput, 'invalid-email');
       fireEvent.blur(emailInput);
@@ -177,10 +173,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
@@ -210,10 +205,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
@@ -245,10 +239,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       await userEvent.type(input, 'example@example.com');
       fireEvent.blur(input);
@@ -281,10 +274,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       expect(handleUpdate).not.toHaveBeenCalled();
 
@@ -340,10 +332,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
@@ -379,10 +370,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       const initialValue = input.value;
 
@@ -408,10 +398,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       const initialValue = input.value;
 
@@ -437,10 +426,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       let input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       await userEvent.type(input, 'invalid-email');
       fireEvent.blur(input);
@@ -462,10 +450,9 @@ describe('Contact form block tests: EmailBlock', () => {
 
       input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       const errorHintAfter = getErrorHint(container);
       expect(errorHintAfter).not.toBeNull();
@@ -489,7 +476,6 @@ describe('Contact form block contract: EmailBlock', () => {
 
     const registration = getRegistration();
     expect(registration).not.toBeNull();
-    if (!registration) return;
 
     expect(registration.key).toBe('email');
     expect(typeof registration.focus).toBe('function');
@@ -509,10 +495,9 @@ describe('Contact form block contract: EmailBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     await userEvent.type(input, 'example@example.com');
 
@@ -531,10 +516,9 @@ describe('Contact form block contract: EmailBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     let registration = getRegistration();
     expect(registration?.validate?.()).toBe(false);
@@ -562,10 +546,9 @@ describe('Contact form block contract: EmailBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     let registration = getRegistration();
     expect(registration?.liveValidation).toBe(false);
@@ -607,10 +590,9 @@ describe('Contact form block contract: EmailBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     await userEvent.type(input, 'invalid-email');
 
@@ -637,10 +619,9 @@ describe('Contact form block contract: EmailBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     await userEvent.type(input, 'example@example.com');
 

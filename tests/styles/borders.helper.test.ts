@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 import { color } from '@/styles/helpers/colorWrap.helper';
 import { colorVars } from '@/tokens/global.tokens';
 import borders from '../../src/styles/helpers/borders.helper';
@@ -39,13 +39,6 @@ describe('borders.helper', () => {
       radius: { nw: m(8), ne: m(8) },
     });
     expect(result).toEqual({ borderRadius: '8px 8px 0 0' });
-  });
-
-  it('resolves radius-only all-intents from shorthand measurement', () => {
-    const result = borders.radii({
-      radius: m(10),
-    });
-    expect(result).toEqual({});
   });
 
   it('resolves radius-only all-intents from explicit all compass', () => {

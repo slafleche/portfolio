@@ -59,10 +59,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const label = container.querySelector('label');
       expect(label).not.toBeNull();
@@ -116,10 +115,9 @@ describe('Contact form block tests: MessageBlock', () => {
       const handles = createFocusSentinelHandles(getByTestId);
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       handles.focusBefore();
       expect(handles.isFocusOnBefore()).toBe(true);
@@ -153,10 +151,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       fireEvent.blur(textarea);
 
@@ -187,10 +184,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const maxLengthValue = 'x'.repeat(MESSAGE_MAX_LENGTH);
       fireEvent.change(textarea, {
@@ -217,10 +213,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       expect(
         container.querySelector(
@@ -252,10 +247,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const tooShortValue = 'x'.repeat(
         Math.max(1, MESSAGE_MIN_LENGTH - 1),
@@ -303,10 +297,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const tooLongValue = 'x'.repeat(MESSAGE_MAX_LENGTH + 1);
       fireEvent.change(textarea, { target: { value: tooLongValue } });
@@ -367,10 +360,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const urlCount = MESSAGE_URL_LIMIT;
       const urls = Array.from(
@@ -405,10 +397,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const urlCount = MESSAGE_URL_LIMIT + 1;
       const urls = Array.from(
@@ -441,10 +432,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       expect(
         container.querySelector(
@@ -504,10 +494,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       // Empty + blur → required bucket.
       fireEvent.blur(textarea);
@@ -561,10 +550,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       expect(handleUpdate).not.toHaveBeenCalled();
 
@@ -618,10 +606,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const initialValue = textarea.value;
 
@@ -651,10 +638,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       const textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const initialValue = textarea.value;
 
@@ -684,10 +670,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       let textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const tooShortValue = 'x'.repeat(
         Math.max(1, MESSAGE_MIN_LENGTH - 1),
@@ -715,10 +700,9 @@ describe('Contact form block tests: MessageBlock', () => {
 
       textarea = container.querySelector(
         'textarea',
-      ) as HTMLTextAreaElement | null;
+      ) as HTMLTextAreaElement;
 
       expect(textarea).not.toBeNull();
-      if (!textarea) return;
 
       const tooShortHintAfter = container.querySelector(
         '#test-message-block-hint[data-form-hint="error"]',
@@ -744,7 +728,6 @@ describe('Contact form block contract: MessageBlock', () => {
 
     const registration = getRegistration();
     expect(registration).not.toBeNull();
-    if (!registration) return;
 
     expect(registration.key).toBe('message');
     expect(typeof registration.focus).toBe('function');
@@ -764,10 +747,9 @@ describe('Contact form block contract: MessageBlock', () => {
 
     const textarea = container.querySelector(
       'textarea',
-    ) as HTMLTextAreaElement | null;
+    ) as HTMLTextAreaElement;
 
     expect(textarea).not.toBeNull();
-    if (!textarea) return;
 
     await userEvent.type(textarea, 'Some message text');
 
@@ -786,10 +768,9 @@ describe('Contact form block contract: MessageBlock', () => {
 
     const textarea = container.querySelector(
       'textarea',
-    ) as HTMLTextAreaElement | null;
+    ) as HTMLTextAreaElement;
 
     expect(textarea).not.toBeNull();
-    if (!textarea) return;
 
     let registration = getRegistration();
     expect(registration?.validate?.()).toBe(false);
@@ -812,10 +793,9 @@ describe('Contact form block contract: MessageBlock', () => {
 
     const textarea = container.querySelector(
       'textarea',
-    ) as HTMLTextAreaElement | null;
+    ) as HTMLTextAreaElement;
 
     expect(textarea).not.toBeNull();
-    if (!textarea) return;
 
     let registration = getRegistration();
     expect(registration?.liveValidation).toBe(false);
@@ -857,10 +837,9 @@ describe('Contact form block contract: MessageBlock', () => {
 
     const textarea = container.querySelector(
       'textarea',
-    ) as HTMLTextAreaElement | null;
+    ) as HTMLTextAreaElement;
 
     expect(textarea).not.toBeNull();
-    if (!textarea) return;
 
     const tooShortValue = 'x'.repeat(
       Math.max(1, MESSAGE_MIN_LENGTH - 1),
@@ -890,10 +869,9 @@ describe('Contact form block contract: MessageBlock', () => {
 
     const textarea = container.querySelector(
       'textarea',
-    ) as HTMLTextAreaElement | null;
+    ) as HTMLTextAreaElement;
 
     expect(textarea).not.toBeNull();
-    if (!textarea) return;
 
     const tooLongValue = 'x'.repeat(MESSAGE_MAX_LENGTH + 1);
     fireEvent.change(textarea, { target: { value: tooLongValue } });
@@ -921,10 +899,9 @@ describe('Contact form block contract: MessageBlock', () => {
 
     const textarea = container.querySelector(
       'textarea',
-    ) as HTMLTextAreaElement | null;
+    ) as HTMLTextAreaElement;
 
     expect(textarea).not.toBeNull();
-    if (!textarea) return;
 
     const urlCount = MESSAGE_URL_LIMIT + 1;
     const urls = Array.from(
@@ -957,10 +934,9 @@ describe('Contact form block contract: MessageBlock', () => {
 
     const textarea = container.querySelector(
       'textarea',
-    ) as HTMLTextAreaElement | null;
+    ) as HTMLTextAreaElement;
 
     expect(textarea).not.toBeNull();
-    if (!textarea) return;
 
     const validValue = 'x'.repeat(MESSAGE_MIN_LENGTH);
     await userEvent.type(textarea, validValue);

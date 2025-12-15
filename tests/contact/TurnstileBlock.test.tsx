@@ -103,10 +103,9 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
-      ) as HTMLDivElement | null;
+      ) as HTMLDivElement;
 
       expect(wrapper).not.toBeNull();
-      if (!wrapper) return;
 
       await waitFor(() => {
         expect(wrapper).toHaveAttribute('data-state');
@@ -124,9 +123,8 @@ describe('Contact form block tests: TurnstileBlock', () => {
         'input[name="token"][type="hidden"]',
       ) as HTMLInputElement | null;
       expect(tokenInput).not.toBeNull();
-      if (!tokenInput) return;
 
-      expect(tokenInput.value).toBe('');
+      expect(tokenInput!.value).toBe('');
     });
 
     it('does not bypass when no site key is configured', () => {
@@ -146,10 +144,9 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
-      ) as HTMLDivElement | null;
+      ) as HTMLDivElement;
 
       expect(wrapper).not.toBeNull();
-      if (!wrapper) return;
 
       expect(wrapper).toHaveAttribute('data-disabled', 'false');
       // We should not silently bypass Turnstile; in the absence of a site key
@@ -158,9 +155,8 @@ describe('Contact form block tests: TurnstileBlock', () => {
         'input[name="token"][type="hidden"]',
       ) as HTMLInputElement | null;
       expect(tokenInput).not.toBeNull();
-      if (!tokenInput) return;
 
-      expect(tokenInput.value).toBe('');
+      expect(tokenInput!.value).toBe('');
     });
   });
 
@@ -179,10 +175,9 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
-      ) as HTMLDivElement | null;
+      ) as HTMLDivElement;
 
       expect(wrapper).not.toBeNull();
-      if (!wrapper) return;
 
       const status = wrapper.querySelector(
         '[data-form-turnstile="status"]',
@@ -210,10 +205,9 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
-      ) as HTMLDivElement | null;
+      ) as HTMLDivElement;
 
       expect(wrapper).not.toBeNull();
-      if (!wrapper) return;
 
       const api = window.turnstile as MockTurnstileApi | undefined;
       await waitFor(() => {
@@ -274,8 +268,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
         'input[name="token"][type="hidden"]',
       ) as HTMLInputElement | null;
       expect(tokenInput).not.toBeNull();
-      if (!tokenInput) return;
-      expect(tokenInput.value).toBe('');
+      expect(tokenInput!.value).toBe('');
     });
 
     it('moves to error state, shows error summary, and logs a catastrophic reason when the error callback is invoked', async () => {
@@ -296,10 +289,9 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
-      ) as HTMLDivElement | null;
+      ) as HTMLDivElement;
 
       expect(wrapper).not.toBeNull();
-      if (!wrapper) return;
 
       const api = window.turnstile as MockTurnstileApi | undefined;
       await waitFor(() => {
@@ -396,10 +388,9 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
-      ) as HTMLDivElement | null;
+      ) as HTMLDivElement;
 
       expect(wrapper).not.toBeNull();
-      if (!wrapper) return;
 
       expect(wrapper).toHaveAttribute('data-disabled', 'true');
 
@@ -409,14 +400,12 @@ describe('Contact form block tests: TurnstileBlock', () => {
         'input[name=\"token\"][type=\"hidden\"]',
       ) as HTMLInputElement | null;
       expect(tokenInput).not.toBeNull();
-      if (!tokenInput) return;
-      const initialToken = tokenInput.value;
+      const initialToken = tokenInput!.value;
 
       const widgetContainer = wrapper.querySelector(
         '[data-rendered]',
       ) as HTMLDivElement | null;
       expect(widgetContainer).not.toBeNull();
-      if (!widgetContainer) return;
 
       await userEvent.click(widgetContainer);
 
@@ -488,21 +477,19 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
-      ) as HTMLDivElement | null;
+      ) as HTMLDivElement;
 
       expect(wrapper).not.toBeNull();
-      if (!wrapper) return;
 
       const hintBefore = wrapper.querySelector(
         '[data-form-hint]',
       ) as HTMLElement | null;
       expect(hintBefore).not.toBeNull();
-      if (!hintBefore) return;
 
-      expect(hintBefore.getAttribute('data-form-hint')).toBe(
+      expect(hintBefore!.getAttribute('data-form-hint')).toBe(
         'helper',
       );
-      expect(hintBefore.textContent).toBe(
+      expect(hintBefore!.textContent).toBe(
         turnstileCopy.requiredText,
       );
 
@@ -513,12 +500,11 @@ describe('Contact form block tests: TurnstileBlock', () => {
           '[data-form-hint]',
         ) as HTMLElement | null;
         expect(hintAfter).not.toBeNull();
-        if (!hintAfter) return;
 
-        expect(hintAfter.getAttribute('data-form-hint')).toBe(
+        expect(hintAfter!.getAttribute('data-form-hint')).toBe(
           'error',
         );
-        expect(hintAfter.textContent).toBe(
+        expect(hintAfter!.textContent).toBe(
           turnstileCopy.summary.missing,
         );
       });

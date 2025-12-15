@@ -37,10 +37,9 @@ describe('Contact form block tests: NameBlock', () => {
   ) => {
     const errorHint = getErrorHint(container);
     expect(errorHint).not.toBeNull();
-    if (!errorHint) return;
-    expect(errorHint.id).toBeTruthy();
+    expect(errorHint!.id).toBeTruthy();
     const describedBy = input.getAttribute('aria-describedby');
-    expect(describedBy).toBe(errorHint.id);
+    expect(describedBy).toBe(errorHint!.id);
   };
 
   describe('wiring and ARIA', () => {
@@ -58,10 +57,9 @@ describe('Contact form block tests: NameBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       // Label and required indicator: label text and required marker are present
       const label = container.querySelector('label');
@@ -114,10 +112,9 @@ describe('Contact form block tests: NameBlock', () => {
       const handles = createFocusSentinelHandles(getByTestId);
       const nameInput = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(nameInput).not.toBeNull();
-      if (!nameInput) return;
 
       // Start on the "before" sentinel
       handles.focusBefore();
@@ -157,10 +154,9 @@ describe('Contact form block tests: NameBlock', () => {
 
       const nameInput = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(nameInput).not.toBeNull();
-      if (!nameInput) return;
 
       fireEvent.blur(nameInput);
 
@@ -188,10 +184,9 @@ describe('Contact form block tests: NameBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       // Before blur, no inline error text
       expect(getErrorHint(container)).toBeNull();
@@ -219,10 +214,9 @@ describe('Contact form block tests: NameBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       // Initial state: no error
       expect(getErrorHint(container)).toBeNull();
@@ -254,10 +248,9 @@ describe('Contact form block tests: NameBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       // Too long: value exceeds NAME_LIMIT.max
       const tooLongValue = 'x'.repeat(NAME_LIMIT.max + 1);
@@ -291,10 +284,9 @@ describe('Contact form block tests: NameBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       const validValue = 'x'.repeat(NAME_LIMIT.min);
       fireEvent.change(input, { target: { value: validValue } });
@@ -315,10 +307,9 @@ describe('Contact form block tests: NameBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
@@ -362,10 +353,9 @@ describe('Contact form block tests: NameBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       // Initial render: no validation results recorded.
       expect(handleUpdate).not.toHaveBeenCalled();
@@ -438,10 +428,9 @@ describe('Contact form block tests: NameBlock', () => {
 
       const input = container.querySelector(
         'input[data-input="text"]',
-      ) as HTMLInputElement | null;
+      ) as HTMLInputElement;
 
       expect(input).not.toBeNull();
-      if (!input) return;
 
       // Empty + blur → required-style bucket.
       fireEvent.blur(input);
@@ -494,7 +483,6 @@ describe('Contact form block contract: NameBlock', () => {
 
     const registration = getRegistration();
     expect(registration).not.toBeNull();
-    if (!registration) return;
 
     expect(registration.key).toBe('name');
     expect(typeof registration.focus).toBe('function');
@@ -514,10 +502,9 @@ describe('Contact form block contract: NameBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     await userEvent.type(input, 'Jane Doe');
 
@@ -536,10 +523,9 @@ describe('Contact form block contract: NameBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     let registration = getRegistration();
     expect(registration?.validate?.()).toBe(false);
@@ -561,10 +547,9 @@ describe('Contact form block contract: NameBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     let registration = getRegistration();
     expect(registration?.liveValidation).toBe(false);
@@ -607,10 +592,9 @@ describe('Contact form block contract: NameBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     const tooShortValue = 'x'.repeat(Math.max(1, NAME_LIMIT.min - 1));
     await userEvent.type(input, tooShortValue);
@@ -640,10 +624,9 @@ describe('Contact form block contract: NameBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     const tooLongValue = 'x'.repeat(NAME_LIMIT.max + 1);
     fireEvent.change(input, { target: { value: tooLongValue } });
@@ -673,10 +656,9 @@ describe('Contact form block contract: NameBlock', () => {
 
     const input = container.querySelector(
       'input[data-input="text"]',
-    ) as HTMLInputElement | null;
+    ) as HTMLInputElement;
 
     expect(input).not.toBeNull();
-    if (!input) return;
 
     const validValue = 'x'.repeat(NAME_LIMIT.min);
     await userEvent.type(input, validValue);

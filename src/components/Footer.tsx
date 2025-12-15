@@ -9,7 +9,6 @@ import SocialLinkedInIcon from './icons/SocialLinkedInIcon';
 import SocialGitHubIcon from './icons/SocialGitHubIcon';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import PageCurl from './PageCurl';
-import BackButton from './BackButton';
 
 type FooterProps = {
   contact: ContactCopy;
@@ -28,8 +27,6 @@ export default function Footer({
   id,
   systemsLink,
   hideSystemsLink,
-  backHref,
-  backLabel,
 }: FooterProps) {
   const footerId = id ?? contact.href;
   const headingId = `${footerId}-title`;
@@ -39,12 +36,6 @@ export default function Footer({
       id={footerId}
       aria-labelledby={headingId}
     >
-      {backHref ? (
-        <BackButton
-          href={backHref}
-          label={backLabel ?? 'Back to home'}
-        />
-      ) : null}
       {/* Put gradient on overlay */}
       <div className={s.overlay}></div>
       <Heading

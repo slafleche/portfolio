@@ -121,3 +121,9 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 
 - Must: When you make non-trivial changes to application code, run `yarn lint` before considering the work complete.
 - Must: When you touch style-layer files under `src/styles` (including `*.css.ts`), run `yarn lint:rules` after your changes to ensure architecture guardrails still hold.
+
+## Testing discipline (`testing`)
+
+- Must: Prefer real failing tests over disabled ones; do not use constructs like `it.skip`, `describe.skip`, `test.skip`, or `.todo` to park incomplete behaviour—capture the intended behaviour as assertions that fail until the feature is correctly implemented.
+- Must: Do not “cheat” by updating expectations just to match a known-bad implementation result; expectations should describe the desired behaviour, not the current bug.
+- Should: Keep guards inside tests minimal; avoid early returns or defensive branches that can allow tests to pass without actually exercising the code under test (for example, returning early after an element query instead of letting the test fail when the wiring is wrong).

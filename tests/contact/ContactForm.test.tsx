@@ -13,9 +13,7 @@ import {
   setContactFormDebugEnabled,
   setContactFormDebugLogger,
 } from '@/components/contact/contactFormDebugLogger';
-import {
-  FormBlocksProvider,
-} from '@/components/contact/formBlocks.context';
+import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import { NameBlock } from '@/components/contact/blocks/NameBlock';
 import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
 import { MessageBlock } from '@/components/contact/blocks/MessageBlock';
@@ -35,7 +33,9 @@ import {
 const buildCopy = () =>
   buildContactFormCopy(
     ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
+      enFormCopy[
+        key as keyof typeof enFormCopy
+      ]) as unknown as Translator,
   );
 
 const buildStatusMessages = (copy = buildCopy()) =>
@@ -81,9 +81,7 @@ function LiveValidationHarness({
 }: LiveValidationHarnessProps) {
   return (
     <FormBlocksProvider>
-      <FormBlocksValidationObserver
-        onUpdate={onValidationUpdate}
-      />
+      <FormBlocksValidationObserver onUpdate={onValidationUpdate} />
       <LiveValidationInner copy={copy} submitHelper={submitHelper} />
     </FormBlocksProvider>
   );
@@ -187,7 +185,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       // Key assertion: the submission went through once.
       expect(fetchMock).toHaveBeenCalledTimes(1);
-      expect(fetchMock).toHaveBeenCalledTimes(1);
 
       const successPanel = container.querySelector(
         '[data-form="success"]',
@@ -230,27 +227,31 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: 'test-site-key',
     };
 
-    const originalTurnstile = (window as typeof window & {
-      turnstile?: {
-        render: (
-          container: HTMLElement,
-          options: { [key: string]: unknown },
-        ) => string;
-        reset: (id?: string) => void;
-      };
-    }).turnstile;
+    const originalTurnstile = (
+      window as typeof window & {
+        turnstile?: {
+          render: (
+            container: HTMLElement,
+            options: { [key: string]: unknown },
+          ) => string;
+          reset: (id?: string) => void;
+        };
+      }
+    ).turnstile;
 
     let renderCount = 0;
 
-    (window as typeof window & {
-      turnstile?: {
-        render: (
-          container: HTMLElement,
-          options: { [key: string]: unknown },
-        ) => string;
-        reset: (id?: string) => void;
-      };
-    }).turnstile = {
+    (
+      window as typeof window & {
+        turnstile?: {
+          render: (
+            container: HTMLElement,
+            options: { [key: string]: unknown },
+          ) => string;
+          reset: (id?: string) => void;
+        };
+      }
+    ).turnstile = {
       render: (container) => {
         renderCount += 1;
         const marker = document.createElement('div');
@@ -281,9 +282,9 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         '/api/contact',
       );
 
-      const turnstileSection = container.querySelector(
-        '[data-form-turnstile="status"]',
-      )?.closest('[data-order]');
+      const turnstileSection = container
+        .querySelector('[data-form-turnstile="status"]')
+        ?.closest('[data-order]');
       expect(turnstileSection).not.toBeNull();
 
       await waitFor(() => {
@@ -490,8 +491,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(inlineRegion).not.toBeNull();
       if (!inlineRegion) return;
 
-      const globalText =
-        statusMessages.service_unavailable;
+      const globalText = statusMessages.service_unavailable;
       const inlineLines = Array.from(
         inlineRegion.querySelectorAll('[data-error]'),
       ) as HTMLElement[];
@@ -597,7 +597,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
         if (!inlineRegion) return;
-         expect(inlineRegion.textContent ?? '').toContain(
+        expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.validation_error,
         );
         const lines = Array.from(
@@ -638,7 +638,9 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       ).toBeNull();
 
       expect(
-        container.querySelector('[data-testid="jump-to-first-issue"]'),
+        container.querySelector(
+          '[data-testid="jump-to-first-issue"]',
+        ),
       ).toBeNull();
     } finally {
       global.fetch = originalFetch;
@@ -799,10 +801,9 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       />,
     );
 
-    const nameInput = screen.getByLabelText(
-      copy.blocks.name.label,
-      { exact: false },
-    ) as HTMLInputElement;
+    const nameInput = screen.getByLabelText(copy.blocks.name.label, {
+      exact: false,
+    }) as HTMLInputElement;
     const emailInput = screen.getByLabelText(
       copy.blocks.email.label,
       { exact: false },
@@ -916,9 +917,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ) as HTMLElement[];
         const codes = lines.map((el) => el.dataset.error);
         expect(
-          codes.some((code) =>
-            code?.startsWith('form-error-name-'),
-          ),
+          codes.some((code) => code?.startsWith('form-error-name-')),
         ).toBe(true);
         expect(codes).toContain('form-error-email-invalid');
       });
@@ -936,9 +935,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         const codes = lines.map((el) => el.dataset.error);
         expect(codes).toContain('form-error-email-invalid');
         expect(
-          codes.some((code) =>
-            code?.startsWith('form-error-name-'),
-          ),
+          codes.some((code) => code?.startsWith('form-error-name-')),
         ).toBe(false);
       });
 
@@ -960,17 +957,12 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ).toBe(true);
         expect(codes).not.toContain('form-error-email-invalid');
         expect(
-          codes.some((code) =>
-            code?.startsWith('form-error-name-'),
-          ),
+          codes.some((code) => code?.startsWith('form-error-name-')),
         ).toBe(false);
       });
 
       // Finally fix the message; now no errors should remain and jump button should disappear.
-      await userEvent.type(
-        messageInput,
-        'This is a valid message.',
-      );
+      await userEvent.type(messageInput, 'This is a valid message.');
 
       await waitFor(() => {
         const lines = Array.from(
@@ -978,13 +970,13 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ) as HTMLElement[];
         const codes = lines.map((el) => el.dataset.error);
         expect(codes.filter(Boolean)).toHaveLength(0);
-        expect(
-          inlineRegion.textContent?.trim() ?? '',
-        ).toBe('');
+        expect(inlineRegion.textContent?.trim() ?? '').toBe('');
       });
 
       expect(
-        container.querySelector('[data-testid="jump-to-first-issue"]'),
+        container.querySelector(
+          '[data-testid="jump-to-first-issue"]',
+        ),
       ).toBeNull();
     } finally {
       global.fetch = originalFetch;
@@ -1164,10 +1156,14 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       await userEvent.click(submitButton);
 
       const attemptEvents = logger.mock.calls.filter(
-        ([event]) => event.type === 'submit_attempt',
+        ([
+          event,
+        ]) => event.type === 'submit_attempt',
       );
       const resultEvents = logger.mock.calls.filter(
-        ([event]) => event.type === 'submit_result',
+        ([
+          event,
+        ]) => event.type === 'submit_result',
       );
 
       expect(attemptEvents.length).toBe(1);
@@ -1248,9 +1244,8 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       expect(lastResult.submitStatus).toBe('validation_error');
       expect(
-        lastResult.invalidFields.some(
-          (field: { id: string }) =>
-            field.id.includes('message'),
+        lastResult.invalidFields.some((field: { id: string }) =>
+          field.id.includes('message'),
         ),
       ).toBe(true);
     } finally {
