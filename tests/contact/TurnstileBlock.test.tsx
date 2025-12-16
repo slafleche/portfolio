@@ -400,12 +400,22 @@ describe('Contact form block tests: TurnstileBlock', () => {
         'input[name=\"token\"][type=\"hidden\"]',
       ) as HTMLInputElement | null;
       expect(tokenInput).not.toBeNull();
-      const initialToken = tokenInput!.value;
+      if (!tokenInput) {
+        throw new Error(
+          'Expected hidden Turnstile token input to exist',
+        );
+      }
+      const initialToken = tokenInput.value;
 
       const widgetContainer = wrapper.querySelector(
         '[data-rendered]',
       ) as HTMLDivElement | null;
       expect(widgetContainer).not.toBeNull();
+      if (!widgetContainer) {
+        throw new Error(
+          'Expected Turnstile widget container to exist',
+        );
+      }
 
       await userEvent.click(widgetContainer);
 
@@ -437,20 +447,27 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       await waitFor(() => {
         expect(wrapper).not.toBeNull();
+
         const widgetContainer = wrapper?.querySelector(
           '[data-rendered]',
         ) as HTMLDivElement | null;
-        expect(widgetContainer).not.toBeNull();
-
         const helperHint = wrapper?.querySelector(
           '[data-form-hint]',
         ) as HTMLElement | null;
+
+        expect(widgetContainer).not.toBeNull();
         expect(helperHint).not.toBeNull();
 
-        expect(helperHint?.getAttribute('data-form-hint')).toBe(
+        if (!widgetContainer || !helperHint) {
+          throw new Error(
+            'Expected Turnstile widget container and helper hint to exist',
+          );
+        }
+
+        expect(helperHint.getAttribute('data-form-hint')).toBe(
           'helper',
         );
-        expect(helperHint?.textContent).toBe(
+        expect(helperHint.textContent).toBe(
           turnstileCopy.requiredText,
         );
         expect(

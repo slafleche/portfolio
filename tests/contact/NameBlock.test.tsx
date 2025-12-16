@@ -482,7 +482,11 @@ describe('Contact form block contract: NameBlock', () => {
     });
 
     const registration = getRegistration();
-    expect(registration).not.toBeNull();
+    if (!registration) {
+      throw new Error(
+        'Expected NameBlock to register with the form blocks context',
+      );
+    }
 
     expect(registration.key).toBe('name');
     expect(typeof registration.focus).toBe('function');
