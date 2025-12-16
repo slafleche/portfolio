@@ -12,6 +12,7 @@ on:
       - main
       - staging
       - release
+      - 'candidate/**'
 
 jobs:
   test-and-build:
@@ -33,6 +34,13 @@ jobs:
           corepack yarn install --immutable
 
       - name: Run candidate checks (lint + tests)
+        if: >
+          (github.event_name == 'push' &&
+            (github.ref == 'refs/heads/main' ||
+             startsWith(github.ref, 'refs/heads/candidate/'))) ||
+          (github.event_name == 'pull_request' &&
+            (github.base_ref == 'main' ||
+             startsWith(github.base_ref, 'candidate/')))
         run: corepack yarn ci:candidate
 
       - name: Run publish checks (staging/release only)
@@ -42,4 +50,3 @@ jobs:
           (github.event_name == 'pull_request' &&
             (github.base_ref == 'staging' || github.base_ref == 'release'))
         run: corepack yarn ci:publish
-

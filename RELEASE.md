@@ -1,118 +1,103 @@
 # Release workflow (privateLaunch)
 
-This document captures the release flow for this portfolio so that future-you
-does not have to remember all the moving parts. It assumes the
-`privateLaunch` epic is in place.
-
-No secrets live in this file; anything sensitive belongs in environment
-variables (Vercel or local `.env`), not here.
+This document documents the release flow
 
 ## Branches at a glance
 
 - `main` — day-to-day work.
-- `candidate/<slug>-x.y.z` — short-lived release candidates cut from `main`
-  (for example, `candidate/update-systems-page-0.1.0`); safe to delete later.
+- `candidate/<slug>-x.y.z` — short-lived release candidates cut from `main` (for
+  example, `candidate/update-systems-page-0.1.0`); safe to delete later.
 - `staging` — demo branch; Vercel deploys this as the “staging” site.
 - `release` — live branch; Vercel deploys this as the “production” site.
 
-## Scripts you’ll use
+## Branch protections and behaviour
 
-- `yarn publish`
-  - Full “publish” check: runs `setup` (assets + video + locales) then
-    `lint`, `lint:rules`, `test`, and `build`.
-  - Used by CI for `staging`/`release` via `ci:publish`.
-- `yarn ci:candidate`
-  - Lightweight CI check for code health: `lint`, `lint:rules`, `test`.
-  - Used by CI on `main` and `candidate/*` branches.
-- `yarn ci:publish`
-  - CI entrypoint for full publish checks on `staging` and `release`:
-    `setup` → `lint` → `lint:rules` → `test` → `build`.
+### main (`main`)
 
-CI is configured in `.github/workflows/ci.yml` to run:
+Local everyday workhorse and hub. I may or may not use `main` directly to update
+other branches; it depends if I want to do it on GitHub or locally. In the end,
+staging and release always get their own checks when they are updated.
 
-- `ci:candidate` on `main` and `candidate/*`.
-- `ci:publish` (in addition) on `staging` and `release`.
+Pre-commit:
 
-## Gate and robots overview (no secrets)
+- lint (full lint stack: base, rules, secrets, locales)
+- can always bypass with `git commit --no-verify` if needed
 
-The private gate and robots behavior are controlled entirely by env vars:
+GitHub CI (pushes and PRs into `main`):
 
-- HTTP Basic Auth:
-  - `PRIVATE_LAUNCH_USER` — username for the browser’s Basic Auth prompt.
-  - `PRIVATE_LAUNCH_PASSWORD` — long random password (only in env + password
-    manager).
-  - `PRIVATE_LAUNCH_ENABLED_STAGING` — if truthy, gate is enforced on
-    `staging` deployments.
-  - `PRIVATE_LAUNCH_ENABLED_RELEASE` — if truthy, gate is enforced on
-    `release` deployments.
-- Indexing:
-  - `staging` and all preview deployments should always be configured to
-    signal “do not index” (robots.txt and/or meta).
-  - `release` should also be “do not index” by default and only allow
-    indexing when a dedicated “production indexing allowed” env var is set
-    to true in the production environment (exact name is defined alongside
-    the implementation).
+- `ci:candidate`
+  - `yarn setup:noVideo`
+  - `yarn lint`
+  - `yarn test`
 
-## Typical release flow
+### Candidates (`candidate/<slug>-x.y.z`)
 
-### 1. Prepare `main`
+Short-lived branches for experiments and potential releases. These may or may
+not become pull requests to `main`, `staging`, or `release`. They are where I
+can try ideas, test on staging, and then either delete or promote them.
 
-1. Work as usual on `main`.
-2. Push your changes and let CI run `ci:candidate` on `main`:
-   - Lint, lint rules, and tests must pass before you cut a candidate.
-3. Optionally run `yarn publish` locally if you want to see the full pipeline
-   succeed before creating a candidate.
+Pre-commit:
 
-### 2. Cut a candidate branch
+- lint (same full lint stack as `main`)
+- tests are optional; I run them manually when I want to
+- can bypass with `git commit --no-verify`
 
-1. From `main`, create a candidate branch:
-   - `candidate/<slug>-x.y.z`, for example
-     `candidate/update-systems-page-0.1.0`.
-2. Push the candidate branch to GitHub.
-3. CI will run `yarn ci:candidate` for that branch.
-4. When CI is green and you are happy with the code, you can:
-   - open a PR from the candidate into `staging`, or
-   - merge it into `staging` using your normal workflow.
-5. Optionally tag the candidate commit with a version tag like `v0.1.0` so
-   you can always find that release later even if you delete the candidate
-   branch.
+GitHub CI (pushes and PRs into `candidate/*`):
 
-### 3. Promote to `staging`
+- `ci:candidate`
+  - `yarn setup:noVideo`
+  - `yarn lint`
+  - `yarn test`
 
-1. Merge the candidate branch into `staging` (or merge via PR).
-2. CI runs `yarn ci:publish` on `staging`:
-   - Regenerates assets (including video), runs lint + lint:rules + tests,
-     then builds.
-3. Vercel deploys the new `staging` build:
-   - Gate is enforced if `PRIVATE_LAUNCH_ENABLED_STAGING` is truthy.
-   - Staging always signals “do not index”.
-4. Use the `staging` deployment URL to manually click through the site and
-   confirm the release looks good.
+### Staging (`staging`)
 
-### 4. Promote to `release`
+Vercel: staging site points to this branch. This is the first “serious” branch
+that should behave like production.
 
-1. Once `staging` looks good, merge `staging` into `release` (often via PR so
-   you get another CI run).
-2. CI runs `yarn ci:publish` on `release` again.
-3. Vercel deploys the new `release` build:
-   - Gate is enforced if `PRIVATE_LAUNCH_ENABLED_RELEASE` is truthy.
-   - By default, `release` still signals “do not index” until you explicitly
-     enable indexing via the production indexing env var.
-4. Share the `release` deployment URL (and, later, the custom domain) with
-   anyone who should see the site.
+Pre-commit:
 
-### 5. Going fully public (later)
+- full publish stack (equivalent to `ci:publish`):
+  - `yarn setup`
+  - `yarn lint`
+  - `yarn test`
+  - `yarn build`
+- can bypass with `git commit --no-verify` in emergencies, but the friction is
+  intentional to encourage using PRs
 
-When you are ready for the portfolio to be public:
+GitHub CI (pushes and PRs into `staging`):
 
-1. Attach your GoDaddy domain to the `release` deployment in Vercel (if not
-   already attached).
-2. Turn off the gate for production by setting
-   `PRIVATE_LAUNCH_ENABLED_RELEASE` to a falsey value in the production
-   environment.
-3. Once you are comfortable with the public behavior, enable indexing for
-   production by setting the “production indexing allowed” env var to true:
-   - Staging and previews should remain “do not index”.
-4. Keep `staging` gated permanently, even after production is public, so you
-   always have a private demo environment.
+- `ci:publish`
+  - `yarn setup`
+  - `yarn lint`
+  - `yarn test`
+  - `yarn build`
 
+### Release (`release`)
+
+Vercel: live site points to this branch. The safest and “correct” path is to
+test on `staging` first, then promote those changes into `release`, but in a
+pinch I can also merge `main` or a candidate directly if needed.
+
+Pre-commit:
+
+- full publish stack (same as `staging` / `ci:publish`):
+  - `yarn setup`
+  - `yarn lint`
+  - `yarn test`
+  - `yarn build`
+- can bypass with `git commit --no-verify` in emergencies
+
+GitHub CI (pushes and PRs into `release`):
+
+- `ci:publish`
+  - `yarn setup`
+  - `yarn lint`
+  - `yarn test`
+  - `yarn build`
+
+### Uncharted branches (anything else)
+
+Any other branch name is “uncharted”. These behave like normal playground
+branches locally (no extra branch-specific constraints) and only pick up
+stricter rules when changes are merged into `main`, `candidate/*`, `staging`,
+or `release`, where the hooks and CI above apply.
