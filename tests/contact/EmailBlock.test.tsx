@@ -475,7 +475,11 @@ describe('Contact form block contract: EmailBlock', () => {
     });
 
     const registration = getRegistration();
-    expect(registration).not.toBeNull();
+    if (!registration) {
+      throw new Error(
+        'Expected EmailBlock to register with the form blocks context',
+      );
+    }
 
     expect(registration.key).toBe('email');
     expect(typeof registration.focus).toBe('function');

@@ -727,7 +727,11 @@ describe('Contact form block contract: MessageBlock', () => {
     });
 
     const registration = getRegistration();
-    expect(registration).not.toBeNull();
+    if (!registration) {
+      throw new Error(
+        'Expected MessageBlock to register with the form blocks context',
+      );
+    }
 
     expect(registration.key).toBe('message');
     expect(typeof registration.focus).toBe('function');
