@@ -22,7 +22,6 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_MEASUREMENT_DEBUG ??
       (isDev ? '1' : '0'),
   },
-  turbopack: {},
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),

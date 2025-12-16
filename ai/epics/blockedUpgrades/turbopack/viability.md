@@ -2,6 +2,14 @@
 
 Waiting to see future updates to finally decide to switch over.
 
+## Current stance
+
+- Webpack is the only supported bundler for this project today; all branches and
+  environments use webpack for both dev and build.
+- Turbopack is explicitly *out of scope* for release-quality workflows until
+  the requirements and blockers in this epic are addressed and we have a
+  repeatable smoke-test that proves a Turbopack configuration is safe.
+
 ## Blocking (no path yet)
 
 - [ ] vanilla-extract still depends on `@vanilla-extract/webpack-plugin`; no

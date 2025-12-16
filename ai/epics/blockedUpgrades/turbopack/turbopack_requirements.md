@@ -12,3 +12,7 @@ move dev/build workflows from webpack to Turbopack.
 - [ ] A small, documented smoke-test (for example, `yarn dev` and `yarn build`
       with Turbopack enabled) that we can run locally and in CI to validate the
       Turbopack configuration before switching defaults.
+
+Until these requirements are met, webpack remains the default and only supported
+bundler for dev, CI, and production builds; Turbopack should not be enabled in
+Next.js config, scripts, or CI jobs outside of tightly scoped experiments.
