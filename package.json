@@ -82,6 +82,9 @@
   },
   "packageManager": "yarn@4.11.0",
   "scripts": {
+    "publish": "yarn setup && yarn lint && yarn lint:rules && yarn test && yarn build",
+    "ci:candidate": "yarn lint && yarn lint:rules && yarn test",
+    "ci:publish": "yarn setup && yarn lint && yarn lint:rules && yarn test && yarn build",
     "fresh": "yarn install && yarn setup",
     "setup": "yarn format:assets && yarn locales:prep && yarn locales:publish",
     "setup:noVideo": "yarn format:assets:noVideo && yarn locales:prep && yarn locales:publish",

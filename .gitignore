@@ -103,3 +103,12 @@ src/assets/images/imageBackup/*
 src/assets/videos/videoBackup/*
 public/videos/*
 tmp/*
+
+# -----------------------
+# Epics (local by default)
+# -----------------------
+ai/epics/*
+!ai/epics/README.md
+!ai/epics/AGENTS.md
+!ai/epics/blockedUpgrades/
+!ai/epics/blockedUpgrades/**
