@@ -98,7 +98,7 @@
     "font:smoketest": "VERIFY_FONT_URLS=true yarn fonts:urls",
     "dev": "DEBUG_VE=1 node scripts/devWithDebug.mjs --webpack",
     "prebuild": "yarn locales && MINIFY=1 yarn fonts",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint:locales": "yarn locales:markdown && tsx scripts/checkLocaleMarkdown.ts",
     "lint": "yarn lint:base && yarn lint:rules && yarn lint:secrets && yarn lint:locales",
