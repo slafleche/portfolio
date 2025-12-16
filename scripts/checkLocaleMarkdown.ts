@@ -56,8 +56,11 @@ const loadLocaleMessages = async (
   }
 };
 
-const getSectionForKey = (key: string) =>
-  key.startsWith('systems-') ? 'systems' : 'home';
+const getSectionForKey = (key: string) => {
+  if (key.startsWith('systems-')) return 'systems';
+  if (key.startsWith('forms-')) return 'contact';
+  return 'home';
+};
 
 const readMarkdownFor = async (
   key: MarkdownKey,

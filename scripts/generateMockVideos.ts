@@ -48,13 +48,10 @@ async function main() {
     'utf8',
   );
 
-  // eslint-disable-next-line no-console
   console.log(`✅ Wrote mock video manifest → ${MANIFEST_PATH}`);
 }
 
 main().catch((error) => {
-  // eslint-disable-next-line no-console
   console.error(error);
   process.exit(1);
 });
-
