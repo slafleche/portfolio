@@ -1,4 +1,5 @@
 import { m, assertUnit } from 'css-calipers';
+import { notProd } from '../../lib/runtimeEnv';
 
 /* ---------- SPIN (exit) ---------- */
 export const spinAnticDeg = m(-10, 'deg'); // wrong-direction pre-rotation
@@ -99,7 +100,7 @@ export const focusWidthPx = m(2);
 export const focusOffsetPx = m(2);
 
 /* ---------- Dev unit checks ---------- */
-if (process.env.NODE_ENV !== 'production') {
+if (notProd()) {
   // px
   assertUnit(offsetPx, 'px', 'offsetPx');
   assertUnit(buttonSizePx, 'px', 'buttonSizePx');

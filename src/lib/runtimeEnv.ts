@@ -91,6 +91,14 @@ export function isHostedEnv(
   return true;
 }
 
+export function isOnlyProd(): boolean {
+  return isHostedEnv({ onlyProd: true });
+}
+
+export function notProd(): boolean {
+  return !isOnlyProd();
+}
+
 export interface TurnstileEnvConfig {
   siteKey: string | null;
   secretKey: string | null;
@@ -114,9 +122,7 @@ export interface BrevoEnvConfig {
 }
 
 export function getBrevoEnvConfig(): BrevoEnvConfig {
-  const parseNumber = (
-    raw: string | undefined,
-  ): number | null => {
+  const parseNumber = (raw: string | undefined): number | null => {
     if (raw == null) return null;
     if (raw.trim() === '') return null;
     const value = Number(raw);
@@ -124,12 +130,8 @@ export function getBrevoEnvConfig(): BrevoEnvConfig {
   };
 
   const timeout = parseNumber(process.env.BREVO_TIMEOUT_MS);
-  const retryDelay = parseNumber(
-    process.env.BREVO_RETRY_DELAY_MS,
-  );
-  const retryJitter = parseNumber(
-    process.env.BREVO_RETRY_JITTER_MS,
-  );
+  const retryDelay = parseNumber(process.env.BREVO_RETRY_DELAY_MS);
+  const retryJitter = parseNumber(process.env.BREVO_RETRY_JITTER_MS);
 
   return {
     apiKey: process.env.BREVO_API_KEY ?? null,

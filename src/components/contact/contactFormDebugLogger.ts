@@ -1,5 +1,6 @@
 'use client';
 
+import { notProd } from '@/lib/runtimeEnv';
 import type {
   ContactFormBlockValidationResult,
   ContactFormSubmitStatus,
@@ -43,31 +44,7 @@ export type ContactFormDebugEvent =
 
 type ContactFormDebugLogger = (event: ContactFormDebugEvent) => void;
 
-let explicitEnabled: boolean | null = null;
 let customLogger: ContactFormDebugLogger | null = null;
-
-const isProduction = process.env.NODE_ENV === 'production';
-
-const resolveEnvEnabled = (): boolean => {
-  if (isProduction) return false;
-  const value = process.env.NEXT_PUBLIC_CONTACT_FORM_DEBUG;
-  if (!value) return false;
-  const normalised = value.trim().toLowerCase();
-  return normalised === '1' || normalised === 'true';
-};
-
-export const isContactFormDebugEnabled = (): boolean => {
-  if (explicitEnabled !== null) {
-    return explicitEnabled;
-  }
-  return resolveEnvEnabled();
-};
-
-export const setContactFormDebugEnabled = (
-  enabled: boolean | null,
-): void => {
-  explicitEnabled = enabled;
-};
 
 export const setContactFormDebugLogger = (
   logger: ContactFormDebugLogger | null,
@@ -87,7 +64,7 @@ export const logContactFormDebugEvent = (
     | ContactFormDebugSubmitAttemptPayload
     | ContactFormDebugSubmitResultPayload,
 ): void => {
-  if (!isContactFormDebugEnabled()) {
+  if (!notProd()) {
     return;
   }
   const logger = customLogger ?? defaultLogger;
@@ -116,4 +93,3 @@ export const buildInvalidFieldSummary = (
       id: result.id,
       messageCount: result.messages.length,
     }));
-

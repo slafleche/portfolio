@@ -8,6 +8,7 @@ import {
   MARKDOWN_MESSAGE_KEYS,
   type LocaleMessagesShape,
 } from './localeTypes';
+import { notProd } from '../runtimeEnv';
 
 export const DEFAULT_LOCALE: Locale = 'en';
 
@@ -71,10 +72,7 @@ export async function loadMessages(
   const resolved = mod.default as Messages;
   const typed = resolved as LocaleMessagesShape;
 
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    locale !== DEFAULT_LOCALE
-  ) {
+  if (notProd() && locale !== DEFAULT_LOCALE) {
     const fallback = await loadDefaultMessages();
     for (const key of MARKDOWN_MESSAGE_KEYS) {
       const value = typed[key];

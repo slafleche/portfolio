@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 
@@ -14,6 +14,7 @@ import {
   exitTranslationDelayMs,
 } from '@/styles/components/contactButton.vars';
 import { useElementOffscreen } from '@/lib/useElementOffscreen';
+import { notProd } from '../lib/runtimeEnv';
 
 type Phase = 'hidden' | 'entering' | 'shown' | 'exiting';
 
@@ -76,8 +77,7 @@ export default function ContactButton({
     }
   }, []);
 
-  const enableDebug =
-    debugLog && process.env.NODE_ENV !== 'production';
+  const enableDebug = debugLog && notProd();
   const L = useCallback(
     (...a: unknown[]) => {
       if (!enableDebug) return;

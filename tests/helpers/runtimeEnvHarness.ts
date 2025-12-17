@@ -30,10 +30,28 @@ export function withEnvOverrides<T>(
   }
 }
 
+/**
+ * Apply environment overrides for the duration of a test and return a restore
+ * function. This is useful for asynchronous flows where env must stay
+ * overridden across multiple awaits.
+ */
+export function installEnvOverrides(
+  overrides: EnvOverrides,
+): () => void {
+  const original = { ...process.env } as NodeJS.ProcessEnv;
+  process.env = {
+    ...original,
+    ...overrides,
+  } as NodeJS.ProcessEnv;
+
+  return () => {
+    process.env = original;
+  };
+}
+
 export {
   getBrevoEnvConfig,
   getRuntimeEnv,
   getTurnstileEnvConfig,
   isHostedEnv,
 };
-

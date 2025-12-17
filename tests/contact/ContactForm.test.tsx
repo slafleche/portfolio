@@ -9,10 +9,7 @@ import {
 } from '@/lib/locales/sections/form.locale';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
-import {
-  setContactFormDebugEnabled,
-  setContactFormDebugLogger,
-} from '@/components/contact/contactFormDebugLogger';
+import { setContactFormDebugLogger } from '@/components/contact/contactFormDebugLogger';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import { NameBlock } from '@/components/contact/blocks/NameBlock';
 import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
@@ -62,7 +59,6 @@ function renderWrappedContactForm(
 }
 
 afterEach(() => {
-  setContactFormDebugEnabled(null);
   setContactFormDebugLogger(null);
 });
 
@@ -1052,7 +1048,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const statusMessages = buildStatusMessages(copy);
 
     const logger = vi.fn();
-    setContactFormDebugEnabled(true);
     setContactFormDebugLogger(logger);
 
     const turnstileHarness: TurnstileHarnessController =
@@ -1127,7 +1122,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const statusMessages = buildStatusMessages(copy);
 
     const logger = vi.fn();
-    setContactFormDebugEnabled(true);
     setContactFormDebugLogger(logger);
 
     const originalFetch = global.fetch;
@@ -1170,7 +1164,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       expect(resultEvents.length).toBe(1);
     } finally {
       global.fetch = originalFetch;
-      setContactFormDebugEnabled(null);
       setContactFormDebugLogger(null);
     }
   });
@@ -1180,7 +1173,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     const statusMessages = buildStatusMessages(copy);
 
     const logger = vi.fn();
-    setContactFormDebugEnabled(true);
     setContactFormDebugLogger(logger);
 
     const originalFetch = global.fetch;

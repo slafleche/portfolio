@@ -1,4 +1,5 @@
 import { sharedStrings } from '@/lib/sharedStrings';
+import { notProd } from '../../lib/runtimeEnv';
 
 export function resolveContactFormScenarioIdFromLocation():
   | string
@@ -41,7 +42,7 @@ const stripScenarioParamFromUrl = (scenarioId: string) => {
       window.history.replaceState(window.history.state, '', nextHref);
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (notProd()) {
       // Dev-only debug log so scenarios remain traceable when they are stripped.
       console.log('[contact][dev-scenario][stripped]', {
         scenarioId,

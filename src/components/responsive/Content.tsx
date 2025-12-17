@@ -10,6 +10,7 @@ import { content as contentClass } from '@/styles/layout.css';
 import Heading from '../Heading';
 import { userContent } from '@/styles/typography.css';
 import { Markdown } from '@/components/Markdown';
+import { notProd } from '../../lib/runtimeEnv';
 
 type BaseProps<T extends ElementType> = {
   tag?: T;
@@ -43,7 +44,7 @@ export default function Content<T extends ElementType = 'section'>({
   const Component: ElementType = tag ?? 'section';
 
   if (
-    process.env.NODE_ENV !== 'production' &&
+    notProd() &&
     typeof markdown === 'string' &&
     children !== undefined
   ) {

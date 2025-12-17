@@ -13,6 +13,7 @@ import type {
   BorderMeasurementInput,
 } from '../../tokens/global.tokens';
 import { isMeasurement, hasCssMethod } from 'css-calipers';
+import { isHostedEnv, notProd } from '../../lib/runtimeEnv';
 
 /**
  * Public UX: Border({ bottom: true, bottom: { width: m(6) }, radius:
@@ -419,7 +420,7 @@ const normalizeIntent = (
 ): BorderIntent | undefined => {
   if (input === undefined || input === null) return undefined;
   if (typeof input !== 'object') {
-    if (process.env.NODE_ENV !== 'production') {
+    if (notProd()) {
       throw new Error(
         '[borders] Shorthand inputs must identify their intent (e.g., `{ radius: { all: measurement } }`).',
       );
@@ -565,7 +566,9 @@ const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
       Object.prototype.hasOwnProperty.call(radius, 'all') &&
       keys.length === 1
     ) {
-      const allVal = asRadius((radius as Record<'all', BorderRadiusInput>).all);
+      const allVal = asRadius(
+        (radius as Record<'all', BorderRadiusInput>).all,
+      );
       if (!allVal || allVal === '0' || allVal === '0px') {
         return {};
       }

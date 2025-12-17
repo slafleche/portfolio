@@ -24,6 +24,7 @@ import {
 } from '../menuUtils';
 import { archVars } from '../../../tokens/global.tokens';
 import { menuVars } from '../../../styles/componentTokens/menu.componentTokens';
+import { notProd } from '../../../lib/runtimeEnv';
 
 type HighlightStyles = {
   containerStyle: CSSProperties;
@@ -36,7 +37,7 @@ const snapToDevicePixel = (value: number, dpr: number): number => {
   return Math.round(value * ratio) / ratio;
 };
 
-if (process.env.NODE_ENV !== 'production') {
+if (notProd()) {
   assertUnit(menuVars.height, 'px', 'useMenuHighlight menu height');
   assertUnit(
     menuVars.paddings.horizontal,
