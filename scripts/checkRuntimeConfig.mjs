@@ -5,14 +5,13 @@
 
 import path from 'node:path';
 import {
-  RUNTIME_ENV_USAGE_PATTERNS,
-} from './lint/runtimeEnvRules.mjs';
-import {
-  TURNSTILE_ENV_USAGE_PATTERNS,
-} from './lint/turnstileConfigRules.mjs';
-import {
   BREVO_ENV_USAGE_PATTERNS,
-} from './lint/brevoConfigRules.mjs';
+  RUNTIME_ENV_USAGE_PATTERNS,
+  TURNSTILE_ENV_USAGE_PATTERNS,
+} from './lint/runtimeConfigEnvUsagePatterns.mjs';
+import {
+  TESTS_RUNTIME_ENV_USAGE_PATTERNS,
+} from './lint/runtimeEnvTestsRules.mjs';
 
 /**
  * @typedef {import('./lint/runtimeEnvRules.mjs').RuntimeEnvUsagePattern} RuntimeEnvUsagePattern
@@ -131,3 +130,28 @@ export function scanAllRuntimeConfigUsage(filePath, content) {
   ];
 }
 
+/**
+ * Scan a test file for direct env-tier usage (NODE_ENV, VERCEL_ENV, Turnstile,
+ * Brevo, etc.) that should go through the runtime env harness instead.
+ *
+ * This reuses the same regex patterns as application scans, but allows direct
+ * env access inside the dedicated runtime env harness helper.
+ *
+ * @param {string} filePath
+ * @param {string} content
+ * @returns {RuntimeConfigViolation[]}
+ */
+export function scanRuntimeEnvUsageInTests(filePath, content) {
+  const posix = normalizePath(filePath);
+
+  if (!posix.includes('tests/')) {
+    return [];
+  }
+
+  return scanWithPatterns(
+    'env',
+    filePath,
+    content,
+    TESTS_RUNTIME_ENV_USAGE_PATTERNS,
+  );
+}
