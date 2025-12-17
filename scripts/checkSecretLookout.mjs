@@ -247,6 +247,27 @@ function scanRuntimeConfigViolations(relativePath, content) {
   });
 }
 
+function colorPathSegment(text) {
+  if (!process.stderr.isTTY) {
+    return text;
+  }
+  const CYAN = '\x1b[36m';
+  const RESET = '\x1b[0m';
+  return `${CYAN}${text}${RESET}`;
+}
+
+function colorSnippet(text) {
+  if (!process.stderr.isTTY) {
+    return text;
+  }
+  const MAGENTA = '\x1b[35m';
+  const RESET = '\x1b[0m';
+  return text.replace(
+    /\b[A-Z][A-Z0-9_]*\b/g,
+    (token) => `${MAGENTA}${token}${RESET}`,
+  );
+}
+
 function formatViolations(violations) {
   if (!violations.length) return;
 
@@ -262,10 +283,13 @@ function formatViolations(violations) {
           : type === 'runtime-config'
             ? 'runtime env in code'
             : 'email';
-    console.error(
-      ` - [${kindLabel}] ${filePath}:${lineNumber} — ${message}`,
-    );
-    console.error(`   Snippet: ${value}`);
+    const location = colorPathSegment(`${filePath}:${lineNumber}`);
+    console.error(` - [${kindLabel}] ${location} — ${message}`);
+    const snippet =
+      type === 'runtime-config' || type === 'runtime-env-test'
+        ? colorSnippet(value)
+        : value;
+    console.error(`   Snippet: ${snippet}`);
   }
 
   console.error(

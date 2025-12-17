@@ -31,6 +31,7 @@ import {
   buildFaviconMetaBundle,
   type FaviconMetaBundle,
 } from '../src/lib/locales/sections/favicons.locale';
+import { notProd } from '../src/lib/runtimeEnv';
 
 const OUT_ROOT = path.resolve('public', 'favicons');
 const TEMP_ROOT = path.resolve('tmp', 'favicons.gen');
@@ -41,7 +42,8 @@ const MANIFEST_TS_PATH = path.resolve(
   'favicons.manifest.gen.ts',
 );
 const PUBLIC_ROOT = '/favicons';
-const DEV_MODE = process.env.NODE_ENV !== 'production';
+
+const DEV_MODE = notProd();
 
 type ExtractSvgLayerOptions = {
   attribute: string;
@@ -437,7 +439,7 @@ async function main() {
   let generatedMaskSvgPath = '';
   let generatedTileSvgPath = '';
 
-  if (DEV_MODE) {
+  if (notProd()) {
     const filesToFormat: string[] = [];
 
     generatedMaskSvgPath = path.join(

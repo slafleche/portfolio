@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getBrevoEnvConfig } from '@/lib/runtimeEnv';
 
 export const runtime = 'nodejs';
 
@@ -43,11 +44,18 @@ const summarizeError = (error: unknown) => {
   }
 };
 
-const snapshotEnv = (): EnvSnapshot => ({
-  brevoApiKey: Boolean(process.env.BREVO_API_KEY),
-  mailFrom: Boolean(process.env.MAIL_FROM),
-  mailTo: Boolean(process.env.MAIL_TO),
-});
+const snapshotEnv = (): EnvSnapshot => {
+  const {
+    apiKey,
+    mailFrom,
+    mailTo,
+  } = getBrevoEnvConfig();
+  return {
+    brevoApiKey: Boolean(apiKey),
+    mailFrom: Boolean(mailFrom),
+    mailTo: Boolean(mailTo),
+  };
+};
 
 const buildResponse = (payload: HealthPayload) => {
   return NextResponse.json(payload, {
@@ -115,9 +123,10 @@ export async function GET() {
     });
   }
 
-  const probe = await probeBrevoAccount(
-    process.env.BREVO_API_KEY as string,
-  );
+  const {
+    apiKey,
+  } = getBrevoEnvConfig();
+  const probe = await probeBrevoAccount(apiKey as string);
   brevoProbe.attempted = true;
   brevoProbe.reachable = probe.reachable;
   brevoProbe.status = probe.status;

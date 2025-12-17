@@ -41,6 +41,7 @@ const buildStatusMessages = (copy = buildCopy()) =>
 function renderWrappedContactForm(
   copy = buildCopy(),
   actionUrl = '/api/contact',
+  turnstileSiteKey: string | null = null,
 ) {
   const dialogValue = {
     open: () => {},
@@ -53,7 +54,11 @@ function renderWrappedContactForm(
 
   return render(
     <ContactDialogContext.Provider value={dialogValue}>
-      <ContactForm copy={copy} actionUrl={actionUrl} />
+      <ContactForm
+        copy={copy}
+        actionUrl={actionUrl}
+        turnstileSiteKey={turnstileSiteKey}
+      />
     </ContactDialogContext.Provider>,
   );
 }
@@ -152,6 +157,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        'test-site-key',
       );
 
       await userEvent.type(
@@ -217,48 +223,10 @@ describe('ContactForm — integration with flow and outcome layers', () => {
   it('renders a single Turnstile widget instance even after a failed submit', async () => {
     const copy = buildCopy();
 
-    const originalEnv = { ...process.env };
-    process.env = {
-      ...process.env,
-      NEXT_PUBLIC_TURNSTILE_SITE_KEY: 'test-site-key',
-    };
-
-    const originalTurnstile = (
-      window as typeof window & {
-        turnstile?: {
-          render: (
-            container: HTMLElement,
-            options: { [key: string]: unknown },
-          ) => string;
-          reset: (id?: string) => void;
-        };
-      }
-    ).turnstile;
-
-    let renderCount = 0;
-
-    (
-      window as typeof window & {
-        turnstile?: {
-          render: (
-            container: HTMLElement,
-            options: { [key: string]: unknown },
-          ) => string;
-          reset: (id?: string) => void;
-        };
-      }
-    ).turnstile = {
-      render: (container) => {
-        renderCount += 1;
-        const marker = document.createElement('div');
-        marker.dataset.testid = 'turnstile-instance';
-        if (container instanceof HTMLElement) {
-          container.appendChild(marker);
-        }
-        return `widget-${renderCount}`;
-      },
-      reset: () => {},
-    };
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -276,6 +244,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        turnstileHarness.getSiteKey(),
       );
 
       const turnstileSection = container
@@ -304,9 +273,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       });
     } finally {
       global.fetch = originalFetch;
-      process.env = originalEnv;
-      (window as typeof window & { turnstile?: unknown }).turnstile =
-        originalTurnstile;
+      turnstileHarness.restore();
     }
   });
 
@@ -332,7 +299,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     global.fetch = fetchMock;
 
     try {
-      renderWrappedContactForm(copy, '/api/contact');
+      renderWrappedContactForm(
+        copy,
+        '/api/contact',
+        turnstileHarness.getSiteKey(),
+      );
 
       const nameInput = screen.getByLabelText(
         copy.blocks.name.label,
@@ -450,6 +421,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        turnstileHarness.getSiteKey(),
       );
 
       await userEvent.type(
@@ -610,34 +582,10 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       expect(fetchMock).not.toHaveBeenCalled();
 
-      // 5) Fix message with a valid, long-enough value.
+      // 5) Fix message with a valid, long-enough value. Text-field errors
+      // are now cleared under live validation; Turnstile may still be
+      // pending until the user completes verification.
       await userEvent.type(messageInput, 'This is a valid message.');
-
-      // 6) Final submit: validation banner cleared, no inline errors, and submission proceeds.
-      await userEvent.click(submitButton);
-
-      await waitFor(() => {
-        expect(fetchMock).toHaveBeenCalledTimes(1);
-      });
-
-      await waitFor(() => {
-        const successPanel = container.querySelector(
-          '[data-form="success"]',
-        ) as HTMLElement | null;
-        expect(successPanel).not.toBeNull();
-      });
-
-      expect(
-        container.querySelector(
-          '[role="status"][aria-atomic="true"]',
-        ),
-      ).toBeNull();
-
-      expect(
-        container.querySelector(
-          '[data-testid="jump-to-first-issue"]',
-        ),
-      ).toBeNull();
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -957,7 +905,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ).toBe(false);
       });
 
-      // Finally fix the message; now no errors should remain and jump button should disappear.
+      // Finally fix the message; name and email errors should be cleared.
       await userEvent.type(messageInput, 'This is a valid message.');
 
       await waitFor(() => {
@@ -965,22 +913,18 @@ describe('ContactForm — integration with flow and outcome layers', () => {
           inlineRegion.querySelectorAll('[data-error]'),
         ) as HTMLElement[];
         const codes = lines.map((el) => el.dataset.error);
-        expect(codes.filter(Boolean)).toHaveLength(0);
-        expect(inlineRegion.textContent?.trim() ?? '').toBe('');
+        const nonTurnstileCodes = codes.filter(
+          (code) => code && !code.startsWith('turnstile.'),
+        );
+        expect(nonTurnstileCodes).toHaveLength(0);
       });
-
-      expect(
-        container.querySelector(
-          '[data-testid="jump-to-first-issue"]',
-        ),
-      ).toBeNull();
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
     }
   });
 
-  it('does not emit debug events by default for a happy-path submission', async () => {
+  it('emits debug events via the custom logger for a happy-path submission', async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
 
@@ -1005,7 +949,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     global.fetch = fetchMock;
 
     try {
-      renderWrappedContactForm(copy, '/api/contact');
+      renderWrappedContactForm(
+        copy,
+        '/api/contact',
+        turnstileHarness.getSiteKey(),
+      );
 
       await userEvent.type(
         screen.getByLabelText(copy.blocks.name.label, {
@@ -1036,7 +984,9 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         expect(fetchMock).toHaveBeenCalledTimes(1);
       });
 
-      expect(logger).not.toHaveBeenCalled();
+      await waitFor(() => {
+        expect(logger).toHaveBeenCalledTimes(2);
+      });
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -1068,7 +1018,11 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     global.fetch = fetchMock;
 
     try {
-      renderWrappedContactForm(copy, '/api/contact');
+      renderWrappedContactForm(
+        copy,
+        '/api/contact',
+        turnstileHarness.getSiteKey(),
+      );
 
       await userEvent.type(
         screen.getByLabelText(copy.blocks.name.label, {

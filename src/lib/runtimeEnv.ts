@@ -99,6 +99,39 @@ export function notProd(): boolean {
   return !isOnlyProd();
 }
 
+export interface PrivateLaunchEnvConfig {
+  user: string | null;
+  password: string | null;
+  enabledForStaging: boolean;
+  enabledForRelease: boolean;
+}
+
+function parsePrivateLaunchFlag(
+  value: string | undefined,
+): boolean {
+  if (!value) return false;
+  const normalized = value.trim().toLowerCase();
+  return (
+    normalized === '1' ||
+    normalized === 'true' ||
+    normalized === 'yes' ||
+    normalized === 'on'
+  );
+}
+
+export function getPrivateLaunchEnvConfig(): PrivateLaunchEnvConfig {
+  return {
+    user: process.env.PRIVATE_LAUNCH_USER ?? null,
+    password: process.env.PRIVATE_LAUNCH_PASSWORD ?? null,
+    enabledForStaging: parsePrivateLaunchFlag(
+      process.env.PRIVATE_LAUNCH_ENABLED_STAGING,
+    ),
+    enabledForRelease: parsePrivateLaunchFlag(
+      process.env.PRIVATE_LAUNCH_ENABLED_RELEASE,
+    ),
+  };
+}
+
 export interface TurnstileEnvConfig {
   siteKey: string | null;
   secretKey: string | null;

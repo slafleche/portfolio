@@ -22,6 +22,7 @@ export type TurnstileBlockProps = Omit<
   'required'
 > & {
   copy: TurnstileBlockLocale;
+  turnstileSiteKey: string | null;
 };
 
 export type TurnstileState =
@@ -149,15 +150,14 @@ const buildTurnstileContract = (
   },
 });
 
-export function TurnstileBlock({
-  id,
-  order,
-  disabled,
-  copy,
-}: TurnstileBlockProps) {
-  const turnstileSiteKey =
-    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? null;
-  const hasTurnstileConfig = Boolean(turnstileSiteKey);
+	export function TurnstileBlock({
+	  id,
+	  order,
+	  disabled,
+	  copy,
+	  turnstileSiteKey,
+	}: TurnstileBlockProps) {
+	  const hasTurnstileConfig = Boolean(turnstileSiteKey);
 
   const hasInlineTurnstile =
     typeof window !== 'undefined' &&

@@ -24,9 +24,9 @@ export const BREVO_ENV_USAGE_PATTERNS = [
     description:
       'Use getBrevoEnvConfig() instead of process.env.BREVO_API_KEY.',
     // Match common direct usages of BREVO_API_KEY via process.env, including
-    // optional chaining and bracket access.
+    // dot, optional chaining, and bracket access, all at the line level.
     regex:
-      /process\s*(?:\.\s*env|\?\.\s*env)\s*(?:\.\s*|\?\.\s*)?(?:BREVO_API_KEY|\[['"]BREVO_API_KEY['"]\])\b/,
+      /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*BREVO_API_KEY\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
   },
   {
@@ -34,7 +34,7 @@ export const BREVO_ENV_USAGE_PATTERNS = [
     description:
       'Use getBrevoEnvConfig() instead of process.env.MAIL_FROM.',
     regex:
-      /process\s*(?:\.\s*env|\?\.\s*env)\s*(?:\.\s*|\?\.\s*)?(?:MAIL_FROM|\[['"]MAIL_FROM['"]\])\b/,
+      /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*MAIL_FROM\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
   },
   {
@@ -42,7 +42,7 @@ export const BREVO_ENV_USAGE_PATTERNS = [
     description:
       'Use getBrevoEnvConfig() instead of process.env.MAIL_TO.',
     regex:
-      /process\s*(?:\.\s*env|\?\.\s*env)\s*(?:\.\s*|\?\.\s*)?(?:MAIL_TO|\[['"]MAIL_TO['"]\])\b/,
+      /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*MAIL_TO\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
   },
   {
@@ -50,7 +50,23 @@ export const BREVO_ENV_USAGE_PATTERNS = [
     description:
       'Use getBrevoEnvConfig() instead of process.env.CONTACT_SUBJECT_PREFIX.',
     regex:
-      /process\s*(?:\.\s*env|\?\.\s*env)\s*(?:\.\s*|\?\.\s*)?(?:CONTACT_SUBJECT_PREFIX|\[['"]CONTACT_SUBJECT_PREFIX['"]\])\b/,
+      /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*CONTACT_SUBJECT_PREFIX\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
+  {
+    id: 'brevo-env-helper-usage',
+    description:
+      'Call getBrevoEnvConfig() only in server/runtime env helpers; pass Brevo config into consumers via props or parameters.',
+    // Match usage of the Brevo env helper by name so imports or calls
+    // outside approved server / runtimeEnv locations are treated as violations.
+    regex: /\bgetBrevoEnvConfig\b/,
+    allowedPathSubstrings: [
+      'src/lib/runtimeEnv.ts',
+      'src/server/contact/deliverContactMessage.ts',
+      'app/api/contact/health/route.ts',
+      // Meta/runtimeEnv tests and harnesses
+      'tests/helpers/runtimeEnvHarness.ts',
+      'tests/helpers/runtimeEnv.test.ts',
+    ],
   },
 ];

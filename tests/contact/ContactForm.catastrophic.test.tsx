@@ -19,6 +19,10 @@ import type {
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
+import {
+  enableTurnstileHarness,
+  type TurnstileHarnessController,
+} from './helpers/turnstileTestHarness';
 
 // NOTE:
 // These tests will cover *catastrophic* contact-form failures — cases where
@@ -50,60 +54,10 @@ const STATUS_MESSAGES: Record<FormStatusKey, string> = {
   blocked: 'blocked',
 };
 
-type TurnstileApi = NonNullable<Window['turnstile']>;
-type TurnstileApiOptions = Parameters<TurnstileApi['render']>[1];
-
-type MockTurnstileApi = TurnstileApi & {
-  lastOptions: TurnstileApiOptions | null;
-};
-
-const enableTurnstileForTest = () => {
-  const originalEnv = { ...process.env };
-  const extendedWindow = window as typeof window & {
-    turnstile?: MockTurnstileApi;
-  };
-  const originalTurnstile = extendedWindow.turnstile;
-
-  process.env = {
-    ...process.env,
-    NEXT_PUBLIC_TURNSTILE_SITE_KEY: 'test-site-key',
-  };
-
-  const mockTurnstile: MockTurnstileApi = {
-    lastOptions: null,
-    render: (container, options) => {
-      if (!container || typeof container === 'string') {
-        throw new Error('Missing container');
-      }
-      mockTurnstile.lastOptions = options;
-      return 'mock-widget-id';
-    },
-    reset: () => {},
-  };
-
-  extendedWindow.turnstile = mockTurnstile;
-
-  return {
-    originalEnv,
-    originalTurnstile,
-    mockTurnstile,
-  };
-};
-
-const restoreTurnstileForTest = (
-  originalEnv: NodeJS.ProcessEnv,
-  originalTurnstile: MockTurnstileApi | undefined,
-) => {
-  process.env = originalEnv;
-  const extendedWindow = window as typeof window & {
-    turnstile?: MockTurnstileApi;
-  };
-  extendedWindow.turnstile = originalTurnstile;
-};
-
 function renderWrappedContactForm(
   copy = buildCopy(),
   actionUrl = '/api/contact',
+  turnstileSiteKey: string | null = null,
 ) {
   const dialogValue = {
     open: () => {},
@@ -116,7 +70,11 @@ function renderWrappedContactForm(
 
   return render(
     <ContactDialogContext.Provider value={dialogValue}>
-      <ContactForm copy={copy} actionUrl={actionUrl} />
+      <ContactForm
+        copy={copy}
+        actionUrl={actionUrl}
+        turnstileSiteKey={turnstileSiteKey}
+      />
     </ContactDialogContext.Provider>,
   );
 }
@@ -171,6 +129,11 @@ describe('ContactForm — catastrophic failures (error view)', () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
 
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
+
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
@@ -187,25 +150,12 @@ describe('ContactForm — catastrophic failures (error view)', () => {
 
     global.fetch = fetchMock;
 
-    const {
-      originalEnv,
-      originalTurnstile,
-      mockTurnstile,
-    } = enableTurnstileForTest();
-
     try {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        turnstileHarness.getSiteKey(),
       );
-
-      await waitFor(() => {
-        expect(mockTurnstile.lastOptions).not.toBeNull();
-      });
-
-      await act(async () => {
-        mockTurnstile.lastOptions?.callback?.('test-token');
-      });
 
       await userEvent.type(
         screen.getByLabelText(copy.blocks.name.label, {
@@ -276,13 +226,18 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       );
     } finally {
       global.fetch = originalFetch;
-      restoreTurnstileForTest(originalEnv, originalTurnstile);
+      turnstileHarness.restore();
       consoleErrorSpy.mockRestore();
     }
   });
 
   it('switches to the error view and hides the form when the server reports the request is blocked', async () => {
     const copy = buildCopy();
+
+    const turnstileHarness: TurnstileHarnessController =
+      enableTurnstileHarness({
+        mode: 'autoVerify',
+      });
 
     const originalFetch = global.fetch;
     const fetchMock = vi.fn().mockResolvedValue({
@@ -299,25 +254,12 @@ describe('ContactForm — catastrophic failures (error view)', () => {
 
     global.fetch = fetchMock;
 
-    const {
-      originalEnv,
-      originalTurnstile,
-      mockTurnstile,
-    } = enableTurnstileForTest();
-
     try {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        turnstileHarness.getSiteKey(),
       );
-
-      await waitFor(() => {
-        expect(mockTurnstile.lastOptions).not.toBeNull();
-      });
-
-      await act(async () => {
-        mockTurnstile.lastOptions?.callback?.('test-token');
-      });
 
       await userEvent.type(
         screen.getByLabelText(copy.blocks.name.label, {
@@ -388,7 +330,7 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       );
     } finally {
       global.fetch = originalFetch;
-      restoreTurnstileForTest(originalEnv, originalTurnstile);
+      turnstileHarness.restore();
       consoleErrorSpy.mockRestore();
     }
   });
@@ -396,13 +338,9 @@ describe('ContactForm — catastrophic failures (error view)', () => {
   it('switches to the catastrophic error view when Turnstile reports an unrecoverable error before any submit', async () => {
     const copy = buildCopy();
 
-    const originalEnv = { ...process.env };
-    const originalTurnstile = (window as typeof window & { turnstile?: unknown }).turnstile;
-
-    process.env = {
-      ...process.env,
-      NEXT_PUBLIC_TURNSTILE_SITE_KEY: 'test-site-key',
-    };
+    const originalTurnstile = (window as typeof window & {
+      turnstile?: unknown;
+    }).turnstile;
 
     const mockTurnstile = {
       render: () => {
@@ -422,6 +360,7 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        'test-site-key',
       );
 
       await waitFor(() => {
@@ -462,7 +401,6 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         },
       );
     } finally {
-      process.env = originalEnv;
       (window as typeof window & { turnstile?: unknown }).turnstile =
         originalTurnstile;
       consoleErrorSpy.mockRestore();

@@ -155,6 +155,7 @@ type ContactDialogProviderProps = {
   formCopy: ContactFormCopy;
   privacyCopy: PrivacyCopy;
   closeLabel: string;
+  turnstileSiteKey?: string | null;
 };
 
 export function ContactDialogProvider({
@@ -162,6 +163,7 @@ export function ContactDialogProvider({
   formCopy,
   privacyCopy,
   closeLabel,
+  turnstileSiteKey = null,
 }: ContactDialogProviderProps) {
   const [
     intent,
@@ -463,10 +465,13 @@ export function ContactDialogProvider({
                   </p>
                 </Dialog.Description>
                 <ContactDialogTitleContext.Provider
-                  value={titleContextValue}
-                >
-                  <ContactForm copy={formCopy} />
-                </ContactDialogTitleContext.Provider>
+	                  value={titleContextValue}
+	                >
+	                  <ContactForm
+	                    copy={formCopy}
+	                    turnstileSiteKey={turnstileSiteKey}
+	                  />
+	                </ContactDialogTitleContext.Provider>
               </div>
             </div>
           </Dialog.Content>

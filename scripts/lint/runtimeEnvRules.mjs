@@ -68,6 +68,6 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
     // path allowlists to exempt canonical helpers / harnesses.
     regex:
       /\bPRIVATE_LAUNCH_(?:USER|PASSWORD|ENABLED_STAGING|ENABLED_RELEASE)\b/,
-    allowedPathSubstrings: [],
+    allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
   },
 ];

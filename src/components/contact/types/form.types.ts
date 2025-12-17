@@ -107,6 +107,13 @@ export type ContactFormProps = {
    * hosts) to prefill and optionally validate blocks on mount.
    */
   initialBlocks?: ContactFormBlockInitialValues;
+  /**
+   * Public Turnstile site key to use when rendering the Turnstile
+   * block. This should be derived from runtime env helpers at a
+   * server/page boundary and passed into the form as plain data,
+   * rather than reading env vars directly in components.
+   */
+  turnstileSiteKey?: string | null;
 };
 
 export type BlockMessage = Omit<MessageBase, 'code'> & {

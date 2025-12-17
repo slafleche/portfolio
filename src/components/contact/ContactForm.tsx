@@ -81,6 +81,7 @@ type ContactFormInnerProps = {
   onSuccessStateChange?: (visible: boolean) => void;
   onCatastrophic?: (source: string, reason: string) => void;
   initialBlocks?: ContactFormBlockInitialValues | null;
+  turnstileSiteKey: string | null;
 };
 
 function ContactFormInner({
@@ -91,6 +92,7 @@ function ContactFormInner({
   onSuccessStateChange,
   onCatastrophic,
   initialBlocks,
+  turnstileSiteKey,
 }: ContactFormInnerProps) {
   const [
     initialBlocksSnapshot,
@@ -370,6 +372,7 @@ function ContactFormInner({
         {...formMembers[3]}
         disabled={disableFields}
         copy={copy.blocks.turnstile}
+        turnstileSiteKey={turnstileSiteKey}
       />
       <ContactPrivacy copy={copy.privacy} />
       <HoneypotBlock copy={copy.blocks.honeypot} />
@@ -394,6 +397,7 @@ export default function ContactForm({
   copy,
   onSuccessStateChange,
   initialBlocks,
+  turnstileSiteKey = null,
 }: ContactFormProps) {
   const idPrefix = useSafeId('contact-form-');
   const { setTitleKey } = useContactDialogTitle();
@@ -639,6 +643,7 @@ export default function ContactForm({
           onSuccessStateChange={handleSuccessStateChange}
           onCatastrophic={handleCatastrophic}
           initialBlocks={initialBlocks ?? scenarioInitialBlocks}
+          turnstileSiteKey={turnstileSiteKey}
         />
       )}
     </FormBlocksProvider>
