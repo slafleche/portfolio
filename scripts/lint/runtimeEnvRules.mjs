@@ -1,0 +1,62 @@
+// Linting rules for runtime environment usage (NODE_ENV, VERCEL_ENV, branch).
+// This file is data-only; scripts/checkRuntimeConfig.mjs owns the scanning logic.
+
+/**
+ * @typedef {Object} RuntimeEnvUsagePattern
+ * @property {string} id - Stable identifier for this rule.
+ * @property {string} description - Human-readable description for error messages.
+ * @property {RegExp} regex - Line-level pattern that matches disallowed usage.
+ * @property {string[]} [allowedPathSubstrings] - Relative path substrings where this
+ *   usage is allowed (for example, the central runtimeEnv helper).
+ */
+
+/**
+ * Direct env-tier usages that should be routed through src/lib/runtimeEnv instead.
+ *
+ * The goal is that application code (components, modules, scripts) no longer reads
+ * env-tier variables directly and instead calls helpers like getRuntimeEnv or
+ * isHostedEnv.
+ *
+ * @type {RuntimeEnvUsagePattern[]}
+ */
+export const RUNTIME_ENV_USAGE_PATTERNS = [
+  {
+    id: 'runtime-node-env',
+    description:
+      'Use runtimeEnv helpers instead of process.env.NODE_ENV.',
+    // Match common direct usages of NODE_ENV via process.env, including:
+    // - process.env.NODE_ENV
+    // - process?.env.NODE_ENV
+    // - process.env?.NODE_ENV
+    // - process?.env?.NODE_ENV
+    // - process.env['NODE_ENV']
+    // - process?.env?.['NODE_ENV']
+    //
+    // This deliberately does not try to follow aliases (for example,
+    // const env = process.env; env.NODE_ENV) and focuses on the obvious
+    // direct access patterns.
+    regex:
+      /process\s*(?:\.\s*env|\?\.\s*env)\s*(?:\.\s*|\?\.\s*)?(?:NODE_ENV|\[['"]NODE_ENV['"]\])\b/,
+    allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
+  {
+    id: 'runtime-vercel-env',
+    description:
+      'Use runtimeEnv helpers instead of process.env.VERCEL_ENV.',
+    regex:
+      /process\s*(?:\.\s*env|\?\.\s*env)\s*(?:\.\s*|\?\.\s*)?(?:VERCEL_ENV|\[['"]VERCEL_ENV['"]\])\b/,
+    allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
+  {
+    id: 'runtime-vercel-branch',
+    description:
+      'Use runtimeEnv helpers instead of reading Vercel git branch env vars directly.',
+    // For branch-related env vars, treat any occurrence of the bare env
+    // var name in code as a match, regardless of whether it is accessed
+    // via process.env or in some other way. The caller is expected to
+    // scope this to non-doc code.
+    regex:
+      /\b(?:VERCEL_GIT_COMMIT_REF|VERCEL_GIT_BRANCH|BRANCH)\b/,
+    allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
+];

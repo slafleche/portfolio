@@ -119,7 +119,7 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 
 ## Linting and guardrails (`linting`)
 
-- Must: When you make non-trivial changes to application code, run `yarn lint` before considering the work complete.
+- Must: When you make non-trivial changes to application code, ensure `yarn lint` has been run before considering the work complete; the agent may either run `yarn lint` directly or explicitly ask the user to run it.
 - Must: When you touch style-layer files under `src/styles` (including `*.css.ts`), run `yarn lint:rules` after your changes to ensure architecture guardrails still hold.
 
 ## Testing discipline (`testing`)

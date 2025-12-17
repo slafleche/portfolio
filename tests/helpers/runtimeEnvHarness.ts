@@ -1,0 +1,39 @@
+import {
+  getBrevoEnvConfig,
+  getRuntimeEnv,
+  getTurnstileEnvConfig,
+  isHostedEnv,
+} from '@/lib/runtimeEnv';
+
+export type EnvOverrides = Record<string, string>;
+
+/**
+ * Apply a set of environment overrides for the duration of a synchronous test
+ * function, restoring the original environment afterwards.
+ *
+ * This helper is intentionally synchronous; use it for code paths where env
+ * variables are read eagerly (for example, runtimeEnv helpers).
+ */
+export function withEnvOverrides<T>(
+  overrides: EnvOverrides,
+  fn: () => T,
+): T {
+  const original = { ...process.env };
+  try {
+    process.env = {
+      ...original,
+      ...overrides,
+    } as NodeJS.ProcessEnv;
+    return fn();
+  } finally {
+    process.env = original;
+  }
+}
+
+export {
+  getBrevoEnvConfig,
+  getRuntimeEnv,
+  getTurnstileEnvConfig,
+  isHostedEnv,
+};
+

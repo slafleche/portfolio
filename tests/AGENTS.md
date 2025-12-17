@@ -36,3 +36,14 @@ and server logic.
 - Should: When a test uncovers a genuine behaviour bug or HTML/ARIA issue in a
   component, change the component (with a clear assertion) instead of working
   around the bug in the test.
+
+## Test-first workflow (`tests-layer`)
+
+- Must: When the user asks you to write or extend a test, treat it as a
+  specification that may fail until the corresponding behaviour is implemented;
+  do not hide incomplete work behind skipped tests (`it.skip`, `describe.skip`,
+  `test.skip`) or `.todo`.
+- Must: Do not make new or updated tests trivially pass with placeholder
+  expectations (for example, assertions that always succeed) when the real
+  behaviour has not been wired up yet; it is better for the test to fail
+  clearly and honestly until the feature is complete.
