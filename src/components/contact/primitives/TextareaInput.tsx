@@ -24,7 +24,14 @@ export const TextareaInput = forwardRef<
   TextareaInputProps
 >(
   (
-    { className, autoResizeHandlers, value, style, ...props },
+    {
+      className,
+      autoResizeHandlers,
+      value,
+      style,
+      disabled,
+      ...props
+    },
     ref,
   ) => {
     const innerRef = useRef<HTMLTextAreaElement | null>(null);
@@ -91,6 +98,8 @@ export const TextareaInput = forwardRef<
         ref={handleRef}
         className={clsx(s.textarea, className)}
         style={computedStyle}
+        disabled={disabled}
+        data-disabled={disabled ? 'true' : undefined}
       />
     );
   },

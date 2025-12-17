@@ -13,7 +13,7 @@ import type {
   BorderMeasurementInput,
 } from '../../tokens/global.tokens';
 import { isMeasurement, hasCssMethod } from 'css-calipers';
-import { isHostedEnv, notProd } from '../../lib/runtimeEnv';
+import { notProd } from '../../lib/runtimeEnv';
 
 /**
  * Public UX: Border({ bottom: true, bottom: { width: m(6) }, radius:

@@ -393,6 +393,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
 
       expect(wrapper).toHaveAttribute('data-disabled', 'true');
+      expect(wrapper).toHaveAttribute('aria-disabled', 'true');
 
       const initialState = wrapper.getAttribute('data-state');
 
@@ -425,6 +426,45 @@ describe('Contact form block tests: TurnstileBlock', () => {
         /^(loading|ready|error)$/,
       );
       expect(tokenInput.value).toBe(initialToken);
+    });
+
+    it('announces a disabled status with helper tone when disabled', async () => {
+      const { container } = render(
+        <FormBlocksProvider>
+          <TurnstileBlock
+            id="test-turnstile-block"
+            order={0}
+            disabled
+            copy={turnstileCopy}
+          />
+        </FormBlocksProvider>,
+      );
+
+      const wrapper = container.querySelector(
+        '#test-turnstile-block',
+      ) as HTMLDivElement;
+
+      expect(wrapper).not.toBeNull();
+
+      await waitFor(() => {
+        const status = wrapper.querySelector(
+          '[data-form-turnstile="status"]',
+        ) as HTMLElement | null;
+        expect(status).not.toBeNull();
+        const hint = status?.querySelector(
+          '[data-form-hint]',
+        ) as HTMLElement | null;
+        expect(hint).not.toBeNull();
+        if (!hint) {
+          throw new Error(
+            'Expected Turnstile disabled hint to exist',
+          );
+        }
+        expect(hint.getAttribute('data-form-hint')).toBe('helper');
+        expect(hint.textContent).toBe(
+          turnstileCopy.statuses.disabled,
+        );
+      });
     });
   });
 
