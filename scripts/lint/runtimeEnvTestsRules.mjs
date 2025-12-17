@@ -20,6 +20,7 @@ import {
 
 const TESTS_ALLOWED_PATH_SUBSTRINGS = [
   'tests/helpers/runtimeEnvHarness.ts',
+  'tests/scripts/runtimeEnvScannerFixtures.ts',
 ];
 
 /**
@@ -39,4 +40,3 @@ export const TESTS_RUNTIME_ENV_USAGE_PATTERNS = [
     ...TESTS_ALLOWED_PATH_SUBSTRINGS,
   ],
 }));
-

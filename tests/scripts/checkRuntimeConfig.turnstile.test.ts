@@ -7,6 +7,12 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
 import { scanTurnstileEnvUsage } from '../../scripts/checkRuntimeConfig.mjs';
+import {
+  TURNSTILE_SECRET_DIRECT_SNIPPET,
+  TURNSTILE_SECRET_VARIANTS_SNIPPET,
+  TURNSTILE_SITE_KEY_DIRECT_SNIPPET,
+  TURNSTILE_SITE_KEY_VARIANTS_SNIPPET,
+} from './runtimeEnvScannerFixtures';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,10 +20,7 @@ const __dirname = path.dirname(__filename);
 describe('Turnstile env usage rules', () => {
   it('flags direct NEXT_PUBLIC_TURNSTILE_SITE_KEY usage', () => {
     const filePath = 'src/example/turnstileSiteKey.tsx';
-    const content = `
-      const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-      console.log(siteKey);
-    `;
+    const content = TURNSTILE_SITE_KEY_DIRECT_SNIPPET;
 
     const violations = scanTurnstileEnvUsage(filePath, content);
     expect(violations.length).toBe(1);
@@ -26,12 +29,7 @@ describe('Turnstile env usage rules', () => {
 
   it('flags common NEXT_PUBLIC_TURNSTILE_SITE_KEY variants (optional chaining + bracket)', () => {
     const filePath = 'src/example/turnstileSiteKeyVariants.tsx';
-    const content = `
-      const a = process.env['NEXT_PUBLIC_TURNSTILE_SITE_KEY'];
-      const b = process?.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-      const c = process.env?.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-      const d = process?.env?.['NEXT_PUBLIC_TURNSTILE_SITE_KEY'];
-    `;
+    const content = TURNSTILE_SITE_KEY_VARIANTS_SNIPPET;
 
     const violations = scanTurnstileEnvUsage(filePath, content);
     const siteKeyViolations = violations.filter(
@@ -43,10 +41,7 @@ describe('Turnstile env usage rules', () => {
 
   it('flags direct TURNSTILE_SECRET usage', () => {
     const filePath = 'src/example/turnstileSecret.ts';
-    const content = `
-      const secret = process.env.TURNSTILE_SECRET;
-      console.log(secret);
-    `;
+    const content = TURNSTILE_SECRET_DIRECT_SNIPPET;
 
     const violations = scanTurnstileEnvUsage(filePath, content);
     expect(violations.length).toBe(1);
@@ -55,12 +50,7 @@ describe('Turnstile env usage rules', () => {
 
   it('flags common TURNSTILE_SECRET variants (optional chaining + bracket)', () => {
     const filePath = 'src/example/turnstileSecretVariants.ts';
-    const content = `
-      const a = process.env['TURNSTILE_SECRET'];
-      const b = process?.env.TURNSTILE_SECRET;
-      const c = process.env?.TURNSTILE_SECRET;
-      const d = process?.env?.['TURNSTILE_SECRET'];
-    `;
+    const content = TURNSTILE_SECRET_VARIANTS_SNIPPET;
 
     const violations = scanTurnstileEnvUsage(filePath, content);
     const secretViolations = violations.filter(

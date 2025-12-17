@@ -7,6 +7,10 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
 import { scanRuntimeEnvUsageInTests } from '../../scripts/checkRuntimeConfig.mjs';
+import {
+  NON_TEST_NODE_ENV_SNIPPET,
+  TEST_FILE_NODE_ENV_SNIPPET,
+} from './runtimeEnvScannerFixtures';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,13 +19,7 @@ describe('runtime env usage rules in tests', () => {
   it('flags direct env usage in test files outside the harness', () => {
     const filePath =
       'tests/example/runtimeEnvBad.test.ts';
-    const content = `
-      describe('example', () => {
-        it('reads NODE_ENV directly', () => {
-          expect(process.env.NODE_ENV).toBeDefined();
-        });
-      });
-    `;
+    const content = TEST_FILE_NODE_ENV_SNIPPET;
 
     const violations = scanRuntimeEnvUsageInTests(
       filePath,
@@ -56,11 +54,7 @@ describe('runtime env usage rules in tests', () => {
 
   it('does nothing for non-test paths', () => {
     const filePath = 'src/lib/runtimeEnv.ts';
-    const content = `
-      if (process.env.NODE_ENV === 'production') {
-        console.log('prod');
-      }
-    `;
+    const content = NON_TEST_NODE_ENV_SNIPPET;
 
     const violations = scanRuntimeEnvUsageInTests(
       filePath,
@@ -70,4 +64,3 @@ describe('runtime env usage rules in tests', () => {
     expect(violations.length).toBe(0);
   });
 });
-

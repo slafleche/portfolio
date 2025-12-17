@@ -7,6 +7,10 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
 import { scanBrevoEnvUsage } from '../../scripts/checkRuntimeConfig.mjs';
+import {
+  BREVO_DIRECT_SNIPPET,
+  BREVO_VARIANTS_SNIPPET,
+} from './runtimeEnvScannerFixtures';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,13 +18,7 @@ const __dirname = path.dirname(__filename);
 describe('Brevo env usage rules', () => {
   it('flags direct Brevo env usage for all four keys', () => {
     const filePath = 'src/server/exampleBrevo.ts';
-    const content = `
-      const apiKey = process.env.BREVO_API_KEY;
-      const from = process.env.MAIL_FROM;
-      const to = process.env.MAIL_TO;
-      const prefix = process.env.CONTACT_SUBJECT_PREFIX;
-      console.log(apiKey, from, to, prefix);
-    `;
+    const content = BREVO_DIRECT_SNIPPET;
 
     const violations = scanBrevoEnvUsage(filePath, content);
     const ids = violations.map((violation) => violation.rule.id);
@@ -33,27 +31,7 @@ describe('Brevo env usage rules', () => {
 
   it('flags common Brevo env variants (optional chaining + bracket)', () => {
     const filePath = 'src/server/exampleBrevoVariants.ts';
-    const content = `
-      const apiKeyA = process.env['BREVO_API_KEY'];
-      const apiKeyB = process?.env.BREVO_API_KEY;
-      const apiKeyC = process.env?.BREVO_API_KEY;
-      const apiKeyD = process?.env?.['BREVO_API_KEY'];
-
-      const fromA = process.env['MAIL_FROM'];
-      const fromB = process?.env.MAIL_FROM;
-      const fromC = process.env?.MAIL_FROM;
-      const fromD = process?.env?.['MAIL_FROM'];
-
-      const toA = process.env['MAIL_TO'];
-      const toB = process?.env.MAIL_TO;
-      const toC = process.env?.MAIL_TO;
-      const toD = process?.env?.['MAIL_TO'];
-
-      const prefixA = process.env['CONTACT_SUBJECT_PREFIX'];
-      const prefixB = process?.env.CONTACT_SUBJECT_PREFIX;
-      const prefixC = process.env?.CONTACT_SUBJECT_PREFIX;
-      const prefixD = process?.env?.['CONTACT_SUBJECT_PREFIX'];
-    `;
+    const content = BREVO_VARIANTS_SNIPPET;
 
     const violations = scanBrevoEnvUsage(filePath, content);
     const ids = violations.map((violation) => violation.rule.id);
