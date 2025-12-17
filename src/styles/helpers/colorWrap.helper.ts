@@ -23,7 +23,7 @@
  */
 import chroma, { type Color } from 'chroma-js';
 import { converter, parse, type Oklch } from 'culori';
-import { isHostedEnv, notProd } from '../../lib/runtimeEnv';
+import { notProd } from '../../lib/runtimeEnv';
 export type { Color } from 'chroma-js';
 
 type MixArgs = Parameters<Color['mix']>;

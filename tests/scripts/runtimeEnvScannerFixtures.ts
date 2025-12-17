@@ -44,6 +44,19 @@ export const BRANCH_ENV_BARE_SNIPPET = `
   const c = BRANCH;
 `;
 
+export const PRIVATE_LAUNCH_ENV_SNIPPET = `
+  const user = PRIVATE_LAUNCH_USER;
+  const password = PRIVATE_LAUNCH_PASSWORD;
+  const enabledStaging = PRIVATE_LAUNCH_ENABLED_STAGING;
+  const enabledRelease = PRIVATE_LAUNCH_ENABLED_RELEASE;
+`;
+
+export const PRIVATE_LAUNCH_CONSOLE_LOG_SNIPPET = `
+  console.error(
+    '[privateLaunch] PRIVATE_LAUNCH_PASSWORD must be at least 60 characters; refusing to accept a shorter password.',
+  );
+`;
+
 export const TEST_FILE_NODE_ENV_SNIPPET = `
   describe('example', () => {
     it('reads NODE_ENV directly', () => {
@@ -111,4 +124,3 @@ export const BREVO_VARIANTS_SNIPPET = `
   const prefixC = process.env?.CONTACT_SUBJECT_PREFIX;
   const prefixD = process?.env?.['CONTACT_SUBJECT_PREFIX'];
 `;
-

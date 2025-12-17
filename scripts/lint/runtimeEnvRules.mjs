@@ -35,16 +35,17 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
     // This deliberately does not try to follow aliases (for example,
     // const env = process.env; env.NODE_ENV) and focuses on the obvious
     // direct access patterns.
-    regex:
-      /process\s*(?:\.\s*env|\?\.\s*env)\s*(?:\.\s*|\?\.\s*)?(?:NODE_ENV|\[['"]NODE_ENV['"]\])\b/,
+    // Match any occurrence of NODE_ENV in code; the scanner is responsible
+    // for scoping this to code files and allowed paths.
+    regex: /\bNODE_ENV\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
   },
   {
     id: 'runtime-vercel-env',
     description:
       'Use runtimeEnv helpers instead of process.env.VERCEL_ENV.',
-    regex:
-      /process\s*(?:\.\s*env|\?\.\s*env)\s*(?:\.\s*|\?\.\s*)?(?:VERCEL_ENV|\[['"]VERCEL_ENV['"]\])\b/,
+    // Match any occurrence of VERCEL_ENV in code.
+    regex: /\bVERCEL_ENV\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
   },
   {
@@ -58,5 +59,15 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
     regex:
       /\b(?:VERCEL_GIT_COMMIT_REF|VERCEL_GIT_BRANCH|BRANCH)\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
+  {
+    id: 'runtime-private-launch',
+    description:
+      'Route PRIVATE_LAUNCH_* env usage through dedicated helpers instead of reading the env vars directly.',
+    // Match any occurrence of the private-launch env keys. The scanner uses
+    // path allowlists to exempt canonical helpers / harnesses.
+    regex:
+      /\bPRIVATE_LAUNCH_(?:USER|PASSWORD|ENABLED_STAGING|ENABLED_RELEASE)\b/,
+    allowedPathSubstrings: [],
   },
 ];

@@ -1,7 +1,7 @@
 import { color } from '../styles/helpers/colorWrap.helper';
 import type { CardGradientPack } from '../styles/helpers/cardGradient.helper';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
-import { m } from 'css-calipers';
+import { m, type IMeasurement } from 'css-calipers';
 export type ColorKeys = keyof typeof colors;
 
 export type {
@@ -213,6 +213,18 @@ const baseColours = {
   bg: color('#000000'),
 };
 
+type PxMeasurement = IMeasurement<'px'>;
+
+interface ArchVars {
+  top: PxMeasurement;
+  curveHeight: PxMeasurement;
+  ry: PxMeasurement;
+  bumpHeight: PxMeasurement;
+  bumpWidth: PxMeasurement;
+  bumpBaseWidth: number;
+  bumpTipWidth: PxMeasurement;
+}
+
 export const colors = {
   // Main Colours
   brand: color('#5b4199'),
@@ -295,7 +307,7 @@ export const borderVars = {
   radius: m(16),
 };
 
-export const archVars = {
+export const archVars: ArchVars = {
   top: m(55),
   curveHeight: m(15),
   ry: m(70),

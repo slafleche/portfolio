@@ -32,15 +32,88 @@ function normalizePath(filePath) {
   return filePath.split(path.sep).join('/');
 }
 
+function isIndexInsideStringLiteral(line, index) {
+  let inSingle = false;
+  let inDouble = false;
+  let inBacktick = false;
+
+  for (let position = 0; position < line.length; position += 1) {
+    const char = line[position];
+    const prev = position > 0 ? line[position - 1] : null;
+
+    if (char === "'" && prev !== '\\' && !inDouble && !inBacktick) {
+      inSingle = !inSingle;
+    } else if (char === '"' && prev !== '\\' && !inSingle && !inBacktick) {
+      inDouble = !inDouble;
+    } else if (char === '`' && prev !== '\\') {
+      inBacktick = !inBacktick;
+    }
+
+    if (position === index) {
+      return inSingle || inDouble || inBacktick;
+    }
+  }
+
+  return false;
+}
+
+function isPrivateLaunchKeyOnlyInStrings(line) {
+  const envKeyRegex =
+    /PRIVATE_LAUNCH_(?:USER|PASSWORD|ENABLED_STAGING|ENABLED_RELEASE)/g;
+  let match;
+  let sawMatch = false;
+
+  while ((match = envKeyRegex.exec(line)) !== null) {
+    sawMatch = true;
+    const index = match.index;
+    if (!isIndexInsideStringLiteral(line, index)) {
+      return false;
+    }
+  }
+
+  return sawMatch;
+}
+
+function shouldSkipMatch(category, line, pattern, context = {}) {
+  // Console logging exceptions for private-launch env keys: allow them to be
+  // mentioned in log messages while still treating other usages as violations.
+  if (
+    category === 'env' &&
+    pattern.id === 'runtime-private-launch' &&
+    context.inConsoleBlock
+  ) {
+    // If this line also performs a real env access, do not skip.
+    if (line.includes('process.env')) {
+      return false;
+    }
+
+    // Skip only when the private-launch keys appear inside string literals
+    // (for example, log messages) within a console.* call.
+    if (isPrivateLaunchKeyOnlyInStrings(line)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function scanWithPatterns(category, filePath, content, patterns) {
   /** @type {RuntimeConfigViolation[]} */
   const violations = [];
   const posix = normalizePath(filePath);
   const lines = content.split('\n');
 
+  let inConsoleBlock = false;
+
   for (let index = 0; index < lines.length; index += 1) {
     const lineNumber = index + 1;
     const line = lines[index];
+
+    const startsConsoleBlock =
+      /\bconsole\.(?:log|error|warn|info)\s*\(/.test(line);
+    if (startsConsoleBlock) {
+      inConsoleBlock = true;
+    }
 
     for (const pattern of patterns) {
       if (
@@ -53,6 +126,13 @@ function scanWithPatterns(category, filePath, content, patterns) {
       }
 
       if (pattern.regex.test(line)) {
+        if (
+          shouldSkipMatch(category, line, pattern, {
+            inConsoleBlock,
+          })
+        ) {
+          continue;
+        }
         violations.push({
           category,
           filePath: posix,
@@ -61,6 +141,10 @@ function scanWithPatterns(category, filePath, content, patterns) {
           message: pattern.description,
         });
       }
+    }
+
+    if (inConsoleBlock && /\)\s*;?\s*$/.test(line)) {
+      inConsoleBlock = false;
     }
   }
 

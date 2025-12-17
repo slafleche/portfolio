@@ -42,22 +42,20 @@ type EnvHarness = {
   };
 };
 
-const envHarness: EnvHarness = {
-  // Import at runtime to avoid coupling tests to module resolution ordering.
-  installEnvOverrides: (overrides) => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { installEnvOverrides } = require('../../helpers/runtimeEnvHarness') as {
-      installEnvOverrides: (
-        overrides: Record<string, string>,
+  const envHarness: EnvHarness = {
+    // Import at runtime to avoid coupling tests to module resolution ordering.
+    installEnvOverrides: (overrides) => {
+      const { installEnvOverrides } = require('../../helpers/runtimeEnvHarness') as {
+        installEnvOverrides: (
+          overrides: Record<string, string>,
       ) => () => void;
-    };
-    return installEnvOverrides(overrides);
-  },
-  getRuntimeEnv: () => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { getRuntimeEnv } = require('../../helpers/runtimeEnvHarness') as {
-      getRuntimeEnv: () => {
-        nodeEnv: string;
+      };
+      return installEnvOverrides(overrides);
+    },
+    getRuntimeEnv: () => {
+      const { getRuntimeEnv } = require('../../helpers/runtimeEnvHarness') as {
+        getRuntimeEnv: () => {
+          nodeEnv: string;
       };
     };
     return getRuntimeEnv();

@@ -12,6 +12,8 @@ import {
   BRANCH_ENV_DIRECT_SNIPPET,
   NODE_ENV_DIRECT_SNIPPET,
   NODE_ENV_VARIANTS_SNIPPET,
+  PRIVATE_LAUNCH_ENV_SNIPPET,
+  PRIVATE_LAUNCH_CONSOLE_LOG_SNIPPET,
   VERCEL_ENV_DIRECT_SNIPPET,
   VERCEL_ENV_VARIANTS_SNIPPET,
 } from './runtimeEnvScannerFixtures';
@@ -91,6 +93,30 @@ describe('runtime env usage rules', () => {
     );
 
     expect(branchViolations.length).toBe(3);
+  });
+
+  it('flags private-launch env keys by name', () => {
+    const filePath = 'src/example/envPrivateLaunch.ts';
+    const content = PRIVATE_LAUNCH_ENV_SNIPPET;
+
+    const violations = scanRuntimeEnvUsage(filePath, content);
+    const privateLaunchViolations = violations.filter(
+      (violation) => violation.rule.id === 'runtime-private-launch',
+    );
+
+    expect(privateLaunchViolations.length).toBe(4);
+  });
+
+  it('allows private-launch env keys inside console log strings', () => {
+    const filePath = 'src/example/envPrivateLaunchConsoleLog.ts';
+    const content = PRIVATE_LAUNCH_CONSOLE_LOG_SNIPPET;
+
+    const violations = scanRuntimeEnvUsage(filePath, content);
+    const privateLaunchViolations = violations.filter(
+      (violation) => violation.rule.id === 'runtime-private-launch',
+    );
+
+    expect(privateLaunchViolations.length).toBe(0);
   });
 
   it('does not flag env usage inside runtimeEnv helper itself', () => {

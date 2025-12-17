@@ -1,6 +1,6 @@
 'use client';
 
-import { notProd } from '@/lib/runtimeEnv';
+import { isOnlyProd } from '@/lib/runtimeEnv';
 import type {
   ContactFormBlockValidationResult,
   ContactFormSubmitStatus,
@@ -64,7 +64,8 @@ export const logContactFormDebugEvent = (
     | ContactFormDebugSubmitAttemptPayload
     | ContactFormDebugSubmitResultPayload,
 ): void => {
-  if (!notProd()) {
+  if (isOnlyProd()) {
+    // Disable logging in production.
     return;
   }
   const logger = customLogger ?? defaultLogger;

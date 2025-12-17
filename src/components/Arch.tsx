@@ -14,7 +14,7 @@ import { createDomId } from '../lib/dom';
 
 import { shadowTotalY } from '../styles/helpers/shadow.helper';
 import { noiseStyle } from '../styles/helpers/noiseSVG.helper';
-import { assertUnit } from 'css-calipers';
+import { assertUnit, type IMeasurement } from 'css-calipers';
 import { archVars } from '../tokens/global.tokens';
 import { archGlassVars } from '../tokens/arch.tokens';
 import { notProd } from '../lib/runtimeEnv';
@@ -68,7 +68,7 @@ function Arch({
   const archTop = archVars.top;
   const archCurveHeight = archVars.curveHeight;
   const fullHeight = archTop.getValue() + archCurveHeight.getValue();
-  const shadowYOffset = shadowTotalY();
+  const shadowYOffset: IMeasurement = shadowTotalY();
   if (notProd()) {
     assertUnit(shadowYOffset, 'px', 'Arch shadowTotalY');
   }
