@@ -81,8 +81,12 @@
     ]
   },
   "packageManager": "yarn@4.11.0",
+  "engines": {
+    "node": "20.19.6"
+  },
   "scripts": {
     "ci:candidate": "yarn setup:noVideo && yarn lint && yarn typecheck && yarn test",
+    "ci:local": "CI=true yarn ci:candidate",
     "ci:publish": "yarn setup && yarn lint && yarn typecheck && yarn test && yarn build",
     "fresh": "yarn install && yarn setup",
     "setup": "yarn locales:prep && yarn format:assets && yarn locales:publish",
