@@ -13,7 +13,7 @@ import {
 } from '@/data/generated/favicons.manifest.gen';
 import { type Locale } from '@/lib/locales/translations';
 import debugRoutes from '@/data/debugRoutes.json';
-import { notProd } from '../src/lib/runtimeEnv';
+import { isIndexingAllowed, notProd } from '../src/lib/runtimeEnv';
 
 if (notProd()) {
   const globalTracker = globalThis as {
@@ -54,6 +54,7 @@ export default async function RootLayout({
   const faviconMeta =
     FAVICON_META_BUNDLES_BY_LOCALE[locale] ??
     FAVICON_META_BUNDLES_BY_LOCALE[fallbackLocale];
+  const indexingAllowed = isIndexingAllowed();
 
   return (
     <html lang={locale}>
@@ -100,6 +101,10 @@ export default async function RootLayout({
           content={manifestMeta.shortName}
         />
         <meta name="description" content={faviconMeta.description} />
+        <meta
+          name="robots"
+          content={indexingAllowed ? 'index,follow' : 'noindex,nofollow'}
+        />
         <meta name="keywords" content={faviconMeta.keywords} />
         <meta name="author" content={faviconMeta.author} />
         <meta
