@@ -9,7 +9,7 @@ import { localizedToCanonicalSlugs } from '@/lib/routes/localeSlugs';
 import {
   getPrivateLaunchEnvConfig,
   getRuntimeEnv,
-  isOnlyProd,
+  isProd,
 } from '@/lib/runtimeEnv';
 
 const LOCALES = new Set<Locale>(
@@ -33,12 +33,8 @@ function isLocale(segment: string): segment is Locale {
 function isGateEnabled(): boolean {
   const env = getRuntimeEnv();
 
-  const {
-    user,
-    password,
-    enabledForStaging,
-    enabledForRelease,
-  } = getPrivateLaunchEnvConfig();
+  const { user, password, enabledForStaging, enabledForRelease } =
+    getPrivateLaunchEnvConfig();
   if (!user || !password) {
     return false;
   }
@@ -164,10 +160,7 @@ export function middleware(request: NextRequest) {
       ...restSegments
     ] = segments;
 
-    if (
-      isOnlyProd() &&
-      firstSegment === 'debug'
-    ) {
+    if (isProd() && firstSegment === 'debug') {
       return new NextResponse(null, { status: 404 });
     }
 

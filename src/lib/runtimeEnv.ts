@@ -91,12 +91,17 @@ export function isHostedEnv(
   return true;
 }
 
-export function isOnlyProd(): boolean {
+export function isProd(): boolean {
   return isHostedEnv({ onlyProd: true });
 }
 
 export function notProd(): boolean {
-  return !isOnlyProd();
+  return !isProd();
+}
+
+export function isStaging(): boolean {
+  const env = getRuntimeEnv();
+  return env.hostedTier === 'staging';
 }
 
 export interface PrivateLaunchEnvConfig {
@@ -107,7 +112,7 @@ export interface PrivateLaunchEnvConfig {
 }
 
 function parsePrivateLaunchFlag(
-  value: string | undefined,
+  value: string | undefined | null,
 ): boolean {
   if (!value) return false;
   const normalized = value.trim().toLowerCase();
@@ -175,4 +180,32 @@ export function getBrevoEnvConfig(): BrevoEnvConfig {
     retryDelayMs: Number.isNaN(retryDelay) ? null : retryDelay,
     retryJitterMs: Number.isNaN(retryJitter) ? null : retryJitter,
   };
+}
+
+// Indexing control
+export interface IndexingEnvConfig {
+  allowReleaseIndexing: string | null;
+}
+
+export function getIndexingEnvConfig(): IndexingEnvConfig {
+  return {
+    allowReleaseIndexing: process.env.ALLOW_INDEXING ?? null,
+  };
+}
+
+export function isIndexingAllowed(): boolean {
+  const privatePermissions = getPrivateLaunchEnvConfig();
+
+  if (!isProd()) {
+    return false;
+  }
+
+  if (privatePermissions.enabledForRelease) {
+    return false;
+  }
+
+  const indexingPermissions = getIndexingEnvConfig();
+  return parsePrivateLaunchFlag(
+    indexingPermissions.allowReleaseIndexing,
+  );
 }
