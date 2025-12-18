@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import * as s from '@/styles/components/forms.css';
 import { Markdown } from '../Markdown';
 import CircledCheckIcon from '../icons/CircledCheckIcon';
@@ -14,7 +14,7 @@ export default function ContactFormSuccess({
 }: ContactFormSuccessProps) {
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof document === 'undefined') return;
     const heading = headingRef.current;
     if (heading && typeof heading.focus === 'function') {
