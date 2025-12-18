@@ -13,9 +13,9 @@ import {
 } from '@/data/generated/favicons.manifest.gen';
 import { type Locale } from '@/lib/locales/translations';
 import debugRoutes from '@/data/debugRoutes.json';
-import { isIndexingAllowed, notProd } from '../src/lib/runtimeEnv';
+import { isIndexingAllowed, notRelease } from '../src/lib/runtimeEnv';
 
-if (notProd()) {
+if (notRelease()) {
   const globalTracker = globalThis as {
     __debugRoutesLogged?: boolean;
   };

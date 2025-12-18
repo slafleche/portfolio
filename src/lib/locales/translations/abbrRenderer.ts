@@ -1,5 +1,5 @@
 import { abbrSlug, escapeHtml } from '@/lib/stringUtils';
-import { notProd } from '../../runtimeEnv';
+import { notRelease } from '@/lib/runtimeEnv';
 
 export type AbbrLocaleEntry = {
   label?: string | null;
@@ -45,7 +45,7 @@ export const renderAbbreviation = ({
   const definition = sanitize(entry?.definition);
 
   if (!entry || !definition) {
-    if (notProd()) {
+    if (notRelease()) {
       throw new Error(
         `[locales][${locale}] Missing abbreviation definition for slug "${slug}".`,
       );

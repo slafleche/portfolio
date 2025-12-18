@@ -55,6 +55,10 @@ export function isHostedEnv(): boolean {
   return env.hosted;
 }
 
+export function isNotHosted(): boolean {
+  return !isHostedEnv();
+}
+
 export interface PrivateLaunchEnvConfig {
   user?: string | null;
   password?: string | null;
@@ -139,7 +143,7 @@ export function isIndexingAllowed(): boolean {
   const privatePermissions = getPrivateLaunchEnvConfig();
 
   // Never allow indexing if we're not in production as an extra safety measure
-  if (!isRelease()) {
+  if (notRelease()) {
     return false;
   }
 

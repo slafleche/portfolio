@@ -14,7 +14,7 @@ import {
   exitTranslationDelayMs,
 } from '@/styles/components/contactButton.vars';
 import { useElementOffscreen } from '@/lib/useElementOffscreen';
-import { notProd } from '../lib/runtimeEnv';
+import { notRelease } from '@/lib/runtimeEnv';
 
 type Phase = 'hidden' | 'entering' | 'shown' | 'exiting';
 
@@ -77,7 +77,7 @@ export default function ContactButton({
     }
   }, []);
 
-  const enableDebug = debugLog && notProd();
+  const enableDebug = debugLog && notRelease();
   const L = useCallback(
     (...a: unknown[]) => {
       if (!enableDebug) return;

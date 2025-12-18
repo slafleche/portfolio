@@ -35,7 +35,7 @@ import ContactFormSuccess from './ContactFormSuccess';
 import ContactFormError from './ContactFormError';
 import { resolveContactFormScenarioIdFromLocation } from '@/dev/scenarios/contactForm.adapter';
 import { contactFormScenarioMap } from '@/dev/scenarios/contactForm.scenarios';
-import { notProd } from '../../lib/runtimeEnv';
+import { notRelease } from '../../lib/runtimeEnv';
 
 const DEFAULT_ACTION_URL = '/api/contact';
 
@@ -507,7 +507,7 @@ export default function ContactForm({
     [],
   );
 
-  const isDevScenarioActive = notProd() && devScenarioId != null;
+  const isDevScenarioActive = notRelease() && devScenarioId != null;
   const isDevLoadingScenario =
     isDevScenarioActive && devScenarioId === 'loading';
   const isDevSuccessScenario =

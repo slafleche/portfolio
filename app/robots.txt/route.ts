@@ -1,21 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getRuntimeEnv, isIndexingAllowed } from '@/lib/runtimeEnv';
+import { isIndexingAllowed, isRelease } from '@/lib/runtimeEnv';
 
 const TEXT_CONTENT_TYPE = 'text/plain; charset=utf-8';
 
 function buildRobotsBody(): string {
-  const env = getRuntimeEnv();
-
-  // Staging, previews, and uncharted branches: always "do not index".
-  if (env.hostedTier === 'staging' || env.kind !== 'hosted') {
-    return [
-      'User-agent: *',
-      'Disallow: /',
-    ].join('\n');
-  }
-
-  // Production (release): respect the indexing helper.
-  if (isIndexingAllowed()) {
+  // Allow indexing only in release environments where indexing is allowed.
+  if (isRelease() && isIndexingAllowed()) {
     return [
       'User-agent: *',
       'Allow: /',
