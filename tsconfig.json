@@ -39,7 +39,8 @@
   },
   "include": [
     "app/*.tsx",
-    "app/[LOCALE]/**/*.tsx",
+    "app/**/*.ts",
+    "app/**/*.tsx",
     "middleware.ts",
     "src/**/*",
     "tests/**/*",
