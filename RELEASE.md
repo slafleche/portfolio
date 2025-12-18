@@ -28,6 +28,7 @@ GitHub CI (pushes and PRs into `main`):
 - `ci:candidate`
   - `yarn setup:noVideo`
   - `yarn lint`
+  - `yarn typecheck`
   - `yarn test`
 
 ### Candidates (`candidate/<slug>-x.y.z`)
@@ -69,6 +70,7 @@ GitHub CI (pushes and PRs into `staging`):
 - `ci:publish`
   - `yarn setup`
   - `yarn lint`
+  - `yarn typecheck`
   - `yarn test`
   - `yarn build`
 
@@ -92,6 +94,7 @@ GitHub CI (pushes and PRs into `release`):
 - `ci:publish`
   - `yarn setup`
   - `yarn lint`
+  - `yarn typecheck`
   - `yarn test`
   - `yarn build`
 
