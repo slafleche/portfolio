@@ -54,6 +54,7 @@ src/lib/locales/generated/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.staging
 .env.prod
 
 # -----------------------

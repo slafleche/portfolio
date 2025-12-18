@@ -7,6 +7,7 @@ import {
   vi,
 } from 'vitest';
 import type { ContactFormDraft } from '@/modules/contactForm/validation';
+import { withEnvOverrides } from '../helpers/runtimeEnvHarness';
 
 const ORIGINAL_ENV = { ...process.env };
 
@@ -336,15 +337,18 @@ describe('deliverContactMessage', () => {
   });
 
   it('returns not configured when Brevo env vars are missing', async () => {
-    process.env.BREVO_API_KEY = '';
-    delete process.env.MAIL_FROM;
-    delete process.env.MAIL_TO;
-
     const { deliverContactMessage } = await import(
       '@/server/contact/deliverContactMessage'
     );
 
-    const result = await deliverContactMessage(buildDraft());
+    const result = await withEnvOverrides(
+      {
+        BREVO_API_KEY: '',
+        MAIL_FROM: '',
+        MAIL_TO: '',
+      },
+      () => deliverContactMessage(buildDraft()),
+    );
     expect(result.ok).toBe(false);
     expect(result.status).toBe(503);
     expect(result.error).toBeInstanceOf(Error);

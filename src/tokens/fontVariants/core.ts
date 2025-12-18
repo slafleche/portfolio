@@ -11,6 +11,7 @@ import type {
   FontFamilyDef,
   CSS_TYPES,
 } from '../../styles/helpers/types.helper';
+import { notProd } from '../../lib/runtimeEnv';
 
 export type FontVariantDefinition = {
   family: FontFamilyDef;
@@ -162,7 +163,7 @@ const resolveVariantWeights = (
         baseNumber > family.weights.high
       ) {
         const message = `fontVariants: default font weight for "${family.family}" (${baseNumber}) should stay within [${family.weights.low}, ${family.weights.high}].`;
-        if (process.env.NODE_ENV !== 'production') {
+        if (notProd()) {
           throw new Error(message);
         }
         console.warn(message);
@@ -179,7 +180,7 @@ const resolveVariantWeights = (
         strongNumber > family.weights.high
       ) {
         const message = `fontVariants: strong font weight for "${family.family}" (${strongNumber}) should stay within [${family.weights.low}, ${family.weights.high}].`;
-        if (process.env.NODE_ENV !== 'production') {
+        if (notProd()) {
           throw new Error(message);
         }
         console.warn(message);

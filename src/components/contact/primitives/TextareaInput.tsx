@@ -8,6 +8,7 @@ import {
 import type { ComponentPropsWithoutRef } from 'react';
 import clsx from 'clsx';
 import * as s from '@/styles/components/forms.css';
+import { notProd } from '../../../lib/runtimeEnv';
 
 type AutoResizeHandlers = {
   onInit: (node: HTMLTextAreaElement) => void;
@@ -23,7 +24,14 @@ export const TextareaInput = forwardRef<
   TextareaInputProps
 >(
   (
-    { className, autoResizeHandlers, value, style, ...props },
+    {
+      className,
+      autoResizeHandlers,
+      value,
+      style,
+      disabled,
+      ...props
+    },
     ref,
   ) => {
     const innerRef = useRef<HTMLTextAreaElement | null>(null);
@@ -35,7 +43,7 @@ export const TextareaInput = forwardRef<
     useEffect(() => {
       if (!autoResizeHandlers) return;
       if (hasInit === hasSync) return;
-      if (process.env.NODE_ENV !== 'production') {
+      if (notProd()) {
         console.error(
           'TextareaInput autoResizeHandlers requires both onInit and onSync callbacks.',
         );
@@ -90,6 +98,8 @@ export const TextareaInput = forwardRef<
         ref={handleRef}
         className={clsx(s.textarea, className)}
         style={computedStyle}
+        disabled={disabled}
+        data-disabled={disabled ? 'true' : undefined}
       />
     );
   },

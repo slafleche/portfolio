@@ -60,6 +60,7 @@ describe('ContactDialogProvider', () => {
           formCopy={formCopy}
           privacyCopy={privacyCopy}
           closeLabel="Close"
+          turnstileSiteKey={turnstileHarness.getSiteKey()}
         >
           <ContactDialogTrigger>Open contact</ContactDialogTrigger>
         </ContactDialogProvider>,
@@ -155,6 +156,7 @@ describe('ContactDialogProvider', () => {
           formCopy={formCopy}
           privacyCopy={privacyCopy}
           closeLabel="Close"
+          turnstileSiteKey={turnstileHarness.getSiteKey()}
         >
           <ContactDialogTrigger>Open contact</ContactDialogTrigger>
         </ContactDialogProvider>,
@@ -238,6 +240,7 @@ describe('ContactDialogProvider', () => {
           formCopy={formCopy}
           privacyCopy={privacyCopy}
           closeLabel="Close"
+          turnstileSiteKey={turnstileHarness.getSiteKey()}
         >
           <ContactDialogTrigger>Open contact</ContactDialogTrigger>
         </ContactDialogProvider>,

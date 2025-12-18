@@ -1,8 +1,6 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import process from 'node:process';
-
 import {
   MARKDOWN_MESSAGE_KEYS,
   MARKDOWN_MESSAGES,
@@ -140,8 +138,6 @@ const transformMarkdownWithAbbr = (
 };
 
 const main = async () => {
-  process.env.NODE_ENV = 'production';
-
   const localeMessages: Array<{
     locale: Locale;
     messages: LocaleMessagesShape;

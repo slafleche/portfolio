@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import * as s from '@/styles/components/forms.css';
+import { notProd } from '../../../lib/runtimeEnv';
 
 type FormLabelProps = {
   className?: string;
@@ -17,11 +18,7 @@ export function FormLabel({
   required,
   requiredText,
 }: FormLabelProps) {
-  if (
-    required &&
-    !requiredText &&
-    process.env.NODE_ENV !== 'production'
-  ) {
+  if (required && !requiredText && notProd()) {
     console.warn(
       `FormLabel for "${htmlFor}" is missing requiredText.`,
     );
@@ -37,14 +34,9 @@ export function FormLabel({
         <span data-form="label-required" className={s.required}>
           {requiredText ? (
             <>
-              <span aria-hidden="true">
-                {requiredText}
-              </span>
+              <span aria-hidden="true">{requiredText}</span>
               <span data-visible="sc-only">{requiredText}</span>
-              <span aria-hidden="true">
-                {' '}
-                *
-              </span>
+              <span aria-hidden="true"> *</span>
             </>
           ) : (
             <span aria-hidden="true">*</span>

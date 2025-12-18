@@ -277,6 +277,13 @@ describe('Contact form shell harness', () => {
 
       await waitFor(() => {
         expect(submitHelper).toHaveBeenCalledTimes(1);
+
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        const inlineText = inlineRegion?.textContent ?? '';
+        expect(inlineText).toContain(scenario.expectedSummary);
       });
 
       // Second submit: success clears summaries from the message centre.

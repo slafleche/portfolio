@@ -23,6 +23,7 @@
  */
 import chroma, { type Color } from 'chroma-js';
 import { converter, parse, type Oklch } from 'culori';
+import { notProd } from '../../lib/runtimeEnv';
 export type { Color } from 'chroma-js';
 
 type MixArgs = Parameters<Color['mix']>;
@@ -274,7 +275,7 @@ export function wrap(input: ColorInput): ColorWrapper {
     // dummy immutable wrapper
     const err = (fn: string) => {
       const msg = `Cannot modify symbolic color 'currentColor' via ${fn}().`;
-      if (process.env.NODE_ENV !== 'production') throw new Error(msg);
+      if (notProd()) throw new Error(msg);
       console.warn(msg);
       return symbolic;
     };

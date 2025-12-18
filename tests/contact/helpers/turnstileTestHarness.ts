@@ -1,3 +1,8 @@
+import {
+  getRuntimeEnv,
+  installEnvOverrides,
+} from '../../helpers/runtimeEnvHarness';
+
 type TurnstileApiOptions = {
   sitekey: string;
   callback?: (token: string) => void;
@@ -60,6 +65,10 @@ export type TurnstileHarnessController = {
    */
   getLastWidgetContainer: () => HTMLElement | null;
   /**
+   * The site key currently in use for Turnstile (for wiring props).
+   */
+  getSiteKey: () => string;
+  /**
    * Restore NEXT_PUBLIC_TURNSTILE_SITE_KEY and window.turnstile to
    * their original values.
    */
@@ -72,11 +81,16 @@ export function enableTurnstileHarness(
   const mode: TurnstileHarnessMode = options.mode ?? 'autoVerify';
   const siteKeyVariant: TurnstileSiteKeyVariant =
     options.siteKeyVariant ?? 'alwaysPass';
+  const siteKey = CLOUDFLARE_TEST_SITE_KEYS[siteKeyVariant];
 
   const hasWindow = typeof window !== 'undefined';
 
-  const originalSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const {
+    nodeEnv,
+  } = getRuntimeEnv();
+
   let originalTurnstile: Window['turnstile'] | undefined;
+  let restoreEnv: (() => void) | null = null;
 
   let lastOptions: TurnstileApiOptions | null = null;
   let lastContainer: HTMLElement | null = null;
@@ -86,10 +100,9 @@ export function enableTurnstileHarness(
     const extendedWindow = window as ExtendedWindow;
     originalTurnstile = extendedWindow.turnstile;
 
-    if (!originalSiteKey || originalSiteKey.trim() === '') {
-      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY =
-        CLOUDFLARE_TEST_SITE_KEYS[siteKeyVariant];
-    }
+    restoreEnv = installEnvOverrides({
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: siteKey,
+    });
 
     const mockTurnstile: NonNullable<Window['turnstile']> = {
       render: (container, renderOptions) => {
@@ -109,7 +122,7 @@ export function enableTurnstileHarness(
 
         if (
           mode === 'autoVerify' &&
-          process.env.NODE_ENV !== 'production' &&
+          nodeEnv !== 'production' &&
           typeof renderOptions.callback === 'function'
         ) {
           renderOptions.callback(CLOUDFLARE_TEST_TOKEN);
@@ -153,10 +166,8 @@ export function enableTurnstileHarness(
   const getLastWidgetContainer = () => lastContainer;
 
   const restore = () => {
-    if (typeof originalSiteKey === 'undefined') {
-      delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-    } else {
-      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = originalSiteKey;
+    if (restoreEnv) {
+      restoreEnv();
     }
 
     if (!hasWindow) return;
@@ -176,6 +187,7 @@ export function enableTurnstileHarness(
     fail,
     getLastOptions,
     getLastWidgetContainer,
+    getSiteKey: () => siteKey,
     restore,
   };
 }

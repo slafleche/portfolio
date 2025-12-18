@@ -9,6 +9,7 @@ import { buildMetaCopy } from '@/lib/locales/sections/meta.locale';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { SkipNavContent } from '@/components/SkipNavContent';
+import { getTurnstileEnvConfig } from '@/lib/runtimeEnv';
 
 interface SiteLayoutProps {
   children: ReactNode;
@@ -25,6 +26,9 @@ export default async function SiteLayout({
   const contactFormCopy = buildContactFormCopy(translator);
   const privacyCopy = buildPrivacyCopy(translator);
   const closeLabel = translator('close-label');
+  const {
+    siteKey: turnstileSiteKey,
+  } = getTurnstileEnvConfig();
 
   return (
     <WindowSizeProvider>
@@ -33,6 +37,7 @@ export default async function SiteLayout({
           formCopy={contactFormCopy}
           privacyCopy={privacyCopy}
           closeLabel={closeLabel}
+          turnstileSiteKey={turnstileSiteKey}
         >
           <SkipNavContent id="body">{children}</SkipNavContent>
         </ContactDialogProvider>

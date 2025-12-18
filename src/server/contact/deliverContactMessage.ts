@@ -1,5 +1,6 @@
 import type { ContactFormDraft } from '@/modules/contactForm/validation';
 import type { RetryReason } from '@/server/contact/contactTelemetry';
+import { getBrevoEnvConfig } from '@/lib/runtimeEnv';
 
 export type DeliveryAttempt = {
   attempt: number;
@@ -20,8 +21,7 @@ export type DeliveryResult = {
 };
 
 const BREVO_ENDPOINT = 'https://api.brevo.com/v3/smtp/email';
-const SUBJECT_PREFIX =
-  process.env.CONTACT_SUBJECT_PREFIX ?? '[Portfolio Contact]';
+const DEFAULT_SUBJECT_PREFIX = '[Portfolio Contact]';
 const BREVO_TIMEOUT_MS = Number(process.env.BREVO_TIMEOUT_MS ?? 8000);
 const BREVO_RETRY_DELAY_MS = Number(
   process.env.BREVO_RETRY_DELAY_MS ?? 350,
@@ -80,9 +80,12 @@ const retryReasonFor = (
   return 'network';
 };
 
-const formatPlainTextBody = (draft: ContactFormDraft) => {
+const formatPlainTextBody = (
+  draft: ContactFormDraft,
+  subjectPrefix: string,
+) => {
   return [
-    `${SUBJECT_PREFIX} Message from ${draft.name}`,
+    `${subjectPrefix} Message from ${draft.name}`,
     '',
     `Name: ${draft.name}`,
     `Email: ${draft.email}`,
@@ -96,6 +99,7 @@ const buildPayload = (
   draft: ContactFormDraft,
   senderEmail: string,
   recipientEmail: string,
+  subjectPrefix: string,
 ) => ({
   headers: {
     'X-Portfolio-Contact': 'true',
@@ -114,18 +118,21 @@ const buildPayload = (
     email: draft.email,
     name: draft.name,
   },
-  subject: `${SUBJECT_PREFIX} ${draft.name}`,
-  textContent: formatPlainTextBody(draft),
+  subject: `${subjectPrefix} ${draft.name}`,
+  textContent: formatPlainTextBody(draft, subjectPrefix),
 });
 
 export async function deliverContactMessage(
   draft: ContactFormDraft,
 ): Promise<DeliveryResult> {
-  const apiKey = process.env.BREVO_API_KEY;
-  const senderEmail = process.env.MAIL_FROM;
-  const recipientEmail = process.env.MAIL_TO;
+  const {
+    apiKey,
+    mailFrom,
+    mailTo,
+    subjectPrefix,
+  } = getBrevoEnvConfig();
 
-  if (!apiKey || !senderEmail || !recipientEmail) {
+  if (!apiKey || !mailFrom || !mailTo) {
     return {
       ok: false,
       status: 503,
@@ -138,7 +145,12 @@ export async function deliverContactMessage(
 
   const attempts: DeliveryAttempt[] = [];
   const retryReasons: RetryReason[] = [];
-  const payload = buildPayload(draft, senderEmail, recipientEmail);
+  const payload = buildPayload(
+    draft,
+    mailFrom,
+    mailTo,
+    subjectPrefix ?? DEFAULT_SUBJECT_PREFIX,
+  );
 
   for (let attempt = 1; attempt <= MAX_BREVO_ATTEMPTS; attempt += 1) {
     const attemptStart = Date.now();

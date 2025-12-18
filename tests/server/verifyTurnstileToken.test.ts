@@ -7,6 +7,7 @@ import {
   vi,
 } from 'vitest';
 import { verifyTurnstileToken } from '@/server/turnstile/verifyTurnstileToken';
+import { withEnvOverrides } from '../helpers/runtimeEnvHarness';
 
 const ORIGINAL_ENV = { ...process.env } as NodeJS.ProcessEnv;
 
@@ -24,12 +25,15 @@ describe('verifyTurnstileToken', () => {
   });
 
   it('returns missing-secret without calling fetch when secret is absent', async () => {
-    delete process.env.TURNSTILE_SECRET;
-
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
 
-    const result = await verifyTurnstileToken('token-123');
+    const result = await withEnvOverrides(
+      {
+        TURNSTILE_SECRET: '',
+      },
+      () => verifyTurnstileToken('token-123'),
+    );
 
     expect(result.ok).toBe(false);
     expect(result.errorCodes).toEqual([
@@ -39,13 +43,16 @@ describe('verifyTurnstileToken', () => {
   });
 
   it('returns missing-secret without calling fetch when secret is empty string', async () => {
-    process.env.TURNSTILE_BYPASS = '';
-    process.env.TURNSTILE_SECRET = '';
-
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
 
-    const result = await verifyTurnstileToken('token-123');
+    const result = await withEnvOverrides(
+      {
+        TURNSTILE_BYPASS: '',
+        TURNSTILE_SECRET: '',
+      },
+      () => verifyTurnstileToken('token-123'),
+    );
 
     expect(result.ok).toBe(false);
     expect(result.errorCodes).toEqual([
@@ -55,19 +62,28 @@ describe('verifyTurnstileToken', () => {
   });
 
   it('returns missing-token without calling fetch when token is null or undefined', async () => {
-    process.env.TURNSTILE_BYPASS = '';
-    process.env.TURNSTILE_SECRET = 'test-secret';
-
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
 
-    const nullResult = await verifyTurnstileToken(null);
+    const nullResult = await withEnvOverrides(
+      {
+        TURNSTILE_BYPASS: '',
+        TURNSTILE_SECRET: 'test-secret',
+      },
+      () => verifyTurnstileToken(null),
+    );
     expect(nullResult.ok).toBe(false);
     expect(nullResult.errorCodes).toEqual([
       'missing-token',
     ]);
 
-    const undefinedResult = await verifyTurnstileToken(undefined);
+    const undefinedResult = await withEnvOverrides(
+      {
+        TURNSTILE_BYPASS: '',
+        TURNSTILE_SECRET: 'test-secret',
+      },
+      () => verifyTurnstileToken(undefined),
+    );
     expect(undefinedResult.ok).toBe(false);
     expect(undefinedResult.errorCodes).toEqual([
       'missing-token',
@@ -81,15 +97,18 @@ describe('verifyTurnstileToken', () => {
     const token = 'XXXX.DUMMY.TOKEN.XXXX';
     const remoteIp = '203.0.113.10';
 
-    process.env.TURNSTILE_BYPASS = '';
-    process.env.TURNSTILE_SECRET = secret;
-
     const fetchMock = vi.fn().mockResolvedValue({
       json: async () => ({ success: true }),
     } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
-    const result = await verifyTurnstileToken(token, remoteIp);
+    const result = await withEnvOverrides(
+      {
+        TURNSTILE_BYPASS: '',
+        TURNSTILE_SECRET: secret,
+      },
+      () => verifyTurnstileToken(token, remoteIp),
+    );
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [
@@ -118,15 +137,18 @@ describe('verifyTurnstileToken', () => {
     const secret = '1x0000000000000000000000000000000AA';
     const token = 'XXXX.DUMMY.TOKEN.XXXX';
 
-    process.env.TURNSTILE_BYPASS = '';
-    process.env.TURNSTILE_SECRET = secret;
-
     const fetchMock = vi.fn().mockResolvedValue({
       json: async () => ({ success: true }),
     } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
-    await verifyTurnstileToken(token, null);
+    await withEnvOverrides(
+      {
+        TURNSTILE_BYPASS: '',
+        TURNSTILE_SECRET: secret,
+      },
+      () => verifyTurnstileToken(token, null),
+    );
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [
@@ -138,10 +160,6 @@ describe('verifyTurnstileToken', () => {
   });
 
   it('forwards error-codes array on failed verification', async () => {
-    process.env.TURNSTILE_BYPASS = '';
-    process.env.TURNSTILE_SECRET =
-      '2x0000000000000000000000000000000AA';
-
     const fetchMock = vi.fn().mockResolvedValue({
       json: async () => ({
         success: false,
@@ -152,8 +170,13 @@ describe('verifyTurnstileToken', () => {
     } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
-    const result = await verifyTurnstileToken(
-      'XXXX.DUMMY.TOKEN.XXXX',
+    const result = await withEnvOverrides(
+      {
+        TURNSTILE_BYPASS: '',
+        TURNSTILE_SECRET:
+          '2x0000000000000000000000000000000AA',
+      },
+      () => verifyTurnstileToken('XXXX.DUMMY.TOKEN.XXXX'),
     );
 
     expect(result.ok).toBe(false);
@@ -163,16 +186,16 @@ describe('verifyTurnstileToken', () => {
   });
 
   it('returns empty errorCodes array when verification fails without error-codes', async () => {
-    process.env.TURNSTILE_BYPASS = '';
-    process.env.TURNSTILE_SECRET = 'no-error-codes-secret';
-
     const fetchMock = vi.fn().mockResolvedValue({
       json: async () => ({ success: false }),
     } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
-
-    const result = await verifyTurnstileToken(
-      'XXXX.DUMMY.TOKEN.XXXX',
+    const result = await withEnvOverrides(
+      {
+        TURNSTILE_BYPASS: '',
+        TURNSTILE_SECRET: 'no-error-codes-secret',
+      },
+      () => verifyTurnstileToken('XXXX.DUMMY.TOKEN.XXXX'),
     );
 
     expect(result.ok).toBe(false);
@@ -180,10 +203,6 @@ describe('verifyTurnstileToken', () => {
   });
 
   it('forwards timeout-or-duplicate error code for the dummy timeout secret', async () => {
-    process.env.TURNSTILE_BYPASS = '';
-    process.env.TURNSTILE_SECRET =
-      '3x0000000000000000000000000000000AA';
-
     const fetchMock = vi.fn().mockResolvedValue({
       json: async () => ({
         success: false,
@@ -194,8 +213,13 @@ describe('verifyTurnstileToken', () => {
     } as unknown as Response);
     vi.stubGlobal('fetch', fetchMock);
 
-    const result = await verifyTurnstileToken(
-      'XXXX.DUMMY.TOKEN.XXXX',
+    const result = await withEnvOverrides(
+      {
+        TURNSTILE_BYPASS: '',
+        TURNSTILE_SECRET:
+          '3x0000000000000000000000000000000AA',
+      },
+      () => verifyTurnstileToken('XXXX.DUMMY.TOKEN.XXXX'),
     );
 
     expect(result.ok).toBe(false);
@@ -208,9 +232,6 @@ describe('verifyTurnstileToken', () => {
     const secret = '1x0000000000000000000000000000000AA';
     const token = 'XXXX.DUMMY.TOKEN.XXXX';
 
-    process.env.TURNSTILE_BYPASS = '';
-    process.env.TURNSTILE_SECRET = secret;
-
     const fetchError = new Error('network down');
     const fetchMock = vi.fn().mockRejectedValue(fetchError);
     vi.stubGlobal('fetch', fetchMock);
@@ -219,7 +240,13 @@ describe('verifyTurnstileToken', () => {
       .spyOn(console, 'error')
       .mockImplementation(() => {});
 
-    const result = await verifyTurnstileToken(token);
+    const result = await withEnvOverrides(
+      {
+        TURNSTILE_BYPASS: '',
+        TURNSTILE_SECRET: secret,
+      },
+      () => verifyTurnstileToken(token),
+    );
 
     expect(result.ok).toBe(false);
     expect(result.errorCodes).toEqual([

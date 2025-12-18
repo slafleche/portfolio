@@ -1,8 +1,9 @@
 import { assertUnit } from 'css-calipers';
 import { archVars } from '../../tokens/global.tokens';
 import { menuVars } from '../../styles/componentTokens/menu.componentTokens';
+import { notProd } from '../../lib/runtimeEnv';
 
-if (process.env.NODE_ENV !== 'production') {
+if (notProd()) {
   assertUnit(menuVars.height, 'px', 'menuUtils menu height');
   assertUnit(
     menuVars.paddings.horizontal,

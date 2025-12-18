@@ -1,6 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
+import { notProd } from './src/lib/runtimeEnv';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,13 +15,11 @@ const vanillaDebugTest = /\.css\.(ts|tsx|js|jsx|mjs|mts|cts)$/;
 const withVanillaExtract = createVanillaExtractPlugin();
 
 /** @type {import('next').NextConfig} */
-const isDev = process.env.NODE_ENV !== 'production';
-
 const nextConfig = {
   env: {
     NEXT_PUBLIC_MEASUREMENT_DEBUG:
       process.env.NEXT_PUBLIC_MEASUREMENT_DEBUG ??
-      (isDev ? '1' : '0'),
+      (notProd() ? '1' : '0'),
   },
   webpack(config) {
     config.resolve.alias = {
