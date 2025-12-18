@@ -70,4 +70,13 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
       /\bPRIVATE_LAUNCH_(?:USER|PASSWORD|ENABLED_STAGING|ENABLED_RELEASE)\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
   },
+  {
+    id: 'runtime-indexing-env',
+    description:
+      'Route ALLOW_INDEXING env usage through dedicated helpers instead of reading the env var directly.',
+    // Match any occurrence of the indexing env key by name; the scanner uses
+    // path allowlists to exempt the central runtimeEnv helper.
+    regex: /\bALLOW_INDEXING\b/,
+    allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
 ];
