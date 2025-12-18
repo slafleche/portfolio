@@ -103,7 +103,9 @@ export default async function RootLayout({
         <meta name="description" content={faviconMeta.description} />
         <meta
           name="robots"
-          content={indexingAllowed ? 'index,follow' : 'noindex,nofollow'}
+          content={
+            indexingAllowed ? 'index,follow' : 'noindex,nofollow'
+          }
         />
         <meta name="keywords" content={faviconMeta.keywords} />
         <meta name="author" content={faviconMeta.author} />

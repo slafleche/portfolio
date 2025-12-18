@@ -47,3 +47,9 @@ and server logic.
   expectations (for example, assertions that always succeed) when the real
   behaviour has not been wired up yet; it is better for the test to fail
   clearly and honestly until the feature is complete.
+
+## Exploration vs current tests (`tests-layer`)
+
+- Must: Treat existing tests as describing the current implementation, not the target of an in-progress design discussion.
+- Must: When the user is exploring a new idea or challenging assumptions, do not change tests (or bend expectations) just to keep them green unless the user has explicitly asked to implement the new behaviour.
+- May: Allow a proposed design to temporarily conflict with existing tests during the discussion/planning phase; only realign tests once the new behaviour is agreed and implementation has been requested.

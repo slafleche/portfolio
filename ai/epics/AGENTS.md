@@ -63,3 +63,8 @@ repo. These files are the primary input/output for role "hats" such as
   - `#coder` or `#c` reads all of the above before editing code or tests.
 - Should: See `roles/README.md` and any `roles/*.md` documents for detailed
   expectations per role.
+
+## Exploration vs current state (`epics-layer`)
+
+- Must: When shaping or rethinking behaviour under an epic, treat existing code, tests, and docs as describing the **current** implementation, not the proposed design.
+- May: During the planning/spec phase of an epic, let the desired behaviour diverge from the current implementation; once the spec is settled, explicitly call out any mismatches so implementation and tests can be updated deliberately.
