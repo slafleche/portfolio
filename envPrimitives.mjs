@@ -39,7 +39,7 @@ export function notRelease() {
 }
 
 export function isDev() {
-  return !isStaging() && !isRelease();
+  return notStaging() && notRelease();
 }
 
 export function notDev() {
