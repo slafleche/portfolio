@@ -8,11 +8,13 @@ import {
 export type EnvOverrides = Record<string, string>;
 
 /**
- * Apply a set of environment overrides for the duration of a synchronous test
- * function, restoring the original environment afterwards.
+ * Apply a set of environment overrides for the duration of a
+ * synchronous test function, restoring the original environment
+ * afterwards.
  *
- * This helper is intentionally synchronous; use it for code paths where env
- * variables are read eagerly (for example, runtimeEnv helpers).
+ * This helper is intentionally synchronous; use it for code paths
+ * where env variables are read eagerly (for example, runtimeEnv
+ * helpers).
  */
 export function withEnvOverrides<T>(
   overrides: EnvOverrides,
@@ -31,9 +33,9 @@ export function withEnvOverrides<T>(
 }
 
 /**
- * Apply environment overrides for the duration of a test and return a restore
- * function. This is useful for asynchronous flows where env must stay
- * overridden across multiple awaits.
+ * Apply environment overrides for the duration of a test and return a
+ * restore function. This is useful for asynchronous flows where env
+ * must stay overridden across multiple awaits.
  */
 export function installEnvOverrides(
   overrides: EnvOverrides,

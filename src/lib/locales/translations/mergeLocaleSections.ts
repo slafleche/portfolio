@@ -1,4 +1,4 @@
-import { notProd } from "../../runtimeEnv";
+import { notProd } from '../../runtimeEnv';
 
 type RecordLike = Record<string, unknown>;
 

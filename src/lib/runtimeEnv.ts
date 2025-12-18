@@ -1,115 +1,20 @@
-export type HostedTier = 'staging' | 'release';
+import {
+  isDev,
+  notDev,
+  isStaging,
+  notStaging,
+  isRelease,
+  notRelease,
+} from '../config/envPrimitives';
 
-export type RuntimeEnvKind = 'local' | 'hosted' | 'uncharted';
-
-export interface RuntimeEnv {
-  nodeEnv: string;
-  vercelEnv: string | undefined;
-  branch: string | undefined;
-  kind: RuntimeEnvKind;
-  hostedTier: HostedTier | null;
-}
-
-function readBranch(): string | undefined {
-  return (
-    process.env.VERCEL_GIT_COMMIT_REF ??
-    process.env.VERCEL_GIT_BRANCH ??
-    process.env.BRANCH ??
-    undefined
-  );
-}
-
-export function getRuntimeEnv(): RuntimeEnv {
-  const nodeEnv = process.env.NODE_ENV ?? 'development';
-  const vercelEnv = process.env.VERCEL_ENV;
-  const branch = readBranch();
-
-  if (nodeEnv !== 'production') {
-    return {
-      nodeEnv,
-      vercelEnv,
-      branch,
-      kind: 'local',
-      hostedTier: null,
-    };
-  }
-
-  if (vercelEnv === 'production') {
-    return {
-      nodeEnv,
-      vercelEnv,
-      branch,
-      kind: 'hosted',
-      hostedTier: 'release',
-    };
-  }
-
-  if (vercelEnv === 'preview') {
-    if (branch === 'staging') {
-      return {
-        nodeEnv,
-        vercelEnv,
-        branch,
-        kind: 'hosted',
-        hostedTier: 'staging',
-      };
-    }
-
-    return {
-      nodeEnv,
-      vercelEnv,
-      branch,
-      kind: 'uncharted',
-      hostedTier: null,
-    };
-  }
-
-  return {
-    nodeEnv,
-    vercelEnv,
-    branch,
-    kind: vercelEnv ? 'uncharted' : 'local',
-    hostedTier: null,
-  };
-}
-
-export interface IsHostedEnvOptions {
-  onlyProd?: boolean;
-}
-
-export function isHostedEnv(
-  options: IsHostedEnvOptions = {},
-): boolean {
-  const { onlyProd = false } = options;
-  const env = getRuntimeEnv();
-  if (env.kind !== 'hosted') {
-    return false;
-  }
-  if (onlyProd) {
-    return env.hostedTier === 'release';
-  }
-  return true;
-}
-
-export function isProd(): boolean {
-  return isHostedEnv({ onlyProd: true });
-}
-
-export function notProd(): boolean {
-  return !isProd();
-}
-
-export function isStaging(): boolean {
-  const env = getRuntimeEnv();
-  return env.hostedTier === 'staging';
-}
-
-export interface PrivateLaunchEnvConfig {
-  user: string | null;
-  password: string | null;
-  enabledForStaging: boolean;
-  enabledForRelease: boolean;
-}
+export {
+  isDev,
+  notDev,
+  isStaging,
+  notStaging,
+  isRelease,
+  notRelease,
+};
 
 function parsePrivateLaunchFlag(
   value: string | undefined | null,
@@ -124,16 +29,50 @@ function parsePrivateLaunchFlag(
   );
 }
 
-export function getPrivateLaunchEnvConfig(): PrivateLaunchEnvConfig {
+const parseNumber = (raw: string | undefined): number | null => {
+  if (raw == null) return null;
+  if (raw.trim() === '') return null;
+  const value = Number(raw);
+  return Number.isNaN(value) ? null : value;
+};
+
+export interface RuntimeEnv {
+  nodeEnv: 'development' | 'production' | 'test';
+  hosted: boolean;
+}
+
+export function getRuntimeEnv(): RuntimeEnv {
+  const nodeEnv = process.env.NODE_ENV ?? 'development';
+  const hosted = isStaging() || isRelease();
   return {
-    user: process.env.PRIVATE_LAUNCH_USER ?? null,
-    password: process.env.PRIVATE_LAUNCH_PASSWORD ?? null,
-    enabledForStaging: parsePrivateLaunchFlag(
-      process.env.PRIVATE_LAUNCH_ENABLED_STAGING,
-    ),
-    enabledForRelease: parsePrivateLaunchFlag(
-      process.env.PRIVATE_LAUNCH_ENABLED_RELEASE,
-    ),
+    nodeEnv,
+    hosted,
+  };
+}
+
+export function isHostedEnv(): boolean {
+  const env = getRuntimeEnv();
+  return env.hosted;
+}
+
+export interface PrivateLaunchEnvConfig {
+  user?: string | null;
+  password?: string | null;
+  isPrivateOnStaging: boolean;
+  isPrivateOnRelease: boolean;
+  isPrivateOnLocal: boolean;
+}
+
+export function getPrivateLaunchEnvConfig(): PrivateLaunchEnvConfig {
+  const env = process.env as PasswordProtectionEnv;
+
+  return {
+    user: env.PRIVATE_LAUNCH_USER ?? null,
+    password: env.PRIVATE_LAUNCH_PASSWORD ?? null,
+
+    isPrivateOnStaging: parsePrivateLaunchFlag(env.PRIVATE_STAGING),
+    isPrivateOnRelease: parsePrivateLaunchFlag(env.PRIVATE_RELEASE),
+    isPrivateOnLocal: parsePrivateLaunchFlag(env.PRIVATE_LOCAL),
   };
 }
 
@@ -143,9 +82,11 @@ export interface TurnstileEnvConfig {
 }
 
 export function getTurnstileEnvConfig(): TurnstileEnvConfig {
+  const env = process.env as TurnstileEnv;
+
   return {
-    siteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? null,
-    secretKey: process.env.TURNSTILE_SECRET ?? null,
+    siteKey: env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? null,
+    secretKey: env.TURNSTILE_SECRET ?? null,
   };
 }
 
@@ -157,55 +98,57 @@ export interface BrevoEnvConfig {
   timeoutMs: number | null;
   retryDelayMs: number | null;
   retryJitterMs: number | null;
+  healthTimeoutMs: number | null;
 }
 
 export function getBrevoEnvConfig(): BrevoEnvConfig {
-  const parseNumber = (raw: string | undefined): number | null => {
-    if (raw == null) return null;
-    if (raw.trim() === '') return null;
-    const value = Number(raw);
-    return Number.isNaN(value) ? null : value;
-  };
+  const env = process.env as ContactFormEnv;
 
-  const timeout = parseNumber(process.env.BREVO_TIMEOUT_MS);
-  const retryDelay = parseNumber(process.env.BREVO_RETRY_DELAY_MS);
-  const retryJitter = parseNumber(process.env.BREVO_RETRY_JITTER_MS);
+  const timeout = parseNumber(env.BREVO_TIMEOUT_MS);
+  const retryDelay = parseNumber(env.BREVO_RETRY_DELAY_MS);
+  const retryJitter = parseNumber(env.BREVO_RETRY_JITTER_MS);
+  const healthTimeout = parseNumber(env.BREVO_HEALTH_TIMEOUT_MS);
 
   return {
-    apiKey: process.env.BREVO_API_KEY ?? null,
-    mailFrom: process.env.MAIL_FROM ?? null,
-    mailTo: process.env.MAIL_TO ?? null,
-    subjectPrefix: process.env.CONTACT_SUBJECT_PREFIX ?? null,
+    apiKey: env.BREVO_API_KEY ?? null,
+    mailFrom: env.MAIL_FROM ?? null,
+    mailTo: env.MAIL_TO ?? null,
+    subjectPrefix: env.CONTACT_SUBJECT_PREFIX ?? null,
     timeoutMs: Number.isNaN(timeout) ? null : timeout,
     retryDelayMs: Number.isNaN(retryDelay) ? null : retryDelay,
     retryJitterMs: Number.isNaN(retryJitter) ? null : retryJitter,
+    healthTimeoutMs: Number.isNaN(healthTimeout)
+      ? null
+      : healthTimeout,
   };
 }
 
 // Indexing control
 export interface IndexingEnvConfig {
-  allowReleaseIndexing: string | null;
+  allowIndexing: string | null;
 }
 
 export function getIndexingEnvConfig(): IndexingEnvConfig {
+  const env = process.env as IndexingEnv;
   return {
-    allowReleaseIndexing: process.env.ALLOW_INDEXING ?? null,
+    allowIndexing: env.ALLOW_INDEXING ?? null,
   };
 }
 
 export function isIndexingAllowed(): boolean {
   const privatePermissions = getPrivateLaunchEnvConfig();
 
-  if (!isProd()) {
+  // Never allow indexing if we're not in production as an extra safety measure
+  if (!isRelease()) {
     return false;
   }
 
-  if (privatePermissions.enabledForRelease) {
+  // Never allow indexing if private launch is enabled on release
+  if (privatePermissions.isPrivateOnRelease) {
     return false;
   }
 
+  // If we're on release and not private, check the indexing flag
   const indexingPermissions = getIndexingEnvConfig();
-  return parsePrivateLaunchFlag(
-    indexingPermissions.allowReleaseIndexing,
-  );
+  return parsePrivateLaunchFlag(indexingPermissions.allowIndexing);
 }

@@ -25,9 +25,7 @@ type HealthPayload = {
 };
 
 const BREVO_ACCOUNT_ENDPOINT = 'https://api.brevo.com/v3/account';
-const HEALTH_TIMEOUT_MS = Number(
-  process.env.BREVO_HEALTH_TIMEOUT_MS ?? 4000,
-);
+const DEFAULT_BREVO_HEALTH_TIMEOUT_MS = 4000;
 
 const summarizeError = (error: unknown) => {
   if (!error) return undefined;
@@ -45,11 +43,7 @@ const summarizeError = (error: unknown) => {
 };
 
 const snapshotEnv = (): EnvSnapshot => {
-  const {
-    apiKey,
-    mailFrom,
-    mailTo,
-  } = getBrevoEnvConfig();
+  const { apiKey, mailFrom, mailTo } = getBrevoEnvConfig();
   return {
     brevoApiKey: Boolean(apiKey),
     mailFrom: Boolean(mailFrom),
@@ -68,11 +62,12 @@ const buildResponse = (payload: HealthPayload) => {
 
 const probeBrevoAccount = async (
   apiKey: string,
+  healthTimeoutMs: number,
 ): Promise<BrevoProbe> => {
   const controller = new AbortController();
   const timeoutId = setTimeout(
     () => controller.abort(),
-    HEALTH_TIMEOUT_MS,
+    healthTimeoutMs,
   );
   const startedAt = Date.now();
   try {
@@ -123,10 +118,13 @@ export async function GET() {
     });
   }
 
-  const {
-    apiKey,
-  } = getBrevoEnvConfig();
-  const probe = await probeBrevoAccount(apiKey as string);
+  const { apiKey, healthTimeoutMs } = getBrevoEnvConfig();
+  const effectiveHealthTimeoutMs =
+    healthTimeoutMs ?? DEFAULT_BREVO_HEALTH_TIMEOUT_MS;
+  const probe = await probeBrevoAccount(
+    apiKey as string,
+    effectiveHealthTimeoutMs,
+  );
   brevoProbe.attempted = true;
   brevoProbe.reachable = probe.reachable;
   brevoProbe.status = probe.status;

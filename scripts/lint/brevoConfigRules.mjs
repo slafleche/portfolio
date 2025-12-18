@@ -45,12 +45,44 @@ export const BREVO_ENV_USAGE_PATTERNS = [
       /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*MAIL_TO\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
   },
-  {
+ {
     id: 'brevo-subject-prefix',
     description:
       'Use getBrevoEnvConfig() instead of process.env.CONTACT_SUBJECT_PREFIX.',
     regex:
       /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*CONTACT_SUBJECT_PREFIX\b/,
+    allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
+  {
+    id: 'brevo-timeout-ms',
+    description:
+      'Use getBrevoEnvConfig() instead of process.env.BREVO_TIMEOUT_MS.',
+    regex:
+      /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*BREVO_TIMEOUT_MS\b/,
+    allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
+  {
+    id: 'brevo-retry-delay-ms',
+    description:
+      'Use getBrevoEnvConfig() instead of process.env.BREVO_RETRY_DELAY_MS.',
+    regex:
+      /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*BREVO_RETRY_DELAY_MS\b/,
+    allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
+  {
+    id: 'brevo-retry-jitter-ms',
+    description:
+      'Use getBrevoEnvConfig() instead of process.env.BREVO_RETRY_JITTER_MS.',
+    regex:
+      /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*BREVO_RETRY_JITTER_MS\b/,
+    allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
+  },
+  {
+    id: 'brevo-health-timeout-ms',
+    description:
+      'Use getBrevoEnvConfig() instead of process.env.BREVO_HEALTH_TIMEOUT_MS.',
+    regex:
+      /process\s*(?:\.\s*env|\?\.\s*env)[^\n]*BREVO_HEALTH_TIMEOUT_MS\b/,
     allowedPathSubstrings: ['src/lib/runtimeEnv.ts'],
   },
   {

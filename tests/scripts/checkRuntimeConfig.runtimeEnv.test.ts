@@ -104,7 +104,7 @@ describe('runtime env usage rules', () => {
       (violation) => violation.rule.id === 'runtime-private-launch',
     );
 
-    expect(privateLaunchViolations.length).toBe(4);
+    expect(privateLaunchViolations.length).toBe(5);
   });
 
   it('allows private-launch env keys inside console log strings', () => {

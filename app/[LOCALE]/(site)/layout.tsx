@@ -26,9 +26,7 @@ export default async function SiteLayout({
   const contactFormCopy = buildContactFormCopy(translator);
   const privacyCopy = buildPrivacyCopy(translator);
   const closeLabel = translator('close-label');
-  const {
-    siteKey: turnstileSiteKey,
-  } = getTurnstileEnvConfig();
+  const { siteKey: turnstileSiteKey } = getTurnstileEnvConfig();
 
   return (
     <WindowSizeProvider>
