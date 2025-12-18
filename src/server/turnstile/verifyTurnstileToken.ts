@@ -1,3 +1,5 @@
+import { getTurnstileEnvConfig } from '@/lib/runtimeEnv';
+
 type VerificationResponse = {
   success: boolean;
   ['error-codes']?: string[];
@@ -16,7 +18,10 @@ export async function verifyTurnstileToken(
   token: string | null | undefined,
   remoteIp?: string | null,
 ): Promise<TurnstileVerificationResult> {
-  const secret = process.env.TURNSTILE_SECRET;
+  const {
+    secretKey,
+  } = getTurnstileEnvConfig();
+  const secret = secretKey;
   if (!secret) {
     return {
       ok: false,

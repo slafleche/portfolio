@@ -22,6 +22,7 @@ export type TurnstileBlockProps = Omit<
   'required'
 > & {
   copy: TurnstileBlockLocale;
+  turnstileSiteKey: string | null;
 };
 
 export type TurnstileState =
@@ -149,15 +150,14 @@ const buildTurnstileContract = (
   },
 });
 
-export function TurnstileBlock({
-  id,
-  order,
-  disabled,
-  copy,
-}: TurnstileBlockProps) {
-  const turnstileSiteKey =
-    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? null;
-  const hasTurnstileConfig = Boolean(turnstileSiteKey);
+	export function TurnstileBlock({
+	  id,
+	  order,
+	  disabled,
+	  copy,
+	  turnstileSiteKey,
+	}: TurnstileBlockProps) {
+	  const hasTurnstileConfig = Boolean(turnstileSiteKey);
 
   const hasInlineTurnstile =
     typeof window !== 'undefined' &&
@@ -301,8 +301,12 @@ export function TurnstileBlock({
         : copy.summary.missing
     : null;
   const helperText = !isComplete ? copy.requiredText : null;
-  const showError = Boolean(summaryText && continuousValidation);
-  const hintText = showError ? summaryText : helperText;
+  const disabledText = disabled ? copy.statuses.disabled : null;
+  const showError = Boolean(
+    summaryText && continuousValidation && !disabled,
+  );
+  const hintText =
+    disabledText ?? (showError ? summaryText : helperText);
   const hintId = `${id}-turnstile-hint`;
 
   return (
@@ -312,6 +316,7 @@ export function TurnstileBlock({
       className={clsx(s.turnstileSection)}
       data-state={status}
       data-disabled={disabled ? 'true' : 'false'}
+      aria-disabled={disabled ? 'true' : undefined}
       onClickCapture={
         ((event) => {
           if (disabled) {

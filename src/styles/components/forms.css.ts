@@ -90,11 +90,8 @@ export const input = style({
         ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
-      opacity: 0.55,
-      cursor: 'not-allowed',
-    },
-    '&[data-debug="readonly"]': {
       opacity: 0.85,
+      cursor: 'not-allowed',
     },
     '&[data-error="true"]': {
       color: formTokens.field.error.text.color.css(),
@@ -131,11 +128,8 @@ export const textarea = style({
         ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
-      opacity: 0.55,
-      cursor: 'not-allowed',
-    },
-    '&[data-debug="readonly"]': {
       opacity: 0.85,
+      cursor: 'not-allowed',
     },
     '&[data-error="true"]': {
       color: formTokens.field.error.text.color.css(),
@@ -262,7 +256,7 @@ export const submitButton = style({
         ...boxShadow(glassyButtonTokens.focusVisible.boxShadows),
       },
     '&:disabled, &[data-debug="disabled"]': {
-      opacity: 0.5,
+      opacity: 0.85,
       cursor: 'not-allowed',
       transform: 'none',
     },
@@ -304,6 +298,12 @@ export const turnstileSection = style({
   display: 'flex',
   flexDirection: 'column',
   gap: '8px',
+  selectors: {
+    '&[data-disabled="true"], &[data-debug="disabled"]': {
+      opacity: 0.55,
+      cursor: 'not-allowed',
+    },
+  },
 });
 
 export const turnstileWidget = style({

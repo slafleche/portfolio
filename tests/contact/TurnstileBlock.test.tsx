@@ -48,6 +48,8 @@ const turnstileCopy: TurnstileBlockLocale = {
 
 const ORIGINAL_ENV = { ...process.env };
 
+const DEFAULT_SITE_KEY = 'test-site-key';
+
 const createMockTurnstile = (
   shouldThrowOnRender = false,
 ): MockTurnstileApi => {
@@ -68,18 +70,9 @@ const createMockTurnstile = (
   return api;
 };
 
-const setTurnstileEnv = (siteKey: string | null) => {
-  if (siteKey === null) {
-    delete process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-  } else {
-    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = siteKey;
-  }
-};
-
 describe('Contact form block tests: TurnstileBlock', () => {
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV };
-    setTurnstileEnv('test-site-key');
     window.turnstile = createMockTurnstile();
   });
 
@@ -97,6 +90,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
             order={1}
             disabled={false}
             copy={turnstileCopy}
+            turnstileSiteKey={DEFAULT_SITE_KEY}
           />
         </FormBlocksProvider>,
       );
@@ -128,7 +122,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
     });
 
     it('does not bypass when no site key is configured', () => {
-      setTurnstileEnv(null);
       window.turnstile = undefined;
 
       const { container } = render(
@@ -138,6 +131,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
             order={0}
             disabled={false}
             copy={turnstileCopy}
+            turnstileSiteKey={null}
           />
         </FormBlocksProvider>,
       );
@@ -169,6 +163,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
             order={0}
             disabled={false}
             copy={turnstileCopy}
+            turnstileSiteKey={DEFAULT_SITE_KEY}
           />
         </FormBlocksProvider>,
       );
@@ -199,6 +194,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
             order={0}
             disabled={false}
             copy={turnstileCopy}
+            turnstileSiteKey={DEFAULT_SITE_KEY}
           />
         </FormBlocksProvider>,
       );
@@ -238,6 +234,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
             order={0}
             disabled={false}
             copy={turnstileCopy}
+            turnstileSiteKey={DEFAULT_SITE_KEY}
           />
         </FormBlocksProvider>,
       );
@@ -283,6 +280,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
             order={0}
             disabled={false}
             copy={turnstileCopy}
+            turnstileSiteKey={DEFAULT_SITE_KEY}
           />
         </FormBlocksProvider>,
       );
@@ -341,6 +339,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
             order={0}
             disabled={false}
             copy={turnstileCopy}
+            turnstileSiteKey={DEFAULT_SITE_KEY}
           />
         </FormBlocksProvider>,
       );
@@ -382,6 +381,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
             order={0}
             disabled
             copy={turnstileCopy}
+            turnstileSiteKey={DEFAULT_SITE_KEY}
           />
         </FormBlocksProvider>,
       );
@@ -393,6 +393,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).not.toBeNull();
 
       expect(wrapper).toHaveAttribute('data-disabled', 'true');
+      expect(wrapper).toHaveAttribute('aria-disabled', 'true');
 
       const initialState = wrapper.getAttribute('data-state');
 
@@ -426,6 +427,46 @@ describe('Contact form block tests: TurnstileBlock', () => {
       );
       expect(tokenInput.value).toBe(initialToken);
     });
+
+    it('announces a disabled status with helper tone when disabled', async () => {
+      const { container } = render(
+        <FormBlocksProvider>
+          <TurnstileBlock
+            id="test-turnstile-block"
+            order={0}
+            disabled
+            copy={turnstileCopy}
+            turnstileSiteKey={DEFAULT_SITE_KEY}
+          />
+        </FormBlocksProvider>,
+      );
+
+      const wrapper = container.querySelector(
+        '#test-turnstile-block',
+      ) as HTMLDivElement;
+
+      expect(wrapper).not.toBeNull();
+
+      await waitFor(() => {
+        const status = wrapper.querySelector(
+          '[data-form-turnstile="status"]',
+        ) as HTMLElement | null;
+        expect(status).not.toBeNull();
+        const hint = status?.querySelector(
+          '[data-form-hint]',
+        ) as HTMLElement | null;
+        expect(hint).not.toBeNull();
+        if (!hint) {
+          throw new Error(
+            'Expected Turnstile disabled hint to exist',
+          );
+        }
+        expect(hint.getAttribute('data-form-hint')).toBe('helper');
+        expect(hint.textContent).toBe(
+          turnstileCopy.statuses.disabled,
+        );
+      });
+    });
   });
 
   describe('validation and live behaviour', () => {
@@ -437,6 +478,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
             order={0}
             disabled={false}
             copy={turnstileCopy}
+            turnstileSiteKey={DEFAULT_SITE_KEY}
           />
         </FormBlocksProvider>,
       );
@@ -490,6 +532,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
         order: 0,
         disabled: false,
         copy: turnstileCopy,
+        turnstileSiteKey: DEFAULT_SITE_KEY,
       });
 
       const wrapper = container.querySelector(
@@ -537,7 +580,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
 describe('Contact form block contract: TurnstileBlock', () => {
   beforeEach(() => {
     process.env = { ...ORIGINAL_ENV };
-    setTurnstileEnv('test-site-key');
     window.turnstile = createMockTurnstile();
   });
 
@@ -552,6 +594,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
       order: 0,
       disabled: false,
       copy: turnstileCopy,
+      turnstileSiteKey: DEFAULT_SITE_KEY,
     });
 
     await waitFor(() => {
@@ -577,6 +620,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
       order: 0,
       disabled: false,
       copy: turnstileCopy,
+      turnstileSiteKey: DEFAULT_SITE_KEY,
     });
 
     const api = window.turnstile as MockTurnstileApi | undefined;
@@ -602,6 +646,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
       order: 0,
       disabled: false,
       copy: turnstileCopy,
+      turnstileSiteKey: DEFAULT_SITE_KEY,
     });
 
     let registration = getRegistration();
@@ -639,6 +684,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
       order: 0,
       disabled: false,
       copy: turnstileCopy,
+      turnstileSiteKey: DEFAULT_SITE_KEY,
     });
 
     const registration = getRegistration();
@@ -679,6 +725,7 @@ describe('Contact form block contract: TurnstileBlock', () => {
         order: 0,
         disabled: false,
         copy: turnstileCopy,
+        turnstileSiteKey: DEFAULT_SITE_KEY,
       });
 
     const api = window.turnstile as MockTurnstileApi | undefined;

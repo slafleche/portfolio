@@ -40,6 +40,7 @@ const buildStatusMessages = (copy = buildCopy()) =>
 function renderWrappedContactForm(
   copy = buildCopy(),
   actionUrl = '/api/contact',
+  turnstileSiteKey: string | null = null,
 ) {
   const dialogValue = {
     open: () => {},
@@ -52,7 +53,11 @@ function renderWrappedContactForm(
 
   return render(
     <ContactDialogContext.Provider value={dialogValue}>
-      <ContactForm copy={copy} actionUrl={actionUrl} />
+      <ContactForm
+        copy={copy}
+        actionUrl={actionUrl}
+        turnstileSiteKey={turnstileSiteKey}
+      />
     </ContactDialogContext.Provider>,
   );
 }
@@ -154,6 +159,7 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        turnstileHarness.getSiteKey(),
       );
 
       await userEvent.type(
@@ -244,6 +250,7 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        turnstileHarness.getSiteKey(),
       );
 
       await userEvent.type(
@@ -334,6 +341,7 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        turnstileHarness.getSiteKey(),
       );
 
       await userEvent.type(
@@ -435,6 +443,7 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        turnstileHarness.getSiteKey(),
       );
 
       await userEvent.type(
@@ -540,6 +549,7 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       const { container } = renderWrappedContactForm(
         copy,
         '/api/contact',
+        turnstileHarness.getSiteKey(),
       );
 
       await userEvent.type(

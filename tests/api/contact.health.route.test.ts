@@ -7,22 +7,22 @@ import {
   vi,
 } from 'vitest';
 import { GET as healthRoute } from '../../app/api/contact/health/route';
+import { withEnvOverrides } from '../helpers/runtimeEnvHarness';
 
 const ORIGINAL_ENV = { ...process.env };
 
-const setEnv = () => {
-  process.env = {
+const baseEnv = () =>
+  ({
     ...ORIGINAL_ENV,
     BREVO_API_KEY: 'test-key',
     MAIL_FROM: 'example@example.com',
     MAIL_TO: 'example@example.com',
     BREVO_HEALTH_TIMEOUT_MS: '50',
-  } as NodeJS.ProcessEnv;
-};
+  }) as NodeJS.ProcessEnv;
 
 describe('GET /api/contact/health', () => {
   beforeEach(() => {
-    setEnv();
+    process.env = baseEnv();
   });
 
   afterEach(() => {
@@ -31,9 +31,13 @@ describe('GET /api/contact/health', () => {
   });
 
   it('reports missing configuration without hitting Brevo', async () => {
-    process.env.BREVO_API_KEY = '';
-    delete process.env.MAIL_FROM;
-    const response = await healthRoute();
+    const response = await withEnvOverrides(
+      {
+        BREVO_API_KEY: '',
+        MAIL_FROM: '',
+      },
+      () => healthRoute(),
+    );
     expect(response.status).toBe(503);
     const json = await response.json();
     expect(json.ok).toBe(false);

@@ -35,6 +35,7 @@ import ContactFormSuccess from './ContactFormSuccess';
 import ContactFormError from './ContactFormError';
 import { resolveContactFormScenarioIdFromLocation } from '@/dev/scenarios/contactForm.adapter';
 import { contactFormScenarioMap } from '@/dev/scenarios/contactForm.scenarios';
+import { notProd } from '../../lib/runtimeEnv';
 
 const DEFAULT_ACTION_URL = '/api/contact';
 
@@ -80,6 +81,7 @@ type ContactFormInnerProps = {
   onSuccessStateChange?: (visible: boolean) => void;
   onCatastrophic?: (source: string, reason: string) => void;
   initialBlocks?: ContactFormBlockInitialValues | null;
+  turnstileSiteKey: string | null;
 };
 
 function ContactFormInner({
@@ -90,10 +92,13 @@ function ContactFormInner({
   onSuccessStateChange,
   onCatastrophic,
   initialBlocks,
+  turnstileSiteKey,
 }: ContactFormInnerProps) {
-  const [initialBlocksSnapshot] = useState<
-    ContactFormBlockInitialValues | null | undefined
-  >(() => initialBlocks ?? null);
+  const [
+    initialBlocksSnapshot,
+  ] = useState<ContactFormBlockInitialValues | null | undefined>(
+    () => initialBlocks ?? null,
+  );
   const {
     getRegistrationsSnapshot,
     recordValidationResult,
@@ -110,9 +115,7 @@ function ContactFormInner({
   const [
     useInitialServerState,
     setUseInitialServerState,
-  ] = useState(() =>
-    Boolean(initialServerState),
-  );
+  ] = useState(() => Boolean(initialServerState));
 
   const submitStatusForUi =
     useInitialServerState && initialServerState?.submitStatus
@@ -146,8 +149,7 @@ function ContactFormInner({
 
   const hasRunInitialMockValidationRef = useRef(false);
 
-  const disableFields =
-    isSubmittingForUi || isCatastrophic;
+  const disableFields = isSubmittingForUi || isCatastrophic;
   const disableSubmit =
     isSubmittingForUi || isInvalid || isCatastrophic;
 
@@ -197,7 +199,10 @@ function ContactFormInner({
   const initialSubmitStatus = initialServerState?.submitStatus;
 
   useEffect(() => {
-    if (!hasInitialMockData || hasRunInitialMockValidationRef.current) {
+    if (
+      !hasInitialMockData ||
+      hasRunInitialMockValidationRef.current
+    ) {
       return;
     }
     const registrations = getRegistrationsSnapshot();
@@ -367,6 +372,7 @@ function ContactFormInner({
         {...formMembers[3]}
         disabled={disableFields}
         copy={copy.blocks.turnstile}
+        turnstileSiteKey={turnstileSiteKey}
       />
       <ContactPrivacy copy={copy.privacy} />
       <HoneypotBlock copy={copy.blocks.honeypot} />
@@ -391,11 +397,14 @@ export default function ContactForm({
   copy,
   onSuccessStateChange,
   initialBlocks,
+  turnstileSiteKey = null,
 }: ContactFormProps) {
   const idPrefix = useSafeId('contact-form-');
   const { setTitleKey } = useContactDialogTitle();
 
-  const [devScenarioId] = useState<string | null>(() =>
+  const [
+    devScenarioId,
+  ] = useState<string | null>(() =>
     resolveContactFormScenarioIdFromLocation(),
   );
 
@@ -498,8 +507,7 @@ export default function ContactForm({
     [],
   );
 
-  const isDevScenarioActive =
-    process.env.NODE_ENV !== 'production' && devScenarioId != null;
+  const isDevScenarioActive = notProd() && devScenarioId != null;
   const isDevLoadingScenario =
     isDevScenarioActive && devScenarioId === 'loading';
   const isDevSuccessScenario =
@@ -537,7 +545,9 @@ export default function ContactForm({
 
           if (devState) {
             const server: NonNullable<
-              NonNullable<ContactFormBlockInitialValues['form']>['server']
+              NonNullable<
+                ContactFormBlockInitialValues['form']
+              >['server']
             > = {};
 
             if (devState.forcedSubmitStatus) {
@@ -633,6 +643,7 @@ export default function ContactForm({
           onSuccessStateChange={handleSuccessStateChange}
           onCatastrophic={handleCatastrophic}
           initialBlocks={initialBlocks ?? scenarioInitialBlocks}
+          turnstileSiteKey={turnstileSiteKey}
         />
       )}
     </FormBlocksProvider>

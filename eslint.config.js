@@ -60,6 +60,7 @@ export default [
       'node_modules/**',
       '.yarn/**',
       '.next/**',
+      'next-env.d.ts',
       'dist/**',
       'build/**',
       'public/**',

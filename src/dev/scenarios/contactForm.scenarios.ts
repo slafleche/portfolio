@@ -100,6 +100,21 @@ export const contactFormScenarios: Record<string, ContactFormScenarioConfig> = {
       isSubmitting: true,
     },
   },
+  disabled: {
+    id: 'disabled',
+    label: 'Contact form – all fields disabled',
+    initialValues: {
+      name: 'Jane Doe',
+      email: 'example@example.com',
+      message:
+        'This is a sufficiently long message for validation.',
+      token: 'turnstile-token',
+      honeypot: '',
+    },
+    devState: {
+      isSubmitting: true,
+    },
+  },
   success: {
     id: 'success',
     label: 'Contact form – success',

@@ -1,9 +1,10 @@
 import { sharedStrings } from '@/lib/sharedStrings';
+import { isOnlyProd, notProd } from '../../lib/runtimeEnv';
 
 export function resolveContactFormScenarioIdFromLocation():
   | string
   | null {
-  if (process.env.NODE_ENV === 'production') return null;
+  if (isOnlyProd()) return null;
   if (typeof window === 'undefined') return null;
 
   const { hash, search } = window.location;
@@ -41,7 +42,7 @@ const stripScenarioParamFromUrl = (scenarioId: string) => {
       window.history.replaceState(window.history.state, '', nextHref);
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (notProd()) {
       // Dev-only debug log so scenarios remain traceable when they are stripped.
       console.log('[contact][dev-scenario][stripped]', {
         scenarioId,
@@ -55,7 +56,7 @@ const stripScenarioParamFromUrl = (scenarioId: string) => {
 };
 
 export function stripContactFormScenarioFromLocation(): void {
-  if (process.env.NODE_ENV === 'production') return;
+  if (isOnlyProd()) return;
   if (typeof window === 'undefined') return;
 
   try {

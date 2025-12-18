@@ -7,44 +7,16 @@ import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 import {
   buildInvalidFieldSummary,
   logContactFormDebugEvent,
-  setContactFormDebugEnabled,
   setContactFormDebugLogger,
 } from '@/components/contact/contactFormDebugLogger';
 
 afterEach(() => {
-  setContactFormDebugEnabled(null);
   setContactFormDebugLogger(null);
 });
 
 describe('contactFormDebugLogger', () => {
-  it('does not emit events when debug is disabled', () => {
-    const logger = vi.fn();
-    setContactFormDebugEnabled(false);
-    setContactFormDebugLogger(logger);
-
-    logContactFormDebugEvent('submit_attempt', {
-      name: 'Alice',
-      email: 'alice@example.com',
-      messageLength: 42,
-      tokenPresent: true,
-      hpValue: '',
-    });
-
-    const submitStatus: ContactFormSubmitStatus = 'success';
-    const code: FormServerResponseCode = 'success';
-
-    logContactFormDebugEvent('submit_result', {
-      submitStatus,
-      code,
-      invalidFields: [],
-    });
-
-    expect(logger).not.toHaveBeenCalled();
-  });
-
   it('emits structured attempt and result events when enabled', () => {
     const logger = vi.fn();
-    setContactFormDebugEnabled(true);
     setContactFormDebugLogger(logger);
 
     logContactFormDebugEvent('submit_attempt', {
@@ -145,4 +117,3 @@ describe('contactFormDebugLogger', () => {
     ]);
   });
 });
-

@@ -12,6 +12,10 @@ import {
   SECRET_LOOKOUT_SCAN_EXTENSIONS,
   SECRET_LOOKOUT_SCAN_PATH_SUBSTRINGS,
 } from './lint/secretLookoutRules.mjs';
+import {
+  scanAllRuntimeConfigUsage,
+  scanRuntimeEnvUsageInTests,
+} from './checkRuntimeConfig.mjs';
 
 const ROOT = path.resolve(process.cwd());
 
@@ -166,6 +170,104 @@ function scanFile(relativePath, content) {
   return violations;
 }
 
+function scanTestRuntimeEnvViolations(relativePath, content) {
+  const testViolations = scanRuntimeEnvUsageInTests(
+    relativePath,
+    content,
+  );
+  if (!testViolations.length) return [];
+
+  const lines = content.split('\n');
+
+  return testViolations.map((violation) => {
+    const snippet =
+      lines[violation.lineNumber - 1] ?? '';
+
+    return {
+      type: 'runtime-env-test',
+      filePath: violation.filePath,
+      lineNumber: violation.lineNumber,
+      value: snippet.trim(),
+      ruleId: violation.rule.id,
+      description: violation.rule.description,
+      message: violation.message,
+    };
+  });
+}
+
+const RUNTIME_CONFIG_SCAN_EXTENSIONS = [
+  '.js',
+  '.jsx',
+  '.ts',
+  '.tsx',
+  '.mjs',
+  '.cjs',
+];
+
+function scanRuntimeConfigViolations(relativePath, content) {
+  const posix = relativePath.split(path.sep).join('/');
+
+  if (
+    posix.includes('/tests/') ||
+    posix.startsWith('tests/') ||
+    posix.startsWith('scripts/lint/') ||
+    posix === 'scripts/checkRuntimeConfig.mjs'
+  ) {
+    return [];
+  }
+
+  const ext = path.extname(posix).toLowerCase();
+  if (!RUNTIME_CONFIG_SCAN_EXTENSIONS.includes(ext)) {
+    return [];
+  }
+
+  const configViolations = scanAllRuntimeConfigUsage(
+    relativePath,
+    content,
+  );
+  if (!configViolations.length) {
+    return [];
+  }
+
+  const lines = content.split('\n');
+
+  return configViolations.map((violation) => {
+    const snippet =
+      lines[violation.lineNumber - 1] ?? '';
+
+    return {
+      type: 'runtime-config',
+      filePath: violation.filePath,
+      lineNumber: violation.lineNumber,
+      value: snippet.trim(),
+      ruleId: violation.rule.id,
+      description: violation.rule.description,
+      message: violation.message,
+    };
+  });
+}
+
+function colorPathSegment(text) {
+  if (!process.stderr.isTTY) {
+    return text;
+  }
+  const CYAN = '\x1b[36m';
+  const RESET = '\x1b[0m';
+  return `${CYAN}${text}${RESET}`;
+}
+
+function colorSnippet(text) {
+  if (!process.stderr.isTTY) {
+    return text;
+  }
+  const MAGENTA = '\x1b[35m';
+  const RESET = '\x1b[0m';
+  return text.replace(
+    /\b[A-Z][A-Z0-9_]*\b/g,
+    (token) => `${MAGENTA}${token}${RESET}`,
+  );
+}
+
 function formatViolations(violations) {
   if (!violations.length) return;
 
@@ -173,11 +275,21 @@ function formatViolations(violations) {
 
   for (const violation of violations) {
     const { type, filePath, lineNumber, message, value } = violation;
-    const kindLabel = type === 'api-key' ? 'API key' : 'email';
-    console.error(
-      ` - [${kindLabel}] ${filePath}:${lineNumber} — ${message}`,
-    );
-    console.error(`   Snippet: ${value}`);
+    const kindLabel =
+      type === 'api-key'
+        ? 'API key'
+        : type === 'runtime-env-test'
+          ? 'runtime env in tests'
+          : type === 'runtime-config'
+            ? 'runtime env in code'
+            : 'email';
+    const location = colorPathSegment(`${filePath}:${lineNumber}`);
+    console.error(` - [${kindLabel}] ${location} — ${message}`);
+    const snippet =
+      type === 'runtime-config' || type === 'runtime-env-test'
+        ? colorSnippet(value)
+        : value;
+    console.error(`   Snippet: ${snippet}`);
   }
 
   console.error(
@@ -219,6 +331,12 @@ function main() {
     if (!content) continue;
 
     violations.push(...scanFile(relativePath, content));
+    violations.push(
+      ...scanTestRuntimeEnvViolations(relativePath, content),
+    );
+    violations.push(
+      ...scanRuntimeConfigViolations(relativePath, content),
+    );
   }
 
   if (violations.length) {

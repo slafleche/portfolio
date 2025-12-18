@@ -1,13 +1,20 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { AVAILABLE_LOCALES } from '@/data/locales';
 import {
   DEFAULT_LOCALE,
   pickLocaleFromAcceptLanguage,
 } from '@/lib/locales/locale';
+import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
 import { localizedToCanonicalSlugs } from '@/lib/routes/localeSlugs';
+import {
+  getPrivateLaunchEnvConfig,
+  getRuntimeEnv,
+  isOnlyProd,
+} from '@/lib/runtimeEnv';
 
-const LOCALES = new Set(AVAILABLE_LOCALES as readonly string[]);
+const LOCALES = new Set<Locale>(
+  AVAILABLE_LOCALES as readonly Locale[],
+);
 
 function pickPreferredLocale(request: NextRequest): string {
   const headerLocale = pickLocaleFromAcceptLanguage(
@@ -19,7 +26,123 @@ function pickPreferredLocale(request: NextRequest): string {
   return DEFAULT_LOCALE;
 }
 
+function isLocale(segment: string): segment is Locale {
+  return LOCALES.has(segment as Locale);
+}
+
+function isGateEnabled(): boolean {
+  const env = getRuntimeEnv();
+
+  const {
+    user,
+    password,
+    enabledForStaging,
+    enabledForRelease,
+  } = getPrivateLaunchEnvConfig();
+  if (!user || !password) {
+    return false;
+  }
+
+  // Only gate on hosted environments wired through Vercel.
+  if (env.kind === 'hosted') {
+    if (env.hostedTier === 'release') {
+      return enabledForRelease;
+    }
+    if (env.hostedTier === 'staging') {
+      return enabledForStaging;
+    }
+  }
+
+  // Fallback: for other Vercel-driven environments (for example,
+  // uncharted preview branches), enable the gate if any flag is set.
+  if (env.vercelEnv) {
+    return enabledForRelease || enabledForStaging;
+  }
+
+  // No gate in local / non-Vercel environments.
+  return false;
+}
+
+function parseBasicAuth(
+  header: string | null,
+): { user: string; password: string } | null {
+  if (!header) return null;
+  const [
+    scheme,
+    credentials,
+  ] = header.split(' ');
+  if (!scheme || scheme.toLowerCase() !== 'basic' || !credentials) {
+    return null;
+  }
+
+  let decoded: string;
+  try {
+    if (typeof globalThis.atob === 'function') {
+      decoded = globalThis.atob(credentials);
+    } else if (typeof Buffer !== 'undefined') {
+      decoded = Buffer.from(credentials, 'base64').toString('utf8');
+    } else {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+
+  const colonIndex = decoded.indexOf(':');
+  if (colonIndex === -1) return null;
+
+  const user = decoded.slice(0, colonIndex);
+  const password = decoded.slice(colonIndex + 1);
+  if (!user || !password) return null;
+
+  return { user, password };
+}
+
+function requireBasicAuth(request: NextRequest): NextResponse | null {
+  if (!isGateEnabled()) {
+    return null;
+  }
+
+  const { user: expectedUser, password: expectedPassword } =
+    getPrivateLaunchEnvConfig();
+  if (!expectedUser || !expectedPassword) {
+    return null;
+  }
+
+  if (expectedPassword.length < 60) {
+    console.error(
+      '[privateLaunch] PRIVATE_LAUNCH_PASSWORD must be at least 60 characters; refusing to accept a shorter password.',
+    );
+    return new NextResponse('Server misconfigured', {
+      status: 500,
+    });
+  }
+
+  const parsed = parseBasicAuth(request.headers.get('authorization'));
+  if (
+    !parsed ||
+    parsed.user !== expectedUser ||
+    parsed.password !== expectedPassword
+  ) {
+    const response = new NextResponse('Authentication required', {
+      status: 401,
+    });
+    response.headers.set(
+      'WWW-Authenticate',
+      'Basic realm="Private portfolio"',
+    );
+    return response;
+  }
+
+  return null;
+}
+
 export function middleware(request: NextRequest) {
+  const authResponse = requireBasicAuth(request);
+  if (authResponse) {
+    return authResponse;
+  }
+
   const { pathname } = request.nextUrl;
 
   if (pathname === '/' || pathname === '') {
@@ -32,9 +155,9 @@ export function middleware(request: NextRequest) {
   const seg = pathname.split('/')[1] || '';
   const requestHeaders = new Headers(request.headers);
 
-  if (LOCALES.has(seg)) {
+  if (isLocale(seg)) {
     requestHeaders.set('x-locale', seg);
-    const locale = seg;
+    const locale: Locale = seg;
     const segments = pathname.split('/').filter(Boolean).slice(1);
     const [
       firstSegment,
@@ -42,7 +165,7 @@ export function middleware(request: NextRequest) {
     ] = segments;
 
     if (
-      process.env.NODE_ENV === 'production' &&
+      isOnlyProd() &&
       firstSegment === 'debug'
     ) {
       return new NextResponse(null, { status: 404 });
@@ -74,6 +197,5 @@ export function middleware(request: NextRequest) {
     },
   });
 }
-
 // Optionally, scope middleware if needed with a matcher export
 // export const config = { matcher: ['/((?!_next|api|.*\..*).*)'] };
