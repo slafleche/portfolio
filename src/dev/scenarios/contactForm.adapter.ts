@@ -1,10 +1,10 @@
 import { sharedStrings } from '@/lib/sharedStrings';
-import { isOnlyProd, notProd } from '../../lib/runtimeEnv';
+import { isProd, notProd } from '../../lib/runtimeEnv';
 
 export function resolveContactFormScenarioIdFromLocation():
   | string
   | null {
-  if (isOnlyProd()) return null;
+  if (isProd()) return null;
   if (typeof window === 'undefined') return null;
 
   const { hash, search } = window.location;
@@ -56,7 +56,7 @@ const stripScenarioParamFromUrl = (scenarioId: string) => {
 };
 
 export function stripContactFormScenarioFromLocation(): void {
-  if (isOnlyProd()) return;
+  if (isProd()) return;
   if (typeof window === 'undefined') return;
 
   try {
