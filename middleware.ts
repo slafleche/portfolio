@@ -41,15 +41,15 @@ function isGateEnabled(): boolean {
   }
 
   if (isDev()) {
-    return !isPrivateOnLocal;
+    return isPrivateOnLocal;
   }
 
   if (isStaging()) {
-    return !isPrivateOnStaging;
+    return isPrivateOnStaging;
   }
 
   if (isRelease()) {
-    return !isPrivateOnRelease;
+    return isPrivateOnRelease;
   }
 
   return false;
