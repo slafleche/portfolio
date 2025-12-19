@@ -519,12 +519,8 @@ function parseTargets(argv) {
   const allowedNames = new Set(
     Object.keys(urlMap).map((key) => toName(key)),
   );
-  if (!partialBuild) {
-    manifest = {};
-  } else {
-    for (const key of Object.keys(manifest)) {
-      if (!allowedNames.has(key)) delete manifest[key];
-    }
+  for (const key of Object.keys(manifest)) {
+    if (!allowedNames.has(key)) delete manifest[key];
   }
   const normalizedEntries = Object.entries(urlMap)
     .map(
@@ -566,13 +562,9 @@ function parseTargets(argv) {
   await fs.mkdir(path.dirname(MANIFEST_PATH), { recursive: true });
   await cleanTempRoot();
 
-  if (!partialBuild) {
-    await cleanOutRoot();
-  } else {
-    await fs.mkdir(OUT_ROOT, {
-      recursive: true,
-    });
-  }
+  await fs.mkdir(OUT_ROOT, {
+    recursive: true,
+  });
 
   for (const { rawName, name, src, speed } of entries) {
     console.log(
@@ -587,14 +579,23 @@ function parseTargets(argv) {
       const slug = `${VIDEO_CACHE_PREFIX}-${name}-${shortHash}`;
 
       if (
-        partialBuild &&
         prev?.sourceHash === hash &&
         (prev?.speed ?? 1) === speed
       ) {
+        const prevDir = prev.dirName
+          ? path.join(OUT_ROOT, prev.dirName)
+          : null;
+        const masterPath =
+          prevDir && path.join(prevDir, 'master.m3u8');
+        if (masterPath && (await exists(masterPath))) {
+          console.log(
+            `• Unchanged (${prettyBytes(bytes)}). Skipping transcode.`,
+          );
+          continue;
+        }
         console.log(
-          `• Unchanged (${prettyBytes(bytes)}). Skipping transcode.`,
+          `• Manifest unchanged but outputs missing. Rebuilding.`,
         );
-        continue;
       }
       await removeHashedVideoDirs(name);
 
