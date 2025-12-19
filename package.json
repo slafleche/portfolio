@@ -89,7 +89,7 @@
     "ci:local": "CI=true yarn ci:candidate",
     "ci:publish": "yarn setup && yarn lint && yarn typecheck && yarn test && yarn build",
     "fresh": "yarn install && yarn setup",
-    "setup": "yarn locales:markdown& yarn format:assets && yarn locales:publish",
+    "setup": "yarn locales:markdown && yarn format:assets && yarn locales:publish",
     "setup:noVideo": "yarn locales:markdown && yarn format:assets:noVideo && yarn format:video:mock && yarn locales:publish",
     "locales": "yarn locales:markdown && yarn locales:publish",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",
