@@ -13,7 +13,7 @@ import type {
   BorderMeasurementInput,
 } from '../../tokens/global.tokens';
 import { isMeasurement, hasCssMethod } from 'css-calipers';
-import { notProd } from '../../lib/runtimeEnv';
+import { notRelease } from '@/lib/runtimeEnv';
 
 /**
  * Public UX: Border({ bottom: true, bottom: { width: m(6) }, radius:
@@ -420,7 +420,7 @@ const normalizeIntent = (
 ): BorderIntent | undefined => {
   if (input === undefined || input === null) return undefined;
   if (typeof input !== 'object') {
-    if (notProd()) {
+    if (notRelease()) {
       throw new Error(
         '[borders] Shorthand inputs must identify their intent (e.g., `{ radius: { all: measurement } }`).',
       );

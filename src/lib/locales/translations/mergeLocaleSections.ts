@@ -1,4 +1,4 @@
-import { notProd } from "../../runtimeEnv";
+import { notRelease } from '@/lib/runtimeEnv';
 
 type RecordLike = Record<string, unknown>;
 
@@ -14,7 +14,7 @@ export function mergeLocaleSections<
   Base extends RecordLike,
   Sections extends ReadonlyArray<RecordLike>,
 >(base: Base, ...sections: Sections): Base & MergeSections<Sections> {
-  if (notProd()) {
+  if (notRelease()) {
     const seen = new Set(Object.keys(base));
     for (const section of sections) {
       for (const key of Object.keys(section)) {

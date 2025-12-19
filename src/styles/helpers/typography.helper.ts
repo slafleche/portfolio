@@ -9,12 +9,12 @@ import {
   type PercentMeasurement,
 } from 'css-calipers';
 import { percentToDecimal } from '../../lib/math';
-import { notProd } from '../../lib/runtimeEnv';
+import { notRelease } from '../../lib/runtimeEnv';
 
 const typographyWarning = (message: string): void => {
   const prefixed = `[Typography] ${message}`;
 
-  if (notProd()) {
+  if (notRelease()) {
     throw new Error(prefixed);
   }
   console.warn(prefixed);
