@@ -1032,13 +1032,13 @@ export const FAVICON_DEV_MASK_SVG_PATH = ${JSON.stringify(
     devMaskSvgPublicPath,
     null,
     2,
-  )} as const;
+  )};
 
 export const FAVICON_DEV_TILE_FOREGROUND_SVG_PATH = ${JSON.stringify(
     devTileSvgPublicPath,
     null,
     2,
-  )} as const;
+  )};
 
 export const FAVICON_MANIFEST_META_BY_LOCALE = ${JSON.stringify(
     manifestMetaByLocale,
