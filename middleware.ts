@@ -6,11 +6,8 @@ import {
 } from '@/lib/locales/locale';
 import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
 import { localizedToCanonicalSlugs } from '@/lib/routes/localeSlugs';
-import {
-  getPrivateLaunchEnvConfig,
-  getRuntimeEnv,
-  isProd,
-} from '@/lib/runtimeEnv';
+import * as runtimeEnv from '@/lib/runtimeEnv';
+import { isDev, isRelease, isStaging } from '@/config/envPrimitives';
 
 const LOCALES = new Set<Locale>(
   AVAILABLE_LOCALES as readonly Locale[],
@@ -31,31 +28,30 @@ function isLocale(segment: string): segment is Locale {
 }
 
 function isGateEnabled(): boolean {
-  const env = getRuntimeEnv();
+  const {
+    user,
+    password,
+    isPrivateOnStaging = false,
+    isPrivateOnRelease = false,
+    isPrivateOnLocal = false,
+  } = runtimeEnv.getPrivateLaunchEnvConfig();
 
-  const { user, password, enabledForStaging, enabledForRelease } =
-    getPrivateLaunchEnvConfig();
   if (!user || !password) {
     return false;
   }
 
-  // Only gate on hosted environments wired through Vercel.
-  if (env.kind === 'hosted') {
-    if (env.hostedTier === 'release') {
-      return enabledForRelease;
-    }
-    if (env.hostedTier === 'staging') {
-      return enabledForStaging;
-    }
+  if (isDev()) {
+    return !isPrivateOnLocal;
   }
 
-  // Fallback: for other Vercel-driven environments (for example,
-  // uncharted preview branches), enable the gate if any flag is set.
-  if (env.vercelEnv) {
-    return enabledForRelease || enabledForStaging;
+  if (isStaging()) {
+    return !isPrivateOnStaging;
   }
 
-  // No gate in local / non-Vercel environments.
+  if (isRelease()) {
+    return !isPrivateOnRelease;
+  }
+
   return false;
 }
 
@@ -100,7 +96,8 @@ function requireBasicAuth(request: NextRequest): NextResponse | null {
   }
 
   const { user: expectedUser, password: expectedPassword } =
-    getPrivateLaunchEnvConfig();
+    runtimeEnv.getPrivateLaunchEnvConfig();
+
   if (!expectedUser || !expectedPassword) {
     return null;
   }
@@ -160,7 +157,7 @@ export function middleware(request: NextRequest) {
       ...restSegments
     ] = segments;
 
-    if (isProd() && firstSegment === 'debug') {
+    if (isRelease() && firstSegment === 'debug') {
       return new NextResponse(null, { status: 404 });
     }
 

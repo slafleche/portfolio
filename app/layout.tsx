@@ -13,9 +13,9 @@ import {
 } from '@/data/generated/favicons.manifest.gen';
 import { type Locale } from '@/lib/locales/translations';
 import debugRoutes from '@/data/debugRoutes.json';
-import { isIndexingAllowed, notProd } from '../src/lib/runtimeEnv';
+import { isIndexingAllowed, notRelease } from '../src/lib/runtimeEnv';
 
-if (notProd()) {
+if (notRelease()) {
   const globalTracker = globalThis as {
     __debugRoutesLogged?: boolean;
   };
@@ -103,7 +103,9 @@ export default async function RootLayout({
         <meta name="description" content={faviconMeta.description} />
         <meta
           name="robots"
-          content={indexingAllowed ? 'index,follow' : 'noindex,nofollow'}
+          content={
+            indexingAllowed ? 'index,follow' : 'noindex,nofollow'
+          }
         />
         <meta name="keywords" content={faviconMeta.keywords} />
         <meta name="author" content={faviconMeta.author} />

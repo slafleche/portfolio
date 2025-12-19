@@ -22,13 +22,9 @@ export type DeliveryResult = {
 
 const BREVO_ENDPOINT = 'https://api.brevo.com/v3/smtp/email';
 const DEFAULT_SUBJECT_PREFIX = '[Portfolio Contact]';
-const BREVO_TIMEOUT_MS = Number(process.env.BREVO_TIMEOUT_MS ?? 8000);
-const BREVO_RETRY_DELAY_MS = Number(
-  process.env.BREVO_RETRY_DELAY_MS ?? 350,
-);
-const BREVO_RETRY_JITTER_MS = Number(
-  process.env.BREVO_RETRY_JITTER_MS ?? 250,
-);
+const DEFAULT_BREVO_TIMEOUT_MS = 8000;
+const DEFAULT_BREVO_RETRY_DELAY_MS = 350;
+const DEFAULT_BREVO_RETRY_JITTER_MS = 250;
 const MAX_BREVO_ATTEMPTS = 2;
 
 const sleep = (ms: number) =>
@@ -36,9 +32,12 @@ const sleep = (ms: number) =>
     setTimeout(resolve, ms);
   });
 
-const jitterDelay = () =>
-  BREVO_RETRY_DELAY_MS +
-  Math.floor(Math.random() * Math.max(1, BREVO_RETRY_JITTER_MS));
+const jitterDelay = (
+  retryDelayMs: number,
+  retryJitterMs: number,
+) =>
+  retryDelayMs +
+  Math.floor(Math.random() * Math.max(1, retryJitterMs));
 
 const summarizeError = (error: unknown): string | undefined => {
   if (!error) return undefined;
@@ -130,6 +129,9 @@ export async function deliverContactMessage(
     mailFrom,
     mailTo,
     subjectPrefix,
+    timeoutMs,
+    retryDelayMs,
+    retryJitterMs,
   } = getBrevoEnvConfig();
 
   if (!apiKey || !mailFrom || !mailTo) {
@@ -142,6 +144,13 @@ export async function deliverContactMessage(
       retryReasons: [],
     };
   }
+
+  const effectiveTimeoutMs =
+    timeoutMs ?? DEFAULT_BREVO_TIMEOUT_MS;
+  const effectiveRetryDelayMs =
+    retryDelayMs ?? DEFAULT_BREVO_RETRY_DELAY_MS;
+  const effectiveRetryJitterMs =
+    retryJitterMs ?? DEFAULT_BREVO_RETRY_JITTER_MS;
 
   const attempts: DeliveryAttempt[] = [];
   const retryReasons: RetryReason[] = [];
@@ -157,7 +166,7 @@ export async function deliverContactMessage(
     const controller = new AbortController();
     const timeoutId = setTimeout(
       () => controller.abort(),
-      BREVO_TIMEOUT_MS,
+      effectiveTimeoutMs,
     );
 
     try {
@@ -209,7 +218,12 @@ export async function deliverContactMessage(
       if (retryable && attempt < MAX_BREVO_ATTEMPTS) {
         const reason = attemptRecord.retryReason ?? 'server';
         retryReasons.push(reason);
-        await sleep(jitterDelay());
+        await sleep(
+          jitterDelay(
+            effectiveRetryDelayMs,
+            effectiveRetryJitterMs,
+          ),
+        );
         continue;
       }
 
@@ -240,7 +254,12 @@ export async function deliverContactMessage(
         if (attemptRecord.retryReason) {
           retryReasons.push(attemptRecord.retryReason);
         }
-        await sleep(jitterDelay());
+        await sleep(
+          jitterDelay(
+            effectiveRetryDelayMs,
+            effectiveRetryJitterMs,
+          ),
+        );
         continue;
       }
       return {

@@ -3,9 +3,9 @@ import { assertUnit, m } from 'css-calipers';
 import { chevronVars, colorVars } from '../../tokens/global.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import borders from '../helpers/borders.helper';
-import { notProd } from '../../lib/runtimeEnv';
+import { notRelease } from '@/lib/runtimeEnv';
 
-if (notProd()) {
+if (notRelease()) {
   assertUnit(chevronVars.width, 'px', 'skipToContent chevron width');
   assertUnit(
     chevronVars.padding,

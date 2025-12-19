@@ -18,9 +18,7 @@ export async function verifyTurnstileToken(
   token: string | null | undefined,
   remoteIp?: string | null,
 ): Promise<TurnstileVerificationResult> {
-  const {
-    secretKey,
-  } = getTurnstileEnvConfig();
+  const { secretKey } = getTurnstileEnvConfig();
   const secret = secretKey;
   if (!secret) {
     return {

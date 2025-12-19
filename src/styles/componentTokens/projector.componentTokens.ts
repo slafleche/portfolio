@@ -1,7 +1,7 @@
 import { color } from '../helpers/colorWrap.helper';
 import { assertCondition, assertUnit, m } from 'css-calipers';
 import { dropShadowVars } from '../../tokens/global.tokens';
-import { notProd } from '../../lib/runtimeEnv';
+import { notRelease } from '@/lib/runtimeEnv';
 
 export type ProjectorChannel = 'blue' | 'green' | 'red';
 export type ProjectorStage = 'initial' | 'waypoint' | 'focus';
@@ -27,7 +27,7 @@ const toWayPointTime = m(800, 'ms');
 const waypointHoldTime = m(0, 'ms');
 const toFocusTime = m(100, 'ms');
 
-if (notProd()) {
+if (notRelease()) {
   assertCondition(() => {
     return (
       toWayPointTime.getValue() > 0 && toFocusTime.getValue() > 0

@@ -28,9 +28,9 @@ import {
 } from 'css-calipers';
 import transforms from '../helpers/transforms.helper';
 import { menuVars } from '../componentTokens/menu.componentTokens';
-import { notProd } from '../../lib/runtimeEnv';
+import { notRelease } from '@/lib/runtimeEnv';
 
-if (notProd()) {
+if (notRelease()) {
   assertUnit(archVars.top, 'px', 'menu archVars.top');
   assertUnit(archVars.curveHeight, 'px', 'menu archVars.curveHeight');
   assertUnit(archVars.bumpHeight, 'px', 'menu archVars.bumpHeight');

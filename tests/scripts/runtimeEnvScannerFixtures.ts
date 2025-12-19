@@ -47,8 +47,9 @@ export const BRANCH_ENV_BARE_SNIPPET = `
 export const PRIVATE_LAUNCH_ENV_SNIPPET = `
   const user = PRIVATE_LAUNCH_USER;
   const password = PRIVATE_LAUNCH_PASSWORD;
-  const enabledStaging = PRIVATE_LAUNCH_ENABLED_STAGING;
-  const enabledRelease = PRIVATE_LAUNCH_ENABLED_RELEASE;
+  const enabledStaging = PRIVATE_STAGING;
+  const enabledRelease = PRIVATE_RELEASE;
+  const enabledLocal = PRIVATE_LOCAL;
 `;
 
 export const PRIVATE_LAUNCH_CONSOLE_LOG_SNIPPET = `

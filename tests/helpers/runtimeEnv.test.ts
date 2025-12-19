@@ -1,15 +1,11 @@
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-} from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   getBrevoEnvConfig,
   getRuntimeEnv,
   getTurnstileEnvConfig,
+  getPrivateLaunchEnvConfig,
   isHostedEnv,
+  isIndexingAllowed,
 } from '@/lib/runtimeEnv';
 
 const ORIGINAL_ENV = {
@@ -21,16 +17,12 @@ function baseEnv(): Record<string, string | undefined> {
     ...ORIGINAL_ENV,
   };
   delete env.NODE_ENV;
+  delete env.VERCEL;
   delete env.VERCEL_ENV;
-  delete env.VERCEL_GIT_COMMIT_REF;
-  delete env.VERCEL_GIT_BRANCH;
-  delete env.BRANCH;
   return env;
 }
 
-function setEnv(
-  overrides: Partial<Record<string, string>>,
-): void {
+function setEnv(overrides: Partial<Record<string, string>>): void {
   process.env = {
     ...baseEnv(),
     ...overrides,
@@ -46,114 +38,74 @@ describe('getRuntimeEnv', () => {
     process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
   });
 
-  it('treats non-production NODE_ENV as local, even on Vercel', () => {
+  it('defaults to development and not hosted when NODE_ENV and Vercel flags are missing', () => {
+    setEnv({});
+
+    const env = getRuntimeEnv();
+
+    expect(env.nodeEnv).toBe('development');
+    expect(env.hosted).toBe(false);
+  });
+
+  it('treats explicit NODE_ENV=development without Vercel as local', () => {
     setEnv({
       NODE_ENV: 'development',
-      VERCEL_ENV: 'production',
-      VERCEL_GIT_COMMIT_REF: 'release',
     });
 
     const env = getRuntimeEnv();
 
     expect(env.nodeEnv).toBe('development');
-    expect(env.kind).toBe('local');
-    expect(env.hostedTier).toBeNull();
+    expect(env.hosted).toBe(false);
   });
 
-  it('classifies production + VERCEL_ENV=production as hosted release', () => {
+  it('treats NODE_ENV=production without Vercel as non-hosted', () => {
     setEnv({
       NODE_ENV: 'production',
-      VERCEL_ENV: 'production',
-      VERCEL_GIT_COMMIT_REF: 'release',
     });
 
     const env = getRuntimeEnv();
 
     expect(env.nodeEnv).toBe('production');
-    expect(env.vercelEnv).toBe('production');
-    expect(env.kind).toBe('hosted');
-    expect(env.hostedTier).toBe('release');
+    expect(env.hosted).toBe(false);
   });
 
-  it('classifies production preview on staging branch as hosted staging (commit ref)', () => {
+  it('marks Vercel preview as hosted', () => {
     setEnv({
       NODE_ENV: 'production',
+      VERCEL: '1',
       VERCEL_ENV: 'preview',
-      VERCEL_GIT_COMMIT_REF: 'staging',
     });
 
     const env = getRuntimeEnv();
 
-    expect(env.kind).toBe('hosted');
-    expect(env.hostedTier).toBe('staging');
-    expect(env.branch).toBe('staging');
+    expect(env.nodeEnv).toBe('production');
+    expect(env.hosted).toBe(true);
   });
 
-  it('classifies production preview on staging branch as hosted staging (git branch)', () => {
+  it('marks Vercel production as hosted', () => {
     setEnv({
       NODE_ENV: 'production',
-      VERCEL_ENV: 'preview',
-      VERCEL_GIT_BRANCH: 'staging',
+      VERCEL: '1',
+      VERCEL_ENV: 'production',
     });
 
     const env = getRuntimeEnv();
 
-    expect(env.kind).toBe('hosted');
-    expect(env.hostedTier).toBe('staging');
-    expect(env.branch).toBe('staging');
+    expect(env.nodeEnv).toBe('production');
+    expect(env.hosted).toBe(true);
   });
 
-  it('classifies production preview on staging branch as hosted staging (BRANCH env)', () => {
+  it('treats Vercel development as non-hosted', () => {
     setEnv({
-      NODE_ENV: 'production',
-      VERCEL_ENV: 'preview',
-      BRANCH: 'staging',
-    });
-
-    const env = getRuntimeEnv();
-
-    expect(env.kind).toBe('hosted');
-    expect(env.hostedTier).toBe('staging');
-    expect(env.branch).toBe('staging');
-  });
-
-  it('classifies production preview on non-staging branch as uncharted', () => {
-    setEnv({
-      NODE_ENV: 'production',
-      VERCEL_ENV: 'preview',
-      VERCEL_GIT_COMMIT_REF: 'candidate/feature-1.2.3',
-    });
-
-    const env = getRuntimeEnv();
-
-    expect(env.kind).toBe('uncharted');
-    expect(env.hostedTier).toBeNull();
-    expect(env.branch).toBe('candidate/feature-1.2.3');
-  });
-
-  it('classifies production with unknown VERCEL_ENV as uncharted', () => {
-    setEnv({
-      NODE_ENV: 'production',
+      NODE_ENV: 'development',
+      VERCEL: '1',
       VERCEL_ENV: 'development',
-      VERCEL_GIT_COMMIT_REF: 'main',
     });
 
     const env = getRuntimeEnv();
 
-    expect(env.kind).toBe('uncharted');
-    expect(env.hostedTier).toBeNull();
-  });
-
-  it('falls back to local when production has no VERCEL_ENV', () => {
-    setEnv({
-      NODE_ENV: 'production',
-    });
-
-    const env = getRuntimeEnv();
-
-    expect(env.kind).toBe('local');
-    expect(env.hostedTier).toBeNull();
-    expect(env.vercelEnv).toBeUndefined();
+    expect(env.nodeEnv).toBe('development');
+    expect(env.hosted).toBe(false);
   });
 });
 
@@ -172,49 +124,44 @@ describe('isHostedEnv', () => {
     });
 
     expect(isHostedEnv()).toBe(false);
-    expect(isHostedEnv({ onlyProd: true })).toBe(false);
   });
 
-  it('returns true for hosted staging, but false with onlyProd', () => {
+  it('returns false for local production without Vercel flags', () => {
     setEnv({
       NODE_ENV: 'production',
+    });
+
+    expect(isHostedEnv()).toBe(false);
+  });
+
+  it('returns true for Vercel preview', () => {
+    setEnv({
+      NODE_ENV: 'production',
+      VERCEL: '1',
       VERCEL_ENV: 'preview',
-      VERCEL_GIT_COMMIT_REF: 'staging',
     });
 
     expect(isHostedEnv()).toBe(true);
-    expect(isHostedEnv({ onlyProd: true })).toBe(false);
   });
 
-  it('returns true for hosted release, including onlyProd', () => {
+  it('returns true for Vercel production', () => {
     setEnv({
       NODE_ENV: 'production',
+      VERCEL: '1',
       VERCEL_ENV: 'production',
-      VERCEL_GIT_COMMIT_REF: 'release',
     });
 
     expect(isHostedEnv()).toBe(true);
-    expect(isHostedEnv({ onlyProd: true })).toBe(true);
   });
 
-  it('returns false for uncharted environments', () => {
+  it('returns false for Vercel development', () => {
     setEnv({
-      NODE_ENV: 'production',
-      VERCEL_ENV: 'preview',
-      VERCEL_GIT_COMMIT_REF: 'candidate/try-new-layout-0.1.0',
+      NODE_ENV: 'development',
+      VERCEL: '1',
+      VERCEL_ENV: 'development',
     });
 
     expect(isHostedEnv()).toBe(false);
-    expect(isHostedEnv({ onlyProd: true })).toBe(false);
-  });
-
-  it('returns false when production has no VERCEL_ENV', () => {
-    setEnv({
-      NODE_ENV: 'production',
-    });
-
-    expect(isHostedEnv()).toBe(false);
-    expect(isHostedEnv({ onlyProd: true })).toBe(false);
   });
 });
 
@@ -326,7 +273,10 @@ describe('getBrevoEnvConfig', () => {
 
     for (const { missingKey } of cases) {
       const envForCase: Record<string, string> = {};
-      for (const [key, value] of Object.entries(baseEnv)) {
+      for (const [
+        key,
+        value,
+      ] of Object.entries(baseEnv)) {
         if (key === missingKey) continue;
         envForCase[key] = value;
       }
@@ -338,18 +288,134 @@ describe('getBrevoEnvConfig', () => {
         missingKey === 'BREVO_API_KEY' ? null : 'brevo-key',
       );
       expect(cfg.mailFrom).toBe(
-        missingKey === 'MAIL_FROM'
-          ? null
-          : 'from@example.com',
+        missingKey === 'MAIL_FROM' ? null : 'from@example.com',
       );
       expect(cfg.mailTo).toBe(
         missingKey === 'MAIL_TO' ? null : 'to@example.com',
       );
       expect(cfg.subjectPrefix).toBe(
-        missingKey === 'CONTACT_SUBJECT_PREFIX'
-          ? null
-          : '[Prefix]',
+        missingKey === 'CONTACT_SUBJECT_PREFIX' ? null : '[Prefix]',
       );
     }
+  });
+
+  it('normalizes Brevo timeout-related env vars to numbers or null', () => {
+    setEnv({
+      BREVO_API_KEY: 'brevo-key',
+      MAIL_FROM: 'from@example.com',
+      MAIL_TO: 'to@example.com',
+      CONTACT_SUBJECT_PREFIX: '[Prefix]',
+      BREVO_TIMEOUT_MS: '5000',
+      BREVO_RETRY_DELAY_MS: '350',
+      BREVO_RETRY_JITTER_MS: '0',
+      BREVO_HEALTH_TIMEOUT_MS: '4000',
+    });
+
+    const cfg = getBrevoEnvConfig();
+
+    expect(cfg.timeoutMs).toBe(5000);
+    expect(cfg.retryDelayMs).toBe(350);
+    expect(cfg.retryJitterMs).toBe(0);
+    expect(cfg.healthTimeoutMs).toBe(4000);
+  });
+
+  it('treats missing or invalid Brevo timeout-related env vars as null', () => {
+    setEnv({
+      BREVO_API_KEY: 'brevo-key',
+      MAIL_FROM: 'from@example.com',
+      MAIL_TO: 'to@example.com',
+      CONTACT_SUBJECT_PREFIX: '[Prefix]',
+      BREVO_TIMEOUT_MS: '',
+      BREVO_RETRY_DELAY_MS: 'not-a-number',
+    });
+
+    const cfg = getBrevoEnvConfig();
+
+    expect(cfg.timeoutMs).toBeNull();
+    expect(cfg.retryDelayMs).toBeNull();
+    expect(cfg.retryJitterMs).toBeNull();
+    expect(cfg.healthTimeoutMs).toBeNull();
+  });
+});
+
+describe('getPrivateLaunchEnvConfig and isIndexingAllowed', () => {
+  beforeEach(() => {
+    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+  });
+
+  afterEach(() => {
+    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+  });
+
+  it('normalizes private-launch flags and credentials from env', () => {
+    setEnv({
+      PRIVATE_LAUNCH_USER: 'user',
+      PRIVATE_LAUNCH_PASSWORD: 'secret',
+      PRIVATE_STAGING: '1',
+      PRIVATE_RELEASE: '0',
+      PRIVATE_LOCAL: 'yes',
+    });
+
+    const {
+      user,
+      password,
+      isPrivateOnStaging,
+      isPrivateOnRelease,
+      isPrivateOnLocal,
+    } = getPrivateLaunchEnvConfig();
+
+    expect(user).toBe('user');
+    expect(password).toBe('secret');
+    expect(isPrivateOnStaging).toBe(true);
+    expect(isPrivateOnRelease).toBe(false);
+    expect(isPrivateOnLocal).toBe(true);
+  });
+
+  it('never allows indexing outside release', () => {
+    setEnv({
+      NODE_ENV: 'production',
+      VERCEL: '1',
+      VERCEL_ENV: 'preview', // staging
+      PRIVATE_RELEASE: '0',
+      ALLOW_INDEXING: '1',
+    });
+
+    expect(isIndexingAllowed()).toBe(false);
+  });
+
+  it('never allows indexing on private release', () => {
+    setEnv({
+      NODE_ENV: 'production',
+      VERCEL: '1',
+      VERCEL_ENV: 'production', // release
+      PRIVATE_RELEASE: '1',
+      ALLOW_INDEXING: '1',
+    });
+
+    expect(isIndexingAllowed()).toBe(false);
+  });
+
+  it('allows indexing only on non-private release when ALLOW_INDEXING is truthy', () => {
+    setEnv({
+      NODE_ENV: 'production',
+      VERCEL: '1',
+      VERCEL_ENV: 'production', // release
+      PRIVATE_RELEASE: '0',
+      ALLOW_INDEXING: '1',
+    });
+
+    expect(isIndexingAllowed()).toBe(true);
+  });
+
+  it('disallows indexing on non-private release when ALLOW_INDEXING is falsy', () => {
+    setEnv({
+      NODE_ENV: 'production',
+      VERCEL: '1',
+      VERCEL_ENV: 'production', // release
+      PRIVATE_RELEASE: '0',
+      ALLOW_INDEXING: '0',
+    });
+
+    expect(isIndexingAllowed()).toBe(false);
   });
 });
