@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   getBrevoEnvConfig,
-  getRuntimeEnv,
   getTurnstileEnvConfig,
   getPrivateLaunchEnvConfig,
   isHostedEnv,
@@ -28,86 +27,6 @@ function setEnv(overrides: Partial<Record<string, string>>): void {
     ...overrides,
   } as NodeJS.ProcessEnv;
 }
-
-describe('getRuntimeEnv', () => {
-  beforeEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
-  });
-
-  afterEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
-  });
-
-  it('defaults to development and not hosted when NODE_ENV and Vercel flags are missing', () => {
-    setEnv({});
-
-    const env = getRuntimeEnv();
-
-    expect(env.nodeEnv).toBe('development');
-    expect(env.hosted).toBe(false);
-  });
-
-  it('treats explicit NODE_ENV=development without Vercel as local', () => {
-    setEnv({
-      NODE_ENV: 'development',
-    });
-
-    const env = getRuntimeEnv();
-
-    expect(env.nodeEnv).toBe('development');
-    expect(env.hosted).toBe(false);
-  });
-
-  it('treats NODE_ENV=production without Vercel as non-hosted', () => {
-    setEnv({
-      NODE_ENV: 'production',
-    });
-
-    const env = getRuntimeEnv();
-
-    expect(env.nodeEnv).toBe('production');
-    expect(env.hosted).toBe(false);
-  });
-
-  it('marks Vercel preview as hosted', () => {
-    setEnv({
-      NODE_ENV: 'production',
-      VERCEL: '1',
-      VERCEL_ENV: 'preview',
-    });
-
-    const env = getRuntimeEnv();
-
-    expect(env.nodeEnv).toBe('production');
-    expect(env.hosted).toBe(true);
-  });
-
-  it('marks Vercel production as hosted', () => {
-    setEnv({
-      NODE_ENV: 'production',
-      VERCEL: '1',
-      VERCEL_ENV: 'production',
-    });
-
-    const env = getRuntimeEnv();
-
-    expect(env.nodeEnv).toBe('production');
-    expect(env.hosted).toBe(true);
-  });
-
-  it('treats Vercel development as non-hosted', () => {
-    setEnv({
-      NODE_ENV: 'development',
-      VERCEL: '1',
-      VERCEL_ENV: 'development',
-    });
-
-    const env = getRuntimeEnv();
-
-    expect(env.nodeEnv).toBe('development');
-    expect(env.hosted).toBe(false);
-  });
-});
 
 describe('isHostedEnv', () => {
   beforeEach(() => {

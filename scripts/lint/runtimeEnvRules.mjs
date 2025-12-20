@@ -14,8 +14,8 @@
  * Direct env-tier usages that should be routed through src/lib/runtimeEnv instead.
  *
  * The goal is that application code (components, modules, scripts) no longer reads
- * env-tier variables directly and instead calls helpers like getRuntimeEnv or
- * isHostedEnv.
+ * env-tier variables directly and instead calls helpers such as isHostedEnv and
+ * the other runtimeEnv helpers.
  *
  * @type {RuntimeEnvUsagePattern[]}
  */
