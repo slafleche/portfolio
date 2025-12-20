@@ -32,7 +32,7 @@ import {
   buildFaviconMetaBundle,
   type FaviconMetaBundle,
 } from '../src/lib/locales/sections/favicons.locale';
-import { isNotHosted, notRelease } from '../src/lib/runtimeEnv';
+import { notHosted, notRelease } from '../src/lib/runtimeEnv';
 
 const OUT_ROOT = path.resolve('public', 'favicons');
 const TEMP_ROOT = path.resolve('tmp', 'favicons.gen');
@@ -421,7 +421,8 @@ async function main() {
       previousHash = parsed.sourceHash;
     }
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT')
+      throw error;
   }
 
   if (
@@ -860,11 +861,11 @@ async function main() {
     `/${path.relative(path.resolve('public'), absPath).replace(/\\+/g, '/')}`;
 
   const devMaskSvgPublicPath =
-    isNotHosted() && generatedMaskSvgPath
+    notHosted() && generatedMaskSvgPath
       ? toPublicPath(generatedMaskSvgPath)
       : null;
   const devTileSvgPublicPath =
-    isNotHosted() && generatedTileSvgPath
+    notHosted() && generatedTileSvgPath
       ? toPublicPath(generatedTileSvgPath)
       : null;
 

@@ -1,6 +1,5 @@
 import {
   getBrevoEnvConfig,
-  getRuntimeEnv,
   getTurnstileEnvConfig,
   isHostedEnv,
 } from '@/lib/runtimeEnv';
@@ -53,7 +52,6 @@ export function installEnvOverrides(
 
 export {
   getBrevoEnvConfig,
-  getRuntimeEnv,
   getTurnstileEnvConfig,
   isHostedEnv,
 };

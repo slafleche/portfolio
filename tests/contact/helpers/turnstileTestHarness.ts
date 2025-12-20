@@ -1,5 +1,4 @@
 import {
-  getRuntimeEnv,
   installEnvOverrides,
 } from '../../helpers/runtimeEnvHarness';
 
@@ -85,10 +84,6 @@ export function enableTurnstileHarness(
 
   const hasWindow = typeof window !== 'undefined';
 
-  const {
-    nodeEnv,
-  } = getRuntimeEnv();
-
   let originalTurnstile: Window['turnstile'] | undefined;
   let restoreEnv: (() => void) | null = null;
 
@@ -122,7 +117,6 @@ export function enableTurnstileHarness(
 
         if (
           mode === 'autoVerify' &&
-          nodeEnv !== 'production' &&
           typeof renderOptions.callback === 'function'
         ) {
           renderOptions.callback(CLOUDFLARE_TEST_TOKEN);

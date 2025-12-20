@@ -36,26 +36,11 @@ const parseNumber = (raw: string | undefined): number | null => {
   return Number.isNaN(value) ? null : value;
 };
 
-export interface RuntimeEnv {
-  nodeEnv: 'development' | 'production' | 'test';
-  hosted: boolean;
-}
-
-export function getRuntimeEnv(): RuntimeEnv {
-  const nodeEnv = process.env.NODE_ENV ?? 'development';
-  const hosted = isStaging() || isRelease();
-  return {
-    nodeEnv,
-    hosted,
-  };
-}
-
 export function isHostedEnv(): boolean {
-  const env = getRuntimeEnv();
-  return env.hosted;
+  return isStaging() || isRelease();
 }
 
-export function isNotHosted(): boolean {
+export function notHosted(): boolean {
   return !isHostedEnv();
 }
 
