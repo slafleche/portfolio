@@ -25,11 +25,10 @@ Pre-commit:
 
 GitHub CI (pushes and PRs into `main`):
 
-- `ci:candidate`
-  - `yarn setup:noVideo`
-  - `yarn lint`
-  - `yarn typecheck`
-  - `yarn test`
+- `ci:skipVideo`
+  - `yarn generate:all:mockVideo`
+  - `yarn verify`
+  - `yarn build`
 
 ### Candidates (`candidate/<slug>-x.y.z`)
 
@@ -45,10 +44,10 @@ Pre-commit:
 
 GitHub CI (pushes and PRs into `candidate/*`):
 
-- `ci:candidate`
-  - `yarn setup:noVideo`
-  - `yarn lint`
-  - `yarn test`
+- `ci:skipVideo`
+  - `yarn generate:all:mockVideo`
+  - `yarn verify`
+  - `yarn build`
 
 ### Staging (`staging`)
 
@@ -57,21 +56,18 @@ that should behave like production.
 
 Pre-commit:
 
-- full publish stack (equivalent to `ci:publish`):
-  - `yarn setup`
-  - `yarn lint`
-  - `yarn test`
+- full publish stack (equivalent to `ci:full`):
+  - `yarn generate:all`
+  - `yarn verify`
   - `yarn build`
 - can bypass with `git commit --no-verify` in emergencies, but the friction is
   intentional to encourage using PRs
 
 GitHub CI (pushes and PRs into `staging`):
 
-- `ci:publish`
-  - `yarn setup`
-  - `yarn lint`
-  - `yarn typecheck`
-  - `yarn test`
+- `ci:full`
+  - `yarn generate:all`
+  - `yarn verify`
   - `yarn build`
 
 ### Release (`release`)
@@ -82,20 +78,17 @@ pinch I can also merge `main` or a candidate directly if needed.
 
 Pre-commit:
 
-- full publish stack (same as `staging` / `ci:publish`):
-  - `yarn setup`
-  - `yarn lint`
-  - `yarn test`
+- full publish stack (same as `staging` / `ci:full`):
+  - `yarn generate:all`
+  - `yarn verify`
   - `yarn build`
 - can bypass with `git commit --no-verify` in emergencies
 
 GitHub CI (pushes and PRs into `release`):
 
-- `ci:publish`
-  - `yarn setup`
-  - `yarn lint`
-  - `yarn typecheck`
-  - `yarn test`
+- `ci:full`
+  - `yarn generate:all`
+  - `yarn verify`
   - `yarn build`
 
 ### Uncharted branches (anything else)
