@@ -8,7 +8,7 @@ const enBaseData = {
   label: 'English',
   'abbreviated-label': 'EN',
   redirecting: 'Redirecting...',
-  title: "Front-End Developer | Stéphane/'s Developer Portfolio",
+  title: "Front-End Developer | Stéphane's Developer Portfolio",
   description:
     'Front‑end developer Stéphane builds UI systems, reusable components, and accessible interfaces that keep design and engineering aligned over time',
 
@@ -19,8 +19,8 @@ const enBaseData = {
   'close-label': 'Close',
   'scroll-cue': 'Scroll to content',
 
-  'manifest-name': "Stéphane/'s Developer Portfolio",
-  'manifest-short-name': "Stéphane/'s Developer Portfolio",
+  'manifest-name': "Stéphane's Developer Portfolio",
+  'manifest-short-name': "Stéphane's Developer Portfolio",
   'manifest-description': 'Personal portfolio progressive web app.',
   'manifest-categories': [
     'portfolio',

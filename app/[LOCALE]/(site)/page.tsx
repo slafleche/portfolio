@@ -111,7 +111,7 @@ export default async function HomePage({
       />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
-          <Hero id="hero" copy={heroCopy} />
+          <Hero id="hero" copy={heroCopy} headingAnimated={false} />
           <HeroWaypoint />
           <Content
             id={approach.href}
