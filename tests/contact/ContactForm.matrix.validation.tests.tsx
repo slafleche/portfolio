@@ -93,15 +93,17 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       const text = inlineRegion.textContent ?? '';
       expect(text).toContain('validation_error');
       expect(text).toContain('name error');
+
+      const jumpButton = queryByTestId('jump-to-first-issue');
+      expect(jumpButton).not.toBeNull();
+
+      const submitButton = getByRole('button', {
+        name: 'Submit',
+      });
+      expect(submitButton).toBeDisabled();
     });
 
     expect(submitHelper).not.toHaveBeenCalled();
-
-    const jumpButton = queryByTestId('jump-to-first-issue');
-    expect(jumpButton).not.toBeNull();
-
-    const submitButton = getByRole('button', { name: 'Submit' });
-    expect(submitButton).toBeDisabled();
   });
 
   it('shows validation banner and jump button when server-driven validation_error occurs with all blocks locally valid', async () => {
@@ -139,28 +141,29 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
 
     await waitFor(() => {
       expect(submitHelper).toHaveBeenCalledTimes(1);
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      const text = inlineRegion?.textContent ?? '';
+      expect(text).toContain('validation_error');
+
+      const toastRegion = container.querySelector(
+        '[role="status"]:not([aria-atomic])',
+      );
+      expect(toastRegion?.textContent ?? '').toContain(
+        'validation_error',
+      );
+
+      const jumpButton = queryByTestId('jump-to-first-issue');
+      expect(jumpButton).not.toBeNull();
+
+      const submitButton = getByRole('button', {
+        name: 'Submit',
+      });
+      expect(submitButton).toBeDisabled();
     });
-
-    const inlineRegion = container.querySelector(
-      '[role="status"][aria-atomic="true"]',
-    ) as HTMLElement | null;
-    expect(inlineRegion).not.toBeNull();
-    if (!inlineRegion) return;
-    const text = inlineRegion.textContent ?? '';
-    expect(text).toContain('validation_error');
-
-    const toastRegion = container.querySelector(
-      '[role="status"]:not([aria-atomic])',
-    );
-    expect(toastRegion?.textContent ?? '').toContain(
-      'validation_error',
-    );
-
-    const jumpButton = queryByTestId('jump-to-first-issue');
-    expect(jumpButton).not.toBeNull();
-
-    const submitButton = getByRole('button', { name: 'Submit' });
-    expect(submitButton).toBeDisabled();
   });
 
   it('shows a non-validation banner but no jump button when the form is valid and rate-limited', async () => {
@@ -191,27 +194,28 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
 
     await waitFor(() => {
       expect(submitHelper).toHaveBeenCalledTimes(1);
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      const text = inlineRegion?.textContent ?? '';
+      expect(text).toContain('rate_limited');
+
+      const toastRegion = container.querySelector(
+        '[role="status"]:not([aria-atomic])',
+      );
+      expect(toastRegion?.textContent ?? '').toContain(
+        'rate_limited',
+      );
+
+      expect(queryByTestId('jump-to-first-issue')).toBeNull();
+
+      const submitButton = getByRole('button', {
+        name: 'Submit',
+      });
+      expect(submitButton).not.toBeDisabled();
     });
-
-    const inlineRegion = container.querySelector(
-      '[role="status"][aria-atomic="true"]',
-    ) as HTMLElement | null;
-    expect(inlineRegion).not.toBeNull();
-    if (!inlineRegion) return;
-    const text = inlineRegion.textContent ?? '';
-    expect(text).toContain('rate_limited');
-
-    const toastRegion = container.querySelector(
-      '[role="status"]:not([aria-atomic])',
-    );
-    expect(toastRegion?.textContent ?? '').toContain(
-      'rate_limited',
-    );
-
-    expect(queryByTestId('jump-to-first-issue')).toBeNull();
-
-    const submitButton = getByRole('button', { name: 'Submit' });
-    expect(submitButton).not.toBeDisabled();
   });
 
   it('shows a not_configured summary and no jump button when not_configured is returned', async () => {
@@ -242,26 +246,27 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
 
     await waitFor(() => {
       expect(submitHelper).toHaveBeenCalledTimes(1);
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      const text = inlineRegion?.textContent ?? '';
+      expect(text).toContain('not_configured');
+
+      const toastRegion = container.querySelector(
+        '[role="status"]:not([aria-atomic])',
+      );
+      expect(toastRegion?.textContent ?? '').toContain(
+        'not_configured',
+      );
+
+      expect(queryByTestId('jump-to-first-issue')).toBeNull();
+
+      const submitButton = getByRole('button', {
+        name: 'Submit',
+      });
+      expect(submitButton).toBeDisabled();
     });
-
-    const inlineRegion = container.querySelector(
-      '[role="status"][aria-atomic="true"]',
-    ) as HTMLElement | null;
-    expect(inlineRegion).not.toBeNull();
-    if (!inlineRegion) return;
-    const text = inlineRegion.textContent ?? '';
-    expect(text).toContain('not_configured');
-
-    const toastRegion = container.querySelector(
-      '[role="status"]:not([aria-atomic])',
-    );
-    expect(toastRegion?.textContent ?? '').toContain(
-      'not_configured',
-    );
-
-    expect(queryByTestId('jump-to-first-issue')).toBeNull();
-
-    const submitButton = getByRole('button', { name: 'Submit' });
-    expect(submitButton).toBeDisabled();
   });
 });
