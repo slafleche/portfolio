@@ -96,21 +96,20 @@ describe('ContactForm validated blocks — static matrix', () => {
 
     await waitFor(() => {
       expect(submitHelper).toHaveBeenCalledTimes(1);
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      expect(inlineRegion?.textContent ?? '').toBe('');
+
+      const toastRegion = container.querySelector(
+        '[role="status"]:not([aria-atomic])',
+      );
+      expect(toastRegion).toBeNull();
+
+      expect(queryByTestId('jump-to-first-issue')).toBeNull();
     });
-
-    const inlineRegion = container.querySelector(
-      '[role="status"][aria-atomic="true"]',
-    ) as HTMLElement | null;
-    expect(inlineRegion).not.toBeNull();
-    if (!inlineRegion) return;
-    expect(inlineRegion.textContent ?? '').toBe('');
-
-    const toastRegion = container.querySelector(
-      '[role="status"]:not([aria-atomic])',
-    );
-    expect(toastRegion).toBeNull();
-
-    expect(queryByTestId('jump-to-first-issue')).toBeNull();
   });
 
   it('surfaces a single-block validation error when only Name is invalid', async () => {
@@ -165,6 +164,9 @@ describe('ContactForm validated blocks — static matrix', () => {
       const text = inlineRegion.textContent ?? '';
       expect(text).toContain('validation_error');
       expect(text).toContain('name error');
+
+      const jumpButton = queryByTestId('jump-to-first-issue');
+      expect(jumpButton).not.toBeNull();
     });
 
     expect(submitHelper).not.toHaveBeenCalled();
@@ -225,6 +227,9 @@ describe('ContactForm validated blocks — static matrix', () => {
       const text = inlineRegion.textContent ?? '';
       expect(text).toContain('validation_error');
       expect(text).toContain('email error');
+
+      const jumpButton = queryByTestId('jump-to-first-issue');
+      expect(jumpButton).not.toBeNull();
     });
 
     expect(submitHelper).not.toHaveBeenCalled();
@@ -280,6 +285,9 @@ describe('ContactForm validated blocks — static matrix', () => {
       const text = inlineRegion.textContent ?? '';
       expect(text).toContain('validation_error');
       expect(text).toContain('message error');
+
+      const jumpButton = queryByTestId('jump-to-first-issue');
+      expect(jumpButton).not.toBeNull();
     });
 
     expect(submitHelper).not.toHaveBeenCalled();
@@ -342,6 +350,9 @@ describe('ContactForm validated blocks — static matrix', () => {
       expect(text).toContain('validation_error');
       expect(text).toContain('name error');
       expect(text).toContain('email error');
+
+      const jumpButton = queryByTestId('jump-to-first-issue');
+      expect(jumpButton).not.toBeNull();
     });
 
     expect(submitHelper).not.toHaveBeenCalled();
@@ -381,22 +392,21 @@ describe('ContactForm validated blocks — static matrix', () => {
 
     await waitFor(() => {
       expect(submitHelper).toHaveBeenCalledTimes(1);
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      const text = inlineRegion?.textContent ?? '';
+      expect(text).toContain('blocked');
+
+      const toastRegion = container.querySelector(
+        '[role="status"]:not([aria-atomic])',
+      );
+      expect(toastRegion?.textContent ?? '').toContain('blocked');
+
+      expect(queryByTestId('jump-to-first-issue')).toBeNull();
     });
-
-    const inlineRegion = container.querySelector(
-      '[role="status"][aria-atomic="true"]',
-    ) as HTMLElement | null;
-    expect(inlineRegion).not.toBeNull();
-    if (!inlineRegion) return;
-    const text = inlineRegion.textContent ?? '';
-    expect(text).toContain('blocked');
-
-    const toastRegion = container.querySelector(
-      '[role="status"]:not([aria-atomic])',
-    );
-    expect(toastRegion?.textContent ?? '').toContain('blocked');
-
-    expect(queryByTestId('jump-to-first-issue')).toBeNull();
 
     const submitButton = getByRole('button', { name: 'Submit' });
     expect(submitButton).toBeDisabled();
