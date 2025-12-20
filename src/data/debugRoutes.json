@@ -3,6 +3,7 @@
   "pages": [
     "favicons",
     "formelements",
-    "abbreviations"
+    "abbreviations",
+    "projectorPath"
   ]
 }

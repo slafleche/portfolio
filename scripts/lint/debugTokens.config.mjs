@@ -78,4 +78,12 @@ export const DEBUG_TOKEN_WHITELISTS = [
       '@/tokens/glassy.tokens',
     ],
   },
+  {
+    filePath: 'app/[LOCALE]/debug/projectorPath/page.tsx',
+    purpose:
+      'Projector path debug page: uses the hero font family for canvas text.',
+    allowedTokenImports: [
+      '@/tokens/fontFamilies.tokens',
+    ],
+  },
 ];
