@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ContactDialogProvider } from '@/components/contact/ContactDialogProvider';
@@ -17,6 +17,7 @@ import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
 } from './helpers/turnstileTestHarness';
+import { installTestEnv } from '../helpers/testEnvVars';
 
 const buildFormCopy = () =>
   buildContactFormCopy(
@@ -31,6 +32,17 @@ const buildPrivacy = () =>
   );
 
 describe('ContactDialogProvider', () => {
+  let restoreEnv: (() => void) | null = null;
+
+  beforeEach(() => {
+    restoreEnv = installTestEnv();
+  });
+
+  afterEach(() => {
+    restoreEnv?.();
+    restoreEnv = null;
+  });
+
   it('shows the success panel after a successful form submission inside the dialog', async () => {
     const formCopy = buildFormCopy();
     const privacyCopy = buildPrivacy();
