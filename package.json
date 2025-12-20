@@ -92,7 +92,7 @@
     "generate:img": "node scripts/generateImages.mjs",
     "generate:video": "node scripts/generateVideos.mjs",
     "generate:video:mockVideo": "tsx scripts/generateMockVideos.ts",
-    "generate:translations": "yarn fonts && yarn locales",
+    "generate:translations": "yarn locales && yarn fonts",
     "generate:favicons": "node --import tsx scripts/generateFavicons.ts",
     "locales": "yarn locales:markdown && yarn locales:publish",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",
