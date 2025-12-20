@@ -13,3 +13,8 @@ not leak into production behaviour.
   whitelist token imports for that page. Each whitelist is per-page and must be
   kept in sync between this file (for humans) and
   `scripts/lint/debugTokens.config.mjs` (for the lint guardrails).
+
+## Token import whitelists
+
+- `app/[LOCALE]/debug/projectorPath/page.tsx`: `@/tokens/fontFamilies.tokens`
+  for matching the hero font family in the canvas preview.

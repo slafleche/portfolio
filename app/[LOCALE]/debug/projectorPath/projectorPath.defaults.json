@@ -1,0 +1,41 @@
+{
+  "centerOffset": {
+    "x": 0,
+    "y": 0
+  },
+  "channels": [
+    {
+      "id": "blue",
+      "start": { "x": -220, "y": -120 },
+      "showTitle": true,
+      "turns": 1.25,
+      "amplitude": 0,
+      "decay": 1,
+      "phase": 0,
+      "handedness": 1,
+      "easing": "easeOutCubic"
+    },
+    {
+      "id": "green",
+      "start": { "x": 180, "y": 140 },
+      "showTitle": true,
+      "turns": 1.25,
+      "amplitude": 0,
+      "decay": 1,
+      "phase": 0,
+      "handedness": -1,
+      "easing": "easeOutCubic"
+    },
+    {
+      "id": "red",
+      "start": { "x": 240, "y": -60 },
+      "showTitle": true,
+      "turns": 1.25,
+      "amplitude": 0,
+      "decay": 1,
+      "phase": 0,
+      "handedness": 1,
+      "easing": "easeOutCubic"
+    }
+  ]
+}

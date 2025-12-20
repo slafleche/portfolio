@@ -61,7 +61,7 @@ const frBaseData = {
 
   projects: 'Projets',
   'projects-href': 'projets',
-  'projects-01-cocacola-title': 'Brigade du Bonheur (Coca-Cola)',
+  'projects-01-cocacola-title': 'La Brigade du Bonheur (Coca-Cola)',
   ...markdownRefs('projects-01-cocacola-content'),
   'projects-02-ea-title': 'Electronic Arts ([abbr:EA])',
   ...markdownRefs('projects-02-ea-content'),
