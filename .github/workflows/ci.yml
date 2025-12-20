@@ -6,13 +6,13 @@ on:
       - main
       - staging
       - release
-      - 'candidate/**'
+      - "candidate/**"
   pull_request:
     branches:
       - main
       - staging
       - release
-      - 'candidate/**'
+      - "candidate/**"
 
 jobs:
   test-and-build:
@@ -39,7 +39,7 @@ jobs:
           (github.event_name == 'pull_request' &&
             (github.base_ref == 'main' ||
              startsWith(github.base_ref, 'candidate/')))
-        run: yarn ci:candidate
+        run: yarn ci:light
 
       - name: Run publish checks (staging/release only)
         if: >
@@ -47,4 +47,4 @@ jobs:
             (github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/release')) ||
           (github.event_name == 'pull_request' &&
             (github.base_ref == 'staging' || github.base_ref == 'release'))
-        run: yarn ci:publish
+        run: yarn ci:full

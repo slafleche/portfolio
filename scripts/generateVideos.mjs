@@ -84,8 +84,8 @@ const exists = async (p) =>
     .then(() => true)
     .catch(() => false));
 
-const sha256 = (buf) =>
-  crypto.createHash('sha256').update(buf).digest('hex');
+const sha256 = (value) =>
+  crypto.createHash('sha256').update(value).digest('hex');
 
 const toName = (s) =>
   s
@@ -114,7 +114,7 @@ function normalizeSourceEntry(rawValue, key) {
         speed = parsed;
       } else {
         console.warn(
-          `⚠️ Ignoring invalid speed "${rawValue.speed}" for "${key}". Expected a positive number.`,
+          `ℹ️ Ignoring invalid speed "${rawValue.speed}" for "${key}". Expected a positive number.`,
         );
       }
     }
@@ -246,16 +246,13 @@ async function downloadToTemp(name, rawUrl) {
         : '';
   const ext = extFromCT || extFromUrlSafe(urlStr) || '.mp4';
 
-  const hash = sha256(buf);
   await fs.mkdir(TEMP_ROOT, {
     recursive: true,
   });
-  const file = path.join(TEMP_ROOT, `${name}-${hash}${ext}`);
+  const file = path.join(TEMP_ROOT, `${name}${ext}`);
   await fs.writeFile(file, buf);
   return {
     file,
-    hash,
-    shortHash: hash.slice(0, VIDEO_CACHE_HASH_LENGTH),
     bytes: buf.length,
   };
 }
@@ -550,8 +547,8 @@ function parseTargets(argv) {
   );
 
   if (partialBuild && entries.length === 0) {
-    console.warn(
-      '⚠️ No matching video keys for:',
+    console.log(
+      'ℹ️ No matching video keys for:',
       [
         ...targets,
       ].join(', '),
@@ -571,43 +568,63 @@ function parseTargets(argv) {
       `\n▶ ${name}${speed !== 1 ? `  (speed ×${speed.toFixed(2)})` : ''}`,
     );
     try {
-      const { file, hash, shortHash, bytes } = await downloadToTemp(
-        name,
-        src,
+      const normalizedSrc = toDirectDropboxUrl(
+        normalizeDrive(src),
       );
-      const prev = manifest[name];
+      const effectiveSpeed =
+        typeof speed === 'number' && speed > 0 ? speed : 1;
+
+      const configString = `${name}\n${normalizedSrc}\n${effectiveSpeed}`;
+      const configHash = sha256(configString);
+      const shortHash = configHash.slice(
+        0,
+        VIDEO_CACHE_HASH_LENGTH,
+      );
       const slug = `${VIDEO_CACHE_PREFIX}-${name}-${shortHash}`;
+      const prev = manifest[name];
 
       if (
-        prev?.sourceHash === hash &&
-        (prev?.speed ?? 1) === speed
+        prev?.sourceHash === configHash &&
+        (prev?.speed ?? 1) === effectiveSpeed
       ) {
-        const prevDir = prev.dirName
-          ? path.join(OUT_ROOT, prev.dirName)
-          : null;
+        const dirName = prev.dirName || slug;
+        const prevDir = path.join(OUT_ROOT, dirName);
         const masterPath =
           prevDir && path.join(prevDir, 'master.m3u8');
         if (masterPath && (await exists(masterPath))) {
           console.log(
-            `• Unchanged (${prettyBytes(bytes)}). Skipping transcode.`,
+            'ℹ️  Video config unchanged; using existing outputs. Skipping download and transcode.',
           );
+          manifest[name] = {
+            ...prev,
+            dirName,
+            basePath: prev.basePath ?? `${PUBLIC_ROOT}/${dirName}`,
+            hash: shortHash,
+            sourceHash: configHash,
+            speed: effectiveSpeed,
+          };
           continue;
         }
         console.log(
-          `• Manifest unchanged but outputs missing. Rebuilding.`,
+          '• Manifest config unchanged but outputs missing. Rebuilding.',
         );
       }
+
+      const { file, bytes } = await downloadToTemp(
+        name,
+        normalizedSrc,
+      );
       await removeHashedVideoDirs(name);
 
       const info = await buildHLS(file, {
         name,
         slug,
-        speed,
+        speed: effectiveSpeed,
       });
       manifest[name] = {
         ...info,
         hash: shortHash,
-        sourceHash: hash,
+        sourceHash: configHash,
         sourceSize: bytes,
       };
       console.log(
