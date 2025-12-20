@@ -26,7 +26,9 @@ Pre-commit:
 GitHub CI (pushes and PRs into `main`):
 
 - `ci:skipVideo`
-  - `yarn generate:all:mockVideo`
+  - `yarn generate:img`
+  - `yarn generate:video:mockVideo`
+  - `yarn generate:translations`
   - `yarn verify`
   - `yarn build`
 
@@ -45,7 +47,9 @@ Pre-commit:
 GitHub CI (pushes and PRs into `candidate/*`):
 
 - `ci:skipVideo`
-  - `yarn generate:all:mockVideo`
+  - `yarn generate:img`
+  - `yarn generate:video:mockVideo`
+  - `yarn generate:translations`
   - `yarn verify`
   - `yarn build`
 
