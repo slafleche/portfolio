@@ -6,35 +6,22 @@ import {
   isHostedEnv,
   isIndexingAllowed,
 } from '@/lib/runtimeEnv';
+import { buildTestEnv, installTestEnv } from './testEnvVars';
 
-const ORIGINAL_ENV = {
-  ...process.env,
-} as Record<string, string | undefined>;
-
-function baseEnv(): Record<string, string | undefined> {
-  const env: Record<string, string | undefined> = {
-    ...ORIGINAL_ENV,
-  };
-  delete env.NODE_ENV;
-  delete env.VERCEL;
-  delete env.VERCEL_ENV;
-  return env;
-}
+let restoreEnv: (() => void) | null = null;
 
 function setEnv(overrides: Partial<Record<string, string>>): void {
-  process.env = {
-    ...baseEnv(),
-    ...overrides,
-  } as NodeJS.ProcessEnv;
+  process.env = buildTestEnv(overrides) as NodeJS.ProcessEnv;
 }
 
 describe('isHostedEnv', () => {
   beforeEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv = installTestEnv();
   });
 
   afterEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv?.();
+    restoreEnv = null;
   });
 
   it('returns false in local development', () => {
@@ -86,11 +73,12 @@ describe('isHostedEnv', () => {
 
 describe('getTurnstileEnvConfig', () => {
   beforeEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv = installTestEnv();
   });
 
   afterEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv?.();
+    restoreEnv = null;
   });
 
   it('reads both site and secret keys when present', () => {
@@ -139,11 +127,12 @@ describe('getTurnstileEnvConfig', () => {
 
 describe('getBrevoEnvConfig', () => {
   beforeEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv = installTestEnv();
   });
 
   afterEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv?.();
+    restoreEnv = null;
   });
 
   it('reads Brevo configuration keys when all are present', () => {
@@ -259,11 +248,12 @@ describe('getBrevoEnvConfig', () => {
 
 describe('getPrivateLaunchEnvConfig and isIndexingAllowed', () => {
   beforeEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv = installTestEnv();
   });
 
   afterEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv?.();
+    restoreEnv = null;
   });
 
   it('normalizes private-launch flags and credentials from env', () => {

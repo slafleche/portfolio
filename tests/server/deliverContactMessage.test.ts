@@ -7,9 +7,10 @@ import {
   vi,
 } from 'vitest';
 import type { ContactFormDraft } from '@/modules/contactForm/validation';
+import { installTestEnv } from '../helpers/testEnvVars';
 import { withEnvOverrides } from '../helpers/runtimeEnvHarness';
 
-const ORIGINAL_ENV = { ...process.env };
+let restoreEnv: (() => void) | null = null;
 
 const buildDraft = (): ContactFormDraft => ({
   name: 'Test Sender',
@@ -18,18 +19,6 @@ const buildDraft = (): ContactFormDraft => ({
   token: 'turnstile-token',
   hp: '',
 });
-
-const assignBaseEnv = () => {
-  process.env = {
-    ...ORIGINAL_ENV,
-    BREVO_API_KEY: 'test-key',
-    MAIL_FROM: 'portfolio@example.com',
-    MAIL_TO: 'owner@example.com',
-    BREVO_TIMEOUT_MS: '5',
-    BREVO_RETRY_DELAY_MS: '1',
-    BREVO_RETRY_JITTER_MS: '0',
-  } as NodeJS.ProcessEnv;
-};
 
 const createAbortError = () => {
   const error = new Error('Request aborted');
@@ -42,12 +31,20 @@ describe('deliverContactMessage', () => {
     vi.resetModules();
     vi.restoreAllMocks();
     vi.useRealTimers();
-    assignBaseEnv();
+    restoreEnv = installTestEnv({
+      BREVO_API_KEY: 'test-key',
+      MAIL_FROM: 'portfolio@example.com',
+      MAIL_TO: 'owner@example.com',
+      BREVO_TIMEOUT_MS: '5',
+      BREVO_RETRY_DELAY_MS: '1',
+      BREVO_RETRY_JITTER_MS: '0',
+    });
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv?.();
+    restoreEnv = null;
   });
 
   it('returns ok on successful Brevo delivery', async () => {

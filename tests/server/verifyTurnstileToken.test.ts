@@ -7,19 +7,21 @@ import {
   vi,
 } from 'vitest';
 import { verifyTurnstileToken } from '@/server/turnstile/verifyTurnstileToken';
+import { installTestEnv } from '../helpers/testEnvVars';
 import { withEnvOverrides } from '../helpers/runtimeEnvHarness';
 
-const ORIGINAL_ENV = { ...process.env } as NodeJS.ProcessEnv;
+let restoreEnv: (() => void) | null = null;
 
 describe('verifyTurnstileToken', () => {
   beforeEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv = installTestEnv();
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });
 
   afterEach(() => {
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv?.();
+    restoreEnv = null;
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });

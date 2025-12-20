@@ -209,7 +209,7 @@ const main = async () => {
   }
 
   if (issuesByLocale.size === 0) {
-    console.log('✅ Locale markdown checks passed.');
+    console.log('✅ lint:locale markdown checks passed');
     return;
   }
 
