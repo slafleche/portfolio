@@ -237,7 +237,7 @@ async function loadVideoManifest() {
   } catch (error) {
     if (error.code === 'ENOENT') {
       console.log(
-        `ℹ️ Video manifest not found at "${VIDEO_MANIFEST_PATH}". Run the video pipeline first to enable video previews.`,
+        `ℹ️  Video manifest not found at "${VIDEO_MANIFEST_PATH}". Run the video pipeline first to enable video previews.`,
       );
       return null;
     }
