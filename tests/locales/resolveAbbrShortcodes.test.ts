@@ -1,6 +1,18 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeEach, afterEach } from 'vitest';
 import { resolveAbbrShortcodes } from '@/lib/locales/translations/resolveAbbrShortcodes';
 import { isLocaleRichText } from '@/lib/stringUtils';
+import { installTestEnv } from '../helpers/testEnvVars';
+
+let restoreEnv: (() => void) | null = null;
+
+beforeEach(() => {
+  restoreEnv = installTestEnv();
+});
+
+afterEach(() => {
+  restoreEnv?.();
+  restoreEnv = null;
+});
 
 describe('resolveAbbrShortcodes', () => {
   it('replaces [abbr:TERM] tokens with <abbr> markup', () => {

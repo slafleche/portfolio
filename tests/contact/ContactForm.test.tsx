@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactForm from '@/components/contact/ContactForm';
@@ -26,6 +26,7 @@ import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
 } from './helpers/turnstileTestHarness';
+import { installTestEnv } from '../helpers/testEnvVars';
 
 const buildCopy = () =>
   buildContactFormCopy(
@@ -37,6 +38,8 @@ const buildCopy = () =>
 
 const buildStatusMessages = (copy = buildCopy()) =>
   copy.blocks.messageCentre.statuses as Record<FormStatusKey, string>;
+
+let restoreEnv: (() => void) | null = null;
 
 function renderWrappedContactForm(
   copy = buildCopy(),
@@ -63,7 +66,13 @@ function renderWrappedContactForm(
   );
 }
 
+beforeEach(() => {
+  restoreEnv = installTestEnv();
+});
+
 afterEach(() => {
+  restoreEnv?.();
+  restoreEnv = null;
   setContactFormDebugLogger(null);
 });
 

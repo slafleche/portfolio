@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeEach, afterEach } from 'vitest';
 import type { RendererThis, TokenizerThis, TokensList } from 'marked';
 import { createAbbrShortcodeExtension } from '@/lib/markdown/abbrShortcode';
 import { renderAbbreviation } from '@/lib/locales/translations/abbrRenderer';
 import { abbrSlug } from '@/lib/stringUtils';
+import { installTestEnv } from '../helpers/testEnvVars';
 
 const lookup = (slug: string) =>
   ({
@@ -11,6 +12,17 @@ const lookup = (slug: string) =>
       definition: 'Artificial Intelligence',
     },
   })[slug];
+
+let restoreEnv: (() => void) | null = null;
+
+beforeEach(() => {
+  restoreEnv = installTestEnv();
+});
+
+afterEach(() => {
+  restoreEnv?.();
+  restoreEnv = null;
+});
 
 describe('abbr renderer', () => {
   it('renders abbreviations with escaped label + definition', () => {
