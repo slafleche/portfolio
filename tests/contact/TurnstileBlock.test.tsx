@@ -15,6 +15,7 @@ import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
+import { installTestEnv } from '../helpers/testEnvVars';
 
 type TurnstileApi = NonNullable<Window['turnstile']>;
 type TurnstileApiOptions = Parameters<TurnstileApi['render']>[1];
@@ -46,9 +47,8 @@ const turnstileCopy: TurnstileBlockLocale = {
   },
 };
 
-const ORIGINAL_ENV = { ...process.env };
-
 const DEFAULT_SITE_KEY = 'test-site-key';
+let restoreEnv: (() => void) | null = null;
 
 const createMockTurnstile = (
   shouldThrowOnRender = false,
@@ -72,12 +72,13 @@ const createMockTurnstile = (
 
 describe('Contact form block tests: TurnstileBlock', () => {
   beforeEach(() => {
-    process.env = { ...ORIGINAL_ENV };
+    restoreEnv = installTestEnv();
     window.turnstile = createMockTurnstile();
   });
 
   afterEach(() => {
-    process.env = { ...ORIGINAL_ENV };
+    restoreEnv?.();
+    restoreEnv = null;
     window.turnstile = undefined;
   });
 
@@ -579,12 +580,13 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
 describe('Contact form block contract: TurnstileBlock', () => {
   beforeEach(() => {
-    process.env = { ...ORIGINAL_ENV };
+    restoreEnv = installTestEnv();
     window.turnstile = createMockTurnstile();
   });
 
   afterEach(() => {
-    process.env = { ...ORIGINAL_ENV };
+    restoreEnv?.();
+    restoreEnv = null;
     window.turnstile = undefined;
   });
 

@@ -7,27 +7,25 @@ import {
   vi,
 } from 'vitest';
 import { GET as healthRoute } from '../../app/api/contact/health/route';
+import { installTestEnv } from '../helpers/testEnvVars';
 import { withEnvOverrides } from '../helpers/runtimeEnvHarness';
 
-const ORIGINAL_ENV = { ...process.env };
-
-const baseEnv = () =>
-  ({
-    ...ORIGINAL_ENV,
-    BREVO_API_KEY: 'test-key',
-    MAIL_FROM: 'example@example.com',
-    MAIL_TO: 'example@example.com',
-    BREVO_HEALTH_TIMEOUT_MS: '50',
-  }) as NodeJS.ProcessEnv;
+let restoreEnv: (() => void) | null = null;
 
 describe('GET /api/contact/health', () => {
   beforeEach(() => {
-    process.env = baseEnv();
+    restoreEnv = installTestEnv({
+      BREVO_API_KEY: 'test-key',
+      MAIL_FROM: 'example@example.com',
+      MAIL_TO: 'example@example.com',
+      BREVO_HEALTH_TIMEOUT_MS: '50',
+    });
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    process.env = { ...ORIGINAL_ENV } as NodeJS.ProcessEnv;
+    restoreEnv?.();
+    restoreEnv = null;
   });
 
   it('reports missing configuration without hitting Brevo', async () => {
@@ -35,6 +33,8 @@ describe('GET /api/contact/health', () => {
       {
         BREVO_API_KEY: '',
         MAIL_FROM: '',
+        MAIL_TO: 'example@example.com',
+        BREVO_HEALTH_TIMEOUT_MS: '50',
       },
       () => healthRoute(),
     );

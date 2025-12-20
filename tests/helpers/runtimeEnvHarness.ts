@@ -3,6 +3,7 @@ import {
   getTurnstileEnvConfig,
   isHostedEnv,
 } from '@/lib/runtimeEnv';
+import { buildTestEnv } from './testEnvVars';
 
 export type EnvOverrides = Record<string, string>;
 
@@ -21,10 +22,7 @@ export function withEnvOverrides<T>(
 ): T {
   const original = { ...process.env };
   try {
-    process.env = {
-      ...original,
-      ...overrides,
-    } as NodeJS.ProcessEnv;
+    process.env = buildTestEnv(overrides) as NodeJS.ProcessEnv;
     return fn();
   } finally {
     process.env = original;
@@ -40,10 +38,7 @@ export function installEnvOverrides(
   overrides: EnvOverrides,
 ): () => void {
   const original = { ...process.env } as NodeJS.ProcessEnv;
-  process.env = {
-    ...original,
-    ...overrides,
-  } as NodeJS.ProcessEnv;
+  process.env = buildTestEnv(overrides) as NodeJS.ProcessEnv;
 
   return () => {
     process.env = original;
