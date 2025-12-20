@@ -128,9 +128,6 @@ const CHANNEL_PALETTE: Record<ChannelId, ChannelPalette> = {
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
-const lerp = (from: number, to: number, t: number) =>
-  from + (to - from) * t;
-
 const degToRad = (value: number) =>
   (value * Math.PI) / 180;
 
@@ -579,7 +576,7 @@ const ToggleField = ({
   label: string;
   checked: boolean;
   onChange: (next: boolean) => void;
-  inputRef?: RefObject<HTMLInputElement>;
+  inputRef?: RefObject<HTMLInputElement | null>;
 }) => (
   <label style={toggleStyle}>
     <input
@@ -671,7 +668,7 @@ export default function ProjectorPathDebug({
     } catch {
       setSaveStatus('error');
     }
-  }, [centerOffset, channels]);
+  }, [channels]);
 
   useEffect(() => {
     if (masterToggleRef.current) {

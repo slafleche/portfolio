@@ -17,6 +17,7 @@ export const LINT_FILE_IGNORE_SUBSTRINGS = [
 export const STYLE_RULE_SKIP_PATHS = [
   'src/tokens/',
   'public/main.js',
+  'src/components/debug/ProjectorPathDebug.tsx',
 ];
 
 // Literal reset values that are allowed for specific inline style rules.

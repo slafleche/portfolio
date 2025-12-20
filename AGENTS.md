@@ -17,21 +17,33 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 
 ## Workflow and TODOs (`workflow-and-todos`)
 
-- Must: Follow the “talk → clarify → TODO → go” cadence for non-trivial tasks.
-- Must: Use structured plan/backlog files for real tasks: per-epic plans under
-  `ai/epics/` as `<epic-id>_primer.md`, `<epic-id>_implementation.md`, and
+- Must: Keep alignment through collaborative, iterative planning with quick
+  check-ins and explicit assumptions; do not force a fixed cadence.
+- Should: Use “talk → clarify → TODO → go” only when it helps the user, not as
+  a required sequence.
+- Must: Separate WHAT (planning) from DO (execution). During WHAT, do not change
+  files; during DO, follow the agreed spec exactly and ask when anything is
+  ambiguous or blocked.
+- Should: During WHAT, keep file investigation lightweight and announce deeper
+  dives before doing them.
+- Should: Use structured plan/backlog files when explicitly requested or when
+  both the user and agent agree it is needed: per-epic plans under `ai/epics/`
+  as `<epic-id>_primer.md`, `<epic-id>_implementation.md`, and
   `<epic-id>_plan.md`, and cross-cutting backlogs under `ai/backlog/` as
   `TODO.*.md` or `*.backlog.md`; a brief inline plan in chat is fine for tiny
   edits, and root-level TODOs should be rare/explicit.
-- Must: Before coding, pause to check that tokens are consumed directly, helpers
-  are in use, and values are not re-aliased without a real transformation.
+- Must: If the user asks for a plan/backlog file, follow the required structure
+  above.
+- Must: Before coding in DO mode, do a quick check that tokens are consumed
+  directly, helpers are in use, and values are not re-aliased without a real
+  transformation.
 - Should: For step-by-step, list-based work on a known list of items, follow the
-  wizard flow described in `agents/wizard.md` (one item at a time with explicit
-  approval before moving on).
+  wizard flow described in `agents/wizard.md` only when the user requests
+  item-by-item approvals.
 - Must: For non-trivial work that introduces new structures (types/interfaces,
   data shapes, locale key groups, helpers/config), first propose the primary
-  building blocks and wait for explicit user approval before using them in
-  components, APIs, or flows.
+  building blocks during WHAT and wait for explicit user approval before using
+  them in components, APIs, or flows during DO.
 - May: When extending an already approved structure with more of the same (for
   example, adding another locale string to an existing key group or another
   field to an established type), follow the existing pattern without re-

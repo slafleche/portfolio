@@ -1,13 +1,11 @@
 import path from 'node:path';
 import { readFile } from 'node:fs/promises';
+import { type ComponentProps } from 'react';
 import ProjectorPathDebug from '@/components/debug/ProjectorPathDebug';
 import { projectorVars } from '@/styles/componentTokens/projector.componentTokens';
 import { fontFamilies } from '@/tokens/fontFamilies.tokens';
 
-type ProjectorPathDefaults = {
-  centerOffset?: { x?: number; y?: number };
-  channels?: Record<string, unknown>[];
-};
+type ProjectorPathDebugProps = ComponentProps<typeof ProjectorPathDebug>;
 
 const DEFAULTS_PATH = path.resolve(
   process.cwd(),
@@ -19,10 +17,12 @@ const DEFAULTS_PATH = path.resolve(
 );
 
 export default async function ProjectorPathDebugPage() {
-  let initialDefaults: ProjectorPathDefaults | null = null;
+  let initialDefaults: ProjectorPathDebugProps['initialDefaults'] = null;
   try {
     const raw = await readFile(DEFAULTS_PATH, 'utf8');
-    initialDefaults = JSON.parse(raw) as ProjectorPathDefaults;
+    initialDefaults = JSON.parse(
+      raw,
+    ) as ProjectorPathDebugProps['initialDefaults'];
   } catch {
     initialDefaults = null;
   }
