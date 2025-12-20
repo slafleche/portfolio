@@ -89,7 +89,9 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
         '[role="status"][aria-atomic="true"]',
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
+      if (!inlineRegion) {
+        throw new Error('Expected inline status region to render.');
+      }
       const text = inlineRegion.textContent ?? '';
       expect(text).toContain('validation_error');
       expect(text).toContain('name error');

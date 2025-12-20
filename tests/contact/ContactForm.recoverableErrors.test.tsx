@@ -108,7 +108,9 @@ describe('ContactForm — recoverable error flows (form view)', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.validation_error,
         );
@@ -198,7 +200,9 @@ describe('ContactForm — recoverable error flows (form view)', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.validation_error,
         );
@@ -214,10 +218,8 @@ describe('ContactForm — recoverable error flows (form view)', () => {
         expect(
           container.querySelector('[data-form="success"]'),
         ).toBeNull();
+        expect(submitButton).toBeDisabled();
       });
-
-      // Submit is disabled until the user updates fields under continuous validation.
-      expect(submitButton).toBeDisabled();
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -289,7 +291,9 @@ describe('ContactForm — recoverable error flows (form view)', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.rate_limited,
         );
@@ -305,11 +309,8 @@ describe('ContactForm — recoverable error flows (form view)', () => {
         expect(
           container.querySelector('[data-form="success"]'),
         ).toBeNull();
+        expect(submitButton).not.toBeDisabled();
       });
-
-      // User is still able to interact with the form (submit is not
-      // permanently disabled by the rate limit).
-      expect(submitButton).not.toBeDisabled();
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -380,7 +381,9 @@ describe('ContactForm — recoverable error flows (form view)', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.service_unavailable,
         );
@@ -396,9 +399,8 @@ describe('ContactForm — recoverable error flows (form view)', () => {
         expect(
           container.querySelector('[data-form="success"]'),
         ).toBeNull();
+        expect(submitButton).not.toBeDisabled();
       });
-
-      expect(submitButton).not.toBeDisabled();
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -481,7 +483,9 @@ describe('ContactForm — recoverable error flows (form view)', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.generic,
         );
@@ -593,7 +597,9 @@ describe('ContactForm — recoverable error flows (form view)', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.generic,
         );
@@ -609,9 +615,8 @@ describe('ContactForm — recoverable error flows (form view)', () => {
         expect(
           container.querySelector('[data-form="success"]'),
         ).toBeNull();
+        expect(submitButton).not.toBeDisabled();
       });
-
-      expect(submitButton).not.toBeDisabled();
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();

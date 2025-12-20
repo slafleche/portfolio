@@ -167,24 +167,26 @@ describe('ContactForm — full stack happy path', () => {
 
       await waitFor(() => {
         expect(fetchMock).toHaveBeenCalledTimes(1);
+
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
+
+        expect(inlineRegion.textContent ?? '').toBe('');
+
+        const toastRegion = container.querySelector(
+          '[role="status"]:not([aria-atomic]):not([data-form="loading"])',
+        ) as HTMLElement | null;
+        expect(toastRegion).toBeNull();
+
+        // No "jump to first issue" control should be present once the
+        // form has successfully submitted with no validation errors.
+        expect(queryByTestId('jump-to-first-issue')).toBeNull();
       });
-
-      const inlineRegion = container.querySelector(
-        '[role="status"][aria-atomic="true"]',
-      ) as HTMLElement | null;
-      expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
-
-      expect(inlineRegion.textContent ?? '').toBe('');
-
-      const toastRegion = container.querySelector(
-        '[role="status"]:not([aria-atomic]):not([data-form="loading"])',
-      ) as HTMLElement | null;
-      expect(toastRegion).toBeNull();
-
-      // No "jump to first issue" control should be present once the
-      // form has successfully submitted with no validation errors.
-      expect(queryByTestId('jump-to-first-issue')).toBeNull();
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();

@@ -103,26 +103,28 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         '[role="status"][aria-atomic="true"]',
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
+      if (!inlineRegion) {
+        throw new Error('Expected inline status region to render.');
+      }
       expect(inlineRegion.textContent ?? '').toContain(
         'not_configured',
       );
+
+      const toastRegion = container.querySelector(
+        '[role="status"]:not([aria-atomic])',
+      );
+      expect(toastRegion?.textContent ?? '').toContain(
+        'not_configured',
+      );
+
+      const submitButton = getByRole('button', { name: 'Submit' });
+      expect(submitButton).toBeDisabled();
+
+      const jumpButton = queryByTestId('jump-to-first-issue');
+      expect(jumpButton).toBeNull();
     });
 
-    const toastRegion = container.querySelector(
-      '[role="status"]:not([aria-atomic])',
-    );
-    expect(toastRegion?.textContent ?? '').toContain(
-      'not_configured',
-    );
-
     expect(submitHelper).not.toHaveBeenCalled();
-
-    const submitButton = getByRole('button', { name: 'Submit' });
-    expect(submitButton).toBeDisabled();
-
-    const jumpButton = queryByTestId('jump-to-first-issue');
-    expect(jumpButton).toBeNull();
   });
 
   it('switches to the error view, hides the form, and logs a catastrophic-view reason when the server returns not_configured', async () => {
@@ -195,35 +197,36 @@ describe('ContactForm — catastrophic failures (error view)', () => {
           'h1',
         ) as HTMLElement | null;
         expect(errorHeading).not.toBeNull();
-        if (!errorHeading) return;
+        if (!errorHeading) {
+          throw new Error('Expected error heading to render.');
+        }
         expect(errorHeading.getAttribute('tabindex')).toBe('-1');
         expect(document.activeElement).toBe(errorHeading);
+        expect(
+          container.querySelector('[data-form="loading"]'),
+        ).toBeNull();
+
+        expect(
+          container.querySelector('[data-form="form"]'),
+        ).toBeNull();
+
+        expect(
+          container.querySelector('[data-testid="jump-to-first-issue"]'),
+        ).toBeNull();
+
+        expect(
+          screen.queryByRole('button', {
+            name: copy.submitLabel,
+          }),
+        ).toBeNull();
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          '[contact][catastrophic-view]',
+          {
+            reason: 'form.not_configured',
+          },
+        );
       });
-
-      expect(
-        container.querySelector('[data-form="loading"]'),
-      ).toBeNull();
-
-      expect(
-        container.querySelector('[data-form="form"]'),
-      ).toBeNull();
-
-      expect(
-        container.querySelector('[data-testid="jump-to-first-issue"]'),
-      ).toBeNull();
-
-      expect(
-        screen.queryByRole('button', {
-          name: copy.submitLabel,
-        }),
-      ).toBeNull();
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        '[contact][catastrophic-view]',
-        {
-          reason: 'form.not_configured',
-        },
-      );
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -299,35 +302,36 @@ describe('ContactForm — catastrophic failures (error view)', () => {
           'h1',
         ) as HTMLElement | null;
         expect(errorHeading).not.toBeNull();
-        if (!errorHeading) return;
+        if (!errorHeading) {
+          throw new Error('Expected error heading to render.');
+        }
         expect(errorHeading.getAttribute('tabindex')).toBe('-1');
         expect(document.activeElement).toBe(errorHeading);
+        expect(
+          container.querySelector('[data-form="form"]'),
+        ).toBeNull();
+
+        expect(
+          container.querySelector('[data-form="loading"]'),
+        ).toBeNull();
+
+        expect(
+          container.querySelector('[data-testid="jump-to-first-issue"]'),
+        ).toBeNull();
+
+        expect(
+          screen.queryByRole('button', {
+            name: copy.submitLabel,
+          }),
+        ).toBeNull();
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          '[contact][catastrophic-view]',
+          {
+            reason: 'form.blocked',
+          },
+        );
       });
-
-      expect(
-        container.querySelector('[data-form="form"]'),
-      ).toBeNull();
-
-      expect(
-        container.querySelector('[data-form="loading"]'),
-      ).toBeNull();
-
-      expect(
-        container.querySelector('[data-testid="jump-to-first-issue"]'),
-      ).toBeNull();
-
-      expect(
-        screen.queryByRole('button', {
-          name: copy.submitLabel,
-        }),
-      ).toBeNull();
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        '[contact][catastrophic-view]',
-        {
-          reason: 'form.blocked',
-        },
-      );
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -368,38 +372,37 @@ describe('ContactForm — catastrophic failures (error view)', () => {
           '[data-form="error"]',
         ) as HTMLElement | null;
         expect(errorPanel).not.toBeNull();
+        expect(
+          container.querySelector('[data-form="form"]'),
+        ).toBeNull();
+
+        expect(
+          container.querySelector('[data-testid="jump-to-first-issue"]'),
+        ).toBeNull();
+
+        expect(
+          screen.queryByRole('button', {
+            name: copy.submitLabel,
+          }),
+        ).toBeNull();
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          '[contact][catastrophic]',
+          {
+            source: 'turnstile',
+            reason:
+              'Turnstile script failed to load or initialise.',
+          },
+        );
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          '[contact][catastrophic-view]',
+          {
+            reason:
+              'Turnstile script failed to load or initialise.',
+          },
+        );
       });
-
-      expect(
-        container.querySelector('[data-form="form"]'),
-      ).toBeNull();
-
-      expect(
-        container.querySelector('[data-testid="jump-to-first-issue"]'),
-      ).toBeNull();
-
-      expect(
-        screen.queryByRole('button', {
-          name: copy.submitLabel,
-        }),
-      ).toBeNull();
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        '[contact][catastrophic]',
-        {
-          source: 'turnstile',
-          reason:
-            'Turnstile script failed to load or initialise.',
-        },
-      );
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        '[contact][catastrophic-view]',
-        {
-          reason:
-            'Turnstile script failed to load or initialise.',
-        },
-      );
     } finally {
       (window as typeof window & { turnstile?: unknown }).turnstile =
         originalTurnstile;

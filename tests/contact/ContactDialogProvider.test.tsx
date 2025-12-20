@@ -109,12 +109,8 @@ describe('ContactDialogProvider', () => {
           '[data-form="success"]',
         );
         expect(successPanel).not.toBeNull();
-      });
-
-      const liveForm = document.querySelector('[data-form="form"]');
-      expect(liveForm).toBeNull();
-
-      await waitFor(() => {
+        const liveForm = document.querySelector('[data-form="form"]');
+        expect(liveForm).toBeNull();
         const title = document.querySelector(
           '[data-modal="title"]',
         ) as HTMLElement | null;
