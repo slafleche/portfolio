@@ -86,9 +86,9 @@
   },
   "scripts": {
     "ci:full": "yarn generate:all && yarn verify && yarn build",
-    "ci:skipVideo": "yarn generate:all:mockVideo && yarn verify && yarn build",
+    "ci:light": "yarn generate:all:light && yarn verify && yarn build",
     "generate:all": "yarn generate:img && yarn generate:video && yarn generate:translations && yarn generate:favicons",
-    "generate:all:mockVideo": "yarn generate:img && yarn generate:video:mockVideo && yarn generate:translations && yarn generate:favicons",
+    "generate:all:light": "yarn generate:img && yarn generate:video:mockVideo && yarn generate:translations",
     "generate:img": "node scripts/generateImages.mjs",
     "generate:video": "node scripts/generateVideos.mjs",
     "generate:video:mockVideo": "tsx scripts/generateMockVideos.ts",
