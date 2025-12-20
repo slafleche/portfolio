@@ -205,22 +205,21 @@ describe('Contact form shell harness', () => {
 
       await waitFor(() => {
         expect(submitHelper).toHaveBeenCalledTimes(1);
+
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        const inlineText = inlineRegion?.textContent ?? '';
+        expect(inlineText).toContain(expectedSummary);
+
+        const toastRegion = container.querySelector(
+          '[role="status"]:not([aria-atomic])',
+        );
+        expect(toastRegion?.textContent ?? '').toContain(
+          expectedSummary,
+        );
       });
-
-      const inlineRegion = container.querySelector(
-        '[role="status"][aria-atomic="true"]',
-      ) as HTMLElement | null;
-      expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
-      const inlineText = inlineRegion.textContent ?? '';
-      expect(inlineText).toContain(expectedSummary);
-
-      const toastRegion = container.querySelector(
-        '[role="status"]:not([aria-atomic])',
-      );
-      expect(toastRegion?.textContent ?? '').toContain(
-        expectedSummary,
-      );
 
       unmount();
     }
