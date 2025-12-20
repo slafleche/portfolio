@@ -236,8 +236,8 @@ async function loadVideoManifest() {
     return parsed && typeof parsed === 'object' ? parsed : null;
   } catch (error) {
     if (error.code === 'ENOENT') {
-      console.warn(
-        `⚠️ Video manifest not found at "${VIDEO_MANIFEST_PATH}". Run the video pipeline first to enable video previews.`,
+      console.log(
+        `ℹ️ Video manifest not found at "${VIDEO_MANIFEST_PATH}". Run the video pipeline first to enable video previews.`,
       );
       return null;
     }
@@ -480,8 +480,8 @@ if (remoteImageEntries.length) {
   ] of remoteImageEntries) {
     const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
     if (!url) {
-      console.warn(
-        `⚠️ Skipping remote image "${name}" because URL is empty.`,
+      console.log(
+        `ℹ️ Skipping remote image "${name}" because URL is empty.`,
       );
       continue;
     }
@@ -505,7 +505,7 @@ if (remoteImageEntries.length) {
     await fs.rm(TEMP_ROOT, { recursive: true, force: true });
     console.log('   ✓ Cleaned temporary download directory.');
   } catch {
-    console.warn('⚠️ Could not clean temporary download directory.');
+    console.log('ℹ️ Could not clean temporary download directory.');
   }
   console.log(
     `   ✓ Processed ${remoteCount} remote image${remoteCount === 1 ? '' : 's'}.`,
@@ -521,8 +521,8 @@ const videoManifest = await loadVideoManifest();
 if (videoManifest) {
   const entries = Object.entries(videoManifest);
   if (entries.length === 0) {
-    console.warn(
-      '⚠️ Video manifest is empty. No video previews will be generated.',
+    console.log(
+      'ℹ️ Video manifest is empty. No video previews will be generated.',
     );
   } else {
     let processed = 0;
@@ -581,13 +581,13 @@ if (videoManifest) {
       }
     }
     if (manifestMissingPosterUrl.length) {
-      console.warn(
-        `⚠️ Video manifest entries missing posterUrl: ${manifestMissingPosterUrl.join(', ')}.`,
+      console.log(
+        `ℹ️ Video manifest entries missing posterUrl: ${manifestMissingPosterUrl.join(', ')}.`,
       );
     }
     if (unresolvedPosterPaths.length) {
-      console.warn(
-        '⚠️ Could not resolve local poster path for videos:\n' +
+      console.log(
+        'ℹ️ Could not resolve local poster path for videos:\n' +
           unresolvedPosterPaths
             .map(
               ([
@@ -599,8 +599,8 @@ if (videoManifest) {
       );
     }
     if (missingPosterFiles.length) {
-      console.warn(
-        '⚠️ Poster image missing for videos:\n' +
+      console.log(
+        'ℹ️ Poster image missing for videos:\n' +
           missingPosterFiles
             .map(
               ([
@@ -617,8 +617,8 @@ if (videoManifest) {
         `   ✓ Processed ${processed} video poster image${processed === 1 ? '' : 's'}.`,
       );
     } else {
-      console.warn(
-        '⚠️ No video poster images were processed. Check warnings above.',
+      console.log(
+        'ℹ️ No video poster images were processed. Check notes above.',
       );
     }
   }
