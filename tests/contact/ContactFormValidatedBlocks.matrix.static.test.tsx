@@ -160,7 +160,9 @@ describe('ContactForm validated blocks — static matrix', () => {
         '[role="status"][aria-atomic="true"]',
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
+      if (!inlineRegion) {
+        throw new Error('Expected inline status region to render.');
+      }
       const text = inlineRegion.textContent ?? '';
       expect(text).toContain('validation_error');
       expect(text).toContain('name error');
@@ -223,7 +225,9 @@ describe('ContactForm validated blocks — static matrix', () => {
         '[role="status"][aria-atomic="true"]',
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
+      if (!inlineRegion) {
+        throw new Error('Expected inline status region to render.');
+      }
       const text = inlineRegion.textContent ?? '';
       expect(text).toContain('validation_error');
       expect(text).toContain('email error');
@@ -281,7 +285,9 @@ describe('ContactForm validated blocks — static matrix', () => {
         '[role="status"][aria-atomic="true"]',
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
+      if (!inlineRegion) {
+        throw new Error('Expected inline status region to render.');
+      }
       const text = inlineRegion.textContent ?? '';
       expect(text).toContain('validation_error');
       expect(text).toContain('message error');
@@ -345,7 +351,9 @@ describe('ContactForm validated blocks — static matrix', () => {
         '[role="status"][aria-atomic="true"]',
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
+      if (!inlineRegion) {
+        throw new Error('Expected inline status region to render.');
+      }
       const text = inlineRegion.textContent ?? '';
       expect(text).toContain('validation_error');
       expect(text).toContain('name error');
@@ -359,7 +367,9 @@ describe('ContactForm validated blocks — static matrix', () => {
 
     const jumpButton = queryByTestId('jump-to-first-issue');
     expect(jumpButton).not.toBeNull();
-    if (!jumpButton) return;
+    if (!jumpButton) {
+      throw new Error('Expected jump-to-first-issue control to render.');
+    }
     jumpButton.click();
     expect(onJumpToFirstIssue).toHaveBeenCalledWith('name');
   });

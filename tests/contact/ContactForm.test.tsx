@@ -185,35 +185,43 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       await userEvent.click(submitButton);
 
-      // Key assertion: the submission went through once.
-      expect(fetchMock).toHaveBeenCalledTimes(1);
+      await waitFor(() => {
+        // Key assertion: the submission went through once.
+        expect(fetchMock).toHaveBeenCalledTimes(1);
 
-      const successPanel = container.querySelector(
-        '[data-form="success"]',
-      ) as HTMLElement | null;
-      expect(successPanel).not.toBeNull();
-      const successHeading = successPanel?.querySelector(
-        'h1',
-      ) as HTMLElement | null;
-      expect(successHeading).not.toBeNull();
-      if (successHeading) {
+        const successPanel = container.querySelector(
+          '[data-form="success"]',
+        ) as HTMLElement | null;
+        expect(successPanel).not.toBeNull();
+        if (!successPanel) {
+          throw new Error('Expected success panel to render.');
+        }
+
+        const successHeading = successPanel.querySelector(
+          'h1',
+        ) as HTMLElement | null;
+        expect(successHeading).not.toBeNull();
+        if (!successHeading) {
+          throw new Error('Expected success heading to render.');
+        }
+
         expect(successHeading.getAttribute('tabindex')).toBe('-1');
         expect(document.activeElement).toBe(successHeading);
-      }
 
-      expect(
-        container.querySelector('[data-form="loading"]'),
-      ).toBeNull();
+        expect(
+          container.querySelector('[data-form="loading"]'),
+        ).toBeNull();
 
-      const inlineRegion = container.querySelector(
-        '[role="status"][aria-atomic="true"]',
-      ) as HTMLElement | null;
-      expect(inlineRegion).toBeNull();
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).toBeNull();
 
-      const toastRegion = container.querySelector(
-        '[role="status"]:not([aria-atomic])',
-      );
-      expect(toastRegion).toBeNull();
+        const toastRegion = container.querySelector(
+          '[role="status"]:not([aria-atomic])',
+        );
+        expect(toastRegion).toBeNull();
+      });
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -343,13 +351,17 @@ describe('ContactForm — integration with flow and outcome layers', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.validation_error,
         );
       });
 
-      expect(document.activeElement).toBe(messageInput);
+      await waitFor(() => {
+        expect(document.activeElement).toBe(messageInput);
+      });
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -382,15 +394,16 @@ describe('ContactForm — integration with flow and outcome layers', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.validation_error,
         );
+        expect(submitButton).toBeDisabled();
       });
 
       expect(fetchMock).not.toHaveBeenCalled();
-
-      expect(submitButton).toBeDisabled();
     } finally {
       global.fetch = originalFetch;
     }
@@ -453,25 +466,29 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         expect(fetchMock).toHaveBeenCalledTimes(1);
       });
 
-      const inlineRegion = container.querySelector(
-        '[role="status"][aria-atomic="true"]',
-      ) as HTMLElement | null;
-      expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
+      await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
 
-      const globalText = statusMessages.service_unavailable;
-      const inlineLines = Array.from(
-        inlineRegion.querySelectorAll('[data-error]'),
-      ) as HTMLElement[];
-      const inlineTexts = inlineLines.map(
-        (el) => el.textContent ?? '',
-      );
+        const globalText = statusMessages.service_unavailable;
+        const inlineLines = Array.from(
+          inlineRegion.querySelectorAll('[data-error]'),
+        ) as HTMLElement[];
+        const inlineTexts = inlineLines.map(
+          (el) => el.textContent ?? '',
+        );
 
-      expect(inlineRegion.textContent ?? '').toContain(globalText);
-      expect(
-        inlineTexts.filter((text) => text.includes(globalText))
-          .length,
-      ).toBe(0);
+        expect(inlineRegion.textContent ?? '').toContain(globalText);
+        expect(
+          inlineTexts.filter((text) => text.includes(globalText))
+            .length,
+        ).toBe(0);
+      });
     } finally {
       global.fetch = originalFetch;
       turnstileHarness.restore();
@@ -533,7 +550,9 @@ describe('ContactForm — integration with flow and outcome layers', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.validation_error,
         );
@@ -564,7 +583,9 @@ describe('ContactForm — integration with flow and outcome layers', () => {
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
         expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) return;
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.validation_error,
         );
@@ -849,13 +870,15 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       });
       await userEvent.click(submitButton);
 
-      const inlineRegion = container.querySelector(
-        '[role="status"][aria-atomic="true"]',
-      ) as HTMLElement | null;
-      expect(inlineRegion).not.toBeNull();
-      if (!inlineRegion) return;
-
       await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
+
         const lines = Array.from(
           inlineRegion.querySelectorAll('[data-error]'),
         ) as HTMLElement[];
@@ -870,6 +893,14 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       await userEvent.type(nameInput, 'Jane Doe');
 
       await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
+
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.validation_error,
         );
@@ -887,6 +918,14 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       await userEvent.type(emailInput, 'example@example.com');
 
       await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
+
         expect(inlineRegion.textContent ?? '').toContain(
           statusMessages.validation_error,
         );
@@ -909,6 +948,14 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       await userEvent.type(messageInput, 'This is a valid message.');
 
       await waitFor(() => {
+        const inlineRegion = container.querySelector(
+          '[role="status"][aria-atomic="true"]',
+        ) as HTMLElement | null;
+        expect(inlineRegion).not.toBeNull();
+        if (!inlineRegion) {
+          throw new Error('Expected inline status region to render.');
+        }
+
         const lines = Array.from(
           inlineRegion.querySelectorAll('[data-error]'),
         ) as HTMLElement[];
@@ -1103,19 +1150,21 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       // Second invalid submit with no meaningful change.
       await userEvent.click(submitButton);
 
-      const attemptEvents = logger.mock.calls.filter(
-        ([
-          event,
-        ]) => event.type === 'submit_attempt',
-      );
-      const resultEvents = logger.mock.calls.filter(
-        ([
-          event,
-        ]) => event.type === 'submit_result',
-      );
+      await waitFor(() => {
+        const attemptEvents = logger.mock.calls.filter(
+          ([
+            event,
+          ]) => event.type === 'submit_attempt',
+        );
+        const resultEvents = logger.mock.calls.filter(
+          ([
+            event,
+          ]) => event.type === 'submit_result',
+        );
 
-      expect(attemptEvents.length).toBe(1);
-      expect(resultEvents.length).toBe(1);
+        expect(attemptEvents.length).toBe(1);
+        expect(resultEvents.length).toBe(1);
+      });
     } finally {
       global.fetch = originalFetch;
       setContactFormDebugLogger(null);

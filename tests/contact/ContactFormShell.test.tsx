@@ -85,15 +85,17 @@ describe('Contact form shell harness', () => {
 
     await waitFor(() => {
       expect(submitHelper).toHaveBeenCalledTimes(1);
+
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      if (!inlineRegion) {
+        throw new Error('Expected inline status region to render.');
+      }
+
+      expect(inlineRegion.textContent ?? '').toBe('');
     });
-
-    const inlineRegion = container.querySelector(
-      '[role="status"][aria-atomic="true"]',
-    ) as HTMLElement | null;
-    expect(inlineRegion).not.toBeNull();
-    if (!inlineRegion) return;
-
-    expect(inlineRegion.textContent ?? '').toBe('');
   });
 
   it('surfaces validation errors from blocks and flow as inline and toast summaries', async () => {
@@ -131,31 +133,37 @@ describe('Contact form shell harness', () => {
         '[data-visible="true"]',
       );
       expect(statusWrapper).not.toBeNull();
+      const inlineRegion = container.querySelector(
+        '[role="status"][aria-atomic="true"]',
+      ) as HTMLElement | null;
+      expect(inlineRegion).not.toBeNull();
+      if (!inlineRegion) {
+        throw new Error('Expected inline status region to render.');
+      }
+
+      const inlineText = inlineRegion.textContent ?? '';
+      expect(inlineText).toContain('validation_error');
+      expect(inlineText).toContain('first error');
+
+      const toastRegion = container.querySelector(
+        '[role="status"]:not([aria-atomic])',
+      );
+      expect(toastRegion?.textContent ?? '').toContain(
+        'validation_error',
+      );
+
+      const submitButton = getByRole('button', { name: 'Submit' });
+      expect(submitButton).toBeDisabled();
+
+      const jumpButton = queryByTestId('jump-to-first-issue');
+      expect(jumpButton).not.toBeNull();
     });
-
-    const inlineRegion = container.querySelector(
-      '[role="status"][aria-atomic="true"]',
-    ) as HTMLElement | null;
-    expect(inlineRegion).not.toBeNull();
-    if (!inlineRegion) return;
-
-    const inlineText = inlineRegion.textContent ?? '';
-    expect(inlineText).toContain('validation_error');
-    expect(inlineText).toContain('first error');
-
-    const toastRegion = container.querySelector(
-      '[role="status"]:not([aria-atomic])',
-    );
-    expect(toastRegion?.textContent ?? '').toContain(
-      'validation_error',
-    );
-
-    const submitButton = getByRole('button', { name: 'Submit' });
-    expect(submitButton).toBeDisabled();
 
     const jumpButton = queryByTestId('jump-to-first-issue');
     expect(jumpButton).not.toBeNull();
-    if (!jumpButton) return;
+    if (!jumpButton) {
+      throw new Error('Expected jump-to-first-issue control to render.');
+    }
 
     jumpButton.click();
     expect(onJumpToFirstIssue).toHaveBeenCalledWith('first');
