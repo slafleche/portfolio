@@ -114,3 +114,5 @@ ai/epics/*
 !ai/epics/AGENTS.md
 !ai/epics/blockedUpgrades/
 !ai/epics/blockedUpgrades/**
+.vercel
+.env*.local

@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
 import { ContactDialogProvider } from '@/components/contact/ContactDialogProvider';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
@@ -16,6 +16,7 @@ import {
 } from '@/lib/locales/translations/en.data';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
 import { sharedStrings } from '@/lib/sharedStrings';
+import { installTestEnv } from '../helpers/testEnvVars';
 
 const buildFormCopy = () =>
   buildContactFormCopy(
@@ -62,7 +63,18 @@ const renderScenarioDialog = () => {
   return { formCopy, statusMessages: buildStatusMessages(formCopy) };
 };
 
+let restoreEnv: (() => void) | null = null;
+
 describe('ContactForm dev scenarios — URL-driven visual states', () => {
+  beforeEach(() => {
+    restoreEnv = installTestEnv();
+  });
+
+  afterEach(() => {
+    restoreEnv?.();
+    restoreEnv = null;
+  });
+
   it('dev scenario recoverable renders a recoverable generic_error state without submit', async () => {
     const scenarioUrl = buildScenarioUrl('recoverable');
     window.history.pushState({}, '', scenarioUrl);
