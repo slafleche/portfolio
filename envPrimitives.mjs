@@ -1,4 +1,3 @@
-/* eslint-env node */
 /* global process */
 
 // Basic environment classification helpers for config and runtime.
