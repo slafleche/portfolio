@@ -87,8 +87,8 @@
   "scripts": {
     "ci:full": "yarn generate:all && yarn verify && yarn build",
     "ci:light": "yarn generate:all:light && yarn verify && yarn build",
-    "generate:all": "yarn generate:img && yarn generate:video && yarn generate:translations && yarn generate:favicons",
-    "generate:all:light": "yarn generate:img && yarn generate:video:mock && yarn generate:favicons:mock && yarn generate:translations",
+    "generate:all": "yarn generate:translations && yarn generate:img && yarn generate:video && yarn generate:favicons",
+    "generate:all:light": "yarn generate:translations && yarn generate:img && yarn generate:video:mock && yarn generate:favicons:mock",
     "generate:img": "node scripts/generateImages.mjs",
     "generate:video": "node scripts/generateVideos.mjs",
     "generate:video:mock": "tsx scripts/generateMockVideos.ts",
