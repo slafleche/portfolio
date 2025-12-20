@@ -1,4 +1,11 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+} from 'vitest';
 import type {
   ContactFormBlockValidationResult,
   ContactFormSubmitStatus,
@@ -9,8 +16,17 @@ import {
   logContactFormDebugEvent,
   setContactFormDebugLogger,
 } from '@/components/contact/contactFormDebugLogger';
+import { installTestEnv } from '../helpers/testEnvVars';
+
+let restoreEnv: (() => void) | null = null;
+
+beforeEach(() => {
+  restoreEnv = installTestEnv();
+});
 
 afterEach(() => {
+  restoreEnv?.();
+  restoreEnv = null;
   setContactFormDebugLogger(null);
 });
 
