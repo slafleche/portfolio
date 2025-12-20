@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import sharp from 'sharp';
 import {
   faviconTokens,
@@ -42,6 +43,12 @@ const MANIFEST_TS_PATH = path.resolve(
   'favicons.manifest.gen.ts',
 );
 const PUBLIC_ROOT = '/favicons';
+const CACHE_INFO_PATH = path.resolve(
+  'src',
+  'data',
+  'generated',
+  'favicons.hash.json',
+);
 
 type ExtractSvgLayerOptions = {
   attribute: string;
@@ -239,6 +246,12 @@ type LocaleManifestLoadResult = {
   faviconMetaBundles: Readonly<Record<Locale, FaviconMetaBundle>>;
 };
 
+const exists = async (p: string): Promise<boolean> =>
+  !!(await fs
+    .access(p)
+    .then(() => true)
+    .catch(() => false));
+
 const MANIFEST_NAME_KEY = 'manifest-name';
 const MANIFEST_SHORT_NAME_KEY = 'manifest-short-name';
 const MANIFEST_DESCRIPTION_KEY = 'manifest-description';
@@ -383,14 +396,48 @@ function buildIcoFromPng(candidates: IcoCandidate[]) {
 }
 
 async function main() {
-  console.log('→ Favicons: cleaning staging directories');
-  await resetDir(TEMP_ROOT);
-  await resetDir(OUT_ROOT);
-
   const sourceSvgPath = path.resolve(faviconTokens.sourceSvg);
   console.log(`→ Favicons: loading source SVG "${sourceSvgPath}"`);
 
   const svgSource = await fs.readFile(sourceSvgPath, 'utf8');
+
+  const configPayload = {
+    svg: svgSource,
+    assetPlan: faviconAssetPlan,
+    themeColors: faviconThemeColors,
+    appConfig: faviconAppConfig,
+    options: faviconOptions,
+  };
+  const sourceHash = crypto
+    .createHash('sha256')
+    .update(JSON.stringify(configPayload))
+    .digest('hex');
+
+  let previousHash: string | null = null;
+  try {
+    const raw = await fs.readFile(CACHE_INFO_PATH, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed.sourceHash === 'string') {
+      previousHash = parsed.sourceHash;
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+  }
+
+  if (
+    previousHash === sourceHash &&
+    (await exists(MANIFEST_TS_PATH)) &&
+    (await exists(OUT_ROOT))
+  ) {
+    console.log(
+      'ℹ️  Favicons config unchanged; using existing outputs. Skipping generation.',
+    );
+    return;
+  }
+
+  console.log('→ Favicons: cleaning staging directories');
+  await resetDir(TEMP_ROOT);
+  await resetDir(OUT_ROOT);
 
   const maskLayer = extractSvgLayer(svgSource, {
     attribute: 'data-mask',
@@ -1101,6 +1148,13 @@ export const FAVICON_LINK_DESCRIPTORS_BY_LOCALE = ${JSON.stringify(
 
   console.log(`→ Favicons: wrote manifest ${MANIFEST_TS_PATH}`);
   console.log(`→ Favicons: assets available under ${OUT_ROOT}`);
+
+  await fs.mkdir(path.dirname(CACHE_INFO_PATH), { recursive: true });
+  await fs.writeFile(
+    CACHE_INFO_PATH,
+    `${JSON.stringify({ sourceHash }, null, 2)}\n`,
+    'utf8',
+  );
 
   console.log('→ Favicons: cleaning staging directory');
   await fs
