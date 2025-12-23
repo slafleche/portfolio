@@ -116,3 +116,6 @@ ai/epics/*
 !ai/epics/blockedUpgrades/**
 .vercel
 .env*.local
+scripts/cdn/media/fonts/selfhostedFontsSources.json
+scripts/cdn/media/images/imageSources.json
+scripts/cdn/media/videos/videoSources.json

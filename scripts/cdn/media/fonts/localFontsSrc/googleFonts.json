@@ -1,0 +1,14 @@
+{
+  "Urbanist": {
+    "type": "googleFonts",
+    "weights": "100..900"
+  },
+  "IBM+Plex+Sans": {
+    "type": "googleFonts",
+    "weights": "100..700",
+    "ital": true,
+    "axes": {
+      "wdth": "100"
+    }
+  }
+}

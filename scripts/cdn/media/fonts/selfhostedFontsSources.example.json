@@ -1,0 +1,20 @@
+{
+  "Example+Font": {
+    "src": "example.com/pathToSomeDropBoxLocation",
+    "weights": [
+      100,
+      200,
+      300,
+      400,
+      500,
+      600,
+      700,
+      800
+    ],
+    "ital": true,
+    "axes": {
+      "wdth": "100",
+      "slnt": "10"
+    }
+  }
+}

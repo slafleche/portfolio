@@ -1,0 +1,23 @@
+{
+  "name": "@portfolio/cdn-tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "20.19.6"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.715.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "generate:favicons": "node --import tsx ../generateFavicons.ts",
+    "generate:selfHostedFonts": "tsx scripts/generateSelfHostedFonts.ts",
+    "generate:img": "node scripts/generateImages.mjs",
+    "generate:video": "node scripts/generateVideos.mjs"
+  }
+}

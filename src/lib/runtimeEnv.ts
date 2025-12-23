@@ -124,6 +124,20 @@ export function getIndexingEnvConfig(): IndexingEnvConfig {
   };
 }
 
+export interface FontsCdnConfig {
+  baseUrl: string | null;
+}
+
+export function getFontsCdnConfig(): FontsCdnConfig {
+  const env = process.env as { SELF_HOSTED_FONTS_BASE_URL?: string };
+  const baseUrl =
+    env.SELF_HOSTED_FONTS_BASE_URL &&
+    env.SELF_HOSTED_FONTS_BASE_URL.trim().length > 0
+      ? env.SELF_HOSTED_FONTS_BASE_URL.trim()
+      : null;
+  return { baseUrl };
+}
+
 export function isIndexingAllowed(): boolean {
   const privatePermissions = getPrivateLaunchEnvConfig();
 

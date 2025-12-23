@@ -128,7 +128,9 @@ const extractFileLinks = (
   let match: RegExpExecArray | null;
   while ((match = anchorRegex.exec(html))) {
     const href = match[1];
-    if (!/\.(woff2?|otf|ttf)(?:\?|$)/i.test(href)) continue;
+    const isFont = /\.(woff2?|otf|ttf)(?:\?|$)/i.test(href);
+    const isMeta = /metaData\.json(?:\?|$)/i.test(href);
+    if (!isFont && !isMeta) continue;
     try {
       const abs = new URL(href, baseUrl).toString();
       links.add(abs);
