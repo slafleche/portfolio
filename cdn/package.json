@@ -21,8 +21,14 @@
     "cdn:ls": "tsx cdnClient.mts ls",
     "cdn:sync": "tsx cdnSyncManifests.mts",
 
-    "generate:selfHostedFonts": "tsx ../scripts/generateSelfHostedFonts.ts",
+    "fonts": "yarn generate:selfHosted && yarn generate:googleFonts",
+    "generate:selfHosted": "tsx ../scripts/generateLocalFonts.mts",
+    "generate:googleFonts": "tsx ../scripts/generateFontUrls.mts",
+    
+  
+    "generate:fonts": "yarn fonts",
     "generate:img": "node ../scripts/generateImages.mjs",
-    "generate:video": "node ../scripts/generateVideos.mjs"
+    "generate:video": "node ../scripts/generateVideos.mjs",
+    "generate:video:posters": "node ../scripts/generateVideos.mjs --posters-only"
   }
 }

@@ -95,7 +95,7 @@ function parseArgs(): ParsedArgs {
   for (const arg of args) {
     if (arg === '--images') kinds.add('images');
     else if (arg === '--fonts') kinds.add('fonts');
-    else if (arg === '--video') kinds.add('video');
+    else if (arg === '--video' || arg === '--videos') kinds.add('video');
     else if (arg.startsWith('--target=')) {
       const t = arg.split('=')[1]?.trim();
       if (t === '_staging' || t === 'release') target = t;
@@ -423,7 +423,7 @@ async function main() {
         '  --version=...  Override version for all kinds (otherwise uses cdn/assetGroupVersions.json).',
         '  --images       Include images manifest (default on if no kinds specified).',
         '  --fonts        Include fonts manifest (default on if no kinds specified).',
-        '  --video        Include video manifest (default on if no kinds specified).',
+        '  --video, --videos  Include video manifest (default on if no kinds specified).',
         '  --manifest-only  Skip uploading assets; only rewrite/write manifest locally.',
         '  --yes, -y      Skip confirmation prompts for overwriting CDN objects.',
         '  --help, -h     Show this help.',
