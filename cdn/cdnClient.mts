@@ -59,8 +59,16 @@ const isValidTarget = (value: string): value is '_staging' | 'release' => {
   return value === '_staging' || value === 'release';
 };
 
-const isValidKind = (value: string): value is 'images' | 'fonts' | 'videos' | 'video' => {
-  return value === 'images' || value === 'fonts' || value === 'videos' || value === 'video';
+const isValidKind = (
+  value: string,
+): value is 'images' | 'fonts' | 'font' | 'videos' | 'video' => {
+  return (
+    value === 'images' ||
+    value === 'fonts' ||
+    value === 'font' ||
+    value === 'videos' ||
+    value === 'video'
+  );
 };
 
 const hasAtLeastOneSegment = (key: string): boolean => {
@@ -218,11 +226,13 @@ async function main() {
       return;
     }
 
-    const args = [arg, ...extraArgs].filter(Boolean).map((s) => s?.trim());
-    // Tolerate an accidental duplicated command token (e.g., yarn passing "delete-version" twice).
-    while (args[0] === 'delete-version' && args.length > 1) {
-      args.shift();
-    }
+    const argv = process.argv
+      .slice(2)
+      .map((s) => s?.trim())
+      .filter((s) => s && s !== '--');
+    const idx = argv.indexOf('delete-version');
+    const args =
+      idx === -1 ? argv.slice(1) : argv.slice(idx + 1);
     const target = args[0];
     const kind = args[1];
     const version = args[2];
@@ -235,16 +245,21 @@ async function main() {
     }
 
     if (!isValidTarget(target)) {
-      console.error('Target must be "_staging" or "release".');
+      console.error(
+        `Target must be "_staging" or "release". Got "${target}".`,
+      );
       process.exit(1);
     }
 
     if (!isValidKind(kind)) {
-      console.error('Kind must be one of: images, fonts, videos.');
+      console.error(
+        `Kind must be one of: images, fonts, font, videos, video. Got "${kind}".`,
+      );
       process.exit(1);
     }
 
-    const normalizedKind = kind === 'video' ? 'videos' : kind;
+    const normalizedKind =
+      kind === 'video' ? 'videos' : kind === 'font' ? 'fonts' : kind;
     const prefix = `${target}/${normalizedKind}/${version}`;
     await deletePrefix(prefix);
     return;

@@ -52,6 +52,21 @@ type SelfHostedEntry = {
 type FontsConfigEntry = GoogleEntry & { type?: string } & SelfHostedEntry;
 type FontsConfig = Record<string, FontsConfigEntry>;
 
+type FontFileEntry = {
+  fileName: string;
+  url: string;
+};
+
+type FontManifestEntry = {
+  type: 'selfHosted';
+  src: string;
+  weights?: number[];
+  ital?: boolean;
+  axes?: Record<string, string>;
+  dirName: string;
+  files: FontFileEntry[];
+};
+
 const ALLOWED_EXTENSIONS = new Set([
   '.woff',
   '.woff2',
@@ -121,6 +136,43 @@ async function copyDirFiltered(
     if (!allowExt.has(ext)) continue;
     await fs.copyFile(srcPath, destPath);
   }
+}
+
+async function listFilesRecursive(rootDir: string): Promise<string[]> {
+  const entries = await fs.readdir(rootDir, { withFileTypes: true });
+  const files: string[] = [];
+  for (const entry of entries) {
+    const full = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await listFilesRecursive(full)));
+    } else if (entry.isFile()) {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
+async function buildManifestFiles(
+  dirName: string,
+  dirPath: string,
+): Promise<FontFileEntry[]> {
+  const files = await listFilesRecursive(dirPath);
+  return files
+    .filter((filePath) => {
+      const ext = path.extname(filePath).toLowerCase();
+      return ALLOWED_EXTENSIONS.has(ext);
+    })
+    .map((filePath) => {
+      const rel = path
+        .relative(dirPath, filePath)
+        .split(path.sep)
+        .join('/');
+      return {
+        fileName: rel,
+        url: `${dirName}/${rel}`,
+      };
+    })
+    .sort((a, b) => a.fileName.localeCompare(b.fileName));
 }
 
 const normalizeKey = (key: string) => key.replace(/\s+/g, '-');
@@ -265,6 +317,19 @@ async function readHashCache(pathname: string) {
   return {} as Record<string, string>;
 }
 
+async function readManifest(pathname: string) {
+  try {
+    const raw = await fs.readFile(pathname, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      return parsed as Record<string, FontManifestEntry>;
+    }
+  } catch {
+    // ignore
+  }
+  return {} as Record<string, FontManifestEntry>;
+}
+
 function parseArgs(argv: string[]) {
   const opts = {
     target: '_staging',
@@ -353,6 +418,9 @@ async function main() {
   const outputPath = path.join(outRoot, 'fonts.config.json');
   await writeJsonAtomic(outputPath, merged);
   console.log(`✓ Wrote fonts config → ${outputPath}`);
+  const manifestPath = path.join(outRoot, 'manifest.json');
+  const existingManifest = await readManifest(manifestPath);
+  const manifest: Record<string, FontManifestEntry> = {};
 
   const hasSelfHosted = Object.keys(selfHosted).length > 0;
   if (hasSelfHosted) {
@@ -382,6 +450,16 @@ async function main() {
       const stagedDest = path.join(outRoot, `${keySlug}.gen`);
       if (cached === hash && (await fileExists(stagedDest))) {
         console.log(`ℹ︎ ${fontKey}: url+version unchanged; skipping download.`);
+        const files = await buildManifestFiles(`${keySlug}.gen`, stagedDest);
+        manifest[fontKey] = {
+          type: 'selfHosted',
+          src: rawUrl,
+          weights: entry.weights,
+          ital: entry.ital,
+          axes: entry.axes,
+          dirName: `${keySlug}.gen`,
+          files,
+        };
         continue;
       }
       await removeDir(outDir);
@@ -455,6 +533,16 @@ async function main() {
       await removeDir(stagedDest);
       await copyDirFiltered(outDir, stagedDest, ALLOWED_EXTENSIONS);
       console.log(`✓ Staged ${fontKey} → ${stagedDest}`);
+      const files = await buildManifestFiles(`${keySlug}.gen`, stagedDest);
+      manifest[fontKey] = {
+        type: 'selfHosted',
+        src: rawUrl,
+        weights: entry.weights,
+        ital: entry.ital,
+        axes: entry.axes,
+        dirName: `${keySlug}.gen`,
+        files,
+      };
       hashCache[fontKey] = hash;
       hashChanged = true;
     }
@@ -465,6 +553,14 @@ async function main() {
     console.log(`✓ Staged self-hosted fonts → ${outRoot}`);
   } else {
     console.log('ℹ︎ No self-hosted fonts configured. Skipping download.');
+  }
+
+  if (Object.keys(manifest).length > 0) {
+    await writeJsonAtomic(manifestPath, manifest);
+    console.log(`✓ Wrote font manifest → ${manifestPath}`);
+  } else if (Object.keys(existingManifest).length > 0) {
+    await writeJsonAtomic(manifestPath, existingManifest);
+    console.log(`✓ Wrote font manifest → ${manifestPath}`);
   }
 }
 

@@ -283,7 +283,9 @@ async function syncKind(options: {
     const files = await listFilesRecursive(versionRoot);
     const uploadFiles = files.filter((filePath) => {
       const base = path.basename(filePath);
-      return base !== 'manifest.json' && base !== 'hashes.json';
+      if (base === 'manifest.json' || base === 'hashes.json') return false;
+      if (kind === 'fonts' && base === 'fonts.config.json') return false;
+      return true;
     });
 
     const toKey = (fullPath: string) => {
@@ -354,56 +356,93 @@ async function syncKind(options: {
   }
 
   const rawManifest = await fs.readFile(manifestPath, 'utf8');
-  const parsed = JSON.parse(rawManifest) as Record<
-    string,
-    {
-      name: string;
-      variants: Record<string, { w: number; url: string }[]>;
-      original: { url: string; width: number; height: number };
-      [key: string]: unknown;
-    }
-  >;
-
   const rewriteUrl = (u: string) => {
     const rel = u.startsWith('/') ? u.slice(1) : u;
     const key = `${prefix}/${kind}/${version}/${rel}`;
     return buildPublicUrl(publicBase, key);
   };
 
-  const rewritten: typeof parsed = {};
-  for (const [name, entry] of Object.entries(parsed)) {
-    const variants: typeof entry.variants = {};
-    for (const [fmt, arr] of Object.entries(entry.variants ?? {})) {
-      variants[fmt] = (arr ?? []).map((variant) => ({
-        ...variant,
-        url: rewriteUrl(variant.url),
-      }));
-    }
-    rewritten[name] = {
-      ...entry,
-      variants,
-      original: {
-        ...entry.original,
-        url: rewriteUrl(entry.original.url),
-      },
-    };
-  }
-
-  const publicManifestPath = path.join(
-    REPO_ROOT,
-    'public',
-    'cdn',
-    kind,
-    'manifest.json',
-  );
+  const publicManifestPath =
+    kind === 'fonts'
+      ? path.join(
+          REPO_ROOT,
+          'src',
+          'data',
+          'generated',
+          'fonts.manifest.gen.json',
+        )
+      : path.join(
+          REPO_ROOT,
+          'public',
+          'cdn',
+          kind,
+          'manifest.json',
+        );
 
   await fs.mkdir(path.dirname(publicManifestPath), { recursive: true });
-  await fs.writeFile(
-    publicManifestPath,
-    `${JSON.stringify(rewritten, null, 2)}\n`,
-  );
-  console.log(`✓ Wrote manifest to ${publicManifestPath}`);
 
+  if (kind === 'fonts') {
+    const parsed = JSON.parse(rawManifest) as Record<
+      string,
+      {
+        type: 'selfHosted';
+        src: string;
+        weights?: number[];
+        ital?: boolean;
+        axes?: Record<string, string>;
+        dirName: string;
+        files: { fileName: string; url: string }[];
+      }
+    >;
+    const rewritten: typeof parsed = {};
+    for (const [name, entry] of Object.entries(parsed)) {
+      rewritten[name] = {
+        ...entry,
+        files: (entry.files ?? []).map((file) => ({
+          ...file,
+          url: rewriteUrl(file.url),
+        })),
+      };
+    }
+    await fs.writeFile(
+      publicManifestPath,
+      `${JSON.stringify(rewritten, null, 2)}\n`,
+    );
+  } else {
+    const parsed = JSON.parse(rawManifest) as Record<
+      string,
+      {
+        name: string;
+        variants: Record<string, { w: number; url: string }[]>;
+        original: { url: string; width: number; height: number };
+        [key: string]: unknown;
+      }
+    >;
+    const rewritten: typeof parsed = {};
+    for (const [name, entry] of Object.entries(parsed)) {
+      const variants: typeof entry.variants = {};
+      for (const [fmt, arr] of Object.entries(entry.variants ?? {})) {
+        variants[fmt] = (arr ?? []).map((variant) => ({
+          ...variant,
+          url: rewriteUrl(variant.url),
+        }));
+      }
+      rewritten[name] = {
+        ...entry,
+        variants,
+        original: {
+          ...entry.original,
+          url: rewriteUrl(entry.original.url),
+        },
+      };
+    }
+    await fs.writeFile(
+      publicManifestPath,
+      `${JSON.stringify(rewritten, null, 2)}\n`,
+    );
+  }
+
+  console.log(`✓ Wrote manifest to ${publicManifestPath}`);
   console.log(
     'ℹ︎ Manifest written locally only; CDN manifest upload skipped by design.',
   );
@@ -416,7 +455,7 @@ async function main() {
       [
         'Usage: yarn --cwd cdn cdn:sync-manifests [--target=_staging|release] [--version=vX] [--images] [--fonts] [--video] [--yes]',
         '',
-        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a single tracked manifest to public/cdn/<kind>/manifest.json (manifest is not uploaded to CDN).',
+        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a tracked manifest locally (images/video under public/cdn/<kind>/manifest.json, fonts under src/data/generated/fonts.manifest.gen.json).',
         '',
         'Flags:',
         '  --target=...   Choose _staging (or s) or release (or r); default is auto-pick if both exist.',
