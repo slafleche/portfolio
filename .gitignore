@@ -99,12 +99,10 @@ pnpm-debug.log*
 .pnpm-debug.log*
 
 # -----------------------
-# Large Images
+# Local files
 # -----------------------
-src/assets/images/imageBackup/*
-src/assets/videos/videoBackup/*
-public/videos/*
 tmp/*
+.local/*
 
 # -----------------------
 # Epics (local by default)
@@ -115,7 +113,43 @@ ai/epics/*
 !ai/epics/blockedUpgrades/
 !ai/epics/blockedUpgrades/**
 .vercel
-.env*.local
-scripts/cdn/media/fonts/selfhostedFontsSources.json
-scripts/cdn/media/images/imageSources.json
-scripts/cdn/media/videos/videoSources.json
+.env*
+
+# -----------------------
+# Media binaries
+# -----------------------
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.avif
+*.bmp
+*.tif
+*.tiff
+*.ico
+*.heic
+*.heif
+*.mp4
+*.mov
+*.m4v
+*.webm
+*.avi
+*.mkv
+*.ts
+*.m2ts
+*.mpg
+*.mpeg
+*.wmv
+*.flv
+*.mp3
+*.wav
+*.ogg
+*.flac
+*.aac
+*.woff
+*.woff2
+*.otf
+*.ttf
+*.ttc
+*.eot

@@ -16,11 +16,13 @@
   },
   "scripts": {
     "cdn:delete": "tsx cdnClient.mts delete",
+    "cdn:delete:version": "tsx cdnClient.mts delete-version",
     "cdn:delete:prefix": "tsx cdnClient.mts delete-prefix",
-    "cdn:ls": "tsx cdnClient.mts ls", 
-    
-    "generate:selfHostedFonts": "tsx scripts/generateSelfHostedFonts.ts",
-    "generate:img": "node scripts/generateImages.mjs",
-    "generate:video": "node scripts/generateVideos.mjs"
+    "cdn:ls": "tsx cdnClient.mts ls",
+    "cdn:sync": "tsx cdnSyncManifests.mts",
+
+    "generate:selfHostedFonts": "tsx ../scripts/generateSelfHostedFonts.ts",
+    "generate:img": "node ../scripts/generateImages.mjs",
+    "generate:video": "node ../scripts/generateVideos.mjs"
   }
 }

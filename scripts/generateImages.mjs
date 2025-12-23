@@ -2,24 +2,41 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
-const SRC_DIR = 'src/assets/images';
-const OUT_ROOT = 'public/images';
-const MANIFEST_PATH = 'src/data/generated/images.manifest.gen.json';
-const VIDEO_MANIFEST_PATH =
-  'src/data/generated/videos.manifest.gen.json';
-const TEMP_ROOT = 'tmp/large-images';
-const IMAGE_SOURCES_DIR = path.join(SRC_DIR, 'largeImages');
-const IMAGE_SOURCES_CONFIG = path.join(SRC_DIR, 'imageSources.json');
-const IGNORE_DIRS = new Set([
-  IMAGE_SOURCES_DIR,
-  path.join(SRC_DIR, 'imageBackup'),
-]);
+const __filename = fileURLToPath(import.meta.url);
+const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
 
-const PUBLIC_ROOT = '/images';
+const IMAGE_SOURCES_DIR = path.join(
+  REPO_ROOT,
+  'cdn',
+  'media',
+  'images',
+  'localImageSrc',
+);
+const IMAGE_SOURCES_CONFIG = path.join(
+  REPO_ROOT,
+  'cdn',
+  'media',
+  'images',
+  'imageSources.json',
+);
+const VIDEO_MANIFEST_PATH = path.join(
+  REPO_ROOT,
+  'src/data/generated/videos.manifest.gen.json',
+);
+const IGNORE_DIRS = new Set([]);
+
 const IMAGE_CACHE_PREFIX = 'img';
 const IMAGE_CACHE_HASH_LENGTH = 8;
+const OUT_ROOT_BASE = path.resolve(REPO_ROOT, 'tmp', 'cdn');
+const VERSIONS_PATH = path.resolve(
+  REPO_ROOT,
+  'cdn',
+  'assetGroupVersions.json',
+);
+const CATEGORY = 'img';
 
 const MIME_EXTENSIONS = new Map([
   [
@@ -103,11 +120,29 @@ const hashBuffer = (buffer, length) => {
   return rawHash.slice(0, Math.max(1, length));
 };
 
-async function removeHashedImageDirs(name) {
+async function loadJson(pathname) {
+  try {
+    const raw = await fs.readFile(pathname, 'utf8');
+    return JSON.parse(raw);
+  } catch (error) {
+    if (error && error.code === 'ENOENT') return null;
+    throw error;
+  }
+}
+
+async function writeJsonAtomic(pathname, data) {
+  const dir = path.dirname(pathname);
+  await fs.mkdir(dir, { recursive: true });
+  const tmpPath = `${pathname}.tmp`;
+  await fs.writeFile(tmpPath, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+  await fs.rename(tmpPath, pathname);
+}
+
+async function removeHashedImageDirs(name, outRoot) {
   const prefix = `${IMAGE_CACHE_PREFIX}-${name}-`;
   let entries = [];
   try {
-    entries = await fs.readdir(OUT_ROOT);
+    entries = await fs.readdir(outRoot);
   } catch (error) {
     if (error.code === 'ENOENT') return;
     throw error;
@@ -116,7 +151,7 @@ async function removeHashedImageDirs(name) {
     entries
       .filter((entry) => entry.startsWith(prefix))
       .map((entry) =>
-        fs.rm(path.join(OUT_ROOT, entry), {
+        fs.rm(path.join(outRoot, entry), {
           recursive: true,
           force: true,
         }),
@@ -252,15 +287,15 @@ function toPublicPathFromUrl(rawUrl) {
   try {
     const url = new URL(trimmed, 'http://localhost');
     const pathname = url.pathname.replace(/^\/+/, '');
-    return pathname ? path.join('public', pathname) : '';
+    return pathname ? path.resolve(REPO_ROOT, pathname) : '';
   } catch {
     const withoutQuery = trimmed.split('?')[0] ?? '';
     const pathname = withoutQuery.replace(/^\/+/, '');
-    return pathname ? path.join('public', pathname) : '';
+    return pathname ? path.resolve(REPO_ROOT, pathname) : '';
   }
 }
 
-async function downloadRemoteImage(name, rawUrl) {
+async function downloadRemoteImage(name, rawUrl, tempDir) {
   if (typeof fetch !== 'function')
     throw new Error(
       'fetch is not available in this Node.js runtime.',
@@ -277,7 +312,7 @@ async function downloadRemoteImage(name, rawUrl) {
       extensionFromMime(response.headers.get('content-type')) ||
       '.jpg';
   if (!VALID_EXT.has(ext)) ext = '.jpg';
-  const filePath = path.join(TEMP_ROOT, `${name}${ext}`);
+  const filePath = path.join(tempDir, `${name}${ext}`);
   await fs.writeFile(filePath, Buffer.from(arrayBuffer));
   return filePath;
 }
@@ -298,18 +333,11 @@ async function* walk(dir) {
 
 function toName(filePath) {
   return path
-    .relative(SRC_DIR, filePath)
+    .relative(IMAGE_SOURCES_DIR, filePath)
     .replace(path.extname(filePath), '')
     .replace(/[\\/]+/g, '-')
     .replace(/\s+/g, '-')
     .toLowerCase();
-}
-
-async function cleanOutRoot() {
-  try {
-    await fs.rm(OUT_ROOT, { recursive: true, force: true });
-  } catch {}
-  await fs.mkdir(OUT_ROOT, { recursive: true });
 }
 
 async function processImage(
@@ -317,6 +345,9 @@ async function processImage(
   nameOverride,
   manifest,
   provenance,
+  outRoot,
+  hashes,
+  existingManifest,
 ) {
   const ext = path.extname(filePath).toLowerCase();
   if (!VALID_EXT.has(ext)) return;
@@ -341,9 +372,18 @@ async function processImage(
     .toBuffer({ resolveWithObject: true });
   const hash = hashBuffer(originalBuffer, IMAGE_CACHE_HASH_LENGTH);
   const dirSlug = `${IMAGE_CACHE_PREFIX}-${name}-${hash}`;
-  const outDir = path.join(OUT_ROOT, dirSlug);
+  const outDir = path.join(outRoot, dirSlug);
 
-  await removeHashedImageDirs(name);
+  const existingHash = hashes[name];
+  if (existingHash && existingHash === hash && existingManifest[name]) {
+    manifest[name] = existingManifest[name];
+    console.log(
+      `   • Skipping "${name}" — hash unchanged (${hash}).`,
+    );
+    return;
+  }
+
+  await removeHashedImageDirs(name, outRoot);
   await fs.mkdir(outDir, { recursive: true });
 
   console.log(
@@ -359,7 +399,7 @@ async function processImage(
     .toBuffer();
   const blurDataURL = `data:image/jpeg;base64,${lqip.toString('base64')}`;
 
-  const baseUrl = `${PUBLIC_ROOT}/${dirSlug}`;
+  const baseUrl = `${dirSlug}`;
 
   const item = {
     name,
@@ -394,236 +434,405 @@ async function processImage(
   };
 
   manifest[name] = item;
+  hashes[name] = hash;
   console.log(
     `   • Completed "${name}" (${targetWidths.length} responsive widths, plus original).`,
   );
 }
 
-console.log(`→ Cleaning output directory "${OUT_ROOT}"`);
-await cleanOutRoot();
-console.log(`   ✓ Cleared "${OUT_ROOT}"`);
-
-const manifestDir = path.dirname(MANIFEST_PATH);
-console.log(`→ Ensuring manifest directory "${manifestDir}" exists`);
-await fs.mkdir(manifestDir, { recursive: true });
-
-console.log(`→ Clearing temporary download directory "${TEMP_ROOT}"`);
-try {
-  await fs.rm(TEMP_ROOT, { recursive: true, force: true });
-  console.log('   ✓ Temp directory emptied');
-} catch {
-  console.log('   • Temp directory not present, skipping removal');
+async function prepareOutRoot(target, version) {
+  const outRoot = path.join(OUT_ROOT_BASE, target, 'images', version);
+  await fs.mkdir(outRoot, { recursive: true });
+  return outRoot;
 }
 
-const manifest = {};
-
-console.log(`→ Walking source images in "${SRC_DIR}"`);
-let localCount = 0;
-for await (const file of walk(SRC_DIR)) {
-  await processImage(file, undefined, manifest, {
-    source: 'local',
-    origin: file,
-  });
-  localCount += 1;
-}
-console.log(
-  `   ✓ Processed ${localCount} local image${localCount === 1 ? '' : 's'}.`,
-);
-
-console.log(
-  `→ Loading remote image source manifest "${IMAGE_SOURCES_CONFIG}"`,
-);
-let imageSourcesMap = await loadImageSourcesConfig();
-const dropboxUpdates = [];
-let manifestChanged = false;
-for (const [
-  name,
-  rawUrl,
-] of Object.entries(imageSourcesMap)) {
-  if (typeof rawUrl !== 'string') continue;
-  const trimmed = rawUrl.trim();
-  const normalized = ensureDirectDropboxUrl(trimmed);
-  if (normalized !== trimmed) {
-    dropboxUpdates.push(name);
-    imageSourcesMap[name] = normalized;
-    manifestChanged = true;
-  } else if (trimmed !== rawUrl) {
-    imageSourcesMap[name] = trimmed;
-    manifestChanged = true;
-  }
-}
-if (manifestChanged) {
-  await fs.writeFile(
-    IMAGE_SOURCES_CONFIG,
-    `${JSON.stringify(imageSourcesMap, null, 2)}\n`,
-  );
-  console.log('   ✓ Wrote normalized remote image source manifest.');
-  if (dropboxUpdates.length)
-    console.log(
-      `     - Applied direct Dropbox links for: ${dropboxUpdates.join(', ')}`,
-    );
-} else {
-  console.log('   • No Dropbox URL updates needed.');
-}
-
-const remoteImageEntries = Object.entries(imageSourcesMap);
-
-if (remoteImageEntries.length) {
-  await fs.mkdir(TEMP_ROOT, { recursive: true });
-  console.log(
-    `→ Downloading and processing ${remoteImageEntries.length} remote image${remoteImageEntries.length === 1 ? '' : 's'}`,
-  );
-  let remoteCount = 0;
-  for (const [
-    name,
-    rawUrl,
-  ] of remoteImageEntries) {
-    const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
-    if (!url) {
-      console.log(
-        `ℹ️ Skipping remote image "${name}" because URL is empty.`,
-      );
-      continue;
+function parseArgs() {
+  const args = process.argv.slice(2);
+  const opts = {
+    target: '_staging',
+    versionOverride: null,
+    bump: false,
+    help: false,
+  };
+  for (const arg of args) {
+    if (arg === '--bump') {
+      opts.bump = true;
+    } else if (arg === '--help' || arg === '-h') {
+      opts.help = true;
+    } else if (arg.startsWith('--target=')) {
+      const t = arg.split('=')[1]?.trim();
+      if (t === 'both') opts.target = 'both';
+      else if (t === '_staging' || t === 'release') opts.target = t;
+    } else if (arg.startsWith('--version=')) {
+      const v = arg.split('=')[1]?.trim();
+      if (v) opts.versionOverride = v;
     }
+  }
+  return opts;
+}
+
+async function loadVersions() {
+  const raw = await fs.readFile(VERSIONS_PATH, 'utf8');
+  return JSON.parse(raw);
+}
+
+async function saveVersions(map) {
+  await writeJsonAtomic(VERSIONS_PATH, map);
+}
+
+function bumpVersion(v) {
+  const match = String(v ?? '').match(/^v(\d+)$/i);
+  if (!match) return 'v1';
+  const next = Number(match[1]) + 1;
+  return `v${next}`;
+}
+
+async function processTargets(targets, versionOverride, bumpFlag) {
+  const versions = await loadVersions();
+  let versionsChanged = false;
+
+  for (const target of targets) {
+    seenNames.clear();
+    const localOrigins = new Map();
+    // Paths
+    const targetImagesRoot = path.join(OUT_ROOT_BASE, target, 'images');
+    await fs.mkdir(targetImagesRoot, { recursive: true });
+    const current = versions[target]?.[CATEGORY];
+    const chosen = versionOverride
+      ? versionOverride
+      : bumpFlag
+        ? bumpVersion(current)
+        : current;
+    if (!chosen) {
+      throw new Error(
+        `Missing version for ${target}/${CATEGORY} in ${VERSIONS_PATH}`,
+      );
+    }
+    if (!versions[target]) versions[target] = {};
+    if (bumpFlag && chosen !== current) {
+      versions[target][CATEGORY] = chosen;
+      versionsChanged = true;
+    }
+    const existingManifestPath = path.join(
+      targetImagesRoot,
+      chosen,
+      'manifest.json',
+    );
+    const existingManifest =
+      (await loadJson(existingManifestPath)) ?? {};
+
+    const outRoot = await prepareOutRoot(target, chosen);
+    console.log(
+      `→ Target "${target}" @ version "${chosen}" → ${outRoot}`,
+    );
+
+    const tempDir = path.join(
+      OUT_ROOT_BASE,
+      'downloads',
+      target,
+      chosen,
+      Math.random().toString(16).slice(2),
+    );
+    console.log(`→ Ensuring temporary download directory "${tempDir}"`);
+    await fs.rm(tempDir, { recursive: true, force: true }).catch(() => {});
+    await fs.mkdir(tempDir, { recursive: true });
+
+    const hashesPath = path.join(
+      OUT_ROOT_BASE,
+      'downloads',
+      target,
+      chosen,
+      'hashes.json',
+    );
+    const hashesDir = path.dirname(hashesPath);
+    await fs.mkdir(hashesDir, { recursive: true });
+    const hashes = (await loadJson(hashesPath)) ?? {};
+
+    const manifest = {};
+
+    console.log(`→ Walking source images in "${IMAGE_SOURCES_DIR}"`);
+    let localCount = 0;
     try {
-      console.log(`   • Downloading "${name}" from ${url}`);
-      const filePath = await downloadRemoteImage(name, url);
-      console.log(`     - Saved to ${filePath}`);
-      await processImage(filePath, name, manifest, {
-        source: 'remote',
-        origin: url,
-      });
-      remoteCount += 1;
-    } catch (error) {
-      if (error && error.code === 'DUPLICATE_IMAGE_NAME') throw error;
-      console.error(
-        `✗ Failed to process remote image "${name}": ${error.message}`,
+      await fs.access(IMAGE_SOURCES_DIR);
+      for await (const file of walk(IMAGE_SOURCES_DIR)) {
+        const candidateName = toName(file);
+        await processImage(
+          file,
+          undefined,
+          manifest,
+          {
+            source: 'local',
+            origin: file,
+          },
+          outRoot,
+          hashes,
+          existingManifest,
+        );
+        localCount += 1;
+        if (manifest[candidateName]) {
+          localOrigins.set(candidateName, file);
+        }
+      }
+      console.log(
+        `   ✓ Processed ${localCount} local image${localCount === 1 ? '' : 's'}.`,
       );
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        console.log(
+          `   • No local image directory at "${IMAGE_SOURCES_DIR}", skipping.`,
+        );
+      } else {
+        throw error;
+      }
     }
-  }
-  try {
-    await fs.rm(TEMP_ROOT, { recursive: true, force: true });
-    console.log('   ✓ Cleaned temporary download directory.');
-  } catch {
-    console.log('ℹ️ Could not clean temporary download directory.');
-  }
-  console.log(
-    `   ✓ Processed ${remoteCount} remote image${remoteCount === 1 ? '' : 's'}.`,
-  );
-} else {
-  console.log('→ No remote image sources configured.');
-}
 
-console.log(
-  `→ Checking for video posters via "${VIDEO_MANIFEST_PATH}"`,
-);
-const videoManifest = await loadVideoManifest();
-if (videoManifest) {
-  const entries = Object.entries(videoManifest);
-  if (entries.length === 0) {
     console.log(
-      'ℹ️ Video manifest is empty. No video previews will be generated.',
+      `→ Loading remote image source manifest "${IMAGE_SOURCES_CONFIG}"`,
     );
-  } else {
-    let processed = 0;
-    const manifestMissingPosterUrl = [];
-    const unresolvedPosterPaths = [];
-    const missingPosterFiles = [];
+    let imageSourcesMap = await loadImageSourcesConfig();
+    // Preflight validation: empty URLs and duplicate names.
+    const remoteNames = new Set();
+    const dropboxUpdates = [];
+    let manifestChanged = false;
     for (const [
       name,
-      data,
-    ] of entries) {
-      const posterUrl =
-        typeof data === 'object' && data !== null
-          ? data.posterUrl
-          : '';
-      if (typeof posterUrl !== 'string' || !posterUrl.trim()) {
-        manifestMissingPosterUrl.push(name);
-        continue;
+      rawUrl,
+    ] of Object.entries(imageSourcesMap)) {
+      if (typeof rawUrl !== 'string') continue;
+      if (remoteNames.has(name)) {
+        throw new Error(
+          `Duplicate key "${name}" detected in ${IMAGE_SOURCES_CONFIG}.`,
+        );
       }
-      const posterPath = toPublicPathFromUrl(posterUrl);
-      if (!posterPath) {
-        unresolvedPosterPaths.push([
+      remoteNames.add(name);
+      const trimmed = rawUrl.trim();
+      if (!trimmed) {
+        throw new Error(
+          `Remote image "${name}" has an empty URL. Fix ${IMAGE_SOURCES_CONFIG}.`,
+        );
+      }
+      const normalized = ensureDirectDropboxUrl(trimmed);
+      if (normalized !== trimmed) {
+        dropboxUpdates.push(name);
+        imageSourcesMap[name] = normalized;
+        manifestChanged = true;
+      } else if (trimmed !== rawUrl) {
+        imageSourcesMap[name] = trimmed;
+        manifestChanged = true;
+      }
+      if (localOrigins.has(name)) {
+        throw new DuplicateNameError(
           name,
-          posterUrl,
-        ]);
-        continue;
-      }
-      try {
-        await fs.access(posterPath);
-      } catch {
-        missingPosterFiles.push([
-          name,
-          posterPath,
-        ]);
-        continue;
-      }
-      const baseName =
-        typeof data === 'object' &&
-        data !== null &&
-        typeof data.name === 'string' &&
-        data.name.trim()
-          ? data.name.trim().toLowerCase()
-          : `${name}`.trim().toLowerCase();
-      const videoImageName = `video-${baseName.replace(/[^\dA-Za-z_-]/g, '-')}`;
-      try {
-        await processImage(posterPath, videoImageName, manifest, {
-          source: 'video',
-          origin: `${VIDEO_MANIFEST_PATH} → ${name}`,
-        });
-        processed += 1;
-      } catch (error) {
-        if (error && error.code === 'DUPLICATE_IMAGE_NAME')
-          throw error;
-        console.error(
-          `✗ Failed to process video poster "${name}": ${error.message}`,
+          {
+            source: 'local',
+            origin: localOrigins.get(name),
+          },
+          {
+            source: 'remote',
+            origin: IMAGE_SOURCES_CONFIG,
+          },
         );
       }
     }
-    if (manifestMissingPosterUrl.length) {
-      console.log(
-        `ℹ️ Video manifest entries missing posterUrl: ${manifestMissingPosterUrl.join(', ')}.`,
-      );
+    if (manifestChanged) {
+      await writeJsonAtomic(IMAGE_SOURCES_CONFIG, imageSourcesMap);
+      console.log('   ✓ Wrote normalized remote image source manifest.');
+      if (dropboxUpdates.length)
+        console.log(
+          `     - Applied direct Dropbox links for: ${dropboxUpdates.join(', ')}`,
+        );
+    } else {
+      console.log('   • No Dropbox URL updates needed.');
     }
-    if (unresolvedPosterPaths.length) {
+
+    const remoteImageEntries = Object.entries(imageSourcesMap);
+
+    if (remoteImageEntries.length) {
       console.log(
-        'ℹ️ Could not resolve local poster path for videos:\n' +
-          unresolvedPosterPaths
-            .map(
-              ([
-                n,
-                url,
-              ]) => `   • ${n} → ${url}`,
-            )
-            .join('\n'),
+        `→ Downloading and processing ${remoteImageEntries.length} remote image${remoteImageEntries.length === 1 ? '' : 's'}`,
       );
-    }
-    if (missingPosterFiles.length) {
-      console.log(
-        'ℹ️ Poster image missing for videos:\n' +
-          missingPosterFiles
-            .map(
-              ([
-                n,
-                p,
-              ]) => `   • ${n} → ${p}`,
-            )
-            .join('\n') +
-          '\n   Did you run "generateVideos" first?',
+      let remoteCount = 0;
+      for (const [
+        name,
+        rawUrl,
+      ] of remoteImageEntries) {
+        const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
+        try {
+          console.log(`   • Downloading "${name}" from ${url}`);
+          const filePath = await downloadRemoteImage(
+            name,
+            url,
+            tempDir,
+          );
+          console.log(`     - Saved to ${filePath}`);
+          await processImage(filePath, name, manifest, {
+            source: 'remote',
+            origin: url,
+          }, outRoot, hashes, existingManifest);
+          remoteCount += 1;
+        } catch (error) {
+          if (error && error.code === 'DUPLICATE_IMAGE_NAME') throw error;
+          console.error(
+            `✗ Failed to process remote image "${name}": ${error.message}`,
+          );
+        }
+      }
+      await fs.rm(tempDir, { recursive: true, force: true }).catch(
+        () => {},
       );
-    }
-    if (processed > 0) {
       console.log(
-        `   ✓ Processed ${processed} video poster image${processed === 1 ? '' : 's'}.`,
+        `   ✓ Processed ${remoteCount} remote image${remoteCount === 1 ? '' : 's'}.`,
       );
     } else {
-      console.log(
-        'ℹ️ No video poster images were processed. Check notes above.',
-      );
+      console.log('→ No remote image sources configured.');
     }
+
+    // Legacy video poster handling (moved to video pipeline; kept for reference):
+    // console.log(
+    //   `→ Checking for video posters via "${VIDEO_MANIFEST_PATH}"`,
+    // );
+    // const videoManifest = await loadVideoManifest();
+    // if (videoManifest) {
+    //   const entries = Object.entries(videoManifest);
+    //   if (entries.length === 0) {
+    //     console.log(
+    //       'ℹ️ Video manifest is empty. No video previews will be generated.',
+    //     );
+    //   } else {
+    //     let processed = 0;
+    //     const manifestMissingPosterUrl = [];
+    //     const unresolvedPosterPaths = [];
+    //     const missingPosterFiles = [];
+    //     for (const [name, data] of entries) {
+    //       const posterUrl =
+    //         typeof data === 'object' && data !== null
+    //           ? data.posterUrl
+    //           : '';
+    //       if (typeof posterUrl !== 'string' || !posterUrl.trim()) {
+    //         manifestMissingPosterUrl.push(name);
+    //         continue;
+    //       }
+    //       const posterPath = toPublicPathFromUrl(posterUrl);
+    //       if (!posterPath) {
+    //         unresolvedPosterPaths.push([name, posterUrl]);
+    //         continue;
+    //       }
+    //       try {
+    //         await fs.access(posterPath);
+    //       } catch {
+    //         missingPosterFiles.push([name, posterPath]);
+    //         continue;
+    //       }
+    //       const baseName =
+    //         typeof data === 'object' &&
+    //         data !== null &&
+    //         typeof data.name === 'string' &&
+    //         data.name.trim()
+    //           ? data.name.trim().toLowerCase()
+    //           : `${name}`.trim().toLowerCase();
+    //       const videoImageName = `video-${baseName.replace(/[^\dA-Za-z_-]/g, '-')}`;
+    //       try {
+    //         await processImage(
+    //           posterPath,
+    //           videoImageName,
+    //           manifest,
+    //           {
+    //             source: 'video',
+    //             origin: `${VIDEO_MANIFEST_PATH} → ${name}`,
+    //           },
+    //           outRoot,
+    //           hashes,
+    //           existingManifest,
+    //         );
+    //         processed += 1;
+    //       } catch (error) {
+    //         if (error && error.code === 'DUPLICATE_IMAGE_NAME') throw error;
+    //         console.error(
+    //           `✗ Failed to process video poster "${name}": ${error.message}`,
+    //         );
+    //       }
+    //     }
+    //     if (manifestMissingPosterUrl.length) {
+    //       console.log(
+    //         `ℹ️ Video manifest entries missing posterUrl: ${manifestMissingPosterUrl.join(', ')}.`,
+    //       );
+    //     }
+    //     if (unresolvedPosterPaths.length) {
+    //       console.log(
+    //         'ℹ️ Could not resolve local poster path for videos:\n' +
+    //           unresolvedPosterPaths
+    //             .map(([n, url]) => `   • ${n} → ${url}`)
+    //             .join('\n'),
+    //       );
+    //     }
+    //     if (missingPosterFiles.length) {
+    //       console.log(
+    //         'ℹ️ Poster image missing for videos:\n' +
+    //           missingPosterFiles
+    //             .map(([n, p]) => `   • ${n} → ${p}`)
+    //             .join('\n') +
+    //           '\n   Did you run "generateVideos" first?',
+    //       );
+    //     }
+    //     if (processed > 0) {
+    //       console.log(
+    //         `   ✓ Processed ${processed} video poster image${processed === 1 ? '' : 's'}.`,
+    //       );
+    //     } else {
+    //       console.log(
+    //         'ℹ️ No video poster images were processed. Check notes above.',
+    //       );
+    //     }
+    //   }
+    // }
+
+    const manifestPath = path.join(outRoot, 'manifest.json');
+    await writeJsonAtomic(manifestPath, manifest);
+    console.log(`✓ Wrote manifest: ${manifestPath}`);
+    await writeJsonAtomic(hashesPath, hashes);
+    console.log(`✓ Wrote hashes: ${hashesPath}`);
+    console.log(`✓ Images in: ${outRoot} (clean build)`);
+  }
+
+  if (versionsChanged) {
+    await saveVersions(versions);
+    console.log(`✓ Updated versions file at ${VERSIONS_PATH}`);
   }
 }
 
-await fs.writeFile(MANIFEST_PATH, JSON.stringify(manifest, null, 2));
-console.log(`✓ Wrote manifest: ${MANIFEST_PATH}`);
-console.log(`✓ Images in: ${OUT_ROOT} (clean build)`);
+async function main() {
+  const opts = parseArgs();
+  if (opts.help) {
+    console.log(
+      [
+        'Usage: yarn generate:img [--target=_staging|release|both] [--version=vX] [--bump]',
+        '',
+        'Flags:',
+        '  --target=...   Choose target environment(s); default _staging; "both" runs both _staging and release.',
+        '  --version=...  Override version for this run without persisting.',
+        '  --bump         Increment the version in cdn/assetGroupVersions.json for the target(s).',
+        '',
+        'Examples:',
+        '  yarn generate:img --help',
+        '  yarn generate:img --target=_staging --bump',
+        '  yarn generate:img --target=both --version=v5',
+      ].join('\n'),
+    );
+    return;
+  }
+  const targets =
+    opts.target === 'both'
+      ? [
+          '_staging',
+          'release',
+        ]
+      : [
+          opts.target,
+        ];
+  await processTargets(targets, opts.versionOverride, opts.bump);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

@@ -55,6 +55,14 @@ const isLikelyFullPath = (key: string): boolean => {
   return /^[A-Za-z0-9_.+-]+\/.+[^/]$/.test(key);
 };
 
+const isValidTarget = (value: string): value is '_staging' | 'release' => {
+  return value === '_staging' || value === 'release';
+};
+
+const isValidKind = (value: string): value is 'images' | 'fonts' | 'videos' | 'video' => {
+  return value === 'images' || value === 'fonts' || value === 'videos' || value === 'video';
+};
+
 const hasAtLeastOneSegment = (key: string): boolean => {
   return /^[A-Za-z0-9_.+-]+/.test(key);
 };
@@ -160,6 +168,7 @@ async function deletePrefix(prefix: string) {
 
 async function main() {
   const [, , command, arg] = process.argv;
+  const extraArgs = process.argv.slice(3);
 
   if (command === 'delete') {
     if (!arg) {
@@ -193,9 +202,76 @@ async function main() {
     return;
   }
 
+  if (command === 'delete-version') {
+    if (arg === '--help' || arg === '-h') {
+      console.log(
+        [
+          'Usage: tsx cdnClient.mts delete-version <_staging|release> <images|fonts|videos> <version>',
+          '',
+          'Deletes an entire version folder for a kind/target.',
+          'Examples:',
+          '  tsx cdnClient.mts delete-version _staging images v1',
+          '  tsx cdnClient.mts delete-version release fonts v2',
+          '  tsx cdnClient.mts delete-version release videos v3',
+        ].join('\n'),
+      );
+      return;
+    }
+
+    const args = [arg, ...extraArgs].filter(Boolean).map((s) => s?.trim());
+    const target = args[0];
+    const kind = args[1];
+    const version = args[2];
+
+    if (!target || !kind || !version) {
+      console.error(
+        'Usage: tsx cdnClient.mts delete-version <_staging|release> <images|fonts|videos> <version>',
+      );
+      process.exit(1);
+    }
+
+    if (!isValidTarget(target)) {
+      console.error('Target must be "_staging" or "release".');
+      process.exit(1);
+    }
+
+    if (!isValidKind(kind)) {
+      console.error('Kind must be one of: images, fonts, videos.');
+      process.exit(1);
+    }
+
+    const normalizedKind = kind === 'video' ? 'videos' : kind;
+    const prefix = `${target}/${normalizedKind}/${version}`;
+    await deletePrefix(prefix);
+    return;
+  }
+
   if (command === 'ls') {
+    if (arg === '--help' || arg === '-h') {
+      console.log(
+        [
+          'Usage: tsx cdnClient.mts ls [prefix]',
+          '',
+          'Lists objects under the given prefix. Examples:',
+          '  tsx cdnClient.mts ls               # list entire bucket',
+          '  tsx cdnClient.mts ls staging       # list under _staging/',
+          '  tsx cdnClient.mts ls staging/images/v1',
+          '  tsx cdnClient.mts ls release/images',
+        ].join('\n'),
+      );
+      return;
+    }
+
     const scope = arg?.trim() ?? 'root';
-    const prefix = scope === 'staging' || scope === '_staging' ? '_staging/' : '';
+    let prefix: string | undefined;
+    if (scope === 'root' || scope === '') {
+      prefix = undefined;
+    } else if (scope === 'staging' || scope === '_staging') {
+      prefix = '_staging/';
+    } else {
+      prefix = scope.endsWith('/') ? scope : `${scope}/`;
+    }
+
     let continuation: string | undefined;
     let total = 0;
 
@@ -203,7 +279,7 @@ async function main() {
       const res = await s3.send(
         new ListObjectsV2Command({
           Bucket: bucket,
-          Prefix: prefix.length > 0 ? prefix : undefined,
+          Prefix: prefix,
           ContinuationToken: continuation,
         }),
       );
@@ -228,7 +304,13 @@ async function main() {
   }
 
   console.error(
-    'Usage:\n  tsx cdnClient.mts delete <full-key-path>\n  tsx cdnClient.mts delete-prefix <prefix>\n  tsx cdnClient.mts ls [root|staging]',
+    [
+      'Usage:',
+      '  tsx cdnClient.mts delete <full-key-path>',
+      '  tsx cdnClient.mts delete-prefix <prefix>',
+      '  tsx cdnClient.mts delete-version <_staging|release> <images|fonts|videos> <version>',
+      '  tsx cdnClient.mts ls [prefix] (use --help for examples)',
+    ].join('\n'),
   );
   process.exit(1);
 }
