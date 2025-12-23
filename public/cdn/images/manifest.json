@@ -1,0 +1,121 @@
+{
+  "abstract_purple": {
+    "name": "abstract_purple",
+    "hash": "8d836c9f",
+    "basePath": "img-abstract_purple-8d836c9f",
+    "dirName": "img-abstract_purple-8d836c9f",
+    "width": 4111,
+    "height": 2741,
+    "aspect": 1.4998175848230573,
+    "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAQABgDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAMFAv/EAB8QAQABBAEFAAAAAAAAAAAAAAEAAgMREjEEFCEiUf/EABcBAAMBAAAAAAAAAAAAAAAAAAABBAX/xAAXEQADAQAAAAAAAAAAAAAAAAAAARES/9oADAMBAAIRAxEAPwBT1P3hmApLhUOZPpvuPZjC9q8zYSpTUV7YL4xCTe7KcawhgdR//9k=",
+    "variants": {
+      "avif": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/320.avif"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/480.avif"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/640.avif"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/750.avif"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/828.avif"
+        },
+        {
+          "w": 1080,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/1080.avif"
+        },
+        {
+          "w": 1200,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/1200.avif"
+        },
+        {
+          "w": 1920,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/1920.avif"
+        }
+      ],
+      "webp": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/320.webp"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/480.webp"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/640.webp"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/750.webp"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/828.webp"
+        },
+        {
+          "w": 1080,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/1080.webp"
+        },
+        {
+          "w": 1200,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/1200.webp"
+        },
+        {
+          "w": 1920,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/1920.webp"
+        }
+      ],
+      "jpg": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/320.jpg"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/480.jpg"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/640.jpg"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/750.jpg"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/828.jpg"
+        },
+        {
+          "w": 1080,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/1080.jpg"
+        },
+        {
+          "w": 1200,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/1200.jpg"
+        },
+        {
+          "w": 1920,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/1920.jpg"
+        }
+      ]
+    },
+    "original": {
+      "url": "https://cdn.lafleche.dev/_staging/images/v1/img-abstract_purple-8d836c9f/orig.png",
+      "width": 4111,
+      "height": 2741
+    }
+  }
+}

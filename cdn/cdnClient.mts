@@ -219,6 +219,10 @@ async function main() {
     }
 
     const args = [arg, ...extraArgs].filter(Boolean).map((s) => s?.trim());
+    // Tolerate an accidental duplicated command token (e.g., yarn passing "delete-version" twice).
+    while (args[0] === 'delete-version' && args.length > 1) {
+      args.shift();
+    }
     const target = args[0];
     const kind = args[1];
     const version = args[2];

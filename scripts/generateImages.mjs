@@ -687,6 +687,24 @@ async function processTargets(targets, versionOverride, bumpFlag) {
       console.log('→ No remote image sources configured.');
     }
 
+    const manifestNames = new Set(Object.keys(manifest));
+    const staleNames = new Set([
+      ...Object.keys(existingManifest ?? {}),
+      ...Object.keys(hashes ?? {}),
+    ]);
+    for (const name of manifestNames) staleNames.delete(name);
+    if (staleNames.size > 0) {
+      console.log(
+        `→ Removing ${staleNames.size} stale image${
+          staleNames.size === 1 ? '' : 's'
+        } from ${outRoot}`,
+      );
+      for (const name of staleNames) {
+        await removeHashedImageDirs(name, outRoot);
+        delete hashes[name];
+      }
+    }
+
     // Legacy video poster handling (moved to video pipeline; kept for reference):
     // console.log(
     //   `→ Checking for video posters via "${VIDEO_MANIFEST_PATH}"`,

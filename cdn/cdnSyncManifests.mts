@@ -30,7 +30,7 @@ type ParsedArgs = {
   kinds: Set<AssetKind>;
   version?: string;
   yes: boolean;
-  publicTarget?: Target;
+  manifestOnly: boolean;
   help: boolean;
 };
 
@@ -89,7 +89,7 @@ function parseArgs(): ParsedArgs {
   let target: Target | undefined;
   let version: string | undefined;
   let yes = false;
-  let publicTarget: Target | undefined;
+  let manifestOnly = false;
   let help = false;
 
   for (const arg of args) {
@@ -104,13 +104,10 @@ function parseArgs(): ParsedArgs {
     } else if (arg.startsWith('--version=')) {
       const v = arg.split('=')[1]?.trim();
       if (v) version = v;
-    } else if (arg.startsWith('--public-target=')) {
-      const t = arg.split('=')[1]?.trim();
-      if (t === '_staging' || t === 'release') publicTarget = t;
-      else if (t === 's') publicTarget = '_staging';
-      else if (t === 'r') publicTarget = 'release';
     } else if (arg === '--yes' || arg === '-y') {
       yes = true;
+    } else if (arg === '--manifest-only') {
+      manifestOnly = true;
     } else if (arg === '--help' || arg === '-h') {
       help = true;
     }
@@ -122,7 +119,7 @@ function parseArgs(): ParsedArgs {
     kinds.add('video');
   }
 
-  return { target, kinds, version, yes, publicTarget, help };
+  return { target, kinds, version, yes, manifestOnly, help };
 }
 
 async function pickTarget(): Promise<Target> {
@@ -245,20 +242,20 @@ async function syncKind(options: {
   kind: AssetKind;
   versions: Versions;
   yes: boolean;
-  s3: S3Client;
-  bucket: string;
+  manifestOnly: boolean;
+  s3?: S3Client;
+  bucket?: string;
   publicBase: string;
-  publicTarget?: Target;
 }): Promise<void> {
   const {
     target,
     kind,
     versions,
     yes,
+    manifestOnly,
     s3,
     bucket,
     publicBase,
-    publicTarget,
   } = options;
   const version = versions[kind];
   const versionRoot = path.join(TMP_ROOT, target, kind, version);
@@ -266,6 +263,12 @@ async function syncKind(options: {
   const prefix = PREFIX_BY_TARGET[target];
 
   if (!(await fileExists(manifestPath))) {
+    if (manifestOnly) {
+      console.log(
+        `ℹ︎ Manifest-only mode: missing manifest at ${manifestPath}, skipping ${kind}.`,
+      );
+      return;
+    }
     throw new Error(`Missing manifest at ${manifestPath}`);
   }
 
@@ -273,74 +276,81 @@ async function syncKind(options: {
     /* non-blocking */
   });
 
-  const files = await listFilesRecursive(versionRoot);
-  const uploadFiles = files.filter((filePath) => {
-    const base = path.basename(filePath);
-    return base !== 'manifest.json' && base !== 'hashes.json';
-  });
+  if (!manifestOnly) {
+    if (!s3 || !bucket) {
+      throw new Error('Missing S3 client or bucket for upload step.');
+    }
+    const files = await listFilesRecursive(versionRoot);
+    const uploadFiles = files.filter((filePath) => {
+      const base = path.basename(filePath);
+      return base !== 'manifest.json' && base !== 'hashes.json';
+    });
 
-  const toKey = (fullPath: string) => {
-    const rel = path.relative(versionRoot, fullPath).split(path.sep).join('/');
-    return `${prefix}/${kind}/${version}/${rel}`;
-  };
+    const toKey = (fullPath: string) => {
+      const rel = path.relative(versionRoot, fullPath).split(path.sep).join('/');
+      return `${prefix}/${kind}/${version}/${rel}`;
+    };
 
-  const headExists = async (key: string) => {
-    try {
+    const headExists = async (key: string) => {
+      try {
+        await s3.send(
+          new HeadObjectCommand({
+            Bucket: bucket,
+            Key: key,
+          }),
+        );
+        return true;
+      } catch {
+        return false;
+      }
+    };
+
+    for (const filePath of uploadFiles) {
+      const key = toKey(filePath);
+      const exists = await headExists(key);
+      if (exists && !yes) {
+        const ok = await confirm(
+          `"${key}" exists in bucket "${bucket}". Overwrite?`,
+        );
+        if (!ok) {
+          console.log(`Skipped ${key}`);
+          continue;
+        }
+      }
+
+      const body = await fs.readFile(filePath);
+      const ContentType = contentTypeFor(filePath);
       await s3.send(
-        new HeadObjectCommand({
+        new PutObjectCommand({
           Bucket: bucket,
           Key: key,
+          Body: body,
+          ContentType,
         }),
       );
-      return true;
-    } catch {
-      return false;
-    }
-  };
 
-  for (const filePath of uploadFiles) {
-    const key = toKey(filePath);
-    const exists = await headExists(key);
-    if (exists && !yes) {
-      const ok = await confirm(
-        `"${key}" exists in bucket "${bucket}". Overwrite?`,
-      );
-      if (!ok) {
-        console.log(`Skipped ${key}`);
-        continue;
-      }
-    }
-
-    const body = await fs.readFile(filePath);
-    const ContentType = contentTypeFor(filePath);
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: bucket,
-        Key: key,
-        Body: body,
-        ContentType,
-      }),
-    );
-
-    const url = buildPublicUrl(publicBase, key);
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10_000);
-    const res = await fetch(url, {
-      method: 'HEAD',
-      signal: controller.signal,
-    }).catch((error) => {
+      const url = buildPublicUrl(publicBase, key);
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10_000);
+      const res = await fetch(url, {
+        method: 'HEAD',
+        signal: controller.signal,
+      }).catch((error) => {
+        clearTimeout(timeout);
+        throw error;
+      });
       clearTimeout(timeout);
-      throw error;
-    });
-    clearTimeout(timeout);
-    if (!res || !res.ok) {
-      throw new Error(
-        `CDN URL not reachable for ${key}: ${
-          res ? res.status : 'no response'
-        }`,
-      );
+      if (!res || !res.ok) {
+        throw new Error(
+          `CDN URL not reachable for ${key}: ${
+            res ? res.status : 'no response'
+          }`,
+        );
+      }
+      console.log(`✓ Uploaded ${key}`);
     }
-    console.log(`✓ Uploaded ${key}`);
+  } else {
+    console.log('ℹ︎ Manifest-only mode: skipping asset uploads.');
   }
 
   const rawManifest = await fs.readFile(manifestPath, 'utf8');
@@ -383,22 +393,9 @@ async function syncKind(options: {
     REPO_ROOT,
     'public',
     'cdn',
-    publicTarget ?? target,
     kind,
-    version,
     'manifest.json',
   );
-  if (await fileExists(publicManifestPath)) {
-    if (!yes) {
-      const ok = await confirm(
-        `Manifest exists at ${publicManifestPath}. Overwrite?`,
-      );
-      if (!ok) {
-        console.log(`Skipped writing manifest for ${kind}.`);
-        return;
-      }
-    }
-  }
 
   await fs.mkdir(path.dirname(publicManifestPath), { recursive: true });
   await fs.writeFile(
@@ -419,7 +416,7 @@ async function main() {
       [
         'Usage: yarn --cwd cdn cdn:sync-manifests [--target=_staging|release] [--version=vX] [--images] [--fonts] [--video] [--yes]',
         '',
-        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a tracked manifest to public/cdn/<target>/<kind>/<version>/manifest.json (manifest is not uploaded to CDN).',
+        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a single tracked manifest to public/cdn/<kind>/manifest.json (manifest is not uploaded to CDN).',
         '',
         'Flags:',
         '  --target=...   Choose _staging (or s) or release (or r); default is auto-pick if both exist.',
@@ -427,33 +424,43 @@ async function main() {
         '  --images       Include images manifest (default on if no kinds specified).',
         '  --fonts        Include fonts manifest (default on if no kinds specified).',
         '  --video        Include video manifest (default on if no kinds specified).',
-        '  --public-target=... Write manifest under public/cdn/<target>/... (default: same as --target).',
-        '  --yes, -y      Skip confirmation prompts for overwriting CDN objects/manifests and local public manifest.',
+        '  --manifest-only  Skip uploading assets; only rewrite/write manifest locally.',
+        '  --yes, -y      Skip confirmation prompts for overwriting CDN objects.',
         '  --help, -h     Show this help.',
         '',
-        'Requires env: R2_BUCKET, R2_ENDPOINT, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY; optional CDN_PUBLIC_BASE_URL for public URLs (fallbacks to R2_ENDPOINT).',
+        'Requires env: CDN_PUBLIC_BASE_URL (or R2_ENDPOINT for fallback). Uploads require R2_BUCKET, R2_ENDPOINT, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY.',
       ].join('\n'),
     );
     return;
   }
 
   const env = process.env as RequiredEnv;
-  const bucket = requireEnv('R2_BUCKET', env);
-  const endpoint = requireEnv('R2_ENDPOINT', env);
-  const accessKeyId = requireEnv('R2_ACCESS_KEY_ID', env);
-  const secretAccessKey = requireEnv('R2_SECRET_ACCESS_KEY', env);
   const publicBase = sanitizeBaseUrl(
     env.CDN_PUBLIC_BASE_URL ?? env.R2_ENDPOINT ?? '',
   );
+  if (!publicBase) {
+    throw new Error(
+      'Missing CDN_PUBLIC_BASE_URL (or R2_ENDPOINT fallback) for manifest rewriting.',
+    );
+  }
 
-  const s3 = new S3Client({
-    region: 'auto',
-    endpoint,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
-  });
+  let bucket: string | undefined;
+  let s3: S3Client | undefined;
+  if (!args.manifestOnly) {
+    bucket = requireEnv('R2_BUCKET', env);
+    const endpoint = requireEnv('R2_ENDPOINT', env);
+    const accessKeyId = requireEnv('R2_ACCESS_KEY_ID', env);
+    const secretAccessKey = requireEnv('R2_SECRET_ACCESS_KEY', env);
+
+    s3 = new S3Client({
+      region: 'auto',
+      endpoint,
+      credentials: {
+        accessKeyId,
+        secretAccessKey,
+      },
+    });
+  }
 
   const target = args.target ?? (await pickTarget());
   const versions = await resolveVersions(target, args.version);
@@ -464,10 +471,10 @@ async function main() {
       kind,
       versions,
       yes: args.yes,
+      manifestOnly: args.manifestOnly,
       s3,
       bucket,
       publicBase,
-      publicTarget: args.publicTarget,
     });
   }
 }
