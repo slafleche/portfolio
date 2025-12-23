@@ -13,6 +13,7 @@ export const SECRET_LOOKOUT_IGNORE_PATH_SUBSTRINGS = [
   'dist/',
   'build/',
   'coverage/',
+  'tmp/',
   // Env typing file is allowed to list canonical variable names.
   'types/env.d.ts',
 ];

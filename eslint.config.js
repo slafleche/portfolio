@@ -50,6 +50,7 @@ const tsNoProjectFiles = [
   'middleware.ts',
   'next-env.d.ts',
   'scripts/**/*.ts',
+  'cdn/**/*.{ts,tsx,mts}',
   'tests/**/*.{ts,tsx}',
 ];
 
@@ -63,6 +64,7 @@ export default [
       'next-env.d.ts',
       'dist/**',
       'build/**',
+      'tmp/**',
       'public/**',
       'src/data/generated/**/*.gen.ts',
       'src/lib/locales/generated/**/*.gen.ts',

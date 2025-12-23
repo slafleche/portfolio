@@ -55,7 +55,9 @@ const isLikelyFullPath = (key: string): boolean => {
   return /^[A-Za-z0-9_.+-]+\/.+[^/]$/.test(key);
 };
 
-const isValidTarget = (value: string): value is '_staging' | 'release' => {
+const isValidTarget = (
+  value: string,
+): value is '_staging' | 'release' => {
   return value === '_staging' || value === 'release';
 };
 
@@ -122,11 +124,13 @@ async function deleteObject(key: string) {
 async function deletePrefix(prefix: string) {
   const normalized = prefix.endsWith('/') ? prefix : `${prefix}/`;
   if (!hasAtLeastOneSegment(normalized)) {
-    throw new Error('Refusing to delete: prefix must have at least one segment.');
+    throw new Error(
+      'Refusing to delete: prefix must have at least one segment.',
+    );
   }
 
   let continuation: string | undefined;
-  let keys: string[] = [];
+  const keys: string[] = [];
 
   do {
     const res = await s3.send(
@@ -140,7 +144,9 @@ async function deletePrefix(prefix: string) {
     for (const obj of contents) {
       if (obj.Key) keys.push(obj.Key);
     }
-    continuation = res.IsTruncated ? res.NextContinuationToken : undefined;
+    continuation = res.IsTruncated
+      ? res.NextContinuationToken
+      : undefined;
   } while (continuation);
 
   if (keys.length === 0) {
@@ -171,11 +177,18 @@ async function deletePrefix(prefix: string) {
       }),
     );
   }
-  console.log(`Deleted prefix "${normalized}" (${keys.length} object(s)).`);
+  console.log(
+    `Deleted prefix "${normalized}" (${keys.length} object(s)).`,
+  );
 }
 
 async function main() {
-  const [, , command, arg] = process.argv;
+  const [
+    ,
+    ,
+    command,
+    arg,
+  ] = process.argv;
   const extraArgs = process.argv.slice(3);
 
   if (command === 'delete') {
@@ -231,8 +244,7 @@ async function main() {
       .map((s) => s?.trim())
       .filter((s) => s && s !== '--');
     const idx = argv.indexOf('delete-version');
-    const args =
-      idx === -1 ? argv.slice(1) : argv.slice(idx + 1);
+    const args = idx === -1 ? argv.slice(1) : argv.slice(idx + 1);
     const target = args[0];
     const kind = args[1];
     const version = args[2];
@@ -309,12 +321,16 @@ async function main() {
           total += 1;
         }
       }
-      continuation = res.IsTruncated ? res.NextContinuationToken : undefined;
+      continuation = res.IsTruncated
+        ? res.NextContinuationToken
+        : undefined;
     } while (continuation);
 
     if (total === 0) {
       console.log(
-        prefix ? `No objects found under prefix "${prefix}".` : 'Bucket is empty.',
+        prefix
+          ? `No objects found under prefix "${prefix}".`
+          : 'Bucket is empty.',
       );
     } else {
       console.log(`Total: ${total} object(s).`);
