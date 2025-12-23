@@ -39,8 +39,9 @@ const frBaseData = {
   'hero-video-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
 
-  'hero-title': 'Systèmes de design [split] pensés pour évoluer',
-  'hero-subTitle': 'Portfolio de développeur par Stéphane',
+  'hero-title': 'Stéphane, développeur front-end',
+  'hero-subTitle':
+    'Je me spécialise dans les interfaces React et les systèmes de design, en gardant design et code alignés.',
 
   'hero-console_description': 'Arrière-plan de code décoratif',
   'hero-cta': 'Prenons contact !',

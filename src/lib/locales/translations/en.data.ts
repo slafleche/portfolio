@@ -38,8 +38,9 @@ const enBaseData = {
   'hero-video-alt':
     'Slowly rotating diagonal gradient blending cool blue and soft magenta tones with subtle light bands',
 
-  'hero-title': 'Design systems [split] built to evolve',
-  'hero-subTitle': "Stéphane's Developer Portfolio",
+  'hero-title': 'Stéphane, Front-end Developer',
+  'hero-subTitle':
+    'I specialize in React UI & design systems, keeping design and code aligned',
 
   'hero-console_description': 'Decorative code backdrop',
   'hero-cta': "Let's connect!",

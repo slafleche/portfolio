@@ -11,6 +11,8 @@ import {
   useRef,
   useState,
 } from 'react';
+import { enData } from '@/lib/locales/translations/en.data';
+import { parseSplit } from '@/lib/locales/translations/splitShortcodes';
 
 type ChannelId = 'red' | 'green' | 'blue';
 
@@ -59,10 +61,13 @@ type ChannelPalette = {
   text: string;
 };
 
+const { first: titleFirstLine, second: titleSecondLine } = parseSplit(
+  enData['hero-title'],
+);
 const TITLE_LINES = [
-  'Design systems',
-  'built to evolve',
-];
+  titleFirstLine,
+  titleSecondLine,
+].filter(Boolean);
 const TITLE_FONT_SIZE = 80;
 const TITLE_LINE_HEIGHT = TITLE_FONT_SIZE * 1.1;
 
