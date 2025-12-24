@@ -1,7 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
-import { notRelease } from './envPrimitives.mjs';
+import { notRelease } from './envPrimitives.mts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

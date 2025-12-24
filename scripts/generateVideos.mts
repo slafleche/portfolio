@@ -213,12 +213,37 @@ function hashBuffer(buffer, length) {
 }
 
 /* Networking --------------------------------------------------------- */
-async function downloadToTemp(name, rawUrl, tempDir) {
+async function findCachedFile(cacheDir, cacheKey) {
+  try {
+    const entries = await fs.readdir(cacheDir);
+    const match = entries.find((entry) =>
+      entry.startsWith(`${cacheKey}.`),
+    );
+    return match ? path.join(cacheDir, match) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function downloadToTemp(name, rawUrl, cacheDir, cacheKey) {
   let urlStr = (rawUrl || '').trim();
   if (!urlStr) throw new Error(`Empty URL for "${name}"`);
 
   urlStr = normalizeDrive(urlStr);
   urlStr = toDirectDropboxUrl(urlStr);
+
+  await fs.mkdir(cacheDir, {
+    recursive: true,
+  });
+  const cached = await findCachedFile(cacheDir, cacheKey);
+  if (cached && (await exists(cached))) {
+    const stat = await fs.stat(cached);
+    console.log(`ℹ︎ Using cached download → ${cached}`);
+    return {
+      file: cached,
+      bytes: stat.size,
+    };
+  }
 
   const res = await fetch(urlStr, {
     redirect: 'follow',
@@ -263,10 +288,7 @@ async function downloadToTemp(name, rawUrl, tempDir) {
         : '';
   const ext = extFromCT || extFromUrlSafe(urlStr) || '.mp4';
 
-  await fs.mkdir(tempDir, {
-    recursive: true,
-  });
-  const file = path.join(tempDir, `${name}${ext}`);
+  const file = path.join(cacheDir, `${cacheKey}${ext}`);
   await fs.writeFile(file, buf);
   return {
     file,
@@ -421,6 +443,10 @@ async function buildHLS(srcPath, { name, slug, speed = 1, outRoot }) {
   ]);
 
   const args = [
+    '-nostdin',
+    '-hide_banner',
+    '-loglevel',
+    'error',
     '-i',
     srcPath,
 
@@ -472,6 +498,10 @@ async function buildHLS(srcPath, { name, slug, speed = 1, outRoot }) {
     })
     .catch(() => {});
   await execa(ffmpegStatic, [
+    '-nostdin',
+    '-hide_banner',
+    '-loglevel',
+    'error',
     '-i',
     posterSource,
     '-frames:v',
@@ -641,7 +671,7 @@ function parseTargets(argv) {
     DOWNLOAD_ROOT,
     opts.target,
     version,
-    Math.random().toString(16).slice(2),
+    CATEGORY,
   );
 
   await fs.mkdir(outRoot, { recursive: true });
@@ -738,6 +768,10 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
 
       const posterPath = path.join(outDir, 'poster.png');
       await execa(ffmpegStatic, [
+        '-nostdin',
+        '-hide_banner',
+        '-loglevel',
+        'error',
         '-i',
         posterSource,
         '-frames:v',
@@ -788,7 +822,7 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
       const normalizedSrc = isRemote
         ? toDirectDropboxUrl(normalizeDrive(src))
         : src;
-      const configString = `${name}\n${normalizedSrc}\n${effectiveSpeed}`;
+      const configString = `${name}\n${normalizedSrc}\n${effectiveSpeed}\n${version}`;
       const configHash = sha256(configString);
       const shortHash = configHash.slice(
         0,
@@ -809,7 +843,10 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
       const hasSameSource = isRemote
         ? prevSourceUrl === normalizedSrc
         : prevLocalSource === `local:${rawName}`;
-      const hasSameSpeed = (prev?.speed ?? 1) === effectiveSpeed;
+      const hasSameSpeed = Number(prev?.speed ?? 1) === effectiveSpeed;
+      const hasSameConfig =
+        typeof prev?.sourceHash === 'string' &&
+        prev.sourceHash === configHash;
       const prevDir = prev?.dirName
         ? path.join(outRoot, prev.dirName, 'master.m3u8')
         : null;
@@ -819,8 +856,7 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
           : null;
 
       if (
-        hasSameSource &&
-        hasSameSpeed &&
+        hasSameConfig &&
         prevDir &&
         (await exists(prevDir)) &&
         (!prevPosterPath || (await exists(prevPosterPath)))
@@ -832,8 +868,10 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
         continue;
       }
 
+      const sourceHash = sha256(normalizedSrc).slice(0, 12);
+      const cacheKey = `${name}-${sourceHash}`;
       const { file, bytes } = isRemote
-        ? await downloadToTemp(name, normalizedSrc, tempDownloadDir)
+        ? await downloadToTemp(name, normalizedSrc, tempDownloadDir, cacheKey)
         : {
             file: src,
             bytes: (await fs.stat(src)).size,
@@ -891,10 +929,5 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
   console.log(`\n✓ Wrote manifest → ${manifestPath}`);
   console.log(`✓ Outputs under → ${outRoot}`);
 
-  await fs
-    .rm(tempDownloadDir, {
-      recursive: true,
-      force: true,
-    })
-    .catch(() => {});
+  // Keep cached downloads for future runs.
 })();

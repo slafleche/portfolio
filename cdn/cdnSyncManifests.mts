@@ -396,12 +396,75 @@ async function syncKind(options: {
     >;
     const rewritten: typeof parsed = {};
     for (const [name, entry] of Object.entries(parsed)) {
+      const { src: _src, ...rest } = entry;
       rewritten[name] = {
-        ...entry,
+        ...rest,
         files: (entry.files ?? []).map((file) => ({
           ...file,
           url: rewriteUrl(file.url),
         })),
+      };
+    }
+    await fs.writeFile(
+      publicManifestPath,
+      `${JSON.stringify(rewritten, null, 2)}\n`,
+    );
+  } else if (kind === 'video') {
+    const parsed = JSON.parse(rawManifest) as Record<
+      string,
+      {
+        masterUrl?: string;
+        posterUrl?: string;
+        variants?: { playlistUrl?: string }[];
+        poster?: {
+          variants?: Record<string, { w: number; url: string }[]>;
+          original?: { url: string; width: number; height: number };
+          [key: string]: unknown;
+        };
+        [key: string]: unknown;
+      }
+    >;
+    const rewritten: typeof parsed = {};
+    for (const [name, entry] of Object.entries(parsed)) {
+      const { source, sourceUrl, ...rest } = entry;
+      const variants = Array.isArray(entry.variants)
+        ? entry.variants.map((variant) => ({
+            ...variant,
+            playlistUrl: variant.playlistUrl
+              ? rewriteUrl(variant.playlistUrl)
+              : variant.playlistUrl,
+          }))
+        : entry.variants;
+      let poster = entry.poster;
+      if (poster) {
+        const posterVariants: typeof poster.variants = {};
+        for (const [fmt, arr] of Object.entries(poster.variants ?? {})) {
+          posterVariants[fmt] = (arr ?? []).map((variant) => ({
+            ...variant,
+            url: rewriteUrl(variant.url),
+          }));
+        }
+        poster = {
+          ...poster,
+          variants: posterVariants,
+          original: poster.original
+            ? {
+                ...poster.original,
+                url: rewriteUrl(poster.original.url),
+              }
+            : poster.original,
+        };
+      }
+      rewritten[name] = {
+        ...rest,
+        masterUrl: entry.masterUrl
+          ? rewriteUrl(entry.masterUrl)
+          : entry.masterUrl,
+        posterUrl: entry.posterUrl
+          ? rewriteUrl(entry.posterUrl)
+          : entry.posterUrl,
+        variants,
+        poster,
       };
     }
     await fs.writeFile(
