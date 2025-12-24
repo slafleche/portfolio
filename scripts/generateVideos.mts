@@ -32,7 +32,7 @@ const LOCAL_VIDEO_DIR = path.join(
 const TMP_ROOT = path.join(REPO_ROOT, 'tmp', 'cdn');
 const DOWNLOAD_ROOT = path.join(TMP_ROOT, 'downloads');
 const OUT_ROOT_BASE = TMP_ROOT;
-const CATEGORY = 'video';
+const CATEGORY = 'videos';
 const VERSIONS_PATH = path.join(REPO_ROOT, 'cdn', 'assetGroupVersions.json');
 const VIDEO_CACHE_PREFIX = 'vid';
 const VIDEO_CACHE_HASH_LENGTH = 8;
@@ -375,8 +375,8 @@ async function removeHashedVideoDirs(name, outRoot) {
   );
 }
 
-async function buildHLS(srcPath, { name, slug, speed = 1, outRoot }) {
-  const outDir = path.join(outRoot, slug);
+async function buildHLS(srcPath, { name, slug, speed = 1, outRoot, speedLabel }) {
+  const outDir = path.join(outRoot, speedLabel, slug);
   await fs.mkdir(outDir, {
     recursive: true,
   });
@@ -518,11 +518,11 @@ async function buildHLS(srcPath, { name, slug, speed = 1, outRoot }) {
     poster,
   ]);
 
-  const relBasePath = `${slug}`;
+  const relBasePath = `${speedLabel}/${slug}`;
 
   return {
     name,
-    dirName: slug,
+    dirName: relBasePath,
     basePath: relBasePath,
     width,
     height,
@@ -542,7 +542,7 @@ async function buildHLS(srcPath, { name, slug, speed = 1, outRoot }) {
   };
 }
 
-async function generatePosterVariants(posterPath, outDir, slug) {
+async function generatePosterVariants(posterPath, outDir, basePathRoot, namePrefix) {
   const img = sharp(posterPath).rotate();
   const meta = await img.metadata();
   const srcW = meta.width ?? 0;
@@ -570,7 +570,7 @@ async function generatePosterVariants(posterPath, outDir, slug) {
     .toBuffer();
   const blurDataURL = `data:image/jpeg;base64,${lqip.toString('base64')}`;
 
-  const basePath = `${slug}/${posterDirName}`;
+  const basePath = `${basePathRoot}/${posterDirName}`;
   const targetWidths = POSTER_WIDTHS.filter((w) => w <= srcW);
   const variants = {};
 
@@ -589,7 +589,7 @@ async function generatePosterVariants(posterPath, outDir, slug) {
   await fs.writeFile(path.join(posterDir, origFile), originalBuffer);
 
   return {
-    name: `${slug}-poster`,
+    name: `${namePrefix}-poster`,
     hash,
     basePath,
     dirName: posterDirName,
@@ -634,9 +634,9 @@ function parseTargets(argv) {
     } else if (arg === '--help' || arg === '-h') {
       console.log(
         [
-          'Usage: yarn generate:video [--target=_staging|release] [--version=vX] [name ...]',
+          'Usage: yarn generate:videos [--target=_staging|release] [--version=vX] [name ...]',
           '',
-          'Generates video outputs into tmp/cdn/<target>/video/<version>/',
+          'Generates video outputs into tmp/cdn/<target>/videos/<version>/s<speed>/',
           'Use --posters-only to regenerate poster variants from existing outputs.',
           'Inputs:',
           '  - Local files under cdn/media/videos/localVideoSrc',
@@ -644,7 +644,7 @@ function parseTargets(argv) {
           '',
           'Args:',
           '  --target=...   Target environment (_staging or release); default _staging.',
-          '  --version=...  Override version (otherwise uses cdn/assetGroupVersions.json for video).',
+          '  --version=...  Override version (otherwise uses cdn/assetGroupVersions.json for videos).',
           '  --posters-only  Regenerate poster variants for existing videos (errors if outputs missing).',
           '  name ...       Optional list of video keys to build (by name); defaults to all.',
         ].join('\n'),
@@ -662,9 +662,7 @@ function parseTargets(argv) {
   }
   const version =
     opts.versionOverride ||
-    (parsedVersions?.[opts.target]?.[CATEGORY] ??
-      parsedVersions?.[opts.target]?.video ??
-      'v1');
+    (parsedVersions?.[opts.target]?.[CATEGORY] ?? 'v1');
 
   const outRoot = path.join(OUT_ROOT_BASE, opts.target, CATEGORY, version);
   const tempDownloadDir = path.join(
@@ -711,13 +709,13 @@ function parseTargets(argv) {
     return { rawName, name: toName(rawName), ...entry, isRemote: true };
   });
 
-const normalizedLocal = localEntries.map(({ rawName, file }) => ({
-  rawName,
-  name: toName(rawName),
-  src: file,
-  speed: 1,
-  isRemote: false,
-}));
+  const normalizedLocal = localEntries.map(({ rawName, file }) => ({
+    rawName,
+    name: toName(rawName),
+    src: file,
+    speed: 1,
+    isRemote: false,
+  }));
 
   const seenNames = new Set();
   const allEntries = [...normalizedRemote, ...normalizedLocal].filter((entry) => {
@@ -736,7 +734,7 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
   if (opts.postersOnly) {
     if (!(await exists(existingManifestPath))) {
       throw new Error(
-        `Missing manifest at ${existingManifestPath}; run generate:video first.`,
+        `Missing manifest at ${existingManifestPath}; run generate:videos first.`,
       );
     }
     for (const entry of allEntries) {
@@ -788,10 +786,12 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
         posterPath,
       ]);
 
+      const namePrefix = prev.dirName.split('/').pop() ?? prev.dirName;
       const posterEntry = await generatePosterVariants(
         posterPath,
         outDir,
         prev.dirName,
+        namePrefix,
       );
       manifest[entry.name] = {
         ...prev,
@@ -818,6 +818,7 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
     try {
       const effectiveSpeed =
         typeof speed === 'number' && speed > 0 ? speed : 1;
+      const speedLabel = `s${Number(effectiveSpeed).toString().replace('.', 'p')}`;
 
       const normalizedSrc = isRemote
         ? toDirectDropboxUrl(normalizeDrive(src))
@@ -855,7 +856,9 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
           ? path.join(outRoot, prev.poster.original.url)
           : null;
 
-      if (
+      if (!hasSameSpeed) {
+        // Speed change always forces a rebuild.
+      } else if (
         hasSameConfig &&
         prevDir &&
         (await exists(prevDir)) &&
@@ -876,18 +879,22 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
             file: src,
             bytes: (await fs.stat(src)).size,
           };
-      await removeHashedVideoDirs(name, outRoot);
+      const speedRoot = path.join(outRoot, speedLabel);
+      await fs.mkdir(speedRoot, { recursive: true });
+      await removeHashedVideoDirs(name, speedRoot);
 
       const info = await buildHLS(file, {
         name,
         slug,
         speed: effectiveSpeed,
         outRoot,
+        speedLabel,
       });
       const posterEntry = await generatePosterVariants(
         info.posterPath,
         path.join(outRoot, info.dirName),
         info.dirName,
+        slug,
       );
       manifest[name] = {
         ...info,
@@ -917,7 +924,13 @@ const normalizedLocal = localEntries.map(({ rawName, file }) => ({
       } from ${outRoot}`,
     );
     for (const name of staleNames) {
-      await removeHashedVideoDirs(name, outRoot);
+      const prev = existingManifest?.[name];
+      const speedLabel =
+        typeof prev?.dirName === 'string'
+          ? prev.dirName.split('/')[0]
+          : null;
+      if (!speedLabel) continue;
+      await removeHashedVideoDirs(name, path.join(outRoot, speedLabel));
     }
   }
 

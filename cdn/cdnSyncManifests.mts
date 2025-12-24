@@ -22,7 +22,7 @@ const REPO_ROOT = path.resolve(__dirname, '..');
 const TMP_ROOT = path.join(REPO_ROOT, 'tmp', 'cdn');
 
 type Target = '_staging' | 'release';
-type AssetKind = 'images' | 'fonts' | 'video';
+type AssetKind = 'images' | 'fonts' | 'videos';
 type Versions = Record<AssetKind, string>;
 
 type ParsedArgs = {
@@ -95,7 +95,7 @@ function parseArgs(): ParsedArgs {
   for (const arg of args) {
     if (arg === '--images') kinds.add('images');
     else if (arg === '--fonts') kinds.add('fonts');
-    else if (arg === '--video' || arg === '--videos') kinds.add('video');
+    else if (arg === '--videos') kinds.add('videos');
     else if (arg.startsWith('--target=')) {
       const t = arg.split('=')[1]?.trim();
       if (t === '_staging' || t === 'release') target = t;
@@ -116,7 +116,7 @@ function parseArgs(): ParsedArgs {
   if (kinds.size === 0) {
     kinds.add('images');
     kinds.add('fonts');
-    kinds.add('video');
+    kinds.add('videos');
   }
 
   return { target, kinds, version, yes, manifestOnly, help };
@@ -153,7 +153,7 @@ async function resolveVersions(
     return {
       images: override,
       fonts: override,
-      video: override,
+      videos: override,
     };
   }
   const versionsPath = path.join(REPO_ROOT, 'cdn', 'assetGroupVersions.json');
@@ -161,15 +161,15 @@ async function resolveVersions(
   if (raw) {
     try {
       const parsed = JSON.parse(raw) as Partial<
-        Record<Target, { img?: string; fonts?: string; video?: string }>
+        Record<Target, { img?: string; fonts?: string; videos?: string }>
       >;
       const img = parsed?.[target]?.img;
       const fonts = parsed?.[target]?.fonts;
-      const video = parsed?.[target]?.video;
+      const videos = parsed?.[target]?.videos;
       return {
         images: typeof img === 'string' && img.trim() ? img.trim() : 'v1',
         fonts: typeof fonts === 'string' && fonts.trim() ? fonts.trim() : 'v1',
-        video: typeof video === 'string' && video.trim() ? video.trim() : 'v1',
+        videos: typeof videos === 'string' && videos.trim() ? videos.trim() : 'v1',
       };
     } catch {
       // ignore
@@ -178,7 +178,7 @@ async function resolveVersions(
   return {
     images: 'v1',
     fonts: 'v1',
-    video: 'v1',
+    videos: 'v1',
   };
 }
 
@@ -261,6 +261,7 @@ async function syncKind(options: {
   const versionRoot = path.join(TMP_ROOT, target, kind, version);
   const manifestPath = path.join(versionRoot, 'manifest.json');
   const prefix = PREFIX_BY_TARGET[target];
+  const storageKind = kind;
 
   if (!(await fileExists(manifestPath))) {
     if (manifestOnly) {
@@ -290,7 +291,7 @@ async function syncKind(options: {
 
     const toKey = (fullPath: string) => {
       const rel = path.relative(versionRoot, fullPath).split(path.sep).join('/');
-      return `${prefix}/${kind}/${version}/${rel}`;
+      return `${prefix}/${storageKind}/${version}/${rel}`;
     };
 
     const headExists = async (key: string) => {
@@ -358,7 +359,7 @@ async function syncKind(options: {
   const rawManifest = await fs.readFile(manifestPath, 'utf8');
   const rewriteUrl = (u: string) => {
     const rel = u.startsWith('/') ? u.slice(1) : u;
-    const key = `${prefix}/${kind}/${version}/${rel}`;
+    const key = `${prefix}/${storageKind}/${version}/${rel}`;
     return buildPublicUrl(publicBase, key);
   };
 
@@ -375,7 +376,7 @@ async function syncKind(options: {
           REPO_ROOT,
           'public',
           'cdn',
-          kind,
+          storageKind,
           'manifest.json',
         );
 
@@ -409,7 +410,7 @@ async function syncKind(options: {
       publicManifestPath,
       `${JSON.stringify(rewritten, null, 2)}\n`,
     );
-  } else if (kind === 'video') {
+  } else if (kind === 'videos') {
     const parsed = JSON.parse(rawManifest) as Record<
       string,
       {
@@ -516,16 +517,16 @@ async function main() {
   if (args.help) {
     console.log(
       [
-        'Usage: yarn --cwd cdn cdn:sync-manifests [--target=_staging|release] [--version=vX] [--images] [--fonts] [--video] [--yes]',
+        'Usage: yarn --cwd cdn cdn:sync-manifests [--target=_staging|release] [--version=vX] [--images] [--fonts] [--videos] [--yes]',
         '',
-        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a tracked manifest locally (images/video under public/cdn/<kind>/manifest.json, fonts under src/data/generated/fonts.manifest.gen.json).',
+        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a tracked manifest locally (images/videos under public/cdn/<kind>/manifest.json, fonts under src/data/generated/fonts.manifest.gen.json).',
         '',
         'Flags:',
         '  --target=...   Choose _staging (or s) or release (or r); default is auto-pick if both exist.',
         '  --version=...  Override version for all kinds (otherwise uses cdn/assetGroupVersions.json).',
         '  --images       Include images manifest (default on if no kinds specified).',
         '  --fonts        Include fonts manifest (default on if no kinds specified).',
-        '  --video, --videos  Include video manifest (default on if no kinds specified).',
+        '  --videos      Include video manifest (default on if no kinds specified).',
         '  --manifest-only  Skip uploading assets; only rewrite/write manifest locally.',
         '  --yes, -y      Skip confirmation prompts for overwriting CDN objects.',
         '  --help, -h     Show this help.',

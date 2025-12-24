@@ -63,13 +63,12 @@ const isValidTarget = (
 
 const isValidKind = (
   value: string,
-): value is 'images' | 'fonts' | 'font' | 'videos' | 'video' => {
+): value is 'images' | 'fonts' | 'font' | 'videos' => {
   return (
     value === 'images' ||
     value === 'fonts' ||
     value === 'font' ||
-    value === 'videos' ||
-    value === 'video'
+    value === 'videos'
   );
 };
 
@@ -265,13 +264,13 @@ async function main() {
 
     if (!isValidKind(kind)) {
       console.error(
-        `Kind must be one of: images, fonts, font, videos, video. Got "${kind}".`,
+        `Kind must be one of: images, fonts, font, videos. Got "${kind}".`,
       );
       process.exit(1);
     }
 
     const normalizedKind =
-      kind === 'video' ? 'videos' : kind === 'font' ? 'fonts' : kind;
+      kind === 'font' ? 'fonts' : kind;
     const prefix = `${target}/${normalizedKind}/${version}`;
     await deletePrefix(prefix);
     return;

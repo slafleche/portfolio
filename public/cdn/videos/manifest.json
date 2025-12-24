@@ -1,0 +1,170 @@
+{
+  "hero": {
+    "name": "hero",
+    "dirName": "s2/vid-hero-22a68eeb",
+    "basePath": "s2/vid-hero-22a68eeb",
+    "width": 3840,
+    "height": 2160,
+    "aspect": 1.7777777777777777,
+    "duration": 17.5146665,
+    "hasAudio": false,
+    "speed": 2,
+    "masterUrl": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/master.m3u8",
+    "posterPath": "/Users/stephane/Documents/GitHub/portfolio/tmp/cdn/_staging/videos/v2/s2/vid-hero-22a68eeb/poster.png",
+    "posterUrl": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/orig.png",
+    "variants": [
+      {
+        "rung": 0,
+        "height": 1440,
+        "bandwidthKbps": 5200,
+        "playlistUrl": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/out_0/index.m3u8"
+      },
+      {
+        "rung": 1,
+        "height": 1080,
+        "bandwidthKbps": 3800,
+        "playlistUrl": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/out_1/index.m3u8"
+      },
+      {
+        "rung": 2,
+        "height": 900,
+        "bandwidthKbps": 2800,
+        "playlistUrl": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/out_2/index.m3u8"
+      },
+      {
+        "rung": 3,
+        "height": 720,
+        "bandwidthKbps": 1900,
+        "playlistUrl": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/out_3/index.m3u8"
+      },
+      {
+        "rung": 4,
+        "height": 540,
+        "bandwidthKbps": 1200,
+        "playlistUrl": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/out_4/index.m3u8"
+      },
+      {
+        "rung": 5,
+        "height": 360,
+        "bandwidthKbps": 700,
+        "playlistUrl": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/out_5/index.m3u8"
+      },
+      {
+        "rung": 6,
+        "height": 240,
+        "bandwidthKbps": 400,
+        "playlistUrl": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/out_6/index.m3u8"
+      }
+    ],
+    "poster": {
+      "name": "vid-hero-22a68eeb-poster",
+      "hash": "c0ce837f",
+      "basePath": "s2/vid-hero-22a68eeb/poster-c0ce837f",
+      "dirName": "poster-c0ce837f",
+      "width": 1280,
+      "height": 720,
+      "aspect": 1.7777777777777777,
+      "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAOABgDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAAF/8QAHBAAAgICAwAAAAAAAAAAAAAAAAIBAxEhBDFR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAwEF/8QAGBEBAAMBAAAAAAAAAAAAAAAAAAEREgL/2gAMAwEAAhEDEQA/AHWclWjUg7LNhFsb0necGjmhxxRMXxHZGVbY2SKTD//Z",
+      "variants": {
+        "avif": [
+          {
+            "w": 320,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/320.avif"
+          },
+          {
+            "w": 480,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/480.avif"
+          },
+          {
+            "w": 640,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/640.avif"
+          },
+          {
+            "w": 750,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/750.avif"
+          },
+          {
+            "w": 828,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/828.avif"
+          },
+          {
+            "w": 1080,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/1080.avif"
+          },
+          {
+            "w": 1200,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/1200.avif"
+          }
+        ],
+        "webp": [
+          {
+            "w": 320,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/320.webp"
+          },
+          {
+            "w": 480,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/480.webp"
+          },
+          {
+            "w": 640,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/640.webp"
+          },
+          {
+            "w": 750,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/750.webp"
+          },
+          {
+            "w": 828,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/828.webp"
+          },
+          {
+            "w": 1080,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/1080.webp"
+          },
+          {
+            "w": 1200,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/1200.webp"
+          }
+        ],
+        "jpg": [
+          {
+            "w": 320,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/320.jpg"
+          },
+          {
+            "w": 480,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/480.jpg"
+          },
+          {
+            "w": 640,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/640.jpg"
+          },
+          {
+            "w": 750,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/750.jpg"
+          },
+          {
+            "w": 828,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/828.jpg"
+          },
+          {
+            "w": 1080,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/1080.jpg"
+          },
+          {
+            "w": 1200,
+            "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/1200.jpg"
+          }
+        ]
+      },
+      "original": {
+        "url": "https://cdn.lafleche.dev/_staging/videos/v2/s2/vid-hero-22a68eeb/poster-c0ce837f/orig.png",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "hash": "22a68eeb",
+    "sourceHash": "22a68eeb998ac8e208380cdb2ad8aa15c61c9645e700ca28de1119af60ebb258",
+    "sourceSize": 364368569
+  }
+}

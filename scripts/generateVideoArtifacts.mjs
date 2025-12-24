@@ -9,7 +9,7 @@ const SOURCE_MANIFEST = path.join(
   REPO_ROOT,
   'public',
   'cdn',
-  'video',
+  'videos',
   'manifest.json',
 );
 const OUTPUT_MANIFEST = path.join(
@@ -40,14 +40,14 @@ async function main() {
   if (opts.help) {
     console.log(
       [
-        'Usage: yarn generate:video:artifacts',
+        'Usage: yarn generate:videos:artifacts',
         '',
         'Copies the CDN-rewritten video manifest into src/data/generated so the app',
-        'uses CDN URLs. Requires that cdn:sync --video has already run.',
+        'uses CDN URLs. Requires that cdn:sync --videos has already run.',
         '',
         'Example:',
-        '  yarn --cwd cdn cdn:sync --video --target=_staging',
-        '  yarn --cwd cdn generate:video:artifacts',
+        '  yarn --cwd cdn cdn:sync --videos --target=_staging',
+        '  yarn --cwd cdn generate:videos:artifacts',
       ].join('\n'),
     );
     return;
@@ -55,7 +55,7 @@ async function main() {
 
   if (!(await fileExists(SOURCE_MANIFEST))) {
     throw new Error(
-      `Missing ${SOURCE_MANIFEST}. Run "yarn --cwd cdn cdn:sync --video --target=_staging" first.`,
+      `Missing ${SOURCE_MANIFEST}. Run "yarn --cwd cdn cdn:sync --videos --target=_staging" first.`,
     );
   }
 

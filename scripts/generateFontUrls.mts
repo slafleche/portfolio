@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   generateGoogleFontUrls,
   type FontConfig,
@@ -7,8 +8,16 @@ import {
 import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
 import { loadMessages } from '../src/lib/locales/locale.ts';
 
-const FONTS_CONFIG = path.resolve('src', 'data', 'fonts.config.json');
+const __filename = fileURLToPath(import.meta.url);
+const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
+const FONTS_CONFIG = path.resolve(
+  REPO_ROOT,
+  'src',
+  'data',
+  'fonts.config.json',
+);
 const OUT_FILE = path.resolve(
+  REPO_ROOT,
   'src',
   'data',
   'generated',

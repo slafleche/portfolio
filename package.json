@@ -86,7 +86,7 @@
   },
   "scripts": {
     "ci:full": "yarn generate && yarn verify && yarn build",
-    "generate": "yarn locales && yarn --cwd scripts/cdn/generate:fonts && yarn --cwd scripts/cdn/generate:img && yarn --cwd scripts/cdn/generate:video && yarn --cwd scripts/cdn/generate:favicons",
+    "generate": "yarn locales && yarn --cwd scripts/cdn/generate && generate:favicons",
     "generate:favicons": "node tsx scripts/generateFavicons.ts",
     "locales": "yarn locales:markdown && yarn locales:publish",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",

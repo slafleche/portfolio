@@ -21,18 +21,20 @@
     "cdn:ls": "tsx cdnClient.mts ls",
     "cdn:sync": "tsx cdnSyncManifests.mts",
     
-    "fonts": "yarn generate:selfHostedFonts && yarn generate:font:artifacts && yarn generate:googleFonts",
+    "generate": "yarn generate:fonts && yarn generate:img && yarn generate:videos",
     
+    "generate:fonts": "node ../scripts/runGenerateFontsPipeline.mjs",
     "generate:selfHostedFonts": "tsx ../scripts/generateLocalFonts.mts",
     "generate:font:artifacts": "tsx ../scripts/generateFontArtifacts.mts",
     "generate:googleFonts": "tsx ../scripts/generateFontUrls.mts",
     
-    "generate:img": "node ../scripts/generateImages.mts",
+    "generate:img": "node ../scripts/runGenerateImagesPipeline.mjs",
+    "generate:img:files": "node ../scripts/generateImages.mts",
     "generate:img:artifacts": "node ../scripts/generateImageArtifacts.mjs",
     
-    "generate:video": "yarn generate:video:files && yarn generate:video:posters && yarn generate:video:artifacts",
-    "generate:video:files": "node ../scripts/generateVideos.mts",
-    "generate:video:posters": "node ../scripts/generateVideos.mts --posters-only",
-    "generate:video:artifacts": "node ../scripts/generateVideoArtifacts.mjs"
+    "generate:videos": "node ../scripts/runGenerateVideoPipeline.mjs",
+    "generate:videos:files": "node ../scripts/generateVideos.mts",
+    "generate:videos:posters": "node ../scripts/generateVideos.mts --posters-only",
+    "generate:videos:artifacts": "node ../scripts/generateVideoArtifacts.mjs"
   }
 }
