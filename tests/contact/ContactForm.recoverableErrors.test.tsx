@@ -535,7 +535,7 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       });
 
     const originalFetch = global.fetch;
-    let resolveFetch: ((value: Response) => void) | null = null;
+    let resolveFetch!: (value: Response) => void;
     const fetchPromise = new Promise<Response>((resolve) => {
       resolveFetch = resolve;
     });
@@ -586,9 +586,6 @@ describe('ContactForm — recoverable error flows (form view)', () => {
         expect(loading).not.toBeNull();
       });
 
-      if (!resolveFetch) {
-        throw new Error('Expected fetch resolver to be available.');
-      }
       resolveFetch({
         ok: true,
         json: async () => ({

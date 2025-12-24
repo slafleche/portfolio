@@ -85,7 +85,7 @@
     "node": "20.19.6"
   },
   "scripts": {
-    "ci": "yarn locales && yarn generate:favicons && yarn verify && yarn build",
+    "ci": "yarn locales && yarn verify && yarn build",
     "generate": "tsx scripts/runGenerateAllPipeline.mts",
     "generate:staging": "tsx scripts/runGenerateAllPipeline.mts --target=_staging",
     "generate:staging:skipConfirmation": "tsx scripts/runGenerateAllPipeline.mts --target=_staging --yes",

@@ -142,8 +142,15 @@ export type ManifestTarget = '_staging' | 'release';
 
 export function getManifestTarget(): ManifestTarget {
   if (isRelease()) return 'release';
-  const env = process.env as { LOCAL_MANIFEST_TARGET?: string };
-  const raw = env.LOCAL_MANIFEST_TARGET?.trim();
+  const env =
+    typeof process !== 'undefined'
+      ? (process.env as { LOCAL_MANIFEST_TARGET?: string })
+      : (
+          globalThis as {
+            process?: { env?: { LOCAL_MANIFEST_TARGET?: string } };
+          }
+        ).process?.env;
+  const raw = env?.LOCAL_MANIFEST_TARGET?.trim();
   if (raw === 'release') return 'release';
   if (raw === '_staging') return '_staging';
   return '_staging';

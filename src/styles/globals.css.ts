@@ -11,7 +11,6 @@ import {
 } from './helpers/accessibility.helper';
 import { paddings } from './helpers/spacing.helper';
 import borders from './helpers/borders.helper';
-import './fontFaces.css';
 import './utilities.css';
 
 const {

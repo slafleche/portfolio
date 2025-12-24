@@ -13,7 +13,11 @@ import {
 } from '@/data/generated/favicons/manifest.favicons.gen';
 import { type Locale } from '@/lib/locales/translations';
 import debugRoutes from '@/data/debugRoutes.json';
-import { isIndexingAllowed, notRelease } from '../src/lib/runtimeEnv';
+import {
+  isIndexingAllowed,
+  isRelease,
+  notRelease,
+} from '../src/lib/runtimeEnv';
 
 if (notRelease()) {
   const globalTracker = globalThis as {
@@ -55,6 +59,9 @@ export default async function RootLayout({
     FAVICON_META_BUNDLES_BY_LOCALE[locale] ??
     FAVICON_META_BUNDLES_BY_LOCALE[fallbackLocale];
   const indexingAllowed = isIndexingAllowed();
+  const fontFacesHref = isRelease()
+    ? '/styles/fontFaces.css'
+    : '/styles/fontFaces._staging.gen.css';
 
   return (
     <html lang={locale}>
@@ -65,6 +72,7 @@ export default async function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        <link rel="stylesheet" href={fontFacesHref} />
 
         {fontUrls.map((href) => (
           <link key={href} rel="stylesheet" href={href} />

@@ -1,6 +1,65 @@
 'use client';
 import * as React from 'react';
-import { getImage, type ImageEntry } from '@/lib/images';
+import type { ImageEntry } from '@/lib/images';
+
+const IMAGES_MANIFEST_URL = '/cdn/manifest/images.json';
+let cachedImagesManifest: Record<string, ImageEntry> | null = null;
+let cachedImagesPromise: Promise<Record<string, ImageEntry>> | null =
+  null;
+
+const fetchImagesManifest = async (): Promise<
+  Record<string, ImageEntry>
+> => {
+  if (cachedImagesManifest) return cachedImagesManifest;
+  if (!cachedImagesPromise) {
+    cachedImagesPromise = fetch(IMAGES_MANIFEST_URL)
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(
+            `Failed to load images manifest (${response.status}).`,
+          );
+        }
+        return (await response.json()) as Record<
+          string,
+          ImageEntry
+        >;
+      })
+      .catch((error) => {
+        cachedImagesPromise = null;
+        throw error;
+      });
+  }
+  cachedImagesManifest = await cachedImagesPromise;
+  return cachedImagesManifest;
+};
+
+const useImagesManifest = () => {
+  const [
+    manifest,
+    setManifest,
+  ] = React.useState<Record<string, ImageEntry> | null>(
+    () => cachedImagesManifest,
+  );
+
+  React.useEffect(() => {
+    let cancelled = false;
+    if (manifest) return;
+    fetchImagesManifest()
+      .then((data) => {
+        if (!cancelled) setManifest(data);
+      })
+      .catch(() => {
+        if (!cancelled) setManifest({});
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    manifest,
+  ]);
+
+  return manifest;
+};
 
 type ImageSize = 'auto' | 'sm' | 'md' | 'lg';
 
@@ -62,7 +121,8 @@ export default function ImageByName({
   priority = false,
   onLoad,
 }: Props) {
-  const data = getImage(name);
+  const manifest = useImagesManifest();
+  const data = manifest ? (manifest[name] ?? null) : null;
   if (!data) return null;
 
   const toSrcSet = (arr?: ImageEntry['variants']['avif']) =>

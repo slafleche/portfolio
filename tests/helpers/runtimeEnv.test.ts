@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
   getBrevoEnvConfig,
+  getManifestTarget,
   getTurnstileEnvConfig,
   getPrivateLaunchEnvConfig,
   isHostedEnv,
@@ -122,6 +123,54 @@ describe('getTurnstileEnvConfig', () => {
 
     expect(cfg.siteKey).toBeNull();
     expect(cfg.secretKey).toBeNull();
+  });
+});
+
+describe('getManifestTarget', () => {
+  beforeEach(() => {
+    restoreEnv = installTestEnv();
+  });
+
+  afterEach(() => {
+    restoreEnv?.();
+    restoreEnv = null;
+  });
+
+  it('returns release when isRelease is true', () => {
+    setEnv({
+      NODE_ENV: 'production',
+      VERCEL: '1',
+      VERCEL_ENV: 'production',
+      LOCAL_MANIFEST_TARGET: '_staging',
+    });
+
+    expect(getManifestTarget()).toBe('release');
+  });
+
+  it('honors LOCAL_MANIFEST_TARGET release when set', () => {
+    setEnv({
+      NODE_ENV: 'development',
+      LOCAL_MANIFEST_TARGET: 'release',
+    });
+
+    expect(getManifestTarget()).toBe('release');
+  });
+
+  it('honors LOCAL_MANIFEST_TARGET _staging when set', () => {
+    setEnv({
+      NODE_ENV: 'development',
+      LOCAL_MANIFEST_TARGET: '_staging',
+    });
+
+    expect(getManifestTarget()).toBe('_staging');
+  });
+
+  it('defaults to _staging when not set', () => {
+    setEnv({
+      NODE_ENV: 'development',
+    });
+
+    expect(getManifestTarget()).toBe('_staging');
   });
 });
 

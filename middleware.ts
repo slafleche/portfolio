@@ -137,6 +137,39 @@ export function middleware(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
+  const manifestTarget = runtimeEnv.getManifestTarget();
+
+  if (pathname === '/cdn/manifest/images.json') {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = `/cdn/images/manifest.${manifestTarget}.json`;
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
+  if (pathname === '/cdn/manifest/videos.json') {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = `/cdn/videos/manifest.${manifestTarget}.json`;
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
+  if (pathname === '/cdn/manifest/fonts.config.json') {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = '/api/manifest/fonts-config';
+    rewriteUrl.searchParams.set('target', manifestTarget);
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
+  if (pathname === '/cdn/manifest/fonts.json') {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = '/api/manifest/fonts';
+    rewriteUrl.searchParams.set('target', manifestTarget);
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
+  if (pathname === '/styles/fontFaces.css' && isRelease()) {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = `/styles/fontFaces.${manifestTarget}.gen.css`;
+    return NextResponse.rewrite(rewriteUrl);
+  }
 
   if (pathname === '/' || pathname === '') {
     const locale = pickPreferredLocale(request);
