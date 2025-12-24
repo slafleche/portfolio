@@ -22,12 +22,25 @@ const run = (script: string, extraArgs: string[] = []) => {
 };
 
 const runRoot = (script: string, extraArgs: string[] = []) => {
-  const result = spawnSync('yarn', [script, ...extraArgs], {
+  const commandArgs =
+    extraArgs.length > 0 ? [script, '--', ...extraArgs] : [script];
+  const result = spawnSync('yarn', commandArgs, {
     stdio: 'inherit',
   });
   if (result.status !== 0) {
     process.exit(result.status ?? 1);
   }
+};
+
+const runCdnPipeline = (
+  targetName: Exclude<Target, 'both'>,
+  extraArgs: string[] = [],
+) => {
+  const targetArg = `--target=${targetName}`;
+  const combinedArgs = [targetArg, ...extraArgs];
+  run('generate:fonts', combinedArgs);
+  run('generate:img', combinedArgs);
+  run('generate:videos', combinedArgs);
 };
 
 const parseTarget = (argv: string[]): Target => {
@@ -54,7 +67,9 @@ if (wantsHelp) {
       'Runs:',
       '  yarn locales',
       '  yarn generate:favicons',
-      '  yarn --cwd cdn generate (staging/release/both)',
+      '  yarn --cwd cdn generate:fonts',
+      '  yarn --cwd cdn generate:img',
+      '  yarn --cwd cdn generate:videos',
       '',
       'Examples:',
       '  yarn generate',
@@ -71,15 +86,11 @@ if (wantsHelp) {
 runRoot('locales');
 runRoot('generate:favicons');
 
-const runCdnGenerate = (targetArg: string) => {
-  run('generate:fonts', ['--target=' + targetArg, ...cdnArgs]);
-  run('generate:img', ['--target=' + targetArg, ...cdnArgs]);
-  run('generate:videos', ['--target=' + targetArg, ...cdnArgs]);
-};
-
 if (target === 'both') {
-  runCdnGenerate('_staging');
-  runCdnGenerate('release');
+  runCdnPipeline('_staging', cdnArgs);
+  runCdnPipeline('release', cdnArgs);
+} else if (target === '_staging') {
+  runCdnPipeline('_staging', cdnArgs);
 } else {
-  runCdnGenerate(target);
+  runCdnPipeline('release', cdnArgs);
 }

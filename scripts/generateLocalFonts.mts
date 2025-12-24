@@ -75,6 +75,13 @@ const ALLOWED_EXTENSIONS = new Set([
   '.eot',
   '.json',
 ]);
+const HASHED_EXTENSIONS = new Set([
+  '.woff',
+  '.woff2',
+  '.otf',
+  '.ttf',
+  '.eot',
+]);
 const DOWNLOADABLE_EXTENSIONS = new Set([
   '.woff',
   '.woff2',
@@ -84,6 +91,7 @@ const DOWNLOADABLE_EXTENSIONS = new Set([
   '.json',
 ]);
 const HASH_FILENAME = 'hashes.json';
+const URL_HASH_LENGTH = 8;
 
 async function readJson<T>(pathname: string): Promise<T> {
   const raw = await fs.readFile(pathname, 'utf8');
@@ -117,10 +125,19 @@ function ensureRecord(value: unknown, label: string): Record<string, unknown> {
 const sha256 = (value: string) =>
   crypto.createHash('sha256').update(value).digest('hex');
 
-async function copyDirFiltered(
+function addUrlHash(fileName: string, urlHash: string): string {
+  const ext = path.extname(fileName);
+  const base = path.basename(fileName, ext);
+  const strippedBase = base.replace(/\.[0-9a-f]{8}$/i, '');
+  return `${strippedBase}.${urlHash}${ext}`;
+}
+
+async function copyDirFilteredWithUrlHash(
   srcDir: string,
   destDir: string,
   allowExt: Set<string>,
+  hashExt: Set<string>,
+  urlHash: string,
 ): Promise<void> {
   await fs.mkdir(destDir, { recursive: true });
   const entries = await fs.readdir(srcDir, { withFileTypes: true });
@@ -128,13 +145,24 @@ async function copyDirFiltered(
     const srcPath = path.join(srcDir, entry.name);
     const destPath = path.join(destDir, entry.name);
     if (entry.isDirectory()) {
-      await copyDirFiltered(srcPath, destPath, allowExt);
+      await copyDirFilteredWithUrlHash(
+        srcPath,
+        destPath,
+        allowExt,
+        hashExt,
+        urlHash,
+      );
       continue;
     }
     if (!entry.isFile()) continue;
     const ext = path.extname(entry.name).toLowerCase();
     if (!allowExt.has(ext)) continue;
-    await fs.copyFile(srcPath, destPath);
+    const hashedName =
+      hashExt.has(ext) && entry.name !== 'metaData.json'
+        ? addUrlHash(entry.name, urlHash)
+        : entry.name;
+    const hashedDestPath = path.join(destDir, hashedName);
+    await fs.copyFile(srcPath, hashedDestPath);
   }
 }
 
@@ -150,6 +178,26 @@ async function listFilesRecursive(rootDir: string): Promise<string[]> {
     }
   }
   return files;
+}
+
+async function ensureHashedFontFiles(
+  dirPath: string,
+  urlHash: string,
+  hashExt: Set<string>,
+): Promise<void> {
+  const files = await listFilesRecursive(dirPath);
+  for (const filePath of files) {
+    const ext = path.extname(filePath).toLowerCase();
+    if (!hashExt.has(ext)) continue;
+    if (path.basename(filePath) === 'metaData.json') continue;
+    const baseName = path.basename(filePath, ext);
+    const strippedBase = baseName.replace(/\.[0-9a-f]{8}$/i, '');
+    const desiredName = `${strippedBase}.${urlHash}${ext}`;
+    if (path.basename(filePath) === desiredName) continue;
+    const nextPath = path.join(path.dirname(filePath), desiredName);
+    await fs.rm(nextPath, { force: true }).catch(() => undefined);
+    await fs.rename(filePath, nextPath);
+  }
 }
 
 async function buildManifestFiles(
@@ -445,11 +493,13 @@ async function main() {
       if (!rawUrl) {
         throw new Error(`Self-hosted font "${fontKey}" is missing src.`);
       }
+      const urlHash = sha256(rawUrl).slice(0, URL_HASH_LENGTH);
       const hash = sha256(`${rawUrl}::${version}`);
       const cached = hashCache[fontKey];
       const stagedDest = path.join(outRoot, `${keySlug}.gen`);
       if (cached === hash && (await fileExists(stagedDest))) {
         console.log(`ℹ︎ ${fontKey}: url+version unchanged; skipping download.`);
+        await ensureHashedFontFiles(stagedDest, urlHash, HASHED_EXTENSIONS);
         const files = await buildManifestFiles(`${keySlug}.gen`, stagedDest);
         manifest[fontKey] = {
           type: 'selfHosted',
@@ -531,7 +581,13 @@ async function main() {
       }
 
       await removeDir(stagedDest);
-      await copyDirFiltered(outDir, stagedDest, ALLOWED_EXTENSIONS);
+      await copyDirFilteredWithUrlHash(
+        outDir,
+        stagedDest,
+        ALLOWED_EXTENSIONS,
+        HASHED_EXTENSIONS,
+        urlHash,
+      );
       console.log(`✓ Staged ${fontKey} → ${stagedDest}`);
       const files = await buildManifestFiles(`${keySlug}.gen`, stagedDest);
       manifest[fontKey] = {

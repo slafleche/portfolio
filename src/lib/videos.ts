@@ -1,5 +1,5 @@
-import releaseManifest from '@/data/generated/videos.manifest.release.gen.json';
-import stagingManifest from '@/data/generated/videos.manifest._staging.gen.json';
+import releaseManifest from '@/data/generated/release/videos/manifest.videos.gen.json';
+import stagingManifest from '@/data/generated/_staging/videos/manifest.videos.gen.json';
 import { getManifestTarget } from '@/lib/runtimeEnv';
 
 export type VideoVariant = {

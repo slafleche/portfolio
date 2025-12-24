@@ -28,7 +28,9 @@ const resolveVideoManifestPath = (target) =>
     'src',
     'data',
     'generated',
-    `videos.manifest.${target}.gen.json`,
+    target,
+    'videos',
+    'manifest.videos.gen.json',
   );
 const IGNORE_DIRS = new Set([]);
 
@@ -171,7 +173,7 @@ class DuplicateNameError extends Error {
         ? 'src/assets/images'
         : s === 'remote'
           ? 'imageSources.json'
-          : 'videos.manifest.<target>.gen.json';
+          : 'generated/<target>/videos/manifest.videos.gen.json';
 
     const message = [
       '\n',

@@ -41,7 +41,6 @@ scripts/bash/
 # -----------------------
 # Generated data
 # -----------------------
-src/data/generated/*
 public/images/*
 public/favicons/*
 src/lib/locales/generated/

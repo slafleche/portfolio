@@ -18,7 +18,9 @@ const resolvePaths = (target) => ({
     'src',
     'data',
     'generated',
-    `videos.manifest.${target}.gen.json`,
+    target,
+    'videos',
+    'manifest.videos.gen.json',
   ),
 });
 

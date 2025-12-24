@@ -1,5 +1,5 @@
-import releaseManifest from '@/data/generated/images.manifest.release.gen.json';
-import stagingManifest from '@/data/generated/images.manifest._staging.gen.json';
+import releaseManifest from '@/data/generated/release/images/manifest.images.gen.json';
+import stagingManifest from '@/data/generated/_staging/images/manifest.images.gen.json';
 import { getManifestTarget } from '@/lib/runtimeEnv';
 
 export type Variant = {

@@ -11,7 +11,15 @@ import { loadMessages } from '../src/lib/locales/locale.ts';
 const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
 const resolveFontsConfig = (target: string) =>
-  path.resolve(REPO_ROOT, 'src', 'data', `fonts.config.${target}.json`);
+  path.resolve(
+    REPO_ROOT,
+    'src',
+    'data',
+    'generated',
+    target,
+    'fonts',
+    'config.fonts.gen.json',
+  );
 const FALLBACK_FONTS_CONFIG = path.resolve(
   REPO_ROOT,
   'src',
@@ -23,6 +31,7 @@ const OUT_FILE = path.resolve(
   'src',
   'data',
   'generated',
+  'fonts',
   'googleFonts.gen.ts',
 );
 

@@ -9,12 +9,18 @@ reproducible via scripts.
 
 - Treat generated artifacts as disposable outputs:
   - `src/data/generated/`
-  - `src/data/*.gen.*` (e.g., `favicons.manifest.gen.ts`, `googleFonts.gen.ts`,
-    `images.manifest._staging.gen.json`, `images.manifest.release.gen.json`,
-    `videos.manifest._staging.gen.json`, `videos.manifest.release.gen.json`,
-    `fonts.manifest._staging.gen.json`, `fonts.manifest.release.gen.json`,
-    `minimalFontText.gen.ts`)
-  - `src/data/fonts.config.*.json`
+  - `src/data/generated/**` examples:
+    `src/data/generated/favicons/manifest.favicons.gen.ts`,
+    `src/data/generated/fonts/googleFonts.gen.ts`,
+    `src/data/generated/_staging/images/manifest.images.gen.json`,
+    `src/data/generated/release/images/manifest.images.gen.json`,
+    `src/data/generated/_staging/videos/manifest.videos.gen.json`,
+    `src/data/generated/release/videos/manifest.videos.gen.json`,
+    `src/data/generated/_staging/fonts/manifest.fonts.gen.json`,
+    `src/data/generated/release/fonts/manifest.fonts.gen.json`,
+    `src/data/generated/_staging/fonts/config.fonts.gen.json`,
+    `src/data/generated/release/fonts/config.fonts.gen.json`,
+    `src/data/generated/minimalFontText.gen.ts`
   - `src/styles/fontFaces.*.css.ts`
   - `public/styles/fontFaces.*.gen.css`
   - `src/lib/locales/generated/`

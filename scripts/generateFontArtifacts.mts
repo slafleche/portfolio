@@ -10,7 +10,15 @@ const TMP_ROOT = path.join(REPO_ROOT, 'tmp', 'cdn');
 const VERSIONS_PATH = path.join(REPO_ROOT, 'cdn', 'assetGroupVersions.json');
 
 const CONFIG_OUT = (target: Target) =>
-  path.join(REPO_ROOT, 'src', 'data', `fonts.config.${target}.json`);
+  path.join(
+    REPO_ROOT,
+    'src',
+    'data',
+    'generated',
+    target,
+    'fonts',
+    'config.fonts.gen.json',
+  );
 const FONTFACES_TS_OUT = (target: Target) =>
   path.join(REPO_ROOT, 'src', 'styles', `fontFaces.${target}.css.ts`);
 const FONTFACES_CSS_OUT = (target: Target) =>
@@ -271,7 +279,7 @@ async function main() {
         'Usage: yarn generate:fontArtifacts [--target=_staging|release] [--version=vX] [--base-url=https://...]',
         '',
         'Reads tmp fonts config + manifest to produce:',
-        '  src/data/fonts.config.<target>.json',
+        '  src/data/generated/<target>/fonts/config.fonts.gen.json',
         '  src/styles/fontFaces.<target>.css.ts',
         '  public/styles/fontFaces.<target>.gen.css',
         '',
@@ -294,7 +302,9 @@ async function main() {
     'src',
     'data',
     'generated',
-    `fonts.manifest.${target}.gen.json`,
+    target,
+    'fonts',
+    'manifest.fonts.gen.json',
   );
 
   if (!(await fileExists(configPath))) {
@@ -333,7 +343,7 @@ async function main() {
   );
   if (hasSelfHosted && needsBaseUrl && !baseUrlEnv.trim()) {
     throw new Error(
-      `Missing base URL for self-hosted fonts. Run cdn:sync --fonts to generate src/data/generated/fonts.manifest.${target}.gen.json, or set SELF_HOSTED_FONTS_BASE_URL, or use --base-url (ex: yarn generate:fontArtifacts --target=${target} --base-url=https://cdn.example.com).`,
+      `Missing base URL for self-hosted fonts. Run cdn:sync --fonts to generate src/data/generated/${target}/fonts/manifest.fonts.gen.json, or set SELF_HOSTED_FONTS_BASE_URL, or use --base-url (ex: yarn generate:fontArtifacts --target=${target} --base-url=https://cdn.example.com).`,
     );
   }
 

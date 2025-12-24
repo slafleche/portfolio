@@ -4,7 +4,7 @@
   font-style: italic;
   font-weight: 300;
   font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion+Sans.gen/PPFraktionSans-LightItalic.woff2") format("woff2");
+  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion+Sans.gen/PPFraktionSans-BoldItalic.45f17c3c.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion+Sans.gen/PPFraktionSans-LightItalic.45f17c3c.woff2") format("woff2");
 }
 
 @font-face {
@@ -12,23 +12,7 @@
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion+Sans.gen/PPFraktionSans-Light.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Fraktion Sans";
-  font-style: italic;
-  font-weight: 700;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion+Sans.gen/PPFraktionSans-BoldItalic.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Fraktion Sans";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion+Sans.gen/PPFraktionSans-Bold.woff2") format("woff2");
+  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion+Sans.gen/PPFraktionSans-Bold.45f17c3c.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion+Sans.gen/PPFraktionSans-Light.45f17c3c.woff2") format("woff2");
 }
 
 @font-face {
@@ -36,7 +20,7 @@
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion-Mono.gen/PPFraktionMono-RegularItalic.woff2") format("woff2");
+  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion-Mono.gen/PPFraktionMono-RegularItalic.e9233dc1.woff2") format("woff2");
 }
 
 @font-face {
@@ -44,15 +28,15 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion-Mono.gen/PPFraktionMono-Regular.woff2") format("woff2");
+  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion-Mono.gen/PPFraktionMono-Bold.e9233dc1.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion-Mono.gen/PPFraktionMono-Regular.e9233dc1.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Fraktion-Mono";
-  font-style: normal;
-  font-weight: 700;
+  font-family: "Neue Montreal";
+  font-style: italic;
+  font-weight: 100;
   font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Fraktion-Mono.gen/PPFraktionMono-Bold.woff2") format("woff2");
+  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Italic.01869a6e.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-SemiBolditalic.01869a6e.woff2") format("woff2");
 }
 
 @font-face {
@@ -60,47 +44,7 @@
   font-style: normal;
   font-weight: 100;
   font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Thin.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Neue Montreal";
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Italic.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Neue Montreal";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Book.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Neue Montreal";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Medium.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Neue Montreal";
-  font-style: italic;
-  font-weight: 600;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-SemiBolditalic.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Neue Montreal";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Bold.woff2") format("woff2");
+  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Bold.01869a6e.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Book.01869a6e.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Medium.01869a6e.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Neue+Montreal.gen/PPNeueMontreal-Thin.01869a6e.woff2") format("woff2");
 }
 
 @font-face {
@@ -108,15 +52,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-Regular.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-Slanted.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Object Sans";
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-Heavy.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-HeavySlanted.woff2") format("woff2");
+  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-Heavy.6e1490d0.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-HeavySlanted.6e1490d0.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-Regular.6e1490d0.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-Slanted.6e1490d0.woff2") format("woff2");
 }
 
 @font-face {
@@ -124,7 +60,7 @@
   font-style: italic;
   font-weight: 100;
   font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompactThinItalic.woff2") format("woff2");
+  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompactThinItalic.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-ExtraboldItalic.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-NarrowExtraboldItalic.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-NarrowSemiboldItalic.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-SlimSemiboldItalic.d6aeafc5.woff2") format("woff2");
 }
 
 @font-face {
@@ -132,77 +68,5 @@
   font-style: normal;
   font-weight: 100;
   font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CondensedThin.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Thin.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Pangram Sans";
-  font-style: normal;
-  font-weight: 200;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompactExtralightReclined.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-NarrowExtralightReclined.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-SlimExtralight.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Pangram Sans";
-  font-style: normal;
-  font-weight: 300;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Light.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Pangram Sans";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompactRegular.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Pangram Sans";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompressedMediumReclined.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Medium.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-SlimMediumReclined.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Pangram Sans";
-  font-style: italic;
-  font-weight: 600;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-NarrowSemiboldItalic.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-SlimSemiboldItalic.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Pangram Sans";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-NarrowSemibold.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Semibold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Pangram Sans";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Bold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Pangram Sans";
-  font-style: italic;
-  font-weight: 800;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-ExtraboldItalic.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-NarrowExtraboldItalic.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "Pangram Sans";
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompressedExtrabold.woff2") format("woff2");
+  src: url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Bold.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompactExtralightReclined.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompactRegular.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompressedExtrabold.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CompressedMediumReclined.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-CondensedThin.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Light.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Medium.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-NarrowExtralightReclined.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-NarrowSemibold.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Semibold.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-SlimExtralight.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-SlimMediumReclined.d6aeafc5.woff2") format("woff2"), url("https://cdn.lafleche.dev/_staging/fonts/v1/Pangram+Sans.gen/PPPangramSans-Thin.d6aeafc5.woff2") format("woff2");
 }

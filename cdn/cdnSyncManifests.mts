@@ -30,6 +30,7 @@ type ParsedArgs = {
   kinds: Set<AssetKind>;
   version?: string;
   yes: boolean;
+  force: boolean;
   manifestOnly: boolean;
   help: boolean;
 };
@@ -89,6 +90,7 @@ function parseArgs(): ParsedArgs {
   let target: Target | undefined;
   let version: string | undefined;
   let yes = false;
+  let force = false;
   let manifestOnly = false;
   let help = false;
 
@@ -106,6 +108,8 @@ function parseArgs(): ParsedArgs {
       if (v) version = v;
     } else if (arg === '--yes' || arg === '-y') {
       yes = true;
+    } else if (arg === '--force') {
+      force = true;
     } else if (arg === '--manifest-only') {
       manifestOnly = true;
     } else if (arg === '--help' || arg === '-h') {
@@ -119,7 +123,7 @@ function parseArgs(): ParsedArgs {
     kinds.add('videos');
   }
 
-  return { target, kinds, version, yes, manifestOnly, help };
+  return { target, kinds, version, yes, force, manifestOnly, help };
 }
 
 async function pickTarget(): Promise<Target> {
@@ -240,11 +244,16 @@ function contentTypeFor(filePath: string): string | undefined {
   return MIME_MAP[ext];
 }
 
+function isHashedKey(key: string): boolean {
+  return /[.-][0-9a-f]{8}(?:\/|\.|$)/i.test(key);
+}
+
 async function syncKind(options: {
   target: Target;
   kind: AssetKind;
   versions: Versions;
   yes: boolean;
+  force: boolean;
   manifestOnly: boolean;
   s3?: S3Client;
   bucket?: string;
@@ -255,6 +264,7 @@ async function syncKind(options: {
     kind,
     versions,
     yes,
+    force,
     manifestOnly,
     s3,
     bucket,
@@ -314,7 +324,11 @@ async function syncKind(options: {
     for (const filePath of uploadFiles) {
       const key = toKey(filePath);
       const exists = await headExists(key);
-      if (exists && !yes) {
+      if (exists && isHashedKey(key) && !force) {
+        console.log(`↷ Skipping existing hashed asset ${key}`);
+        continue;
+      }
+      if (exists && !yes && !force) {
         const ok = await confirm(
           `"${key}" exists in bucket "${bucket}". Overwrite?`,
         );
@@ -373,7 +387,9 @@ async function syncKind(options: {
           'src',
           'data',
           'generated',
-          `fonts.manifest.${target}.gen.json`,
+          target,
+          'fonts',
+          'manifest.fonts.gen.json',
         )
       : path.join(
           REPO_ROOT,
@@ -522,7 +538,7 @@ async function main() {
       [
         'Usage: yarn --cwd cdn cdn:sync-manifests [--target=_staging|release] [--version=vX] [--images] [--fonts] [--videos] [--yes]',
         '',
-        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a tracked manifest locally (images/videos under public/cdn/<kind>/manifest.<target>.json, fonts under src/data/generated/fonts.manifest.<target>.gen.json).',
+        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a tracked manifest locally (images/videos under public/cdn/<kind>/manifest.<target>.json, fonts under src/data/generated/<target>/fonts/manifest.fonts.gen.json).',
         '',
         'Flags:',
         '  --target=...   Choose _staging (or s) or release (or r); default is auto-pick if both exist.',
@@ -531,7 +547,8 @@ async function main() {
         '  --fonts        Include fonts manifest (default on if no kinds specified).',
         '  --videos      Include video manifest (default on if no kinds specified).',
         '  --manifest-only  Skip uploading assets; only rewrite/write manifest locally.',
-        '  --yes, -y      Skip confirmation prompts for overwriting CDN objects.',
+        '  --force       Overwrite existing objects (including hashed assets).',
+        '  --yes, -y     Skip confirmation prompts for overwriting CDN objects.',
         '  --help, -h     Show this help.',
         '',
         'Requires env: CDN_PUBLIC_BASE_URL (or R2_ENDPOINT for fallback). Uploads require R2_BUCKET, R2_ENDPOINT, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY.',
@@ -577,6 +594,7 @@ async function main() {
       kind,
       versions,
       yes: args.yes,
+      force: args.force,
       manifestOnly: args.manifestOnly,
       s3,
       bucket,
