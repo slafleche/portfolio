@@ -22,10 +22,14 @@ const IMAGE_SOURCES_CONFIG = path.join(
   'images',
   'imageSources.json',
 );
-const VIDEO_MANIFEST_PATH = path.join(
-  REPO_ROOT,
-  'src/data/generated/videos.manifest.gen.json',
-);
+const resolveVideoManifestPath = (target) =>
+  path.join(
+    REPO_ROOT,
+    'src',
+    'data',
+    'generated',
+    `videos.manifest.${target}.gen.json`,
+  );
 const IGNORE_DIRS = new Set([]);
 
 const IMAGE_CACHE_PREFIX = 'img';
@@ -167,7 +171,7 @@ class DuplicateNameError extends Error {
         ? 'src/assets/images'
         : s === 'remote'
           ? 'imageSources.json'
-          : 'videos.manifest.gen.json';
+          : 'videos.manifest.<target>.gen.json';
 
     const message = [
       '\n',
@@ -264,15 +268,16 @@ async function loadImageSourcesConfig() {
   }
 }
 
-async function loadVideoManifest() {
+async function loadVideoManifest(target) {
+  const videoManifestPath = resolveVideoManifestPath(target);
   try {
-    const raw = await fs.readFile(VIDEO_MANIFEST_PATH, 'utf8');
+    const raw = await fs.readFile(videoManifestPath, 'utf8');
     const parsed = JSON.parse(raw);
     return parsed && typeof parsed === 'object' ? parsed : null;
   } catch (error) {
     if (error.code === 'ENOENT') {
       console.log(
-        `ℹ️  Video manifest not found at "${VIDEO_MANIFEST_PATH}". Run the video pipeline first to enable video previews.`,
+        `ℹ️  Video manifest not found at "${videoManifestPath}". Run the video pipeline first to enable video previews.`,
       );
       return null;
     }
@@ -707,9 +712,9 @@ async function processTargets(targets, versionOverride, bumpFlag) {
 
     // Legacy video poster handling (moved to video pipeline; kept for reference):
     // console.log(
-    //   `→ Checking for video posters via "${VIDEO_MANIFEST_PATH}"`,
+    //   `→ Checking for video posters via "${resolveVideoManifestPath(target)}"`,
     // );
-    // const videoManifest = await loadVideoManifest();
+    // const videoManifest = await loadVideoManifest(target);
     // if (videoManifest) {
     //   const entries = Object.entries(videoManifest);
     //   if (entries.length === 0) {
@@ -756,7 +761,7 @@ async function processTargets(targets, versionOverride, bumpFlag) {
     //           manifest,
     //           {
     //             source: 'video',
-    //             origin: `${VIDEO_MANIFEST_PATH} → ${name}`,
+    //             origin: `${resolveVideoManifestPath(target)} → ${name}`,
     //           },
     //           outRoot,
     //           hashes,

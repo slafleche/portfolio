@@ -373,14 +373,14 @@ async function syncKind(options: {
           'src',
           'data',
           'generated',
-          'fonts.manifest.gen.json',
+          `fonts.manifest.${target}.gen.json`,
         )
       : path.join(
           REPO_ROOT,
           'public',
           'cdn',
           storageKind,
-          'manifest.json',
+          `manifest.${target}.json`,
         );
 
   await fs.mkdir(path.dirname(publicManifestPath), { recursive: true });
@@ -522,7 +522,7 @@ async function main() {
       [
         'Usage: yarn --cwd cdn cdn:sync-manifests [--target=_staging|release] [--version=vX] [--images] [--fonts] [--videos] [--yes]',
         '',
-        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a tracked manifest locally (images/videos under public/cdn/<kind>/manifest.json, fonts under src/data/generated/fonts.manifest.gen.json).',
+        'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a tracked manifest locally (images/videos under public/cdn/<kind>/manifest.<target>.json, fonts under src/data/generated/fonts.manifest.<target>.gen.json).',
         '',
         'Flags:',
         '  --target=...   Choose _staging (or s) or release (or r); default is auto-pick if both exist.',

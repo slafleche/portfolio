@@ -1,4 +1,6 @@
-import manifestJson from '@/data/generated/videos.manifest.gen.json';
+import releaseManifest from '@/data/generated/videos.manifest.release.gen.json';
+import stagingManifest from '@/data/generated/videos.manifest._staging.gen.json';
+import { getManifestTarget } from '@/lib/runtimeEnv';
 
 export type VideoVariant = {
   rung: number;
@@ -25,7 +27,10 @@ export type VideoEntry = {
   sourceSize?: number;
 };
 
-const manifest = manifestJson as Record<string, VideoEntry>;
+const target = getManifestTarget();
+const manifest = (target === 'release'
+  ? releaseManifest
+  : stagingManifest) as Record<string, VideoEntry>;
 
 export function getVideo(name: string): VideoEntry | undefined {
   return manifest[name];

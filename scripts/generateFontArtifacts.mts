@@ -9,19 +9,12 @@ const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
 const TMP_ROOT = path.join(REPO_ROOT, 'tmp', 'cdn');
 const VERSIONS_PATH = path.join(REPO_ROOT, 'cdn', 'assetGroupVersions.json');
 
-const CONFIG_OUT = path.join(REPO_ROOT, 'src', 'data', 'fonts.config.json');
-const FONTFACES_TS_OUT = path.join(
-  REPO_ROOT,
-  'src',
-  'styles',
-  'fontFaces.css.ts',
-);
-const FONTFACES_CSS_OUT = path.join(
-  REPO_ROOT,
-  'public',
-  'styles',
-  'fontFaces.gen.css',
-);
+const CONFIG_OUT = (target: Target) =>
+  path.join(REPO_ROOT, 'src', 'data', `fonts.config.${target}.json`);
+const FONTFACES_TS_OUT = (target: Target) =>
+  path.join(REPO_ROOT, 'src', 'styles', `fontFaces.${target}.css.ts`);
+const FONTFACES_CSS_OUT = (target: Target) =>
+  path.join(REPO_ROOT, 'public', 'styles', `fontFaces.${target}.gen.css`);
 
 type Target = '_staging' | 'release';
 type FontsConfig = Record<string, unknown>;
@@ -278,9 +271,9 @@ async function main() {
         'Usage: yarn generate:fontArtifacts [--target=_staging|release] [--version=vX] [--base-url=https://...]',
         '',
         'Reads tmp fonts config + manifest to produce:',
-        '  src/data/fonts.config.json',
-        '  src/styles/fontFaces.css.ts',
-        '  public/styles/fontFaces.gen.css',
+        '  src/data/fonts.config.<target>.json',
+        '  src/styles/fontFaces.<target>.css.ts',
+        '  public/styles/fontFaces.<target>.gen.css',
         '',
         'Examples:',
         '  yarn generate:fontArtifacts --target=_staging',
@@ -301,19 +294,23 @@ async function main() {
     'src',
     'data',
     'generated',
-    'fonts.manifest.gen.json',
+    `fonts.manifest.${target}.gen.json`,
   );
 
   if (!(await fileExists(configPath))) {
     throw new Error(`Missing fonts config at ${configPath}`);
   }
 
+  const configOut = CONFIG_OUT(target);
+  const fontFacesTsOut = FONTFACES_TS_OUT(target);
+  const fontFacesCssOut = FONTFACES_CSS_OUT(target);
+
   const config = await readJson<FontsConfig>(configPath);
   await writeFileAtomic(
-    CONFIG_OUT,
+    configOut,
     `${JSON.stringify(config, null, 2)}\n`,
   );
-  console.log(`✓ Wrote fonts config → ${CONFIG_OUT}`);
+  console.log(`✓ Wrote fonts config → ${configOut}`);
 
   const publicManifestExists = await fileExists(publicManifestPath);
   const tmpManifestExists = await fileExists(manifestPath);
@@ -336,7 +333,7 @@ async function main() {
   );
   if (hasSelfHosted && needsBaseUrl && !baseUrlEnv.trim()) {
     throw new Error(
-      'Missing base URL for self-hosted fonts. Run cdn:sync --fonts to generate src/data/generated/fonts.manifest.gen.json, or set SELF_HOSTED_FONTS_BASE_URL, or use --base-url (ex: yarn generate:fontArtifacts --target=_staging --base-url=https://cdn.example.com).',
+      `Missing base URL for self-hosted fonts. Run cdn:sync --fonts to generate src/data/generated/fonts.manifest.${target}.gen.json, or set SELF_HOSTED_FONTS_BASE_URL, or use --base-url (ex: yarn generate:fontArtifacts --target=${target} --base-url=https://cdn.example.com).`,
     );
   }
 
@@ -356,11 +353,11 @@ async function main() {
   const css = renderCss(fontFaces);
   const ts = renderCssTs(fontFaces);
 
-  await writeFileAtomic(FONTFACES_TS_OUT, ts);
-  console.log(`✓ Wrote font faces → ${FONTFACES_TS_OUT}`);
+  await writeFileAtomic(fontFacesTsOut, ts);
+  console.log(`✓ Wrote font faces → ${fontFacesTsOut}`);
 
-  await writeFileAtomic(FONTFACES_CSS_OUT, css);
-  console.log(`✓ Wrote public font faces → ${FONTFACES_CSS_OUT}`);
+  await writeFileAtomic(fontFacesCssOut, css);
+  console.log(`✓ Wrote public font faces → ${fontFacesCssOut}`);
 }
 
 main().catch((error) => {

@@ -1,4 +1,6 @@
-import manifest from '@/data/generated/images.manifest.gen.json';
+import releaseManifest from '@/data/generated/images.manifest.release.gen.json';
+import stagingManifest from '@/data/generated/images.manifest._staging.gen.json';
+import { getManifestTarget } from '@/lib/runtimeEnv';
 
 export type Variant = {
   w: number;
@@ -25,7 +27,10 @@ export type ImageEntry = {
   };
 };
 
-const db = manifest as Record<string, ImageEntry>;
+const target = getManifestTarget();
+const db = (target === 'release'
+  ? releaseManifest
+  : stagingManifest) as Record<string, ImageEntry>;
 
 export function getImage(name: string): ImageEntry | null {
   return db[name] ?? null;

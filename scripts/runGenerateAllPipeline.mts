@@ -6,6 +6,8 @@ const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
 const args = process.argv.slice(2);
 
+type Target = '_staging' | 'release' | 'both';
+
 const run = (script: string, extraArgs: string[] = []) => {
   const result = spawnSync(
     'yarn',
@@ -19,13 +21,65 @@ const run = (script: string, extraArgs: string[] = []) => {
   }
 };
 
-if (args.includes('--help') || args.includes('-h')) {
+const runRoot = (script: string, extraArgs: string[] = []) => {
+  const result = spawnSync('yarn', [script, ...extraArgs], {
+    stdio: 'inherit',
+  });
+  if (result.status !== 0) {
+    process.exit(result.status ?? 1);
+  }
+};
+
+const parseTarget = (argv: string[]): Target => {
+  for (const arg of argv) {
+    if (arg.startsWith('--target=')) {
+      const t = arg.split('=')[1]?.trim();
+      if (t === '_staging' || t === 'staging' || t === 's') return '_staging';
+      if (t === 'release' || t === 'r') return 'release';
+      if (t === 'both') return 'both';
+    }
+  }
+  return 'both';
+};
+
+const wantsHelp = args.includes('--help') || args.includes('-h');
+const target = parseTarget(args);
+const cdnArgs = args.filter((arg) => !arg.startsWith('--target='));
+
+if (wantsHelp) {
+  console.log(
+    [
+      'Usage: yarn generate [--target=_staging|release|both] [--yes]',
+      '',
+      'Runs:',
+      '  yarn locales',
+      '  yarn generate:favicons',
+      '  yarn --cwd cdn generate (staging/release/both)',
+      '',
+      'Examples:',
+      '  yarn generate',
+      '  yarn generate --target=_staging',
+      '  yarn generate --target=release --yes',
+    ].join('\n'),
+  );
   run('generate:fonts', ['--help']);
   run('generate:img', ['--help']);
   run('generate:videos', ['--help']);
   process.exit(0);
 }
 
-run('generate:fonts', args);
-run('generate:img', args);
-run('generate:videos', args);
+runRoot('locales');
+runRoot('generate:favicons');
+
+const runCdnGenerate = (targetArg: string) => {
+  run('generate:fonts', ['--target=' + targetArg, ...cdnArgs]);
+  run('generate:img', ['--target=' + targetArg, ...cdnArgs]);
+  run('generate:videos', ['--target=' + targetArg, ...cdnArgs]);
+};
+
+if (target === 'both') {
+  runCdnGenerate('_staging');
+  runCdnGenerate('release');
+} else {
+  runCdnGenerate(target);
+}

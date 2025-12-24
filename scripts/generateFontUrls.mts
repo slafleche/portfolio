@@ -10,7 +10,9 @@ import { loadMessages } from '../src/lib/locales/locale.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
-const FONTS_CONFIG = path.resolve(
+const resolveFontsConfig = (target: string) =>
+  path.resolve(REPO_ROOT, 'src', 'data', `fonts.config.${target}.json`);
+const FALLBACK_FONTS_CONFIG = path.resolve(
   REPO_ROOT,
   'src',
   'data',
@@ -45,14 +47,32 @@ const collectStringsForKeys = (
     .map((key) => messages[key])
     .filter((value): value is string => typeof value === 'string');
 
+const parseTarget = (argv: string[]) => {
+  for (const arg of argv) {
+    if (arg.startsWith('--target=')) {
+      const t = arg.split('=')[1]?.trim();
+      if (t === '_staging' || t === 'release') return t;
+      if (t === 's') return '_staging';
+      if (t === 'r') return 'release';
+    }
+  }
+  return '_staging';
+};
+
 async function main() {
-  if (!fs.existsSync(FONTS_CONFIG)) {
+  const target = parseTarget(process.argv.slice(2));
+  const targetConfig = resolveFontsConfig(target);
+  const configPath = fs.existsSync(targetConfig)
+    ? targetConfig
+    : FALLBACK_FONTS_CONFIG;
+
+  if (!fs.existsSync(configPath)) {
     throw new Error(
-      `Missing ${FONTS_CONFIG}. Add your font families there.`,
+      `Missing ${configPath}. Add your font families there.`,
     );
   }
   const fontsConfig = JSON.parse(
-    fs.readFileSync(FONTS_CONFIG, 'utf8'),
+    fs.readFileSync(configPath, 'utf8'),
   ) as FontsConfig;
 
   const translationsEntries = await Promise.all(

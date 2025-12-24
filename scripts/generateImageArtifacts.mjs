@@ -5,20 +5,22 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
 
-const SOURCE_MANIFEST = path.join(
-  REPO_ROOT,
-  'public',
-  'cdn',
-  'images',
-  'manifest.json',
-);
-const OUTPUT_MANIFEST = path.join(
-  REPO_ROOT,
-  'src',
-  'data',
-  'generated',
-  'images.manifest.gen.json',
-);
+const resolvePaths = (target) => ({
+  source: path.join(
+    REPO_ROOT,
+    'public',
+    'cdn',
+    'images',
+    `manifest.${target}.json`,
+  ),
+  output: path.join(
+    REPO_ROOT,
+    'src',
+    'data',
+    'generated',
+    `images.manifest.${target}.gen.json`,
+  ),
+});
 
 async function fileExists(pathname) {
   try {
@@ -30,9 +32,19 @@ async function fileExists(pathname) {
 }
 
 function parseArgs(argv) {
-  return {
+  const opts = {
     help: argv.includes('--help') || argv.includes('-h'),
+    target: '_staging',
   };
+  for (const arg of argv) {
+    if (arg.startsWith('--target=')) {
+      const t = arg.split('=')[1]?.trim();
+      if (t === '_staging' || t === 'release') opts.target = t;
+      else if (t === 's') opts.target = '_staging';
+      else if (t === 'r') opts.target = 'release';
+    }
+  }
+  return opts;
 }
 
 async function main() {
@@ -40,34 +52,38 @@ async function main() {
   if (opts.help) {
     console.log(
       [
-        'Usage: yarn generate:img:artifacts',
+        'Usage: yarn generate:img:artifacts [--target=_staging|release]',
         '',
         'Copies the CDN-rewritten image manifest into src/data/generated so the app',
         'uses CDN URLs. Requires that cdn:sync --images has already run.',
         '',
         'Example:',
         '  yarn --cwd cdn cdn:sync --images --target=_staging',
-        '  yarn --cwd cdn generate:img:artifacts',
+        '  yarn --cwd cdn generate:img:artifacts --target=_staging',
       ].join('\n'),
     );
     return;
   }
 
-  if (!(await fileExists(SOURCE_MANIFEST))) {
+  const { source: sourceManifest, output: outputManifest } = resolvePaths(
+    opts.target,
+  );
+
+  if (!(await fileExists(sourceManifest))) {
     throw new Error(
-      `Missing ${SOURCE_MANIFEST}. Run "yarn --cwd cdn cdn:sync --images --target=_staging" first.`,
+      `Missing ${sourceManifest}. Run "yarn --cwd cdn cdn:sync --images --target=${opts.target}" first.`,
     );
   }
 
-  const raw = await fs.readFile(SOURCE_MANIFEST, 'utf8');
+  const raw = await fs.readFile(sourceManifest, 'utf8');
   const parsed = JSON.parse(raw);
-  await fs.mkdir(path.dirname(OUTPUT_MANIFEST), { recursive: true });
+  await fs.mkdir(path.dirname(outputManifest), { recursive: true });
   await fs.writeFile(
-    OUTPUT_MANIFEST,
+    outputManifest,
     `${JSON.stringify(parsed, null, 2)}\n`,
     'utf8',
   );
-  console.log(`✓ Wrote image manifest → ${OUTPUT_MANIFEST}`);
+  console.log(`✓ Wrote image manifest → ${outputManifest}`);
 }
 
 main().catch((error) => {
