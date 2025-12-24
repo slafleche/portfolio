@@ -33,6 +33,26 @@ const confirmSync = async () => {
   return answer.trim() === '' || /^y(es)?$/i.test(answer.trim());
 };
 
+const confirmOverwrite = async () => {
+  if (hasYesFlag) return true;
+  if (!process.stdin.isTTY || !process.stdout.isTTY) return true;
+  console.log('Overwrite existing CDN objects? [Y/n]:');
+  const rl = readline.createInterface({ input, output });
+  const answer = await rl.question('> ');
+  await rl.close();
+  return answer.trim() === '' || /^y(es)?$/i.test(answer.trim());
+};
+
+const confirmOverwriteAll = async () => {
+  if (hasYesFlag) return true;
+  if (!process.stdin.isTTY || !process.stdout.isTTY) return true;
+  console.log('Overwrite all without per-file prompts? [Y/n]:');
+  const rl = readline.createInterface({ input, output });
+  const answer = await rl.question('> ');
+  await rl.close();
+  return answer.trim() === '' || /^y(es)?$/i.test(answer.trim());
+};
+
 if (args.includes('--help') || args.includes('-h')) {
   run('generate:img:files', ['--help']);
   process.exit(0);
@@ -41,6 +61,9 @@ if (args.includes('--help') || args.includes('-h')) {
 run('generate:img:files', args);
 const runSync = await confirmSync();
 if (runSync) {
-  run('cdn:sync', ['--images', ...args]);
+  const overwrite = await confirmOverwrite();
+  const overwriteAll = overwrite ? await confirmOverwriteAll() : false;
+  const syncArgs = overwriteAll ? ['--images', '--yes', ...args] : ['--images', ...args];
+  run('cdn:sync', syncArgs);
   run('generate:img:artifacts', args);
 }

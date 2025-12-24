@@ -161,13 +161,16 @@ async function resolveVersions(
   if (raw) {
     try {
       const parsed = JSON.parse(raw) as Partial<
-        Record<Target, { img?: string; fonts?: string; videos?: string }>
+        Record<Target, { images?: string; fonts?: string; videos?: string }>
       >;
-      const img = parsed?.[target]?.img;
+      const images = parsed?.[target]?.images;
       const fonts = parsed?.[target]?.fonts;
       const videos = parsed?.[target]?.videos;
       return {
-        images: typeof img === 'string' && img.trim() ? img.trim() : 'v1',
+        images:
+          typeof images === 'string' && images.trim()
+            ? images.trim()
+            : 'v1',
         fonts: typeof fonts === 'string' && fonts.trim() ? fonts.trim() : 'v1',
         videos: typeof videos === 'string' && videos.trim() ? videos.trim() : 'v1',
       };

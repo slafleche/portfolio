@@ -1,12 +1,12 @@
 {
   "release": {
     "videos": "v1",
-    "img": "v1",
+    "images": "v1",
     "fonts": "v1"
   },
   "_staging": {
     "videos": "v1",
-    "img": "v1",
+    "images": "v1",
     "fonts": "v1"
   }
 }

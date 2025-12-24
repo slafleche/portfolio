@@ -43,6 +43,16 @@ const confirmOverwrite = async () => {
   return answer.trim() === '' || /^y(es)?$/i.test(answer.trim());
 };
 
+const confirmOverwriteAll = async () => {
+  if (hasYesFlag) return true;
+  if (!process.stdin.isTTY || !process.stdout.isTTY) return true;
+  console.log('Overwrite all without per-file prompts? [Y/n]:');
+  const rl = readline.createInterface({ input, output });
+  const answer = await rl.question('> ');
+  await rl.close();
+  return answer.trim() === '' || /^y(es)?$/i.test(answer.trim());
+};
+
 if (args.includes('--help') || args.includes('-h')) {
   run('generate:videos:files', ['--help']);
   process.exit(0);
@@ -53,7 +63,8 @@ run('generate:videos:posters', args);
 const runSync = await confirmSync();
 if (runSync) {
   const overwrite = await confirmOverwrite();
-  const syncArgs = overwrite
+  const overwriteAll = overwrite ? await confirmOverwriteAll() : false;
+  const syncArgs = overwriteAll
     ? ['--videos', '--yes', ...args]
     : ['--videos', ...args];
   run('cdn:sync', syncArgs);

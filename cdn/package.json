@@ -20,14 +20,12 @@
     "cdn:delete:prefix": "tsx cdnClient.mts delete-prefix",
     "cdn:ls": "tsx cdnClient.mts ls",
     "cdn:sync": "tsx cdnSyncManifests.mts",
-    
-    "generate": "yarn generate:fonts && yarn generate:img && yarn generate:videos",
-    
+
     "generate:fonts": "node ../scripts/runGenerateFontsPipeline.mjs",
     "generate:selfHostedFonts": "tsx ../scripts/generateLocalFonts.mts",
     "generate:font:artifacts": "tsx ../scripts/generateFontArtifacts.mts",
     "generate:googleFonts": "tsx ../scripts/generateFontUrls.mts",
-    
+
     "generate:img": "node ../scripts/runGenerateImagesPipeline.mjs",
     "generate:img:files": "node ../scripts/generateImages.mts",
     "generate:img:artifacts": "node ../scripts/generateImageArtifacts.mjs",

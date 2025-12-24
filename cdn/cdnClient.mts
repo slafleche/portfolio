@@ -94,8 +94,11 @@ async function ensureExists(key: string) {
   } catch (error) {
     const message =
       error instanceof Error ? error.message : String(error);
+    const hint = key.endsWith('/')
+      ? 'If you meant a folder/prefix, use: tsx cdnClient.mts delete-prefix <prefix>'
+      : 'If you meant a folder/prefix, use: tsx cdnClient.mts delete-prefix <prefix>';
     throw new Error(
-      `Object "${key}" not found in bucket "${bucket}": ${message}`,
+      `Object "${key}" not found in bucket "${bucket}": ${message}. ${hint}`,
     );
   }
 }

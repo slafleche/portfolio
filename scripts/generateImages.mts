@@ -36,7 +36,7 @@ const VERSIONS_PATH = path.resolve(
   'cdn',
   'assetGroupVersions.json',
 );
-const CATEGORY = 'img';
+const CATEGORY = 'images';
 
 const MIME_EXTENSIONS = new Map([
   [
