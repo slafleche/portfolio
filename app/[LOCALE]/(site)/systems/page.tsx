@@ -1,7 +1,7 @@
 import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
-import Menu from '@/components/Menu';
+// import Menu from '@/components/Menu';
 import HeroWaypoint from '@/components/HeroWaypoint';
 import ContentAsTiles from '@/components/responsive/ContentAsTiles';
 import { Markdown } from '@/components/Markdown';
@@ -11,13 +11,13 @@ import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import * as layoutStyles from '@/styles/layout.css';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
 import * as systemsStyles from '@/styles/components/systems.css';
-import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
-import {
-  buildHomeMenuSections,
-  buildSystemsMenuSections,
-} from '@/lib/locales/sections/menuSections';
-import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
-import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+// import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+// import {
+// buildHomeMenuSections,
+// buildSystemsMenuSections,
+// } from '@/lib/locales/sections/menuSections';
+// import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
+// import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { resolveLocale } from '@/lib/locales/locale';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { userContent } from '@/styles/typography.css';
@@ -60,51 +60,32 @@ export default async function SystemsPage({
     ctaLabel: contactCopy.title,
   };
 
-  const menuCopy = buildMenuCopy(translator);
-  const menuSections = buildHomeMenuSections(translator);
-  const systemsMenuSections = buildSystemsMenuSections(translator);
-  const curiosityMessages = {
-    title: translator('console-curiosity-title'),
-    test: translator('console-curiosity-test'),
-    result: translator('console-curiosity-result'),
-    hint: translator('console-curiosity-hint'),
-  };
-  const systemsSlug =
-    canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
-  const curiosityTarget = `/${locale}/${systemsSlug}`;
+  // const menuCopy = buildMenuCopy(translator);
+  // const menuSections = buildHomeMenuSections(translator);
+  // const systemsMenuSections = buildSystemsMenuSections(translator);
+  // const systemsSlug =
+  // canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
+
   const homeHref = `/${locale}`;
 
-  const menuProps = {
-    root: `/${locale}`,
-    skipNavLabel: menuCopy.skipNavLabel,
-    leftLabel: menuCopy.leftLabel,
-    rightLabel: menuCopy.rightLabel,
-    localeChangeLabel: menuCopy.languageLabel,
-    sections: menuSections,
-    systemsSections: systemsMenuSections,
-    localeLinks: AVAILABLE_LOCALES.filter(
-      (code) => code !== locale,
-    ).map((code) => ({
-      locale: code,
-      label: LOCALE_LABELS[code],
-    })),
-  };
+  // const menuProps = {
+  //   root: `/${locale}`,
+  //   skipNavLabel: menuCopy.skipNavLabel,
+  //   leftLabel: menuCopy.leftLabel,
+  //   rightLabel: menuCopy.rightLabel,
+  //   localeChangeLabel: menuCopy.languageLabel,
+  //   sections: menuSections,
+  //   systemsSections: systemsMenuSections,
+  //   localeLinks: AVAILABLE_LOCALES.filter(
+  //     (code) => code !== locale,
+  //   ).map((code) => ({
+  //     locale: code,
+  //     label: LOCALE_LABELS[code],
+  //   })),
+  // };
 
   return (
     <>
-      <Menu
-        {...menuProps}
-        curiosityMessages={{
-          title: curiosityMessages.title,
-          test: curiosityMessages.test,
-          result: curiosityMessages.result,
-          hint: curiosityMessages.hint,
-          targetHref: curiosityTarget,
-        }}
-        logoRedirectPaths={[
-          curiosityTarget,
-        ]}
-      />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
           <Hero
