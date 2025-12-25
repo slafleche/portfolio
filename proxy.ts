@@ -130,7 +130,7 @@ function requireBasicAuth(request: NextRequest): NextResponse | null {
   return null;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const authResponse = requireBasicAuth(request);
   if (authResponse) {
     return authResponse;
@@ -220,5 +220,5 @@ export function middleware(request: NextRequest) {
     },
   });
 }
-// Optionally, scope middleware if needed with a matcher export
+// Optionally, scope proxy if needed with a matcher export
 // export const config = { matcher: ['/((?!_next|api|.*\..*).*)'] };

@@ -1,3 +1,4 @@
+// AUTO-GENERATED from envPrimitives.mts. Do not edit directly.
 /* global process */
 
 // Basic environment classification helpers for config and runtime.

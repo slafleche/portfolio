@@ -40,7 +40,7 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
     regex: /\bNODE_ENV\b/,
     allowedPathSubstrings: [
       'src/lib/runtimeEnv.ts',
-      'envPrimitives.mts',
+      'envPrimitives.mjs',
     ],
   },
   {
@@ -51,7 +51,7 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
     regex: /\bVERCEL_ENV\b/,
     allowedPathSubstrings: [
       'src/lib/runtimeEnv.ts',
-      'envPrimitives.mts',
+      'envPrimitives.mjs',
     ],
   },
   {
@@ -66,7 +66,7 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
       /\b(?:VERCEL_GIT_COMMIT_REF|VERCEL_GIT_BRANCH|BRANCH|VERCEL_GIT_REPO_SLUG)\b/,
     allowedPathSubstrings: [
       'src/lib/runtimeEnv.ts',
-      'envPrimitives.mts',
+      'envPrimitives.mjs',
     ],
   },
   {
@@ -77,7 +77,7 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
     regex: /\bVERCEL\b/,
     allowedPathSubstrings: [
       'src/lib/runtimeEnv.ts',
-      'envPrimitives.mts',
+      'envPrimitives.mjs',
     ],
   },
   {
