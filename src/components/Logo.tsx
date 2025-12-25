@@ -16,7 +16,6 @@ type LogoMode = (typeof LogoMode)[keyof typeof LogoMode];
 type Props = {
   className?: string;
   mode?: LogoMode;
-  shadow?: boolean;
   title?: string;
   bgColour?: ColorWrapper;
   colourState?: 'color' | 'mono';
@@ -26,10 +25,9 @@ type Props = {
 export default function Logo({
   className,
   mode = LogoMode.light,
-  shadow = false,
   title = "Stéphane's Logo",
   bgColour = color('#251a38'),
-  colourState = 'color',
+  colourState = 'mono',
   idBase,
 }: Props) {
   const baseId = idBase ?? 'sl-logo';
@@ -47,59 +45,8 @@ export default function Logo({
   const monoGradientE = `${baseId}-mono-e`;
   const monoGradientF = `${baseId}-mono-f`;
 
-  const shadowGradientA = `${baseId}-shadowA`;
-  const shadowGradientB = `${baseId}-shadowB`;
-
   return (
     <div className={clsx(s.root, className)}>
-      {shadow && (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          xmlSpace="preserve"
-          width="948.31276"
-          height="782.49392"
-          viewBox="0 0 250.90776 207.03484"
-          focusable="false"
-          className={s.shadow}
-        >
-          <defs>
-            <linearGradient id={shadowGradientA}>
-              <stop offset="0" stopColor="#251a38" stopOpacity={1} />
-              <stop
-                offset=".18656"
-                stopColor="#251a38"
-                stopOpacity={1}
-              />
-              <stop
-                offset=".513"
-                stopColor="#251a38"
-                stopOpacity={0.63636363}
-              />
-              <stop offset="1" stopColor="#251a38" stopOpacity={0} />
-            </linearGradient>
-            <linearGradient
-              xlinkHref={`#${shadowGradientA}`}
-              id={shadowGradientB}
-              x1="42.0508"
-              x2="128.7097"
-              y1="41.52238"
-              y2="106.24017"
-              gradientTransform="translate(-3.25583 -2.51857)"
-              gradientUnits="userSpaceOnUse"
-            />
-          </defs>
-          <path
-            d="M30.9364.42905C25.63106.52566 19.75754.98677 12.23366 2.4806l-.0036.00052C7.22486 6.41332 1.50708 12.08196.34808 14.14036-.5666 15.73766.6106 22.0055.6106 22.0055l57.4013 101.24456 87.97904 83.78479 104.91681-86.33398L135.15721.93178c-2.05324-1.92266-7.39514-.27384-7.79826-.27384-2.4595 0-52.52725-.43755-81.12425-.09508h-.0052C40.97916.60014 36.24229.33294 30.9374.42953l-.0005-.00051zm92.18559 50.4517-.005.0093-.0196.0336c.006-.01115.0129-.02247.0191-.0336.002-.0031.003-.0062.005-.0093z"
-            fill={`url(#${shadowGradientB})`}
-            stroke="none"
-            strokeWidth={1}
-            strokeLinejoin="round"
-            strokeOpacity={0.6}
-          />
-        </svg>
-      )}
-      {/* End of shadow, start of logo */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -111,6 +58,7 @@ export default function Logo({
         aria-label={title}
         className={clsx(s.core, s.svgStates)}
         data-color={isMono ? 'mono' : 'color'}
+        data-animate={isMono ? 'mono' : 'color'}
       >
         <title>{title}</title>
         <defs>
