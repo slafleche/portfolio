@@ -135,7 +135,6 @@ ai/epics/*
 *.webm
 *.avi
 *.mkv
-*.ts
 *.m2ts
 *.mpg
 *.mpeg
