@@ -1,6 +1,4 @@
 import type { MessageKey, Translator } from './helpers.locale';
-import { translateMarkdownSections } from './markdownSections.helpers';
-
 export const PROJECTS_KEYS = {
   title: 'projects',
   href: 'projects-href',
@@ -9,60 +7,72 @@ export const PROJECTS_KEYS = {
   href: MessageKey;
 };
 
-const PROJECT_DEFINITIONS = [
-  {
-    id: 'cocacola',
+type ProjectDefinition = {
+  titleKey: MessageKey;
+  markdownKey: MessageKey;
+};
+
+const PROJECT_DEFINITIONS = {
+  cocacola: {
     titleKey: 'projects-01-cocacola-title',
     markdownKey: 'projects-01-cocacola-content',
   },
-  {
-    id: 'ea',
+  ea: {
     titleKey: 'projects-02-ea-title',
     markdownKey: 'projects-02-ea-content',
   },
-  {
-    id: 'banq',
+  banq: {
     titleKey: 'projects-03-banq-title',
     markdownKey: 'projects-03-banq-content',
   },
-  {
-    id: 'hootsuite',
+  hootsuite: {
     titleKey: 'projects-04-hootsuite-title',
     markdownKey: 'projects-04-hootsuite-content',
   },
-  {
-    id: 'kingGames',
+  kingGames: {
     titleKey: 'projects-05-king-games-title',
     markdownKey: 'projects-05-king-games-content',
   },
-] as const satisfies ReadonlyArray<{
-  id: string;
-  titleKey: MessageKey;
-  markdownKey: MessageKey;
-}>;
+} as const satisfies Record<string, ProjectDefinition>;
+
+export type ProjectId = keyof typeof PROJECT_DEFINITIONS;
 
 export type ProjectListItem = {
-  id: string;
+  id: ProjectId;
   title: string;
   content: string;
+};
+
+export type ProjectsItems = {
+  [Key in ProjectId]: ProjectListItem;
 };
 
 export type ProjectsCopy = {
   title: string;
   href: string;
-  list: ProjectListItem[];
+  items: ProjectsItems;
+};
+
+const buildProjectItems = (t: Translator): ProjectsItems => {
+  return (
+    Object.entries(PROJECT_DEFINITIONS) as [
+      ProjectId,
+      ProjectDefinition,
+    ][]
+  ).reduce<ProjectsItems>((acc, [id, definition]) => {
+    acc[id] = {
+      id,
+      title: t(definition.titleKey),
+      content: t(definition.markdownKey),
+    };
+    return acc;
+  }, {} as ProjectsItems);
 };
 
 export const buildProjectsCopy = (t: Translator): ProjectsCopy => {
   return {
     title: t(PROJECTS_KEYS.title),
     href: t(PROJECTS_KEYS.href),
-    list: translateMarkdownSections(t, PROJECT_DEFINITIONS).map(
-      ({ id, title, content }) => ({
-        id,
-        title,
-        content,
-      }),
-    ),
+    items: buildProjectItems(t),
   };
 };

@@ -1,7 +1,7 @@
 import { markdownRefs } from '../markdownRefs';
 
 export const enCaseStudies = {
-  case_study: 'Case Study',
+  case_study: '[wordmark:Vanilla] Case Study',
   'case_study-href': 'case_study',
   ...markdownRefs('case-study-00-intro'),
   'case-study-01-title': 'Starting as a themer',

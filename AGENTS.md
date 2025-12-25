@@ -95,6 +95,10 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Must: Any statement of desired behavior ("should", "expected", "wrong")
   implies corrective intent. Output the fix (minimal diff or corrected draft).
   Never restate existing behavior unless explicitly asked for diagnostics.
+- Must: When a user implies a bug (for example, "why is..." or "X doesn't do Y"),
+  inspect the relevant code first and respond with the fix, not a summary or
+  guessed explanation.
+- Must: Do not provide summaries unless the user explicitly asks for one.
 - Must: When a user message (non-code text) contains a `?`, reply using
   text-only responses—no code blocks or other non-text output.
 - Must: When AGENTS, user instructions, or existing code seem to conflict, call

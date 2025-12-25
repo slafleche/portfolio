@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 import { margins } from '../helpers/spacing.helper';
 
-export const caseStudyNoLogoText = style({
+export const wordmarkTextNoLogo = style({
   selectors: {
     '&[data-position="before"]': {
       ...margins({
@@ -26,4 +26,24 @@ export const caseStudyLogo = style({
   transform: `translateY(${caseStudyLogoOffset.css()})`,
   width: 'auto',
   verticalAlign: 'baseline',
+});
+
+export const kingGamesTitle = style({
+  // Add your styles here
+});
+
+export const hootsuiteTitle = style({
+  // Add your styles here
+});
+
+export const banqTitle = style({
+  // Add your styles here
+});
+
+export const eaTitle = style({
+  // Add your styles here
+});
+
+export const cocacolaTitle = style({
+  // Add your styles here
 });
