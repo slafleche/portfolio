@@ -165,7 +165,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.rewrite(rewriteUrl);
   }
 
-  if (pathname === '/styles/fontFaces.css' && isRelease()) {
+  if (pathname === '/styles/fontFaces.css') {
     const rewriteUrl = request.nextUrl.clone();
     rewriteUrl.pathname = `/styles/fontFaces.${manifestTarget}.gen.css`;
     return NextResponse.rewrite(rewriteUrl);

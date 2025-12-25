@@ -2,6 +2,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
 
 const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
@@ -63,6 +65,14 @@ const normalizeBaseUrl = (raw: string) => {
   return trimmed.endsWith('/') ? trimmed.slice(0, -1) : trimmed;
 };
 
+const color = {
+  blue: (value: string) => `\x1b[34m${value}\x1b[0m`,
+  yellow: (value: string) => `\x1b[33m${value}\x1b[0m`,
+};
+
+const formatTargetLabel = (target: Target) =>
+  target === '_staging' ? color.blue(target) : color.yellow(target);
+
 async function readJson<T>(pathname: string): Promise<T> {
   const raw = await fs.readFile(pathname, 'utf8');
   return JSON.parse(raw) as T;
@@ -88,6 +98,8 @@ async function fileExists(pathname: string) {
 function parseArgs(argv: string[]) {
   const opts = {
     target: '_staging' as Target,
+    hasExplicitTarget: false,
+    hasExplicitBoth: false,
     versionOverride: null as string | null,
     baseUrlOverride: null as string | null,
     help: false,
@@ -97,9 +109,19 @@ function parseArgs(argv: string[]) {
       opts.help = true;
     } else if (arg.startsWith('--target=')) {
       const t = arg.split('=')[1]?.trim();
-      if (t === '_staging' || t === 'release') opts.target = t;
-      else if (t === 's') opts.target = '_staging';
-      else if (t === 'r') opts.target = 'release';
+      if (t === '_staging' || t === 'release') {
+        opts.target = t;
+        opts.hasExplicitTarget = true;
+      } else if (t === 's') {
+        opts.target = '_staging';
+        opts.hasExplicitTarget = true;
+      } else if (t === 'r') {
+        opts.target = 'release';
+        opts.hasExplicitTarget = true;
+      } else if (t === 'both' || t === 'b') {
+        opts.hasExplicitTarget = true;
+        opts.hasExplicitBoth = true;
+      }
     } else if (arg.startsWith('--version=')) {
       const v = arg.split('=')[1]?.trim();
       if (v) opts.versionOverride = v;
@@ -109,6 +131,29 @@ function parseArgs(argv: string[]) {
     }
   }
   return opts;
+}
+
+async function pickTargets(): Promise<Target[]> {
+  const stagingPath = path.join(TMP_ROOT, '_staging');
+  const releasePath = path.join(TMP_ROOT, 'release');
+  const stagingExists = await fileExists(stagingPath);
+  const releaseExists = await fileExists(releasePath);
+
+  if (stagingExists && releaseExists) {
+    const rl = readline.createInterface({ input, output });
+    const answer = await rl.question(
+      'Found manifests for both _staging and release. Use which? [_staging (s)/release (r)/both (b)] (default: both): ',
+    );
+    await rl.close();
+    const t = answer.trim();
+    if (t === 'release' || t === 'r') return ['release'];
+    if (t === '_staging' || t === 's') return ['_staging'];
+    if (t === 'both' || t === 'b' || t === '') return ['_staging', 'release'];
+    return ['_staging', 'release'];
+  }
+
+  if (releaseExists) return ['release'];
+  return ['_staging'];
 }
 
 async function resolveVersion(
@@ -292,82 +337,96 @@ async function main() {
     return;
   }
 
-  const target = opts.target;
-  const version = await resolveVersion(target, opts.versionOverride);
-  const versionRoot = path.join(TMP_ROOT, target, 'fonts', version);
-  const configPath = path.join(versionRoot, 'fonts.config.json');
-  const manifestPath = path.join(versionRoot, 'manifest.json');
-  const publicManifestPath = path.join(
-    REPO_ROOT,
-    'src',
-    'data',
-    'generated',
-    target,
-    'fonts',
-    'manifest.fonts.gen.json',
-  );
-
-  if (!(await fileExists(configPath))) {
-    throw new Error(`Missing fonts config at ${configPath}`);
-  }
-
-  const configOut = CONFIG_OUT(target);
-  const fontFacesTsOut = FONTFACES_TS_OUT(target);
-  const fontFacesCssOut = FONTFACES_CSS_OUT(target);
-
-  const config = await readJson<FontsConfig>(configPath);
-  await writeFileAtomic(
-    configOut,
-    `${JSON.stringify(config, null, 2)}\n`,
-  );
-  console.log(`✓ Wrote fonts config → ${configOut}`);
-
-  const publicManifestExists = await fileExists(publicManifestPath);
-  const tmpManifestExists = await fileExists(manifestPath);
-  const manifest = publicManifestExists
-    ? await readJson<Record<string, FontManifestEntry>>(publicManifestPath)
-    : tmpManifestExists
-      ? await readJson<Record<string, FontManifestEntry>>(manifestPath)
-      : {};
+  const targets = opts.hasExplicitTarget
+    ? opts.hasExplicitBoth
+      ? [
+          '_staging',
+          'release',
+        ]
+      : [opts.target]
+    : await pickTargets();
 
   const baseUrlEnv =
     opts.baseUrlOverride ??
     process.env.SELF_HOSTED_FONTS_BASE_URL ??
     process.env.CDN_PUBLIC_BASE_URL ??
     '';
-  const hasSelfHosted = Object.keys(manifest).length > 0;
-  const needsBaseUrl = Object.values(manifest).some((entry) =>
-    (entry.files ?? []).some(
-      (file) => !/^https?:\/\//i.test(file.url),
-    ),
-  );
-  if (hasSelfHosted && needsBaseUrl && !baseUrlEnv.trim()) {
-    throw new Error(
-      `Missing base URL for self-hosted fonts. Run cdn:sync --fonts to generate src/data/generated/${target}/fonts/manifest.fonts.gen.json, or set SELF_HOSTED_FONTS_BASE_URL, or use --base-url (ex: yarn generate:fontArtifacts --target=${target} --base-url=https://cdn.example.com).`,
-    );
-  }
-
   const baseUrl = baseUrlEnv.trim()
     ? normalizeBaseUrl(baseUrlEnv)
     : '';
-  const fontFaces = hasSelfHosted
-    ? await buildFontFaces({
-        baseUrl,
-        target,
-        version,
-        manifest,
-        versionRoot,
-      })
-    : [];
 
-  const css = renderCss(fontFaces);
-  const ts = renderCssTs(fontFaces);
+  for (const target of targets) {
+    const targetLabel = formatTargetLabel(target);
+    const version = await resolveVersion(target, opts.versionOverride);
+    const versionRoot = path.join(TMP_ROOT, target, 'fonts', version);
+    const configPath = path.join(versionRoot, 'fonts.config.json');
+    const manifestPath = path.join(versionRoot, 'manifest.json');
+    const publicManifestPath = path.join(
+      REPO_ROOT,
+      'src',
+      'data',
+      'generated',
+      target,
+      'fonts',
+      'manifest.fonts.gen.json',
+    );
 
-  await writeFileAtomic(fontFacesTsOut, ts);
-  console.log(`✓ Wrote font faces → ${fontFacesTsOut}`);
+    if (!(await fileExists(configPath))) {
+      throw new Error(`Missing fonts config at ${configPath}`);
+    }
 
-  await writeFileAtomic(fontFacesCssOut, css);
-  console.log(`✓ Wrote public font faces → ${fontFacesCssOut}`);
+    const configOut = CONFIG_OUT(target);
+    const fontFacesTsOut = FONTFACES_TS_OUT(target);
+    const fontFacesCssOut = FONTFACES_CSS_OUT(target);
+
+    const config = await readJson<FontsConfig>(configPath);
+    await writeFileAtomic(
+      configOut,
+      `${JSON.stringify(config, null, 2)}\n`,
+    );
+    console.log(`[${targetLabel}] ✓ Wrote fonts config → ${configOut}`);
+
+    const publicManifestExists = await fileExists(publicManifestPath);
+    const tmpManifestExists = await fileExists(manifestPath);
+    const manifest = publicManifestExists
+      ? await readJson<Record<string, FontManifestEntry>>(publicManifestPath)
+      : tmpManifestExists
+        ? await readJson<Record<string, FontManifestEntry>>(manifestPath)
+        : {};
+
+    const hasSelfHosted = Object.keys(manifest).length > 0;
+    const needsBaseUrl = Object.values(manifest).some((entry) =>
+      (entry.files ?? []).some(
+        (file) => !/^https?:\/\//i.test(file.url),
+      ),
+    );
+    if (hasSelfHosted && needsBaseUrl && !baseUrl.trim()) {
+      throw new Error(
+        `Missing base URL for self-hosted fonts. Run cdn:sync --fonts to generate src/data/generated/${target}/fonts/manifest.fonts.gen.json, or set SELF_HOSTED_FONTS_BASE_URL, or use --base-url (ex: yarn generate:fontArtifacts --target=${target} --base-url=https://cdn.example.com).`,
+      );
+    }
+
+    const fontFaces = hasSelfHosted
+      ? await buildFontFaces({
+          baseUrl,
+          target,
+          version,
+          manifest,
+          versionRoot,
+        })
+      : [];
+
+    const css = renderCss(fontFaces);
+    const ts = renderCssTs(fontFaces);
+
+    await writeFileAtomic(fontFacesTsOut, ts);
+    console.log(`[${targetLabel}] ✓ Wrote font faces → ${fontFacesTsOut}`);
+
+    await writeFileAtomic(fontFacesCssOut, css);
+    console.log(
+      `[${targetLabel}] ✓ Wrote public font faces → ${fontFacesCssOut}`,
+    );
+  }
 }
 
 main().catch((error) => {

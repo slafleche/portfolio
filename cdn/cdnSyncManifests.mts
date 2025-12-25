@@ -26,7 +26,7 @@ type AssetKind = 'images' | 'fonts' | 'videos';
 type Versions = Record<AssetKind, string>;
 
 type ParsedArgs = {
-  target?: Target;
+  targets?: Target[];
   kinds: Set<AssetKind>;
   version?: string;
   yes: boolean;
@@ -87,7 +87,7 @@ async function fileExists(p: string): Promise<boolean> {
 function parseArgs(): ParsedArgs {
   const args = process.argv.slice(2);
   const kinds = new Set<AssetKind>();
-  let target: Target | undefined;
+  let targets: Target[] | undefined;
   let version: string | undefined;
   let yes = false;
   let force = false;
@@ -100,9 +100,16 @@ function parseArgs(): ParsedArgs {
     else if (arg === '--videos') kinds.add('videos');
     else if (arg.startsWith('--target=')) {
       const t = arg.split('=')[1]?.trim();
-      if (t === '_staging' || t === 'release') target = t;
-      else if (t === 's') target = '_staging';
-      else if (t === 'r') target = 'release';
+      if (t === '_staging' || t === 's') {
+        targets = ['_staging'];
+      } else if (t === 'release' || t === 'r') {
+        targets = ['release'];
+      } else if (t === 'both' || t === 'b') {
+        targets = [
+          '_staging',
+          'release',
+        ];
+      }
     } else if (arg.startsWith('--version=')) {
       const v = arg.split('=')[1]?.trim();
       if (v) version = v;
@@ -123,10 +130,10 @@ function parseArgs(): ParsedArgs {
     kinds.add('videos');
   }
 
-  return { target, kinds, version, yes, force, manifestOnly, help };
+  return { targets, kinds, version, yes, force, manifestOnly, help };
 }
 
-async function pickTarget(): Promise<Target> {
+async function pickTargets(): Promise<Target[]> {
   const stagingPath = path.join(TMP_ROOT, '_staging');
   const releasePath = path.join(TMP_ROOT, 'release');
   const stagingExists = await fileExists(stagingPath);
@@ -135,18 +142,26 @@ async function pickTarget(): Promise<Target> {
   if (stagingExists && releaseExists) {
     const rl = readline.createInterface({ input, output });
     const answer = await rl.question(
-      'Found manifests for both _staging and release. Use which? [_staging (s)/release (r)]: ',
+      'Found manifests for both _staging and release. Use which? [_staging (s)/release (r)/both (b)] (default: both). Tip: pass --target=_staging, --target=release, or --target=both to skip prompt: ',
     );
     await rl.close();
     const t = answer.trim();
-    if (t === 'release') return 'release';
-    if (t === 'r') return 'release';
-    if (t === 's') return '_staging';
-    return '_staging';
+    if (t === 'release' || t === 'r') return ['release'];
+    if (t === '_staging' || t === 's') return ['_staging'];
+    if (t === 'both' || t === 'b' || t === '') {
+      return [
+        '_staging',
+        'release',
+      ];
+    }
+    return [
+      '_staging',
+      'release',
+    ];
   }
 
-  if (releaseExists) return 'release';
-  return '_staging';
+  if (releaseExists) return ['release'];
+  return ['_staging'];
 }
 
 async function resolveVersions(
@@ -541,7 +556,7 @@ async function main() {
         'Uploads assets from tmp/cdn/<target>/<kind>/<version>/ to CDN (prefix: release|_staging), verifies CDN URLs, rewrites manifest URLs to CDN paths, and writes a tracked manifest locally (images/videos under public/cdn/<kind>/manifest.<target>.json, fonts under src/data/generated/<target>/fonts/manifest.fonts.gen.json).',
         '',
         'Flags:',
-        '  --target=...   Choose _staging (or s) or release (or r); default is auto-pick if both exist.',
+        '  --target=...   Choose _staging (or s), release (or r), or both (or b); default prompts if both exist.',
         '  --version=...  Override version for all kinds (otherwise uses cdn/assetGroupVersions.json).',
         '  --images       Include images manifest (default on if no kinds specified).',
         '  --fonts        Include fonts manifest (default on if no kinds specified).',
@@ -585,21 +600,23 @@ async function main() {
     });
   }
 
-  const target = args.target ?? (await pickTarget());
-  const versions = await resolveVersions(target, args.version);
+  const targets = args.targets ?? (await pickTargets());
 
-  for (const kind of args.kinds) {
-    await syncKind({
-      target,
-      kind,
-      versions,
-      yes: args.yes,
-      force: args.force,
-      manifestOnly: args.manifestOnly,
-      s3,
-      bucket,
-      publicBase,
-    });
+  for (const target of targets) {
+    const versions = await resolveVersions(target, args.version);
+    for (const kind of args.kinds) {
+      await syncKind({
+        target,
+        kind,
+        versions,
+        yes: args.yes,
+        force: args.force,
+        manifestOnly: args.manifestOnly,
+        s3,
+        bucket,
+        publicBase,
+      });
+    }
   }
 }
 

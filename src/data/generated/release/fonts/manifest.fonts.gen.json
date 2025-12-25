@@ -205,30 +205,30 @@
       }
     ]
   },
-  "Fraktion-Mono": {
+  "Fraktion+Mono": {
     "type": "selfHosted",
     "weights": [
       400,
       700
     ],
     "ital": true,
-    "dirName": "Fraktion-Mono.gen",
+    "dirName": "Fraktion+Mono.gen",
     "files": [
       {
         "fileName": "metaData.json",
-        "url": "https://cdn.lafleche.dev/release/fonts/v1/Fraktion-Mono.gen/metaData.json"
+        "url": "https://cdn.lafleche.dev/release/fonts/v1/Fraktion+Mono.gen/metaData.json"
       },
       {
         "fileName": "PPFraktionMono-Bold.e9233dc1.woff2",
-        "url": "https://cdn.lafleche.dev/release/fonts/v1/Fraktion-Mono.gen/PPFraktionMono-Bold.e9233dc1.woff2"
+        "url": "https://cdn.lafleche.dev/release/fonts/v1/Fraktion+Mono.gen/PPFraktionMono-Bold.e9233dc1.woff2"
       },
       {
         "fileName": "PPFraktionMono-Regular.e9233dc1.woff2",
-        "url": "https://cdn.lafleche.dev/release/fonts/v1/Fraktion-Mono.gen/PPFraktionMono-Regular.e9233dc1.woff2"
+        "url": "https://cdn.lafleche.dev/release/fonts/v1/Fraktion+Mono.gen/PPFraktionMono-Regular.e9233dc1.woff2"
       },
       {
         "fileName": "PPFraktionMono-RegularItalic.e9233dc1.woff2",
-        "url": "https://cdn.lafleche.dev/release/fonts/v1/Fraktion-Mono.gen/PPFraktionMono-RegularItalic.e9233dc1.woff2"
+        "url": "https://cdn.lafleche.dev/release/fonts/v1/Fraktion+Mono.gen/PPFraktionMono-RegularItalic.e9233dc1.woff2"
       }
     ]
   }

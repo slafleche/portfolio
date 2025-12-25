@@ -132,6 +132,40 @@ function addUrlHash(fileName: string, urlHash: string): string {
   return `${strippedBase}.${urlHash}${ext}`;
 }
 
+async function updateMetaDataWithHashedNames(
+  dirPath: string,
+  urlHash: string,
+  hashExt: Set<string>,
+): Promise<void> {
+  const metaPath = path.join(dirPath, 'metaData.json');
+  if (!(await fileExists(metaPath))) return;
+  let parsed: unknown;
+  try {
+    parsed = await readJson<unknown>(metaPath);
+  } catch {
+    return;
+  }
+  if (!parsed || typeof parsed !== 'object') return;
+
+  const meta = parsed as Record<string, unknown>;
+  let changed = false;
+
+  for (const [fileName, value] of Object.entries(meta)) {
+    if (typeof value !== 'number') continue;
+    const ext = path.extname(fileName).toLowerCase();
+    if (!hashExt.has(ext)) continue;
+    const hashedName = addUrlHash(fileName, urlHash);
+    if (!(hashedName in meta)) {
+      meta[hashedName] = value;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    await writeJsonAtomic(metaPath, meta);
+  }
+}
+
 async function copyDirFilteredWithUrlHash(
   srcDir: string,
   destDir: string,
@@ -500,6 +534,11 @@ async function main() {
       if (cached === hash && (await fileExists(stagedDest))) {
         console.log(`ℹ︎ ${fontKey}: url+version unchanged; skipping download.`);
         await ensureHashedFontFiles(stagedDest, urlHash, HASHED_EXTENSIONS);
+        await updateMetaDataWithHashedNames(
+          stagedDest,
+          urlHash,
+          HASHED_EXTENSIONS,
+        );
         const files = await buildManifestFiles(`${keySlug}.gen`, stagedDest);
         manifest[fontKey] = {
           type: 'selfHosted',
@@ -587,6 +626,11 @@ async function main() {
         ALLOWED_EXTENSIONS,
         HASHED_EXTENSIONS,
         urlHash,
+      );
+      await updateMetaDataWithHashedNames(
+        stagedDest,
+        urlHash,
+        HASHED_EXTENSIONS,
       );
       console.log(`✓ Staged ${fontKey} → ${stagedDest}`);
       const files = await buildManifestFiles(`${keySlug}.gen`, stagedDest);

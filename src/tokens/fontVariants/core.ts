@@ -24,15 +24,28 @@ export type FontVariantDefinition = {
   waitForFontsTimeoutMs?: number;
 };
 
+type WaitForFontsInput = readonly string[] | true;
+
 export type DefineFontVariantOptions = {
   config?: ComposeFontStylesConfig;
-  waitForFonts?: readonly string[];
+  waitForFonts?: WaitForFontsInput;
   waitForFontsTimeoutMs?: number;
   label?: string;
   sourcePath?: string;
 };
 
 const DEFAULT_SOURCE = 'src/tokens/fontVariants';
+
+const resolvePrimaryFamilyName = (
+  family: FontFamilyDef,
+): string | undefined => {
+  const raw = family.family.split(',')[0]?.trim();
+  if (!raw) return undefined;
+  if (raw.startsWith('"') && raw.endsWith('"') && raw.length > 1) {
+    return raw.slice(1, -1);
+  }
+  return raw;
+};
 
 const mergeWeightPercents = (
   ...sources: Array<FontWeightPercentOptions | null | undefined>
@@ -245,10 +258,18 @@ export const defineFontVariant = (
     sourcePath = DEFAULT_SOURCE,
   } = options;
 
+  const resolvedWaitForFonts =
+    waitForFonts === true
+      ? ((): readonly string[] | undefined => {
+          const primaryName = resolvePrimaryFamilyName(family);
+          return primaryName ? [primaryName] : undefined;
+        })()
+      : waitForFonts;
+
   return {
     family,
     config,
-    waitForFonts,
+    waitForFonts: resolvedWaitForFonts,
     waitForFontsTimeoutMs,
     weights: resolveVariantWeights(family, config, label, sourcePath),
   };

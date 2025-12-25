@@ -5,12 +5,10 @@ import { defineFontVariant, type FontVariantMap } from './core';
 const SOURCE_PATH = 'src/tokens/fontVariants/hero.ts';
 
 export const heroVariants = {
-  hero: defineFontVariant(fontFamilies.urbanist, {
+  hero: defineFontVariant(fontFamilies.fraktionMono, {
     label: 'hero',
     sourcePath: SOURCE_PATH,
-    waitForFonts: [
-      'Outfit',
-    ],
+    waitForFonts: true,
     config: {
       overrides: {
         size: m(45),
@@ -18,7 +16,7 @@ export const heroVariants = {
       },
       options: {
         weightPercents: {
-          default: mPercent(20),
+          default: mPercent(0),
         },
       },
     },

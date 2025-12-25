@@ -253,7 +253,15 @@ async function main() {
 
     if (!target || !kind || !version) {
       console.error(
-        'Usage: tsx cdnClient.mts delete-version <_staging|release> <images|fonts|videos> <version>',
+        [
+          'Usage: tsx cdnClient.mts delete-version <_staging|release> <images|fonts|videos> <version>',
+          'Examples:',
+          '  tsx cdnClient.mts delete-version release fonts v1',
+          '  tsx cdnClient.mts delete-version _staging images v2',
+          'Note: to delete a single folder or file, use:',
+          '  tsx cdnClient.mts delete-prefix fonts/v1/Fraktion+Mono.gen',
+          '  tsx cdnClient.mts delete fonts/v1/Fraktion+Mono.gen/PPFraktionMono-Regular.woff2',
+        ].join('\n'),
       );
       process.exit(1);
     }
@@ -272,8 +280,7 @@ async function main() {
       process.exit(1);
     }
 
-    const normalizedKind =
-      kind === 'font' ? 'fonts' : kind;
+    const normalizedKind = kind === 'font' ? 'fonts' : kind;
     const prefix = `${target}/${normalizedKind}/${version}`;
     await deletePrefix(prefix);
     return;
