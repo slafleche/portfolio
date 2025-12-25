@@ -5,18 +5,17 @@ import { defineFontVariant, type FontVariantMap } from './core';
 const SOURCE_PATH = 'src/tokens/fontVariants/hero.ts';
 
 export const heroVariants = {
-  hero: defineFontVariant(fontFamilies.fraktionMono, {
+  hero: defineFontVariant(fontFamilies.objectSans, {
     label: 'hero',
     sourcePath: SOURCE_PATH,
     waitForFonts: true,
     config: {
       overrides: {
-        size: m(45),
-        lineHeight: 1.1,
+        size: m(26),
       },
       options: {
         weightPercents: {
-          default: mPercent(0),
+          default: mPercent(50),
         },
       },
     },

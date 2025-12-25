@@ -220,6 +220,7 @@ type FontFamilyArgs = {
   offsetToFlushTop: IMeasurement;
   weights: WeightConfig;
   lineHeight?: FontFamilyDef['lineHeight'];
+  fontStyle?: NonNullable<FontFamilyDef['css']>['fontStyle'];
   css?: FontFamilyDef['css'];
   axisDefaults?: FontFamilyDef['axisDefaults'];
 };
@@ -254,6 +255,7 @@ export function defineFontFamily({
   offsetToFlushTop,
   weights,
   lineHeight,
+  fontStyle,
   css,
   axisDefaults,
 }: FontFamilyArgs): FontFamilyDef {
@@ -325,6 +327,7 @@ export function defineFontFamily({
 
   const mergedCss = {
     ...(derivedAxis.css ?? {}),
+    ...(fontStyle ? { fontStyle } : {}),
     ...(css ?? {}),
   };
 

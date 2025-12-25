@@ -8,21 +8,13 @@ import {
 
 const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
-const resolveFontsConfig = (target: string) =>
-  path.resolve(
-    REPO_ROOT,
-    'src',
-    'data',
-    'generated',
-    target,
-    'fonts',
-    'config.fonts.gen.json',
-  );
-const FALLBACK_FONTS_CONFIG = path.resolve(
+const GOOGLE_FONTS_CONFIG = path.resolve(
   REPO_ROOT,
-  'src',
-  'data',
-  'fonts.config.json',
+  'cdn',
+  'media',
+  'fonts',
+  'localFontsSrc',
+  'googleFonts.json',
 );
 const OUT_FILE = path.resolve(
   REPO_ROOT,
@@ -36,32 +28,14 @@ const OUT_FILE = path.resolve(
 type FontCfgInput = FontConfig & { type?: string };
 type FontsConfig = Record<string, FontCfgInput>;
 
-const parseTarget = (argv: string[]) => {
-  for (const arg of argv) {
-    if (arg.startsWith('--target=')) {
-      const t = arg.split('=')[1]?.trim();
-      if (t === '_staging' || t === 'release') return t;
-      if (t === 's') return '_staging';
-      if (t === 'r') return 'release';
-    }
-  }
-  return '_staging';
-};
-
 async function main() {
-  const target = parseTarget(process.argv.slice(2));
-  const targetConfig = resolveFontsConfig(target);
-  const configPath = fs.existsSync(targetConfig)
-    ? targetConfig
-    : FALLBACK_FONTS_CONFIG;
-
-  if (!fs.existsSync(configPath)) {
+  if (!fs.existsSync(GOOGLE_FONTS_CONFIG)) {
     throw new Error(
-      `Missing ${configPath}. Add your font families there.`,
+      `Missing ${GOOGLE_FONTS_CONFIG}. Add your Google font families there.`,
     );
   }
   const fontsConfig = JSON.parse(
-    fs.readFileSync(configPath, 'utf8'),
+    fs.readFileSync(GOOGLE_FONTS_CONFIG, 'utf8'),
   ) as FontsConfig;
 
   const resolvedMap: Record<string, FontConfig> = {};

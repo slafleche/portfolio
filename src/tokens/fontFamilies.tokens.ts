@@ -3,7 +3,6 @@ import { m } from 'css-calipers';
 import fontsConfig, {
   defineFontFamily,
 } from '../styles/helpers/fontConfig.helper';
-import fr from '../lib/locales/translations/fr';
 
 export const fontFamilies = {
   system: defineFontFamily({
@@ -68,8 +67,8 @@ export const fontFamilies = {
       strong: 700,
     },
   }),
-  fraktionMono: defineFontFamily({
-    familyName: 'Fraktion Mono',
+  objectSans: defineFontFamily({
+    familyName: 'Object Sans',
     fallbacks: [
       'IBM Plex Sans',
       'Segoe UI',
@@ -79,28 +78,9 @@ export const fontFamilies = {
       'sans-serif',
     ],
     cfgMap: fontsConfig,
-    spacing: m(-0.05, 'em'),
+    spacing: m(0, 'em'),
     offsetToFlushTop: m(0, 'em'),
-    lineHeight: 1.4,
-    weights: {
-      default: 400,
-      strong: 700,
-    },
-  }),
-  fraktionSans: defineFontFamily({
-    familyName: 'Fraktion Sans',
-    fallbacks: [
-      'IBM Plex Sans',
-      'Segoe UI',
-      'Roboto',
-      'Helvetica Neue',
-      'Arial',
-      'sans-serif',
-    ],
-    cfgMap: fontsConfig,
-    spacing: m(-0.05, 'em'),
-    offsetToFlushTop: m(0, 'em'),
-    lineHeight: 1.4,
+    lineHeight: 1,
     weights: {
       default: 400,
       strong: 700,

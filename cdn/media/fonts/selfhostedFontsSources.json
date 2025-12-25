@@ -1,56 +1,9 @@
 {
-  "Pangram+Sans": {
-    "src": "https://www.dropbox.com/scl/fo/hncgskmpjr50e0ha278yy/ABfcxRqPPvX5Nnd9BY224TM?rlkey=b0qjbxzc87tnf5k15adxttiun&st=eo9p451e&dl=0",
-    "weights": [
-      100,
-      200,
-      300,
-      400,
-      500,
-      600,
-      700,
-      800
-    ],
-    "ital": true,
-    "axes": {
-      "wdth": "100",
-      "slnt": "0"
-    }
-  },
   "Object+Sans": {
     "src": "https://www.dropbox.com/scl/fo/dqi0xrc1zvp9h5gkml33f/ABre72e7jShVb3XXOPKJXOM?rlkey=d22mgck0vl5rzkpwmvkuk2ox5&st=cm4ioxgq&dl=0",
     "weights": [
       400,
       800
-    ],
-    "axes": {
-      "slnt": "0"
-    }
-  },
-  "Neue+Montreal": {
-    "src": "https://www.dropbox.com/scl/fo/5fca9ea9wu1ru1fhvtstl/AHEOvl_DlnGBOmgtH16jcRA?rlkey=e7bpsyk7c3hxq4a4erkgfl28l&st=lwogbhwr&dl=0",
-    "weights": [
-      100,
-      400,
-      500,
-      700
-    ],
-    "ital": true
-  },
-  "Fraktion+Sans": {
-    "src": "https://www.dropbox.com/scl/fo/hcueqassy89gtmr08ijrd/AK3e7mngMLUXdk4PIoT3EHI?rlkey=nvoiqj16uexw0y8ddtx0fnj4x&st=0lrppgn2&dl=0",
-    "weights": [
-      300,
-      700
-    ],
-    "ital": true
-  },
-  "Fraktion+Mono": {
-    "src": "https://www.dropbox.com/scl/fo/x1fv6m55uwf7eyeir0ex1/APYdG6FLd0WYjDRI5x0T63M?rlkey=c7kjhsamglrgn7725bym9yzoo&st=wfe06ew8&dl=0",
-    "weights": [
-      400,
-      700
-    ],
-    "ital": true
+    ]
   }
 }
