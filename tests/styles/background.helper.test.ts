@@ -51,15 +51,23 @@ describe('background.helper', () => {
   });
 
   it('builds manifest-based fallbacks and image sets', () => {
-    const base = backgroundFromManifest('sample');
+    const base = backgroundFromManifest('sample', mockGetImage);
     expect(base.backgroundImage).toBe(
       'url("/images/sample/original.png")',
     );
 
-    const widthOverride = backgroundImageForWidth('sample', 500);
+    const widthOverride = backgroundImageForWidth(
+      'sample',
+      500,
+      mockGetImage,
+    );
     expect(widthOverride.backgroundImage).toContain('image-set(');
 
-    const stepOverride = backgroundImageForStep('sample', 1);
+    const stepOverride = backgroundImageForStep(
+      'sample',
+      1,
+      mockGetImage,
+    );
     expect(stepOverride.backgroundImage).toContain(
       '/images/sample/400.avif',
     );
@@ -69,11 +77,15 @@ describe('background.helper', () => {
     mockGetImage
       .mockReturnValueOnce(undefined)
       .mockReturnValueOnce(undefined);
-    const base = backgroundFromManifest('missing');
+    const base = backgroundFromManifest('missing', mockGetImage);
     expect(base.backgroundImage).toBeUndefined();
 
     mockGetImage.mockReturnValueOnce(undefined);
-    const widthOverride = backgroundImageForWidth('missing', 400);
+    const widthOverride = backgroundImageForWidth(
+      'missing',
+      400,
+      mockGetImage,
+    );
     expect(widthOverride).toEqual({});
 
     mockGetImage.mockImplementation(() => sampleImage);

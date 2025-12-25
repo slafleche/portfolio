@@ -39,7 +39,7 @@ const frBaseData = {
   'hero-video-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
 
-  'hero-title': 'Stéphane, développeur front-end',
+  'hero-title': 'Stéphane LaFlèche, [split] développeur front-end',
   'hero-subTitle':
     'Je me spécialise dans les interfaces React et les systèmes de design, en gardant design et code alignés.',
 

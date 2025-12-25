@@ -86,9 +86,11 @@ const useVideosManifest = () => {
     fetchVideosManifest()
       .then((data) => {
         if (!cancelled) setManifest(data);
+        return data;
       })
       .catch(() => {
         if (!cancelled) setManifest({});
+        return undefined;
       });
     return () => {
       cancelled = true;
@@ -114,9 +116,11 @@ const useImagesManifest = () => {
     fetchImagesManifest()
       .then((data) => {
         if (!cancelled) setManifest(data);
+        return data;
       })
       .catch(() => {
         if (!cancelled) setManifest({});
+        return undefined;
       });
     return () => {
       cancelled = true;

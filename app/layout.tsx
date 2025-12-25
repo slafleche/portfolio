@@ -3,7 +3,7 @@ import '@/styles/globals.css';
 import type { ReactNode } from 'react';
 import { headers } from 'next/headers';
 import { resolveLocale } from '@/lib/locales/locale';
-import { GOOGLE_FONT_URLS_BY_LOCALE } from '@/data/generated/fonts/googleFonts.gen';
+import { GOOGLE_FONT_URLS } from '@/data/generated/fonts/googleFonts.gen';
 import {
   FAVICON_DEFAULT_WEB_MANIFEST,
   FAVICON_LINK_DESCRIPTORS_BY_LOCALE,
@@ -48,7 +48,7 @@ export default async function RootLayout({
   const locale = resolveLocale(requestedLocale);
   const fallbackLocale =
     FAVICON_DEFAULT_WEB_MANIFEST.locale as Locale;
-  const fontUrls = GOOGLE_FONT_URLS_BY_LOCALE[locale] ?? [];
+  const fontUrls = GOOGLE_FONT_URLS;
   const linkGroup =
     FAVICON_LINK_DESCRIPTORS_BY_LOCALE[locale] ??
     FAVICON_LINK_DESCRIPTORS_BY_LOCALE[fallbackLocale];

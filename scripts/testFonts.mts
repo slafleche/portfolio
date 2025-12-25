@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GOOGLE_FONT_URLS_BY_LOCALE } from '../src/data/generated/fonts/googleFonts.gen';
+import { GOOGLE_FONT_URLS } from '../src/data/generated/fonts/googleFonts.gen';
 
 type Target = '_staging' | 'release';
 type FontConfigEntry = {
@@ -59,9 +59,7 @@ async function readJson<T>(filePath: string): Promise<T> {
 }
 
 function getGoogleFontUrls(): string[] {
-  const locales = Object.values(GOOGLE_FONT_URLS_BY_LOCALE);
-  const urls = locales.flat();
-  return Array.from(new Set(urls));
+  return Array.from(new Set(GOOGLE_FONT_URLS));
 }
 
 function hasGoogleFontFamily(urls: string[], family: string): boolean {
