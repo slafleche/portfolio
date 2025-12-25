@@ -268,6 +268,23 @@ function colorSnippet(text) {
   );
 }
 
+function redactValue(value, filePath) {
+  if (!value) return value;
+  if (filePath?.includes('.env')) {
+    const match = value.match(/^([^=:\s]+)\s*[:=]\s*(.*)$/);
+    if (match) {
+      const key = match[1];
+      const raw = match[2] ?? '';
+      const trimmed = raw.replace(/^['"]|['"]$/g, '');
+      const last4 = trimmed.slice(-4);
+      return `${key}=***${last4 ? `(${last4})` : ''}`;
+    }
+  }
+  const trimmed = value.replace(/^['"]|['"]$/g, '');
+  const last4 = trimmed.slice(-4);
+  return `***${last4 ? `(${last4})` : ''}`;
+}
+
 function formatViolations(violations) {
   if (!violations.length) return;
 
@@ -288,7 +305,7 @@ function formatViolations(violations) {
     const snippet =
       type === 'runtime-config' || type === 'runtime-env-test'
         ? colorSnippet(value)
-        : value;
+        : redactValue(value, filePath);
     console.error(`   Snippet: ${snippet}`);
   }
 
@@ -298,16 +315,10 @@ function formatViolations(violations) {
 }
 
 function main() {
-  const useAll =
-    process.env.SECRET_LOOKOUT_ALL === '1' ||
-    process.argv.includes('--all');
+  const useAll = true;
+  const includeEnv = true;
 
-  const includeEnv =
-    process.env.SECRET_LOOKOUT_INCLUDE_ENV === '1';
-
-  const baseFiles = useAll
-    ? getAllTrackedFiles()
-    : getStagedFiles();
+  const baseFiles = getAllTrackedFiles();
 
   const targetFiles = [...baseFiles];
   if (useAll && includeEnv) {

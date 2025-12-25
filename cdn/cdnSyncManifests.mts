@@ -50,6 +50,8 @@ const MIME_MAP: Record<string, string> = {
   '.mp4': 'video/mp4',
   '.m3u8': 'application/vnd.apple.mpegurl',
   '.mpd': 'application/dash+xml',
+  '.woff2': 'font/woff2',
+  '.woff': 'font/woff',
 };
 
 type RequiredEnv = {

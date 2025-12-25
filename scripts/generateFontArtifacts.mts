@@ -337,18 +337,14 @@ async function main() {
     return;
   }
 
-  const targets = opts.hasExplicitTarget
+  const targets: Target[] = opts.hasExplicitTarget
     ? opts.hasExplicitBoth
-      ? [
-          '_staging',
-          'release',
-        ]
+      ? (['_staging', 'release'] as Target[])
       : [opts.target]
     : await pickTargets();
 
   const baseUrlEnv =
     opts.baseUrlOverride ??
-    process.env.SELF_HOSTED_FONTS_BASE_URL ??
     process.env.CDN_PUBLIC_BASE_URL ??
     '';
   const baseUrl = baseUrlEnv.trim()
@@ -402,7 +398,7 @@ async function main() {
     );
     if (hasSelfHosted && needsBaseUrl && !baseUrl.trim()) {
       throw new Error(
-        `Missing base URL for self-hosted fonts. Run cdn:sync --fonts to generate src/data/generated/${target}/fonts/manifest.fonts.gen.json, or set SELF_HOSTED_FONTS_BASE_URL, or use --base-url (ex: yarn generate:fontArtifacts --target=${target} --base-url=https://cdn.example.com).`,
+        `Missing base URL for self-hosted fonts. Run cdn:sync --fonts to generate src/data/generated/${target}/fonts/manifest.fonts.gen.json, or set CDN_PUBLIC_BASE_URL, or use --base-url (ex: yarn generate:fontArtifacts --target=${target} --base-url=https://cdn.example.com).`,
       );
     }
 

@@ -20,6 +20,7 @@
     "cdn:delete:prefix": "tsx cdnClient.mts delete-prefix",
     "cdn:ls": "tsx cdnClient.mts ls",
     "cdn:sync": "tsx cdnSyncManifests.mts",
+    "cdn:cache": "tsx cdnPurgeCache.mts",
 
     "generate:fonts": "node ../scripts/runGenerateFontsPipeline.mjs",
     "generate:selfHostedFonts": "tsx ../scripts/generateLocalFonts.mts",
