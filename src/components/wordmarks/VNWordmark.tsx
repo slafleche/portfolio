@@ -14,6 +14,7 @@ export default function VNWordmark({
       viewBox="0 0 78.54572 31.72025"
       fill="currentColor"
       className={clsx(className, caseStudyLogo)}
+      shapeRendering="geometricPrecision"
       role="img"
       aria-label={LABEL}
       {...props}

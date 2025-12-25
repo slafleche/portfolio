@@ -41,7 +41,7 @@
     "app/*.tsx",
     "app/**/*.ts",
     "app/**/*.tsx",
-    "middleware.ts",
+    "proxy.ts",
     "src/**/*",
     "tests/**/*",
     ".next/types/**/*.ts",

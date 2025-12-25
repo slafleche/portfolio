@@ -12,6 +12,7 @@ export default function CCWordmark({
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 615.08 192.94"
+      shapeRendering="geometricPrecision"
       className={clsx(className, caseStudyLogo)}
       role="img"
       aria-label={LABEL}

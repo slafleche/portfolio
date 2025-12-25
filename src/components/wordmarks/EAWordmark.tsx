@@ -12,6 +12,7 @@ export default function EAWordmark({
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 998.014 998.025"
+      shapeRendering="geometricPrecision"
       className={clsx(className, caseStudyLogo)}
       role="img"
       aria-label={LABEL}

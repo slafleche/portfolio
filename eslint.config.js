@@ -47,7 +47,7 @@ const tsSourceFiles = [
 ];
 
 const tsNoProjectFiles = [
-  'middleware.ts',
+  'proxy.ts',
   'next-env.d.ts',
   'scripts/**/*.ts',
   'cdn/**/*.{ts,tsx,mts}',
@@ -107,7 +107,7 @@ export default [
       ...(config.ignores ?? []),
       '**/*.config.{js,cjs,mjs}',
       'scripts/**/*',
-      'middleware.ts',
+      'proxy.ts',
     ],
     languageOptions: {
       ...config.languageOptions,
