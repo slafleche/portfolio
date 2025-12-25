@@ -6,8 +6,8 @@ import Card from '@/components/Card';
 import { Markdown } from '@/components/Markdown';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
-import Menu from '@/components/Menu';
 import HeroWaypoint from '@/components/HeroWaypoint';
+import ConsoleCuriosity from '@/components/ConsoleCuriosity';
 import * as layoutStyles from '@/styles/layout.css';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
@@ -16,16 +16,25 @@ import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
 import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
-import {
-  buildHomeMenuSections,
-  buildSystemsMenuSections,
-} from '@/lib/locales/sections/menuSections';
-import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+// import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+// import {
+//   buildHomeMenuSections,
+//   buildSystemsMenuSections,
+// } from '@/lib/locales/sections/menuSections';
+// import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { resolveLocale } from '@/lib/locales/locale';
-import VanillaCaseStudyTitle from '../../../src/components/VanillaCaseStudyTitle';
+import WordMarkInTitle from '@/components/WordmarkInTitle';
+import {
+  BQWordmark,
+  CCWordmark,
+  EAWordmark,
+  HSWordmark,
+  KGWordmark,
+  VNWordmark,
+  rms,
+} from '@/components/wordmarks/wordmarks.tsx';
 
 interface PageParams {
   LOCALE: string;
@@ -62,11 +71,12 @@ export default async function HomePage({
   ]);
   const caseStudies = buildCaseStudiesCopy(translator);
   const projects = buildProjectsCopy(translator);
+  const { cocacola, ea, banq, hootsuite, kingGames } = projects.items;
   const contact = buildContactCopy(translator);
   const systemsLink = buildSystemsLink(locale, translator);
-  const menuCopy = buildMenuCopy(translator);
-  const menuSections = buildHomeMenuSections(translator);
-  const systemsMenuSections = buildSystemsMenuSections(translator);
+  // const menuCopy = buildMenuCopy(translator);
+  // const menuSections = buildHomeMenuSections(translator);
+  // const systemsMenuSections = buildSystemsMenuSections(translator);
 
   const curiosityMessages = {
     title: translator('console-curiosity-title'),
@@ -78,25 +88,25 @@ export default async function HomePage({
     canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
   const curiosityTarget = `/${locale}/${systemsSlug}`;
 
-  const menuProps = {
-    root: `/${locale}`,
-    skipNavLabel: menuCopy.skipNavLabel,
-    leftLabel: menuCopy.leftLabel,
-    rightLabel: menuCopy.rightLabel,
-    localeChangeLabel: menuCopy.languageLabel,
-    sections: menuSections,
-    systemsSections: systemsMenuSections,
-    localeLinks: AVAILABLE_LOCALES.filter(
-      (code) => code !== locale,
-    ).map((code) => ({
-      locale: code,
-      label: LOCALE_LABELS[code],
-    })),
-  };
+  // const menuProps = {
+  //   root: `/${locale}`,
+  //   skipNavLabel: menuCopy.skipNavLabel,
+  //   leftLabel: menuCopy.leftLabel,
+  //   rightLabel: menuCopy.rightLabel,
+  //   localeChangeLabel: menuCopy.languageLabel,
+  //   sections: menuSections,
+  //   systemsSections: systemsMenuSections,
+  //   localeLinks: AVAILABLE_LOCALES.filter(
+  //     (code) => code !== locale,
+  //   ).map((code) => ({
+  //     locale: code,
+  //     label: LOCALE_LABELS[code],
+  //   })),
+  // };
 
   return (
     <>
-      <Menu
+      {/* <Menu
         {...menuProps}
         curiosityMessages={{
           title: curiosityMessages.title,
@@ -108,11 +118,18 @@ export default async function HomePage({
         logoRedirectPaths={[
           curiosityTarget,
         ]}
-      />
+      /> */}
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
           <Hero id="hero" copy={heroCopy} headingAnimated={false} />
           <HeroWaypoint />
+          <ConsoleCuriosity
+            title={curiosityMessages.title}
+            test={curiosityMessages.test}
+            result={curiosityMessages.result}
+            hint={curiosityMessages.hint}
+            targetHref={curiosityTarget}
+          />
           <Content
             id={approach.href}
             title={approach.title}
@@ -124,10 +141,10 @@ export default async function HomePage({
             markdown={about.content}
           />
           <Content id={caseStudies.href}>
-            <VanillaCaseStudyTitle
-              id={caseStudies.href}
-              headingTextNoLogo={caseStudies.title}
-              logoBefore={locale === 'en'}
+            <WordMarkInTitle
+              WordMark={VNWordmark}
+              textTemplate={caseStudies.title}
+              textClassName={rms.wordmarkTextNoLogo}
             />
             <CaseStudy
               id={caseStudies.href}
@@ -138,38 +155,72 @@ export default async function HomePage({
           <Content title={projects.title} id={projects.href}>
             <Grid columns={2}>
               <Column span={2}>
-                <Card title={projects.list[0]?.title}>
-                  {projects.list[0] ? (
-                    <Markdown source={projects.list[0].content} />
-                  ) : null}
+                <Card
+                  title={
+                    <WordMarkInTitle
+                      className={rms.cocacolaTitle}
+                      WordMark={CCWordmark}
+                      textTemplate={cocacola.title}
+                      textClassName={rms.wordmarkTextNoLogo}
+                    />
+                  }
+                >
+                  <Markdown source={cocacola.content} />
                 </Card>
               </Column>
               <Column span={2}>
-                <Card title={projects.list[1]?.title}>
-                  {projects.list[1] ? (
-                    <Markdown source={projects.list[1].content} />
-                  ) : null}
+                <Card
+                  title={
+                    <WordMarkInTitle
+                      WordMark={EAWordmark}
+                      textTemplate={ea.title}
+                      textClassName={rms.wordmarkTextNoLogo}
+                    />
+                  }
+                >
+                  <Markdown source={ea.content} />
                 </Card>
               </Column>
               <Column span={1}>
-                <Card title={projects.list[2]?.title}>
-                  {projects.list[2] ? (
-                    <Markdown source={projects.list[2].content} />
-                  ) : null}
+                <Card
+                  title={
+                    <WordMarkInTitle
+                      className={rms.banqTitle}
+                      WordMark={BQWordmark}
+                      textTemplate={banq.title}
+                      textClassName={rms.wordmarkTextNoLogo}
+                    />
+                  }
+                >
+                  <Markdown source={banq.content} />
                 </Card>
               </Column>
               <Column span={1}>
-                <Card title={projects.list[3]?.title}>
-                  {projects.list[3] ? (
-                    <Markdown source={projects.list[3].content} />
-                  ) : null}
+                <Card
+                  title={
+                    <WordMarkInTitle
+                      className={rms.hootsuiteTitle}
+                      WordMark={HSWordmark}
+                      textTemplate={hootsuite.title}
+                      textClassName={rms.wordmarkTextNoLogo}
+                    />
+                  }
+                >
+                  <Markdown source={hootsuite.content} />
                 </Card>
               </Column>
               <Column span={2}>
-                <Card title={projects.list[4]?.title}>
-                  {projects.list[4] ? (
-                    <Markdown source={projects.list[4].content} />
-                  ) : null}
+                <Card
+                  title={
+                    <WordMarkInTitle
+                      className={rms.kingGamesTitle}
+                      WordMark={KGWordmark}
+                      textTemplate={kingGames.title}
+                      textClassName={rms.wordmarkTextNoLogo}
+                    />
+                  }
+                >
+                  <Markdown source={kingGames.content} />
                 </Card>
               </Column>
             </Grid>

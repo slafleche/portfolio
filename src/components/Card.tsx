@@ -5,8 +5,8 @@ import clsx from 'clsx';
 import * as glassFrameStyles from '@/styles/helpers/glassFrame.css';
 
 type Props = IHeadingDepth &
-  ComponentPropsWithoutRef<'div'> & {
-    title?: ReactNode;
+  Omit<ComponentPropsWithoutRef<'div'>, 'title'> & {
+    title?: ReactNode | string;
     children?: ReactNode;
     type?: string;
   };
@@ -22,6 +22,8 @@ export default function Card({
   const gradientClass =
     type === 'right' ? s.cardGradientB : s.cardGradientA;
 
+  const isStringTitle = typeof title === 'string';
+
   return (
     <div
       className={clsx(s.root, className)}
@@ -36,10 +38,12 @@ export default function Card({
         <div className={glassFrameStyles.surfaceBorder} aria-hidden />
         <div className={glassFrameStyles.rim} aria-hidden />
         <div className={s.content}>
-          {title && (
+          {isStringTitle ? (
             <Heading className={s.title} depth={depth}>
               {title}
             </Heading>
+          ) : (
+            title
           )}
           {children}
         </div>

@@ -1,0 +1,32 @@
+{
+  "Object+Sans": {
+    "type": "selfHosted",
+    "weights": [
+      400,
+      800
+    ],
+    "dirName": "Object+Sans.gen",
+    "files": [
+      {
+        "fileName": "metaData.json",
+        "url": "https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/metaData.json"
+      },
+      {
+        "fileName": "PPObjectSans-Heavy.6e1490d0.woff2",
+        "url": "https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-Heavy.6e1490d0.woff2"
+      },
+      {
+        "fileName": "PPObjectSans-HeavySlanted.6e1490d0.woff2",
+        "url": "https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-HeavySlanted.6e1490d0.woff2"
+      },
+      {
+        "fileName": "PPObjectSans-Regular.6e1490d0.woff2",
+        "url": "https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-Regular.6e1490d0.woff2"
+      },
+      {
+        "fileName": "PPObjectSans-Slanted.6e1490d0.woff2",
+        "url": "https://cdn.lafleche.dev/_staging/fonts/v1/Object+Sans.gen/PPObjectSans-Slanted.6e1490d0.woff2"
+      }
+    ]
+  }
+}

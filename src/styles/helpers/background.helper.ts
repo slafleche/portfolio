@@ -3,7 +3,7 @@ import type {
   CssLike,
 } from '@/styles/helpers/types.helper';
 import type { GlobalStyleRule } from '@vanilla-extract/css';
-import { getImage } from '@/lib/images';
+import type { ImageEntry } from '@/lib/images';
 import type { ColorWrapper } from './colorWrap.helper';
 import { hasCssMethod } from 'css-calipers';
 import { margins } from './spacing.helper';
@@ -26,8 +26,18 @@ type Variant = {
 
 /* ------------------------- manifest-driven widths ------------------------- */
 
-function getAvailableWidths(name: string): number[] {
-  const data = getImage(name);
+type ManifestLookup = (name: string) => ImageEntry | null;
+
+const resolveImage = (
+  name: string,
+  lookup?: ManifestLookup,
+): ImageEntry | null => (lookup ? lookup(name) : null);
+
+function getAvailableWidths(
+  name: string,
+  lookup?: ManifestLookup,
+): number[] {
+  const data = resolveImage(name, lookup);
   if (!data) return [];
   const widths = new Set<number>();
   const push = (arr?: Variant[]) =>
@@ -54,8 +64,12 @@ function pickNearestAtMost(
   )?.url;
 }
 
-function buildImageSet(name: string, targetWidth: number) {
-  const data = getImage(name);
+function buildImageSet(
+  name: string,
+  targetWidth: number,
+  lookup?: ManifestLookup,
+) {
+  const data = resolveImage(name, lookup);
   if (!data) {
     return {
       imageSet: undefined as string | undefined,
@@ -86,10 +100,15 @@ function buildImageSet(name: string, targetWidth: number) {
 /* Base background: no MQs, just a safe fallback from the smallest asset. */
 export function backgroundFromManifest(
   name: string,
+  lookup?: ManifestLookup,
 ): GlobalStyleRule {
-  const widths = getAvailableWidths(name);
+  const widths = getAvailableWidths(name, lookup);
   const fallbackWidth = widths[0] ?? Number.POSITIVE_INFINITY;
-  const { fallback } = buildImageSet(name, fallbackWidth);
+  const { fallback } = buildImageSet(
+    name,
+    fallbackWidth,
+    lookup,
+  );
 
   return {
     backgroundRepeat: 'no-repeat',
@@ -107,8 +126,13 @@ export function backgroundFromManifest(
 export function backgroundImageForWidth(
   name: string,
   targetWidth: number,
+  lookup?: ManifestLookup,
 ): GlobalStyleRule {
-  const { imageSet } = buildImageSet(name, targetWidth);
+  const { imageSet } = buildImageSet(
+    name,
+    targetWidth,
+    lookup,
+  );
   return imageSet ? { backgroundImage: imageSet } : {};
 }
 
@@ -116,11 +140,16 @@ export function backgroundImageForWidth(
 export function backgroundImageForStep(
   name: string,
   step: number,
+  lookup?: ManifestLookup,
 ): GlobalStyleRule {
-  const widths = getAvailableWidths(name);
+  const widths = getAvailableWidths(name, lookup);
   if (widths.length === 0) return {};
   const idx = Math.max(0, Math.min(widths.length - 1, step));
-  const { imageSet } = buildImageSet(name, widths[idx]);
+  const { imageSet } = buildImageSet(
+    name,
+    widths[idx],
+    lookup,
+  );
   return imageSet ? { backgroundImage: imageSet } : {};
 }
 

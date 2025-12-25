@@ -3,18 +3,15 @@
  *
  * Supports:
  *
- * - Per-font texts -> &text=... (omit/empty => no text param, just
- *   subset(s))
  * - Per-font weights -> "400" | ["400","700"] | ["100..900"]
  * - Italics -> builds :ital,wght@0,400;0,700;1,400;1,700 (sorted
  *   tuples)
  * - Per-font subsets (override global default of ["latin"])
- * - Global options (display, subsets, stripWhitespaceFromText)
+ * - Global options (display, subsets)
  * - RawAxis escape hatch to pass a full axis string verbatim
  */
 
 export type FontConfig = {
-  texts?: string[]; // collapsed unique-char string array or omitted
   weights: string | string[]; // e.g. "400", ["400","700"], "100..900"
   ital?: boolean; // include italics axis as well
   subsets?: string[]; // per-font override (default is ["latin"])
@@ -27,7 +24,6 @@ export type FontConfigMap = Record<string, FontConfig>;
 export type GoogleFontGlobalOptions = {
   display?: 'auto' | 'block' | 'swap' | 'fallback' | 'optional';
   subsets?: string[]; // default subsets if font doesn't specify
-  stripWhitespaceFromText?: boolean;
 };
 
 /* ---------- internals ---------- */
@@ -138,21 +134,6 @@ function buildAxisParam(cfg: FontConfig): string {
   return `:${axisNames.join(',')}@${axisTuples.join(';')}`;
 }
 
-/** Build &text=... if texts provided */
-function buildTextParam(
-  texts: string[] | undefined,
-  stripWhitespaceFromText: boolean,
-): string {
-  if (!texts || texts.length === 0) return '';
-  const joined = texts.join('');
-  const raw = stripWhitespaceFromText
-    ? joined.replace(/\s+/g, '')
-    : joined;
-  const uniqueChars = Array.from(new Set(raw));
-  if (uniqueChars.length === 0) return '';
-  return `&text=${encodeURIComponent(uniqueChars.join(''))}`;
-}
-
 /* ---------- public ---------- */
 
 /** Main generator: one URL per font family */
@@ -165,7 +146,6 @@ export function generateGoogleFontUrls(
     subsets = [
       'latin',
     ],
-    stripWhitespaceFromText = false,
   } = globalOptions;
 
   const urls: string[] = [];
@@ -192,12 +172,8 @@ export function generateGoogleFontUrls(
     const subsetParam = `&subset=${chosenSubsets.join(',')}`;
 
     const displayParam = `&display=${display}`;
-    const textParam = buildTextParam(
-      cfg.texts,
-      stripWhitespaceFromText,
-    );
 
-    const url = `https://fonts.googleapis.com/css2?family=${familyParam}${axisParam}${subsetParam}${textParam}${displayParam}`;
+    const url = `https://fonts.googleapis.com/css2?family=${familyParam}${axisParam}${subsetParam}${displayParam}`;
     urls.push(url);
   }
 
@@ -215,15 +191,3 @@ export function asLinkTags(urls: string[]): string {
  * Utility you can reuse in generators: collapse strings → unique-char
  * string
  */
-export function uniqueCharsFromStrings(
-  input: string[],
-  opts?: { stripWhitespace?: boolean },
-): string {
-  const joined = input.join('');
-  const raw = opts?.stripWhitespace
-    ? joined.replace(/\s+/g, '')
-    : joined;
-  // NFC normalize to avoid duplicates caused by composed vs decomposed accents
-  const nfc = raw.normalize('NFC');
-  return Array.from(new Set(nfc)).join('');
-}

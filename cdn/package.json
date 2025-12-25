@@ -1,0 +1,39 @@
+{
+  "name": "@portfolio/cdn-tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "20.19.6"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.715.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "cdn:delete": "tsx cdnClient.mts delete",
+    "cdn:delete:version": "tsx cdnClient.mts delete-version",
+    "cdn:delete:prefix": "tsx cdnClient.mts delete-prefix",
+    "cdn:ls": "tsx cdnClient.mts ls",
+    "cdn:sync": "tsx cdnSyncManifests.mts",
+    "cdn:cache": "tsx cdnPurgeCache.mts",
+    
+    "generate:fonts": "node ../scripts/runGenerateFontsPipeline.mjs",
+    "generate:fonts:artifacts": "tsx ../scripts/generateFontArtifacts.mts",
+    "generate:selfHostedFonts": "tsx ../scripts/generateLocalFonts.mts",
+    "generate:googleFonts": "tsx ../scripts/generateFontUrls.mts",
+    
+    "generate:img": "node ../scripts/runGenerateImagesPipeline.mjs",
+    "generate:img:files": "node ../scripts/generateImages.mts",
+    "generate:img:artifacts": "node ../scripts/generateImageArtifacts.mjs",
+    
+    "generate:videos": "node ../scripts/runGenerateVideoPipeline.mjs",
+    "generate:videos:files": "node ../scripts/generateVideos.mts",
+    "generate:videos:posters": "node ../scripts/generateVideos.mts --posters-only",
+    "generate:videos:artifacts": "node ../scripts/generateVideoArtifacts.mjs"
+  }
+}

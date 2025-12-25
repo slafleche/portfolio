@@ -13,6 +13,8 @@ export const SECRET_LOOKOUT_IGNORE_PATH_SUBSTRINGS = [
   'dist/',
   'build/',
   'coverage/',
+  'tmp/',
+  '.env',
   // Env typing file is allowed to list canonical variable names.
   'types/env.d.ts',
 ];
@@ -26,6 +28,8 @@ export const SECRET_LOOKOUT_SCAN_EXTENSIONS = [
   '.jsx',
   '.ts',
   '.tsx',
+  '.mts',
+  '.cts',
   '.mjs',
   '.cjs',
   '.json',
@@ -116,5 +120,14 @@ export const SECRET_API_KEY_PATTERNS = [
     allowedPathSubstrings: [
       'tests/server/verifyTurnstileToken.test.ts',
     ],
+  },
+  {
+    id: 'infra-env-values',
+    description:
+      'Infrastructure env values (CDN/R2/Cloudflare/Vercel tokens)',
+    regex:
+      /(?:^|[^A-Z0-9_])(?:CDN_PUBLIC_BASE_URL|R2_ENDPOINT|R2_ACCOUNT_ID|R2_ACCOUNT_TOKEN|R2_ACCESS_KEY_ID|R2_SECRET_ACCESS_KEY|R2_BUCKET|CF_ZONE_ID|CF_API_TOKEN|VERCEL_OIDC_TOKEN)\s*[:=]\s*["']?[^"'`\s]+/i,
+    allowedValues: [],
+    allowedPathSubstrings: [],
   },
 ];

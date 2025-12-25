@@ -60,31 +60,40 @@ if (files.length === 0) {
   process.exit(0);
 }
 
-const configPath = path.resolve('svgo.config.mjs');
+const configPaths = [
+  path.resolve('svgo.config.mts'),
+  path.resolve('svgo.config.mjs'),
+];
 let baseConfig = {};
-try {
-  // Dynamically import user's svgo config if present
-  baseConfig =
-    (await import(pathToFileURL(configPath))).default ?? {};
-} catch {
-  // fall back to minimal config if not found
+let loaded = false;
+for (const configPath of configPaths) {
+  try {
+    baseConfig =
+      (await import(pathToFileURL(configPath))).default ?? {};
+    loaded = true;
+    break;
+  } catch {
+    // keep trying
+  }
+}
+if (!loaded) {
   baseConfig = {
     multipass: true,
     plugins: [
-      [
-        'preset-default',
-        {
+      {
+        name: 'preset-default',
+        params: {
           overrides: {
             removeViewBox: false,
             cleanupIds: false,
           },
         },
-      ],
-      'convertTransform',
-      [
-        'convertPathData',
-        { forceAbsolutePath: true },
-      ],
+      },
+      { name: 'convertTransform' },
+      {
+        name: 'convertPathData',
+        params: { forceAbsolutePath: true },
+      },
     ],
   };
 }

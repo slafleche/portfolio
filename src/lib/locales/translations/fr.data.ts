@@ -39,8 +39,9 @@ const frBaseData = {
   'hero-video-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
 
-  'hero-title': 'Systèmes de design [split] pensés pour évoluer',
-  'hero-subTitle': 'Portfolio de développeur par Stéphane',
+  'hero-title': 'Stéphane LaFlèche, [split] développeur front-end',
+  'hero-subTitle':
+    'Je me spécialise dans les interfaces React et les systèmes de design, en gardant design et code alignés.',
 
   'hero-console_description': 'Arrière-plan de code décoratif',
   'hero-cta': 'Prenons contact !',
@@ -61,15 +62,17 @@ const frBaseData = {
 
   projects: 'Projets',
   'projects-href': 'projets',
-  'projects-01-cocacola-title': 'La Brigade du Bonheur (Coca-Cola)',
+  'projects-01-cocacola-title':
+    '[wordmark:Coca-Cola]',
   ...markdownRefs('projects-01-cocacola-content'),
-  'projects-02-ea-title': 'Electronic Arts ([abbr:EA])',
+  'projects-02-ea-title': '[wordmark:Electronic Arts]',
   ...markdownRefs('projects-02-ea-content'),
-  'projects-03-banq-title': '[abbr:BAnQ] (via InMedia)',
+  'projects-03-banq-title':
+    '[wordmark:Bibliothèque et Archives nationales du Québec]',
   ...markdownRefs('projects-03-banq-content'),
-  'projects-04-hootsuite-title': 'Hootsuite (collaboration interne)',
+  'projects-04-hootsuite-title': '[wordmark:Hootsuite]',
   ...markdownRefs('projects-04-hootsuite-content'),
-  'projects-05-king-games-title': 'King Games',
+  'projects-05-king-games-title': '[wordmark:King Games]',
   ...markdownRefs('projects-05-king-games-content'),
 
   'systems-hero-title':
@@ -89,7 +92,7 @@ const frBaseData = {
     'systems-system-shape-content',
     'systems-system-shape-blurb',
   ),
-  'systems-back-home-label': 'Retour à la page d’accueil',
+  'systems-back-home-label': "Retour à la page d'accueil",
   'systems-link-label': 'Systèmes',
   'footer-systems-snippet-label':
     'Extrait HTML décoratif inspiré des outils de développement, qui montre la fin du code de la page.',

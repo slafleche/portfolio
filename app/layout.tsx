@@ -3,17 +3,21 @@ import '@/styles/globals.css';
 import type { ReactNode } from 'react';
 import { headers } from 'next/headers';
 import { resolveLocale } from '@/lib/locales/locale';
-import { GOOGLE_FONT_URLS_BY_LOCALE } from '@/data/generated/googleFonts.gen';
+import { GOOGLE_FONT_URLS } from '@/data/generated/fonts/googleFonts.gen';
 import {
   FAVICON_DEFAULT_WEB_MANIFEST,
   FAVICON_LINK_DESCRIPTORS_BY_LOCALE,
   FAVICON_MANIFEST_META_BY_LOCALE,
   FAVICON_META_BUNDLES_BY_LOCALE,
   FAVICON_META_TAGS,
-} from '@/data/generated/favicons.manifest.gen';
+} from '@/data/generated/favicons/manifest.favicons.gen';
 import { type Locale } from '@/lib/locales/translations';
 import debugRoutes from '@/data/debugRoutes.json';
-import { isIndexingAllowed, notRelease } from '../src/lib/runtimeEnv';
+import {
+  isIndexingAllowed,
+  isRelease,
+  notRelease,
+} from '../src/lib/runtimeEnv';
 
 if (notRelease()) {
   const globalTracker = globalThis as {
@@ -44,7 +48,7 @@ export default async function RootLayout({
   const locale = resolveLocale(requestedLocale);
   const fallbackLocale =
     FAVICON_DEFAULT_WEB_MANIFEST.locale as Locale;
-  const fontUrls = GOOGLE_FONT_URLS_BY_LOCALE[locale] ?? [];
+  const fontUrls = GOOGLE_FONT_URLS;
   const linkGroup =
     FAVICON_LINK_DESCRIPTORS_BY_LOCALE[locale] ??
     FAVICON_LINK_DESCRIPTORS_BY_LOCALE[fallbackLocale];
@@ -55,6 +59,9 @@ export default async function RootLayout({
     FAVICON_META_BUNDLES_BY_LOCALE[locale] ??
     FAVICON_META_BUNDLES_BY_LOCALE[fallbackLocale];
   const indexingAllowed = isIndexingAllowed();
+  const fontFacesHref = isRelease()
+    ? '/styles/fontFaces.css'
+    : '/styles/fontFaces._staging.gen.css';
 
   return (
     <html lang={locale}>
@@ -65,6 +72,7 @@ export default async function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        <link rel="stylesheet" href={fontFacesHref} />
 
         {fontUrls.map((href) => (
           <link key={href} rel="stylesheet" href={href} />

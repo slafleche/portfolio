@@ -535,17 +535,11 @@ describe('ContactForm — recoverable error flows (form view)', () => {
       });
 
     const originalFetch = global.fetch;
-    const fetchMock = vi.fn().mockImplementation(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 20));
-      return {
-        ok: true,
-        json: async () => ({
-          ok: false,
-          code: 'generic_error',
-          message: statusMessages.generic,
-        }),
-      } as Response;
+    let resolveFetch!: (value: Response) => void;
+    const fetchPromise = new Promise<Response>((resolve) => {
+      resolveFetch = resolve;
     });
+    const fetchMock = vi.fn().mockImplementation(() => fetchPromise);
 
     global.fetch = fetchMock;
 
@@ -591,6 +585,15 @@ describe('ContactForm — recoverable error flows (form view)', () => {
         );
         expect(loading).not.toBeNull();
       });
+
+      resolveFetch({
+        ok: true,
+        json: async () => ({
+          ok: false,
+          code: 'generic_error',
+          message: statusMessages.generic,
+        }),
+      } as Response);
 
       await waitFor(() => {
         const inlineRegion = container.querySelector(

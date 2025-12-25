@@ -1,19 +1,22 @@
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 import { fontFamilies } from '../fontFamilies.tokens';
 import { defineFontVariant, type FontVariantMap } from './core';
 
 const SOURCE_PATH = 'src/tokens/fontVariants/menu.ts';
 
 export const menuVariants = {
-  menu: defineFontVariant(fontFamilies.urbanist, {
+  menu: defineFontVariant(fontFamilies.objectSans, {
     label: 'menu',
     sourcePath: SOURCE_PATH,
-    waitForFonts: [
-      'Urbanist',
-    ],
+    waitForFonts: true,
     config: {
       overrides: {
         size: m(16),
+      },
+      options: {
+        weightPercents: {
+          default: mPercent(0),
+        },
       },
     },
   }),

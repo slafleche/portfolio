@@ -1,4 +1,5 @@
 // One-stop helpers for font weights + family defs + loading/validating fonts.config.json.
+import { getManifestTarget } from '@/lib/runtimeEnv';
 import type { FontFamilyDef } from './types.helper';
 
 // ---- Types expected from your JSON config ----
@@ -14,8 +15,12 @@ export type FontsConfig = Record<string, FontCfgInput>;
 
 // ---- Load raw JSON (Next.js/modern TS supports JSON imports) ----
 // If your toolchain requires, keep the assert; otherwise you can drop it.
-import rawJson from '../../data/fonts.config.json' assert { type: 'json' };
+import releaseConfig from '@/data/generated/release/fonts/config.fonts.gen.json' assert { type: 'json' };
+import stagingConfig from '@/data/generated/_staging/fonts/config.fonts.gen.json' assert { type: 'json' };
 import type { IMeasurement } from 'css-calipers';
+
+const target = getManifestTarget();
+const rawJson = target === 'release' ? releaseConfig : stagingConfig;
 
 // ----------------- internals -----------------
 function toArray<T>(x: T | T[]): T[] {
@@ -215,6 +220,7 @@ type FontFamilyArgs = {
   offsetToFlushTop: IMeasurement;
   weights: WeightConfig;
   lineHeight?: FontFamilyDef['lineHeight'];
+  fontStyle?: NonNullable<FontFamilyDef['css']>['fontStyle'];
   css?: FontFamilyDef['css'];
   axisDefaults?: FontFamilyDef['axisDefaults'];
 };
@@ -249,6 +255,7 @@ export function defineFontFamily({
   offsetToFlushTop,
   weights,
   lineHeight,
+  fontStyle,
   css,
   axisDefaults,
 }: FontFamilyArgs): FontFamilyDef {
@@ -320,6 +327,7 @@ export function defineFontFamily({
 
   const mergedCss = {
     ...(derivedAxis.css ?? {}),
+    ...(fontStyle ? { fontStyle } : {}),
     ...(css ?? {}),
   };
 

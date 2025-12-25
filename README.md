@@ -100,7 +100,7 @@
 - When updating `fonts.config.json`, regenerate the Google Fonts URL bundle and
   optionally verify that each generated URL resolves:
   ```bash
-  yarn fonts:urls                    # rebuild src/data/generated/googleFonts.gen.ts
+  yarn fonts:urls                    # rebuild src/data/generated/fonts/googleFonts.gen.ts
   VERIFY_FONT_URLS=true yarn fonts:urls  # repeat with live HEAD checks against Google Fonts
   ```
 - Enable the guardrail pre-commit hook so commits fail when locale markdown is
@@ -121,7 +121,7 @@
   if those annotations are missing so we catch regressions early.
 - Run `yarn favicons` whenever the master SVG or the favicon tokens change. The
   script resets `public/favicons/`, regenerates every hashed asset, and emits a
-  TypeScript manifest under `src/data/generated/favicons.manifest.gen.ts`.
+  TypeScript manifest under `src/data/generated/favicons/manifest.favicons.gen.ts`.
 - During development the generator also writes formatted `.gen.svg` artifacts
   for the tagged layers so the favicons debug page can preview them—they live in
   `public/favicons/` and are replaced on every run. The directory is fully

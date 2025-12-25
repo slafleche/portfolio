@@ -40,14 +40,16 @@ const MANIFEST_TS_PATH = path.resolve(
   'src',
   'data',
   'generated',
-  'favicons.manifest.gen.ts',
+  'favicons',
+  'manifest.favicons.gen.ts',
 );
 const PUBLIC_ROOT = '/favicons';
 const CACHE_INFO_PATH = path.resolve(
   'src',
   'data',
   'generated',
-  'favicons.hash.json',
+  'favicons',
+  'hash.favicons.json',
 );
 
 type ExtractSvgLayerOptions = {

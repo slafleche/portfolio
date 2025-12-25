@@ -38,7 +38,10 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
     // Match any occurrence of NODE_ENV in code; the scanner is responsible
     // for scoping this to code files and allowed paths.
     regex: /\bNODE_ENV\b/,
-    allowedPathSubstrings: ['src/lib/runtimeEnv.ts', 'envPrimitives.mjs'],
+    allowedPathSubstrings: [
+      'src/lib/runtimeEnv.ts',
+      'envPrimitives.mts',
+    ],
   },
   {
     id: 'runtime-vercel-env',
@@ -46,7 +49,10 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
       'Use runtimeEnv helpers instead of process.env.VERCEL_ENV.',
     // Match any occurrence of VERCEL_ENV in code.
     regex: /\bVERCEL_ENV\b/,
-    allowedPathSubstrings: ['src/lib/runtimeEnv.ts', 'envPrimitives.mjs'],
+    allowedPathSubstrings: [
+      'src/lib/runtimeEnv.ts',
+      'envPrimitives.mts',
+    ],
   },
   {
     id: 'runtime-vercel-branch',
@@ -58,7 +64,10 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
     // scope this to non-doc code.
     regex:
       /\b(?:VERCEL_GIT_COMMIT_REF|VERCEL_GIT_BRANCH|BRANCH|VERCEL_GIT_REPO_SLUG)\b/,
-    allowedPathSubstrings: ['src/lib/runtimeEnv.ts', 'envPrimitives.mjs'],
+    allowedPathSubstrings: [
+      'src/lib/runtimeEnv.ts',
+      'envPrimitives.mts',
+    ],
   },
   {
     id: 'runtime-vercel-flag',
@@ -66,7 +75,10 @@ export const RUNTIME_ENV_USAGE_PATTERNS = [
       'Use envPrimitives/runtimeEnv helpers instead of process.env.VERCEL.',
     // Match any occurrence of the VERCEL flag in code.
     regex: /\bVERCEL\b/,
-    allowedPathSubstrings: ['src/lib/runtimeEnv.ts', 'envPrimitives.mjs'],
+    allowedPathSubstrings: [
+      'src/lib/runtimeEnv.ts',
+      'envPrimitives.mts',
+    ],
   },
   {
     id: 'runtime-private-launch',

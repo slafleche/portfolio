@@ -1,5 +1,3 @@
-import manifestJson from '@/data/generated/videos.manifest.gen.json';
-
 export type VideoVariant = {
   rung: number;
   height: number;
@@ -24,9 +22,3 @@ export type VideoEntry = {
   sourceHash?: string;
   sourceSize?: number;
 };
-
-const manifest = manifestJson as Record<string, VideoEntry>;
-
-export function getVideo(name: string): VideoEntry | undefined {
-  return manifest[name];
-}

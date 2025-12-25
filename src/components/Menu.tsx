@@ -19,7 +19,6 @@ import {
   useState,
 } from 'react';
 import { usePathname } from 'next/navigation';
-import ConsoleCuriosity from '@/components/ConsoleCuriosity';
 import {
   canonicalToLocalizedSlugs,
   localizedToCanonicalSlugs,
@@ -66,13 +65,6 @@ type MenuProps = {
   bokehDebug?: MiniBokehDebugOptions;
   debugGlow?: boolean;
   focusDebug?: FocusDebugOptions;
-  curiosityMessages?: {
-    title: string;
-    test: string;
-    result: string;
-    hint: string;
-    targetHref: string;
-  };
   logoRedirectPaths?: ReadonlyArray<string>;
 };
 
@@ -98,7 +90,6 @@ export default function Menu({
   bokehDebug,
   debugGlow = false,
   focusDebug,
-  curiosityMessages,
   logoRedirectPaths,
 }: MenuProps) {
   const { isOpen: isContactDialogOpen, isPrivacyOpen } =
@@ -135,9 +126,6 @@ export default function Menu({
     sections,
     systemsSections,
   ]);
-  const curiosityTarget = curiosityMessages?.targetHref ?? '';
-  const shouldRenderCuriosity =
-    Boolean(curiosityMessages) && normalizedPath !== curiosityTarget;
   const normalizedRoot = useMemo(() => {
     if (root === '/') return '/';
     return root.replace(/\/+$/, '');
@@ -899,15 +887,6 @@ export default function Menu({
 
   return (
     <>
-      {shouldRenderCuriosity && curiosityMessages ? (
-        <ConsoleCuriosity
-          title={curiosityMessages.title}
-          test={curiosityMessages.test}
-          result={curiosityMessages.result}
-          hint={curiosityMessages.hint}
-          targetHref={curiosityMessages.targetHref}
-        />
-      ) : null}
       <div
         className={s.root}
         data-mounted={mounted}

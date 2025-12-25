@@ -5,7 +5,7 @@ import {
   notStaging,
   isRelease,
   notRelease,
-} from '../../envPrimitives.mjs';
+} from '../../envPrimitives.mts';
 
 export {
   isDev,
@@ -15,4 +15,3 @@ export {
   isRelease,
   notRelease,
 };
-

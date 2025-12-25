@@ -38,8 +38,9 @@ const enBaseData = {
   'hero-video-alt':
     'Slowly rotating diagonal gradient blending cool blue and soft magenta tones with subtle light bands',
 
-  'hero-title': 'Design systems [split] built to evolve',
-  'hero-subTitle': "Stéphane's Developer Portfolio",
+  'hero-title': 'Stéphane LaFlèche, [split] Front-end Developer',
+  'hero-subTitle':
+    'I specialize in React UI & design systems, keeping design and code aligned',
 
   'hero-console_description': 'Decorative code backdrop',
   'hero-cta': "Let's connect!",
@@ -60,15 +61,16 @@ const enBaseData = {
 
   projects: 'Projects',
   'projects-href': 'projects',
-  'projects-01-cocacola-title': 'La Brigade du Bonheur',
+  'projects-01-cocacola-title': '[wordmark:Coca-Cola]',
   ...markdownRefs('projects-01-cocacola-content'),
-  'projects-02-ea-title': 'Electronic Arts ([abbr:EA])',
+  'projects-02-ea-title': '[wordmark:Electronic Arts]',
   ...markdownRefs('projects-02-ea-content'),
-  'projects-03-banq-title': '[abbr:BAnQ] (via InMedia)',
+  'projects-03-banq-title':
+    '[wordmark:Bibliothèque et Archives nationales du Québec]',
   ...markdownRefs('projects-03-banq-content'),
-  'projects-04-hootsuite-title': 'Hootsuite (internal collaboration)',
+  'projects-04-hootsuite-title': '[wordmark:Hootsuite]',
   ...markdownRefs('projects-04-hootsuite-content'),
-  'projects-05-king-games-title': 'King Games',
+  'projects-05-king-games-title': '[wordmark:King Games]',
   ...markdownRefs('projects-05-king-games-content'),
 
   'systems-hero-title': 'Interfaces designed [split] for composition',

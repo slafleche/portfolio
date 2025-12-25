@@ -18,7 +18,7 @@ import {
   FAVICON_WEB_MANIFESTS,
   FAVICON_DEV_MASK_SVG_PATH,
   FAVICON_DEV_TILE_FOREGROUND_SVG_PATH,
-} from '@/data/generated/favicons.manifest.gen';
+} from '@/data/generated/favicons/manifest.favicons.gen';
 import {
   faviconAssetPlan,
   faviconThemeColors,

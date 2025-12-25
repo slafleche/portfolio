@@ -49,9 +49,10 @@ export const fontFamilies = {
       strong: 600,
     },
   }),
-  urbanist: defineFontFamily({
-    familyName: 'Urbanist',
+  objectSans: defineFontFamily({
+    familyName: 'Object Sans',
     fallbacks: [
+      'IBM Plex Sans',
       'Segoe UI',
       'Roboto',
       'Helvetica Neue',
@@ -59,12 +60,12 @@ export const fontFamilies = {
       'sans-serif',
     ],
     cfgMap: fontsConfig,
-    spacing: m(0, 'rem'),
-    offsetToFlushTop: m(0, 'rem'),
-    lineHeight: 1.2,
+    spacing: m(0, 'em'),
+    offsetToFlushTop: m(0, 'em'),
+    lineHeight: 1,
     weights: {
       default: 400,
-      strong: 700,
+      strong: 600,
     },
   }),
 } satisfies Record<string, FontFamilyDef>;

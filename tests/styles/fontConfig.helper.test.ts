@@ -90,13 +90,12 @@ describe('fontConfig.helper', () => {
         spacing: m(0.1, 'rem'),
         offsetToFlushTop: m(0, 'rem'),
         weights: { low: 200, default: 400, strong: 500 },
-      }),
-    ).toThrow(/conflicts with fonts\.config\.json range/);
+      })).toThrow(/conflicts with fonts\.config\.json range/);
   });
 
   it('coerces raw JSON objects into FontsConfig and validates structure', () => {
     const config = asFontsConfig({
-      Urbanist: {
+      objectSans: {
         texts: [
           42,
         ],
@@ -119,20 +118,20 @@ describe('fontConfig.helper', () => {
       },
     });
 
-    expect(config.Urbanist.weights).toEqual([
+    expect(config.objectSans.weights).toEqual([
       '100..900',
     ]);
-    expect(config.Urbanist.texts).toEqual([
+    expect(config.objectSans.texts).toEqual([
       '42',
     ]);
-    expect(config.Urbanist.keys).toEqual([
+    expect(config.objectSans.keys).toEqual([
       'null',
     ]);
-    expect(config.Urbanist.ital).toBeUndefined();
-    expect(config.Urbanist.subsets).toEqual([
+    expect(config.objectSans.ital).toBeUndefined();
+    expect(config.objectSans.subsets).toEqual([
       '123',
     ]);
-    expect(config.Urbanist.axes).toEqual({
+    expect(config.objectSans.axes).toEqual({
       wght: [
         '100..900',
       ],
