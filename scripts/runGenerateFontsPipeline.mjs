@@ -7,6 +7,12 @@ import { stdin as input, stdout as output } from 'node:process';
 const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
 const args = process.argv.slice(2);
+const hasTargetArg = args.some(
+  (arg) => arg === '--target' || arg.startsWith('--target='),
+);
+if (!hasTargetArg) {
+  args.unshift('--target=both');
+}
 
 const run = (script, extraArgs = []) => {
   const result = spawnSync(
