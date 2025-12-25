@@ -16,12 +16,12 @@ import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
 import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
-import {
-  buildHomeMenuSections,
-  buildSystemsMenuSections,
-} from '@/lib/locales/sections/menuSections';
-import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+// import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+// import {
+//   buildHomeMenuSections,
+//   buildSystemsMenuSections,
+// } from '@/lib/locales/sections/menuSections';
+// import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { resolveLocale } from '@/lib/locales/locale';
@@ -74,9 +74,9 @@ export default async function HomePage({
   const { cocacola, ea, banq, hootsuite, kingGames } = projects.items;
   const contact = buildContactCopy(translator);
   const systemsLink = buildSystemsLink(locale, translator);
-  const menuCopy = buildMenuCopy(translator);
-  const menuSections = buildHomeMenuSections(translator);
-  const systemsMenuSections = buildSystemsMenuSections(translator);
+  // const menuCopy = buildMenuCopy(translator);
+  // const menuSections = buildHomeMenuSections(translator);
+  // const systemsMenuSections = buildSystemsMenuSections(translator);
 
   const curiosityMessages = {
     title: translator('console-curiosity-title'),
