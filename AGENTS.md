@@ -19,8 +19,8 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 
 - Must: Keep alignment through collaborative, iterative planning with quick
   check-ins and explicit assumptions; do not force a fixed cadence.
-- Should: Use “talk → clarify → TODO → go” only when it helps the user, not as
-  a required sequence.
+- Should: Use “talk → clarify → TODO → go” only when it helps the user, not as a
+  required sequence.
 - Must: Separate WHAT (planning) from DO (execution). During WHAT, do not change
   files; during DO, follow the agreed spec exactly and ask when anything is
   ambiguous or blocked.
@@ -92,6 +92,9 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Should: Capture important decisions in `README.md` or `TODO.*.md` so future
   work has context, and surface unrelated lint/type errors without fixing them
   unless asked.
+- Must: Any statement of desired behavior ("should", "expected", "wrong")
+  implies corrective intent. Output the fix (minimal diff or corrected draft).
+  Never restate existing behavior unless explicitly asked for diagnostics.
 - Must: When a user message (non-code text) contains a `?`, reply using
   text-only responses—no code blocks or other non-text output.
 - Must: When AGENTS, user instructions, or existing code seem to conflict, call
@@ -131,11 +134,23 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 
 ## Linting and guardrails (`linting`)
 
-- Must: When you make non-trivial changes to application code, ensure `yarn lint` has been run before considering the work complete; the agent may either run `yarn lint` directly or explicitly ask the user to run it.
-- Must: When you touch style-layer files under `src/styles` (including `*.css.ts`), run `yarn lint:rules` after your changes to ensure architecture guardrails still hold.
+- Must: When you make non-trivial changes to application code, ensure
+  `yarn lint` has been run before considering the work complete; the agent may
+  either run `yarn lint` directly or explicitly ask the user to run it.
+- Must: When you touch style-layer files under `src/styles` (including
+  `*.css.ts`), run `yarn lint:rules` after your changes to ensure architecture
+  guardrails still hold.
 
 ## Testing discipline (`testing`)
 
-- Must: Prefer real failing tests over disabled ones; do not use constructs like `it.skip`, `describe.skip`, `test.skip`, or `.todo` to park incomplete behaviour—capture the intended behaviour as assertions that fail until the feature is correctly implemented.
-- Must: Do not “cheat” by updating expectations just to match a known-bad implementation result; expectations should describe the desired behaviour, not the current bug.
-- Should: Keep guards inside tests minimal; avoid early returns or defensive branches that can allow tests to pass without actually exercising the code under test (for example, returning early after an element query instead of letting the test fail when the wiring is wrong).
+- Must: Prefer real failing tests over disabled ones; do not use constructs like
+  `it.skip`, `describe.skip`, `test.skip`, or `.todo` to park incomplete
+  behaviour—capture the intended behaviour as assertions that fail until the
+  feature is correctly implemented.
+- Must: Do not “cheat” by updating expectations just to match a known-bad
+  implementation result; expectations should describe the desired behaviour, not
+  the current bug.
+- Should: Keep guards inside tests minimal; avoid early returns or defensive
+  branches that can allow tests to pass without actually exercising the code
+  under test (for example, returning early after an element query instead of
+  letting the test fail when the wiring is wrong).
