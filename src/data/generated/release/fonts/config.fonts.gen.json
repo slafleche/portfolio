@@ -1,8 +1,4 @@
 {
-  "Urbanist": {
-    "type": "googleFonts",
-    "weights": "100..900"
-  },
   "IBM+Plex+Sans": {
     "type": "googleFonts",
     "weights": "100..700",

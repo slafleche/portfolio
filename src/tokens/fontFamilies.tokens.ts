@@ -49,24 +49,6 @@ export const fontFamilies = {
       strong: 600,
     },
   }),
-  urbanist: defineFontFamily({
-    familyName: 'Urbanist',
-    fallbacks: [
-      'Segoe UI',
-      'Roboto',
-      'Helvetica Neue',
-      'Arial',
-      'sans-serif',
-    ],
-    cfgMap: fontsConfig,
-    spacing: m(0, 'rem'),
-    offsetToFlushTop: m(0, 'rem'),
-    lineHeight: 1.2,
-    weights: {
-      default: 400,
-      strong: 700,
-    },
-  }),
   objectSans: defineFontFamily({
     familyName: 'Object Sans',
     fallbacks: [

@@ -33,8 +33,8 @@ export default async function ProjectorPathDebugPage() {
   return (
     <ProjectorPathDebug
       durationMs={durationMs}
-      fontFamily={fontFamilies.urbanist.family}
-      fontWeight={fontFamilies.urbanist.weights.strong}
+      fontFamily={fontFamilies.objectSans.family}
+      fontWeight={fontFamilies.objectSans.weights.strong}
       initialDefaults={initialDefaults}
     />
   );

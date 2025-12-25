@@ -5,11 +5,11 @@ import { defineFontVariant, type FontVariantMap } from './core';
 const SOURCE_PATH = 'src/tokens/fontVariants/headings.ts';
 
 export const headingVariants = {
-  heading: defineFontVariant(fontFamilies.urbanist, {
+  heading: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading',
     sourcePath: SOURCE_PATH,
   }),
-  h1: defineFontVariant(fontFamilies.urbanist, {
+  h1: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h1',
     sourcePath: SOURCE_PATH,
     config: {
@@ -23,7 +23,7 @@ export const headingVariants = {
       },
     },
   }),
-  h2: defineFontVariant(fontFamilies.urbanist, {
+  h2: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h2',
     sourcePath: SOURCE_PATH,
     config: {
@@ -37,7 +37,7 @@ export const headingVariants = {
       },
     },
   }),
-  h3: defineFontVariant(fontFamilies.urbanist, {
+  h3: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h3',
     sourcePath: SOURCE_PATH,
     config: {
@@ -51,7 +51,7 @@ export const headingVariants = {
       },
     },
   }),
-  h4: defineFontVariant(fontFamilies.urbanist, {
+  h4: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h4',
     sourcePath: SOURCE_PATH,
     config: {
@@ -65,7 +65,7 @@ export const headingVariants = {
       },
     },
   }),
-  h5: defineFontVariant(fontFamilies.urbanist, {
+  h5: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h5',
     sourcePath: SOURCE_PATH,
     config: {
@@ -79,7 +79,7 @@ export const headingVariants = {
       },
     },
   }),
-  h6: defineFontVariant(fontFamilies.urbanist, {
+  h6: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h6',
     sourcePath: SOURCE_PATH,
     config: {
