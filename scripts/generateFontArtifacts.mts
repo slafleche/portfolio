@@ -2,6 +2,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 import readline from 'node:readline/promises';
 import { stdin as input, stdout as output } from 'node:process';
 
@@ -102,6 +103,8 @@ function parseArgs(argv: string[]) {
     hasExplicitBoth: false,
     versionOverride: null as string | null,
     baseUrlOverride: null as string | null,
+    skipSelfHosted: false,
+    skipGoogleFonts: false,
     help: false,
   };
   for (const arg of argv) {
@@ -128,10 +131,32 @@ function parseArgs(argv: string[]) {
     } else if (arg.startsWith('--base-url=')) {
       const url = arg.split('=')[1]?.trim();
       if (url) opts.baseUrlOverride = url;
+    } else if (arg === '--skip-self-hosted') {
+      opts.skipSelfHosted = true;
+    } else if (arg === '--skip-google-fonts') {
+      opts.skipGoogleFonts = true;
     }
   }
   return opts;
 }
+
+const runCdnScript = (script: string, args: string[]) => {
+  const result = spawnSync(
+    'yarn',
+    [
+      '--cwd',
+      path.join(REPO_ROOT, 'cdn'),
+      script,
+      ...args,
+    ],
+    {
+      stdio: 'inherit',
+    },
+  );
+  if (result.status !== 0) {
+    process.exit(result.status ?? 1);
+  }
+};
 
 async function pickTargets(): Promise<Target[]> {
   const stagingPath = path.join(TMP_ROOT, '_staging');
@@ -321,7 +346,9 @@ async function main() {
   if (opts.help) {
     console.log(
       [
-        'Usage: yarn generate:fontArtifacts [--target=_staging|release] [--version=vX] [--base-url=https://...]',
+        'Usage: yarn generate:fontArtifacts [--target=_staging|release] [--version=vX] [--base-url=https://...] [--skip-self-hosted] [--skip-google-fonts]',
+        '',
+        'Defaults to running generate:selfHostedFonts before, and generate:googleFonts after.',
         '',
         'Reads tmp fonts config + manifest to produce:',
         '  src/data/generated/<target>/fonts/config.fonts.gen.json',
@@ -342,6 +369,25 @@ async function main() {
       ? (['_staging', 'release'] as Target[])
       : [opts.target]
     : await pickTargets();
+
+  const forwardedArgs = process.argv
+    .slice(2)
+    .filter(
+      (arg) =>
+        arg !== '--target' &&
+        !arg.startsWith('--target=') &&
+        arg !== '--skip-self-hosted' &&
+        arg !== '--skip-google-fonts',
+    );
+
+  if (!opts.skipSelfHosted) {
+    for (const target of targets) {
+      runCdnScript('generate:selfHostedFonts', [
+        ...forwardedArgs,
+        `--target=${target}`,
+      ]);
+    }
+  }
 
   const baseUrlEnv =
     opts.baseUrlOverride ??
@@ -422,6 +468,10 @@ async function main() {
     console.log(
       `[${targetLabel}] ✓ Wrote public font faces → ${fontFacesCssOut}`,
     );
+  }
+
+  if (!opts.skipGoogleFonts) {
+    runCdnScript('generate:googleFonts', process.argv.slice(2));
   }
 }
 

@@ -65,7 +65,7 @@ export const fontFamilies = {
     lineHeight: 1,
     weights: {
       default: 400,
-      strong: 700,
+      strong: 600,
     },
   }),
 } satisfies Record<string, FontFamilyDef>;

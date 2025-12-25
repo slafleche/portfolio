@@ -74,5 +74,9 @@ if (runSync) {
   const syncArgs = overwriteAll ? ['--fonts', '--yes', ...args] : ['--fonts', ...args];
   run('cdn:sync', syncArgs);
 }
-run('generate:fonts:artifacts', args);
+run('generate:fonts:artifacts', [
+  ...args,
+  '--skip-self-hosted',
+  '--skip-google-fonts',
+]);
 run('generate:googleFonts', args);

@@ -748,7 +748,7 @@ export const navLink = style({
   ...composeFontVariantStyles(fontVariants.menu, {
     options: {
       weightPercents: {
-        default: mPercent(50),
+        default: mPercent(0),
       },
     },
   }),

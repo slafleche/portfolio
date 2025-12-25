@@ -1,4 +1,4 @@
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 import { fontFamilies } from '../fontFamilies.tokens';
 import { defineFontVariant, type FontVariantMap } from './core';
 
@@ -12,6 +12,11 @@ export const menuVariants = {
     config: {
       overrides: {
         size: m(16),
+      },
+      options: {
+        weightPercents: {
+          default: mPercent(0),
+        },
       },
     },
   }),

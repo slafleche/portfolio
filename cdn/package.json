@@ -23,8 +23,8 @@
     "cdn:cache": "tsx cdnPurgeCache.mts",
     
     "generate:fonts": "node ../scripts/runGenerateFontsPipeline.mjs",
-    "generate:selfHostedFonts": "tsx ../scripts/generateLocalFonts.mts",
     "generate:fonts:artifacts": "tsx ../scripts/generateFontArtifacts.mts",
+    "generate:selfHostedFonts": "tsx ../scripts/generateLocalFonts.mts",
     "generate:googleFonts": "tsx ../scripts/generateFontUrls.mts",
     
     "generate:img": "node ../scripts/runGenerateImagesPipeline.mjs",
