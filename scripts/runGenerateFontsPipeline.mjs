@@ -55,7 +55,7 @@ const confirmOverwriteAll = async () => {
 
 if (args.includes('--help') || args.includes('-h')) {
   run('generate:selfHostedFonts', ['--help']);
-  run('generate:font:artifacts', ['--help']);
+  run('generate:fonts:artifacts', ['--help']);
   run('generate:googleFonts', ['--help']);
   process.exit(0);
 }
@@ -68,5 +68,5 @@ if (runSync) {
   const syncArgs = overwriteAll ? ['--fonts', '--yes', ...args] : ['--fonts', ...args];
   run('cdn:sync', syncArgs);
 }
-run('generate:font:artifacts', args);
+run('generate:fonts:artifacts', args);
 run('generate:googleFonts', args);

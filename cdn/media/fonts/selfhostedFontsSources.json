@@ -14,7 +14,7 @@
     "ital": true,
     "axes": {
       "wdth": "100",
-      "slnt": "10"
+      "slnt": "0"
     }
   },
   "Object+Sans": {
@@ -24,7 +24,7 @@
       800
     ],
     "axes": {
-      "slnt": "10"
+      "slnt": "0"
     }
   },
   "Neue+Montreal": {

@@ -34,13 +34,14 @@ const runRoot = (script: string, extraArgs: string[] = []) => {
 
 const runCdnPipeline = (
   targetName: Exclude<Target, 'both'>,
+  kinds: { fonts: boolean; images: boolean; videos: boolean },
   extraArgs: string[] = [],
 ) => {
   const targetArg = `--target=${targetName}`;
   const combinedArgs = [targetArg, ...extraArgs];
-  run('generate:fonts', combinedArgs);
-  run('generate:img', combinedArgs);
-  run('generate:videos', combinedArgs);
+  if (kinds.fonts) run('generate:fonts', combinedArgs);
+  if (kinds.images) run('generate:img', combinedArgs);
+  if (kinds.videos) run('generate:videos', combinedArgs);
 };
 
 const parseTarget = (argv: string[]): Target => {
@@ -55,24 +56,49 @@ const parseTarget = (argv: string[]): Target => {
   return 'both';
 };
 
+const parseKinds = (argv: string[]) => {
+  let fonts = false;
+  let images = false;
+  let videos = false;
+  for (const arg of argv) {
+    if (arg === '--fonts') fonts = true;
+    if (arg === '--images') images = true;
+    if (arg === '--videos') videos = true;
+  }
+
+  if (!fonts && !images && !videos) {
+    return { fonts: true, images: true, videos: true };
+  }
+
+  return { fonts, images, videos };
+};
+
 const wantsHelp = args.includes('--help') || args.includes('-h');
 const target = parseTarget(args);
-const cdnArgs = args.filter((arg) => !arg.startsWith('--target='));
+const kinds = parseKinds(args);
+const cdnArgs = args.filter(
+  (arg) =>
+    !arg.startsWith('--target=') &&
+    arg !== '--fonts' &&
+    arg !== '--images' &&
+    arg !== '--videos',
+);
 
 if (wantsHelp) {
   console.log(
     [
-      'Usage: yarn generate [--target=_staging|release|both] [--yes]',
+      'Usage: yarn generate [--target=_staging|release|both] [--fonts] [--images] [--videos] [--yes]',
       '',
       'Runs:',
       '  yarn locales',
       '  yarn generate:favicons',
-      '  yarn --cwd cdn generate:fonts',
-      '  yarn --cwd cdn generate:img',
-      '  yarn --cwd cdn generate:videos',
+      '  yarn --cwd cdn generate:fonts (when --fonts or no media flags)',
+      '  yarn --cwd cdn generate:img (when --images or no media flags)',
+      '  yarn --cwd cdn generate:videos (when --videos or no media flags)',
       '',
       'Examples:',
       '  yarn generate',
+      '  yarn generate --fonts --yes',
       '  yarn generate --target=_staging',
       '  yarn generate --target=release --yes',
     ].join('\n'),
@@ -87,10 +113,10 @@ runRoot('locales');
 runRoot('generate:favicons');
 
 if (target === 'both') {
-  runCdnPipeline('_staging', cdnArgs);
-  runCdnPipeline('release', cdnArgs);
+  runCdnPipeline('_staging', kinds, cdnArgs);
+  runCdnPipeline('release', kinds, cdnArgs);
 } else if (target === '_staging') {
-  runCdnPipeline('_staging', cdnArgs);
+  runCdnPipeline('_staging', kinds, cdnArgs);
 } else {
-  runCdnPipeline('release', cdnArgs);
+  runCdnPipeline('release', kinds, cdnArgs);
 }

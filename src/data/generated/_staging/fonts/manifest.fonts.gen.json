@@ -14,7 +14,7 @@
     "ital": true,
     "axes": {
       "wdth": "100",
-      "slnt": "10"
+      "slnt": "0"
     },
     "dirName": "Pangram+Sans.gen",
     "files": [
@@ -107,7 +107,7 @@
       800
     ],
     "axes": {
-      "slnt": "10"
+      "slnt": "0"
     },
     "dirName": "Object+Sans.gen",
     "files": [

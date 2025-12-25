@@ -26,7 +26,7 @@
     "ital": true,
     "axes": {
       "wdth": "100",
-      "slnt": "10"
+      "slnt": "0"
     },
     "type": "selfHosted"
   },
@@ -37,7 +37,7 @@
       800
     ],
     "axes": {
-      "slnt": "10"
+      "slnt": "0"
     },
     "type": "selfHosted"
   },

@@ -21,12 +21,12 @@
     "cdn:ls": "tsx cdnClient.mts ls",
     "cdn:sync": "tsx cdnSyncManifests.mts",
     "cdn:cache": "tsx cdnPurgeCache.mts",
-
+    
     "generate:fonts": "node ../scripts/runGenerateFontsPipeline.mjs",
     "generate:selfHostedFonts": "tsx ../scripts/generateLocalFonts.mts",
-    "generate:font:artifacts": "tsx ../scripts/generateFontArtifacts.mts",
+    "generate:fonts:artifacts": "tsx ../scripts/generateFontArtifacts.mts",
     "generate:googleFonts": "tsx ../scripts/generateFontUrls.mts",
-
+    
     "generate:img": "node ../scripts/runGenerateImagesPipeline.mjs",
     "generate:img:files": "node ../scripts/generateImages.mts",
     "generate:img:artifacts": "node ../scripts/generateImageArtifacts.mjs",
