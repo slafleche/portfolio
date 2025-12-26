@@ -1,26 +1,22 @@
 import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
-// import Menu from '@/components/Menu';
+import Menu from '@/components/Menu';
 import HeroWaypoint from '@/components/HeroWaypoint';
 import ContentAsTiles from '@/components/responsive/ContentAsTiles';
 import { Markdown } from '@/components/Markdown';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
+import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
 import * as layoutStyles from '@/styles/layout.css';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
 import * as systemsStyles from '@/styles/components/systems.css';
-// import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
-// import {
-// buildHomeMenuSections,
-// buildSystemsMenuSections,
-// } from '@/lib/locales/sections/menuSections';
-// import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
-// import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { resolveLocale } from '@/lib/locales/locale';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { userContent } from '@/styles/typography.css';
+import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -60,32 +56,33 @@ export default async function SystemsPage({
     ctaLabel: contactCopy.title,
   };
 
-  // const menuCopy = buildMenuCopy(translator);
-  // const menuSections = buildHomeMenuSections(translator);
-  // const systemsMenuSections = buildSystemsMenuSections(translator);
-  // const systemsSlug =
-  // canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
-
+  const menuCopy: ReturnType<typeof buildMenuCopy> =
+    buildMenuCopy(translator);
   const homeHref = `/${locale}`;
 
-  // const menuProps = {
-  //   root: `/${locale}`,
-  //   skipNavLabel: menuCopy.skipNavLabel,
-  //   leftLabel: menuCopy.leftLabel,
-  //   rightLabel: menuCopy.rightLabel,
-  //   localeChangeLabel: menuCopy.languageLabel,
-  //   sections: menuSections,
-  //   systemsSections: systemsMenuSections,
-  //   localeLinks: AVAILABLE_LOCALES.filter(
-  //     (code) => code !== locale,
-  //   ).map((code) => ({
-  //     locale: code,
-  //     label: LOCALE_LABELS[code],
-  //   })),
-  // };
+  const menuProps = {
+    root: `/${locale}`,
+    homeLabel: menuCopy.homeLabel,
+    skipNavLabel: menuCopy.skipNavLabel,
+    navLabel: menuCopy.navLabel,
+    localeChangeLabel: menuCopy.languageLabel,
+    anchorNavLabel: menuCopy.anchorLabel,
+    anchorLinks: [
+      { title: parseWordmarkTemplate(systemsTitle).fullText, href: `#${systemsIntroId}` },
+      { title: parseWordmarkTemplate(systemsPrinciplesTitle).fullText, href: `#${systemsPrinciplesId}` },
+      { title: parseWordmarkTemplate(systemsShapeTitle).fullText, href: `#${systemsShapeId}` },
+    ],
+    localeLinks: AVAILABLE_LOCALES.filter(
+      (code) => code !== locale,
+    ).map((code) => ({
+      locale: code,
+      label: LOCALE_LABELS[code],
+    })),
+  };
 
   return (
     <>
+      <Menu {...menuProps} />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
           <Hero

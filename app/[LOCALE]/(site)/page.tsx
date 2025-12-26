@@ -25,6 +25,7 @@ import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { resolveLocale } from '@/lib/locales/locale';
+import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import WordMarkInTitle from '@/components/WordmarkInTitle';
 import {
   BQWordmark,
@@ -75,7 +76,8 @@ export default async function HomePage({
   const { cocacola, ea, banq, hootsuite, kingGames } = projects.items;
   const contact = buildContactCopy(translator);
   const systemsLink = buildSystemsLink(locale, translator);
-  const menuCopy = buildMenuCopy(translator);
+  const menuCopy: ReturnType<typeof buildMenuCopy> =
+    buildMenuCopy(translator);
   // const menuSections = buildHomeMenuSections(translator);
   // const systemsMenuSections = buildSystemsMenuSections(translator);
 
@@ -91,8 +93,17 @@ export default async function HomePage({
 
   const menuProps = {
     root: `/${locale}`,
+    homeLabel: menuCopy.homeLabel,
     skipNavLabel: menuCopy.skipNavLabel,
+    navLabel: menuCopy.navLabel,
     localeChangeLabel: menuCopy.languageLabel,
+    anchorNavLabel: menuCopy.anchorLabel,
+    anchorLinks: [
+      { title: parseWordmarkTemplate(approach.title).fullText, href: `#${approach.href}` },
+      { title: parseWordmarkTemplate(about.title).fullText, href: `#${about.href}` },
+      { title: parseWordmarkTemplate(caseStudies.title).fullText, href: `#${caseStudies.href}` },
+      { title: parseWordmarkTemplate(projects.title).fullText, href: `#${projects.href}` },
+    ],
     localeLinks: AVAILABLE_LOCALES.filter(
       (code) => code !== locale,
     ).map((code) => ({

@@ -38,6 +38,7 @@ export const page = style({
   minHeight: '100vh',
   display: 'flex',
   flexDirection: 'column',
+  zIndex: 0,
 });
 
 export const main = style({

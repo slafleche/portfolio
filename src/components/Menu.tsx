@@ -4,49 +4,82 @@ import Link from 'next/link';
 import Logo from './Logo';
 import { SkipNavLink } from './SkipNavLink';
 import type { Locale } from '@/data/locales';
+import AnchorMenu from './AnchorMenu';
+import * as s from '@/styles/components/menu.css.ts';
+import clsx from 'clsx';
 
 type LocaleLink = {
   locale: Locale;
   label: string;
 };
 
+type AnchorLink = {
+  title: string;
+  href: string;
+};
+
 type MenuProps = {
   root: string;
+  homeLabel: string;
   skipNavLabel: string;
+  navLabel: string;
   localeChangeLabel: string;
   localeLinks: ReadonlyArray<LocaleLink>;
+  anchorLinks?: ReadonlyArray<AnchorLink>;
+  anchorNavLabel: string;
 };
 
 export default function Menu({
   root,
+  homeLabel,
   skipNavLabel,
+  navLabel,
   localeChangeLabel,
   localeLinks,
+  anchorLinks = [],
+  anchorNavLabel,
 }: MenuProps) {
   const alternateLocale = localeLinks[0];
 
   return (
-    <header>
+    <header className={s.root}>
       <SkipNavLink contentId="body">{skipNavLabel}</SkipNavLink>
-      <nav aria-label="Primary navigation">
-        <ul>
-          <li>
-            <Link href={root} prefetch={false} aria-label="Home">
+      <nav aria-label={navLabel}>
+        <ul className={s.items} data-ui="list-unordered">
+          <li
+            className={clsx(s.item, s.logoItem)}
+            data-ui="list-item"
+          >
+            <Link
+              href={root}
+              prefetch={false}
+              aria-label={homeLabel}
+              data-ui="link"
+            >
               <Logo idBase="nav-logo" />
             </Link>
           </li>
           {alternateLocale ? (
-            <li>
+            <li
+              className={clsx(s.item, s.localeItem)}
+              data-ui="list-item"
+            >
               <Link
                 href={`/${alternateLocale.locale}`}
                 hrefLang={alternateLocale.locale}
                 aria-label={localeChangeLabel}
+                data-ui="link"
               >
                 {alternateLocale.label}
               </Link>
             </li>
           ) : null}
         </ul>
+        <AnchorMenu
+          className={s.anchorMenu}
+          anchorNavLabel={anchorNavLabel}
+          anchorLinks={anchorLinks}
+        />
       </nav>
     </header>
   );

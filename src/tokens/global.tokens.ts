@@ -326,57 +326,6 @@ export const archVars: ArchVars = {
 // z-index: 1000;
 // border: solid #fff 1px;
 
-export const logoVars = {
-  width: m(45),
-  offsetY: m(0),
-  offsetX: m(0),
-  borders: {
-    radius: mPercent(50),
-    width: m(1),
-    color: colorVars.white.alpha(0.5),
-  },
-  // focus: {
-  //   scale: 1.15,
-  //   transitionMs: 400,
-  //   haloColor: colorVars.contrast.alpha(0.35),
-  // },
-  // hover: {
-  //   blobs: [
-  //     {
-  //       color: themeColours.lights.a,
-  //       posX: 24,
-  //       posY: 38,
-  //       radius: 46,
-  //       intensity: 0.32,
-  //     },
-  //     {
-  //       color: themeColours.lights.b,
-  //       posX: 62,
-  //       posY: 58,
-  //       radius: 48,
-  //       intensity: 0.28,
-  //     },
-  //     {
-  //       color: themeColours.lights.d,
-  //       posX: 42,
-  //       posY: 72,
-  //       radius: 44,
-  //       intensity: 0.24,
-  //     },
-  //   ],
-  //   squareSizeMultiplier: 2.4,
-  //   squareBlur: 18,
-  //   squareOpacity: 1,
-  //   durationMs: 1800,
-  //   speedMultiplier: 1,
-  //   outline: {
-  //     color: colorVars.contrast.alpha(0.6),
-  //     width: m(2),
-  //     offset: m(6),
-  //   },
-  // },
-};
-
 export const dropShadowVars = {
   offsetY: m(2),
   offsetX: m(2),

@@ -1,7 +1,8 @@
 import { keyframes, style, globalStyle } from '@vanilla-extract/css';
-import { logoVars } from '../../tokens/global.tokens';
-import { absolutePosition } from '../helpers/positioning.helper';
+
+
 import borders from '../helpers/borders.helper';
+import { logoVars } from '../../tokens/menu.tokens';
 
 export const root = style({
   position: 'fixed',

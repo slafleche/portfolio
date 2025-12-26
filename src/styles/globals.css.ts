@@ -239,3 +239,25 @@ globalStyle('h1, h2, h3, h4, h5, h6', {
 globalStyle("*, *:after, *:before, input[type='search']", {
   boxSizing: 'border-box',
 });
+
+globalStyle('ul[data-ui="list-unordered"]', {
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+});
+
+globalStyle('ol[data-ui="list-ordered"]', {
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+});
+
+globalStyle('li[data-ui="list-item"]', {
+  margin: 0,
+  padding: 0,
+});
+
+globalStyle('a[data-ui="link"]', {
+  color: 'inherit',
+  textDecoration: 'none',
+});
