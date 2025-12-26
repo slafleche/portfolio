@@ -7,6 +7,9 @@ import type { Locale } from '@/data/locales';
 import AnchorMenu from './AnchorMenu';
 import * as s from '@/styles/components/menu.css.ts';
 import clsx from 'clsx';
+import { useMemo } from 'react';
+import { useId } from 'react';
+import { useActiveAnchors, type AnchorTarget } from '@/lib/useActiveAnchors';
 
 type LocaleLink = {
   locale: Locale;
@@ -40,6 +43,26 @@ export default function Menu({
   anchorNavLabel,
 }: MenuProps) {
   const alternateLocale = localeLinks[0];
+  const anchorTargets = useMemo<AnchorTarget[]>(
+    () =>
+      anchorLinks
+        .map((link) => {
+          const id = link.href.startsWith('#')
+            ? link.href.slice(1)
+            : link.href;
+          if (!id) return null;
+          return {
+            id,
+            href: link.href,
+          };
+        })
+        .filter((link): link is AnchorTarget => link !== null),
+    [anchorLinks],
+  );
+
+  const { activeHref, setManualActive } = useActiveAnchors(anchorTargets, {
+    hashSync: { enabled: true },
+  });
 
   return (
     <header className={s.root}>
@@ -54,6 +77,7 @@ export default function Menu({
               href={root}
               prefetch={false}
               aria-label={homeLabel}
+              className={s.homeLink}
               data-ui="link"
             >
               <Logo idBase="nav-logo" />
@@ -68,6 +92,7 @@ export default function Menu({
                 href={`/${alternateLocale.locale}`}
                 hrefLang={alternateLocale.locale}
                 aria-label={localeChangeLabel}
+                className={s.localeLink}
                 data-ui="link"
               >
                 {alternateLocale.label}
@@ -76,9 +101,10 @@ export default function Menu({
           ) : null}
         </ul>
         <AnchorMenu
-          className={s.anchorMenu}
           anchorNavLabel={anchorNavLabel}
           anchorLinks={anchorLinks}
+          activeHref={activeHref ?? undefined}
+          onActivate={setManualActive}
         />
       </nav>
     </header>

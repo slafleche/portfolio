@@ -7,6 +7,7 @@
 // } from '../../tokens/fontVariants.tokens';
 
 import { style } from '@vanilla-extract/css';
+import { localeSwitcherVars } from '../../tokens/menu.tokens';
 
 // import { m, mPercent } from 'css-calipers';
 // import transforms from '../helpers/transforms.helper';
@@ -23,9 +24,29 @@ export const item = style({});
 
 export const logoItem = style({});
 
-export const anchorMenu = style({});
+export const localeItem = style({
+  position: 'fixed',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: localeSwitcherVars.width.css(),
+  height: localeSwitcherVars.height.css(),
+  top: localeSwitcherVars.offsetY.css(),
+  right: localeSwitcherVars.offsetX.css(),
+  color: localeSwitcherVars.color.css(),
+});
 
-export const localeItem = style({});
+export const homeLink = style({});
+
+export const localeLink = style({
+  fontSize: localeSwitcherVars.fontSize.css(),
+  lineHeight: 1,
+  selectors: {
+    '&:hover, &:focus-visible, &:focus': {
+      textShadow: `0 0 3px ${localeSwitcherVars.color.css()}`,
+    },
+  },
+});
 
 // export const localeChanger = style({
 //   ...absolutePosition.topRight(

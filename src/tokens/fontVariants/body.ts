@@ -10,7 +10,7 @@ export const bodyVariants = {
     sourcePath: SOURCE_PATH,
     config: {
       overrides: {
-        size: m(16),
+        size: m(18),
       },
       options: {
         weightPercents: {

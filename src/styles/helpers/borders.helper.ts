@@ -58,6 +58,10 @@ interface FinalBorderCSS {
   border?: 'none';
 }
 
+type BorderOptions = {
+  skipDefaults?: boolean;
+};
+
 /* --------------------------
    Utilities
 -------------------------- */
@@ -174,7 +178,10 @@ const applyEdgeSpec = (
   return edge;
 };
 
-const resolveIntentToEdges = (intent: BorderIntent | undefined) => {
+const resolveIntentToEdges = (
+  intent: BorderIntent | undefined,
+  options?: BorderOptions,
+) => {
   const t = emptyEdge(),
     r = emptyEdge(),
     b = emptyEdge(),
@@ -205,16 +212,18 @@ const resolveIntentToEdges = (intent: BorderIntent | undefined) => {
   const dW = fallbackWidth();
   const dS = fallbackStyle();
   const dC = fallbackColor();
-  [
+  const applyDefaults = options?.skipDefaults !== true;
+  const edges = [
     t,
     r,
     b,
     l,
-  ].forEach((e) => {
+  ];
+  edges.forEach((e) => {
     if (e.active) {
-      if (!e.width) e.width = dW;
-      if (!e.style) e.style = dS;
-      if (!e.color) e.color = dC;
+      if (!e.width && applyDefaults) e.width = dW;
+      if (!e.style && applyDefaults) e.style = dS;
+      if (!e.color && applyDefaults) e.color = dC;
     } else {
       e.width = '0';
     }
@@ -457,12 +466,12 @@ const normalizeIntent = (
   }
 
   if (radius !== undefined) {
-    if (isRadiusCompass(radius)) {
-      intent.radius = radius;
-    } else if (isMeasurement(radius)) {
+    if (isMeasurement(radius)) {
       intent.radius = {
         all: radius,
       };
+    } else if (isRadiusCompass(radius)) {
+      intent.radius = radius;
     } else {
       intent.radius = radius as BorderIntent['radius'];
     }
@@ -471,13 +480,16 @@ const normalizeIntent = (
   return intent;
 };
 
-const resolve = (input?: BorderInput): FinalBorderCSS => {
+const resolve = (
+  input?: BorderInput,
+  options?: BorderOptions,
+): FinalBorderCSS => {
   const intent = normalizeIntent(input);
   if (intent && 'all' in intent && intent.all === false) {
     // prefer borders.none()
   }
 
-  const { t, r, b, l } = resolveIntentToEdges(intent ?? {});
+  const { t, r, b, l } = resolveIntentToEdges(intent ?? {}, options);
   const anyActive = t.active || r.active || b.active || l.active;
 
   if (!anyActive) return {};
@@ -591,34 +603,38 @@ const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
 -------------------------- */
 
 export const borders = Object.assign(
-  (intent?: BorderInput): FinalBorderCSS => resolve(intent),
+  (intent?: BorderInput, options?: BorderOptions): FinalBorderCSS =>
+    resolve(intent, options),
   {
     none(): FinalBorderCSS {
       return { border: 'none' };
     },
-    top(overrides?: BorderLike): FinalBorderCSS {
-      return resolve({ top: overrides ?? true });
+    top(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+      return resolve({ top: overrides ?? true }, options);
     },
-    right(overrides?: BorderLike): FinalBorderCSS {
-      return resolve({ right: overrides ?? true });
+    right(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+      return resolve({ right: overrides ?? true }, options);
     },
-    bottom(overrides?: BorderLike): FinalBorderCSS {
-      return resolve({ bottom: overrides ?? true });
+    bottom(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+      return resolve({ bottom: overrides ?? true }, options);
     },
-    left(overrides?: BorderLike): FinalBorderCSS {
-      return resolve({ left: overrides ?? true });
+    left(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+      return resolve({ left: overrides ?? true }, options);
     },
-    vertical(overrides?: BorderLike): FinalBorderCSS {
-      return resolve({ vertical: overrides ?? true });
+    vertical(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+      return resolve({ vertical: overrides ?? true }, options);
     },
-    horizontal(overrides?: BorderLike): FinalBorderCSS {
-      return resolve({ horizontal: overrides ?? true });
+    horizontal(
+      overrides?: BorderLike,
+      options?: BorderOptions,
+    ): FinalBorderCSS {
+      return resolve({ horizontal: overrides ?? true }, options);
     },
-    all(overrides?: BorderLike): FinalBorderCSS {
-      return resolve({ all: overrides ?? true });
+    all(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+      return resolve({ all: overrides ?? true }, options);
     },
-    defaults(): FinalBorderCSS {
-      return resolve({ all: true });
+    defaults(options?: BorderOptions): FinalBorderCSS {
+      return resolve({ all: true }, options);
     },
     radii(intent?: BorderInput): FinalBorderCSS {
       return resolveRadiusOnly(intent);
