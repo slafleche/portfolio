@@ -2,13 +2,14 @@ import * as s from '@/styles/components/card.css.ts';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import Heading, { type IHeadingDepth } from './Heading';
 import clsx from 'clsx';
-import * as glassFrameStyles from '@/styles/helpers/glassFrame.css';
+// import * as glassFrameStyles from '@/styles/helpers/glassFrame.css';
 
 type Props = IHeadingDepth &
   Omit<ComponentPropsWithoutRef<'div'>, 'title'> & {
     title?: ReactNode | string;
     children?: ReactNode;
     type?: string;
+    gradientClassName?: string;
   };
 
 export default function Card({
@@ -17,11 +18,9 @@ export default function Card({
   className,
   type,
   children,
+  gradientClassName,
   ...rest
 }: Props) {
-  const gradientClass =
-    type === 'right' ? s.cardGradientB : s.cardGradientA;
-
   const isStringTitle = typeof title === 'string';
 
   return (
@@ -30,13 +29,14 @@ export default function Card({
       data-type={type}
       {...rest}
     >
-      <div className={clsx(glassFrameStyles.frame, s.frame)}>
+      {gradientClassName && (
         <div
-          className={clsx(s.gradient, gradientClass)}
-          aria-hidden
+          className={clsx(s.gradient, gradientClassName)}
+          aria-hidden="true"
         />
-        <div className={glassFrameStyles.surfaceBorder} aria-hidden />
-        <div className={glassFrameStyles.rim} aria-hidden />
+      )}
+
+      <div className={s.frame}>
         <div className={s.content}>
           {isStringTitle ? (
             <Heading className={s.title} depth={depth}>

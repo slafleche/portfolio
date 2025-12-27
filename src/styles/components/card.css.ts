@@ -2,14 +2,18 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { makeCardGradient } from '../helpers/cardGradient.helper';
 import { colorVars, gradients } from '../../tokens/global.tokens';
 import { m } from 'css-calipers';
-import { paddings, margins } from '../helpers/spacing.helper';
+import { paddings } from '../helpers/spacing.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
-import { glassVars } from '../../tokens/glassy.tokens';
-import { borders } from '../helpers/borders.helper';
+import {
+  cardGradient_banq,
+  cardGradient_cc,
+  cardGradient_ea,
+  cardGradient_hs,
+  cardGradient_king,
+} from '../componentTokens/card.componentTokens';
 
 export const root = style({
   position: 'relative',
-  ...margins(m(20)),
   display: 'flex',
   flexDirection: 'column',
   selectors: {
@@ -40,7 +44,6 @@ export const container = style({
 
 export const frame = style({
   position: 'relative',
-  ...borders.radii(glassVars.borders),
   overflow: 'hidden',
   backgroundColor: colorVars.transparent.css(),
   display: 'flex',
@@ -52,7 +55,6 @@ export const content = style({
   position: 'relative',
   zIndex: 2,
   ...paddings(m(40)),
-  ...borders.radii(glassVars.borders),
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
@@ -89,6 +91,35 @@ export const cardGradientA = style(
 
 export const cardGradientB = style(
   makeCardGradient(gradients[1], {
+    linearDirection: m(95, 'deg'),
+  }),
+);
+
+export const gradientCC = style(
+  makeCardGradient(cardGradient_cc, {
+    linearDirection: m(95, 'deg'),
+  }),
+);
+export const gradientEa = style(
+  makeCardGradient(cardGradient_ea, {
+    linearDirection: m(95, 'deg'),
+  }),
+);
+
+export const gradientBanq = style(
+  makeCardGradient(cardGradient_banq, {
+    linearDirection: m(95, 'deg'),
+  }),
+);
+
+export const gradientHs = style(
+  makeCardGradient(cardGradient_hs, {
+    linearDirection: m(95, 'deg'),
+  }),
+);
+
+export const gradientKing = style(
+  makeCardGradient(cardGradient_king, {
     linearDirection: m(95, 'deg'),
   }),
 );

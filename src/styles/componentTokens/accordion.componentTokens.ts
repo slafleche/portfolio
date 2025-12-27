@@ -1,5 +1,6 @@
 import { m, mPercent } from 'css-calipers';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
+import { color } from '../helpers/colorWrap.helper';
 
 export const accordionSurfaceTokens = {
   gradientAngle: m(171, 'deg'),
@@ -26,6 +27,9 @@ export const accordionSurfaceTokens = {
   paddings: {
     horizontal: m(6),
     vertical: m(6),
+  },
+  drawerBackgrounds: {
+    color: color("#912eee"),
   },
   gap: m(3),
 } as const;

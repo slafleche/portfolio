@@ -57,16 +57,25 @@ export const themeColours = {
     dark: color('#524A65'),
   },
   // lights: {
-    // a: color('#00eeff'), // Cyan
-    // b: ,
-    // b: color('#08b263ff'),
-    // c: color('#010101ff'), // Amber
-    // d: color('#dfff00'), // Lime
-    // e: color('#00ff8e'), // Mint
+  // a: color('#00eeff'), // Cyan
+  // b: ,
+  // b: color('#08b263ff'),
+  // c: color('#010101ff'), // Amber
+  // d: color('#dfff00'), // Lime
+  // e: color('#00ff8e'), // Mint
   // },
   // darks: {
   //   a: backgroundColour,
   // },
+};
+
+export const cardGradients = {
+  cc: {
+    linear: [
+      ,
+      themeColours.lights.c,
+    ],
+  },
 };
 
 export const gradients: CardGradientPack[] = [

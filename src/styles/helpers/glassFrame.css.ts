@@ -1,16 +1,20 @@
 import { style } from '@vanilla-extract/css';
-import { glassVars } from '../../tokens/glassy.tokens';
+import {
+  glassVars,
+  // glassyButtonTokens,
+} from '../../tokens/glassy.tokens';
 
 import { colorVars } from '../../tokens/global.tokens';
 import { paddings } from './spacing.helper';
 import borders from './borders.helper';
-import { boxShadow } from './shadow.helper';
+// import { boxShadow } from './shadow.helper';
 
 export const frame = style({
-  // position: 'relative',
-  ...borders.radii(glassVars.borders),
+  position: 'relative',
+  ...borders.radii(glassVars.borders.radius),
+  // ...borders(glassVars.borders),
   // overflow: 'hidden',
-  ...boxShadow(),
+  // ...boxShadow(),
 });
 
 export const surfaceBorder = style({
@@ -20,7 +24,7 @@ export const surfaceBorder = style({
   height: '100%',
   width: '100%',
   ...paddings(glassVars.paddings),
-  ...borders.radii(glassVars.borders),
+  ...borders(glassVars.borders),
   pointerEvents: 'none',
   WebkitMask:
     'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
@@ -42,7 +46,7 @@ export const rim = style({
   position: 'absolute',
   inset: 0,
   ...paddings(glassVars.paddings),
-  ...borders.radii(glassVars.borders),
+  ...borders(glassVars.borders),
   pointerEvents: 'none',
   WebkitMask:
     'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',

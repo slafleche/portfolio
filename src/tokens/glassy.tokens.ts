@@ -15,7 +15,7 @@ export const glassVars = {
   surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),
   innerBorderColor: colorVars.white,
   borders: {
-    radius: m(40),
+    radius: m(18),
     width: m(2),
   },
   paddings: {

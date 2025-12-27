@@ -17,10 +17,7 @@ import { translateMarkdownSections } from '@/lib/locales/sections/markdownSectio
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
 import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
-// import {
-//   buildHomeMenuSections,
-//   buildSystemsMenuSections,
-// } from '@/lib/locales/sections/menuSections';
+import * as cg from '@/styles/components/card.css';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { sharedStrings } from '@/lib/sharedStrings';
@@ -99,10 +96,22 @@ export default async function HomePage({
     localeChangeLabel: menuCopy.languageLabel,
     anchorNavLabel: menuCopy.anchorLabel,
     anchorLinks: [
-      { title: parseWordmarkTemplate(approach.title).fullText, href: `#${approach.href}` },
-      { title: parseWordmarkTemplate(about.title).fullText, href: `#${about.href}` },
-      { title: parseWordmarkTemplate(caseStudies.title).fullText, href: `#${caseStudies.href}` },
-      { title: parseWordmarkTemplate(projects.title).fullText, href: `#${projects.href}` },
+      {
+        title: parseWordmarkTemplate(approach.title).fullText,
+        href: `#${approach.href}`,
+      },
+      {
+        title: parseWordmarkTemplate(about.title).fullText,
+        href: `#${about.href}`,
+      },
+      {
+        title: parseWordmarkTemplate(caseStudies.title).fullText,
+        href: `#${caseStudies.href}`,
+      },
+      {
+        title: parseWordmarkTemplate(projects.title).fullText,
+        href: `#${projects.href}`,
+      },
     ],
     localeLinks: AVAILABLE_LOCALES.filter(
       (code) => code !== locale,
@@ -160,6 +169,7 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientCC}
                 >
                   <Markdown source={cocacola.content} />
                 </Card>
@@ -173,6 +183,7 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientEa}
                 >
                   <Markdown source={ea.content} />
                 </Card>
@@ -187,6 +198,7 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientBanq}
                 >
                   <Markdown source={banq.content} />
                 </Card>
@@ -201,6 +213,7 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientHs}
                 >
                   <Markdown source={hootsuite.content} />
                 </Card>
@@ -215,6 +228,7 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientKing}
                 >
                   <Markdown source={kingGames.content} />
                 </Card>

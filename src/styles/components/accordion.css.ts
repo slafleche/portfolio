@@ -5,10 +5,6 @@ import {
 } from '../helpers/gradients.helper';
 import { backgrounds } from '../helpers/background.helper';
 import {
-  glassVars,
-  glassyPanelTokens,
-} from '../../tokens/glassy.tokens';
-import {
   accordionSurfaceTokens,
   accordionItemTokens,
 } from '../componentTokens/accordion.componentTokens';
@@ -68,17 +64,16 @@ export const accordion = style({
   flexDirection: 'column',
   gap: accordionItemTokens.gap.css(),
   overflow: 'hidden',
-  ...boxShadow(glassyPanelTokens.shadow),
+  // ...boxShadow(glassyPanelTokens.shadow),
   ...paddings(accordionSurfaceTokens.paddings),
   ...borders(accordionSurfaceTokens.borders),
   ...backgroundImageDecl(surfaceGradient),
-  ...backgrounds(glassyPanelTokens.backgrounds),
-  ...backdropFilters.style({ blur: glassVars.blur }),
+  // ...backdropFilters.style({ blur: glassVars.blur }),
 });
 
 export const item = style({
-  ...borders(glassyPanelTokens.borders),
-  ...backgrounds({ color: 'transparent' }),
+  // ...borders(glassyPanelTokens.borders),
+  // ...backgrounds({ color:  }),
   boxShadow: 'none',
   overflow: 'hidden',
 });
@@ -156,6 +151,7 @@ export const iconSvg = style({
 });
 
 export const content = style({
+  // ...backgrounds(accordionSurfaceTokens.drawerBackgrounds),
   overflow: 'hidden',
   selectors: {
     '&[data-state="open"]': {
