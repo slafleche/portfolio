@@ -28,13 +28,14 @@ const safeMargin = logoVars.width
 const dotSize = m(16);
 const dotPadding = m(10);
 const handleHeight = dotPadding.multiply(2).add(dotSize);
+const borderSize = m(1);
 
 const anchorMenuVars = {
   size: dotSize,
   innerGap: m(10),
   borders: {
     radius: mPercent(50),
-    width: m(1),
+    width: borderSize,
     color: colorVars.white.alpha(0.5),
   },
   margins: {
@@ -48,6 +49,7 @@ const anchorMenuVars = {
   },
   handle: {
     size: handleHeight,
+    spacing: dotPadding.add(borderSize.multiply(2)),
   },
 };
 

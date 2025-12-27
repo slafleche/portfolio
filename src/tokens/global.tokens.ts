@@ -25,36 +25,48 @@ const shadow = backgroundColour
   .darken(0.8)
   .desaturate(0.2)
   .alpha(0.5);
+const darkPurple = color('hsl(260 40% 10%)');
+const lightPurple = color('hsl(278 51% 15%)');
+const midPurple = darkPurple.mix(lightPurple, 0.5);
+const wine = color('hsl(310 40% 12%)'); // a bit more red
+const brand = color('#0D9488');
+const secondary = color('#0868b2');
+const brandMix = brand.mix(secondary, 0.5);
 
 export const themeColours = {
-  // lights: {
-  //   a: color('#00D9FF'), // Electric blue
-  //   b: color('#CCFF00'), // Electric lime
-  //   c: color('#FF6B6B'), // Coral
-  //   d: color('#FFB800'), // Amber
-  //   e: color('#00FFB3'), // Mint
-  // },
+  brand,
+  secondary,
+  brandMix,
+  lights: {
+    a: color('#00D9FF'), // Electric blue
+    b: color('#CCFF00'), // Electric lime
+    c: color('#FF6B6B'), // Coral
+    d: color('#FFB800'), // Amber
+    e: color('#00FFB3'), // Mint
+  },
   gradients: {
     main: {
-      start: color("hsl(260 40% 10%)"),
-      end: color("hsl(280 40% 14%)"),
+      start: darkPurple,
+      middle: wine.mix(midPurple, 0.5),
+      end: lightPurple,
     },
   },
   lowContrasts: {
-    light: color("#F5F3FF"),
-    mid: color("#9D95B8"),
-    dark: color("#524A65"),
+    light: color('#F5F3FF'),
+    mid: color('#9D95B8'),
+    dark: color('#524A65'),
   },
-  lights: {
-    a: color('#06B6D4'), // Cyan
-    b: color('#FF6B6B'), // Coral
-    c: color('#F59E0B'), // Amber
-    d: color('#84CC16'), // Lime
-    e: color('#34D399'), // Mint
-  },
-  darks: {
-    a: backgroundColour,
-  },
+  // lights: {
+    // a: color('#00eeff'), // Cyan
+    // b: ,
+    // b: color('#08b263ff'),
+    // c: color('#010101ff'), // Amber
+    // d: color('#dfff00'), // Lime
+    // e: color('#00ff8e'), // Mint
+  // },
+  // darks: {
+  //   a: backgroundColour,
+  // },
 };
 
 export const gradients: CardGradientPack[] = [

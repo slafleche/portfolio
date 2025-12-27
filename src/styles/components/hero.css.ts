@@ -1,6 +1,6 @@
 import { style, globalStyle } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
-import { colorVars } from '../../tokens/global.tokens';
+import { colorVars, themeColours } from '../../tokens/global.tokens';
 import {
   composeFontVariantStyles,
   fontVariants,
@@ -174,6 +174,15 @@ export const subtitle = style({
 //   }),
 // });
 
+const ctaGradient = buildLinear({
+  angle: m(110, 'deg'),
+  stops: [
+    { color: themeColours.secondary, at: mPercent(0) },
+    { color: themeColours.brandMix, at: mPercent(50) },
+    { color: themeColours.secondary, at: mPercent(100) },
+  ],
+});
+
 export const cta = style({
   ...margins({ top: m(16) }),
   display: 'inline-flex',
@@ -181,13 +190,16 @@ export const cta = style({
   gap: '3px',
   justifyContent: 'center',
   alignSelf: 'center',
+  ...backgroundImageDecl(ctaGradient),
   ...paddings({
     vertical: m(3),
     horizontal: m(6),
   }),
   ...borders.radii({ radius: m(3) }),
-  backgroundColor: colorVars.white.alpha(0.85).css(),
-  color: colorVars.navBg.css(),
+
+  // backgroundColor: themeColours.brand.css(),
+  // backgroundColor: colorVars.white.alpha(0.85).css(),
+  color: colorVars.white.css(),
   fontWeight: 600,
   textDecoration: 'none',
   transition:

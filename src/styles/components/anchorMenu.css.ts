@@ -1,8 +1,9 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
-import { margins, paddings } from '../helpers/spacing.helper';
+import { paddings } from '../helpers/spacing.helper';
 import { borders } from '../helpers/borders.helper';
 import { m, mPercent } from 'css-calipers';
+import { themeColours } from '../../tokens/global.tokens';
 
 export const root = style({
   position: 'fixed',
@@ -55,19 +56,6 @@ export const dot = style({
     width: m(1),
     color: 'rgba(255, 255, 255, 0.8)',
   }),
-  // transition:
-  //   'transform 160ms ease, background 160ms ease, border-color 160ms ease',
-  // selectors: {
-  //   [`.${link}:hover &`]: {
-  //     background: 'rgba(255, 255, 255, 0.95)',
-  //   },
-  //   [`.${link}:focus-visible &`]: {
-  //     background: 'rgba(255, 255, 255, 0.95)',
-  //   },
-  //   [`.${link}[data-active="true"] &`]: {
-  //     background: 'rgba(255, 255, 255, 0.95)',
-  //   },
-  // },
 });
 
 export const handle = style({
@@ -112,14 +100,14 @@ export const label = style({
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   transformOrigin: '0 50%',
-
-  ...margins({
-    right: anchorMenuVars.dot.paddings,
-  }),
-  // display: 'inline-block',
-  // transformOrigin: 'left center',
-  // transform: 'scaleX(0)',
-  // opacity: 0,
+  selectors: {
+    '&::after': {
+      content: '""',
+      display: 'inline-block',
+      width: anchorMenuVars.handle.spacing.css(),
+      flexShrink: 0,
+    },
+  },
 });
 
 export const item = style({
@@ -147,15 +135,12 @@ globalStyle(
 );
 
 globalStyle(
-  `.${link}:hover .${labelWrapper}, .${link}:focus .${labelWrapper}, .${link}:focus-visible .${labelWrapper}`,
+  `.${link}:hover .${labelWrapper}, .${link}:focus-visible .${labelWrapper}`,
   {
     gridTemplateColumns: '1fr',
   },
 );
 
-globalStyle(
-  `.${link}:hover .${dot}, .${link}:focus .${dot}, .${link}:focus-visible .${dot}`,
-  {
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-  },
-);
+globalStyle(`.${link}:hover .${dot}, .${link}:focus .${dot}`, {
+  backgroundColor: themeColours.secondary.css(),
+});

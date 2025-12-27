@@ -1,13 +1,16 @@
-import { color } from '../helpers/colorWrap.helper';
 import { m, mPercent } from 'css-calipers';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
 
 export const accordionSurfaceTokens = {
-  gradientAngle: m(180, 'deg'),
+  gradientAngle: m(171, 'deg'),
   gradientStops: [
     {
       color: themeColours.gradients.main.start,
       at: mPercent(0),
+    },
+    {
+      color: themeColours.gradients.main.middle,
+      at: mPercent(48),
     },
     {
       color: themeColours.gradients.main.end,

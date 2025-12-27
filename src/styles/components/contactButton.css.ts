@@ -195,7 +195,7 @@ export const button = style({
     },
     '&:focus-visible': outlines({
       // color: themeColours.lights.b.mix(themeColours.lights.d, 0.5),
-      color: themeColours.lights.a,
+      // color: themeColours.lights.a.mix(themeColours.lights.e, 0.5),
       width: focusWidthPx,
       offset: focusOffsetPx,
     }),
@@ -213,8 +213,8 @@ export const button = style({
 const buttonGradient = buildLinear({
   angle: gradAngleDiagDeg,
   stops: [
-    { color: themeColours.lowContrasts.light, at: mPercent(0) },
-    { color: themeColours.lights.d, at: mPercent(100) },
+    { color: themeColours.brand, at: mPercent(0) },
+    { color: themeColours.secondary, at: mPercent(100) },
   ],
 });
 
@@ -349,7 +349,7 @@ export const iconGlyph = style({
     },
     [`${button}:hover &`]: { color: colorVars.white.css() },
     [`${button}:focus-visible &`]: {
-      color: themeColours.lights.a.css(),
+      // color: themeColours.lights.a.css(),
     },
   },
 });

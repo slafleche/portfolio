@@ -7,15 +7,18 @@ import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
-import { buildLinear } from '../helpers/gradients.helper';
+import {
+  backgroundImageDecl,
+  buildLinear,
+} from '../helpers/gradients.helper';
+import { footerVars } from '../componentTokens/footer.componentTokens';
 
 const surfaceGradient = buildLinear({
-  angle: accordionSurfaceTokens.gradientAngle,
-  stops: accordionSurfaceTokens.gradientStops.map((stop) => ({
+  angle: footerVars.gradient.gradientAngle,
+  stops: footerVars.gradient.gradientStops.map((stop) => ({
     color: stop.color,
     at: stop.at,
   })),
-  globalAlpha: accordionSurfaceTokens.gradientOpacity,
 });
 
 export const root = style({
@@ -30,11 +33,7 @@ export const root = style({
     horizontal: m(24),
     bottom: m(120),
   }),
-  ...backgrounds({
-    image: 'linear-gradient(135deg, #281532 10%, #623aa2 100%)',
-  }),
-
-  
+  ...backgroundImageDecl(surfaceGradient),
 
   display: 'flex',
   flexDirection: 'column',
