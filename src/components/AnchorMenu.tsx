@@ -67,7 +67,7 @@ export default function AnchorMenu({
                   }
                 }}
               >
-                <div className={s.handle}>
+                <span className={s.handle}>
                   <span className={s.dotWrapper}>
                     <span className={s.dot} />
                   </span>
@@ -75,7 +75,7 @@ export default function AnchorMenu({
                   <span className={s.labelWrapper}>
                     <span className={s.label}>{anchor.title}</span>
                   </span>
-                </div>
+                </span>
               </Link>
             </li>
           );

@@ -495,26 +495,30 @@ const resolve = (
   if (!anyActive) return {};
 
   const widths = [
-    t.width!,
-    r.width!,
-    b.width!,
-    l.width!,
+    t.width,
+    r.width,
+    b.width,
+    l.width,
   ];
   const styles = [
-    t.style!,
-    r.style!,
-    b.style!,
-    l.style!,
+    t.style,
+    r.style,
+    b.style,
+    l.style,
   ];
   const colors = [
-    t.color!,
-    r.color!,
-    b.color!,
-    l.color!,
+    t.color,
+    r.color,
+    b.color,
+    l.color,
   ];
 
-  const styleAllEq = styles.every((s) => s === styles[0]);
-  const colorAllEq = colors.every((c) => c === colors[0]);
+  const styleAllEq =
+    styles.every((s) => s !== undefined) &&
+    styles.every((s) => s === styles[0]);
+  const colorAllEq =
+    colors.every((c) => c !== undefined) &&
+    colors.every((c) => c === colors[0]);
 
   const css: FinalBorderCSS = {};
 
@@ -524,11 +528,19 @@ const resolve = (
     bw,
     lw,
   ] = widths;
-  css.borderWidth = compressSides(tw, rw, bw, lw);
+  const widthsDefined = widths.every((w) => w !== undefined);
+  if (widthsDefined) {
+    css.borderWidth = compressSides(
+      tw as string,
+      rw as string,
+      bw as string,
+      lw as string,
+    );
+  }
 
   if (styleAllEq) {
     css.borderStyle = styles[0];
-  } else {
+  } else if (styles.every((s) => s !== undefined)) {
     css.borderTopStyle =
       styles[0] as CSS_TYPES.Property.BorderTopStyle;
     css.borderRightStyle =
@@ -541,7 +553,7 @@ const resolve = (
 
   if (colorAllEq) {
     css.borderColor = colors[0];
-  } else {
+  } else if (colors.every((c) => c !== undefined)) {
     css.borderTopColor = colors[0];
     css.borderRightColor = colors[1];
     css.borderBottomColor = colors[2];

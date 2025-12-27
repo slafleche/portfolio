@@ -7,6 +7,16 @@ import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
+import { buildLinear } from '../helpers/gradients.helper';
+
+const surfaceGradient = buildLinear({
+  angle: accordionSurfaceTokens.gradientAngle,
+  stops: accordionSurfaceTokens.gradientStops.map((stop) => ({
+    color: stop.color,
+    at: stop.at,
+  })),
+  globalAlpha: accordionSurfaceTokens.gradientOpacity,
+});
 
 export const root = style({
   position: 'relative',
@@ -21,8 +31,11 @@ export const root = style({
     bottom: m(120),
   }),
   ...backgrounds({
-    image: 'linear-gradient(135deg, #f97794 10%, #623aa2 100%)',
+    image: 'linear-gradient(135deg, #281532 10%, #623aa2 100%)',
   }),
+
+  
+
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',

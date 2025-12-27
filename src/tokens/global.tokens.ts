@@ -1,7 +1,7 @@
 import { color } from '../styles/helpers/colorWrap.helper';
 import type { CardGradientPack } from '../styles/helpers/cardGradient.helper';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
-import { m, mPercent, type IMeasurement } from 'css-calipers';
+import { m, type IMeasurement } from 'css-calipers';
 export type ColorKeys = keyof typeof colors;
 
 export type {
@@ -27,11 +27,30 @@ const shadow = backgroundColour
   .alpha(0.5);
 
 export const themeColours = {
+  // lights: {
+  //   a: color('#00D9FF'), // Electric blue
+  //   b: color('#CCFF00'), // Electric lime
+  //   c: color('#FF6B6B'), // Coral
+  //   d: color('#FFB800'), // Amber
+  //   e: color('#00FFB3'), // Mint
+  // },
+  gradients: {
+    main: {
+      start: color("hsl(260 40% 10%)"),
+      end: color("hsl(280 40% 14%)"),
+    },
+  },
+  lowContrasts: {
+    light: color("#F5F3FF"),
+    mid: color("#9D95B8"),
+    dark: color("#524A65"),
+  },
   lights: {
-    a: color('#88dbfc'), // Electric blue
-    b: color('#f4a5ff'), // Hot Pink
-    c: color('#F7D354'), // Yellow
-    d: color('#a283eb'), // Light Violet
+    a: color('#06B6D4'), // Cyan
+    b: color('#FF6B6B'), // Coral
+    c: color('#F59E0B'), // Amber
+    d: color('#84CC16'), // Lime
+    e: color('#34D399'), // Mint
   },
   darks: {
     a: backgroundColour,

@@ -9,7 +9,7 @@ export const root = style({
   top: 0,
   left: 0,
   height: '100%',
-  width: `calc(${anchorMenuVars.size.css()} + ${anchorMenuVars.margins.left.css()})`,
+  minWidth: `calc(${anchorMenuVars.size.css()} + ${anchorMenuVars.margins.left.css()})`,
   display: 'flex',
   alignItems: 'center',
   pointerEvents: 'none',
@@ -33,10 +33,10 @@ export const list = style({
 
 export const link = style({
   position: 'relative',
-  display: 'inline-flex',
+  display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
+  justifyContent: 'flex-start',
+  minWidth: '100%',
   height: '100%',
   color: 'inherit',
   textDecoration: 'none',
@@ -72,11 +72,11 @@ export const dot = style({
 
 export const handle = style({
   display: 'flex',
-  flexDirection: 'row',
   alignItems: 'center',
-  justifyContent: 'center',
+  justifyItems: 'center',
   minWidth: anchorMenuVars.handle.size.css(),
   height: anchorMenuVars.handle.size.css(),
+  width: 'auto',
   ...borders({
     radius: anchorMenuVars.handle.size.half(),
     width: m(1),
@@ -94,12 +94,26 @@ export const dotWrapper = style({
 });
 
 export const labelWrapper = style({
+  display: 'grid',
+  gridTemplateColumns: '0fr',
+  transition: 'grid-template-columns 0.4s ease',
   height: '100%',
   whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  // width: '0%',
+  // flexGrow: 0,
+  // flexShrink: 0,
+  // flexBasis: '0%',
+  // minWidth: 0,
 });
 
 export const label = style({
-  ...paddings({
+  minWidth: 0,
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  transformOrigin: '0 50%',
+
+  ...margins({
     right: anchorMenuVars.dot.paddings,
   }),
   // display: 'inline-block',
@@ -110,10 +124,12 @@ export const label = style({
 
 export const item = style({
   display: 'flex',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   alignItems: 'center',
+  width: 'auto',
   minWidth: anchorMenuVars.handle.size.css(),
   height: anchorMenuVars.handle.size.css(),
+  // width: 'auto', // Add this to allow growth
 });
 
 globalStyle(
@@ -127,5 +143,19 @@ globalStyle(
         skipDefaults: true,
       },
     ),
+  },
+);
+
+globalStyle(
+  `.${link}:hover .${labelWrapper}, .${link}:focus .${labelWrapper}, .${link}:focus-visible .${labelWrapper}`,
+  {
+    gridTemplateColumns: '1fr',
+  },
+);
+
+globalStyle(
+  `.${link}:hover .${dot}, .${link}:focus .${dot}, .${link}:focus-visible .${dot}`,
+  {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
   },
 );
