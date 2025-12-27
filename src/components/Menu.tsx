@@ -8,7 +8,6 @@ import AnchorMenu from './AnchorMenu';
 import * as s from '@/styles/components/menu.css.ts';
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { useId } from 'react';
 import { useActiveAnchors, type AnchorTarget } from '@/lib/useActiveAnchors';
 
 type LocaleLink = {
@@ -43,20 +42,19 @@ export default function Menu({
   anchorNavLabel,
 }: MenuProps) {
   const alternateLocale = localeLinks[0];
-  const anchorTargets = useMemo<AnchorTarget[]>(
+  const anchorTargets = useMemo(
     () =>
-      anchorLinks
-        .map((link) => {
-          const id = link.href.startsWith('#')
-            ? link.href.slice(1)
-            : link.href;
-          if (!id) return null;
-          return {
-            id,
-            href: link.href,
-          };
-        })
-        .filter((link): link is AnchorTarget => link !== null),
+      anchorLinks.reduce<AnchorTarget[]>((acc, link) => {
+        const id = link.href.startsWith('#')
+          ? link.href.slice(1)
+          : link.href;
+        if (!id) return acc;
+        acc.push({
+          id,
+          href: link.href,
+        });
+        return acc;
+      }, []),
     [anchorLinks],
   );
 

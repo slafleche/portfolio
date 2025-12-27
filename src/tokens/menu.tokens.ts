@@ -1,10 +1,16 @@
 import { m, mPercent } from 'css-calipers';
 import { colorVars } from './global.tokens';
 
+const logoWidth = m(48);
+const offsetY = m(12);
+const offsetX = m(12);
+const fullWidth = logoWidth.add(offsetX).add(offsetY);
+
 export const logoVars = {
-  width: m(45),
-  offsetY: m(0),
-  offsetX: m(0),
+  width: logoWidth,
+  fullWidth,
+  offsetY,
+  offsetX,
   borders: {
     radius: mPercent(50),
     width: m(1),
@@ -26,9 +32,10 @@ const safeMargin = logoVars.width
   .add(logoVars.offsetY.multiply(2))
   .add(anchorOuterGap);
 const dotSize = m(16);
-const dotPadding = m(10);
-const handleHeight = dotPadding.multiply(2).add(dotSize);
+
 const borderSize = m(1);
+const dotPadding = logoVars.offsetY.add(borderSize);
+const handleHeight = dotPadding.multiply(2).add(dotSize);
 
 const anchorMenuVars = {
   size: dotSize,
@@ -40,7 +47,6 @@ const anchorMenuVars = {
   },
   margins: {
     vertical: safeMargin,
-    left: m(12),
   },
   dot: {
     paddings: dotPadding,

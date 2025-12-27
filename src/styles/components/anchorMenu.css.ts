@@ -1,23 +1,28 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { anchorMenuVars } from '../../tokens/menu.tokens';
+import { anchorMenuVars, logoVars } from '../../tokens/menu.tokens';
 import { paddings } from '../helpers/spacing.helper';
 import { borders } from '../helpers/borders.helper';
+import { backgrounds } from '../helpers/background.helper';
 import { m, mPercent } from 'css-calipers';
 import { themeColours } from '../../tokens/global.tokens';
 
 export const root = style({
   position: 'fixed',
   top: 0,
-  left: 0,
+  left: logoVars.offsetX.css(),
   height: '100%',
-  minWidth: `calc(${anchorMenuVars.size.css()} + ${anchorMenuVars.margins.left.css()})`,
   display: 'flex',
   alignItems: 'center',
   pointerEvents: 'none',
+  justifyContent: 'center',
+
+  // width: logoVars.width.css(),
   ...paddings(anchorMenuVars.margins),
 });
 
 export const list = style({
+  position: 'relative',
+  // left: anchorMenuVars.dot.paddings.css(),
   display: 'flex',
   flexDirection: 'column',
   gap: anchorMenuVars.innerGap.css(),
@@ -49,8 +54,7 @@ export const dot = style({
   display: 'block',
   width: anchorMenuVars.size.css(),
   height: anchorMenuVars.size.css(),
-
-  background: 'transparent',
+  ...backgrounds({ color: 'transparent' }),
   ...borders({
     radius: mPercent(50),
     width: m(1),
@@ -84,6 +88,7 @@ export const dotWrapper = style({
 export const labelWrapper = style({
   display: 'grid',
   gridTemplateColumns: '0fr',
+  alignItems: 'center',
   transition: 'grid-template-columns 0.4s ease',
   height: '100%',
   whiteSpace: 'nowrap',
@@ -96,9 +101,12 @@ export const labelWrapper = style({
 });
 
 export const label = style({
+  display: 'flex',
+  alignItems: 'center',
   minWidth: 0,
   overflow: 'hidden',
   whiteSpace: 'nowrap',
+  lineHeight: 1,
   transformOrigin: '0 50%',
   selectors: {
     '&::after': {
@@ -142,5 +150,5 @@ globalStyle(
 );
 
 globalStyle(`.${link}:hover .${dot}, .${link}:focus .${dot}`, {
-  backgroundColor: themeColours.secondary.css(),
+  ...backgrounds({ color: themeColours.secondary }),
 });

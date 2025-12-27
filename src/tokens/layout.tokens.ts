@@ -1,13 +1,13 @@
 import { m } from 'css-calipers';
+import { logoVars } from './menu.tokens';
 
-const contentPadding = m(40);
+const contentPadding = logoVars.fullWidth;
 // const compactContentPadding = m(26);
 // const compressedContentPadding = m(16);
 
 export const layoutVars = {
   contentWidth: m(1400),
   contentPadding,
-  halfContentPadding: contentPadding.half(),
   // compact: {
   // 	contentWidth: m(1200),
   // 	contentPadding: m(26),

@@ -1,23 +1,10 @@
 import { keyframes, style, globalStyle } from '@vanilla-extract/css';
 
-
-import borders from '../helpers/borders.helper';
-import { logoVars } from '../../tokens/menu.tokens';
-
-export const root = style({
-  position: 'fixed',
-  top: logoVars.offsetY.css(),
-  left: logoVars.offsetX.css(),
-  width: logoVars.width.css(),
-  ...borders(logoVars.borders),
-  maxWidth: '100%',
-});
-
 export const core = style({
-  width: '100%',
+  width: '85%',
   height: 'auto',
   display: 'block',
-  transform: `translateX(-1px)`, // judge it to look visually centered
+  transform: `translateY(-3.5%)`,
 });
 
 export const stroke = style({

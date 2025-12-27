@@ -7,7 +7,11 @@
 // } from '../../tokens/fontVariants.tokens';
 
 import { style } from '@vanilla-extract/css';
-import { localeSwitcherVars } from '../../tokens/menu.tokens';
+import {
+  localeSwitcherVars,
+  logoVars,
+} from '../../tokens/menu.tokens';
+import borders from '../helpers/borders.helper';
 
 // import { m, mPercent } from 'css-calipers';
 // import transforms from '../helpers/transforms.helper';
@@ -16,6 +20,18 @@ import { localeSwitcherVars } from '../../tokens/menu.tokens';
 export const root = style({
   position: 'relative',
   zIndex: 100,
+});
+
+export const homeLink = style({
+  position: 'fixed',
+  top: logoVars.offsetY.css(),
+  left: logoVars.offsetX.css(),
+  width: logoVars.width.css(),
+  height: logoVars.width.css(),
+  ...borders(logoVars.borders),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 });
 
 export const items = style({});
@@ -35,8 +51,6 @@ export const localeItem = style({
   right: localeSwitcherVars.offsetX.css(),
   color: localeSwitcherVars.color.css(),
 });
-
-export const homeLink = style({});
 
 export const localeLink = style({
   fontSize: localeSwitcherVars.fontSize.css(),
