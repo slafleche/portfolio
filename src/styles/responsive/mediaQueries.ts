@@ -2,11 +2,27 @@ import type {
   ComplexStyleRule,
   StyleRule,
 } from '@vanilla-extract/css';
+import type { IMeasurement } from 'css-calipers';
+import { layoutVars } from '../../tokens/layout.tokens';
 
 export interface IMediaQueryProps {
   type?: 'all' | 'print' | 'screen';
-  minWidth?: string;
-  maxWidth?: string;
+  minWidth?: IMeasurement;
+  maxWidth?: IMeasurement;
+  orientation?: 'landscape' | 'portrait';
+  prefers?: IMediaQueryPrefers;
+  resolution?: IMediaQueryResolution;
+}
+
+export interface IMediaQueryPrefers {
+  colorScheme?: 'light' | 'dark';
+  reducedMotion?: 'no-preference' | 'reduce';
+  contrast?: 'no-preference' | 'more' | 'less';
+}
+
+export interface IMediaQueryResolution {
+  min?: IMeasurement;
+  max?: IMeasurement;
 }
 
 export interface IMediaQuery {
@@ -14,16 +30,23 @@ export interface IMediaQuery {
   styles: StyleRule;
 }
 
-export type IMediaQueries = IMediaQuery[];
+export type IMediaQueries = Record<string, IMediaQueryProps>;
 
-// https://github.com/yocontra/react-responsive
-// To be used in hooks with useMediaQuery()
-// Example: const isFullSize = useMediaQuery(globalMediaQueries.fullSize);
-const globalMediaQueries = {
+export type IMediaQueryStyles<T extends IMediaQueries> = Partial<
+  Record<keyof T, StyleRule>
+>;
+
+const fullSize = layoutVars.contentWidth.add(
+  layoutVars.contentPadding.double(),
+);
+
+export const globalMediaQueries: IMediaQueries = {
   fullSize: {
-    // minWidth: layoutVars.contentWidth
-    //   .add(layoutVars.contentPadding.double())
-    //   .css(),
+    minWidth: fullSize,
+  } as IMediaQueryProps,
+
+  noBleed: {
+    minWidth: fullSize.subtract(1),
   } as IMediaQueryProps,
 
   // compact: {
@@ -36,87 +59,73 @@ const globalMediaQueries = {
   // } as IMediaQueryProps,
 };
 
-// Example use:
-// const exampleStyles = {
-//   label: style({
-//     fontSize: "0.8em",
-//     ...mediaQueryStyle({
-//       props: mediaQueries.smallerText,
-//       styles: {
-//         fontSize: "0.5em",
-//       },
-//     }),
-//   }),
-// };
-export const mediaQueryStyle = (
-  queryAndStyles: IMediaQuery | IMediaQueries,
-  debug = false,
-) => {
-  if (!Array.isArray(queryAndStyles)) {
-    queryAndStyles = [
-      queryAndStyles,
-    ];
-  }
-  const result: Record<string, StyleRule> = {};
-  queryAndStyles.forEach((mq) => {
-    const { props, styles } = mq;
-    const minWidth =
-      'minWidth' in props
-        ? ` and (min-width: ${props.minWidth})`
-        : ``;
+export const buildMediaQueryString = (
+  props: IMediaQueryProps,
+): string => {
+  const mediaType = props.type ?? 'screen';
+  const parts: string[] = [];
 
-    const maxWidth =
-      'maxWidth' in props
-        ? ` and (max-width: ${props.maxWidth})`
-        : ``;
-
-    const rule = `${props.type ?? 'screen'}${minWidth}${maxWidth}`;
-    result[rule] = styles;
-  });
-  const mediaQuery: ComplexStyleRule = {
-    '@media': result,
-  };
-  if (debug) {
-    console.log('mediaQuery: ', mediaQuery);
+  if (props.minWidth) {
+    parts.push(`(min-width: ${props.minWidth.css()})`);
   }
-  return mediaQuery;
+  if (props.maxWidth) {
+    parts.push(`(max-width: ${props.maxWidth.css()})`);
+  }
+  if (props.orientation) {
+    parts.push(`(orientation: ${props.orientation})`);
+  }
+  if (props.prefers?.colorScheme) {
+    parts.push(
+      `(prefers-color-scheme: ${props.prefers.colorScheme})`,
+    );
+  }
+  if (props.prefers?.reducedMotion) {
+    parts.push(
+      `(prefers-reduced-motion: ${props.prefers.reducedMotion})`,
+    );
+  }
+  if (props.prefers?.contrast) {
+    parts.push(`(prefers-contrast: ${props.prefers.contrast})`);
+  }
+  if (props.resolution?.min) {
+    parts.push(`(min-resolution: ${props.resolution.min.css()})`);
+  }
+  if (props.resolution?.max) {
+    parts.push(`(max-resolution: ${props.resolution.max.css()})`);
+  }
+
+  return parts.length
+    ? `${mediaType} and ${parts.join(' and ')}`
+    : mediaType;
 };
 
-interface IGlobalMediaQueryStyles {
-  fullSize?: StyleRule;
-  noBleed?: StyleRule;
-  compact?: StyleRule;
-  compressed?: StyleRule;
-}
+export const makeMediaQueryStyle = <T extends IMediaQueries>(
+    queries: T,
+  ) =>
+  (
+    stylesByQuery: IMediaQueryStyles<T>,
+    debug = false,
+  ): ComplexStyleRule => {
+    const result: Record<string, StyleRule> = {};
 
-export const globalMediaQueryStyles = (
-  styles: IGlobalMediaQueryStyles,
-  debug = false,
-) => {
-  const mediaQueries: IMediaQuery[] = [];
-
-  if (styles.fullSize) {
-    mediaQueries.push({
-      props: globalMediaQueries.fullSize,
-      styles: styles.fullSize,
+    (Object.keys(stylesByQuery) as (keyof T)[]).forEach((key) => {
+      const styles = stylesByQuery[key];
+      const props = queries[key];
+      if (!styles || !props) return;
+      result[buildMediaQueryString(props)] = styles;
     });
-  }
 
-  // if (styles.compact) {
-  //   mediaQueries.push({
-  //     props: globalMediaQueries.compact,
-  //     styles: styles.compact,
-  //   });
-  // }
+    const mediaQuery: ComplexStyleRule = {
+      '@media': result,
+    };
+    if (debug) {
+      console.log('mediaQuery: ', mediaQuery);
+    }
+    return mediaQuery;
+  };
 
-  // if (styles.compressed) {
-  //   mediaQueries.push({
-  //     props: globalMediaQueries.compressed,
-  //     styles: styles.compressed,
-  //   });
-  // }
-
-  return mediaQueryStyle(mediaQueries, debug);
-};
+export const mediaQueryStyle = makeMediaQueryStyle(
+  globalMediaQueries,
+);
 
 export default globalMediaQueries;

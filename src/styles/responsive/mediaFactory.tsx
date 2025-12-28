@@ -1,15 +1,12 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import type { IMediaQueryProps } from './mediaQueries';
+import {
+  buildMediaQueryString,
+  type IMediaQueryProps,
+} from './mediaQueries';
 
 // ---------- Query shaping ----------
 export function toQueryString(q: IMediaQueryProps): string {
-  const mediaType = q.type ?? 'screen';
-  const parts: string[] = [];
-  if (q.minWidth) parts.push(`(min-width: ${q.minWidth})`);
-  if (q.maxWidth) parts.push(`(max-width: ${q.maxWidth})`);
-  return parts.length
-    ? `${mediaType} and ${parts.join(' and ')}`
-    : mediaType;
+  return buildMediaQueryString(q);
 }
 
 export function queriesToStrings<

@@ -7,10 +7,9 @@ export const layoutVars = {
   contentWidth: m(1400),
   contentPadding,
 
-
   noBleed: {
-  	contentWidth: m(1200),
-  	contentPadding: m(26),
+  	// contentWidth: m(1200),
+  	// contentPadding: m(26),
   },
   // compact: {
   // 	contentWidth: m(1200),
