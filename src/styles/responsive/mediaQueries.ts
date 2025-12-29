@@ -1,11 +1,11 @@
 import {
   defineMediaQueryModules,
   mediaQueryFactory,
+  mediaQueryOutputVanillaExtract,
   type IMediaQueries,
   type IMediaQueryProps,
 } from 'css-calipers/mediaQueries';
 import { layoutVars } from '../../tokens/layout.tokens';
-import { mediaQueryOutputVanillaExtract } from 'css-calipers';
 
 const fullSize = layoutVars.contentWidth.add(
   layoutVars.contentPadding.double(),

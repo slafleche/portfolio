@@ -6,14 +6,14 @@ import {
 import { formTokens } from '@/tokens/forms.tokens';
 import { colorVars } from '../../tokens/global.tokens';
 import {
-  glassVars,
+  // glassVars,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
 import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
-import backdropFilters from '../helpers/backdropFilter.helper';
+// import backdropFilters from '../helpers/backdropFilter.helper';
 import { m } from 'css-calipers';
 
 export const form = style({
@@ -240,7 +240,7 @@ export const submitButton = style({
   color: glassyButtonTokens.text.color.css(),
   fontWeight: 600,
   ...boxShadow(glassyButtonTokens.boxShadows),
-  ...backdropFilters.style({ blur: glassVars.blur }),
+  // ...backdropFilters.style({ blur: glassVars.blur }),
   transition:
     'transform 160ms ease, opacity 160ms ease, background 160ms ease, box-shadow 160ms ease',
   selectors: {
@@ -350,7 +350,7 @@ export const privacyOverlay = style({
   position: 'fixed',
   inset: 0,
   backgroundColor: colorVars.black.alpha(0.85).css(),
-  ...backdropFilters.style({ blur: glassVars.blur.double() }),
+  // ...backdropFilters.style({ blur: glassVars.blur.double() }),
   zIndex: 1100,
 });
 
@@ -423,7 +423,7 @@ export const privacyCloseIcon = style({
   fontWeight: 600,
   cursor: 'pointer',
   ...boxShadow(glassyButtonTokens.boxShadows),
-  ...backdropFilters.style({ blur: glassVars.blur.double() }),
+  // ...backdropFilters.style({ blur: glassVars.blur.double() }),
   // transition: glassyButtonTokens.transition,
   selectors: {
     '&:hover': {

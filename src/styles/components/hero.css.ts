@@ -376,7 +376,7 @@ export const heroSurface = style({
     heroSurfaceOverlay,
     heroSurfaceGlow,
   ].join(', '),
-  backgroundColor: glassVars.backgrounds.color.css(),
+  // backgroundColor: glassVars.backgrounds.color.css(),
 });
 
 export const title_break = style({});

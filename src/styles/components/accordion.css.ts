@@ -62,16 +62,12 @@ export const accordion = style({
   flexDirection: 'column',
   gap: accordionItemTokens.gap.css(),
   overflow: 'hidden',
-  // ...boxShadow(glassyPanelTokens.shadow),
   ...paddings(accordionSurfaceTokens.paddings),
   ...borders(accordionSurfaceTokens.borders),
   ...backgroundImageDecl(surfaceGradient),
-  // ...backdropFilters.style({ blur: glassVars.blur }),
 });
 
 export const item = style({
-  // ...borders(glassyPanelTokens.borders),
-  // ...backgrounds({ color:  }),
   boxShadow: 'none',
   overflow: 'hidden',
 });

@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import type { ImageEntry } from '@/lib/images';
+import clsx from 'clsx';
+import * as s from '@/styles/components/imageByName.css';
 
 const IMAGES_MANIFEST_URL = '/cdn/manifest/images.json';
 let cachedImagesManifest: Record<string, ImageEntry> | null = null;
@@ -19,10 +21,7 @@ const fetchImagesManifest = async (): Promise<
             `Failed to load images manifest (${response.status}).`,
           );
         }
-        return (await response.json()) as Record<
-          string,
-          ImageEntry
-        >;
+        return (await response.json()) as Record<string, ImageEntry>;
       })
       .catch((error) => {
         cachedImagesPromise = null;
@@ -106,7 +105,6 @@ type Props = {
   height?: number;
   fit?: React.CSSProperties['objectFit'];
   priority?: boolean;
-  style?: React.CSSProperties;
   onLoad?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
 };
 
@@ -116,7 +114,6 @@ export default function ImageByName({
   title,
   size = 'auto',
   className,
-  style,
   width,
   height,
   fit = 'cover',
@@ -142,7 +139,7 @@ export default function ImageByName({
   const h = height ?? data.height;
 
   return (
-    <picture className={className} style={style}>
+    <picture className={clsx(className, s.root)}>
       {!!data.variants.avif?.length && (
         <source
           type="image/avif"

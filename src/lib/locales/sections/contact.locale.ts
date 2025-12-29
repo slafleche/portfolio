@@ -9,6 +9,8 @@ export const CONTACT_KEYS = {
   emailLabel: 'contact-email-label',
   href: 'contact-href',
   systemsSnippetLabel: 'footer-systems-snippet-label',
+  bgDescription: 'contact-bg-description',
+  bgTitle: 'contact-bg-title',
 } as const satisfies Record<string, MessageKey>;
 
 export type ContactCopy = {

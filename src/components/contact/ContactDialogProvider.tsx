@@ -24,6 +24,8 @@ import {
   type ContactDialogTitleKey,
 } from './contactDialogTitle.context';
 import { stripContactFormScenarioFromLocation } from '@/dev/scenarios/contactForm.adapter';
+import ImageByName from '../ImageByName';
+import { GlassPanel } from '../GlassPanel';
 
 type ModalIntent = 'none' | 'contact' | 'contact-policy';
 
@@ -72,10 +74,20 @@ const resolveIntentFromHash = (hash?: string | null): ModalIntent => {
   if (direct) return direct;
 
   const entries = Object.entries(HASH_TO_INTENT).sort(
-    ([a], [b]) => b.length - a.length,
+    (
+      [
+        a,
+      ],
+      [
+        b,
+      ],
+    ) => b.length - a.length,
   );
 
-  for (const [key, intent] of entries) {
+  for (const [
+    key,
+    intent,
+  ] of entries) {
     if (normalized.startsWith(key)) {
       return intent;
     }
@@ -195,33 +207,30 @@ export function ContactDialogProvider({
     previousFocusRef.current = null;
   }, []);
 
-  const applyIntent = useCallback(
-    (
-      nextIntent: ModalIntent,
-      options?: { history?: 'push' | 'replace' | 'none' },
-    ) => {
-      const prevIntent = intentRef.current;
-      if (prevIntent === nextIntent) return;
+  const applyIntent = useCallback((
+    nextIntent: ModalIntent,
+    options?: { history?: 'push' | 'replace' | 'none' },
+  ) => {
+    const prevIntent = intentRef.current;
+    if (prevIntent === nextIntent) return;
 
-      intentRef.current = nextIntent;
-      setIntent(nextIntent);
+    intentRef.current = nextIntent;
+    setIntent(nextIntent);
 
-      const historyMode = options?.history ?? 'none';
-      if (historyMode === 'none') return;
-      if (typeof window === 'undefined') return;
+    const historyMode = options?.history ?? 'none';
+    if (historyMode === 'none') return;
+    if (typeof window === 'undefined') return;
 
-      const targetUrl = buildUrlForIntent(nextIntent);
-      const currentUrl = getCurrentUrl();
-      if (targetUrl === '' || currentUrl === targetUrl) {
-        return;
-      }
+    const targetUrl = buildUrlForIntent(nextIntent);
+    const currentUrl = getCurrentUrl();
+    if (targetUrl === '' || currentUrl === targetUrl) {
+      return;
+    }
 
-      const method =
-        historyMode === 'replace' ? 'replaceState' : 'pushState';
-      window.history[method](window.history.state, '', targetUrl);
-    },
-    [],
-  );
+    const method =
+      historyMode === 'replace' ? 'replaceState' : 'pushState';
+    window.history[method](window.history.state, '', targetUrl);
+  }, []);
 
   const ensureBaseEntry = useCallback(() => {
     if (typeof window === 'undefined') return null;
@@ -337,11 +346,7 @@ export function ContactDialogProvider({
       const nextUrl = shouldRestoreHash
         ? `${pathname}${search}${previousHash}`
         : `${pathname}${search}`;
-      window.history.replaceState(
-        window.history.state,
-        '',
-        nextUrl,
-      );
+      window.history.replaceState(window.history.state, '', nextUrl);
     }
     stripContactFormScenarioFromLocation();
     setTitleKey(null);
@@ -443,35 +448,44 @@ export function ContactDialogProvider({
       >
         {children}
         <Dialog.Portal>
-          <Dialog.Overlay className={dialogStyles.overlay} />
+          <Dialog.Overlay className={dialogStyles.overlay}>
+            <ImageByName
+              className={dialogStyles.bgImage}
+              title={formCopy.bgTitle}
+              name={'abstract_purple'}
+              alt={formCopy.bgDescription}
+            />
+          </Dialog.Overlay>
           <Dialog.Content className={dialogStyles.content}>
             <div className={dialogStyles.panel}>
               <div className={dialogStyles.panelContent}>
-                <Dialog.Close asChild>
-                  <CloseButton
-                    label={closeLabel}
-                    className={dialogStyles.closeButton}
-                  />
-                </Dialog.Close>
-                <Dialog.Title
-                  className={dialogStyles.heading}
-                  data-modal="title"
-                >
-                  {dialogTitle}
-                </Dialog.Title>
-                <Dialog.Description asChild>
-                  <p className={formStyles.visuallyHidden}>
+                <GlassPanel>
+                  <Dialog.Close asChild>
+                    <CloseButton
+                      label={closeLabel}
+                      className={dialogStyles.closeButton}
+                    />
+                  </Dialog.Close>
+                  <Dialog.Title
+                    className={dialogStyles.heading}
+                    data-modal="title"
+                  >
                     {dialogTitle}
-                  </p>
-                </Dialog.Description>
-                <ContactDialogTitleContext.Provider
-	                  value={titleContextValue}
-	                >
-	                  <ContactForm
-	                    copy={formCopy}
-	                    turnstileSiteKey={turnstileSiteKey}
-	                  />
-	                </ContactDialogTitleContext.Provider>
+                  </Dialog.Title>
+                  <Dialog.Description asChild>
+                    <p className={formStyles.visuallyHidden}>
+                      {dialogTitle}
+                    </p>
+                  </Dialog.Description>
+                  <ContactDialogTitleContext.Provider
+                    value={titleContextValue}
+                  >
+                    <ContactForm
+                      copy={formCopy}
+                      turnstileSiteKey={turnstileSiteKey}
+                    />
+                  </ContactDialogTitleContext.Provider>
+                </GlassPanel>
               </div>
             </div>
           </Dialog.Content>
@@ -485,7 +499,10 @@ export function ContactDialogProvider({
           <Dialog.Overlay className={formStyles.privacyOverlay} />
           <Dialog.Content className={formStyles.privacyDialog}>
             <div className={formStyles.privacyPanel}>
-              <Dialog.Title className={formStyles.privacyTitle} data-modal="title">
+              <Dialog.Title
+                className={formStyles.privacyTitle}
+                data-modal="title"
+              >
                 {privacyCopy.title}
               </Dialog.Title>
               {privacyUpdated ? (

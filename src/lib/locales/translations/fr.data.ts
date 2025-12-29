@@ -65,8 +65,7 @@ const frBaseData = {
 
   projects: 'Projets',
   'projects-href': 'projets',
-  'projects-01-cocacola-title':
-    '[wordmark:Coca-Cola]',
+  'projects-01-cocacola-title': '[wordmark:Coca-Cola]',
   ...markdownRefs('projects-01-cocacola-content'),
   'projects-02-ea-title': '[wordmark:Electronic Arts]',
   ...markdownRefs('projects-02-ea-content'),
@@ -103,13 +102,15 @@ const frBaseData = {
   contact: 'contact',
   'contact-href': 'contact',
   'contact-content': 'Envie de collaborer ?',
-  'contact-email-label': 'Envoyez-moi un email !',
+  'contact-email-label': 'Envoyez-moi un courriel !',
+  'contact-bg-title': 'Texture de pierre fracturée violette',
+  'contact-bg-description':
+    'Texture abstraite de pierre violet, avec des strates fracturées et un léger effet de mouchetures, passant de tons violet clair en partie supérieure à des violets plus profonds vers le bas.',
 
   ...markdownRefs('forms-form-success-body', 'forms-form-error-body'),
 
   'privacy-title': 'Politique de confidentialité',
   'privacy-href': 'confidentialite',
-  'privacy-updated': '',
   ...markdownRefs('privacy-content'),
 } as const;
 

@@ -101,12 +101,14 @@ const enBaseData = {
   'contact-href': 'contact',
   'contact-content': "Think we'd work well together?",
   'contact-email-label': 'Shoot me an email!',
+  'contact-bg-title': 'Purple fractured stone texture',
+  'contact-bg-description': 'Abstract purple stone or crystal texture with layered fractures and subtle speckling, transitioning from lighter violet tones at the top to deeper purple shades toward the bottom.',
+
 
   ...markdownRefs('forms-form-success-body', 'forms-form-error-body'),
 
   'privacy-title': 'Privacy Policy',
   'privacy-href': 'privacy',
-  'privacy-updated': '',
   ...markdownRefs('privacy-content'),
 } as const;
 

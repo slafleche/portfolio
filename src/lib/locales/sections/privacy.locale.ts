@@ -6,7 +6,6 @@ type MessageKey = keyof Messages;
 export const PRIVACY_KEYS = {
   title: 'privacy-title',
   href: 'privacy-href',
-  updated: 'privacy-updated',
   content: 'privacy-content',
 } as const satisfies Record<string, MessageKey>;
 

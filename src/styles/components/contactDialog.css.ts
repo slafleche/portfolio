@@ -31,7 +31,6 @@ export const overlay = style({
   position: 'fixed',
   inset: 0,
   backgroundColor: colorVars.navBg.alpha(0.7).css(),
-  ...backdropFilters.style({ blur: m(24) }),
   zIndex: 1000,
 });
 
@@ -57,15 +56,15 @@ export const panel = style({
     vertical: m(14),
     horizontal: m(10),
   }),
-  background:
-    'linear-gradient(180deg, rgba(20,16,48,0.94) 0%, rgba(15,11,36,0.92) 100%)',
-  ...boxShadow({
-    x: m(0),
-    y: m(3),
-    blur: m(12),
-    color: colorVars.black,
-    alpha: 0.4,
-  }),
+  // background:
+  //   'linear-gradient(180deg, rgba(20,16,48,0.94) 0%, rgba(15,11,36,0.92) 100%)',
+  // ...boxShadow({
+  //   x: m(0),
+  //   y: m(3),
+  //   blur: m(12),
+  //   color: colorVars.black,
+  //   alpha: 0.4,
+  // }),
   borderRadius: 0,
   height: '100%',
   overflowY: 'auto',
@@ -87,7 +86,7 @@ export const heading = style({
   margin: 0,
   color: colorVars.white.css(),
   textAlign: 'center',
-  ...composeFontVariantStyles(fontVariants.hero),
+  fontSize: '26px',
 });
 
 export const body = style({
@@ -116,10 +115,9 @@ export const closeButton = style({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: glassyButtonTokens.iconSize.css(),
   fontWeight: 600,
   ...boxShadow(glassyButtonTokens.boxShadows),
-  ...backdropFilters.style({ blur: glassVars.blur }),
+  ...backdropFilters.style({ blur: glassyButtonTokens.blur }),
   transition:
     'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
   overflow: 'hidden',
@@ -184,4 +182,8 @@ globalStyle(`.${panel} p`, {
   ...margins({
     vertical: m(3),
   }),
+});
+
+export const bgImage = style({
+  // filter: 'brightness(0.6)',
 });
