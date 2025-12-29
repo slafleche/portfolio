@@ -24,14 +24,6 @@ const nextConfig = {
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
-      'css-calipers': path.resolve(
-        __dirname,
-        'node_modules',
-        'css-calipers',
-        'dist',
-        'cjs',
-        'index.js',
-      ),
     };
 
     if (

@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
 import {
   buildMediaQueryString,
   type IMediaQueryProps,
-} from './mediaQueries';
+} from 'css-calipers/mediaQueries';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 
 // ---------- Query shaping ----------
 export function toQueryString(q: IMediaQueryProps): string {
@@ -13,15 +13,13 @@ export function queriesToStrings<
   T extends Record<string, IMediaQueryProps | string>,
 >(queries: T): { [K in keyof T]: string } {
   return Object.fromEntries(
-    Object.entries(queries).map(
-      ([
-        k,
-        v,
-      ]) => [
-        k,
-        typeof v === 'string' ? v : toQueryString(v),
-      ],
-    ),
+    Object.entries(queries).map(([
+      k,
+      v,
+    ]) => [
+      k,
+      typeof v === 'string' ? v : toQueryString(v),
+    ]),
   ) as { [K in keyof T]: string };
 }
 
@@ -61,19 +59,16 @@ export function useMediaFromMap<T extends Record<string, string>>(
 ) {
   type K = keyof T & string;
 
-  const shallowEqual = useCallback(
-    (
-      a: Record<K, boolean | undefined>,
-      b: Record<K, boolean | undefined>,
-    ) => {
-      const ak = Object.keys(a) as K[];
-      const bk = Object.keys(b) as K[];
-      if (ak.length !== bk.length) return false;
-      for (const k of ak) if (a[k] !== b[k]) return false;
-      return true;
-    },
-    [],
-  );
+  const shallowEqual = useCallback((
+    a: Record<K, boolean | undefined>,
+    b: Record<K, boolean | undefined>,
+  ) => {
+    const ak = Object.keys(a) as K[];
+    const bk = Object.keys(b) as K[];
+    if (ak.length !== bk.length) return false;
+    for (const k of ak) if (a[k] !== b[k]) return false;
+    return true;
+  }, []);
 
   // Stable, sorted list of [key, queryString]
   const entries = useMemo(() => {
@@ -107,44 +102,39 @@ export function useMediaFromMap<T extends Record<string, string>>(
 
     // Initial snapshot — only set if changed
     const initial = Object.fromEntries(
-      mqls.map(
-        ([
-          k,
-          mql,
-        ]) => [
-          k,
-          mql.matches,
-        ],
-      ),
+      mqls.map(([
+        k,
+        mql,
+      ]) => [
+        k,
+        mql.matches,
+      ]),
     ) as Record<K, boolean | undefined>;
 
     const frameId = requestAnimationFrame(() => {
       setMatches((prev) =>
-        shallowEqual(prev, initial) ? prev : initial,
-      );
+        shallowEqual(prev, initial) ? prev : initial);
     });
 
     // Subscribe with guarded setState
-    const handlers = mqls.map(
-      ([
-        k,
+    const handlers = mqls.map(([
+      k,
+      mql,
+    ]) => {
+      const onChange = () =>
+        setMatches((prev) => {
+          const next = {
+            ...prev,
+            [k]: mql.matches,
+          } as Record<K, boolean | undefined>;
+          return shallowEqual(prev, next) ? prev : next;
+        });
+      mql.addEventListener?.('change', onChange);
+      return [
         mql,
-      ]) => {
-        const onChange = () =>
-          setMatches((prev) => {
-            const next = {
-              ...prev,
-              [k]: mql.matches,
-            } as Record<K, boolean | undefined>;
-            return shallowEqual(prev, next) ? prev : next;
-          });
-        mql.addEventListener?.('change', onChange);
-        return [
-          mql,
-          onChange,
-        ] as const;
-      },
-    );
+        onChange,
+      ] as const;
+    });
 
     return () => {
       cancelAnimationFrame(frameId);

@@ -13,9 +13,7 @@ import { outlines } from '../helpers/outlines.helper';
 import { colorVars } from '../../tokens/global.tokens';
 import { m, mPercent } from 'css-calipers';
 import { borders } from '../helpers/borders.helper';
-import { boxShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
-import backdropFilters from '../helpers/backdropFilter.helper';
 
 const surfaceGradient = buildLinear({
   angle: accordionSurfaceTokens.gradientAngle,

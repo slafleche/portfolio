@@ -158,7 +158,12 @@ export default async function HomePage({
             />
           </Content>
           <Content title={projects.title} id={projects.href}>
-            <Grid columns={2}>
+            <Grid
+              columns={2}
+              mediaQueryColumns={{
+                noBleed: 1,
+              }}
+            >
               <Column span={2}>
                 <Card
                   title={
@@ -218,7 +223,12 @@ export default async function HomePage({
                   <Markdown source={hootsuite.content} />
                 </Card>
               </Column>
-              <Column span={2}>
+              <Column
+                span={2}
+                mediaQuerySpan={{
+                  noBleed: 1,
+                }}
+              >
                 <Card
                   title={
                     <WordMarkInTitle

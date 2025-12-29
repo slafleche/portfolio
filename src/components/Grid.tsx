@@ -12,6 +12,7 @@ import {
 } from 'react';
 import clsx from 'clsx';
 import * as s from '@/styles/components/grid.css';
+import { useMedia } from '@/styles/responsive';
 
 interface GridContextValue {
   columnCount: number;
@@ -21,16 +22,35 @@ const GridContext = createContext<GridContextValue | null>(null);
 
 export type GridProps = {
   columns?: number;
+  mediaQueryColumns?: Record<string, number>;
   className?: string;
   children?: ReactNode;
 };
 
 export function Grid({
   columns = 1,
+  mediaQueryColumns,
   className,
   children,
 }: GridProps) {
-  const safeColumns = Math.max(1, columns);
+  const matches = useMedia() as Record<
+    string,
+    boolean | undefined
+  >;
+  let overrideColumns: number | undefined;
+  if (mediaQueryColumns) {
+    for (const [key, value] of Object.entries(mediaQueryColumns)) {
+      if (matches[key] === true && Number.isFinite(value)) {
+        overrideColumns =
+          overrideColumns === undefined || value < overrideColumns
+            ? value
+            : overrideColumns;
+      }
+    }
+  }
+
+  const requestedColumns = overrideColumns ?? columns;
+  const safeColumns = Math.max(1, requestedColumns);
 
   return (
     <GridContext.Provider value={{ columnCount: safeColumns }}>
@@ -50,18 +70,39 @@ export function Grid({
 
 export type ColumnProps = {
   span?: number;
+  mediaQuerySpan?: Record<string, number>;
   className?: string;
   children?: ReactNode;
 };
 
 export function Column({
   span = 1,
+  mediaQuerySpan,
   className,
   children,
 }: ColumnProps) {
   const context = useContext(GridContext);
   const maxColumns = context?.columnCount ?? 1;
-  const clampedSpan = Math.min(Math.max(1, span), maxColumns);
+  const matches = useMedia() as Record<
+    string,
+    boolean | undefined
+  >;
+  let overrideSpan: number | undefined;
+  if (mediaQuerySpan) {
+    for (const [key, value] of Object.entries(mediaQuerySpan)) {
+      if (matches[key] === true && Number.isFinite(value)) {
+        overrideSpan =
+          overrideSpan === undefined || value < overrideSpan
+            ? value
+            : overrideSpan;
+      }
+    }
+  }
+  const requestedSpan = overrideSpan ?? span;
+  const clampedSpan = Math.min(
+    Math.max(1, requestedSpan),
+    maxColumns,
+  );
   const shouldStretch = clampedSpan < maxColumns;
   const childClassName = shouldStretch ? s.fillRow : undefined;
 
