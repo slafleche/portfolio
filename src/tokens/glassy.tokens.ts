@@ -7,7 +7,12 @@ import { colorVars } from './global.tokens';
  * turning these into CSS strings / gradients.
  */
 export const glassVars = {
-  blur: m(),
+  backdropFilter: {
+    blur: m(10),
+    saturate: mPercent(180),
+    contrast: mPercent(90),
+    brightness: 1.1,
+  },
   backgrounds: {
     color: colorVars.white.alpha(0.06),
   },

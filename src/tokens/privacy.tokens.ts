@@ -1,12 +1,12 @@
 import { m } from 'css-calipers';
 import { colorVars } from './global.tokens';
-import { glassVars, glassyButtonTokens } from './glassy.tokens';
+import { glassyButtonTokens } from './glassy.tokens';
 import { layoutVars } from './layout.tokens';
 
 const horizontalPadding = m(24);
 
 export const privacyTokens = {
-  blur: glassVars.blur,
+  blur: m(3),
   layout: {
     maxWidth: layoutVars.contentWidth,
     paddings: {

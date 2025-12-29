@@ -134,7 +134,7 @@ export const content = style({
   alignItems: 'center',
 });
 
-export const bridge = style({
+export const main = style({
   position: 'relative',
   zIndex: 2,
   display: 'flex',

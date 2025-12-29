@@ -449,46 +449,46 @@ export function ContactDialogProvider({
         {children}
         <Dialog.Portal>
           <Dialog.Overlay className={dialogStyles.overlay}>
-            <ImageByName
-              className={dialogStyles.bgImage}
-              title={formCopy.bgTitle}
-              name={'abstract_purple'}
-              alt={formCopy.bgDescription}
-            />
-          </Dialog.Overlay>
-          <Dialog.Content className={dialogStyles.content}>
-            <div className={dialogStyles.panel}>
-              <div className={dialogStyles.panelContent}>
-                <GlassPanel>
-                  <Dialog.Close asChild>
-                    <CloseButton
-                      label={closeLabel}
-                      className={dialogStyles.closeButton}
-                    />
-                  </Dialog.Close>
-                  <Dialog.Title
-                    className={dialogStyles.heading}
-                    data-modal="title"
-                  >
-                    {dialogTitle}
-                  </Dialog.Title>
-                  <Dialog.Description asChild>
-                    <p className={formStyles.visuallyHidden}>
+            <Dialog.Content className={dialogStyles.content}>
+              <div className={dialogStyles.panel}>
+                <ImageByName
+                  className={dialogStyles.bgImage}
+                  title={formCopy.bgTitle}
+                  name={'night_forest'}
+                  alt={formCopy.bgDescription}
+                />
+                <div className={dialogStyles.panelContent}>
+                    <Dialog.Close asChild>
+                      <CloseButton
+                        label={closeLabel}
+                        className={dialogStyles.closeButton}
+                      />
+                    </Dialog.Close>
+                  <GlassPanel>
+                    <Dialog.Title
+                      className={dialogStyles.heading}
+                      data-modal="title"
+                    >
                       {dialogTitle}
-                    </p>
-                  </Dialog.Description>
-                  <ContactDialogTitleContext.Provider
-                    value={titleContextValue}
-                  >
-                    <ContactForm
-                      copy={formCopy}
-                      turnstileSiteKey={turnstileSiteKey}
-                    />
-                  </ContactDialogTitleContext.Provider>
-                </GlassPanel>
+                    </Dialog.Title>
+                    <Dialog.Description asChild>
+                      <p className={formStyles.visuallyHidden}>
+                        {dialogTitle}
+                      </p>
+                    </Dialog.Description>
+                    <ContactDialogTitleContext.Provider
+                      value={titleContextValue}
+                    >
+                      <ContactForm
+                        copy={formCopy}
+                        turnstileSiteKey={turnstileSiteKey}
+                      />
+                    </ContactDialogTitleContext.Provider>
+                  </GlassPanel>
+                </div>
               </div>
-            </div>
-          </Dialog.Content>
+            </Dialog.Content>
+          </Dialog.Overlay>
         </Dialog.Portal>
       </Dialog.Root>
       <Dialog.Root

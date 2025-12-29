@@ -78,7 +78,10 @@ export const createGlassBackground = (): {
     backgroundColorValue,
     backgroundImageValue,
     backdropFilterIntent: {
-      blur: glassVars.blur,
+      blur: glassVars.backdropFilter.blur,
+      saturate: glassVars.backdropFilter.saturate,
+      contrast: glassVars.backdropFilter.contrast,
+      brightness: glassVars.backdropFilter.brightness,
     },
   };
 };

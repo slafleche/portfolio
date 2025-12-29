@@ -3,7 +3,7 @@ import {
   createGlassBackground,
   glassNoise,
 } from './helpers/glassy.helper';
-import { glassVars } from '../tokens/glassy.tokens';
+// import { glassVars } from '../tokens/glassy.tokens';
 import { noiseBg } from './helpers/noiseSVG.helper';
 import backdropFilters from './helpers/backdropFilter.helper';
 import { fullSizeOfParent } from './helpers/positioning.helper';
@@ -22,10 +22,10 @@ export const root = style({
   zIndex: 0,
 });
 
-export const effects = style({
-  ...fullSizeOfParent(),
-  pointerEvents: 'none',
-});
+// export const effects = style({
+//   ...fullSizeOfParent(),
+//   pointerEvents: 'none',
+// });
 
 export const content = style({
   position: 'relative',
@@ -34,27 +34,14 @@ export const content = style({
 
 // Main glass surface style
 export const surface = style({
-  ...fullSizeOfParent(),
   ...baseSurfaceBackground,
   ...backdropFilters.style(glassBackground.backdropFilterIntent),
   backgroundClip: 'padding-box',
 });
 
-// Surface shine overlay style
-export const shine = style({
-  ...fullSizeOfParent(),
-  background: `linear-gradient(135deg, ${glassVars.surfaceGlowPrimaryTint
-    .alpha(glassVars.surfaceGlow.primaryTintAlpha)
-    .css()}, ${glassVars.surfaceGlowSecondaryTint
-    .alpha(glassVars.surfaceGlow.secondaryTintAlpha)
-    .css()})`,
-  mixBlendMode: 'screen',
-  // filter: `blur(${glassVars.surfaceGlow.blur.css()})`,
-  opacity: glassVars.surfaceGlow.opacity,
-});
-
 // Grain / noise overlay style
 export const grain = style({
   ...fullSizeOfParent(),
+  pointerEvents: 'none',
   ...noiseBg({ backgroundImage: glassNoise() }),
 });

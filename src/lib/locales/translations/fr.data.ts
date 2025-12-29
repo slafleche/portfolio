@@ -41,6 +41,8 @@ const frBaseData = {
   'hero-video-title': 'Fond dégradé bleu et magenta en rotation',
   'hero-video-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
+  'hero-video-description':
+    'Fond décoratif de dégradé bleu et magenta en rotation',
 
   'hero-title': 'Stéphane LaFlèche, [split] développeur front-end',
   'hero-subTitle':
@@ -103,9 +105,9 @@ const frBaseData = {
   'contact-href': 'contact',
   'contact-content': 'Envie de collaborer ?',
   'contact-email-label': 'Envoyez-moi un courriel !',
-  'contact-bg-title': 'Texture de pierre fracturée violette',
+  'contact-bg-title': "Ciel étoilé avec silhouette de ligne d'arbres",
   'contact-bg-description':
-    'Texture abstraite de pierre violet, avec des strates fracturées et un léger effet de mouchetures, passant de tons violet clair en partie supérieure à des violets plus profonds vers le bas.',
+    "Un ciel nocturne clair rempli d'étoiles et de la faible lueur de la Voie lactée, avec une silhouette noire d'une forêt dense au premier plan.",
 
   ...markdownRefs('forms-form-success-body', 'forms-form-error-body'),
 

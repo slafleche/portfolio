@@ -4,16 +4,14 @@ import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import {
-  glassVars,
-  glassyButtonTokens,
-} from '../../tokens/glassy.tokens';
+import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import { backgrounds } from '../helpers/background.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import borders from '../helpers/borders.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { m } from 'css-calipers';
+import { fullSizeOfParent } from '../helpers/positioning.helper';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -56,16 +54,9 @@ export const panel = style({
     vertical: m(14),
     horizontal: m(10),
   }),
-  // background:
-  //   'linear-gradient(180deg, rgba(20,16,48,0.94) 0%, rgba(15,11,36,0.92) 100%)',
-  // ...boxShadow({
-  //   x: m(0),
-  //   y: m(3),
-  //   blur: m(12),
-  //   color: colorVars.black,
-  //   alpha: 0.4,
-  // }),
-  borderRadius: 0,
+  ...backgrounds({
+    color: colorVars.bodyBg,
+  }),
   height: '100%',
   overflowY: 'auto',
 });
@@ -185,5 +176,10 @@ globalStyle(`.${panel} p`, {
 });
 
 export const bgImage = style({
-  // filter: 'brightness(0.6)',
+  ...fullSizeOfParent(),
+  zIndex: 0,
+  inset: 0,
+  pointerEvents: 'none',
+  objectFit: 'cover',
+  mixBlendMode: 'screen',
 });

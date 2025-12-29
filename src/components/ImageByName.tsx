@@ -108,6 +108,73 @@ type Props = {
   onLoad?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
 };
 
+type PrefetcherProps = {
+  fetchNow?: string[];
+  prefetchOnIdle?: string[];
+};
+
+export function ImageByNamePrefetcher({
+  fetchNow,
+  prefetchOnIdle,
+}: PrefetcherProps) {
+  const [
+    isIdleReady,
+    setIsIdleReady,
+  ] = React.useState(false);
+
+  React.useEffect(() => {
+    const namesIdle = (prefetchOnIdle ?? []).filter(Boolean);
+    if (!namesIdle.length) return;
+    const isWindowReady =
+      typeof window !== 'undefined' &&
+      'requestIdleCallback' in window &&
+      'cancelIdleCallback' in window;
+    const handle = isWindowReady
+      ? window.requestIdleCallback(() => setIsIdleReady(true))
+      : window.setTimeout(() => setIsIdleReady(true), 250);
+    return () => {
+      if (isWindowReady) {
+        window.cancelIdleCallback(handle);
+      } else {
+        window.clearTimeout(handle);
+      }
+    };
+  }, [
+    prefetchOnIdle,
+  ]);
+
+  const names = Array.from(
+    new Set([
+      ...(fetchNow ?? []),
+      ...(isIdleReady ? prefetchOnIdle ?? [] : []),
+    ]),
+  ).filter(Boolean);
+
+  if (!names.length) return null;
+
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        width: 1,
+        height: 1,
+        padding: 0,
+        margin: -1,
+        overflow: 'hidden',
+        clip: 'rect(0, 0, 0, 0)',
+        clipPath: 'inset(50%)',
+        border: 0,
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {names.map((name) => (
+        <ImageByName key={name} name={name} alt="" />
+      ))}
+    </div>
+  );
+}
+
 export default function ImageByName({
   name,
   alt,
