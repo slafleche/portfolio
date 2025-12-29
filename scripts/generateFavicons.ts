@@ -398,6 +398,7 @@ function buildIcoFromPng(candidates: IcoCandidate[]) {
 }
 
 async function main() {
+  const force = process.argv.includes('--force');
   const sourceSvgPath = path.resolve(faviconTokens.sourceSvg);
   console.log(`→ Favicons: loading source SVG "${sourceSvgPath}"`);
 
@@ -428,6 +429,7 @@ async function main() {
   }
 
   if (
+    !force &&
     previousHash === sourceHash &&
     (await exists(MANIFEST_TS_PATH)) &&
     (await exists(OUT_ROOT))
@@ -436,6 +438,9 @@ async function main() {
       'ℹ️  Favicons config unchanged; using existing outputs. Skipping generation.',
     );
     return;
+  }
+  if (force) {
+    console.log('→ Favicons: forcing regeneration.');
   }
 
   console.log('→ Favicons: cleaning staging directories');
@@ -610,6 +615,12 @@ async function main() {
     prefix: faviconCacheTokens.prefix,
     publicRoot: PUBLIC_ROOT,
   });
+
+  console.log('→ Favicons: writing root /favicon.ico');
+  await fs.copyFile(
+    path.join(OUT_ROOT, icoResult.fileName),
+    path.resolve('public', 'favicon.ico'),
+  );
 
   console.log('→ Favicons: generating apple-touch-icon.png');
   const appleBackgroundBuffer = backgroundBufferFor(
