@@ -506,7 +506,10 @@ export function scanBordersRadiiIntent(filePath, content) {
     return [];
   }
 
-  if (!posix.startsWith('src/styles/')) {
+  if (
+    !posix.startsWith('src/styles/') &&
+    !posix.startsWith('app/[LOCALE]/debug/')
+  ) {
     return [];
   }
 

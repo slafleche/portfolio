@@ -27,9 +27,18 @@ export const formTokens = {
       horizontal: m(16),
     },
     borders: {
-      radius: m(12),
-      width: m(1),
-      color: colorVars.white.alpha(0.18),
+      top: {
+        width: m(1),
+        color: colorVars.transparent,
+      },
+      horizontal: {
+        width: m(1),
+        color: colorVars.transparent,
+      },
+      bottom: {
+        width: m(1),
+        color: colorVars.white.alpha(0.18),
+      },
     },
     hover: {
       borders: {

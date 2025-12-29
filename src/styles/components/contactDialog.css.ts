@@ -11,7 +11,10 @@ import backdropFilters from '../helpers/backdropFilter.helper';
 import borders from '../helpers/borders.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { m } from 'css-calipers';
-import { fullSizeOfParent } from '../helpers/positioning.helper';
+import {
+  absolutePosition,
+  fullSizeOfParent,
+} from '../helpers/positioning.helper';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -90,9 +93,11 @@ export const body = style({
   maxWidth: '70ch',
 });
 
+const closeOffset = m(8);
+
 export const closeButton = style({
-  position: 'sticky',
-  top: '6px',
+  ...absolutePosition.topRight(closeOffset, closeOffset),
+
   ...margins({
     vertical: m(4),
   }),

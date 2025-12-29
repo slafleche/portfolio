@@ -458,13 +458,13 @@ export function ContactDialogProvider({
                   alt={formCopy.bgDescription}
                 />
                 <div className={dialogStyles.panelContent}>
-                    <Dialog.Close asChild>
-                      <CloseButton
-                        label={closeLabel}
-                        className={dialogStyles.closeButton}
-                      />
-                    </Dialog.Close>
                   <GlassPanel>
+                  <Dialog.Close asChild>
+                    <CloseButton
+                      label={closeLabel}
+                      className={dialogStyles.closeButton}
+                    />
+                  </Dialog.Close>
                     <Dialog.Title
                       className={dialogStyles.heading}
                       data-modal="title"

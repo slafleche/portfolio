@@ -82,11 +82,15 @@ export const input = style({
       opacity: 1,
     },
     '&:hover, &[data-debug="hover"]': {
-      ...borders(formTokens.field.hover.borders),
+      ...borders(formTokens.field.hover.borders, {
+        skipDefaults: true,
+      }),
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.focusVisible.borders),
+        ...borders(formTokens.field.focusVisible.borders, {
+        skipDefaults: true,
+      }),
         ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
@@ -95,7 +99,9 @@ export const input = style({
     },
     '&[data-error="true"]': {
       color: formTokens.field.error.text.color.css(),
-      ...borders(formTokens.field.error.borders),
+      ...borders(formTokens.field.error.borders, {
+        skipDefaults: true,
+      }),
     },
   },
 });
@@ -120,11 +126,15 @@ export const textarea = style({
       opacity: 1,
     },
     '&:hover, &[data-debug="hover"]': {
-      ...borders(formTokens.field.hover.borders),
+      ...borders(formTokens.field.hover.borders, {
+        skipDefaults: true,
+      }),
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.focusVisible.borders),
+        ...borders(formTokens.field.focusVisible.borders, {
+          skipDefaults: true,
+        }),
         ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
@@ -133,7 +143,9 @@ export const textarea = style({
     },
     '&[data-error="true"]': {
       color: formTokens.field.error.text.color.css(),
-      ...borders(formTokens.field.error.borders),
+      ...borders(formTokens.field.error.borders, {
+        skipDefaults: true,
+      }),
     },
   },
 });
