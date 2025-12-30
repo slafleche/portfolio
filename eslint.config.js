@@ -43,13 +43,13 @@ const reactHooksRecommended = reactHooks.configs?.[
 const tsSourceFiles = [
   'src/**/*.{ts,tsx}',
   'app/**/*.{ts,tsx}',
+  'scripts/**/*.{ts,mts,cts}',
   'types/**/*.{ts,tsx}',
 ];
 
 const tsNoProjectFiles = [
   'proxy.ts',
   'next-env.d.ts',
-  'scripts/**/*.ts',
   'cdn/**/*.{ts,tsx,mts}',
   'tests/**/*.{ts,tsx}',
 ];
@@ -106,7 +106,6 @@ export default [
     ignores: [
       ...(config.ignores ?? []),
       '**/*.config.{js,cjs,mjs}',
-      'scripts/**/*',
       'proxy.ts',
     ],
     languageOptions: {
@@ -186,12 +185,12 @@ export default [
     ],
   },
   {
-    files: [
-      'scripts/**/*.{js,cjs,mjs,ts}',
-    ],
+    files: ['scripts/**/*.{js,cjs,mjs,ts,mts,cts}'],
     languageOptions: {
       parserOptions: {
-        project: false,
+        project: [
+          tsconfigPath,
+        ],
       },
       globals: {
         require: 'readonly',

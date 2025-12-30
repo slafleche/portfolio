@@ -64,6 +64,13 @@ type ExtractSvgLayerResult = {
   count: number;
 };
 
+type CacheInfo = {
+  sourceHash?: string;
+};
+
+const isErrno = (error: unknown): error is NodeJS.ErrnoException =>
+  typeof error === 'object' && error !== null && 'code' in error;
+
 const sanitizeFillFragment = (
   fragment: string,
   desiredFill: string,
@@ -419,13 +426,12 @@ async function main() {
   let previousHash: string | null = null;
   try {
     const raw = await fs.readFile(CACHE_INFO_PATH, 'utf8');
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as CacheInfo;
     if (parsed && typeof parsed.sourceHash === 'string') {
       previousHash = parsed.sourceHash;
     }
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT')
-      throw error;
+    if (!isErrno(error) || error.code !== 'ENOENT') throw error;
   }
 
   if (

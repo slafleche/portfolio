@@ -26,11 +26,14 @@ async function main() {
   let existingManifest: Record<string, unknown> = {};
   try {
     const existingRaw = await fs.readFile(MANIFEST_PATH, 'utf8');
-    const parsed = JSON.parse(existingRaw);
+    const parsed = JSON.parse(existingRaw) as unknown;
     if (parsed && typeof parsed === 'object') {
       existingManifest = parsed as Record<string, unknown>;
     }
   } catch (error) {
+    if (!(error && typeof error === 'object' && 'code' in error)) {
+      throw error;
+    }
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
   }
 

@@ -41,9 +41,13 @@ async function main() {
       value,
     ] of Object.entries(messages)) {
       if (!shouldConvert(key, value)) continue;
+      const renderedMarkdown = marked.parse(value);
+      if (typeof renderedMarkdown !== 'string') {
+        throw new Error(`Expected markdown render for "${key}" to be a string.`);
+      }
       const rendered = wrapHtmlIfNeeded(
         key,
-        marked.parse(value).trim(),
+        renderedMarkdown.trim(),
       );
       htmlMap[key] = rendered;
     }

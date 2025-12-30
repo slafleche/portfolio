@@ -3,7 +3,53 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import sharp from 'sharp';
+import sharp, { type Sharp } from 'sharp';
+
+type ImageVariant = {
+  w: number;
+  url: string;
+};
+
+type ImageManifestEntry = {
+  name: string;
+  hash: string;
+  basePath: string;
+  dirName: string;
+  width: number;
+  height: number;
+  aspect: number;
+  blurDataURL: string;
+  variants: Record<string, ImageVariant[]>;
+  original?: {
+    url: string;
+    width: number;
+    height: number;
+  };
+};
+
+type ImageManifest = Record<string, ImageManifestEntry>;
+
+type HashesMap = Record<string, string>;
+
+type ImageSourceMap = Record<string, string>;
+
+type Provenance = {
+  source: 'local' | 'remote' | 'video';
+  origin: string;
+};
+
+type AssetGroupVersions = Record<string, Record<string, string>>;
+
+type FormatSpec = {
+  ext: string;
+  to: (img: Sharp) => Sharp;
+};
+
+const isErrno = (error: unknown): error is NodeJS.ErrnoException =>
+  typeof error === 'object' && error !== null && 'code' in error;
+
+const getErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : String(error);
 
 const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
@@ -22,16 +68,6 @@ const IMAGE_SOURCES_CONFIG = path.join(
   'images',
   'imageSources.json',
 );
-const resolveVideoManifestPath = (target) =>
-  path.join(
-    REPO_ROOT,
-    'src',
-    'data',
-    'generated',
-    target,
-    'videos',
-    'manifest.videos.gen.json',
-  );
 const IGNORE_DIRS = new Set([]);
 
 const IMAGE_CACHE_PREFIX = 'img';
@@ -81,7 +117,7 @@ const WIDTHS = [
   1200,
   1920,
 ];
-const FORMATS = [
+const FORMATS: FormatSpec[] = [
   { ext: 'avif', to: (img) => img.avif({ quality: 50 }) },
   { ext: 'webp', to: (img) => img.webp({ quality: 70 }) },
   {
@@ -99,7 +135,7 @@ const VALID_EXT = new Set([
   '.avif',
 ]);
 
-const sharpFormatForExt = (ext) => {
+const sharpFormatForExt = (ext: string): string => {
   switch (ext) {
     case '.jpeg':
     case '.jpg':
@@ -118,7 +154,7 @@ const sharpFormatForExt = (ext) => {
   }
 };
 
-const hashBuffer = (buffer, length) => {
+const hashBuffer = (buffer: Buffer, length: number): string => {
   const rawHash = crypto
     .createHash('sha256')
     .update(buffer)
@@ -126,17 +162,20 @@ const hashBuffer = (buffer, length) => {
   return rawHash.slice(0, Math.max(1, length));
 };
 
-async function loadJson(pathname) {
+async function loadJson<T>(pathname: string): Promise<T | null> {
   try {
     const raw = await fs.readFile(pathname, 'utf8');
-    return JSON.parse(raw);
+    return JSON.parse(raw) as T;
   } catch (error) {
-    if (error && error.code === 'ENOENT') return null;
+    if (isErrno(error) && error.code === 'ENOENT') return null;
     throw error;
   }
 }
 
-async function writeJsonAtomic(pathname, data) {
+async function writeJsonAtomic(
+  pathname: string,
+  data: unknown,
+): Promise<void> {
   const dir = path.dirname(pathname);
   await fs.mkdir(dir, { recursive: true });
   const tmpPath = `${pathname}.tmp`;
@@ -144,13 +183,16 @@ async function writeJsonAtomic(pathname, data) {
   await fs.rename(tmpPath, pathname);
 }
 
-async function removeHashedImageDirs(name, outRoot) {
+async function removeHashedImageDirs(
+  name: string,
+  outRoot: string,
+): Promise<void> {
   const prefix = `${IMAGE_CACHE_PREFIX}-${name}-`;
-  let entries = [];
+  let entries: string[] = [];
   try {
     entries = await fs.readdir(outRoot);
   } catch (error) {
-    if (error.code === 'ENOENT') return;
+    if (isErrno(error) && error.code === 'ENOENT') return;
     throw error;
   }
   await Promise.all(
@@ -167,7 +209,13 @@ async function removeHashedImageDirs(name, outRoot) {
 
 // --- Duplicate-name handling ---
 class DuplicateNameError extends Error {
-  constructor(name, prev, next) {
+  code: string;
+
+  constructor(
+    name: string,
+    prev: { source: string; origin: string },
+    next: { source: string; origin: string },
+  ) {
     const label = (s) =>
       s === 'local'
         ? 'src/assets/images'
@@ -196,9 +244,13 @@ class DuplicateNameError extends Error {
   }
 }
 
-const seenNames = new Map();
+const seenNames = new Map<string, { source: string; origin: string }>();
 
-function ensureUniqueName(name, source, origin) {
+function ensureUniqueName(
+  name: string,
+  source: string,
+  origin: string,
+) {
   if (!name)
     throw new Error(
       `Internal error: empty image name from ${source} (${origin}).`,
@@ -211,7 +263,7 @@ function ensureUniqueName(name, source, origin) {
 }
 // --- end duplicate-name handling ---
 
-function ensureDirectDropboxUrl(rawUrl) {
+function ensureDirectDropboxUrl(rawUrl: string) {
   try {
     const url = new URL(rawUrl);
     if (
@@ -229,7 +281,7 @@ function ensureDirectDropboxUrl(rawUrl) {
   }
 }
 
-function normalizeRemoteImageUrl(rawUrl) {
+function normalizeRemoteImageUrl(rawUrl: string) {
   try {
     const dropboxNormalized = ensureDirectDropboxUrl(rawUrl);
     const url = new URL(dropboxNormalized);
@@ -244,13 +296,13 @@ function normalizeRemoteImageUrl(rawUrl) {
   }
 }
 
-function extensionFromMime(mime) {
+function extensionFromMime(mime: string | null) {
   if (!mime) return '';
   const clean = mime.split(';', 1)[0].trim().toLowerCase();
   return MIME_EXTENSIONS.get(clean) ?? '';
 }
 
-function extensionFromUrl(rawUrl) {
+function extensionFromUrl(rawUrl: string) {
   try {
     const { pathname } = new URL(rawUrl);
     return path.extname(pathname).toLowerCase();
@@ -259,50 +311,24 @@ function extensionFromUrl(rawUrl) {
   }
 }
 
-async function loadImageSourcesConfig() {
+async function loadImageSourcesConfig(): Promise<ImageSourceMap> {
   try {
     const raw = await fs.readFile(IMAGE_SOURCES_CONFIG, 'utf8');
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : {};
+    const parsed = JSON.parse(raw) as unknown;
+    return parsed && typeof parsed === 'object'
+      ? (parsed as ImageSourceMap)
+      : {};
   } catch (error) {
-    if (error.code === 'ENOENT') return {};
+    if (isErrno(error) && error.code === 'ENOENT') return {};
     throw error;
   }
 }
 
-async function loadVideoManifest(target) {
-  const videoManifestPath = resolveVideoManifestPath(target);
-  try {
-    const raw = await fs.readFile(videoManifestPath, 'utf8');
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : null;
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      console.log(
-        `ℹ️  Video manifest not found at "${videoManifestPath}". Run the video pipeline first to enable video previews.`,
-      );
-      return null;
-    }
-    throw error;
-  }
-}
-
-function toPublicPathFromUrl(rawUrl) {
-  if (!rawUrl || typeof rawUrl !== 'string') return '';
-  const trimmed = rawUrl.trim();
-  if (!trimmed) return '';
-  try {
-    const url = new URL(trimmed, 'http://localhost');
-    const pathname = url.pathname.replace(/^\/+/, '');
-    return pathname ? path.resolve(REPO_ROOT, pathname) : '';
-  } catch {
-    const withoutQuery = trimmed.split('?')[0] ?? '';
-    const pathname = withoutQuery.replace(/^\/+/, '');
-    return pathname ? path.resolve(REPO_ROOT, pathname) : '';
-  }
-}
-
-async function downloadRemoteImage(name, rawUrl, tempDir) {
+async function downloadRemoteImage(
+  name: string,
+  rawUrl: string,
+  tempDir: string,
+): Promise<string> {
   if (typeof fetch !== 'function')
     throw new Error(
       'fetch is not available in this Node.js runtime.',
@@ -324,7 +350,7 @@ async function downloadRemoteImage(name, rawUrl, tempDir) {
   return filePath;
 }
 
-async function* walk(dir) {
+async function* walk(dir: string): AsyncGenerator<string> {
   for (const entry of await fs.readdir(dir, {
     withFileTypes: true,
   })) {
@@ -338,7 +364,7 @@ async function* walk(dir) {
   }
 }
 
-function toName(filePath) {
+function toName(filePath: string): string {
   return path
     .relative(IMAGE_SOURCES_DIR, filePath)
     .replace(path.extname(filePath), '')
@@ -348,14 +374,14 @@ function toName(filePath) {
 }
 
 async function processImage(
-  filePath,
-  nameOverride,
-  manifest,
-  provenance,
-  outRoot,
-  hashes,
-  existingManifest,
-) {
+  filePath: string,
+  nameOverride: string | undefined,
+  manifest: ImageManifest,
+  provenance: Provenance | undefined,
+  outRoot: string,
+  hashes: HashesMap,
+  existingManifest: ImageManifest,
+): Promise<void> {
   const ext = path.extname(filePath).toLowerCase();
   if (!VALID_EXT.has(ext)) return;
 
@@ -408,7 +434,7 @@ async function processImage(
 
   const baseUrl = `${dirSlug}`;
 
-  const item = {
+  const item: ImageManifestEntry = {
     name,
     hash,
     basePath: baseUrl,
@@ -422,7 +448,7 @@ async function processImage(
   const targetWidths = WIDTHS.filter((w) => w <= srcW);
 
   for (const { ext: outExt, to } of FORMATS) {
-    const list = [];
+    const list: ImageVariant[] = [];
     for (const w of targetWidths) {
       const fileName = `${w}.${outExt}`;
       const outPath = path.join(outDir, fileName);
@@ -447,13 +473,21 @@ async function processImage(
   );
 }
 
-async function prepareOutRoot(target, version) {
+async function prepareOutRoot(
+  target: string,
+  version: string,
+): Promise<string> {
   const outRoot = path.join(OUT_ROOT_BASE, target, 'images', version);
   await fs.mkdir(outRoot, { recursive: true });
   return outRoot;
 }
 
-function parseArgs() {
+function parseArgs(): {
+  target: '_staging' | 'release' | 'both';
+  versionOverride: string | null;
+  bump: boolean;
+  help: boolean;
+} {
   const args = process.argv.slice(2);
   const opts = {
     target: '_staging',
@@ -478,29 +512,33 @@ function parseArgs() {
   return opts;
 }
 
-async function loadVersions() {
+async function loadVersions(): Promise<AssetGroupVersions> {
   const raw = await fs.readFile(VERSIONS_PATH, 'utf8');
-  return JSON.parse(raw);
+  return JSON.parse(raw) as AssetGroupVersions;
 }
 
-async function saveVersions(map) {
+async function saveVersions(map: AssetGroupVersions): Promise<void> {
   await writeJsonAtomic(VERSIONS_PATH, map);
 }
 
-function bumpVersion(v) {
+function bumpVersion(v: string | null | undefined): string {
   const match = String(v ?? '').match(/^v(\d+)$/i);
   if (!match) return 'v1';
   const next = Number(match[1]) + 1;
   return `v${next}`;
 }
 
-async function processTargets(targets, versionOverride, bumpFlag) {
+async function processTargets(
+  targets: Array<'_staging' | 'release'>,
+  versionOverride: string | null,
+  bumpFlag: boolean,
+): Promise<void> {
   const versions = await loadVersions();
   let versionsChanged = false;
 
   for (const target of targets) {
     seenNames.clear();
-    const localOrigins = new Map();
+    const localOrigins = new Map<string, string>();
     // Paths
     const targetImagesRoot = path.join(OUT_ROOT_BASE, target, 'images');
     await fs.mkdir(targetImagesRoot, { recursive: true });
@@ -526,7 +564,7 @@ async function processTargets(targets, versionOverride, bumpFlag) {
       'manifest.json',
     );
     const existingManifest =
-      (await loadJson(existingManifestPath)) ?? {};
+      (await loadJson<ImageManifest>(existingManifestPath)) ?? {};
 
     const outRoot = await prepareOutRoot(target, chosen);
     console.log(
@@ -553,9 +591,10 @@ async function processTargets(targets, versionOverride, bumpFlag) {
     );
     const hashesDir = path.dirname(hashesPath);
     await fs.mkdir(hashesDir, { recursive: true });
-    const hashes = (await loadJson(hashesPath)) ?? {};
+    const hashes =
+      (await loadJson<HashesMap>(hashesPath)) ?? {};
 
-    const manifest = {};
+    const manifest: ImageManifest = {};
 
     console.log(`→ Walking source images in "${IMAGE_SOURCES_DIR}"`);
     let localCount = 0;
@@ -584,7 +623,7 @@ async function processTargets(targets, versionOverride, bumpFlag) {
         `   ✓ Processed ${localCount} local image${localCount === 1 ? '' : 's'}.`,
       );
     } catch (error) {
-      if (error.code === 'ENOENT') {
+      if (isErrno(error) && error.code === 'ENOENT') {
         console.log(
           `   • No local image directory at "${IMAGE_SOURCES_DIR}", skipping.`,
         );
@@ -596,10 +635,10 @@ async function processTargets(targets, versionOverride, bumpFlag) {
     console.log(
       `→ Loading remote image source manifest "${IMAGE_SOURCES_CONFIG}"`,
     );
-    let imageSourcesMap = await loadImageSourcesConfig();
+    const imageSourcesMap = await loadImageSourcesConfig();
     // Preflight validation: empty URLs and duplicate names.
-    const remoteNames = new Set();
-    const dropboxUpdates = [];
+    const remoteNames = new Set<string>();
+    const dropboxUpdates: string[] = [];
     let manifestChanged = false;
     for (const [
       name,
@@ -678,9 +717,9 @@ async function processTargets(targets, versionOverride, bumpFlag) {
           }, outRoot, hashes, existingManifest);
           remoteCount += 1;
         } catch (error) {
-          if (error && error.code === 'DUPLICATE_IMAGE_NAME') throw error;
+          if (error instanceof DuplicateNameError) throw error;
           console.error(
-            `✗ Failed to process remote image "${name}": ${error.message}`,
+            `✗ Failed to process remote image "${name}": ${getErrorMessage(error)}`,
           );
         }
       }

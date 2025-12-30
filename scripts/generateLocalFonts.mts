@@ -389,7 +389,7 @@ async function removeDir(dir: string) {
 async function readHashCache(pathname: string) {
   try {
     const raw = await fs.readFile(pathname, 'utf8');
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as unknown;
     if (parsed && typeof parsed === 'object') {
       return parsed as Record<string, string>;
     }
@@ -402,7 +402,7 @@ async function readHashCache(pathname: string) {
 async function readManifest(pathname: string) {
   try {
     const raw = await fs.readFile(pathname, 'utf8');
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as unknown;
     if (parsed && typeof parsed === 'object') {
       return parsed as Record<string, FontManifestEntry>;
     }
