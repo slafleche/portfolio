@@ -5,8 +5,9 @@ declare global {
         container: string | HTMLElement,
         options: {
           sitekey: string;
+          size?: 'normal' | 'compact' | 'flexible';
           callback?: (token: string) => void;
-          'error-callback'?: () => void;
+          'error-callback'?: (errorCode?: string | number) => void;
           'expired-callback'?: () => void;
           'unsupported-callback'?: () => void;
         },

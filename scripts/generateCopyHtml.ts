@@ -29,9 +29,6 @@ const makeBanner = () =>
 async function main() {
   const htmlByLocale: Record<string, Record<string, string>> = {};
 
-  // Ensure marked does not mangle email addresses or add header ids.
-  marked.use({ mangle: false, headerIds: false });
-
   for (const locale of AVAILABLE_LOCALES) {
     const messages = await loadMessages(locale);
     const htmlMap: Record<string, string> = {};
@@ -41,9 +38,13 @@ async function main() {
       value,
     ] of Object.entries(messages)) {
       if (!shouldConvert(key, value)) continue;
+      const renderedMarkdown = marked.parse(value);
+      if (typeof renderedMarkdown !== 'string') {
+        throw new Error(`Expected markdown render for "${key}" to be a string.`);
+      }
       const rendered = wrapHtmlIfNeeded(
         key,
-        marked.parse(value).trim(),
+        renderedMarkdown.trim(),
       );
       htmlMap[key] = rendered;
     }

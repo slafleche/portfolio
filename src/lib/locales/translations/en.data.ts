@@ -15,6 +15,9 @@ const enBaseData = {
   'menu-skip_nav': 'Skip to content',
   'menu-left_label': 'About Me',
   'menu-right_label': 'My Work',
+  'menu-anchor_label': 'Jump to section',
+  'menu-home_label': 'Home',
+  'menu-nav_label': 'Site navigation',
   localeChange: 'Select language',
   'close-label': 'Close',
   'scroll-cue': 'Scroll to content',
@@ -37,6 +40,7 @@ const enBaseData = {
   'hero-video-title': 'Blue-magenta gradient rotation background',
   'hero-video-alt':
     'Slowly rotating diagonal gradient blending cool blue and soft magenta tones with subtle light bands',
+  'hero-video-description': 'Decorative blue-magenta gradient rotation background',
 
   'hero-title': 'Stéphane LaFlèche, [split] Front-end Developer',
   'hero-subTitle':
@@ -98,12 +102,14 @@ const enBaseData = {
   'contact-href': 'contact',
   'contact-content': "Think we'd work well together?",
   'contact-email-label': 'Shoot me an email!',
+  'contact-bg-title': 'Starry night sky with tree line silhouette',
+  'contact-bg-description': 'A clear night sky filled with stars and the faint glow of the Milky Way, with a black silhouette of a dense forest in the foreground.',
+
 
   ...markdownRefs('forms-form-success-body', 'forms-form-error-body'),
 
   'privacy-title': 'Privacy Policy',
   'privacy-href': 'privacy',
-  'privacy-updated': '',
   ...markdownRefs('privacy-content'),
 } as const;
 

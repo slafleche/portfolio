@@ -1,24 +1,10 @@
 import { keyframes, style, globalStyle } from '@vanilla-extract/css';
-import { logoVars } from '../../tokens/global.tokens';
-import { absolutePosition } from '../helpers/positioning.helper';
-
-export const root = style({
-  position: 'relative',
-  width: logoVars.width.css(),
-  maxWidth: '100%',
-});
 
 export const core = style({
-  width: '100%',
+  width: '85%',
   height: 'auto',
   display: 'block',
-  transform: `translateX(-1px)`, // judge it to look visually centered
-});
-
-export const shadow = style({
-  ...absolutePosition.topLeft(),
-  width: logoVars.width.multiply(logoVars.shadowRatio).css(),
-  height: 'auto',
+  transform: `translateY(-3.5%)`,
 });
 
 export const stroke = style({
@@ -53,18 +39,6 @@ const strokeIn = keyframes({
   },
 });
 
-const strokeOut = keyframes({
-  '0%': {
-    strokeOpacity: 1,
-    strokeWidth: 5.853,
-  },
-  '74%': { strokeOpacity: 0.2 },
-  '100%': {
-    strokeOpacity: 0,
-    strokeWidth: 0,
-  },
-});
-
 export const colourLayer = style({
   opacity: 1,
 });
@@ -75,29 +49,43 @@ export const monoLayer = style({
 
 export const svgStates = style({});
 
-globalStyle(`.${svgStates}[data-color="mono"] .${colourLayer}`, {
-  animation: `${colourOut} 560ms ease-out forwards`,
+// Mono animates; color stays static (no transitions/animations)
+globalStyle(`.${svgStates}[data-animate="mono"] .${colourLayer}`, {
+  opacity: 0,
+  animation: 'none',
 });
 
-globalStyle(`.${svgStates}[data-color="mono"] .${monoLayer}`, {
-  animation: `${colourIn} 560ms ease-out forwards`,
+globalStyle(`.${svgStates}[data-animate="mono"] .${monoLayer}`, {
+  animation: 'none',
+  opacity: 1,
 });
 
-globalStyle(`.${svgStates}[data-color="mono"] .${stroke}`, {
-  animation: `${strokeOut} 560ms ease-out forwards`,
+globalStyle(`.${svgStates}[data-animate="mono"] .${stroke}`, {
+  animation: 'none',
 });
 
-globalStyle(
-  `.${svgStates}:not([data-color="mono"]) .${colourLayer}`,
-  {
-    animation: `${colourIn} 780ms ease-out forwards`,
-  },
-);
+globalStyle(`.${svgStates}[data-animate="color"] .${colourLayer}`, {
+  animation: `${colourIn} 780ms ease-out forwards`,
+});
 
-globalStyle(`.${svgStates}:not([data-color="mono"]) .${monoLayer}`, {
+globalStyle(`.${svgStates}[data-animate="color"] .${monoLayer}`, {
   animation: `${colourOut} 780ms ease-out forwards`,
 });
 
-globalStyle(`.${svgStates}:not([data-color="mono"]) .${stroke}`, {
+globalStyle(`.${svgStates}[data-animate="color"] .${stroke}`, {
   animation: `${strokeIn} 780ms ease-out forwards`,
+});
+
+globalStyle(`.${svgStates}[data-animate="color"] .${colourLayer}`, {
+  opacity: 1,
+  animation: 'none',
+});
+
+globalStyle(`.${svgStates}[data-animate="color"] .${monoLayer}`, {
+  opacity: 0,
+  animation: 'none',
+});
+
+globalStyle(`.${svgStates}[data-animate="color"] .${stroke}`, {
+  animation: 'none',
 });

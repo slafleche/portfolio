@@ -23,11 +23,17 @@ const { AVAILABLE_LOCALES, LOCALE_LOADERS } = await import(
 
 type Issue = {
   locale: Locale;
-  key: string | '*';
+  key: string;
   reason: string;
 };
 
 const issuesByLocale = new Map<Locale, Issue[]>();
+
+const isErrno = (error: unknown): error is NodeJS.ErrnoException =>
+  typeof error === 'object' && error !== null && 'code' in error;
+
+const getErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : String(error);
 
 const recordIssue = (issue: Issue) => {
   const list = issuesByLocale.get(issue.locale);
@@ -48,7 +54,7 @@ const loadLocaleMessages = async (
     recordIssue({
       locale,
       key: '*',
-      reason: `failed to load messages (${(error as Error).message})`,
+      reason: `failed to load messages (${getErrorMessage(error)})`,
     });
     return null;
   }
@@ -71,7 +77,7 @@ const readMarkdownFor = async (
     const content = await fs.readFile(filePath, 'utf8');
     return content;
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+    if (isErrno(error) && error.code === 'ENOENT') {
       recordIssue({
         locale,
         key,
@@ -127,14 +133,12 @@ const transformMarkdownWithAbbr = (
   markdown: string,
   abbrEntries: Record<string, unknown>,
 ) => {
-  const resolved = resolveAbbrShortcodes(
-    {
-      ...abbrEntries,
-      __content: markdown,
-    },
-    locale,
-  );
-  return resolved.__content as string;
+  const payload: Record<string, unknown> & { __content: string } = {
+    ...abbrEntries,
+    __content: markdown,
+  };
+  const resolved = resolveAbbrShortcodes(payload, locale);
+  return resolved.__content;
 };
 
 const main = async () => {

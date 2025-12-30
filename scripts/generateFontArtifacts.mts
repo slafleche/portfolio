@@ -169,7 +169,7 @@ async function pickTargets(): Promise<Target[]> {
     const answer = await rl.question(
       'Found manifests for both _staging and release. Use which? [_staging (s)/release (r)/both (b)] (default: both): ',
     );
-    await rl.close();
+    rl.close();
     const t = answer.trim();
     if (t === 'release' || t === 'r') return ['release'];
     if (t === '_staging' || t === 's') return ['_staging'];
@@ -214,7 +214,7 @@ async function loadMetaData(
   if (!(await fileExists(metaPath))) return {};
   try {
     const raw = await fs.readFile(metaPath, 'utf8');
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as unknown;
     if (!parsed || typeof parsed !== 'object') return {};
     return parsed as Record<string, number>;
   } catch {

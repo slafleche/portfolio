@@ -60,17 +60,16 @@ export async function readMarkdownFiles(
         }
 
         const messageKey = key.replace(/_/g, '-');
+        const localeKey: Locale = locale;
 
         const content = await fs.readFile(
           path.join(directory, file),
           'utf8',
         );
 
-        if (!messages[locale as Locale]) {
-          messages[locale as Locale] = {};
-        }
-
-        messages[locale as Locale]![messageKey] = content;
+        const localeMessages = messages[localeKey] ?? {};
+        localeMessages[messageKey] = content;
+        messages[localeKey] = localeMessages;
         keys.add(messageKey);
       }),
   );

@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import type { ImageEntry } from '@/lib/images';
+import clsx from 'clsx';
+import * as s from '@/styles/components/imageByName.css';
 
 const IMAGES_MANIFEST_URL = '/cdn/manifest/images.json';
 let cachedImagesManifest: Record<string, ImageEntry> | null = null;
@@ -19,10 +21,7 @@ const fetchImagesManifest = async (): Promise<
             `Failed to load images manifest (${response.status}).`,
           );
         }
-        return (await response.json()) as Record<
-          string,
-          ImageEntry
-        >;
+        return (await response.json()) as Record<string, ImageEntry>;
       })
       .catch((error) => {
         cachedImagesPromise = null;
@@ -106,9 +105,75 @@ type Props = {
   height?: number;
   fit?: React.CSSProperties['objectFit'];
   priority?: boolean;
-  style?: React.CSSProperties;
   onLoad?: (event: React.SyntheticEvent<HTMLImageElement>) => void;
 };
+
+type PrefetcherProps = {
+  fetchNow?: string[];
+  prefetchOnIdle?: string[];
+};
+
+export function ImageByNamePrefetcher({
+  fetchNow,
+  prefetchOnIdle,
+}: PrefetcherProps) {
+  const [
+    isIdleReady,
+    setIsIdleReady,
+  ] = React.useState(false);
+
+  React.useEffect(() => {
+    const namesIdle = (prefetchOnIdle ?? []).filter(Boolean);
+    if (!namesIdle.length) return;
+    const isWindowReady =
+      typeof window !== 'undefined' &&
+      'requestIdleCallback' in window &&
+      'cancelIdleCallback' in window;
+    const handle = isWindowReady
+      ? window.requestIdleCallback(() => setIsIdleReady(true))
+      : window.setTimeout(() => setIsIdleReady(true), 250);
+    return () => {
+      if (isWindowReady) {
+        window.cancelIdleCallback(handle);
+      } else {
+        window.clearTimeout(handle);
+      }
+    };
+  }, [
+    prefetchOnIdle,
+  ]);
+
+  const names = Array.from(
+    new Set([
+      ...(fetchNow ?? []),
+      ...(isIdleReady ? prefetchOnIdle ?? [] : []),
+    ]),
+  ).filter(Boolean);
+
+  if (!names.length) return null;
+
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        width: 1,
+        height: 1,
+        padding: 0,
+        margin: -1,
+        overflow: 'hidden',
+        clip: 'rect(0, 0, 0, 0)',
+        clipPath: 'inset(50%)',
+        border: 0,
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {names.map((name) => (
+        <ImageByName key={name} name={name} alt="" />
+      ))}
+    </div>
+  );
+}
 
 export default function ImageByName({
   name,
@@ -116,7 +181,6 @@ export default function ImageByName({
   title,
   size = 'auto',
   className,
-  style,
   width,
   height,
   fit = 'cover',
@@ -142,7 +206,7 @@ export default function ImageByName({
   const h = height ?? data.height;
 
   return (
-    <picture className={className} style={style}>
+    <picture className={clsx(className, s.root)}>
       {!!data.variants.avif?.length && (
         <source
           type="image/avif"

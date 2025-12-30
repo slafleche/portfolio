@@ -4,16 +4,17 @@ import {
   composeFontVariantStyles,
   fontVariants,
 } from '../../tokens/fontVariants.tokens';
-import {
-  glassVars,
-  glassyButtonTokens,
-} from '../../tokens/glassy.tokens';
+import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import { backgrounds } from '../helpers/background.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import borders from '../helpers/borders.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { m } from 'css-calipers';
+import {
+  absolutePosition,
+  fullSizeOfParent,
+} from '../helpers/positioning.helper';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -31,7 +32,6 @@ export const overlay = style({
   position: 'fixed',
   inset: 0,
   backgroundColor: colorVars.navBg.alpha(0.7).css(),
-  ...backdropFilters.style({ blur: m(24) }),
   zIndex: 1000,
 });
 
@@ -57,16 +57,9 @@ export const panel = style({
     vertical: m(14),
     horizontal: m(10),
   }),
-  background:
-    'linear-gradient(180deg, rgba(20,16,48,0.94) 0%, rgba(15,11,36,0.92) 100%)',
-  ...boxShadow({
-    x: m(0),
-    y: m(3),
-    blur: m(12),
-    color: colorVars.black,
-    alpha: 0.4,
+  ...backgrounds({
+    color: colorVars.bodyBg,
   }),
-  borderRadius: 0,
   height: '100%',
   overflowY: 'auto',
 });
@@ -87,7 +80,7 @@ export const heading = style({
   margin: 0,
   color: colorVars.white.css(),
   textAlign: 'center',
-  ...composeFontVariantStyles(fontVariants.hero),
+  fontSize: '50px',
 });
 
 export const body = style({
@@ -100,9 +93,19 @@ export const body = style({
   maxWidth: '70ch',
 });
 
-export const closeButton = style({
+const closeOffset = m(8);
+
+export const closeButtonWrap = style({
   position: 'sticky',
-  top: '6px',
+  top: closeOffset.css(),
+  width: '100%',
+  height: 0,
+  zIndex: 1,
+});
+
+export const closeButton = style({
+  ...absolutePosition.topRight(m(0), closeOffset),
+
   ...margins({
     vertical: m(4),
   }),
@@ -116,10 +119,9 @@ export const closeButton = style({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  fontSize: glassyButtonTokens.iconSize.css(),
   fontWeight: 600,
   ...boxShadow(glassyButtonTokens.boxShadows),
-  ...backdropFilters.style({ blur: glassVars.blur }),
+  ...backdropFilters.style({ blur: glassyButtonTokens.blur }),
   transition:
     'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
   overflow: 'hidden',
@@ -184,4 +186,13 @@ globalStyle(`.${panel} p`, {
   ...margins({
     vertical: m(3),
   }),
+});
+
+export const bgImage = style({
+  ...fullSizeOfParent(),
+  zIndex: 0,
+  inset: 0,
+  pointerEvents: 'none',
+  objectFit: 'cover',
+  mixBlendMode: 'screen',
 });

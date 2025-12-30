@@ -14,7 +14,7 @@ export const heroVars = {
         at: mPercent(100),
       },
     ] as Stop[],
-    videoOpacity: 0.35,
+    videoOpacity: 0.8,
   },
   paddings: {
     top: m(40),

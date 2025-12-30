@@ -14,6 +14,9 @@ const frBaseData = {
   'menu-skip_nav': 'Aller au contenu',
   'menu-left_label': 'À propos de moi',
   'menu-right_label': 'Mon travail',
+  'menu-anchor_label': 'Aller à la section',
+  'menu-home_label': "Page d'accueil",
+  'menu-nav_label': 'Navigation du site',
   localeChange: 'Choix de la langue',
   'close-label': 'Fermer',
   'scroll-cue': 'Défiler vers le contenu',
@@ -38,6 +41,8 @@ const frBaseData = {
   'hero-video-title': 'Fond dégradé bleu et magenta en rotation',
   'hero-video-alt':
     'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
+  'hero-video-description':
+    'Fond décoratif de dégradé bleu et magenta en rotation',
 
   'hero-title': 'Stéphane LaFlèche, [split] développeur front-end',
   'hero-subTitle':
@@ -62,8 +67,7 @@ const frBaseData = {
 
   projects: 'Projets',
   'projects-href': 'projets',
-  'projects-01-cocacola-title':
-    '[wordmark:Coca-Cola]',
+  'projects-01-cocacola-title': '[wordmark:Coca-Cola]',
   ...markdownRefs('projects-01-cocacola-content'),
   'projects-02-ea-title': '[wordmark:Electronic Arts]',
   ...markdownRefs('projects-02-ea-content'),
@@ -100,13 +104,15 @@ const frBaseData = {
   contact: 'contact',
   'contact-href': 'contact',
   'contact-content': 'Envie de collaborer ?',
-  'contact-email-label': 'Envoyez-moi un email !',
+  'contact-email-label': 'Envoyez-moi un courriel !',
+  'contact-bg-title': "Ciel étoilé avec silhouette de ligne d'arbres",
+  'contact-bg-description':
+    "Un ciel nocturne clair rempli d'étoiles et de la faible lueur de la Voie lactée, avec une silhouette noire d'une forêt dense au premier plan.",
 
   ...markdownRefs('forms-form-success-body', 'forms-form-error-body'),
 
   'privacy-title': 'Politique de confidentialité',
   'privacy-href': 'confidentialite',
-  'privacy-updated': '',
   ...markdownRefs('privacy-content'),
 } as const;
 

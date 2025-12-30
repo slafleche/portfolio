@@ -36,7 +36,6 @@ const DOWNLOAD_ROOT = path.join(TMP_ROOT, 'downloads');
 const CATEGORY = 'fonts';
 
 type GoogleEntry = {
-  type?: 'googleFonts';
   weights?: string;
   ital?: boolean;
   axes?: Record<string, string>;
@@ -49,7 +48,9 @@ type SelfHostedEntry = {
   axes?: Record<string, string>;
 };
 
-type FontsConfigEntry = GoogleEntry & { type?: string } & SelfHostedEntry;
+type FontsConfigEntry =
+  | (GoogleEntry & { type: 'googleFonts' })
+  | (SelfHostedEntry & { type: 'selfHosted' });
 type FontsConfig = Record<string, FontsConfigEntry>;
 
 type FontFileEntry = {
@@ -389,7 +390,7 @@ async function removeDir(dir: string) {
 async function readHashCache(pathname: string) {
   try {
     const raw = await fs.readFile(pathname, 'utf8');
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as unknown;
     if (parsed && typeof parsed === 'object') {
       return parsed as Record<string, string>;
     }
@@ -402,7 +403,7 @@ async function readHashCache(pathname: string) {
 async function readManifest(pathname: string) {
   try {
     const raw = await fs.readFile(pathname, 'utf8');
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as unknown;
     if (parsed && typeof parsed === 'object') {
       return parsed as Record<string, FontManifestEntry>;
     }

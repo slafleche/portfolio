@@ -6,14 +6,14 @@ import {
 import { formTokens } from '@/tokens/forms.tokens';
 import { colorVars } from '../../tokens/global.tokens';
 import {
-  glassVars,
+  // glassVars,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
 import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
-import backdropFilters from '../helpers/backdropFilter.helper';
+// import backdropFilters from '../helpers/backdropFilter.helper';
 import { m } from 'css-calipers';
 
 export const form = style({
@@ -82,20 +82,25 @@ export const input = style({
       opacity: 1,
     },
     '&:hover, &[data-debug="hover"]': {
-      ...borders(formTokens.field.hover.borders),
+      // ...borders(formTokens.field.hover.borders, {
+      //   skipDefaults: true,
+      // }),
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.focusVisible.borders),
-        ...boxShadow(formTokens.field.focusVisible.shadow),
+        //   ...borders(formTokens.field.focusVisible.borders, {
+        //   skipDefaults: true,
+        // }),
+        //   ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
       opacity: 0.85,
       cursor: 'not-allowed',
     },
     '&[data-error="true"]': {
-      color: formTokens.field.error.text.color.css(),
-      ...borders(formTokens.field.error.borders),
+      ...borders(formTokens.field.error.borders, {
+        skipDefaults: true,
+      }),
     },
   },
 });
@@ -120,12 +125,16 @@ export const textarea = style({
       opacity: 1,
     },
     '&:hover, &[data-debug="hover"]': {
-      ...borders(formTokens.field.hover.borders),
+      // ...borders(formTokens.field.hover.borders, {
+      //   skipDefaults: true,
+      // }),
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.focusVisible.borders),
-        ...boxShadow(formTokens.field.focusVisible.shadow),
+        // ...borders(formTokens.field.focusVisible.borders, {
+        //   skipDefaults: true,
+        // }),
+        // ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
       opacity: 0.85,
@@ -133,7 +142,9 @@ export const textarea = style({
     },
     '&[data-error="true"]': {
       color: formTokens.field.error.text.color.css(),
-      ...borders(formTokens.field.error.borders),
+      // ...borders(formTokens.field.error.borders, {
+      //   skipDefaults: true,
+      // }),
     },
   },
 });
@@ -155,8 +166,9 @@ export const helperText = style({
 
 const statusBase: ComplexStyleRule = {
   display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
-  ...borders(formTokens.field.borders),
+  // ...borders(formTokens.field.borders),
   ...paddings(formTokens.field.paddings),
   gap: formTokens.layout.fieldGap.css(),
 };
@@ -240,7 +252,7 @@ export const submitButton = style({
   color: glassyButtonTokens.text.color.css(),
   fontWeight: 600,
   ...boxShadow(glassyButtonTokens.boxShadows),
-  ...backdropFilters.style({ blur: glassVars.blur }),
+  // ...backdropFilters.style({ blur: glassVars.blur }),
   transition:
     'transform 160ms ease, opacity 160ms ease, background 160ms ease, box-shadow 160ms ease',
   selectors: {
@@ -308,12 +320,12 @@ export const turnstileSection = style({
 
 export const turnstileWidget = style({
   minHeight: '70px',
-  borderRadius: 12,
-  ...borders({
-    width: m(1),
-    color: 'rgba(245,240,255,0.12)',
-  }),
-  ...backgrounds({ color: 'rgba(8,6,16,0.6)' }),
+  // borderRadius: 12,
+  // ...borders({
+  //   width: m(1),
+  //   color: 'rgba(245,240,255,0.12)',
+  // }),
+  // ...backgrounds({ color: 'rgba(8,6,16,0.6)' }),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -350,7 +362,7 @@ export const privacyOverlay = style({
   position: 'fixed',
   inset: 0,
   backgroundColor: colorVars.black.alpha(0.85).css(),
-  ...backdropFilters.style({ blur: glassVars.blur.double() }),
+  // ...backdropFilters.style({ blur: glassVars.blur.double() }),
   zIndex: 1100,
 });
 
@@ -423,7 +435,7 @@ export const privacyCloseIcon = style({
   fontWeight: 600,
   cursor: 'pointer',
   ...boxShadow(glassyButtonTokens.boxShadows),
-  ...backdropFilters.style({ blur: glassVars.blur.double() }),
+  // ...backdropFilters.style({ blur: glassVars.blur.double() }),
   // transition: glassyButtonTokens.transition,
   selectors: {
     '&:hover': {
@@ -457,7 +469,7 @@ export const visuallyHidden = style({
   border: 0,
 });
 
-const toastBase: ComplexStyleRule = {
+export const toastRoot = style({
   width: '100%',
   maxWidth: '100%',
   display: 'flex',
@@ -474,9 +486,7 @@ const toastBase: ComplexStyleRule = {
     alpha: 0.35,
   }),
   pointerEvents: 'auto',
-};
-
-export const toastRoot = style(toastBase);
+});
 
 export const toastSuccess = style([
   {
@@ -543,7 +553,7 @@ export const successPanel = style({
     vertical: m(24),
     horizontal: m(12),
   }),
-  borderRadius: formTokens.field.borders.radius.css(),
+  // borderRadius: formTokens.field.borders.radius.css(),
   ...backgrounds(formTokens.status.success.backgrounds),
   ...borders(formTokens.status.success.borders),
 });
@@ -551,7 +561,7 @@ export const successPanel = style({
 export const successIconWrapper = style({
   width: '64px',
   height: '64px',
-  ...borders.radii({ radius: m(32) }),
+  // ...borders.radii({ radius: m(32) }),
   ...backgrounds({
     color: formTokens.successPanel.icon.background,
   }),

@@ -3,13 +3,14 @@ import {
   queriesToStrings,
   toQueryString,
 } from '@/styles/responsive/mediaFactory';
+import { m } from 'css-calipers';
 
 describe('mediaFactory', () => {
   it('creates valid media query strings', () => {
     const query = toQueryString({
       type: 'screen',
-      minWidth: '768px',
-      maxWidth: '1200px',
+      minWidth: m(768),
+      maxWidth: m(1200),
     });
     expect(query).toBe(
       'screen and (min-width: 768px) and (max-width: 1200px)',
@@ -18,7 +19,7 @@ describe('mediaFactory', () => {
 
   it('normalizes query maps to strings', () => {
     const queries = queriesToStrings({
-      fullSize: { minWidth: '1280px' },
+      fullSize: { minWidth: m(1280) },
       raw: 'print',
     });
     expect(queries.fullSize).toBe('screen and (min-width: 1280px)');

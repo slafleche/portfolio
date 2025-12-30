@@ -325,10 +325,8 @@ export default function SubmissionTimelineSection({
                 width: '100%',
                 borderRadius: 10,
                 ...borders({
-                  all: {
-                    width: m(1),
-                    color: 'rgba(245,240,255,0.25)',
-                  },
+                  width: m(1),
+                  color: 'rgba(245,240,255,0.25)',
                 }),
                 ...paddings({
                   vertical: m(10),
@@ -359,10 +357,9 @@ export default function SubmissionTimelineSection({
                 width: '100%',
                 borderRadius: 10,
                 ...borders({
-                  all: {
-                    width: m(1),
-                    color: 'rgba(245,240,255,0.25)',
-                  },
+                  width: m(1),
+                  color: 'rgba(245,240,255,0.25)',
+
                 }),
                 ...paddings({
                   vertical: m(10),
@@ -395,10 +392,8 @@ export default function SubmissionTimelineSection({
                 width: '100%',
                 borderRadius: 10,
                 ...borders({
-                  all: {
-                    width: m(1),
-                    color: 'rgba(245,240,255,0.25)',
-                  },
+                  width: m(1),
+                  color: 'rgba(245,240,255,0.25)',
                 }),
                 ...paddings({
                   vertical: m(10),

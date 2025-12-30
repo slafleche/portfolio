@@ -166,8 +166,10 @@ async function validateTarget(
         ok = false;
       }
     } else {
+      const unexpectedType =
+        (entry as { type?: string }).type ?? 'unknown';
       errors.push(
-        `[${target}] Font "${family}" has unknown type "${entry.type}".`,
+        `[${target}] Font "${family}" has unknown type "${unexpectedType}".`,
       );
       ok = false;
     }

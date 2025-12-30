@@ -80,6 +80,8 @@ export type ContactFormCopy = {
   statuses: Record<FormStatusKey, string>;
   rateLimitedCountdown: string;
   blocks: FormBlockLocales;
+  bgDescription: string;
+  bgTitle: string;
 };
 
 export const buildContactFormCopy = (
@@ -112,18 +114,18 @@ export const buildContactFormCopy = (
       },
     },
     statuses: Object.fromEntries(
-      Object.entries(FORM_STATUS_KEYS).map(
-        ([
-          status,
-          key,
-        ]) => [
-          status,
-          withSeconds(t(key)),
-        ],
-      ),
+      Object.entries(FORM_STATUS_KEYS).map(([
+        status,
+        key,
+      ]) => [
+        status,
+        withSeconds(t(key)),
+      ]),
     ) as Record<FormStatusKey, string>,
     rateLimitedCountdown: t('form-status-rate_limited-countdown'),
     blocks: buildFormBlockLocales(t),
+    bgDescription: t('contact-bg-description'),
+    bgTitle: t('contact-bg-title'),
   };
 };
 

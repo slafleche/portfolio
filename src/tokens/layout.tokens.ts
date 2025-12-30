@@ -1,13 +1,16 @@
 import { m } from 'css-calipers';
+import { logoVars } from './menu.tokens';
 
-const contentPadding = m(40);
-// const compactContentPadding = m(26);
-// const compressedContentPadding = m(16);
+const contentPadding = logoVars.fullWidth;
 
 export const layoutVars = {
   contentWidth: m(1400),
   contentPadding,
-  halfContentPadding: contentPadding.half(),
+
+  noBleed: {
+  	// contentWidth: m(1200),
+  	// contentPadding: m(26),
+  },
   // compact: {
   // 	contentWidth: m(1200),
   // 	contentPadding: m(26),
@@ -19,3 +22,8 @@ export const layoutVars = {
   // 	halfContentPadding: compressedContentPadding.half(),
   // },
 } as const;
+
+export const gridLayoutVars = {
+  columns: 1,
+  gap: m(6),
+};

@@ -16,15 +16,13 @@ import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
 import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-// import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
-// import {
-//   buildHomeMenuSections,
-//   buildSystemsMenuSections,
-// } from '@/lib/locales/sections/menuSections';
-// import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+import * as cg from '@/styles/components/card.css';
+import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { resolveLocale } from '@/lib/locales/locale';
+import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import WordMarkInTitle from '@/components/WordmarkInTitle';
 import {
   BQWordmark,
@@ -35,6 +33,7 @@ import {
   VNWordmark,
   rms,
 } from '@/components/wordmarks/wordmarks.tsx';
+import Menu from '../../../src/components/Menu';
 
 interface PageParams {
   LOCALE: string;
@@ -74,7 +73,8 @@ export default async function HomePage({
   const { cocacola, ea, banq, hootsuite, kingGames } = projects.items;
   const contact = buildContactCopy(translator);
   const systemsLink = buildSystemsLink(locale, translator);
-  // const menuCopy = buildMenuCopy(translator);
+  const menuCopy: ReturnType<typeof buildMenuCopy> =
+    buildMenuCopy(translator);
   // const menuSections = buildHomeMenuSections(translator);
   // const systemsMenuSections = buildSystemsMenuSections(translator);
 
@@ -88,37 +88,42 @@ export default async function HomePage({
     canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
   const curiosityTarget = `/${locale}/${systemsSlug}`;
 
-  // const menuProps = {
-  //   root: `/${locale}`,
-  //   skipNavLabel: menuCopy.skipNavLabel,
-  //   leftLabel: menuCopy.leftLabel,
-  //   rightLabel: menuCopy.rightLabel,
-  //   localeChangeLabel: menuCopy.languageLabel,
-  //   sections: menuSections,
-  //   systemsSections: systemsMenuSections,
-  //   localeLinks: AVAILABLE_LOCALES.filter(
-  //     (code) => code !== locale,
-  //   ).map((code) => ({
-  //     locale: code,
-  //     label: LOCALE_LABELS[code],
-  //   })),
-  // };
+  const menuProps = {
+    root: `/${locale}`,
+    homeLabel: menuCopy.homeLabel,
+    skipNavLabel: menuCopy.skipNavLabel,
+    navLabel: menuCopy.navLabel,
+    localeChangeLabel: menuCopy.languageLabel,
+    anchorNavLabel: menuCopy.anchorLabel,
+    anchorLinks: [
+      {
+        title: parseWordmarkTemplate(approach.title).fullText,
+        href: `#${approach.href}`,
+      },
+      {
+        title: parseWordmarkTemplate(about.title).fullText,
+        href: `#${about.href}`,
+      },
+      {
+        title: parseWordmarkTemplate(caseStudies.title).fullText,
+        href: `#${caseStudies.href}`,
+      },
+      {
+        title: parseWordmarkTemplate(projects.title).fullText,
+        href: `#${projects.href}`,
+      },
+    ],
+    localeLinks: AVAILABLE_LOCALES.filter(
+      (code) => code !== locale,
+    ).map((code) => ({
+      locale: code,
+      label: LOCALE_LABELS[code],
+    })),
+  };
 
   return (
     <>
-      {/* <Menu
-        {...menuProps}
-        curiosityMessages={{
-          title: curiosityMessages.title,
-          test: curiosityMessages.test,
-          result: curiosityMessages.result,
-          hint: curiosityMessages.hint,
-          targetHref: curiosityTarget,
-        }}
-        logoRedirectPaths={[
-          curiosityTarget,
-        ]}
-      /> */}
+      <Menu {...menuProps} />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
           <Hero id="hero" copy={heroCopy} headingAnimated={false} />
@@ -153,7 +158,12 @@ export default async function HomePage({
             />
           </Content>
           <Content title={projects.title} id={projects.href}>
-            <Grid columns={2}>
+            <Grid
+              columns={2}
+              mediaQueryColumns={{
+                noBleed: 1,
+              }}
+            >
               <Column span={2}>
                 <Card
                   title={
@@ -164,6 +174,7 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientCC}
                 >
                   <Markdown source={cocacola.content} />
                 </Card>
@@ -177,6 +188,7 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientEa}
                 >
                   <Markdown source={ea.content} />
                 </Card>
@@ -191,6 +203,7 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientBanq}
                 >
                   <Markdown source={banq.content} />
                 </Card>
@@ -205,11 +218,17 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientHs}
                 >
                   <Markdown source={hootsuite.content} />
                 </Card>
               </Column>
-              <Column span={2}>
+              <Column
+                span={2}
+                mediaQuerySpan={{
+                  noBleed: 1,
+                }}
+              >
                 <Card
                   title={
                     <WordMarkInTitle
@@ -219,6 +238,7 @@ export default async function HomePage({
                       textClassName={rms.wordmarkTextNoLogo}
                     />
                   }
+                  gradientClassName={cg.gradientKing}
                 >
                   <Markdown source={kingGames.content} />
                 </Card>

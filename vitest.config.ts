@@ -9,9 +9,26 @@ export default defineConfig({
     vanillaExtractPlugin(),
   ],
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
+    alias: [
+      {
+        find: '@',
+        replacement: path.resolve(__dirname, './src'),
+      },
+      {
+        find: /^css-calipers$/,
+        replacement: path.resolve(
+          __dirname,
+          './node_modules/css-calipers/dist/cjs/index.js',
+        ),
+      },
+      {
+        find: /^css-calipers\/mediaQueries$/,
+        replacement: path.resolve(
+          __dirname,
+          './node_modules/css-calipers/dist/cjs/mediaQueries/index.js',
+        ),
+      },
+    ],
   },
   test: {
     globals: true,

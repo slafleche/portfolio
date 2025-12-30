@@ -18,10 +18,12 @@ import ImageByName from './ImageByName';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import { Markdown } from '@/components/Markdown';
 import { userContent } from '@/styles/typography.css';
+import { GlassPanel } from './GlassPanel';
 
 type HeroCopy = {
   videoTitle: string;
   videoLabel: string;
+  videoDescription: string;
   title: string;
   consoleDescription: string;
   videoErrorMessage: string;
@@ -225,7 +227,7 @@ export default function Hero({
           <div className={s.contentWrap}>
             <ImageByName
               name="video-hero"
-              alt=""
+              alt={copy.videoDescription}
               size="lg"
               className={s.visualContent}
               priority
@@ -244,12 +246,11 @@ export default function Hero({
 
       <div className={clsx(layoutStyles.content, s.content)}>
         <div className={clsx(layoutStyles.panel, s.panel)}>
-          <div className={s.bridge}>
+          <GlassPanel contentClassName={s.main}>
             <HeroHeading
               label={headingLabel}
               animate={isHeadingAnimated}
               onReveal={handleHeadingReveal}
-              // debugStage="initial"
             >
               <span
                 className={s.line}
@@ -293,7 +294,7 @@ export default function Hero({
                 <SendIcon className={s.ctaIcon} aria-hidden />
               </ContactDialogTrigger>
             ) : null}
-          </div>
+          </GlassPanel>
         </div>
       </div>
     </section>

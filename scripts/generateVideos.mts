@@ -5,10 +5,104 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { execa } from 'execa';
-import prettyBytes from 'pretty-bytes';
 import ffmpegStatic from 'ffmpeg-static';
 import ffprobeStatic from 'ffprobe-static';
-import sharp from 'sharp';
+import sharp, { type Sharp } from 'sharp';
+
+type SourceEntryObject = {
+  src: string;
+  speed?: number;
+};
+
+type SourceMapEntry = string | SourceEntryObject;
+
+type SourceMap = Record<string, SourceMapEntry>;
+
+type AssetGroupVersions = Record<string, Record<string, string>>;
+
+type VideoVariant = {
+  rung: number;
+  height: number;
+  bandwidthKbps: number;
+  playlistUrl: string;
+};
+
+type PosterVariant = {
+  w: number;
+  url: string;
+};
+
+type PosterEntry = {
+  name: string;
+  hash: string;
+  basePath: string;
+  dirName: string;
+  width: number;
+  height: number;
+  aspect: number;
+  blurDataURL: string;
+  variants: Record<string, PosterVariant[]>;
+  original: {
+    url: string;
+    width: number;
+    height: number;
+  };
+};
+
+type FormatSpec = {
+  ext: string;
+  to: (img: Sharp) => Sharp;
+};
+
+type NormalizedEntry = {
+  rawName: string;
+  name: string;
+  src: string;
+  speed: number;
+  isRemote: boolean;
+};
+
+type VideoInfo = {
+  name: string;
+  dirName: string;
+  basePath: string;
+  width: number;
+  height: number;
+  aspect: number;
+  duration: number;
+  hasAudio: boolean;
+  speed: number;
+  masterUrl: string;
+  posterPath: string;
+  posterUrl: string;
+  variants: VideoVariant[];
+};
+
+type VideoManifestEntry = VideoInfo & {
+  poster: PosterEntry;
+  hash?: string;
+  sourceHash?: string;
+  sourceSize?: number;
+  sourceUrl?: string;
+  source?: string;
+};
+
+type VideoManifest = Record<string, VideoManifestEntry>;
+
+type FFprobeStream = {
+  codec_type?: string;
+  width?: number;
+  height?: number;
+};
+
+type FFprobeFormat = {
+  duration?: string;
+};
+
+type FFprobeResult = {
+  streams?: FFprobeStream[];
+  format?: FFprobeFormat;
+};
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -86,7 +180,6 @@ const LADDER = [
 const FPS = 24;
 const SEG = 2;
 const GOP = FPS * 2;
-const KEEP_AUDIO = false;
 
 const BASE_VIDEO_FILTER = [
   'format=yuv420p',
@@ -104,7 +197,7 @@ const POSTER_WIDTHS = [
   1200,
   1920,
 ];
-const POSTER_FORMATS = [
+const POSTER_FORMATS: FormatSpec[] = [
   { ext: 'avif', to: (img) => img.avif({ quality: 50 }) },
   { ext: 'webp', to: (img) => img.webp({ quality: 70 }) },
   {
@@ -114,22 +207,40 @@ const POSTER_FORMATS = [
 ];
 
 /* Utility helpers ---------------------------------------------------- */
-const exists = async (p) =>
+const readJsonFile = async <T,>(
+  filePath: string,
+  fallback: T,
+): Promise<T> => {
+  try {
+    const raw = await fs.readFile(filePath, 'utf8');
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+};
+
+const isErrno = (error: unknown): error is NodeJS.ErrnoException =>
+  typeof error === 'object' && error !== null && 'code' in error;
+
+const getErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : String(error);
+
+const exists = async (p: string) =>
   !!(await fs
     .access(p)
     .then(() => true)
     .catch(() => false));
 
-const sha256 = (value) =>
+const sha256 = (value: string) =>
   crypto.createHash('sha256').update(value).digest('hex');
 
-const toName = (s) =>
+const toName = (s: string) =>
   s
     .replace(/[\\/]+/g, '-')
     .replace(/\s+/g, '-')
     .toLowerCase();
 
-function normalizeSourceEntry(rawValue, key) {
+function normalizeSourceEntry(rawValue: SourceMapEntry, key: string) {
   if (typeof rawValue === 'string') {
     return {
       src: rawValue,
@@ -164,7 +275,7 @@ function normalizeSourceEntry(rawValue, key) {
   );
 }
 
-function normalizeDrive(urlStr) {
+function normalizeDrive(urlStr: string) {
   try {
     const u = new URL(urlStr);
     if (u.hostname === 'drive.google.com') {
@@ -182,7 +293,7 @@ function normalizeDrive(urlStr) {
 }
 
 // Force Dropbox shared links to ?dl=1 (direct download) while preserving other query params.
-function toDirectDropboxUrl(urlStr) {
+function toDirectDropboxUrl(urlStr: string) {
   try {
     const u = new URL(urlStr);
     if (
@@ -198,7 +309,7 @@ function toDirectDropboxUrl(urlStr) {
   }
 }
 
-function extFromUrlSafe(rawUrl) {
+function extFromUrlSafe(rawUrl: string) {
   try {
     const u = new URL(rawUrl);
     return path.extname(u.pathname) || '';
@@ -207,13 +318,16 @@ function extFromUrlSafe(rawUrl) {
   }
 }
 
-function hashBuffer(buffer, length) {
+function hashBuffer(buffer: Buffer, length: number) {
   const rawHash = crypto.createHash('sha256').update(buffer).digest('hex');
   return rawHash.slice(0, Math.max(1, length));
 }
 
 /* Networking --------------------------------------------------------- */
-async function findCachedFile(cacheDir, cacheKey) {
+async function findCachedFile(
+  cacheDir: string,
+  cacheKey: string,
+): Promise<string | null> {
   try {
     const entries = await fs.readdir(cacheDir);
     const match = entries.find((entry) =>
@@ -225,7 +339,12 @@ async function findCachedFile(cacheDir, cacheKey) {
   }
 }
 
-async function downloadToTemp(name, rawUrl, cacheDir, cacheKey) {
+async function downloadToTemp(
+  name: string,
+  rawUrl: string,
+  cacheDir: string,
+  cacheKey: string,
+): Promise<{ file: string; bytes: number }> {
   let urlStr = (rawUrl || '').trim();
   if (!urlStr) throw new Error(`Empty URL for "${name}"`);
 
@@ -297,7 +416,7 @@ async function downloadToTemp(name, rawUrl, cacheDir, cacheKey) {
 }
 
 /* FFprobe / FFmpeg --------------------------------------------------- */
-async function ffprobeJSON(inputPath) {
+async function ffprobeJSON(inputPath: string): Promise<FFprobeResult> {
   const { stdout } = await execa(ffprobeStatic.path, [
     '-v',
     'quiet',
@@ -307,20 +426,24 @@ async function ffprobeJSON(inputPath) {
     '-show_streams',
     inputPath,
   ]);
-  const meta = JSON.parse(stdout || '{}');
-  if (!meta.streams || meta.streams.length === 0) {
+  const meta = JSON.parse(stdout || '{}') as FFprobeResult;
+  const streams = Array.isArray(meta.streams) ? meta.streams : [];
+  if (streams.length === 0) {
     throw new Error(
       `ffprobe: no streams found in "${inputPath}". File may be corrupt or not a video.`,
     );
   }
-  return meta;
+  return {
+    ...meta,
+    streams,
+  };
 }
 
 // Deband, add subtle grain, then split/scale ladder outputs (order matters).
 function buildFilterAndMaps(speed = 1) {
   const splitN = LADDER.length;
   const v = Array.from({ length: splitN }, (_, i) => `v${i + 1}`);
-  const out = v.map((label, i) => `${label}out`);
+  const out = v.map((label) => `${label}out`);
 
   const speedFilter =
     typeof speed === 'number' && speed !== 1
@@ -354,13 +477,13 @@ function buildFilterAndMaps(speed = 1) {
   };
 }
 
-async function removeHashedVideoDirs(name, outRoot) {
+async function removeHashedVideoDirs(name: string, outRoot: string) {
   const prefix = `${VIDEO_CACHE_PREFIX}-${name}-`;
-  let entries = [];
+  let entries: string[] = [];
   try {
     entries = await fs.readdir(outRoot);
   } catch (error) {
-    if (error.code === 'ENOENT') return;
+    if (isErrno(error) && error.code === 'ENOENT') return;
     throw error;
   }
   await Promise.all(
@@ -375,14 +498,30 @@ async function removeHashedVideoDirs(name, outRoot) {
   );
 }
 
-async function buildHLS(srcPath, { name, slug, speed = 1, outRoot, speedLabel }) {
+async function buildHLS(
+  srcPath: string,
+  {
+    name,
+    slug,
+    speed = 1,
+    outRoot,
+    speedLabel,
+  }: {
+    name: string;
+    slug: string;
+    speed?: number;
+    outRoot: string;
+    speedLabel: string;
+  },
+): Promise<VideoInfo> {
   const outDir = path.join(outRoot, speedLabel, slug);
   await fs.mkdir(outDir, {
     recursive: true,
   });
 
   const meta = await ffprobeJSON(srcPath);
-  const v = meta.streams.find((s) => s.codec_type === 'video');
+  const streams = meta.streams ?? [];
+  const v = streams.find((s) => s.codec_type === 'video');
   const width = v?.width ?? 0;
   const height = v?.height ?? 0;
   const originalDuration = Number(meta.format?.duration ?? 0);
@@ -475,8 +614,13 @@ async function buildHLS(srcPath, { name, slug, speed = 1, outRoot, speedLabel })
     path.join(outDir, 'out_%v', 'index.m3u8'),
   ];
 
+  const ffmpegPath =
+    typeof ffmpegStatic === 'string' ? ffmpegStatic : null;
+  if (!ffmpegPath) {
+    throw new Error('ffmpeg binary not available.');
+  }
   console.log(`↻ ffmpeg → ${name}`);
-  await execa(ffmpegStatic, args, {
+  await execa(ffmpegPath, args, {
     stdio: 'inherit',
   });
 
@@ -497,7 +641,7 @@ async function buildHLS(srcPath, { name, slug, speed = 1, outRoot, speedLabel })
       force: true,
     })
     .catch(() => {});
-  await execa(ffmpegStatic, [
+  await execa(ffmpegPath, [
     '-nostdin',
     '-hide_banner',
     '-loglevel',
@@ -542,7 +686,12 @@ async function buildHLS(srcPath, { name, slug, speed = 1, outRoot, speedLabel })
   };
 }
 
-async function generatePosterVariants(posterPath, outDir, basePathRoot, namePrefix) {
+async function generatePosterVariants(
+  posterPath: string,
+  outDir: string,
+  basePathRoot: string,
+  namePrefix: string,
+): Promise<PosterEntry> {
   const img = sharp(posterPath).rotate();
   const meta = await img.metadata();
   const srcW = meta.width ?? 0;
@@ -572,10 +721,10 @@ async function generatePosterVariants(posterPath, outDir, basePathRoot, namePref
 
   const basePath = `${basePathRoot}/${posterDirName}`;
   const targetWidths = POSTER_WIDTHS.filter((w) => w <= srcW);
-  const variants = {};
+  const variants: Record<string, PosterVariant[]> = {};
 
   for (const { ext, to } of POSTER_FORMATS) {
-    const list = [];
+    const list: PosterVariant[] = [];
     for (const w of targetWidths) {
       const fileName = `${w}.${ext}`;
       const outPath = path.join(posterDir, fileName);
@@ -607,17 +756,16 @@ async function generatePosterVariants(posterPath, outDir, basePathRoot, namePref
 }
 
 /* CLI entry ---------------------------------------------------------- */
-function parseTargets(argv) {
-  const names = argv.filter((a) => !a.startsWith('-')).map(toName);
-  return new Set(names);
-}
-
-(async () => {
+void (async () => {
   const args = process.argv.slice(2);
   const targetsArg = args.filter((a) => !a.startsWith('--'));
   const targetNames = targetsArg.length > 0 ? targetsArg.map(toName) : [];
 
-  const opts = {
+  const opts: {
+    target: '_staging' | 'release';
+    versionOverride: string | null;
+    postersOnly: boolean;
+  } = {
     target: '_staging',
     versionOverride: null,
     postersOnly: false,
@@ -653,13 +801,10 @@ function parseTargets(argv) {
     }
   }
 
-  const versionsRaw = await fs.readFile(VERSIONS_PATH, 'utf8').catch(() => '{}');
-  let parsedVersions = {};
-  try {
-    parsedVersions = JSON.parse(versionsRaw);
-  } catch {
-    parsedVersions = {};
-  }
+  const parsedVersions = await readJsonFile<AssetGroupVersions>(
+    VERSIONS_PATH,
+    {},
+  );
   const version =
     opts.versionOverride ||
     (parsedVersions?.[opts.target]?.[CATEGORY] ?? 'v1');
@@ -675,20 +820,15 @@ function parseTargets(argv) {
   await fs.mkdir(outRoot, { recursive: true });
   await fs.mkdir(tempDownloadDir, { recursive: true });
 
-  const manifest = {};
+  const manifest: VideoManifest = {};
   const existingManifestPath = path.join(outRoot, 'manifest.json');
-  let existingManifest = {};
-  if (await exists(existingManifestPath)) {
-    try {
-      existingManifest =
-        JSON.parse(await fs.readFile(existingManifestPath, 'utf8')) || {};
-    } catch {
-      existingManifest = {};
-    }
-  }
+  const existingManifest = await readJsonFile<VideoManifest>(
+    existingManifestPath,
+    {},
+  );
 
-  const urlMap = await fs.readFile(SRC_MAP_PATH, 'utf8').then(JSON.parse);
-  const localEntries = [];
+  const urlMap = await readJsonFile<SourceMap>(SRC_MAP_PATH, {});
+  const localEntries: Array<{ rawName: string; file: string }> = [];
   try {
     const localFiles = await fs.readdir(LOCAL_VIDEO_DIR);
     for (const file of localFiles) {
@@ -701,24 +841,31 @@ function parseTargets(argv) {
       localEntries.push({ rawName: path.parse(file).name, file: full });
     }
   } catch (error) {
-    if (error.code !== 'ENOENT') throw error;
+    if (!isErrno(error) || error.code !== 'ENOENT') throw error;
   }
 
-  const normalizedRemote = Object.entries(urlMap).map(([rawName, rawValue]) => {
-    const entry = normalizeSourceEntry(rawValue, rawName);
-    return { rawName, name: toName(rawName), ...entry, isRemote: true };
-  });
+  const normalizedRemote: NormalizedEntry[] = Object.entries(urlMap).map(
+    ([rawName, rawValue]) => {
+      const entry = normalizeSourceEntry(rawValue, rawName);
+      return { rawName, name: toName(rawName), ...entry, isRemote: true };
+    },
+  );
 
-  const normalizedLocal = localEntries.map(({ rawName, file }) => ({
-    rawName,
-    name: toName(rawName),
-    src: file,
-    speed: 1,
-    isRemote: false,
-  }));
+  const normalizedLocal: NormalizedEntry[] = localEntries.map(
+    ({ rawName, file }) => ({
+      rawName,
+      name: toName(rawName),
+      src: file,
+      speed: 1,
+      isRemote: false,
+    }),
+  );
 
-  const seenNames = new Set();
-  const allEntries = [...normalizedRemote, ...normalizedLocal].filter((entry) => {
+  const seenNames = new Set<string>();
+  const allEntries: NormalizedEntry[] = [
+    ...normalizedRemote,
+    ...normalizedLocal,
+  ].filter((entry) => {
     if (seenNames.has(entry.name)) {
       throw new Error(`Duplicate video key "${entry.name}" between sources.`);
     }
@@ -765,7 +912,12 @@ function parseTargets(argv) {
       }
 
       const posterPath = path.join(outDir, 'poster.png');
-      await execa(ffmpegStatic, [
+      const ffmpegPath =
+        typeof ffmpegStatic === 'string' ? ffmpegStatic : null;
+      if (!ffmpegPath) {
+        throw new Error('ffmpeg binary not available.');
+      }
+      await execa(ffmpegPath, [
         '-nostdin',
         '-hide_banner',
         '-loglevel',
@@ -831,19 +983,6 @@ function parseTargets(argv) {
       );
       const slug = `${VIDEO_CACHE_PREFIX}-${name}-${shortHash}`;
       const prev = existingManifest?.[name];
-      const prevSourceUrl =
-        typeof prev?.sourceUrl === 'string'
-          ? prev.sourceUrl
-          : typeof prev?.source === 'string' && !prev.source.startsWith('local:')
-            ? prev.source
-            : null;
-      const prevLocalSource =
-        typeof prev?.source === 'string' && prev.source.startsWith('local:')
-          ? prev.source
-          : null;
-      const hasSameSource = isRemote
-        ? prevSourceUrl === normalizedSrc
-        : prevLocalSource === `local:${rawName}`;
       const hasSameSpeed = Number(prev?.speed ?? 1) === effectiveSpeed;
       const hasSameConfig =
         typeof prev?.sourceHash === 'string' &&
@@ -910,7 +1049,7 @@ function parseTargets(argv) {
         `✓ Built ${name}  ${info.width}x${info.height}  ${Math.round(info.duration)}s`,
       );
     } catch (err) {
-      console.error(`✗ ${name} failed:`, err?.message || err);
+      console.error(`✗ ${name} failed:`, getErrorMessage(err));
     }
   }
 

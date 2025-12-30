@@ -64,6 +64,13 @@ type ExtractSvgLayerResult = {
   count: number;
 };
 
+type CacheInfo = {
+  sourceHash?: string;
+};
+
+const isErrno = (error: unknown): error is NodeJS.ErrnoException =>
+  typeof error === 'object' && error !== null && 'code' in error;
+
 const sanitizeFillFragment = (
   fragment: string,
   desiredFill: string,
@@ -398,6 +405,7 @@ function buildIcoFromPng(candidates: IcoCandidate[]) {
 }
 
 async function main() {
+  const force = process.argv.includes('--force');
   const sourceSvgPath = path.resolve(faviconTokens.sourceSvg);
   console.log(`→ Favicons: loading source SVG "${sourceSvgPath}"`);
 
@@ -418,16 +426,16 @@ async function main() {
   let previousHash: string | null = null;
   try {
     const raw = await fs.readFile(CACHE_INFO_PATH, 'utf8');
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(raw) as CacheInfo;
     if (parsed && typeof parsed.sourceHash === 'string') {
       previousHash = parsed.sourceHash;
     }
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT')
-      throw error;
+    if (!isErrno(error) || error.code !== 'ENOENT') throw error;
   }
 
   if (
+    !force &&
     previousHash === sourceHash &&
     (await exists(MANIFEST_TS_PATH)) &&
     (await exists(OUT_ROOT))
@@ -436,6 +444,9 @@ async function main() {
       'ℹ️  Favicons config unchanged; using existing outputs. Skipping generation.',
     );
     return;
+  }
+  if (force) {
+    console.log('→ Favicons: forcing regeneration.');
   }
 
   console.log('→ Favicons: cleaning staging directories');
@@ -610,6 +621,12 @@ async function main() {
     prefix: faviconCacheTokens.prefix,
     publicRoot: PUBLIC_ROOT,
   });
+
+  console.log('→ Favicons: writing root /favicon.ico');
+  await fs.copyFile(
+    path.join(OUT_ROOT, icoResult.fileName),
+    path.resolve('public', 'favicon.ico'),
+  );
 
   console.log('→ Favicons: generating apple-touch-icon.png');
   const appleBackgroundBuffer = backgroundBufferFor(

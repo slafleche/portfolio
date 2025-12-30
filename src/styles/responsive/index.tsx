@@ -20,11 +20,7 @@ export type IMode = 'fullSize' | 'compact' | 'compressed' | undefined;
 
 // 3) Aggregate when you need multiple flags at once
 export const useMedia = () =>
-  useMediaFromMap({
-    fullSize: mqStrings.fullSize,
-    // compact: mqStrings.compact,
-    // compressed: mqStrings.compressed,
-  });
+  useMediaFromMap(mqStrings);
 
 // 4) Client-only predicate functions (don’t call during SSR render)
 export const {

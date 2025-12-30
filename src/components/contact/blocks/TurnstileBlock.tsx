@@ -32,7 +32,9 @@ export type TurnstileState =
   | 'expired'
   | 'error';
 
-const COMPLETED_STATUSES: TurnstileState[] = ['verified'];
+const COMPLETED_STATUSES: TurnstileState[] = [
+  'verified',
+];
 
 const TURNSTILE_SCRIPT_SRC =
   'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
@@ -150,14 +152,14 @@ const buildTurnstileContract = (
   },
 });
 
-	export function TurnstileBlock({
-	  id,
-	  order,
-	  disabled,
-	  copy,
-	  turnstileSiteKey,
-	}: TurnstileBlockProps) {
-	  const hasTurnstileConfig = Boolean(turnstileSiteKey);
+export function TurnstileBlock({
+  id,
+  order,
+  disabled,
+  copy,
+  turnstileSiteKey,
+}: TurnstileBlockProps) {
+  const hasTurnstileConfig = Boolean(turnstileSiteKey);
 
   const hasInlineTurnstile =
     typeof window !== 'undefined' &&
@@ -179,12 +181,7 @@ const buildTurnstileContract = (
     hasTurnstileConfig || hasInlineTurnstile;
 
   const registration = useMemo(() => {
-    const contract = buildTurnstileContract(
-      id,
-      status,
-      copy,
-      token,
-    );
+    const contract = buildTurnstileContract(id, status, copy, token);
     return {
       key: 'turnstile',
       getValue: () => token,
@@ -245,6 +242,7 @@ const buildTurnstileContract = (
         }
         const widgetId = turnstileApi.render(container, {
           sitekey: turnstileSiteKey,
+          size: 'normal',
           callback: (nextToken: string) => {
             if (cancelled) return;
             setToken(nextToken);
@@ -255,12 +253,16 @@ const buildTurnstileContract = (
             setToken('');
             setStatus('expired');
           },
-          'error-callback': () => {
+          'error-callback': (errorCode?: string | number) => {
             if (cancelled) return;
             setStatus('error');
-            reportCatastrophic(
-              'Turnstile reported an error via error-callback.',
-            );
+            const reason =
+              typeof errorCode === 'undefined' || errorCode === null
+                ? 'Turnstile reported an error via error-callback.'
+                : `Turnstile reported an error via error-callback (${String(
+                    errorCode,
+                  )}).`;
+            reportCatastrophic(reason);
           },
         });
         widgetIdRef.current = widgetId;
@@ -331,18 +333,14 @@ const buildTurnstileContract = (
         className={s.turnstileWidget}
         aria-describedby={hintText ? hintId : undefined}
         data-rendered="true"
-      >
-      </div>
+      />
       <input type="hidden" name="token" value={token} />
       {hintText ? (
         <div
           data-form-turnstile="status"
           className={s.turnstileStatus}
         >
-          <FormHint
-            id={hintId}
-            tone={showError ? 'error' : 'helper'}
-          >
+          <FormHint id={hintId} tone={showError ? 'error' : 'helper'}>
             {hintText}
           </FormHint>
         </div>

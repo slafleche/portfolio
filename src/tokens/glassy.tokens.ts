@@ -7,35 +7,40 @@ import { colorVars } from './global.tokens';
  * turning these into CSS strings / gradients.
  */
 export const glassVars = {
-  blur: m(3),
+  backdropFilter: {
+    blur: m(5),
+    saturate: mPercent(180),
+    contrast: mPercent(90),
+    brightness: 1.1,
+  },
   backgrounds: {
     color: colorVars.white.alpha(0.06),
   },
   surfaceGlowPrimaryTint: color('#0f0c18').alpha(0.5),
   surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),
   innerBorderColor: colorVars.white,
+
   borders: {
-    radius: m(40),
+    radius: m(18),
     width: m(2),
   },
-  paddings: {
-    all: m(2),
-  },
-  innerBorderHighlight: {
-    radialStrength: 0.5,
-    opacity: 1,
-  },
-  outerBorderHighlight: {
-    strength: 0.35,
-    spread: mPercent(70),
-    angle: m(130, 'deg'),
-  },
+
+  // innerBorderHighlight: {
+  //   radialStrength: 0.5,
+  //   opacity: 1,
+  // },
+  // outerBorderHighlight: {
+  //   strength: 0.35,
+  //   spread: mPercent(70),
+  //   angle: m(130, 'deg'),
+  // },
+
   surfaceGlow: {
-    blur: m(12),
     opacity: 0.5,
     primaryTintAlpha: 0.1,
     secondaryTintAlpha: 0.6,
   },
+
   overlay: {
     color: colorVars.black,
     topAlpha: 0.05,
@@ -43,6 +48,7 @@ export const glassVars = {
     bottomAlpha: 0.1,
     direction: m(-45, 'deg'),
   },
+
   noise: {
     idPrefix: 'glassy-noise-',
   },
@@ -53,7 +59,7 @@ export type GlassSurfaceTokens = typeof glassVars;
 export const glassyButtonTokens = {
   size: m(44),
   iconSize: m(18),
-  blur: glassVars.blur,
+  blur: m(5),
   backgrounds: {
     color: colorVars.white.alpha(0.12),
   },

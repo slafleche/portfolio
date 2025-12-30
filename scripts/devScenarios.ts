@@ -8,7 +8,6 @@ import { execa } from 'execa';
 import debugRoutes from '../src/data/debugRoutes.json';
 import {
   contactFormScenarioMap,
-  type ContactFormScenarioConfig,
 } from '../src/dev/scenarios/contactForm.scenarios.ts';
 import { installTTYGuards, restoreTTY } from './ttyGuard.mjs';
 
@@ -60,9 +59,13 @@ function loadScenarioState(): ScenarioState {
       return { doneIds: [] };
     }
     const raw = fs.readFileSync(SCENARIO_STATE_FILE, 'utf8');
-    const parsed = JSON.parse(raw) as Partial<ScenarioState> | undefined;
-    const doneIds = Array.isArray(parsed?.doneIds)
-      ? parsed!.doneIds.filter((id): id is string => typeof id === 'string')
+    const parsed = JSON.parse(raw) as unknown;
+    const parsedState =
+      parsed && typeof parsed === 'object'
+        ? (parsed as Partial<ScenarioState>)
+        : undefined;
+    const doneIds = Array.isArray(parsedState?.doneIds)
+      ? parsedState.doneIds.filter((id): id is string => typeof id === 'string')
       : [];
     return { doneIds };
   } catch {

@@ -24,12 +24,21 @@ export const formTokens = {
     },
     paddings: {
       vertical: m(12),
-      horizontal: m(16),
+      horizontal: m(0),
     },
     borders: {
-      radius: m(12),
-      width: m(1),
-      color: colorVars.white.alpha(0.18),
+      top: {
+        width: m(1),
+        color: colorVars.transparent,
+      },
+      horizontal: {
+        width: m(1),
+        color: colorVars.transparent,
+      },
+      bottom: {
+        width: m(1),
+        color: colorVars.white.alpha(0.18),
+      },
     },
     hover: {
       borders: {
@@ -39,8 +48,8 @@ export const formTokens = {
     focusVisible: {
       shadow: [
         {
-          blur: m(4),
-          color: colorVars.brand.alpha(0.45),
+          // blur: m(4),
+          // color: colorVars.brand.alpha(0.45),
         },
       ],
       borders: {
@@ -60,7 +69,7 @@ export const formTokens = {
       },
     },
     backgrounds: {
-      color: colorVars.white.alpha(0.06),
+      color: colorVars.transparent,
     },
   },
   status: {
@@ -82,7 +91,7 @@ export const formTokens = {
     },
     generic: {
       backgrounds: {
-        color: colorVars.shadow.alpha(0.3),
+        // color: colorVars.shadow.alpha(0.3),
       },
       borders: {
         color: colorVars.gradientA_secondary_end.alpha(0.35),

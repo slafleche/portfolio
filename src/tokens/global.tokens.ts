@@ -25,16 +25,56 @@ const shadow = backgroundColour
   .darken(0.8)
   .desaturate(0.2)
   .alpha(0.5);
+const darkPurple = color('hsl(260 40% 10%)');
+const lightPurple = color('hsl(278 51% 15%)');
+const midPurple = darkPurple.mix(lightPurple, 0.5);
+const wine = color('hsl(310 40% 12%)'); // a bit more red
+const brand = color('#0D9488');
+const secondary = color('#0868b2');
+const brandMix = brand.mix(secondary, 0.5);
 
 export const themeColours = {
+  brand,
+  secondary,
+  brandMix,
   lights: {
-    a: color('#88dbfc'), // Electric blue
-    b: color('#f4a5ff'), // Hot Pink
-    c: color('#F7D354'), // Yellow
-    d: color('#a283eb'), // Light Violet
+    a: color('#00D9FF'), // Electric blue
+    b: color('#CCFF00'), // Electric lime
+    c: color('#FF6B6B'), // Coral
+    d: color('#FFB800'), // Amber
+    e: color('#00FFB3'), // Mint
   },
-  darks: {
-    a: backgroundColour,
+  gradients: {
+    main: {
+      start: darkPurple,
+      middle: wine.mix(midPurple, 0.5),
+      end: lightPurple,
+    },
+  },
+  lowContrasts: {
+    light: color('#F5F3FF'),
+    mid: color('#9D95B8'),
+    dark: color('#524A65'),
+  },
+  // lights: {
+  // a: color('#00eeff'), // Cyan
+  // b: ,
+  // b: color('#08b263ff'),
+  // c: color('#010101ff'), // Amber
+  // d: color('#dfff00'), // Lime
+  // e: color('#00ff8e'), // Mint
+  // },
+  // darks: {
+  //   a: backgroundColour,
+  // },
+};
+
+export const cardGradients = {
+  cc: {
+    linear: [
+      ,
+      themeColours.lights.c,
+    ],
   },
 };
 
@@ -317,52 +357,14 @@ export const archVars: ArchVars = {
   bumpTipWidth: m(10),
 };
 
-export const logoVars = {
-  width: m(65),
-  offsetY: m(0),
-  offsetX: m(0),
-  shadowRatio: 948.31276 / 546.93464, // from shadow width (in the SVG) / logo width
-  focus: {
-    scale: 1.15,
-    transitionMs: 400,
-    haloColor: colorVars.contrast.alpha(0.35),
-  },
-  hover: {
-    blobs: [
-      {
-        color: themeColours.lights.a,
-        posX: 24,
-        posY: 38,
-        radius: 46,
-        intensity: 0.32,
-      },
-      {
-        color: themeColours.lights.b,
-        posX: 62,
-        posY: 58,
-        radius: 48,
-        intensity: 0.28,
-      },
-      {
-        color: themeColours.lights.d,
-        posX: 42,
-        posY: 72,
-        radius: 44,
-        intensity: 0.24,
-      },
-    ],
-    squareSizeMultiplier: 2.4,
-    squareBlur: 18,
-    squareOpacity: 1,
-    durationMs: 1800,
-    speedMultiplier: 1,
-    outline: {
-      color: colorVars.contrast.alpha(0.6),
-      width: m(2),
-      offset: m(6),
-    },
-  },
-};
+// background: currentColor;
+// border-radius: 50%;
+// transform: scale(0.7);
+// position: fixed;
+// top: 12px;
+// left: 12px;
+// z-index: 1000;
+// border: solid #fff 1px;
 
 export const dropShadowVars = {
   offsetY: m(2),

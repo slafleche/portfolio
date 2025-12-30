@@ -10,6 +10,7 @@ import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { SkipNavContent } from '@/components/SkipNavContent';
 import { getTurnstileEnvConfig } from '@/lib/runtimeEnv';
+import { ImageByNamePrefetcher } from '@/components/ImageByName';
 
 interface SiteLayoutProps {
   children: ReactNode;
@@ -37,6 +38,11 @@ export default async function SiteLayout({
           closeLabel={closeLabel}
           turnstileSiteKey={turnstileSiteKey}
         >
+          <ImageByNamePrefetcher
+            prefetchOnIdle={[
+              'night_forest',
+            ]}
+          />
           <SkipNavContent id="body">{children}</SkipNavContent>
         </ContactDialogProvider>
       </ResponsiveProvider>

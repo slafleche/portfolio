@@ -16,17 +16,14 @@ export const userContent = style({});
 for (let level = 1; level <= 6; level++) {
   const variant =
     fontVariants[`h${level}` as keyof typeof fontVariants];
-  globalStyle(
-    `.${userContent} h${level}, h${level}[data-ui="heading"]`,
-    {
-      color: colorVars.bodyFg.css(),
-      ...composeFontVariantStyles(variant),
-      ...margins(textStyleVars.paragraph.margins),
-    },
-  );
+  globalStyle(`.${userContent} h${level}:not([data-ui="heading"])`, {
+    color: colorVars.bodyFg.css(),
+    ...composeFontVariantStyles(variant),
+    ...margins(textStyleVars.paragraph.margins),
+  });
 }
 
-globalStyle(`.${userContent} p, p[data-ui="paragraph"]`, {
+globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {
   ...composeFontVariantStyles(fontVariants.body),
   ...margins(textStyleVars.paragraph.margins),
   color: colorVars.bodyFg.css(),
@@ -39,17 +36,17 @@ globalStyle('blockquote', {
   ...borders(textStyleVars.blockquote.borders),
 });
 
-globalStyle(`.${userContent} ul, ul[data-ui="list-unordered"]`, {
+globalStyle(`.${userContent} ul:not([data-ui="list-unordered"])`, {
   ...margins(textStyleVars.list.unordered.margins),
   ...paddings(textStyleVars.list.unordered.paddings),
 });
 
-globalStyle(`.${userContent} ol, ol[data-ui="list-ordered"]`, {
+globalStyle(`.${userContent} ol:not([data-ui="list-ordered"])`, {
   ...margins(textStyleVars.list.ordered.margins),
   ...paddings(textStyleVars.list.ordered.paddings),
 });
 
-globalStyle(`.${userContent} li, li[data-ui="list-item"]`, {
+globalStyle(`.${userContent} li:not([data-ui="list-item"])`, {
   ...margins(textStyleVars.list.item.margins),
 });
 
@@ -80,36 +77,33 @@ globalStyle('pre code', {
 
 const linkRules = textStyleVars.link;
 
-globalStyle(`.${userContent} a, a[data-ui="link"]`, {
+globalStyle(`.${userContent} a:not([data-ui="link"])`, {
   color: linkRules.default.color.css(),
   textDecoration: 'none',
-  textUnderlineOffset: linkRules.default.underlineOffset.css(),
+  // textUnderlineOffset: linkRules.default.underlineOffset.css(),
 });
 
-globalStyle(`.${userContent} a:hover, a[data-ui="link"]:hover`, {
+globalStyle(`.${userContent} a:not([data-ui="link"]):hover`, {
   textDecoration: 'underline',
   textDecorationThickness:
     linkRules.hover.textDecorationThickness.css(),
   color: linkRules.hover.color.css(),
 });
 
-globalStyle(
-  `.${userContent} a:focus-visible, a[data-ui="link"]:focus-visible`,
-  {
-    ...outlines({
-      color: linkRules.focusVisible.outlines.color,
-      width: linkRules.focusVisible.outlines.width,
-      offset: linkRules.focusVisible.outlines.offset,
-    }),
-  },
-);
+globalStyle(`.${userContent} a:not([data-ui="link"]):focus-visible`, {
+  ...outlines({
+    color: linkRules.focusVisible.outlines.color,
+    width: linkRules.focusVisible.outlines.width,
+    offset: linkRules.focusVisible.outlines.offset,
+  }),
+});
 
-globalStyle(`.${userContent} a:active, a[data-ui="link"]:active`, {
+globalStyle(`.${userContent} a:not([data-ui="link"]):active`, {
   color: linkRules.active.color.css(),
   textDecoration: 'underline',
 });
 
-globalStyle(`.${userContent} a:visited, a[data-ui="link"]:visited`, {
+globalStyle(`.${userContent} a:not([data-ui="link"]):visited`, {
   color: linkRules.visited.color.css(),
   textDecoration: 'underline',
 });

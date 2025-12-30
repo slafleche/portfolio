@@ -64,4 +64,27 @@ describe('borders.helper', () => {
     expect(result.borderRadius).toBe('6px 4px 4px 0px');
     expect(result.borderWidth).toBe('1px 2px 3px 4px');
   });
+
+  it('keeps uniform radius when provided as a measurement shorthand', () => {
+    const result = borders({
+      width: m(1),
+      color: 'red',
+      radius: mPercent(50),
+    });
+    expect(result.borderWidth).toBe('1px');
+    expect(result.borderColor).toBe('red');
+    expect(result.borderRadius).toBe('50%');
+  });
+
+  it('skips defaults when requested', () => {
+    const result = borders(
+      {
+        all: { color: 'blue' },
+      },
+      { skipDefaults: true },
+    );
+    expect(result.borderWidth).toBeUndefined();
+    expect(result.borderStyle).toBeUndefined();
+    expect(result.borderColor).toBe('blue');
+  });
 });

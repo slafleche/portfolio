@@ -5,10 +5,6 @@ import {
 } from '../helpers/gradients.helper';
 import { backgrounds } from '../helpers/background.helper';
 import {
-  glassVars,
-  glassyPanelTokens,
-} from '../../tokens/glassy.tokens';
-import {
   accordionSurfaceTokens,
   accordionItemTokens,
 } from '../componentTokens/accordion.componentTokens';
@@ -17,9 +13,7 @@ import { outlines } from '../helpers/outlines.helper';
 import { colorVars } from '../../tokens/global.tokens';
 import { m, mPercent } from 'css-calipers';
 import { borders } from '../helpers/borders.helper';
-import { boxShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
-import backdropFilters from '../helpers/backdropFilter.helper';
 
 const surfaceGradient = buildLinear({
   angle: accordionSurfaceTokens.gradientAngle,
@@ -68,17 +62,12 @@ export const accordion = style({
   flexDirection: 'column',
   gap: accordionItemTokens.gap.css(),
   overflow: 'hidden',
-  ...boxShadow(glassyPanelTokens.shadow),
   ...paddings(accordionSurfaceTokens.paddings),
   ...borders(accordionSurfaceTokens.borders),
   ...backgroundImageDecl(surfaceGradient),
-  ...backgrounds(glassyPanelTokens.backgrounds),
-  ...backdropFilters.style({ blur: glassVars.blur }),
 });
 
 export const item = style({
-  ...borders(glassyPanelTokens.borders),
-  ...backgrounds({ color: 'transparent' }),
   boxShadow: 'none',
   overflow: 'hidden',
 });
@@ -156,6 +145,7 @@ export const iconSvg = style({
 });
 
 export const content = style({
+  // ...backgrounds(accordionSurfaceTokens.drawerBackgrounds),
   overflow: 'hidden',
   selectors: {
     '&[data-state="open"]': {
