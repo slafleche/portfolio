@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import sharp, { type Sharp } from 'sharp';
+import sharp, { type FormatEnum, type Sharp } from 'sharp';
 
 type ImageVariant = {
   w: number;
@@ -68,7 +68,7 @@ const IMAGE_SOURCES_CONFIG = path.join(
   'images',
   'imageSources.json',
 );
-const IGNORE_DIRS = new Set([]);
+const IGNORE_DIRS = new Set<string>();
 
 const IMAGE_CACHE_PREFIX = 'img';
 const IMAGE_CACHE_HASH_LENGTH = 8;
@@ -135,7 +135,7 @@ const VALID_EXT = new Set([
   '.avif',
 ]);
 
-const sharpFormatForExt = (ext: string): string => {
+const sharpFormatForExt = (ext: string): keyof FormatEnum => {
   switch (ext) {
     case '.jpeg':
     case '.jpg':
@@ -216,7 +216,7 @@ class DuplicateNameError extends Error {
     prev: { source: string; origin: string },
     next: { source: string; origin: string },
   ) {
-    const label = (s) =>
+    const label = (s: string) =>
       s === 'local'
         ? 'src/assets/images'
         : s === 'remote'
@@ -257,6 +257,11 @@ function ensureUniqueName(
     );
   if (seenNames.has(name)) {
     const prev = seenNames.get(name);
+    if (!prev) {
+      throw new Error(
+        `Internal error: duplicate image name "${name}" missing previous record.`,
+      );
+    }
     throw new DuplicateNameError(name, prev, { source, origin });
   }
   seenNames.set(name, { source, origin });
@@ -489,7 +494,12 @@ function parseArgs(): {
   help: boolean;
 } {
   const args = process.argv.slice(2);
-  const opts = {
+  const opts: {
+    target: '_staging' | 'release' | 'both';
+    versionOverride: string | null;
+    bump: boolean;
+    help: boolean;
+  } = {
     target: '_staging',
     versionOverride: null,
     bump: false,
@@ -667,11 +677,12 @@ async function processTargets(
         manifestChanged = true;
       }
       if (localOrigins.has(name)) {
+        const localOrigin = localOrigins.get(name) ?? name;
         throw new DuplicateNameError(
           name,
           {
             source: 'local',
-            origin: localOrigins.get(name),
+            origin: localOrigin,
           },
           {
             source: 'remote',
@@ -884,7 +895,7 @@ async function main() {
     );
     return;
   }
-  const targets =
+  const targets: Array<'_staging' | 'release'> =
     opts.target === 'both'
       ? [
           '_staging',

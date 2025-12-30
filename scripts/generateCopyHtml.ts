@@ -29,9 +29,6 @@ const makeBanner = () =>
 async function main() {
   const htmlByLocale: Record<string, Record<string, string>> = {};
 
-  // Ensure marked does not mangle email addresses or add header ids.
-  marked.use({ mangle: false, headerIds: false });
-
   for (const locale of AVAILABLE_LOCALES) {
     const messages = await loadMessages(locale);
     const htmlMap: Record<string, string> = {};

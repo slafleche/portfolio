@@ -333,7 +333,7 @@ export function TurnstileBlock({
         className={s.turnstileWidget}
         aria-describedby={hintText ? hintId : undefined}
         data-rendered="true"
-      ></div>
+      />
       <input type="hidden" name="token" value={token} />
       {hintText ? (
         <div

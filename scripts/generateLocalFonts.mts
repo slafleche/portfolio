@@ -36,7 +36,6 @@ const DOWNLOAD_ROOT = path.join(TMP_ROOT, 'downloads');
 const CATEGORY = 'fonts';
 
 type GoogleEntry = {
-  type?: 'googleFonts';
   weights?: string;
   ital?: boolean;
   axes?: Record<string, string>;
@@ -49,7 +48,9 @@ type SelfHostedEntry = {
   axes?: Record<string, string>;
 };
 
-type FontsConfigEntry = GoogleEntry & { type?: string } & SelfHostedEntry;
+type FontsConfigEntry =
+  | (GoogleEntry & { type: 'googleFonts' })
+  | (SelfHostedEntry & { type: 'selfHosted' });
 type FontsConfig = Record<string, FontsConfigEntry>;
 
 type FontFileEntry = {

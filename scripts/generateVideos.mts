@@ -207,7 +207,10 @@ const POSTER_FORMATS: FormatSpec[] = [
 ];
 
 /* Utility helpers ---------------------------------------------------- */
-const readJsonFile = async <T>(filePath: string, fallback: T): Promise<T> => {
+const readJsonFile = async <T,>(
+  filePath: string,
+  fallback: T,
+): Promise<T> => {
   try {
     const raw = await fs.readFile(filePath, 'utf8');
     return JSON.parse(raw) as T;
@@ -517,7 +520,8 @@ async function buildHLS(
   });
 
   const meta = await ffprobeJSON(srcPath);
-  const v = meta.streams.find((s) => s.codec_type === 'video');
+  const streams = meta.streams ?? [];
+  const v = streams.find((s) => s.codec_type === 'video');
   const width = v?.width ?? 0;
   const height = v?.height ?? 0;
   const originalDuration = Number(meta.format?.duration ?? 0);
@@ -610,8 +614,13 @@ async function buildHLS(
     path.join(outDir, 'out_%v', 'index.m3u8'),
   ];
 
+  const ffmpegPath =
+    typeof ffmpegStatic === 'string' ? ffmpegStatic : null;
+  if (!ffmpegPath) {
+    throw new Error('ffmpeg binary not available.');
+  }
   console.log(`↻ ffmpeg → ${name}`);
-  await execa(ffmpegStatic, args, {
+  await execa(ffmpegPath, args, {
     stdio: 'inherit',
   });
 
@@ -632,7 +641,7 @@ async function buildHLS(
       force: true,
     })
     .catch(() => {});
-  await execa(ffmpegStatic, [
+  await execa(ffmpegPath, [
     '-nostdin',
     '-hide_banner',
     '-loglevel',
@@ -752,7 +761,11 @@ void (async () => {
   const targetsArg = args.filter((a) => !a.startsWith('--'));
   const targetNames = targetsArg.length > 0 ? targetsArg.map(toName) : [];
 
-  const opts = {
+  const opts: {
+    target: '_staging' | 'release';
+    versionOverride: string | null;
+    postersOnly: boolean;
+  } = {
     target: '_staging',
     versionOverride: null,
     postersOnly: false,
@@ -899,7 +912,12 @@ void (async () => {
       }
 
       const posterPath = path.join(outDir, 'poster.png');
-      await execa(ffmpegStatic, [
+      const ffmpegPath =
+        typeof ffmpegStatic === 'string' ? ffmpegStatic : null;
+      if (!ffmpegPath) {
+        throw new Error('ffmpeg binary not available.');
+      }
+      await execa(ffmpegPath, [
         '-nostdin',
         '-hide_banner',
         '-loglevel',
