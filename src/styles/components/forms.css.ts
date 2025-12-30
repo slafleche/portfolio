@@ -14,8 +14,9 @@ import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { m } from 'css-calipers';
-import { composeFontVariantStyles } from '../../tokens/fontVariants.tokens';
-import { formVariants } from '../../tokens/fontVariants/forms';
+import { formFontVariants } from '../../tokens/fontVariants/forms';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 
 export const form = style({
   display: 'grid',
@@ -64,7 +65,7 @@ export const labelRow = style({
 
 export const label = style({
   ...paddings({
-    right: m(0.5, "em"),
+    right: m(0.5, 'em'),
   }),
 });
 
@@ -79,7 +80,7 @@ export const input = style({
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
   ...backgrounds(formTokens.field.backgrounds),
-  ...composeFontVariantStyles(formVariants.input),
+  ...fontStylesFromFontVariant(formFontVariants.input),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -119,7 +120,7 @@ export const textarea = style({
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
   ...backgrounds(formTokens.field.backgrounds),
-  ...composeFontVariantStyles(formVariants.input),
+  ...fontStylesFromFontVariant(formFontVariants.input),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -161,19 +162,19 @@ export const textarea = style({
 
 export const errorText = style({
   color: formTokens.field.error.text.color.css(),
-  ...composeFontVariantStyles(formVariants.hints),
+  ...fontStylesFromFontVariant(formFontVariants.hints),
   fontSize: '0.85rem',
 });
 
 export const counter = style({
   color: formTokens.counter.text.color.css(),
-  ...composeFontVariantStyles(formVariants.hints),
+  ...fontStylesFromFontVariant(formFontVariants.hints),
   fontSize: '0.85rem',
 });
 
 export const helperText = style({
   color: formTokens.counter.text.color.css(),
-  ...composeFontVariantStyles(formVariants.hints),
+  ...fontStylesFromFontVariant(formFontVariants.hints),
   fontSize: '0.85rem',
 });
 
@@ -295,7 +296,7 @@ export const submitButton = style({
 export const privacy = style({
   fontSize: '0.9rem',
   color: formTokens.privacy.text.color.css(),
-  ...composeFontVariantStyles(formVariants.hints),
+  ...fontStylesFromFontVariant(formFontVariants.hints),
   textAlign: 'left',
 });
 
@@ -604,7 +605,7 @@ export const successCopy = style({
 
 export const successHeading = style({
   margin: 0,
-  ...composeFontVariantStyles(formVariants.heading),
+  ...fontStylesFromFontVariant(typographyFontVariants.h2),
   fontSize: '1.35rem',
   fontWeight: 700,
   color: colorVars.white.alpha(0.95).css(),

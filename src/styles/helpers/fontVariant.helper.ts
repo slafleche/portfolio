@@ -2,15 +2,12 @@ import type {
   ComposeFontStylesConfig,
   FontStyleLayer,
   FontWeightPercentOptions,
-} from '../../styles/helpers/typography.helper';
+} from './typography.helper';
 import {
   composeFontStyles,
   computeFontWeight,
-} from '../../styles/helpers/typography.helper';
-import type {
-  FontFamilyDef,
-  CSS_TYPES,
-} from '../../styles/helpers/types.helper';
+} from './typography.helper';
+import type { FontFamilyDef, CSS_TYPES } from './types.helper';
 import { notRelease } from '../../lib/runtimeEnv';
 
 export type FontVariantDefinition = {
@@ -246,6 +243,35 @@ const resolveVariantWeights = (
   return enforceWeightOrder(defaultWeight, strongWeight);
 };
 
+// const fontVariants = {
+//   ...menuVariants,
+//   ...heroVariants,
+//   ...headingVariants,
+//   ...bodyVariants,
+// } as const satisfies Record<string, FontVariantDefinition>;
+
+// export type FontVariantKey = keyof typeof fontVariants;
+
+// export function getFontVariant<Key extends FontVariantKey>(
+//   key: Key,
+// ): (typeof fontVariants)[Key] {
+//   return fontVariants[key];
+// }
+
+// type ComposeVariantConfig = Parameters<
+//   typeof fontStylesFromFontVariant
+// >[1];
+
+// export function fontVariantStyles<Key extends FontVariantKey>(
+//   key: Key,
+//   extraConfig?: ComposeVariantConfig,
+// ) {
+//   return fontStylesFromFontVariant(fontVariants[key], extraConfig);
+// }
+
+// export { fontStylesFromFontVariant as fontStylesFromFontVariant };
+// export type { FontVariantDefinition };
+
 export const defineFontVariant = (
   family: FontFamilyDef,
   options: DefineFontVariantOptions = {},
@@ -262,7 +288,11 @@ export const defineFontVariant = (
     waitForFonts === true
       ? ((): readonly string[] | undefined => {
           const primaryName = resolvePrimaryFamilyName(family);
-          return primaryName ? [primaryName] : undefined;
+          return primaryName
+            ? [
+                primaryName,
+              ]
+            : undefined;
         })()
       : waitForFonts;
 
@@ -275,7 +305,7 @@ export const defineFontVariant = (
   };
 };
 
-export function composeFontVariantStyles(
+export function fontStylesFromFontVariant(
   variant: FontVariantDefinition,
   extraConfig?: ComposeFontStylesConfig,
 ) {

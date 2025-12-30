@@ -1,11 +1,14 @@
 import { m, mPercent } from 'css-calipers';
 import { fontFamilies } from '../fontFamilies.tokens';
-import { defineFontVariant, type FontVariantMap } from './core';
+import {
+  defineFontVariant,
+  type FontVariantMap,
+} from '../../styles/helpers/fontVariant.helper';
 
 const SOURCE_PATH = 'src/tokens/fontVariants/menu.ts';
 
-export const menuVariants = {
-  menu: defineFontVariant(fontFamilies.objectSans, {
+export const menuFontVariants = {
+  menu: defineFontVariant(fontFamilies.ibm, {
     label: 'menu',
     sourcePath: SOURCE_PATH,
     waitForFonts: true,

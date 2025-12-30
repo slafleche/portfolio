@@ -10,6 +10,7 @@ import {
 } from 'css-calipers';
 import { percentToDecimal } from '../../lib/math';
 import { notRelease } from '../../lib/runtimeEnv';
+import type { FontVariantDefinition } from './fontVariant.helper';
 
 const typographyWarning = (message: string): void => {
   const prefixed = `[Typography] ${message}`;
@@ -106,19 +107,28 @@ export function fontStyles(vars: FontStyles): FontCSS {
   return out;
 }
 
+type RelativeFontWeightInput = FontFamilyDef | FontVariantDefinition;
+
 export function relativeFontWeight(
-  family: FontFamilyDef,
+  fontFamily: RelativeFontWeightInput,
   percent: PercentMeasurement,
-): CSS_TYPES.Property.FontWeight {
+) {
   if (!isPercentMeasurement(percent)) {
     throw new TypeError(
       '[Typography] relativeFontWeight expected a PercentMeasurement.',
     );
   }
-  const { high, low } = family.weights;
+  const targetFont = (
+    typeof fontFamily.family === 'string'
+      ? fontFamily
+      : fontFamily.family
+  ) as FontFamilyDef;
+  const { high, low } = targetFont.weights;
   const normalized = percentToDecimal(percent);
   const value = low + (high - low) * normalized;
-  return value as CSS_TYPES.Property.FontWeight;
+  return {
+    fontWeight: value as CSS_TYPES.Property.FontWeight,
+  };
 }
 
 export function computeFontWeight(

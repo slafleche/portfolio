@@ -1,10 +1,28 @@
 import { m, mPercent } from 'css-calipers';
 import { fontFamilies } from '../fontFamilies.tokens';
-import { defineFontVariant, type FontVariantMap } from './core';
+import {
+  defineFontVariant,
+  type FontVariantMap,
+} from '../../styles/helpers/fontVariant.helper';
 
-const SOURCE_PATH = 'src/tokens/fontVariants/headings.ts';
+const SOURCE_PATH = 'src/tokens/fontVariants/typography.ts';
 
-export const headingVariants = {
+export const typographyFontVariants = {
+  body: defineFontVariant(fontFamilies.ibm, {
+    label: 'body',
+    sourcePath: SOURCE_PATH,
+    config: {
+      overrides: {
+        size: m(18),
+      },
+      options: {
+        weightPercents: {
+          default: mPercent(0),
+          strong: mPercent(100),
+        },
+      },
+    },
+  }),
   heading: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading',
     sourcePath: SOURCE_PATH,

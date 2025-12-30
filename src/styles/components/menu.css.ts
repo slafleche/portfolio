@@ -2,7 +2,7 @@
 // import { absolutePosition } from '../helpers/positioning.helper';
 // import { archVars, colorVars } from '../../tokens/global.tokens';
 // import {
-// composeFontVariantStyles,
+// fontStylesFromFontVariant,
 // fontVariants,
 // } from '../../tokens/fontVariants.tokens';
 
@@ -12,6 +12,14 @@ import {
   logoVars,
 } from '../../tokens/menu.tokens';
 import borders from '../helpers/borders.helper';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import {
+  baseTypographyVariants,
+  typographyFontVariants,
+} from '../../tokens/fontVariants/typography';
+import { menuFontVariants } from '../../tokens/fontVariants/menu';
+import { relativeFontWeight } from '../helpers/typography.helper';
+import { mPercent } from 'css-calipers';
 
 // import { m, mPercent } from 'css-calipers';
 // import transforms from '../helpers/transforms.helper';
@@ -54,10 +62,15 @@ export const localeItem = style({
 
 export const localeLink = style({
   fontSize: localeSwitcherVars.fontSize.css(),
+  ...fontStylesFromFontVariant(menuFontVariants.menu),
+  ...relativeFontWeight(menuFontVariants.menu, mPercent(50)),
   lineHeight: 1,
+  textShadow: `0 0 2px ${localeSwitcherVars.shadow.css()}`,
+  opacity: 0.8,
+  transition: 'opacity 0.2s ease-out',
   selectors: {
     '&:hover, &:focus-visible, &:focus': {
-      textShadow: `0 0 3px ${localeSwitcherVars.color.css()}`,
+      opacity: 1,
     },
   },
 });
@@ -70,7 +83,7 @@ export const localeLink = style({
 //   display: 'flex',
 //   alignContent: 'center',
 //   height: `${archVars.top.add(archVars.curveHeight).css()}`,
-//   ...composeFontVariantStyles(fontVariants.menu, {
+//   ...fontStylesFromFontVariant(fontVariants.menu, {
 //     options: {
 //       weightPercents: {
 //         default: mPercent(50),

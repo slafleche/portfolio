@@ -37,7 +37,7 @@ describe('typography.helper', () => {
   it('computes relative font weights from percent measurements', () => {
     const family = fontFamilies.ibm;
     const percent = mPercent(75);
-    const relative = relativeFontWeight(family, percent);
+    const relative = relativeFontWeight(family, percent).fontWeight;
     const computed = computeFontWeight(family, percent);
     expect(relative).toBe(computed);
     expect(relative).toBeGreaterThan(family.weights.default);

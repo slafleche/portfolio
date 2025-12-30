@@ -3,10 +3,8 @@ import { m } from 'css-calipers';
 import { paddings, margins } from '../helpers/spacing.helper';
 import { borders } from '../helpers/borders.helper';
 import { colorVars, borderVars } from '../../tokens/global.tokens';
-import {
-  composeFontVariantStyles,
-  fontVariants,
-} from '../../tokens/fontVariants.tokens';
+import { typographyFontVariants } from '../../tokens/fontVariants/typography';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 
 export const grid = style({
   display: 'grid',
@@ -25,5 +23,5 @@ export const tileTitle = style({
   ...margins({
     bottom: m(8),
   }),
-  ...composeFontVariantStyles(fontVariants.h3),
+  ...fontStylesFromFontVariant(typographyFontVariants.h3),
 });

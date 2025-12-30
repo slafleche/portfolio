@@ -2,16 +2,14 @@ import { globalStyle } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 import { documentSurface } from '../modules/globals/document.module';
 import {
-  composeFontVariantStyles,
-  fontVariants,
-} from '../tokens/fontVariants.tokens';
-import {
   ReducedMotion,
   reducedMotion,
 } from './helpers/accessibility.helper';
 import { paddings } from './helpers/spacing.helper';
 import borders from './helpers/borders.helper';
 import './utilities.css';
+import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
+import { typographyFontVariants } from '../tokens/fontVariants/typography';
 
 const {
   palette: {
@@ -20,9 +18,9 @@ const {
   layout: { arch, scrollPaddingOffset },
 } = documentSurface;
 
-const bodyFontStyles = composeFontVariantStyles(fontVariants.body);
-const headingFontStyles = composeFontVariantStyles(
-  fontVariants.heading,
+const bodyFontStyles = fontStylesFromFontVariant(typographyFontVariants.body);
+const headingFontStyles = fontStylesFromFontVariant(
+  typographyFontVariants.heading,
 );
 
 globalStyle('body', {

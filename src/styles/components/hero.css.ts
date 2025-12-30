@@ -1,10 +1,6 @@
 import { style, globalStyle } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
-import {
-  composeFontVariantStyles,
-  fontVariants,
-} from '../../tokens/fontVariants.tokens';
 import { heroVars } from '../componentTokens/hero.componentTokens';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { noiseBg } from '../helpers/noiseSVG.helper';
@@ -17,6 +13,8 @@ import {
 } from '../helpers/gradients.helper';
 import { projectorVars } from '../componentTokens/projector.componentTokens';
 import { glassVars } from '../../tokens/glassy.tokens';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import { heroFontVariants } from '../../tokens/fontVariants/hero';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -156,7 +154,7 @@ export const subtitle = style({
 // export const paragraph = style({
 //   position: 'relative',
 //   textAlign: 'center',
-//   ...composeFontVariantStyles(fontVariants.hero, {
+//   ...fontStylesFromFontVariant(fontVariants.hero, {
 //     options: {
 //       weightPercents: {
 //         default: mPercent(0),
@@ -409,9 +407,9 @@ export const heading = style({
   position: 'relative',
   margin: 0,
   textAlign: 'center',
-  ...composeFontVariantStyles(fontVariants.hero),
+  ...fontStylesFromFontVariant(heroFontVariants.hero),
   fontSize: 'clamp(32px, 7vw, 80px)',
-  marginTop: fontVariants.hero.family.offsetToFlushTop?.css(),
+  marginTop: heroFontVariants.hero.family.offsetToFlushTop?.css(),
   // selectors: {
   // 	'&::after': {
   // 		content: '',

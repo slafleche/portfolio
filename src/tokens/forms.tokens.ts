@@ -13,9 +13,6 @@ export const formTokens = {
     text: {
       color: colorVars.white.alpha(0.85),
       fontSize: m(16),
-
-      // ...fontFamilies.objectSans.
-      // fontWeight: relativeFontWeight()
     },
   },
   layout: {

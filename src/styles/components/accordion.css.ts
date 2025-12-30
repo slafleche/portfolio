@@ -8,12 +8,14 @@ import {
   accordionSurfaceTokens,
   accordionItemTokens,
 } from '../componentTokens/accordion.componentTokens';
-import { fontVariantStyles } from '../../tokens/fontVariants.tokens';
 import { outlines } from '../helpers/outlines.helper';
 import { colorVars } from '../../tokens/global.tokens';
 import { m, mPercent } from 'css-calipers';
 import { borders } from '../helpers/borders.helper';
 import { paddings } from '../helpers/spacing.helper';
+// import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+// import { bodyVariants, headingVariants } from '../../tokens/fontVariants/typography';
+
 
 const surfaceGradient = buildLinear({
   angle: accordionSurfaceTokens.gradientAngle,
@@ -106,12 +108,12 @@ export const trigger = style({
 });
 
 export const triggerLabel = style({
-  ...fontVariantStyles('h4'),
+  // ...fontStylesFromFontVariant(headingVariants.h4),
   color: colorVars.white.css(),
 });
 
 export const triggerSubtitle = style({
-  ...fontVariantStyles('body'),
+// 
   color: colorVars.white.alpha(0.72).css(),
 });
 

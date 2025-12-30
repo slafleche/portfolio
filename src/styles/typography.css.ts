@@ -5,26 +5,26 @@ import { backgrounds } from './helpers/background.helper';
 import { color } from './helpers/colorWrap.helper';
 import { outlines } from './helpers/outlines.helper';
 import { colorVars } from '../tokens/global.tokens';
-import {
-  composeFontVariantStyles,
-  fontVariants,
-} from '../tokens/fontVariants.tokens';
 import { textStyleVars } from '../tokens/textStyles.tokens';
+import { typographyFontVariants } from '../tokens/fontVariants/typography';
+import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
 
 export const userContent = style({});
 
 for (let level = 1; level <= 6; level++) {
   const variant =
-    fontVariants[`h${level}` as keyof typeof fontVariants];
+    typographyFontVariants[
+      `h${level}` as keyof typeof typographyFontVariants
+    ];
   globalStyle(`.${userContent} h${level}:not([data-ui="heading"])`, {
     color: colorVars.bodyFg.css(),
-    ...composeFontVariantStyles(variant),
+    ...fontStylesFromFontVariant(variant),
     ...margins(textStyleVars.paragraph.margins),
   });
 }
 
 globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {
-  ...composeFontVariantStyles(fontVariants.body),
+  ...fontStylesFromFontVariant(typographyFontVariants.body),
   ...margins(textStyleVars.paragraph.margins),
   color: colorVars.bodyFg.css(),
 });
@@ -113,7 +113,7 @@ globalStyle('em', {
 });
 
 globalStyle('strong', {
-  fontWeight: fontVariants.body.weights.strong,
+  fontWeight: typographyFontVariants.body.weights.strong,
 });
 
 globalStyle('del', {

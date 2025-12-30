@@ -27,6 +27,7 @@ export const localeSwitcherVars = {
   width: m(32),
   height: m(32),
   color: colorVars.white.alpha(0.8),
+  shadow: colorVars.shadow,
 };
 
 const anchorOuterGap = m(12);

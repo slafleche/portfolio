@@ -113,7 +113,7 @@ export const label = style({
   whiteSpace: 'nowrap',
   lineHeight: 1,
   transformOrigin: '0 50%',
-  fontWeight: relativeFontWeight(fontFamilies.ibm, mPercent(50)),
+  ...relativeFontWeight(fontFamilies.ibm, mPercent(50)),
   ...textShadow(anchorMenuVars.text.textShadow),
   selectors: {
     '&::after': {

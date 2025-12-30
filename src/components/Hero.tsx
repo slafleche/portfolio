@@ -10,7 +10,6 @@ import { toTrimmedOrNull } from '@/lib/stringUtils';
 import { parseSplit } from '@/lib/locales/translations/splitShortcodes';
 import SendIcon from '@/components/icons/SendIcon';
 import { collectWaitForFonts, waitForFonts } from '@/lib/fontLoading';
-import { fontVariants } from '../tokens/fontVariants.tokens';
 import { heroVars } from '../styles/componentTokens/hero.componentTokens';
 import { projectorVars } from '../styles/componentTokens/projector.componentTokens';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
@@ -19,6 +18,7 @@ import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import { Markdown } from '@/components/Markdown';
 import { userContent } from '@/styles/typography.css';
 import { GlassPanel } from './GlassPanel';
+import { heroFontVariants } from '../tokens/fontVariants/hero';
 // import HeroGooey from './HeroGooey';
 
 type HeroCopy = {
@@ -123,7 +123,7 @@ export default function Hero({
 
     const revealAfter = async () => {
       const { fonts, timeoutMs } = collectWaitForFonts(
-        fontVariants.hero,
+        heroFontVariants.hero,
         heroVars.fontLoading,
       );
       if (fonts.length > 0) {
