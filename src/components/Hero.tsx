@@ -19,7 +19,7 @@ import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import { Markdown } from '@/components/Markdown';
 import { userContent } from '@/styles/typography.css';
 import { GlassPanel } from './GlassPanel';
-import HeroGooey from './HeroGooey';
+// import HeroGooey from './HeroGooey';
 
 type HeroCopy = {
   videoTitle: string;
@@ -245,9 +245,10 @@ export default function Hero({
         <div className={s.ringBreaker} />
       </div>
 
+      {/* <HeroGooey /> */}
+
       <div className={clsx(layoutStyles.content, s.content)}>
         <div className={clsx(layoutStyles.panel, s.panel)}>
-          <HeroGooey />
           <div className={s.glassWrap}>
             <GlassPanel contentClassName={s.main}>
               <HeroHeading
