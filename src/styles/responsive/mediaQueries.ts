@@ -7,23 +7,29 @@ import {
 } from 'css-calipers/mediaQueries';
 import { layoutVars } from '../../tokens/layout.tokens';
 
-const fullSize = layoutVars.contentWidth.add(
-  layoutVars.contentPadding.double(),
+const fullSizeMinWidth = layoutVars.contentWidth.add(
+  layoutVars.contentPadding.multiply(2),
 );
+const fullSizeMaxWidth = fullSizeMinWidth.subtract(1);
+const noEdgeOnlyMinWidth = layoutVars.compact.contentWidth.add(1);
 
 export const globalMediaQueriesConf: IMediaQueries = {
   fullSize: {
-    minWidth: fullSize,
+    minWidth: fullSizeMinWidth,
   } as IMediaQueryProps,
 
-  noBleed: {
-    maxWidth: fullSize.subtract(1),
+  noEdge: {
+    maxWidth: fullSizeMaxWidth,
   } as IMediaQueryProps,
 
-  // compact: {
-  //   maxWidth: layoutVars.compact.contentWidth.css(),
-  //   minWidth: layoutVars.compressed.contentWidth.add(1).css(),
-  // } as IMediaQueryProps,
+  noEdgeOnly: {
+    minWidth: noEdgeOnlyMinWidth,
+    maxWidth: fullSizeMaxWidth,
+  } as IMediaQueryProps,
+
+  compact: {
+    maxWidth: layoutVars.compact.contentWidth,
+  } as IMediaQueryProps,
 
   // compressed: {
   //   maxWidth: layoutVars.compressed.contentWidth.css(),

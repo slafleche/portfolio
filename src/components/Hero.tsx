@@ -19,6 +19,7 @@ import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import { Markdown } from '@/components/Markdown';
 import { userContent } from '@/styles/typography.css';
 import { GlassPanel } from './GlassPanel';
+import HeroGooey from './HeroGooey';
 
 type HeroCopy = {
   videoTitle: string;
@@ -246,55 +247,58 @@ export default function Hero({
 
       <div className={clsx(layoutStyles.content, s.content)}>
         <div className={clsx(layoutStyles.panel, s.panel)}>
-          <GlassPanel contentClassName={s.main}>
-            <HeroHeading
-              label={headingLabel}
-              animate={isHeadingAnimated}
-              onReveal={handleHeadingReveal}
-            >
-              <span
-                className={s.line}
-                data-position={headingLastLine ? 'first' : 'single'}
-                data-text={headingFirstLine}
+          <HeroGooey />
+          <div className={s.glassWrap}>
+            <GlassPanel contentClassName={s.main}>
+              <HeroHeading
+                label={headingLabel}
+                animate={isHeadingAnimated}
+                onReveal={handleHeadingReveal}
               >
-                {headingFirstLine}
-              </span>
-              {headingLastLine ? (
-                <>
-                  <br className={s.title_break} />
-                  <span
-                    className={s.line}
-                    data-position="last"
-                    data-text={headingLastLine}
-                  >
-                    {headingLastLine}
-                  </span>
-                </>
+                <span
+                  className={s.line}
+                  data-position={headingLastLine ? 'first' : 'single'}
+                  data-text={headingFirstLine}
+                >
+                  {headingFirstLine}
+                </span>
+                {headingLastLine ? (
+                  <>
+                    <br className={s.title_break} />
+                    <span
+                      className={s.line}
+                      data-position="last"
+                      data-text={headingLastLine}
+                    >
+                      {headingLastLine}
+                    </span>
+                  </>
+                ) : null}
+              </HeroHeading>
+              {copy.subtitle ? (
+                <div
+                  className={s.subtitle}
+                  data-ready={ctaVisible ? 'true' : 'false'}
+                >
+                  <Markdown
+                    source={copy.subtitle}
+                    className={userContent}
+                  />
+                </div>
               ) : null}
-            </HeroHeading>
-            {copy.subtitle ? (
-              <div
-                className={s.subtitle}
-                data-ready={ctaVisible ? 'true' : 'false'}
-              >
-                <Markdown
-                  source={copy.subtitle}
-                  className={userContent}
-                />
-              </div>
-            ) : null}
-            {showCta ? (
-              <ContactDialogTrigger
-                className={s.cta}
-                data-ready={ctaVisible ? 'true' : 'false'}
-                aria-hidden={ctaVisible ? undefined : 'true'}
-                tabIndex={ctaVisible ? undefined : -1}
-              >
-                <span>{copy.ctaLabel}</span>
-                <SendIcon className={s.ctaIcon} aria-hidden />
-              </ContactDialogTrigger>
-            ) : null}
-          </GlassPanel>
+              {showCta ? (
+                <ContactDialogTrigger
+                  className={s.cta}
+                  data-ready={ctaVisible ? 'true' : 'false'}
+                  aria-hidden={ctaVisible ? undefined : 'true'}
+                  tabIndex={ctaVisible ? undefined : -1}
+                >
+                  <span>{copy.ctaLabel}</span>
+                  <SendIcon className={s.ctaIcon} aria-hidden />
+                </ContactDialogTrigger>
+              ) : null}
+            </GlassPanel>
+          </div>
         </div>
       </div>
     </section>

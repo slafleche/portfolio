@@ -137,6 +137,16 @@ function ContactFormInner({
     },
   });
 
+  const messagesForUi =
+    outcome.messagesForUi.globals.length > 0 &&
+    outcome.messagesForUi.blocks.length === 1
+      ? {
+          ...outcome.messagesForUi,
+          blocks: [],
+          blockCodes: [],
+        }
+      : outcome.messagesForUi;
+
   const isCatastrophic = outcome.isCatastrophic;
   const isInvalid = flow.invalid;
   const hasInitialMockData =
@@ -349,7 +359,7 @@ function ContactFormInner({
           message={copy.blocks.messageCentre.statuses.sending}
         />
       ) : null}
-      <MessageCentreBlock messages={outcome.messagesForUi} />
+      <MessageCentreBlock messages={messagesForUi} />
       <NameBlock
         {...formMembers[0]}
         disabled={disableFields}

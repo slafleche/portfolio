@@ -35,6 +35,7 @@ import {
 } from '@/components/wordmarks/wordmarks.tsx';
 import Menu from '../../../src/components/Menu';
 
+
 interface PageParams {
   LOCALE: string;
 }
@@ -161,7 +162,7 @@ export default async function HomePage({
             <Grid
               columns={2}
               mediaQueryColumns={{
-                noBleed: 1,
+                compact: 1,
               }}
             >
               <Column span={2}>
@@ -226,7 +227,7 @@ export default async function HomePage({
               <Column
                 span={2}
                 mediaQuerySpan={{
-                  noBleed: 1,
+                  compact: 1,
                 }}
               >
                 <Card

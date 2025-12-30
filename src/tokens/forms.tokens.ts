@@ -1,6 +1,10 @@
 import { colorVars } from '@/tokens/global.tokens';
 import { m } from 'css-calipers';
 
+
+// import { relativeFontWeight } from '../styles/helpers/typography.helper';
+// import { fontFamilies } from './fontFamilies.tokens';
+
 export const formTokens = {
   textarea: {
     minHeight: m(250),
@@ -8,6 +12,10 @@ export const formTokens = {
   label: {
     text: {
       color: colorVars.white.alpha(0.85),
+      fontSize: m(16),
+
+      // ...fontFamilies.objectSans.
+      // fontWeight: relativeFontWeight()
     },
   },
   layout: {

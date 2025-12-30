@@ -13,8 +13,9 @@ import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
-// import backdropFilters from '../helpers/backdropFilter.helper';
 import { m } from 'css-calipers';
+import { composeFontVariantStyles } from '../../tokens/fontVariants.tokens';
+import { formVariants } from '../../tokens/fontVariants/forms';
 
 export const form = style({
   display: 'grid',
@@ -53,11 +54,18 @@ export const fieldGroup = style({
 
 export const labelRow = style({
   display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'baseline',
-  gap: formTokens.layout.fieldGap.css(),
-  color: formTokens.label.text.color.css(),
-  fontWeight: 600,
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+
+  // color: formTokens.label.text.color.css(),
+  // fontSize: fontFormTokens.label.text.size.css(),
+  // fontWeight: 600,
+});
+
+export const label = style({
+  ...paddings({
+    right: m(0.5, "em"),
+  }),
 });
 
 export const required = style({
@@ -71,6 +79,7 @@ export const input = style({
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
   ...backgrounds(formTokens.field.backgrounds),
+  ...composeFontVariantStyles(formVariants.input),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -110,6 +119,7 @@ export const textarea = style({
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
   ...backgrounds(formTokens.field.backgrounds),
+  ...composeFontVariantStyles(formVariants.input),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -151,16 +161,19 @@ export const textarea = style({
 
 export const errorText = style({
   color: formTokens.field.error.text.color.css(),
+  ...composeFontVariantStyles(formVariants.hints),
   fontSize: '0.85rem',
 });
 
 export const counter = style({
   color: formTokens.counter.text.color.css(),
+  ...composeFontVariantStyles(formVariants.hints),
   fontSize: '0.85rem',
 });
 
 export const helperText = style({
   color: formTokens.counter.text.color.css(),
+  ...composeFontVariantStyles(formVariants.hints),
   fontSize: '0.85rem',
 });
 
@@ -282,6 +295,7 @@ export const submitButton = style({
 export const privacy = style({
   fontSize: '0.9rem',
   color: formTokens.privacy.text.color.css(),
+  ...composeFontVariantStyles(formVariants.hints),
   textAlign: 'left',
 });
 
@@ -590,6 +604,7 @@ export const successCopy = style({
 
 export const successHeading = style({
   margin: 0,
+  ...composeFontVariantStyles(formVariants.heading),
   fontSize: '1.35rem',
   fontWeight: 700,
   color: colorVars.white.alpha(0.95).css(),

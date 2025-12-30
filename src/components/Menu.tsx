@@ -8,7 +8,11 @@ import AnchorMenu from './AnchorMenu';
 import * as s from '@/styles/components/menu.css.ts';
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { useActiveAnchors, type AnchorTarget } from '@/lib/useActiveAnchors';
+import {
+  useActiveAnchors,
+  type AnchorTarget,
+} from '@/lib/useActiveAnchors';
+import { surface } from '../styles/glassy.css';
 
 type LocaleLink = {
   locale: Locale;
@@ -55,12 +59,17 @@ export default function Menu({
         });
         return acc;
       }, []),
-    [anchorLinks],
+    [
+      anchorLinks,
+    ],
   );
 
-  const { activeHref, setManualActive } = useActiveAnchors(anchorTargets, {
-    hashSync: { enabled: true },
-  });
+  const { activeHref, setManualActive } = useActiveAnchors(
+    anchorTargets,
+    {
+      hashSync: { enabled: true },
+    },
+  );
 
   return (
     <header className={s.root}>
@@ -75,7 +84,7 @@ export default function Menu({
               href={root}
               prefetch={false}
               aria-label={homeLabel}
-              className={s.homeLink}
+              className={clsx(s.homeLink, surface)}
               data-ui="link"
             >
               <Logo idBase="nav-logo" />

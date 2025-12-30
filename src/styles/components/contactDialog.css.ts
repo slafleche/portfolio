@@ -190,6 +190,7 @@ globalStyle(`.${panel} p`, {
 
 export const bgImage = style({
   ...fullSizeOfParent(),
+  position: "fixed",
   zIndex: 0,
   inset: 0,
   pointerEvents: 'none',

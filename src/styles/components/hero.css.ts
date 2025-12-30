@@ -328,6 +328,11 @@ export const panel = style({
   }),
 });
 
+export const glassWrap = style({
+  position: 'relative',
+  zIndex: 1,
+});
+
 export const panelContents = style({
   ...paddings(m(80)),
 });

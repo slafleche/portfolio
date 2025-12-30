@@ -19,8 +19,8 @@ export function FormLabel({
   requiredText,
 }: FormLabelProps) {
   if (required && !requiredText && notRelease()) {
-    console.warn(
-      `FormLabel for "${htmlFor}" is missing requiredText.`,
+    throw new Error(
+      `FormLabel for "${htmlFor}" is marked as required but is missing requiredText.`,
     );
   }
   return (
@@ -29,18 +29,13 @@ export function FormLabel({
       className={clsx(s.labelRow, className)}
       htmlFor={htmlFor}
     >
-      <span data-form="label-text">{label}</span>
+      <span className={s.label} data-form="label-text">{label}</span>
       {required ? (
         <span data-form="label-required" className={s.required}>
-          {requiredText ? (
-            <>
-              <span aria-hidden="true">{requiredText}</span>
-              <span data-visible="sc-only">{requiredText}</span>
-              <span aria-hidden="true"> *</span>
-            </>
-          ) : (
-            <span aria-hidden="true">*</span>
+          {requiredText && (
+            <span data-visible="sc-only">{requiredText}</span>
           )}
+          *
         </span>
       ) : null}
     </label>

@@ -32,16 +32,22 @@ export const content = style({
   zIndex: 1,
 });
 
-// Main glass surface style
-export const surface = style({
+export const glassySurface = {
   ...baseSurfaceBackground,
   ...backdropFilters.style(glassBackground.backdropFilterIntent),
   backgroundClip: 'padding-box',
+};
+
+// Main glass surface style
+export const surface = style({
+  ...glassySurface,
 });
+
+export const glassyNoise = noiseBg({ backgroundImage: glassNoise() });
 
 // Grain / noise overlay style
 export const grain = style({
   ...fullSizeOfParent(),
   pointerEvents: 'none',
-  ...noiseBg({ backgroundImage: glassNoise() }),
+  ...glassyNoise,
 });

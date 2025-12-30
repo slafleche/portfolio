@@ -1,5 +1,7 @@
 import { m, mPercent } from 'css-calipers';
 import { colorVars } from './global.tokens';
+import type { modeYiq } from 'culori/require';
+import type { ITextShadow } from '../styles/helpers/shadow.helper';
 
 const logoWidth = m(48);
 const offsetY = m(12);
@@ -52,10 +54,23 @@ const anchorMenuVars = {
     paddings: dotPadding,
     fontSize: dotSize,
     lineHeight: 1,
+    borders: {
+      width: m(1),
+      color: colorVars.white.alpha(0.8),
+      radius: mPercent(50),
+    },
   },
   handle: {
     size: handleHeight,
     spacing: dotPadding.add(borderSize.multiply(2)),
+  },
+  text: {
+    textShadow: {
+      x: m(1),
+      y: m(1),
+      blur: m(1),
+      color: colorVars.shadow,
+    } as ITextShadow,
   },
 };
 

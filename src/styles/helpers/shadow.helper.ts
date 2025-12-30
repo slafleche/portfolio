@@ -112,3 +112,22 @@ export const shadowTotalX = (
   blur.assertUnit(unit, 'shadowTotalX blur');
   return m(x.getValue() + 2 * blur.getValue(), unit);
 };
+
+export interface ITextShadow {
+  x?: IMeasurement;
+  y?: IMeasurement;
+  blur?: IMeasurement;
+  color?: ColorWrapper;
+}
+
+export const textShadow = (props: ITextShadow = {}) => {
+  const {
+    x = dropShadowVars.offsetX ?? m(0),
+    y = dropShadowVars.offsetY ?? m(0),
+    blur = dropShadowVars.blur ?? m(0),
+    color = dropShadowVars.color ?? colorVars.shadow,
+  } = props;
+  return {
+    textShadow: `${x.css()} ${y.css()} ${blur.css()} ${color.css()}`,
+  };
+};

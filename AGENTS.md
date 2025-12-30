@@ -14,6 +14,8 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   Git-mutating commands unless the user explicitly asks.
 - Must: Treat staged changes as a protected snapshot; do not modify staged files
   without explicit confirmation.
+- User preference: Staged files may be modified without extra confirmation; the
+  user keeps staged changes as a backup unless they say otherwise.
 
 ## Workflow and TODOs (`workflow-and-todos`)
 
