@@ -469,7 +469,7 @@ export const visuallyHidden = style({
   border: 0,
 });
 
-const toastBase: ComplexStyleRule = {
+export const toastRoot = style({
   width: '100%',
   maxWidth: '100%',
   display: 'flex',
@@ -486,9 +486,7 @@ const toastBase: ComplexStyleRule = {
     alpha: 0.35,
   }),
   pointerEvents: 'auto',
-};
-
-export const toastRoot = style(toastBase);
+});
 
 export const toastSuccess = style([
   {
