@@ -1,5 +1,5 @@
 export const frFormCopy = {
-  'form-heading': 'Travaillons ensemble',
+  'form-heading': 'Prenons contact',
   'form-success-heading': 'Message envoyé',
   'form-error-heading': "Nous n'avons pas pu envoyer votre message",
   'form-success-body': 'Je vous répondrai dès que possible.',

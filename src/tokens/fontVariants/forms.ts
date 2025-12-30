@@ -4,11 +4,25 @@ import {
   defineFontVariant,
   type FontVariantMap,
 } from '../../styles/helpers/fontVariant.helper';
-import { baseTypographyVariants } from './typography';
 
 const SOURCE_PATH = 'src/tokens/fontVariants/forms.ts';
 
 export const formFontVariants = {
+  base: defineFontVariant(fontFamilies.ibm, {
+    label: 'form-base',
+    sourcePath: SOURCE_PATH,
+    config: {
+      overrides: {
+        size: m(18),
+        lineHeight: 1.1,
+      },
+      options: {
+        weightPercents: {
+          default: mPercent(0),
+        },
+      },
+    },
+  }),
   labels: defineFontVariant(fontFamilies.objectSans, {
     label: 'form-labels',
     sourcePath: SOURCE_PATH,
@@ -28,6 +42,7 @@ export const formFontVariants = {
     sourcePath: SOURCE_PATH,
     config: {
       overrides: {
+        lineHeight: 1.1,
         size: m(16),
       },
       options: {

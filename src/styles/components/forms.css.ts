@@ -13,15 +13,17 @@ import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
+import { relativeFontWeight } from '../helpers/typography.helper';
 
 export const form = style({
   display: 'grid',
   gap: formTokens.layout.sectionGap.css(),
   maxWidth: formTokens.layout.maxWidth.css(),
+  ...fontStylesFromFontVariant(formFontVariants.base),
   width: '100%',
   ...margins({
     horizontal: 'auto',
@@ -49,8 +51,8 @@ export const legend = style({
 });
 
 export const fieldGroup = style({
-  display: 'grid',
-  gap: formTokens.layout.fieldGap.css(),
+  // display: 'grid',
+  // gap: formTokens.layout.fieldGap.css(),
 });
 
 export const labelRow = style({
@@ -64,6 +66,7 @@ export const labelRow = style({
 });
 
 export const label = style({
+  ...relativeFontWeight(formFontVariants.input, mPercent(80)),
   ...paddings({
     right: m(0.5, 'em'),
   }),
@@ -81,10 +84,10 @@ export const input = style({
   ...borders(formTokens.field.borders),
   ...backgrounds(formTokens.field.backgrounds),
   ...fontStylesFromFontVariant(formFontVariants.input),
+  ...relativeFontWeight(formFontVariants.input, mPercent(60)),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
-  font: 'inherit',
   boxSizing: 'border-box',
   selectors: {
     '&::placeholder': {
@@ -98,6 +101,9 @@ export const input = style({
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
+        ...borders(formTokens.field.hover.borders, {
+          skipDefaults: true,
+        }),
         //   ...borders(formTokens.field.focusVisible.borders, {
         //   skipDefaults: true,
         // }),
@@ -142,9 +148,9 @@ export const textarea = style({
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        // ...borders(formTokens.field.focusVisible.borders, {
-        //   skipDefaults: true,
-        // }),
+        ...borders(formTokens.field.focusVisible.borders, {
+          skipDefaults: true,
+        }),
         // ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
@@ -177,6 +183,8 @@ export const helperText = style({
   ...fontStylesFromFontVariant(formFontVariants.hints),
   fontSize: '0.85rem',
 });
+
+export const empty = style({});
 
 const statusBase: ComplexStyleRule = {
   display: 'flex',

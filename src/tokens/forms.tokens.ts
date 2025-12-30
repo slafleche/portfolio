@@ -1,6 +1,5 @@
-import { colorVars } from '@/tokens/global.tokens';
+import { colorVars, themeColours } from '@/tokens/global.tokens';
 import { m } from 'css-calipers';
-
 
 // import { relativeFontWeight } from '../styles/helpers/typography.helper';
 // import { fontFamilies } from './fontFamilies.tokens';
@@ -28,26 +27,28 @@ export const formTokens = {
       color: colorVars.white.alpha(0.55),
     },
     paddings: {
-      vertical: m(12),
+      vertical: m(6),
       horizontal: m(0),
     },
     borders: {
       top: {
-        width: m(1),
+        width: m(0),
         color: colorVars.transparent,
       },
       horizontal: {
-        width: m(1),
+        width: m(0),
         color: colorVars.transparent,
       },
       bottom: {
-        width: m(1),
-        color: colorVars.white.alpha(0.18),
+        width: m(2),
+        color: colorVars.white.alpha(0.35),
       },
     },
     hover: {
       borders: {
-        color: colorVars.white.alpha(0.32),
+        bottom: {
+          color: themeColours.secondary,
+        },
       },
     },
     focusVisible: {
@@ -58,7 +59,9 @@ export const formTokens = {
         },
       ],
       borders: {
-        color: colorVars.brand.alpha(0.65),
+        bottom: {
+          color: colorVars.brand.alpha(0.65),
+        },
       },
       outlines: {
         width: m(3),

@@ -1,5 +1,4 @@
 import { keyframes, style } from '@vanilla-extract/css';
-import { themeColours } from '../../tokens/global.tokens';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 
 export const blobWrap = style({
@@ -17,7 +16,7 @@ export const blobField = style({
 
 export const blobGroup = style({});
 
-const slowSpin = keyframes({
+const spin = keyframes({
   '0%': { transform: 'rotate(0deg)' },
   '100%': { transform: 'rotate(360deg)' },
 });
@@ -34,40 +33,17 @@ export const blobShape = style({
   transformOrigin: '0 0',
 });
 
-export const bigTriangle = style({});
-export const nubbyTriangle = style({});
-export const hexagon = style({});
-
-// Big Triangle
-export const bigTriangleAnimation = style({
-  animation: `${slowSpin} 97s linear infinite`,
-});
-export const bigTriangleGradientStart = style({
-  stopColor: themeColours.lights.c.css(),
-});
-export const bigTriangleGradientEnd = style({
-  stopColor: themeColours.lights.d.css(),
+// Triangle A
+export const triangleA_Animation = style({
+  animation: `${spin} 97s linear infinite`,
 });
 
-// Nubby Triangle
-
-export const nubbyTriangleAnimation = style({
-  animation: `${slowSpin} 37s linear infinite reverse`,
-});
-export const nubbyTriangleGradientStart = style({
-  stopColor: themeColours.lights.d.css(),
-});
-export const nubbyTriangleGradientEnd = style({
-  stopColor: themeColours.lights.e.css(),
+// Triangle B
+export const triangleB_Animation = style({
+  animation: `${spin} 37s linear infinite reverse`,
 });
 
-// Hexagon
-export const hexagonAnimation = style({
-  animation: `${slowSpin} 59s linear infinite`,
-});
-export const hexagonGradientStart = style({
-  stopColor: themeColours.lights.c.css(),
-});
-export const hexagonGradientEnd = style({
-  stopColor: themeColours.lights.a.css(),
+// Triangle C
+export const triangleC_Animation = style({
+  animation: `${spin} 29s linear infinite`,
 });

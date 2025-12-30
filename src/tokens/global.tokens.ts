@@ -29,20 +29,41 @@ const darkPurple = color('hsl(260 40% 10%)');
 const lightPurple = color('hsl(278 51% 15%)');
 const midPurple = darkPurple.mix(lightPurple, 0.5);
 const wine = color('hsl(310 40% 12%)'); // a bit more red
+
 const brand = color('#0D9488');
 const secondary = color('#0868b2');
 const brandMix = brand.mix(secondary, 0.5);
+
+const triangleA = {
+  a: color('hsl(325 38% 16%)'),
+  b: color('hsl(310 42% 14%)'),
+  c: color('hsl(318 40% 18%)'),
+};
+
+const triangleB = {
+  a: color('hsl(250 42% 14%)'),
+  b: color('hsl(230 38% 18%)'),
+  c: color('hsl(240 40% 20%)'),
+};
 
 export const themeColours = {
   brand,
   secondary,
   brandMix,
+
   lights: {
     a: color('#00D9FF'), // Electric blue
     b: color('#CCFF00'), // Electric lime
     c: color('#FF6B6B'), // Coral
     d: color('#FFB800'), // Amber
     e: color('#00FFB3'), // Mint
+  },
+  triangleA,
+  triangleB,
+  triangleC: {
+    a: triangleA.a.mix(triangleB.a, 0.5),
+    b: triangleA.b.mix(triangleB.b, 0.5),
+    c: triangleA.c.mix(triangleB.c, 0.5),
   },
   gradients: {
     main: {

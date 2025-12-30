@@ -137,15 +137,16 @@ function ContactFormInner({
     },
   });
 
-  const messagesForUi =
-    outcome.messagesForUi.globals.length > 0 &&
-    outcome.messagesForUi.blocks.length === 1
-      ? {
-          ...outcome.messagesForUi,
-          blocks: [],
-          blockCodes: [],
-        }
-      : outcome.messagesForUi;
+  const shouldSuppressSoloBlockMessage =
+    outcome.messagesForUi.blocks.length === 1 &&
+    outcome.messagesForUi.blockCodes?.length === 1;
+  const messagesForUi = shouldSuppressSoloBlockMessage
+    ? {
+        ...outcome.messagesForUi,
+        blocks: [],
+        blockCodes: [],
+      }
+    : outcome.messagesForUi;
 
   const isCatastrophic = outcome.isCatastrophic;
   const isInvalid = flow.invalid;

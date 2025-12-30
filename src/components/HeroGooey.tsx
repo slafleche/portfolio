@@ -4,6 +4,7 @@ import type { CSSProperties } from 'react';
 import clsx from 'clsx';
 import Goo from '@lafleche/gooey-react';
 import * as s from '@/styles/components/heroGooey.css';
+import { themeColours } from '../tokens/global.tokens';
 
 type Props = {
   intensity?: 'weak' | 'medium' | 'strong';
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export default function HeroGooey({
-  intensity = 'weak',
+  intensity = 'strong',
   composite,
   filterId,
   className,
@@ -37,72 +38,117 @@ export default function HeroGooey({
       >
         <defs>
           <linearGradient
-            id="hero-gooey-bigTriangle-gradient"
+            id="hero-gooey-triangleA-gradient"
             x1="0%"
             y1="0%"
             x2="100%"
             y2="100%"
           >
             <stop
-              className={s.bigTriangleGradientStart}
+              stopColor={themeColours.triangleA.a.css()}
               offset="0%"
             />
             <stop
-              className={s.bigTriangleGradientEnd}
+              stopColor={themeColours.triangleA.b.css()}
+              offset="0%"
+            />
+            <stop
+              stopColor={themeColours.triangleA.c.css()}
+              offset="0%"
+            />
+          </linearGradient>
+
+          <linearGradient
+            id="hero-gooey-triangleB-gradient"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
+            <stop
+              stopColor={themeColours.triangleB.a.css()}
+              offset="0%"
+            />
+            <stop
+              stopColor={themeColours.triangleB.b.css()}
+              offset="50%"
+            />
+            <stop
+              stopColor={themeColours.triangleB.c.css()}
               offset="100%"
             />
           </linearGradient>
 
           <linearGradient
-            id="hero-gooey-nubbyTriangle-gradient"
+            id="hero-gooey-triangleC-gradient"
             x1="0%"
             y1="0%"
             x2="100%"
             y2="100%"
           >
             <stop
-              className={s.nubbyTriangleGradientStart}
+              stopColor={themeColours.triangleC.a.css()}
               offset="0%"
             />
             <stop
-              className={s.nubbyTriangleGradientEnd}
+              stopColor={themeColours.triangleC.b.css()}
+              offset="50%"
+            />
+            <stop
+              stopColor={themeColours.triangleC.c.css()}
               offset="100%"
             />
           </linearGradient>
-          <linearGradient
-            id="hero-gooey-hexagon-gradient"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop className={s.hexagonGradientStart} offset="0%" />
-            <stop className={s.hexagonGradientEnd} offset="100%" />
-          </linearGradient>
+
+          {/* <stop
+              stopColor={themeColours.earthy.clay.css()}
+              offset="0%"
+            />
+            <stop
+              stopColor={themeColours.earthy.moss.css()}
+              offset="0%"
+            />
+            <stop
+              stopColor={themeColours.earthy.terracotta.css()}
+              offset="0%"
+            /> */}
+          {/* </linearGradient> */}
         </defs>
         <g className={s.blobGroup}>
-          <g className={clsx(s.blobSpin, s.bigTriangleAnimation)}>
+          {/* Triangle A */}
+          <g className={clsx(s.blobSpin, s.triangleA_Animation)}>
             <path
-              className={clsx(s.blobShape, s.bigTriangle)}
+              className={clsx(s.blobShape)}
               d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
-              fill="url(#hero-gooey-bigTriangle-gradient)"
-              transform="translate(6 20) scale(0.45)"
+              fill="none"
+              stroke="url(#hero-gooey-triangleA-gradient)"
+              strokeWidth="26"
+              strokeLinejoin="round"
+              transform="translate(8 28) scale(0.32)"
             />
           </g>
-          <g className={clsx(s.blobSpin, s.nubbyTriangleAnimation)}>
+          {/* Triangle B */}
+          <g className={clsx(s.blobSpin, s.triangleB_Animation)}>
             <path
-              className={clsx(s.blobShape, s.nubbyTriangle)}
-              d="M 200.00 70.00 C 267.55 70.00, 247.53 103.45, 277.45 155.28 C 307.38 207.11, 346.36 206.50, 312.58 265.00 C 278.81 323.50, 259.85 289.43, 200.00 289.43 C 140.15 289.43, 121.19 323.50, 87.42 265.00 C 53.64 206.50, 92.62 207.11, 122.55 155.28 C 152.47 103.45, 132.45 70.00, 200.00 70.00 Z"
-              fill="url(#hero-gooey-nubbyTriangle-gradient)"
-              transform="translate(40 18) scale(0.09)"
+              className={clsx(s.blobShape)}
+              d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
+              fill="none"
+              stroke="url(#hero-gooey-triangleB-gradient)"
+              strokeWidth="35"
+              strokeLinejoin="round"
+              transform="translate(50 30) scale(0.3)"
             />
           </g>
-          <g className={clsx(s.blobSpin, s.hexagonAnimation)}>
+          {/* Triangle C */}
+          <g className={clsx(s.blobSpin, s.triangleC_Animation)}>
             <path
-              className={clsx(s.blobShape, s.hexagon)}
-              d="M 200.00 70.00 C 267.55 70.00, 274.77 78.83, 308.54 137.33 C 342.32 195.83, 346.36 206.50, 312.58 265.00 C 278.81 323.50, 267.55 325.33, 200.00 325.33 C 132.45 325.33, 121.19 323.50, 87.42 265.00 C 53.64 206.50, 57.68 195.83, 91.46 137.33 C 125.23 78.83, 132.45 70.00, 200.00 70.00 Z"
-              fill="url(#hero-gooey-hexagon-gradient)"
-              transform="translate(60 45) scale(0.09)"
+              className={clsx(s.blobShape)}
+              d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
+              fill="none"
+              stroke="url(#hero-gooey-triangleC-gradient)"
+              strokeWidth="15"
+              strokeLinejoin="round"
+              transform="translate(26 35) scale(0.42)"
             />
           </g>
         </g>

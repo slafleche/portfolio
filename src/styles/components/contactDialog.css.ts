@@ -51,10 +51,10 @@ export const panel = style({
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  ...paddings({
-    vertical: m(14),
-    horizontal: m(10),
-  }),
+  // ...paddings({
+  //   vertical: m(14),
+  //   horizontal: m(10),
+  // }),
   ...backgrounds({
     color: colorVars.bodyBg,
   }),
