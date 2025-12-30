@@ -106,6 +106,7 @@
     "test:watch": "NODE_ENV=test vitest --watch",
     "lint": "yarn lint:base && yarn lint:locales && yarn lint:secrets && yarn lint:rules",
     "lint:base": "eslint . && node -e \"console.log(String.fromCharCode(0x2705) + ' lint:base checks passed')\"",
+    "lint:scripts": "eslint \"scripts/**/*.{js,cjs,mjs,ts,cts,mts}\" --max-warnings=0 && node -e \"console.log(String.fromCharCode(0x2705) + ' lint:scripts checks passed')\"",
     "lint:locales": "tsx scripts/checkLocaleMarkdown.ts && node -e \"console.log(String.fromCharCode(0x2705) + ' lint:locales checks passed')\"",
     "lint:secrets": "SECRET_LOOKOUT_ALL=1 node scripts/checkSecretLookout.mjs && node -e \"console.log(String.fromCharCode(0x2705) + ' lint:secrets checks passed')\"",
     "lint:rules": "LINT_RULES_ALL=1 node scripts/checkLintRules.mjs --human && node -e \"console.log(String.fromCharCode(0x2705) + ' lint:rules checks passed')\"",
