@@ -256,11 +256,13 @@ export function TurnstileBlock({
           'error-callback': (errorCode?: string | number) => {
             if (cancelled) return;
             setStatus('error');
-            reportCatastrophic(
-              `Turnstile reported an error via error-callback (${String(
-                errorCode ?? 'unknown',
-              )}).`,
-            );
+            const reason =
+              typeof errorCode === 'undefined' || errorCode === null
+                ? 'Turnstile reported an error via error-callback.'
+                : `Turnstile reported an error via error-callback (${String(
+                    errorCode,
+                  )}).`;
+            reportCatastrophic(reason);
           },
         });
         widgetIdRef.current = widgetId;

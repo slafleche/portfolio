@@ -82,23 +82,22 @@ export const input = style({
       opacity: 1,
     },
     '&:hover, &[data-debug="hover"]': {
-      ...borders(formTokens.field.hover.borders, {
-        skipDefaults: true,
-      }),
+      // ...borders(formTokens.field.hover.borders, {
+      //   skipDefaults: true,
+      // }),
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.focusVisible.borders, {
-        skipDefaults: true,
-      }),
-        ...boxShadow(formTokens.field.focusVisible.shadow),
+        //   ...borders(formTokens.field.focusVisible.borders, {
+        //   skipDefaults: true,
+        // }),
+        //   ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
       opacity: 0.85,
       cursor: 'not-allowed',
     },
     '&[data-error="true"]': {
-      color: formTokens.field.error.text.color.css(),
       ...borders(formTokens.field.error.borders, {
         skipDefaults: true,
       }),
@@ -126,16 +125,16 @@ export const textarea = style({
       opacity: 1,
     },
     '&:hover, &[data-debug="hover"]': {
-      ...borders(formTokens.field.hover.borders, {
-        skipDefaults: true,
-      }),
+      // ...borders(formTokens.field.hover.borders, {
+      //   skipDefaults: true,
+      // }),
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.focusVisible.borders, {
-          skipDefaults: true,
-        }),
-        ...boxShadow(formTokens.field.focusVisible.shadow),
+        // ...borders(formTokens.field.focusVisible.borders, {
+        //   skipDefaults: true,
+        // }),
+        // ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
       opacity: 0.85,
@@ -143,9 +142,9 @@ export const textarea = style({
     },
     '&[data-error="true"]': {
       color: formTokens.field.error.text.color.css(),
-      ...borders(formTokens.field.error.borders, {
-        skipDefaults: true,
-      }),
+      // ...borders(formTokens.field.error.borders, {
+      //   skipDefaults: true,
+      // }),
     },
   },
 });
@@ -167,8 +166,9 @@ export const helperText = style({
 
 const statusBase: ComplexStyleRule = {
   display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
-  ...borders(formTokens.field.borders),
+  // ...borders(formTokens.field.borders),
   ...paddings(formTokens.field.paddings),
   gap: formTokens.layout.fieldGap.css(),
 };
@@ -320,12 +320,12 @@ export const turnstileSection = style({
 
 export const turnstileWidget = style({
   minHeight: '70px',
-  borderRadius: 12,
-  ...borders({
-    width: m(1),
-    color: 'rgba(245,240,255,0.12)',
-  }),
-  ...backgrounds({ color: 'rgba(8,6,16,0.6)' }),
+  // borderRadius: 12,
+  // ...borders({
+  //   width: m(1),
+  //   color: 'rgba(245,240,255,0.12)',
+  // }),
+  // ...backgrounds({ color: 'rgba(8,6,16,0.6)' }),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -555,7 +555,7 @@ export const successPanel = style({
     vertical: m(24),
     horizontal: m(12),
   }),
-  borderRadius: formTokens.field.borders.radius.css(),
+  // borderRadius: formTokens.field.borders.radius.css(),
   ...backgrounds(formTokens.status.success.backgrounds),
   ...borders(formTokens.status.success.borders),
 });
@@ -563,7 +563,7 @@ export const successPanel = style({
 export const successIconWrapper = style({
   width: '64px',
   height: '64px',
-  ...borders.radii({ radius: m(32) }),
+  // ...borders.radii({ radius: m(32) }),
   ...backgrounds({
     color: formTokens.successPanel.icon.background,
   }),

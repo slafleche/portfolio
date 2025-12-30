@@ -140,14 +140,16 @@ export function useActiveAnchors(
   const lastSetHashRef = useRef<string | null>(null);
   const initialHashAppliedRef = useRef(false);
 
+  const effectiveActiveId = orderedAnchors.length === 0 ? null : activeId;
+
   const activeHref = useMemo(() => {
-    if (!activeId) return null;
-    const anchor = anchorMap[activeId];
+    if (!effectiveActiveId) return null;
+    const anchor = anchorMap[effectiveActiveId];
     if (!anchor) return null;
     if (anchor.href) return anchor.href;
     return `#${anchor.id}`;
   }, [
-    activeId,
+    effectiveActiveId,
     anchorMap,
   ]);
 
@@ -203,8 +205,46 @@ export function useActiveAnchors(
     }
 
     if (orderedAnchors.length === 0) {
-      setActiveId(null);
+      manualActiveRef.current = null;
+      rectMapRef.current.clear();
       return undefined;
+    }
+
+    if (!initialHashAppliedRef.current) {
+      const {
+        enabled = true,
+        reservedHashes = RESERVED_HASHES,
+        scrollOnLoad = true,
+      } = hashSync ?? {};
+      if (enabled) {
+        const initialHash = window.location.hash;
+        if (
+          initialHash &&
+          !isReservedHash(initialHash, reservedHashes)
+        ) {
+          const normalized = normalizeHash(initialHash).slice(1);
+          const matching = orderedAnchors.find(
+            (anchor) =>
+              normalizeHash(anchor.href ?? `#${anchor.id}`).slice(1) === normalized ||
+              anchor.id.toLowerCase() === normalized,
+          );
+          if (matching) {
+            manualActiveRef.current = {
+              id: matching.id,
+              expiresAt: performance.now() + Math.max(0, manualHoldMs),
+            };
+            if (scrollOnLoad) {
+              const node = document.getElementById(matching.id);
+              if (node && typeof node.scrollIntoView === 'function') {
+                setTimeout(() => {
+                  node.scrollIntoView({ block: 'start', behavior: 'auto' });
+                }, 0);
+              }
+            }
+          }
+        }
+      }
+      initialHashAppliedRef.current = true;
     }
 
     const nodes: Array<HTMLElement | null> = orderedAnchors.map((anchor) =>
@@ -262,6 +302,8 @@ export function useActiveAnchors(
       }
     };
   }, [
+    hashSync,
+    manualHoldMs,
     orderedAnchors,
     resolveActiveFromRects,
     rootMargin,
@@ -274,7 +316,6 @@ export function useActiveAnchors(
       enabled = true,
       debounceMs = DEFAULT_HASH_DEBOUNCE_MS,
       reservedHashes = RESERVED_HASHES,
-      scrollOnLoad = true,
     } = hashSync ?? {};
 
     if (!enabled) return;
@@ -291,33 +332,6 @@ export function useActiveAnchors(
       lastSetHashRef.current = normalizedNext;
       window.history.replaceState(window.history.state, '', normalizedNext);
     };
-
-    if (!initialHashAppliedRef.current) {
-      initialHashAppliedRef.current = true;
-      const initialHash = window.location.hash;
-      if (
-        initialHash &&
-        !isReservedHash(initialHash, reservedHashes)
-      ) {
-        const normalized = normalizeHash(initialHash).slice(1);
-        const matching = orderedAnchors.find(
-          (anchor) =>
-            normalizeHash(anchor.href ?? `#${anchor.id}`).slice(1) === normalized ||
-            anchor.id.toLowerCase() === normalized,
-        );
-        if (matching) {
-          setActiveId(matching.id);
-          if (scrollOnLoad) {
-            const node = document.getElementById(matching.id);
-            if (node && typeof node.scrollIntoView === 'function') {
-              setTimeout(() => {
-                node.scrollIntoView({ block: 'start', behavior: 'auto' });
-              }, 0);
-            }
-          }
-        }
-      }
-    }
 
     if (!activeHref) {
       if (hashDebounceRef.current !== null) {
@@ -358,12 +372,13 @@ export function useActiveAnchors(
     };
   }, [
     activeHref,
+    anchorHrefSet,
     hashSync,
     orderedAnchors,
   ]);
 
   return {
-    activeId,
+    activeId: effectiveActiveId,
     activeHref,
     setManualActive,
   };

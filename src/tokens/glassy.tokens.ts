@@ -8,7 +8,7 @@ import { colorVars } from './global.tokens';
  */
 export const glassVars = {
   backdropFilter: {
-    blur: m(10),
+    blur: m(5),
     saturate: mPercent(180),
     contrast: mPercent(90),
     brightness: 1.1,

@@ -459,12 +459,14 @@ export function ContactDialogProvider({
                 />
                 <div className={dialogStyles.panelContent}>
                   <GlassPanel>
-                  <Dialog.Close asChild>
-                    <CloseButton
-                      label={closeLabel}
-                      className={dialogStyles.closeButton}
-                    />
-                  </Dialog.Close>
+                    <div className={dialogStyles.closeButtonWrap}>
+                      <Dialog.Close asChild>
+                        <CloseButton
+                          label={closeLabel}
+                          className={dialogStyles.closeButton}
+                        />
+                      </Dialog.Close>
+                    </div>
                     <Dialog.Title
                       className={dialogStyles.heading}
                       data-modal="title"

@@ -12,13 +12,12 @@ export const PRIVACY_KEYS = {
 export type PrivacyCopy = {
   title: string;
   href: string;
-  updated: string;
+  updated?: string;
   content: string;
 };
 
 export const buildPrivacyCopy = (t: Translator): PrivacyCopy => ({
   title: t(PRIVACY_KEYS.title),
   href: t(PRIVACY_KEYS.href),
-  updated: t(PRIVACY_KEYS.updated),
   content: t(PRIVACY_KEYS.content),
 });

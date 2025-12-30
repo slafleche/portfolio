@@ -80,7 +80,7 @@ export const heading = style({
   margin: 0,
   color: colorVars.white.css(),
   textAlign: 'center',
-  fontSize: '26px',
+  fontSize: '50px',
 });
 
 export const body = style({
@@ -95,8 +95,16 @@ export const body = style({
 
 const closeOffset = m(8);
 
+export const closeButtonWrap = style({
+  position: 'sticky',
+  top: closeOffset.css(),
+  width: '100%',
+  height: 0,
+  zIndex: 1,
+});
+
 export const closeButton = style({
-  ...absolutePosition.topRight(closeOffset, closeOffset),
+  ...absolutePosition.topRight(m(0), closeOffset),
 
   ...margins({
     vertical: m(4),

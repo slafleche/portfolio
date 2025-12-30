@@ -3,6 +3,7 @@ import * as s from '../styles/glassy.css';
 
 export type GlassyPanelProps = {
   className?: string;
+  contentClassName?: string;
   surfaceClassName?: string;
   shineClassName?: string;
   grainClassName?: string;
@@ -11,6 +12,7 @@ export type GlassyPanelProps = {
 
 export function GlassPanel({
   className,
+  contentClassName,
   surfaceClassName,
   grainClassName,
   children,
@@ -19,8 +21,8 @@ export function GlassPanel({
     <div className={clsx(s.root, className)}>
       <div className={clsx(surfaceClassName, s.surface)}>
         <div className={clsx(grainClassName, s.grain)} />
-        <div className={s.content}>
-        {children}
+        <div className={clsx(contentClassName, s.content)}>
+          {children}
         </div>
       </div>
     </div>

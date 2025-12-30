@@ -246,12 +246,11 @@ export default function Hero({
 
       <div className={clsx(layoutStyles.content, s.content)}>
         <div className={clsx(layoutStyles.panel, s.panel)}>
-          <GlassPanel className={s.main}>
+          <GlassPanel contentClassName={s.main}>
             <HeroHeading
               label={headingLabel}
               animate={isHeadingAnimated}
               onReveal={handleHeadingReveal}
-              // debugStage="initial"
             >
               <span
                 className={s.line}

@@ -54,7 +54,7 @@ export const video = style({
   inset: 0,
   pointerEvents: 'none',
   objectFit: 'cover',
-  mixBlendMode: 'screen',
+  // mixBlendMode: 'screen',
 });
 
 export const contentWrap = style({
@@ -140,6 +140,7 @@ export const main = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  ...paddings(m(60)),
 });
 
 export const subtitle = style({

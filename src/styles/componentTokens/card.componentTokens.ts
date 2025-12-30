@@ -1,7 +1,5 @@
 import { color } from '../helpers/colorWrap.helper';
 import type { CardGradientPack } from '../helpers/cardGradient.helper';
-import { themeColours } from '../../tokens/global.tokens';
-
 export type { CardGradientPack } from '../helpers/cardGradient.helper';
 
 export const cardGradient_cc: CardGradientPack = {

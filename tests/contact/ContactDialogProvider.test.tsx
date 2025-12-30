@@ -112,8 +112,14 @@ describe('ContactDialogProvider', () => {
 
       await userEvent.click(submitButton);
 
+      const getContactCalls = () =>
+        fetchMock.mock.calls.filter(([url]) => {
+          const href = typeof url === 'string' ? url : url?.url;
+          return href === '/api/contact';
+        });
+
       await waitFor(() => {
-        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(getContactCalls()).toHaveLength(1);
       });
 
       await waitFor(() => {
