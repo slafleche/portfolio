@@ -1,6 +1,6 @@
 'use client';
 
-import type { CSSProperties } from 'react';
+import { useId, type CSSProperties } from 'react';
 import clsx from 'clsx';
 import Goo from '@lafleche/gooey-react';
 import * as s from '@/styles/components/heroGooey.css';
@@ -21,6 +21,10 @@ export default function HeroGooey({
   className,
   style,
 }: Props) {
+  const baseId = useId();
+  const gradientAId = `${baseId}-hero-gooey-gradient-a`;
+  const gradientBId = `${baseId}-hero-gooey-gradient-b`;
+
   return (
     <Goo
       className={clsx(s.blobWrap, className)}
@@ -38,118 +42,78 @@ export default function HeroGooey({
       >
         <defs>
           <linearGradient
-            id="hero-gooey-triangleA-gradient"
+            id={gradientAId}
             x1="0%"
             y1="0%"
             x2="100%"
             y2="100%"
           >
             <stop
-              stopColor={themeColours.triangleA.a.css()}
+              stopColor={themeColours.roundedTriangle.a.css()}
               offset="0%"
             />
             <stop
-              stopColor={themeColours.triangleA.b.css()}
-              offset="0%"
+              stopColor={themeColours.roundedTriangle.b.css()}
+              offset="40%"
             />
             <stop
-              stopColor={themeColours.triangleA.c.css()}
-              offset="0%"
-            />
-          </linearGradient>
-
-          <linearGradient
-            id="hero-gooey-triangleB-gradient"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop
-              stopColor={themeColours.triangleB.a.css()}
-              offset="0%"
+              stopColor={themeColours.roundedTriangle.b.css()}
+              offset="60%"
             />
             <stop
-              stopColor={themeColours.triangleB.b.css()}
-              offset="50%"
-            />
-            <stop
-              stopColor={themeColours.triangleB.c.css()}
+              stopColor={themeColours.roundedTriangle.c.css()}
               offset="100%"
             />
           </linearGradient>
 
           <linearGradient
-            id="hero-gooey-triangleC-gradient"
+            id={gradientBId}
             x1="0%"
             y1="0%"
             x2="100%"
             y2="100%"
           >
             <stop
-              stopColor={themeColours.triangleC.a.css()}
+              stopColor={themeColours.nubbyTriangle.a.css()}
               offset="0%"
             />
             <stop
-              stopColor={themeColours.triangleC.b.css()}
+              stopColor={themeColours.nubbyTriangle.b.css()}
               offset="50%"
             />
             <stop
-              stopColor={themeColours.triangleC.c.css()}
+              stopColor={themeColours.nubbyTriangle.c.css()}
               offset="100%"
             />
           </linearGradient>
-
-          {/* <stop
-              stopColor={themeColours.earthy.clay.css()}
-              offset="0%"
-            />
-            <stop
-              stopColor={themeColours.earthy.moss.css()}
-              offset="0%"
-            />
-            <stop
-              stopColor={themeColours.earthy.terracotta.css()}
-              offset="0%"
-            /> */}
-          {/* </linearGradient> */}
         </defs>
         <g className={s.blobGroup}>
-          {/* Triangle A */}
-          <g className={clsx(s.blobSpin, s.triangleA_Animation)}>
-            <path
-              className={clsx(s.blobShape)}
-              d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
-              fill="none"
-              stroke="url(#hero-gooey-triangleA-gradient)"
-              strokeWidth="26"
-              strokeLinejoin="round"
-              transform="translate(8 28) scale(0.32)"
-            />
+          {/* Fat Triangle */}
+          <g className={clsx(s.blobSpin, s.ellpitical_a_nimation)}>
+            <g className={clsx(s.blobSpin, s.spin_a_animation)}>
+              <path
+                className={s.blobShape}
+                d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
+                fill="none"
+                stroke={`url(#${gradientAId})`}
+                strokeWidth="35"
+                strokeLinejoin="round"
+                transform="translate(20 31) scale(0.3)"
+              />
+            </g>
           </g>
-          {/* Triangle B */}
-          <g className={clsx(s.blobSpin, s.triangleB_Animation)}>
-            <path
-              className={clsx(s.blobShape)}
-              d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
-              fill="none"
-              stroke="url(#hero-gooey-triangleB-gradient)"
-              strokeWidth="35"
-              strokeLinejoin="round"
-              transform="translate(50 30) scale(0.3)"
-            />
-          </g>
-          {/* Triangle C */}
-          <g className={clsx(s.blobSpin, s.triangleC_Animation)}>
-            <path
-              className={clsx(s.blobShape)}
-              d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
-              fill="none"
-              stroke="url(#hero-gooey-triangleC-gradient)"
-              strokeWidth="15"
-              strokeLinejoin="round"
-              transform="translate(26 35) scale(0.42)"
-            />
+          {/* Nubby Triangle */}
+          <g className={clsx(s.blobSpin, s.spin_b_animation)}>
+            <g className={clsx(s.blobSpin, s.ellpitical_b_animation)}>
+              <path
+                className={s.blobShape}
+                d="M 200.00 70.00 C 267.55 70.00, 247.53 103.45, 277.45 155.28 C 307.38 207.11, 346.36 206.50, 312.58 265.00 C 278.81 323.50, 259.85 289.43, 200.00 289.43 C 140.15 289.43, 121.19 323.50, 87.42 265.00 C 53.64 206.50, 92.62 207.11, 122.55 155.28 C 152.47 103.45, 132.45 70.00, 200.00 70.00 Z"
+                stroke={`url(#${gradientBId})`}
+                strokeWidth="75"
+                fill="none"
+                transform="translate(45 33.4) scale(0.11)"
+              />
+            </g>
           </g>
         </g>
       </svg>

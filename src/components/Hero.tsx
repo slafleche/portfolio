@@ -193,6 +193,13 @@ export default function Hero({
   ]);
 
   const ctaVisible = showCta && ctaReady;
+  const gooeyStyle = {
+    opacity: ctaReady ? 1 : 0,
+    transition: prefersReducedMotion
+      ? 'none'
+      : 'opacity 100ms ease-in',
+    transitionDelay: prefersReducedMotion ? '0ms' : '220ms',
+  };
 
   if (!headingLabel) return null;
 
@@ -245,7 +252,7 @@ export default function Hero({
         <div className={s.ringBreaker} />
       </div>
 
-      <HeroGooey />
+      <HeroGooey style={gooeyStyle} />
 
       <div className={clsx(layoutStyles.content, s.content)}>
         <div className={clsx(layoutStyles.panel, s.panel)}>

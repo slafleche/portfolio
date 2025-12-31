@@ -34,16 +34,16 @@ const brand = color('#0D9488');
 const secondary = color('#0868b2');
 const brandMix = brand.mix(secondary, 0.5);
 
-const triangleA = {
-  a: color('hsl(325 38% 16%)'),
-  b: color('hsl(310 42% 14%)'),
-  c: color('hsl(318 40% 18%)'),
+const shapeGradientA = {
+  a: color('hsla(0, 77%, 65%, 1.00)').mix(wine, 0.2),
+  b: color('hsla(310, 56%, 21%, 1.00)'),
+  c: color('hsla(295, 85%, 24%, 1.00)'),
 };
 
-const triangleB = {
-  a: color('hsl(250 42% 14%)'),
-  b: color('hsl(230 38% 18%)'),
-  c: color('hsl(240 40% 20%)'),
+const shapeGradientB = {
+  a: color('hsla(257, 87%, 21%, 1.00)'),
+  b: color('hsla(284, 72%, 32%, 1.00)'),
+  c: color('hsl(260 64% 31%)'),
 };
 
 export const themeColours = {
@@ -58,12 +58,15 @@ export const themeColours = {
     d: color('#FFB800'), // Amber
     e: color('#00FFB3'), // Mint
   },
-  triangleA,
-  triangleB,
-  triangleC: {
-    a: triangleA.a.mix(triangleB.a, 0.5),
-    b: triangleA.b.mix(triangleB.b, 0.5),
-    c: triangleA.c.mix(triangleB.c, 0.5),
+  roundedTriangle: {
+    a: shapeGradientA.a,
+    b: shapeGradientA.b,
+    c: shapeGradientA.c,
+  },
+  nubbyTriangle: {
+    a: shapeGradientB.a,
+    b: shapeGradientB.b,
+    c: shapeGradientB.c,
   },
   gradients: {
     main: {
@@ -72,32 +75,15 @@ export const themeColours = {
       end: lightPurple,
     },
   },
-  lowContrasts: {
-    light: color('#F5F3FF'),
-    mid: color('#9D95B8'),
-    dark: color('#524A65'),
-  },
-  // lights: {
-  // a: color('#00eeff'), // Cyan
-  // b: ,
-  // b: color('#08b263ff'),
-  // c: color('#010101ff'), // Amber
-  // d: color('#dfff00'), // Lime
-  // e: color('#00ff8e'), // Mint
-  // },
-  // darks: {
-  //   a: backgroundColour,
-  // },
 };
 
-export const cardGradients = {
-  cc: {
-    linear: [
-      ,
-      themeColours.lights.c,
-    ],
-  },
-};
+// export const cardGradients = {
+//   cc: {
+//     linear: [
+//       themeColours.lights.c,
+//     ],
+//   },
+// };
 
 export const gradients: CardGradientPack[] = [
   {

@@ -13,10 +13,6 @@ import {
 } from '../../tokens/menu.tokens';
 import borders from '../helpers/borders.helper';
 import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
-import {
-  baseTypographyVariants,
-  typographyFontVariants,
-} from '../../tokens/fontVariants/typography';
 import { menuFontVariants } from '../../tokens/fontVariants/menu';
 import { relativeFontWeight } from '../helpers/typography.helper';
 import { mPercent } from 'css-calipers';

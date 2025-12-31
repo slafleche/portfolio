@@ -1,6 +1,5 @@
 import { m, mPercent } from 'css-calipers';
 import { colorVars } from './global.tokens';
-import type { modeYiq } from 'culori/require';
 import type { ITextShadow } from '../styles/helpers/shadow.helper';
 
 const logoWidth = m(48);
