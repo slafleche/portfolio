@@ -15,6 +15,7 @@ import {
 } from '@/styles/components/contactButton.vars';
 import { useElementOffscreen } from '@/lib/useElementOffscreen';
 import { notRelease } from '@/lib/runtimeEnv';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 
 type Phase = 'hidden' | 'entering' | 'shown' | 'exiting';
 
@@ -136,9 +137,11 @@ export default function ContactButton({
     ],
   );
 
+  const { layoutTick } = useWindowSize();
   const offscreen = useElementOffscreen(watchId, {
     debounceMs: 0,
     mode: 'above',
+    layoutTick,
   });
 
   /* keep phase dataset on shuttle + button (for CSS-driven keyframes) */

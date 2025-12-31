@@ -22,8 +22,6 @@ export const root = style({
   alignItems: 'center',
   pointerEvents: 'none',
   justifyContent: 'center',
-
-  // width: logoVars.width.css(),
   ...paddings(anchorMenuVars.margins),
 });
 

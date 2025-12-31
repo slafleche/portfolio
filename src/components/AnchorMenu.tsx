@@ -1,10 +1,14 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import * as s from '@/styles/components/anchorMenu.css.ts';
 import clsx from 'clsx';
 import { useSafeId } from '@/lib/dom';
 import { visuallyHidden } from '@/styles/components/forms.css.ts';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
+import { shouldHideAnchors } from '@/lib/responsive/anchorMenuMeasurements';
+import { getViewportSize } from '@/lib/responsive/viewport';
 
 export type AnchorLink = {
   title: string;
@@ -26,19 +30,101 @@ export default function AnchorMenu({
   activeHref,
   onActivate,
 }: MenuProps) {
-  const labelId = useSafeId('anchor-menu');
+  const idPrefix = useSafeId('anchorMenu-');
+  const rootId = `${idPrefix}-root`;
+  const anchorListId = `${idPrefix}-anchorList`;
+  const [hideAnchors, setHideAnchors] = useState(false);
+  const { layoutTick } = useWindowSize();
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLUListElement | null>(null);
+  const scheduleUpdateRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let frameId: number | null = null;
+
+    const updateVisibility = () => {
+      const rootEl = rootRef.current;
+      const listEl = listRef.current;
+      if (!rootEl || !listEl) return;
+      setHideAnchors(shouldHideAnchors(rootEl, listEl));
+    };
+
+    const scheduleUpdate = () => {
+      if (frameId !== null) return;
+      frameId = window.requestAnimationFrame(() => {
+        frameId = null;
+        updateVisibility();
+      });
+    };
+
+    scheduleUpdate();
+    scheduleUpdateRef.current = scheduleUpdate;
+
+    let rootObserver: ResizeObserver | null = null;
+    let listObserver: ResizeObserver | null = null;
+    let mutationObserver: MutationObserver | null = null;
+
+    if (typeof ResizeObserver !== 'undefined') {
+      rootObserver = new ResizeObserver(scheduleUpdate);
+      listObserver = new ResizeObserver(scheduleUpdate);
+      if (rootRef.current) rootObserver.observe(rootRef.current);
+      if (listRef.current) listObserver.observe(listRef.current);
+    } else if (typeof MutationObserver !== 'undefined') {
+      mutationObserver = new MutationObserver(scheduleUpdate);
+      if (rootRef.current) {
+        mutationObserver.observe(rootRef.current, {
+          attributes: true,
+        });
+      }
+      if (listRef.current) {
+        mutationObserver.observe(listRef.current, {
+          attributes: true,
+          childList: true,
+          subtree: true,
+        });
+      }
+    }
+
+    return () => {
+      rootObserver?.disconnect();
+      listObserver?.disconnect();
+      mutationObserver?.disconnect();
+      scheduleUpdateRef.current = null;
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, [
+    anchorLinks.length,
+  ]);
+
+  useEffect(() => {
+    scheduleUpdateRef.current?.();
+  }, [
+    layoutTick,
+  ]);
 
   if (anchorLinks.length === 0) {
     return null;
   }
   return (
-    <div className={clsx(s.root, className)}>
-      <h2 id={labelId} className={visuallyHidden}>
+    <div
+      id={rootId}
+      ref={rootRef}
+      data-visible={hideAnchors ? 'hidden' : 'visible'}
+      aria-hidden={hideAnchors ? 'true' : undefined}
+      className={clsx(s.root, className)}
+    >
+      <h2 id={idPrefix} className={visuallyHidden}>
         {anchorNavLabel}
       </h2>
       <ul
+        id={anchorListId}
+        ref={listRef}
         className={s.list}
-        aria-labelledby={labelId}
+        aria-labelledby={idPrefix}
         data-ui="list-unordered"
       >
         {anchorLinks.map((anchor) => {

@@ -13,6 +13,7 @@ import {
   type AnchorTarget,
 } from '@/lib/useActiveAnchors';
 import { surface } from '../styles/glassy.css';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 
 type LocaleLink = {
   locale: Locale;
@@ -45,6 +46,7 @@ export default function Menu({
   anchorLinks = [],
   anchorNavLabel,
 }: MenuProps) {
+  const { layoutTick } = useWindowSize();
   const alternateLocale = localeLinks[0];
   const anchorTargets = useMemo(
     () =>
@@ -68,6 +70,7 @@ export default function Menu({
     anchorTargets,
     {
       hashSync: { enabled: true },
+      layoutTick,
     },
   );
 
