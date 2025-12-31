@@ -22,6 +22,7 @@ export default function HeroGooey({
   style,
 }: Props) {
   const baseId = useId();
+  const gooeyId = filterId ?? `${baseId}-hero-gooey-filter`;
   const gradientAId = `${baseId}-hero-gooey-gradient-a`;
   const gradientBId = `${baseId}-hero-gooey-gradient-b`;
 
@@ -30,7 +31,7 @@ export default function HeroGooey({
       className={clsx(s.blobWrap, className)}
       intensity={intensity}
       composite={composite}
-      id={filterId}
+      id={gooeyId}
       style={style}
     >
       <svg

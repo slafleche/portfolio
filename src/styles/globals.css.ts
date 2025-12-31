@@ -1,11 +1,11 @@
 import { globalStyle } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
+import { m, mEm } from 'css-calipers';
 import { documentSurface } from '../modules/globals/document.module';
 import {
   ReducedMotion,
   reducedMotion,
 } from './helpers/accessibility.helper';
-import { paddings } from './helpers/spacing.helper';
+import { margins, paddings } from './helpers/spacing.helper';
 import borders from './helpers/borders.helper';
 import './utilities.css';
 import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
@@ -18,7 +18,9 @@ const {
   layout: { arch, scrollPaddingOffset },
 } = documentSurface;
 
-const bodyFontStyles = fontStylesFromFontVariant(typographyFontVariants.body);
+const bodyFontStyles = fontStylesFromFontVariant(
+  typographyFontVariants.body,
+);
 const headingFontStyles = fontStylesFromFontVariant(
   typographyFontVariants.heading,
 );
@@ -226,13 +228,25 @@ globalStyle('ul, ol', {
 
 globalStyle('h1, h2, h3, h4, h5, h6', {
   all: 'unset',
-  margin: 0,
+  ...margins({
+    bottom: mEm(0.5),
+  }),
   display: 'block',
   padding: 0,
   border: 0,
   position: 'relative',
   ...headingFontStyles,
 });
+
+for (let level = 1; level <= 6; level++) {
+  const variant =
+    typographyFontVariants[
+      `h${level}` as keyof typeof typographyFontVariants
+    ];
+  globalStyle(`h${level}:not([data-ui="heading"])`, {
+    ...fontStylesFromFontVariant(variant),
+  });
+}
 
 globalStyle("*, *:after, *:before, input[type='search']", {
   boxSizing: 'border-box',

@@ -1,6 +1,10 @@
 import { style, globalStyle } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
-import { colorVars, themeColours } from '../../tokens/global.tokens';
+import {
+  colorVars,
+  dropShadowVars,
+  themeColours,
+} from '../../tokens/global.tokens';
 import { heroVars } from '../componentTokens/hero.componentTokens';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { noiseBg } from '../helpers/noiseSVG.helper';
@@ -258,61 +262,6 @@ export const consolePanel = style({
   position: 'relative',
 });
 
-// export const console = style({
-//   position: 'absolute',
-//   top: 0,
-//   left: 0,
-//   width: `calc(100% + ${offset.multiply(1.5).css()})`,
-//   transform: transforms.value(...consoleTransforms),
-//   transformOrigin: '50% 50%',
-//   display: 'flex',
-//   flexDirection: 'column',
-//   overflow: 'hidden',
-//   pointerEvents: 'auto',
-//   zIndex: 0,
-//   minHeight: '55vh',
-//   selectors: {
-// '&:after': {
-// 	content: '""',
-// 	position: 'absolute',
-// 	inset: 0,
-// 	background:
-// 		'radial-gradient(34% 28% at 60% 62%, rgba(92,204,229,0.18), transparent 72%)',
-// 	mixBlendMode: 'screen',
-// 	filter: 'blur(10px)',
-// 	pointerEvents: 'none',
-// },
-//   },
-// });
-
-// export const designPanel = style({
-//   transform: transforms.value(...designTransforms),
-//   position: 'relative',
-//   zIndex: 1,
-//   selectors: {
-// '&:after': {
-// 	content: '""',
-// 	position: 'absolute',
-// 	inset: 0,
-// 	background:
-// 		'radial-gradient(30% 24% at 64% 60%, rgba(255,255,255,0.32), transparent 70%)',
-// 	mixBlendMode: 'screen',
-// 	filter: 'blur(12px)',
-// 	pointerEvents: 'none',
-// },
-//   },
-// });
-
-// export const vennContents = style({
-//   transform: transforms.value(
-//     transforms.rotate(designRotation.negation()),
-//   ),
-// });
-
-// export const vennMiddle = style({
-// 	padding: offset.multiply(2).css(),
-// });
-
 export const panel = style({
   position: 'relative',
   width: 'fit-content',
@@ -380,28 +329,9 @@ export const heroSurface = style({
     heroSurfaceOverlay,
     heroSurfaceGlow,
   ].join(', '),
-  // backgroundColor: glassVars.backgrounds.color.css(),
 });
 
 export const title_break = style({});
-
-/** Exact colour math from original HTML */
-// const TITLE_LEFT = themeColours.lights.a.saturate(0); // Electric blue
-// const TITLE_RIGHT = themeColours.lights.b.saturate(0.2); // Pink
-// const TITLE_MERGE = themeColours.lights.d.darken(0.2); // Light Purple
-
-/** Identical sweep timing (R→L then idle) — single-layer (::after) */
-// const shimmerSweep = keyframes({
-// 	'0%': {
-// 		backgroundPosition: '120% 50%',
-// 	},
-// 	'70%': {
-// 		backgroundPosition: '-120% 50%',
-// 	},
-// 	'100%': {
-// 		backgroundPosition: '-120% 50%',
-// 	},
-// });
 
 export const heading = style({
   position: 'relative',
@@ -410,27 +340,6 @@ export const heading = style({
   ...fontStylesFromFontVariant(heroFontVariants.hero),
   fontSize: 'clamp(32px, 7vw, 80px)',
   marginTop: heroFontVariants.hero.family.offsetToFlushTop?.css(),
-  // selectors: {
-  // 	'&::after': {
-  // 		content: '',
-  // 		position: 'absolute',
-  // 		left: '50%',
-  // 		top: '50%',
-  // 		transform: 'translate(-50%, -50%)',
-  // 		width: 'min(60%, 28rem)',
-  // 		height: '52px',
-  // 		filter: 'blur(24px)',
-  // 		background: `radial-gradient(
-  //     45% 70% at 50% 50%,
-  //     ${colorVars.white.alpha(0.22).css()},
-  //     ${colorVars.white.alpha(0).css()} 65%
-  //   )`,
-  // 		pointerEvents: 'none',
-  // 		zIndex: 0,
-  // 		animation: `${mergePulse} 11s ease-in-out infinite`,
-  // 		'@media': { '(prefers-reduced-motion: reduce)': { animation: 'none' } },
-  // 	},
-  // },
 });
 
 /**
@@ -440,7 +349,7 @@ export const heading = style({
  * content on a data attribute (data-text="...") so ::after can render
  * it.
  */
-const shadow = projectorVars.textShadow;
+
 export const line = style({
   display: 'inline-block',
   position: 'relative',
@@ -448,48 +357,5 @@ export const line = style({
 
   color: colorVars.white.css(),
   WebkitTextFillColor: colorVars.white.css(),
-
-  // use your black var for shadows (no rgba)
-  // textShadow: [
-  //   `0 1px 0 ${colorVars.black.alpha(0.12).css()}`,
-  //   `0 6px 24px ${colorVars.black.alpha(0.1).css()}`,
-  // ].join(', '),
-
-  textShadow: `${shadow.offsetX.css()} ${shadow.offsetY.css()} ${shadow.blur.css()} ${shadow.color.css()}`,
-
-  // selectors: {
-  //   '&[data-position="first"]': {
-  //     backgroundImage: `linear-gradient(to right, ${TITLE_LEFT.css()} 30%, ${TITLE_MERGE.css()} 60%)`,
-  //   },
-  //   '&[data-position="last"]': {
-  //     marginTop: '-0.08em',
-  //     backgroundImage: `linear-gradient(to right, ${TITLE_MERGE.css()} 20%, ${TITLE_RIGHT.css()} 80%)`,
-  //   },
-  //
-  //   // sheen layer — matches the HTML ".line::after" approach
-  //   '&::after': {
-  //     content: 'attr(data-text)', // requires the same text on data-text
-  //     position: 'absolute',
-  //     inset: 0,
-  //
-  //     // mask the pseudo to the text as well
-  //     color: 'transparent',
-  //     WebkitTextFillColor: 'transparent',
-  //     backgroundClip: 'text',
-  //     WebkitBackgroundClip: 'text',
-  //
-  //     // moving highlight only (uses colorVars.white)
-  //     backgroundImage: `linear-gradient(75deg,
-  //       ${colorVars.white.alpha(0).css()} 42%,
-  //       ${colorVars.white.alpha(0.85).css()} 50%,
-  //       ${colorVars.white.alpha(0).css()} 58%
-  //     )`,
-  //     backgroundRepeat: 'no-repeat',
-  //     backgroundSize: '200% 100%',
-  //     backgroundPosition: '120% 50%',
-  //
-  //     mixBlendMode: 'screen',
-  //     pointerEvents: 'none',
-  //   },
-  // },
+  textShadow: `${dropShadowVars.offsetX.css()} ${dropShadowVars.offsetY.css()} ${dropShadowVars.blur.css()} ${dropShadowVars.color.css()}`,
 });

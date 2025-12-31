@@ -276,6 +276,7 @@ export default function HeroHeading({
         <h1
           data-text={label}
           data-static-ready={staticReady ? 'true' : 'false'}
+          data-ui="heading"
           className={clsx(
             heroStyles.heading,
             revealStyles.layer,
