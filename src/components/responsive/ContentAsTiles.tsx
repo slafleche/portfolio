@@ -76,20 +76,15 @@ function parseMarkdownIntoTiles(markdown: string): ParsedMarkdown {
 export default function ContentAsTiles<
   T extends ElementType = 'section',
 >(props: ContentAsTilesProps<T>) {
-  const {
-    tag,
-    title,
-    headingDepth,
-    className,
-    markdown,
-    ...rest
-  } = props;
+  const { tag, title, headingDepth, className, markdown, ...rest } =
+    props;
   const { intro, tiles } = parseMarkdownIntoTiles(markdown);
 
   return (
     <Content
       tag={tag}
       title={title}
+      ignoreDataUI={true}
       headingDepth={headingDepth}
       className={clsx(className)}
       {...rest}
@@ -101,10 +96,7 @@ export default function ContentAsTiles<
         <TileGrid>
           {tiles.map((tile) => (
             <Tile key={tile.title} title={tile.title}>
-              <Markdown
-                source={tile.body}
-                className={userContent}
-              />
+              <Markdown source={tile.body} className={userContent} />
             </Tile>
           ))}
         </TileGrid>

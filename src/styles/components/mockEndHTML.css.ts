@@ -3,9 +3,8 @@ import { paddings, margins } from '../helpers/spacing.helper';
 import { borders } from '../helpers/borders.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { m, mPercent } from 'css-calipers';
-
-const codeFontStack =
-  'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import { mockHtmlFontVariants } from '../../tokens/fontVariants/mockHtml';
 
 export const root = style({
   ...paddings({
@@ -22,9 +21,7 @@ export const root = style({
     width: m(1),
     color: 'rgba(255, 255, 255, 0.08)',
   }),
-  fontFamily: codeFontStack,
-  fontSize: '12px',
-  lineHeight: 1.45,
+  ...fontStylesFromFontVariant(mockHtmlFontVariants.code),
   color: '#c9d1d9',
 });
 

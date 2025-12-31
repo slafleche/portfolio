@@ -68,4 +68,25 @@ export const fontFamilies = {
       strong: 600,
     },
   }),
+  code: defineFontFamily({
+    familyName: 'code',
+    fallbacks: [
+      'ui-monospace',
+      'SFMono-Regular',
+      'Menlo',
+      'Monaco',
+      'Consolas',
+      'Liberation Mono',
+      'Courier New',
+      'monospace',
+    ],
+    cfgMap: fontsConfig,
+    spacing: m(0, 'em'),
+    offsetToFlushTop: m(0, 'em'),
+    lineHeight: 1.45,
+    weights: {
+      default: 400,
+      strong: 600,
+    },
+  }),
 } satisfies Record<string, FontFamilyDef>;

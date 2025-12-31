@@ -15,6 +15,7 @@ import { notRelease } from '@/lib/runtimeEnv';
 type BaseProps<T extends ElementType> = {
   tag?: T;
   title?: ReactNode;
+  ignoreDataUI?: boolean;
   headingDepth?: 2 | 3 | 4 | 5 | 6;
   className?: string;
 } & Omit<ComponentPropsWithoutRef<T>, 'className' | 'children'>;
@@ -38,6 +39,7 @@ export default function Content<T extends ElementType = 'section'>({
   headingDepth: headingDepthProp,
   className,
   markdown,
+  ignoreDataUI = false,
   children,
   ...rest
 }: ContentProps<T>) {
@@ -67,7 +69,12 @@ export default function Content<T extends ElementType = 'section'>({
       {...rest}
     >
       {title ? (
-        <Heading depth={headingDepthProp ?? 2}>{title}</Heading>
+        <Heading
+          ignoreDataUI={ignoreDataUI}
+          depth={headingDepthProp ?? 2}
+        >
+          {title}
+        </Heading>
       ) : null}
       {renderedBody}
     </Component>

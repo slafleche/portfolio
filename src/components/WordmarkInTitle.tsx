@@ -12,6 +12,7 @@ type WordMarkInTitleProps = {
   className?: string;
   textClassName?: string;
   wordMarkClassName?: string;
+  ignoreDataUI?: boolean;
 } & Pick<ComponentPropsWithoutRef<'h2'>, 'id'>;
 
 export default function WordMarkInTitle(props: WordMarkInTitleProps) {
@@ -21,6 +22,7 @@ export default function WordMarkInTitle(props: WordMarkInTitleProps) {
     className,
     wordMarkClassName,
     textClassName,
+    ignoreDataUI = false,
     ...rest
   } = props;
 
@@ -28,7 +30,12 @@ export default function WordMarkInTitle(props: WordMarkInTitleProps) {
     parseWordmarkTemplate(textTemplate);
   const hasWordmark = wordmarkText.length > 0;
   return (
-    <Heading title={fullText} className={className} {...rest}>
+    <Heading
+      title={fullText}
+      className={className}
+      ignoreDataUI={ignoreDataUI}
+      {...rest}
+    >
       {hasWordmark ? (
         <>
           {beforeText ? (

@@ -5,11 +5,11 @@ import {
   type FontVariantMap,
 } from '../../styles/helpers/fontVariant.helper';
 
-const SOURCE_PATH = 'src/tokens/fontVariants/menu.ts';
+const SOURCE_PATH = 'src/tokens/fontVariants/footer.ts';
 
-export const menuFontVariants = {
-  menu: defineFontVariant(fontFamilies.ibm, {
-    label: 'menu',
+export const footerFontVariants = {
+  cta: defineFontVariant(fontFamilies.ibm, {
+    label: 'footer-cta',
     sourcePath: SOURCE_PATH,
     config: {
       overrides: {

@@ -134,16 +134,19 @@ export default async function HomePage({
           <Content
             id={approach.href}
             title={approach.title}
+            ignoreDataUI={true}
             markdown={approach.content}
           />
           <Content
             id={about.href}
             title={about.title}
+            ignoreDataUI={true}
             markdown={about.content}
           />
           <Content id={caseStudies.href}>
             <WordMarkInTitle
               WordMark={VNWordmark}
+              ignoreDataUI={true}
               textTemplate={caseStudies.title}
               textClassName={rms.wordmarkTextNoLogo}
             />
@@ -153,7 +156,11 @@ export default async function HomePage({
               caseStudies={caseStudies.list}
             />
           </Content>
-          <Content title={projects.title} id={projects.href}>
+          <Content
+            ignoreDataUI={true}
+            title={projects.title}
+            id={projects.href}
+          >
             <Grid
               columns={2}
               mediaQueryColumns={{
