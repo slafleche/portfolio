@@ -8,7 +8,6 @@ import { useSafeId } from '@/lib/dom';
 import { visuallyHidden } from '@/styles/components/forms.css.ts';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { shouldHideAnchors } from '@/lib/responsive/anchorMenuMeasurements';
-import { getViewportSize } from '@/lib/responsive/viewport';
 
 export type AnchorLink = {
   title: string;
@@ -105,10 +104,10 @@ export default function AnchorMenu({
   }, [
     layoutTick,
   ]);
-
   if (anchorLinks.length === 0) {
     return null;
   }
+
   return (
     <div
       id={rootId}
