@@ -69,7 +69,7 @@ export const fontFamilies = {
     },
   }),
   code: defineFontFamily({
-    familyName: 'code',
+    familyName: 'System+Code+Fonts',
     fallbacks: [
       'ui-monospace',
       'SFMono-Regular',

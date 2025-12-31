@@ -3,9 +3,11 @@ import { paddings, margins } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
 import { m } from 'css-calipers';
+import { absolutePosition } from '../helpers/positioning.helper';
 
 export const root = style({
-  display: 'inline-block',
+  ...absolutePosition.bottomLeft(),
+  display: 'block',
   textDecoration: 'none',
   color: 'inherit',
 });

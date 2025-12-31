@@ -12,10 +12,9 @@ import { outlines } from '../helpers/outlines.helper';
 import { colorVars } from '../../tokens/global.tokens';
 import { m, mPercent } from 'css-calipers';
 import { borders } from '../helpers/borders.helper';
-import { paddings } from '../helpers/spacing.helper';
+import { margins, paddings } from '../helpers/spacing.helper';
 // import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 // import { bodyVariants, headingVariants } from '../../tokens/fontVariants/typography';
-
 
 const surfaceGradient = buildLinear({
   angle: accordionSurfaceTokens.gradientAngle,
@@ -62,7 +61,6 @@ export const accordion = style({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
-  gap: accordionItemTokens.gap.css(),
   overflow: 'hidden',
   ...paddings(accordionSurfaceTokens.paddings),
   ...borders(accordionSurfaceTokens.borders),
@@ -78,16 +76,16 @@ export const header = style({
   margin: 0,
 });
 
-export const trigger = style({
+export const button = style({
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
   appearance: 'none',
   ...backgrounds({ color: 'transparent' }),
   border: 'none',
-  display: 'grid',
-  gridTemplateColumns: '1fr auto',
   alignItems: 'center',
-  gap: '3px',
   width: '100%',
-  padding: `${accordionItemTokens.paddingY.css()} ${accordionItemTokens.paddingX.css()}`,
+  ...paddings(accordionItemTokens.paddings),
   cursor: 'pointer',
   textAlign: 'left',
   color: colorVars.white.css(),
@@ -107,34 +105,53 @@ export const trigger = style({
   },
 });
 
+export const triggerText = style({
+  ...paddings({
+    right: m(8),
+  }),
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+});
+
 export const triggerLabel = style({
   // ...fontStylesFromFontVariant(headingVariants.h4),
   color: colorVars.white.css(),
+  ...paddings({
+    right: accordionItemTokens.handle.spacing,
+  }),
+});
+
+export const rightArrow = style({
+  width: accordionItemTokens.rightArrow.size.css(),
+  height: 'auto',
+  color: accordionItemTokens.rightArrow.color.css(),
+  ...paddings({
+    right: accordionItemTokens.handle.spacing,
+  }),
 });
 
 export const triggerSubtitle = style({
-// 
+  //
   color: colorVars.white.alpha(0.72).css(),
 });
 
-export const triggerText = style({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '1px',
-});
-
 export const icon = style({
+  ...margins({
+    left: 'auto',
+  }),
   justifySelf: 'end',
   transition: 'transform 200ms ease',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: accordionItemTokens.iconSize.css(),
-  height: accordionItemTokens.iconSize.css(),
+  width: accordionItemTokens.chevronSize.css(),
+  height: accordionItemTokens.chevronSize.css(),
   ...borders.radii({ radius: mPercent(50) }),
   ...backgrounds({ color: colorVars.white.alpha(0.1) }),
   selectors: {
-    [`${trigger}[data-state="open"] &`]: {
+    [`.${button}[data-state="open"] &`]: {
       transform: 'rotate(180deg)',
     },
   },
@@ -160,7 +177,7 @@ export const content = style({
 });
 
 export const contentInner = style({
-  padding: `3px ${accordionItemTokens.paddingX.css()} ${accordionItemTokens.paddingY.css()}`,
+  // ...paddings(accordionItemTokens.paddings),
   color: colorVars.white.alpha(0.88).css(),
   lineHeight: 1.6,
 });

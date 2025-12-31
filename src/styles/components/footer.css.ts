@@ -66,7 +66,8 @@ export const content = style({
   textAlign: 'center',
   maxWidth: '680px',
   margin: 0,
-  lineHeight: 1.6,
+  fontSize: '28px',
+  // lineHeight: 1.6,
   opacity: 0.9,
 });
 

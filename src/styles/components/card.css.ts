@@ -16,6 +16,7 @@ export const root = style({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
+  minHeight: '250px',
   selectors: {
     '&[data-type="left"]': {
       gridColumn: '1',
@@ -43,24 +44,51 @@ export const container = style({
 });
 
 export const frame = style({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'row',
   position: 'relative',
   overflow: 'hidden',
   backgroundColor: colorVars.transparent.css(),
-  display: 'flex',
-  flexDirection: 'column',
   height: '100%',
+});
+
+export const logoBox = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  ...paddings(m(40)),
+  minWidth: '250px',
 });
 
 export const content = style({
   position: 'relative',
-  zIndex: 2,
-  ...paddings(m(40)),
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+export const panel = style({
+  flex: 1,
+  display: 'flex',
+});
+
+export const panelSurface = style({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+export const panelContent = style({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
 });
 
 export const title = style({});
+export const text = style({
+  ...paddings(m(40)),
+});
 
 export const image = style({
   justifySelf: 'center',

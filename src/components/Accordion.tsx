@@ -9,6 +9,7 @@ import { createDomId } from '@/lib/dom';
 import ChevronDown from '@/components/icons/ChevronDown';
 import * as s from '@/styles/components/accordion.css';
 import { isLocaleRichText } from '@/lib/stringUtils';
+import RightArrow from './icons/RightArrow';
 
 type AccordionItemData = {
   id?: string;
@@ -76,7 +77,7 @@ export function Accordion({
           className={s.item}
         >
           <AccordionPrimitive.Header className={s.header}>
-            <AccordionPrimitive.Trigger className={s.trigger}>
+            <AccordionPrimitive.Trigger className={s.button}>
               <span className={s.triggerText}>
                 <span className={s.triggerLabel}>
                   {typeof item.heading === 'string' &&
@@ -91,18 +92,21 @@ export function Accordion({
                   )}
                 </span>
                 {item.subHeading ? (
-                  <span className={s.triggerSubtitle}>
-                    {typeof item.subHeading === 'string' &&
-                    isLocaleRichText(item.subHeading) ? (
-                      <span
-                        dangerouslySetInnerHTML={{
-                          __html: item.subHeading,
-                        }}
-                      />
-                    ) : (
-                      item.subHeading
-                    )}
-                  </span>
+                  <>
+                    <RightArrow className={s.rightArrow} />
+                    <span className={s.triggerSubtitle}>
+                      {typeof item.subHeading === 'string' &&
+                      isLocaleRichText(item.subHeading) ? (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: item.subHeading,
+                          }}
+                        />
+                      ) : (
+                        item.subHeading
+                      )}
+                    </span>
+                  </>
                 ) : null}
               </span>
               <span className={s.icon} aria-hidden>
