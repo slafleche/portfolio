@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import * as layoutStyles from '@/styles/layout.css';
 import * as s from '@/styles/components/hero.css';
@@ -20,6 +20,7 @@ import { userContent } from '@/styles/typography.css';
 import { GlassPanel } from './GlassPanel';
 import { heroFontVariants } from '../tokens/fontVariants/hero';
 import HeroGooey from './HeroGooey';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 
 type HeroCopy = {
   videoTitle: string;
@@ -59,6 +60,8 @@ export default function Hero({
     waitingForReveal,
     setWaitingForReveal,
   ] = useState(false);
+  const revealDeadlineRef = useRef<number | null>(null);
+  const { layoutTick } = useWindowSize();
 
   const { first: headingFirstLine, second: headingLastLine } =
     useMemo(
@@ -147,6 +150,7 @@ export default function Hero({
             .add(projectorVars.cta.delay)
         : projectorVars.cta.delay;
       const delayMs = totalDelay.getValue();
+      revealDeadlineRef.current = Date.now() + delayMs + 500;
 
       if (typeof window !== 'undefined') {
         timer = window.setTimeout(() => {
@@ -170,6 +174,7 @@ export default function Hero({
 
     return () => {
       cancelled = true;
+      revealDeadlineRef.current = null;
       if (timer !== null) {
         window.clearTimeout(timer);
       }
@@ -181,6 +186,19 @@ export default function Hero({
     isHeadingAnimated,
     headingKey,
     prefersReducedMotion,
+  ]);
+
+  useEffect(() => {
+    if (ctaReady || !waitingForReveal) return;
+    const deadline = revealDeadlineRef.current;
+    if (!deadline) return;
+    if (Date.now() < deadline) return;
+    setCtaReady(true);
+    setWaitingForReveal(false);
+  }, [
+    ctaReady,
+    waitingForReveal,
+    layoutTick,
   ]);
 
   const handleHeadingReveal = useCallback(() => {
