@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, type MouseEvent } from 'react';
-import * as s from '@/styles/components/forms.css';
+import * as s from '@/styles/components/privacy.css';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { useContactDialog } from './ContactDialogProvider';
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
@@ -24,16 +24,16 @@ export function ContactPrivacy({ copy }: ContactPrivacyProps) {
   );
 
   return (
-    <p className={s.privacy}>
+    <div className={s.privacyFinePrint}>
       {copy.text}{' '}
       <a
         href={sharedStrings.contactFormPolicyHash}
-        className={s.privacyLink}
+        className={s.link}
         onClick={handleClick}
         aria-haspopup="dialog"
       >
         {copy.linkLabel}
       </a>
-    </p>
+    </div>
   );
 }

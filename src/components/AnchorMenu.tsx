@@ -5,7 +5,6 @@ import Link from 'next/link';
 import * as s from '@/styles/components/anchorMenu.css.ts';
 import clsx from 'clsx';
 import { useSafeId } from '@/lib/dom';
-import { visuallyHidden } from '@/styles/components/forms.css.ts';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { shouldHideAnchors } from '@/lib/responsive/anchorMenuMeasurements';
 
@@ -119,9 +118,10 @@ export default function AnchorMenu({
       aria-hidden={hideAnchors ? 'true' : undefined}
       className={clsx(s.root, className)}
     >
-      <h2 id={idPrefix} data-ui="heading" className={visuallyHidden}>
+      <h2 id={idPrefix} data-ui="heading" data-visible="sc-only">
         {anchorNavLabel}
       </h2>
+
       <ul
         id={anchorListId}
         ref={listRef}

@@ -12,7 +12,7 @@ import {
 import type { ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as dialogStyles from '@/styles/components/contactDialog.css';
-import * as formStyles from '@/styles/components/forms.css';
+import * as privacyStyles from '@/styles/components/privacy.css';
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { Markdown } from '@/components/Markdown';
@@ -207,30 +207,33 @@ export function ContactDialogProvider({
     previousFocusRef.current = null;
   }, []);
 
-  const applyIntent = useCallback((
-    nextIntent: ModalIntent,
-    options?: { history?: 'push' | 'replace' | 'none' },
-  ) => {
-    const prevIntent = intentRef.current;
-    if (prevIntent === nextIntent) return;
+  const applyIntent = useCallback(
+    (
+      nextIntent: ModalIntent,
+      options?: { history?: 'push' | 'replace' | 'none' },
+    ) => {
+      const prevIntent = intentRef.current;
+      if (prevIntent === nextIntent) return;
 
-    intentRef.current = nextIntent;
-    setIntent(nextIntent);
+      intentRef.current = nextIntent;
+      setIntent(nextIntent);
 
-    const historyMode = options?.history ?? 'none';
-    if (historyMode === 'none') return;
-    if (typeof window === 'undefined') return;
+      const historyMode = options?.history ?? 'none';
+      if (historyMode === 'none') return;
+      if (typeof window === 'undefined') return;
 
-    const targetUrl = buildUrlForIntent(nextIntent);
-    const currentUrl = getCurrentUrl();
-    if (targetUrl === '' || currentUrl === targetUrl) {
-      return;
-    }
+      const targetUrl = buildUrlForIntent(nextIntent);
+      const currentUrl = getCurrentUrl();
+      if (targetUrl === '' || currentUrl === targetUrl) {
+        return;
+      }
 
-    const method =
-      historyMode === 'replace' ? 'replaceState' : 'pushState';
-    window.history[method](window.history.state, '', targetUrl);
-  }, []);
+      const method =
+        historyMode === 'replace' ? 'replaceState' : 'pushState';
+      window.history[method](window.history.state, '', targetUrl);
+    },
+    [],
+  );
 
   const ensureBaseEntry = useCallback(() => {
     if (typeof window === 'undefined') return null;
@@ -474,7 +477,7 @@ export function ContactDialogProvider({
                       {dialogTitle}
                     </Dialog.Title>
                     <Dialog.Description asChild>
-                      <p className={formStyles.visuallyHidden}>
+                      <p data-visible="sc-only">
                         {dialogTitle}
                       </p>
                     </Dialog.Description>
@@ -498,30 +501,30 @@ export function ContactDialogProvider({
         onOpenChange={handlePrivacyOpenChange}
       >
         <Dialog.Portal>
-          <Dialog.Overlay className={formStyles.privacyOverlay} />
-          <Dialog.Content className={formStyles.privacyDialog}>
-            <div className={formStyles.privacyPanel}>
+          <Dialog.Overlay className={privacyStyles.overlay} />
+          <Dialog.Content className={privacyStyles.dialog}>
+            <div className={privacyStyles.panel}>
               <Dialog.Title
-                className={formStyles.privacyTitle}
+                className={privacyStyles.title}
                 data-modal="title"
               >
                 {privacyCopy.title}
               </Dialog.Title>
               {privacyUpdated ? (
-                <p className={formStyles.privacyUpdated}>
+                <p className={privacyStyles.updated}>
                   {privacyUpdated}
                 </p>
               ) : null}
               <Dialog.Description asChild>
                 <Markdown
                   source={privacyCopy.content}
-                  className={formStyles.privacyBody}
+                  className={privacyStyles.body}
                 />
               </Dialog.Description>
               <Dialog.Close asChild>
                 <CloseButton
                   label={formCopy.privacy.closeLabel}
-                  className={formStyles.privacyCloseIcon}
+                  className={dialogStyles.closeButton}
                 />
               </Dialog.Close>
             </div>

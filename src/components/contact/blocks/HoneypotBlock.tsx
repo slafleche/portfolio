@@ -14,7 +14,7 @@ export function HoneypotBlock({
   const inputId = useId();
 
   return (
-    <div aria-hidden className={s.visuallyHidden}>
+    <div aria-hidden data-visible="sc-only">
       <label htmlFor={inputId}>{copy.label}</label>
       <input
         id={inputId}

@@ -221,22 +221,28 @@ globalStyle('code, kbd, samp', {
   fontSize: '1em',
 });
 
-globalStyle('ul, ol', {
-  margin: 0,
-  padding: 0,
-});
+globalStyle(
+  'ul[data-ui="list-unordered"], ol[data-ui="list-ordered"]',
+  {
+    margin: 0,
+    padding: 0,
+  },
+);
 
-globalStyle('h1:not([data-ui="heading"]), h2:not([data-ui="heading"]), h3:not([data-ui="heading"]), h4:not([data-ui="heading"]), h5:not([data-ui="heading"]), h6:not([data-ui="heading"])', {
-  all: 'unset',
-  ...margins({
-    bottom: mEm(0.5),
-  }),
-  display: 'block',
-  padding: 0,
-  border: 0,
-  position: 'relative',
-  ...headingFontStyles,
-});
+globalStyle(
+  'h1:not([data-ui="heading"]), h2:not([data-ui="heading"]), h3:not([data-ui="heading"]), h4:not([data-ui="heading"]), h5:not([data-ui="heading"]), h6:not([data-ui="heading"])',
+  {
+    all: 'unset',
+    ...margins({
+      bottom: mEm(0.5),
+    }),
+    display: 'block',
+    padding: 0,
+    border: 0,
+    position: 'relative',
+    ...headingFontStyles,
+  },
+);
 
 for (let level = 1; level <= 6; level++) {
   const variant =

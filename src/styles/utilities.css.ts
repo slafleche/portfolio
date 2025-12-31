@@ -17,6 +17,7 @@ globalStyle('*[data-visible="sc-only"]', {
   overflow: 'hidden !important' as CSS_TYPES.Property.Overflow,
   clip: 'rect(0,0,0,0) !important' as CSS_TYPES.Property.Clip,
   border: 'none !important' as CSS_TYPES.Property.Border,
+  whiteSpace: 'nowrap !important' as CSS_TYPES.Property.WhiteSpace,
 });
 
 globalStyle('*[data-interaction="none"]', {
