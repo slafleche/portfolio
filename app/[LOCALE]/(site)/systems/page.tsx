@@ -2,7 +2,6 @@ import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
 import Menu from '@/components/Menu';
-import HeroWaypoint from '@/components/HeroWaypoint';
 import ContentAsTiles from '@/components/responsive/ContentAsTiles';
 import { Markdown } from '@/components/Markdown';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
@@ -68,9 +67,18 @@ export default async function SystemsPage({
     localeChangeLabel: menuCopy.languageLabel,
     anchorNavLabel: menuCopy.anchorLabel,
     anchorLinks: [
-      { title: parseWordmarkTemplate(systemsTitle).fullText, href: `#${systemsIntroId}` },
-      { title: parseWordmarkTemplate(systemsPrinciplesTitle).fullText, href: `#${systemsPrinciplesId}` },
-      { title: parseWordmarkTemplate(systemsShapeTitle).fullText, href: `#${systemsShapeId}` },
+      {
+        title: parseWordmarkTemplate(systemsTitle).fullText,
+        href: `#${systemsIntroId}`,
+      },
+      {
+        title: parseWordmarkTemplate(systemsPrinciplesTitle).fullText,
+        href: `#${systemsPrinciplesId}`,
+      },
+      {
+        title: parseWordmarkTemplate(systemsShapeTitle).fullText,
+        href: `#${systemsShapeId}`,
+      },
     ],
     localeLinks: AVAILABLE_LOCALES.filter(
       (code) => code !== locale,
@@ -92,7 +100,7 @@ export default async function SystemsPage({
             withVideo={false}
             headingAnimated={false}
           />
-          <HeroWaypoint />
+
           <ContentAsTiles
             id={systemsIntroId}
             title={systemsTitle}

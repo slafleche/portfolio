@@ -36,7 +36,6 @@ export default function AnchorMenu({
   const { layoutTick } = useWindowSize();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);
-  const scheduleUpdateRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -59,7 +58,6 @@ export default function AnchorMenu({
     };
 
     scheduleUpdate();
-    scheduleUpdateRef.current = scheduleUpdate;
 
     let rootObserver: ResizeObserver | null = null;
     let listObserver: ResizeObserver | null = null;
@@ -90,7 +88,6 @@ export default function AnchorMenu({
       rootObserver?.disconnect();
       listObserver?.disconnect();
       mutationObserver?.disconnect();
-      scheduleUpdateRef.current = null;
       if (frameId !== null) {
         window.cancelAnimationFrame(frameId);
       }
@@ -100,7 +97,10 @@ export default function AnchorMenu({
   ]);
 
   useEffect(() => {
-    scheduleUpdateRef.current?.();
+    const rootEl = rootRef.current;
+    const listEl = listRef.current;
+    if (!rootEl || !listEl) return;
+    setHideAnchors(shouldHideAnchors(rootEl, listEl));
   }, [
     layoutTick,
   ]);

@@ -194,7 +194,7 @@ describe('AnchorMenu', () => {
     });
 
     await waitFor(() => {
-      expect(screen.queryByRole('list')).not.toBeInTheDocument();
+      expect(root).toHaveAttribute('data-visible', 'hidden');
     });
   });
 });

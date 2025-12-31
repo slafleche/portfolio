@@ -6,7 +6,6 @@ import Card from '@/components/Card';
 import { Markdown } from '@/components/Markdown';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
-import HeroWaypoint from '@/components/HeroWaypoint';
 import ConsoleCuriosity from '@/components/ConsoleCuriosity';
 import * as layoutStyles from '@/styles/layout.css';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
@@ -34,7 +33,6 @@ import {
   rms,
 } from '@/components/wordmarks/wordmarks.tsx';
 import Menu from '../../../src/components/Menu';
-
 
 interface PageParams {
   LOCALE: string;
@@ -76,8 +74,6 @@ export default async function HomePage({
   const systemsLink = buildSystemsLink(locale, translator);
   const menuCopy: ReturnType<typeof buildMenuCopy> =
     buildMenuCopy(translator);
-  // const menuSections = buildHomeMenuSections(translator);
-  // const systemsMenuSections = buildSystemsMenuSections(translator);
 
   const curiosityMessages = {
     title: translator('console-curiosity-title'),
@@ -128,7 +124,6 @@ export default async function HomePage({
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
           <Hero id="hero" copy={heroCopy} headingAnimated={false} />
-          <HeroWaypoint />
           <ConsoleCuriosity
             title={curiosityMessages.title}
             test={curiosityMessages.test}

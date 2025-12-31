@@ -21,6 +21,7 @@ import { GlassPanel } from './GlassPanel';
 import { heroFontVariants } from '../tokens/fontVariants/hero';
 import HeroGooey from './HeroGooey';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
+import HeroWaypoint from './HeroWaypoint';
 
 type HeroCopy = {
   videoTitle: string;
@@ -222,111 +223,114 @@ export default function Hero({
   if (!headingLabel) return null;
 
   return (
-    <section
-      id={id}
-      className={clsx(s.root, className)}
-      data-heading-animated={isHeadingAnimated ? 'true' : 'false'}
-    >
-      {showVideo ? (
-        <VideoByName
-          name="hero"
-          title={copy.videoTitle}
-          label={copy.videoLabel}
-          kind="hero"
-          className={s.video}
-          contentWrapClassName={s.contentWrap}
-          visualItemClassName={s.visualContent}
-          backgroundClassName={s.videoBg}
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-hidden
-          role="presentation"
-          errorMessage={copy.videoErrorMessage}
-          fallbackLabel={copy.videoLabel}
-        />
-      ) : null}
-      {showPoster ? (
-        <div className={s.video} aria-hidden>
-          <div className={s.videoBg} />
-          <div className={s.contentWrap}>
-            <ImageByName
-              name="video-hero"
-              alt={copy.videoDescription}
-              size="lg"
-              className={s.visualContent}
-              priority
-            />
+    <>
+      <section
+        id={id}
+        className={clsx(s.root, className)}
+        data-heading-animated={isHeadingAnimated ? 'true' : 'false'}
+      >
+        {showVideo ? (
+          <VideoByName
+            name="hero"
+            title={copy.videoTitle}
+            label={copy.videoLabel}
+            kind="hero"
+            className={s.video}
+            contentWrapClassName={s.contentWrap}
+            visualItemClassName={s.visualContent}
+            backgroundClassName={s.videoBg}
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden
+            role="presentation"
+            errorMessage={copy.videoErrorMessage}
+            fallbackLabel={copy.videoLabel}
+          />
+        ) : null}
+        {showPoster ? (
+          <div className={s.video} aria-hidden>
+            <div className={s.videoBg} />
+            <div className={s.contentWrap}>
+              <ImageByName
+                name="video-hero"
+                alt={copy.videoDescription}
+                size="lg"
+                className={s.visualContent}
+                priority
+              />
+            </div>
           </div>
+        ) : null}
+
+        {/* Banding-fix overlays (over video, under content) */}
+        <div className={clsx(s.overlays, overlayClassName)} aria-hidden>
+          <div className={s.grain} />
+          <div className={s.wash} />
+          <div className={s.centerSoften} />
+          <div className={s.ringBreaker} />
         </div>
-      ) : null}
 
-      {/* Banding-fix overlays (over video, under content) */}
-      <div className={clsx(s.overlays, overlayClassName)} aria-hidden>
-        <div className={s.grain} />
-        <div className={s.wash} />
-        <div className={s.centerSoften} />
-        <div className={s.ringBreaker} />
-      </div>
+        <HeroGooey style={gooeyStyle} />
 
-      <HeroGooey style={gooeyStyle} />
-
-      <div className={clsx(layoutStyles.content, s.content)}>
-        <div className={clsx(layoutStyles.panel, s.panel)}>
-          <div className={s.glassWrap}>
-            <GlassPanel contentClassName={s.main}>
-              <HeroHeading
-                label={headingLabel}
-                animate={isHeadingAnimated}
-                onReveal={handleHeadingReveal}
-              >
-                <span
-                  className={s.line}
-                  data-position={headingLastLine ? 'first' : 'single'}
-                  data-text={headingFirstLine}
+        <div className={clsx(layoutStyles.content, s.content)}>
+          <div className={clsx(layoutStyles.panel, s.panel)}>
+            <div className={s.glassWrap}>
+              <GlassPanel contentClassName={s.main}>
+                <HeroHeading
+                  label={headingLabel}
+                  animate={isHeadingAnimated}
+                  onReveal={handleHeadingReveal}
                 >
-                  {headingFirstLine}
-                </span>
-                {headingLastLine ? (
-                  <>
-                    <br className={s.title_break} />
-                    <span
-                      className={s.line}
-                      data-position="last"
-                      data-text={headingLastLine}
-                    >
-                      {headingLastLine}
-                    </span>
-                  </>
+                  <span
+                    className={s.line}
+                    data-position={headingLastLine ? 'first' : 'single'}
+                    data-text={headingFirstLine}
+                  >
+                    {headingFirstLine}
+                  </span>
+                  {headingLastLine ? (
+                    <>
+                      <br className={s.title_break} />
+                      <span
+                        className={s.line}
+                        data-position="last"
+                        data-text={headingLastLine}
+                      >
+                        {headingLastLine}
+                      </span>
+                    </>
+                  ) : null}
+                </HeroHeading>
+                {copy.subtitle ? (
+                  <div
+                    className={s.subtitle}
+                    data-ready={ctaVisible ? 'true' : 'false'}
+                  >
+                    <Markdown
+                      source={copy.subtitle}
+                      className={userContent}
+                    />
+                  </div>
                 ) : null}
-              </HeroHeading>
-              {copy.subtitle ? (
-                <div
-                  className={s.subtitle}
-                  data-ready={ctaVisible ? 'true' : 'false'}
-                >
-                  <Markdown
-                    source={copy.subtitle}
-                    className={userContent}
-                  />
-                </div>
-              ) : null}
-              {showCta ? (
-                <ContactDialogTrigger
-                  className={s.cta}
-                  data-ready={ctaVisible ? 'true' : 'false'}
-                  aria-hidden={ctaVisible ? undefined : 'true'}
-                  tabIndex={ctaVisible ? undefined : -1}
-                >
-                  <span>{copy.ctaLabel}</span>
-                  <SendIcon className={s.ctaIcon} aria-hidden />
-                </ContactDialogTrigger>
-              ) : null}
-            </GlassPanel>
+                {showCta ? (
+                  <ContactDialogTrigger
+                    className={s.cta}
+                    data-ready={ctaVisible ? 'true' : 'false'}
+                    aria-hidden={ctaVisible ? undefined : 'true'}
+                    tabIndex={ctaVisible ? undefined : -1}
+                  >
+                    <span>{copy.ctaLabel}</span>
+                    <SendIcon className={s.ctaIcon} aria-hidden />
+                  </ContactDialogTrigger>
+                ) : null}
+              </GlassPanel>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <HeroWaypoint />
+    </>
   );
 }
