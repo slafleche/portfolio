@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
-import { caseStudyLogo } from '@/styles/components/richMarkdown.css';
+import { wordMark_kg } from '../../styles/components/card.css';
 
 const LABEL = 'King Games';
 
@@ -14,7 +14,7 @@ export default function KGWordmark({
       viewBox="0 0 684.9532 463.6684"
       shapeRendering="geometricPrecision"
       fill="currentColor"
-      className={clsx(className, caseStudyLogo)}
+      className={clsx(className, wordMark_kg)}
       role="img"
       aria-label={LABEL}
       {...props}

@@ -87,7 +87,7 @@ export const cardGradient_hs: CardGradientPack = {
   ],
 };
 
-export const cardGradient_king: CardGradientPack = {
+export const cardGradient_kg: CardGradientPack = {
   linear: [
     {
       color: color('#FFB800'),

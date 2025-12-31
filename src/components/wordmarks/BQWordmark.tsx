@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
-import { caseStudyLogo } from '@/styles/components/richMarkdown.css';
+import { wordMark_banq } from '../../styles/components/card.css';
 
 const LABEL = 'Bibliothèque et Archives nationales du Québec';
 
@@ -13,7 +13,7 @@ export default function BQWordmark({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 47.02762 47.02762"
       shapeRendering="geometricPrecision"
-      className={clsx(className, caseStudyLogo)}
+      className={clsx(className, wordMark_banq)}
       role="img"
       aria-label={LABEL}
       {...props}

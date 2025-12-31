@@ -1,5 +1,12 @@
 import React from 'react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+  afterEach,
+} from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactForm from '@/components/contact/ContactForm';
@@ -226,10 +233,10 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         ) as HTMLElement | null;
         expect(inlineRegion).toBeNull();
 
-        const toastRegion = container.querySelector(
+        const messageCentreRegion = container.querySelector(
           '[role="status"]:not([aria-atomic])',
         );
-        expect(toastRegion).toBeNull();
+        expect(messageCentreRegion).toBeNull();
       });
     } finally {
       global.fetch = originalFetch;

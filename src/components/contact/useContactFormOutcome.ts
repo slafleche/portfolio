@@ -92,7 +92,7 @@ export function buildContactFormOutcome(
     blocks: [],
     globalCodes: [],
     blockCodes: [],
-    toastFallback: undefined,
+    messageFallback: undefined,
   };
 
   const allMessages: {
@@ -176,7 +176,7 @@ export function buildContactFormOutcome(
       case 'not_configured':
       case 'blocked':
       case 'generic_error':
-        messagesForUi.toastFallback = statusSummary;
+        messagesForUi.messageFallback = statusSummary;
         break;
       default:
         break;
@@ -190,8 +190,7 @@ export function buildContactFormOutcome(
     submitStatus !== 'idle'
   ) {
     const type: PrioritySeverity =
-      submitStatus === 'not_configured' ||
-      submitStatus === 'blocked'
+      submitStatus === 'not_configured' || submitStatus === 'blocked'
         ? 'urgent'
         : 'error';
     priorityMessage = {
@@ -218,7 +217,7 @@ export function buildContactFormOutcome(
 
   const priority: ContactFormOutcomePriority = {
     message: priorityMessage,
-    higherOrderSummary: messagesForUi.toastFallback,
+    higherOrderSummary: messagesForUi.messageFallback,
     isCatastrophic,
   };
 

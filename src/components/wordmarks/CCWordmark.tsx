@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
-import { caseStudyLogo } from '@/styles/components/richMarkdown.css';
+import { wordMark_cc } from '../../styles/components/card.css';
 
 const LABEL = 'Coca-Cola';
 
@@ -13,7 +13,7 @@ export default function CCWordmark({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 615.08 192.94"
       shapeRendering="geometricPrecision"
-      className={clsx(className, caseStudyLogo)}
+      className={clsx(className, wordMark_cc)}
       role="img"
       aria-label={LABEL}
       {...props}

@@ -1,11 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import {
-  act,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactForm from '@/components/contact/ContactForm';
 import {
@@ -15,9 +10,7 @@ import {
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import type {
-  ContactFormFlowSubmitHelper,
-} from '@/components/contact/types/form.types';
+import type { ContactFormFlowSubmitHelper } from '@/components/contact/types/form.types';
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
 import {
   enableTurnstileHarness,
@@ -37,7 +30,9 @@ import {
 const buildCopy = () =>
   buildContactFormCopy(
     ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
+      enFormCopy[
+        key as keyof typeof enFormCopy
+      ]) as unknown as Translator,
   );
 
 const buildStatusMessages = (copy = buildCopy()) =>
@@ -85,16 +80,12 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       .fn()
       .mockResolvedValue('success');
 
-    const {
-      submit,
-      container,
-      getByRole,
-      queryByTestId,
-    } = renderContactFormShellHarness({
-      blocks: [],
-      submitHelper,
-      statusMessages: STATUS_MESSAGES,
-    });
+    const { submit, container, getByRole, queryByTestId } =
+      renderContactFormShellHarness({
+        blocks: [],
+        submitHelper,
+        statusMessages: STATUS_MESSAGES,
+      });
 
     submit();
 
@@ -110,10 +101,10 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         'not_configured',
       );
 
-      const toastRegion = container.querySelector(
+      const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
-      expect(toastRegion?.textContent ?? '').toContain(
+      expect(messageCentreRegion?.textContent ?? '').toContain(
         'not_configured',
       );
 
@@ -211,7 +202,9 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         ).toBeNull();
 
         expect(
-          container.querySelector('[data-testid="jump-to-first-issue"]'),
+          container.querySelector(
+            '[data-testid="jump-to-first-issue"]',
+          ),
         ).toBeNull();
 
         expect(
@@ -316,7 +309,9 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         ).toBeNull();
 
         expect(
-          container.querySelector('[data-testid="jump-to-first-issue"]'),
+          container.querySelector(
+            '[data-testid="jump-to-first-issue"]',
+          ),
         ).toBeNull();
 
         expect(
@@ -342,9 +337,11 @@ describe('ContactForm — catastrophic failures (error view)', () => {
   it('switches to the catastrophic error view when Turnstile reports an unrecoverable error before any submit', async () => {
     const copy = buildCopy();
 
-    const originalTurnstile = (window as typeof window & {
-      turnstile?: unknown;
-    }).turnstile;
+    const originalTurnstile = (
+      window as typeof window & {
+        turnstile?: unknown;
+      }
+    ).turnstile;
 
     const mockTurnstile = {
       render: () => {
@@ -377,7 +374,9 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         ).toBeNull();
 
         expect(
-          container.querySelector('[data-testid="jump-to-first-issue"]'),
+          container.querySelector(
+            '[data-testid="jump-to-first-issue"]',
+          ),
         ).toBeNull();
 
         expect(
@@ -390,16 +389,14 @@ describe('ContactForm — catastrophic failures (error view)', () => {
           '[contact][catastrophic]',
           {
             source: 'turnstile',
-            reason:
-              'Turnstile script failed to load or initialise.',
+            reason: 'Turnstile script failed to load or initialise.',
           },
         );
 
         expect(consoleErrorSpy).toHaveBeenCalledWith(
           '[contact][catastrophic-view]',
           {
-            reason:
-              'Turnstile script failed to load or initialise.',
+            reason: 'Turnstile script failed to load or initialise.',
           },
         );
       });

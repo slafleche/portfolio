@@ -32,7 +32,10 @@ export default function AnchorMenu({
   const idPrefix = useSafeId('anchorMenu-');
   const rootId = `${idPrefix}-root`;
   const anchorListId = `${idPrefix}-anchorList`;
-  const [hideAnchors, setHideAnchors] = useState(false);
+  const [
+    hideAnchors,
+    setHideAnchors,
+  ] = useState(false);
   const { layoutTick } = useWindowSize();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);
@@ -116,7 +119,7 @@ export default function AnchorMenu({
       aria-hidden={hideAnchors ? 'true' : undefined}
       className={clsx(s.root, className)}
     >
-      <h2 id={idPrefix} className={visuallyHidden}>
+      <h2 id={idPrefix} data-ui="heading" className={visuallyHidden}>
         {anchorNavLabel}
       </h2>
       <ul

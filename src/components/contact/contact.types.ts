@@ -1,13 +1,13 @@
 import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 
-export type ToastScenarioCode = Exclude<
+export type messageCentreScenarioCode = Exclude<
   FormServerResponseCode,
   'success'
 >;
 
-export type ContactFormToastDebugScenario =
-  | ToastScenarioCode
+export type ContactFormmessageCentreDebugScenario =
+  | messageCentreScenarioCode
   | {
-      code: ToastScenarioCode;
+      code: messageCentreScenarioCode;
       message?: string;
     };

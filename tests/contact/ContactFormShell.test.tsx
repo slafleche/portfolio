@@ -98,7 +98,7 @@ describe('Contact form shell harness', () => {
     });
   });
 
-  it('surfaces validation errors from blocks and flow as inline and toast summaries', async () => {
+  it('surfaces validation errors from blocks and flow as inline and messageCentre summaries', async () => {
     const blocks = [
       {
         key: 'first',
@@ -145,10 +145,10 @@ describe('Contact form shell harness', () => {
       expect(inlineText).toContain('validation_error');
       expect(inlineText).toContain('first error');
 
-      const toastRegion = container.querySelector(
+      const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
-      expect(toastRegion?.textContent ?? '').toContain(
+      expect(messageCentreRegion?.textContent ?? '').toContain(
         'validation_error',
       );
 
@@ -162,7 +162,9 @@ describe('Contact form shell harness', () => {
     const jumpButton = queryByTestId('jump-to-first-issue');
     expect(jumpButton).not.toBeNull();
     if (!jumpButton) {
-      throw new Error('Expected jump-to-first-issue control to render.');
+      throw new Error(
+        'Expected jump-to-first-issue control to render.',
+      );
     }
 
     jumpButton.click();
@@ -221,10 +223,10 @@ describe('Contact form shell harness', () => {
         const inlineText = inlineRegion?.textContent ?? '';
         expect(inlineText).toContain(expectedSummary);
 
-        const toastRegion = container.querySelector(
+        const messageCentreRegion = container.querySelector(
           '[role="status"]:not([aria-atomic])',
         );
-        expect(toastRegion?.textContent ?? '').toContain(
+        expect(messageCentreRegion?.textContent ?? '').toContain(
           expectedSummary,
         );
       });
@@ -244,7 +246,10 @@ describe('Contact form shell harness', () => {
     ];
 
     const scenarios: Array<{
-      status: 'rate_limited' | 'service_unavailable' | 'generic_error';
+      status:
+        | 'rate_limited'
+        | 'service_unavailable'
+        | 'generic_error';
       expectedSummary: string;
     }> = [
       {
@@ -304,14 +309,14 @@ describe('Contact form shell harness', () => {
         const clearedInlineRegion = container.querySelector(
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
-        expect(
-          (clearedInlineRegion?.textContent ?? '').trim(),
-        ).toBe('');
+        expect((clearedInlineRegion?.textContent ?? '').trim()).toBe(
+          '',
+        );
 
-        const clearedToastRegion = container.querySelector(
+        const clearedmessageCentreRegion = container.querySelector(
           '[role="status"]:not([aria-atomic])',
         );
-        expect(clearedToastRegion).toBeNull();
+        expect(clearedmessageCentreRegion).toBeNull();
       });
 
       unmount();

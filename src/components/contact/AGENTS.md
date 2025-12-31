@@ -7,8 +7,8 @@ This directory focuses on contact and form-related UI.
 - Must: Implement contact form UI, dialogs, and related primitives, delegating
   validation and submission logic to modules and server utilities where
   possible.
-- Must: Wire UI state to the existing toast and debug mechanisms (for example,
-  `toastDebugScenario`) instead of introducing parallel flows.
+- Must: Wire UI state to the existing messageCentre and debug mechanisms (for
+  example, `messageCentreDebugScenario`) instead of introducing parallel flows.
 
 ## Constraints (`contact-forms`, `localization`)
 

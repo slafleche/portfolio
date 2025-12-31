@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css';
-// import { globalMediaQueryStyles } from './responsive/mediaQueries';
 import { margins, paddings } from './helpers/spacing.helper';
 import { layoutVars } from '../tokens/layout.tokens';
 

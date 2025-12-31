@@ -148,7 +148,7 @@ export default async function HomePage({
               WordMark={VNWordmark}
               ignoreDataUI={true}
               textTemplate={caseStudies.title}
-              textClassName={rms.wordmarkTextNoLogo}
+              textClassName={cg.wordmarkTextNoLogo}
             />
             <CaseStudy
               id={caseStudies.href}
@@ -171,10 +171,9 @@ export default async function HomePage({
                 <Card
                   title={
                     <WordMarkInTitle
-                      className={rms.cocacolaTitle}
                       WordMark={CCWordmark}
                       textTemplate={cocacola.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
                   gradientClassName={cg.gradientCC}
@@ -188,7 +187,7 @@ export default async function HomePage({
                     <WordMarkInTitle
                       WordMark={EAWordmark}
                       textTemplate={ea.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
                   gradientClassName={cg.gradientEa}
@@ -200,10 +199,9 @@ export default async function HomePage({
                 <Card
                   title={
                     <WordMarkInTitle
-                      className={rms.banqTitle}
                       WordMark={BQWordmark}
                       textTemplate={banq.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
                   gradientClassName={cg.gradientBanq}
@@ -215,10 +213,9 @@ export default async function HomePage({
                 <Card
                   title={
                     <WordMarkInTitle
-                      className={rms.hootsuiteTitle}
                       WordMark={HSWordmark}
                       textTemplate={hootsuite.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
                   gradientClassName={cg.gradientHs}
@@ -235,13 +232,12 @@ export default async function HomePage({
                 <Card
                   title={
                     <WordMarkInTitle
-                      className={rms.kingGamesTitle}
                       WordMark={KGWordmark}
                       textTemplate={kingGames.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
-                  gradientClassName={cg.gradientKing}
+                  gradientClassName={cg.gradientKg}
                 >
                   <Markdown source={kingGames.content} />
                 </Card>

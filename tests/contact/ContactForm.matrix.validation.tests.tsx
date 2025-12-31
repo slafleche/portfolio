@@ -151,10 +151,10 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       const text = inlineRegion?.textContent ?? '';
       expect(text).toContain('validation_error');
 
-      const toastRegion = container.querySelector(
+      const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
-      expect(toastRegion?.textContent ?? '').toContain(
+      expect(messageCentreRegion?.textContent ?? '').toContain(
         'validation_error',
       );
 
@@ -204,10 +204,10 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       const text = inlineRegion?.textContent ?? '';
       expect(text).toContain('rate_limited');
 
-      const toastRegion = container.querySelector(
+      const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
-      expect(toastRegion?.textContent ?? '').toContain(
+      expect(messageCentreRegion?.textContent ?? '').toContain(
         'rate_limited',
       );
 
@@ -256,10 +256,10 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       const text = inlineRegion?.textContent ?? '';
       expect(text).toContain('not_configured');
 
-      const toastRegion = container.querySelector(
+      const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
-      expect(toastRegion?.textContent ?? '').toContain(
+      expect(messageCentreRegion?.textContent ?? '').toContain(
         'not_configured',
       );
 

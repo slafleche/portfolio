@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
-import { caseStudyLogo } from '@/styles/components/richMarkdown.css';
+import { wordMark_ea } from '../../styles/components/card.css';
 
 const LABEL = 'Electronic Arts';
 
@@ -13,7 +13,7 @@ export default function EAWordmark({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 998.014 998.025"
       shapeRendering="geometricPrecision"
-      className={clsx(className, caseStudyLogo)}
+      className={clsx(className, wordMark_ea)}
       role="img"
       aria-label={LABEL}
       {...props}

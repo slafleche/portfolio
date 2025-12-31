@@ -1,6 +1,6 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
-import { caseStudyLogo } from '@/styles/components/richMarkdown.css';
+import { wordMark_vanilla } from '../../styles/components/card.css';
 
 const LABEL = 'Vanilla';
 
@@ -13,7 +13,7 @@ export default function VNWordmark({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 78.54572 31.72025"
       fill="currentColor"
-      className={clsx(className, caseStudyLogo)}
+      className={clsx(className, wordMark_vanilla)}
       shapeRendering="geometricPrecision"
       role="img"
       aria-label={LABEL}

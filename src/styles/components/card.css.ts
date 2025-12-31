@@ -2,14 +2,14 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import { makeCardGradient } from '../helpers/cardGradient.helper';
 import { colorVars, gradients } from '../../tokens/global.tokens';
 import { m } from 'css-calipers';
-import { paddings } from '../helpers/spacing.helper';
+import { margins, paddings } from '../helpers/spacing.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import {
   cardGradient_banq,
   cardGradient_cc,
   cardGradient_ea,
   cardGradient_hs,
-  cardGradient_king,
+  cardGradient_kg,
 } from '../componentTokens/card.componentTokens';
 
 export const root = style({
@@ -66,23 +66,27 @@ export const content = style({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
+  height: '100%',
 });
 
 export const panel = style({
   flex: 1,
   display: 'flex',
+  height: '100%',
 });
 
 export const panelSurface = style({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
+  height: '100%',
 });
 
 export const panelContent = style({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
+  height: '100%',
 });
 
 export const title = style({});
@@ -146,8 +150,56 @@ export const gradientHs = style(
   }),
 );
 
-export const gradientKing = style(
-  makeCardGradient(cardGradient_king, {
+export const gradientKg = style(
+  makeCardGradient(cardGradient_kg, {
     linearDirection: m(95, 'deg'),
   }),
 );
+
+export const wordmarkTextNoLogo = style({
+  selectors: {
+    '&[data-position="before"]': {
+      ...margins({
+        left: m(0.5, 'em'),
+      }),
+    },
+    '&[data-position="after"]': {
+      ...margins({
+        right: m(0.5, 'em'),
+      }),
+    },
+  },
+});
+
+const caseStudyLogoHeight = m(2.1, 'em');
+const caseStudyLogoOffset = caseStudyLogoHeight.divide(9.3).round(3);
+
+export const wordMark_vanilla = style({
+  display: 'inline-block',
+  height: caseStudyLogoHeight.css(),
+  transform: `translateY(${caseStudyLogoOffset.css()})`,
+  width: 'auto',
+  verticalAlign: 'baseline',
+});
+
+export const wordMark_cc = style({
+  width: '150px',
+  height: 'auto',
+});
+
+export const wordMark_ea = style({
+  width: '150px',
+  height: 'auto',
+});
+export const wordMark_banq = style({
+  width: '150px',
+  height: 'auto',
+});
+export const wordMark_hs = style({
+  width: '150px',
+  height: 'auto',
+});
+export const wordMark_kg = style({
+  width: '150px',
+  height: 'auto',
+});

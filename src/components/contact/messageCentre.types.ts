@@ -30,5 +30,5 @@ export type MessageCentreMessages = {
   // When present, these can be exposed via data attributes for testing.
   globalCodes?: string[];
   blockCodes?: string[];
-  toastFallback?: string;
+  messageFallback?: string;
 };

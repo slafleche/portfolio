@@ -57,7 +57,7 @@ describe('ContactFormOutcome', () => {
     const outcome = getLatestOutcome();
     expect(outcome.messagesForUi.globals).toEqual([]);
     expect(outcome.messagesForUi.blocks).toEqual([]);
-    expect(outcome.messagesForUi.toastFallback).toBeUndefined();
+    expect(outcome.messagesForUi.messageFallback).toBeUndefined();
     expect(outcome.priority.message).toBeNull();
     expect(outcome.hasErrors).toBe(false);
     expect(outcome.isCatastrophic).toBe(false);
@@ -104,7 +104,7 @@ describe('ContactFormOutcome', () => {
       'First field error',
       'Second field error',
     ]);
-    expect(outcome.messagesForUi.toastFallback).toBe(
+    expect(outcome.messagesForUi.messageFallback).toBe(
       'validation_error',
     );
 
@@ -176,7 +176,7 @@ describe('ContactFormOutcome', () => {
       'not_configured',
     ]);
     expect(outcome.messagesForUi.blocks).toEqual([]);
-    expect(outcome.messagesForUi.toastFallback).toBe(
+    expect(outcome.messagesForUi.messageFallback).toBe(
       'not_configured',
     );
 
@@ -202,9 +202,11 @@ describe('ContactFormOutcome', () => {
 
     const outcome = getLatestOutcome();
 
-    expect(outcome.messagesForUi.globals).toEqual(['blocked']);
+    expect(outcome.messagesForUi.globals).toEqual([
+      'blocked',
+    ]);
     expect(outcome.messagesForUi.blocks).toEqual([]);
-    expect(outcome.messagesForUi.toastFallback).toBe('blocked');
+    expect(outcome.messagesForUi.messageFallback).toBe('blocked');
 
     expect(outcome.priority.message).not.toBeNull();
     if (!outcome.priority.message) return;
@@ -215,7 +217,7 @@ describe('ContactFormOutcome', () => {
     expect(outcome.isCatastrophic).toBe(true);
   });
 
-  it('maps non-success server statuses to global summaries and toast fallback', () => {
+  it('maps non-success server statuses to global summaries and messageCentre fallback', () => {
     const nonSuccessStatuses: ContactFormFlowSnapshot['submitStatus'][] =
       [
         'rate_limited',
@@ -240,7 +242,7 @@ describe('ContactFormOutcome', () => {
       expect(outcome.messagesForUi.globals).toEqual([
         expectedSummary,
       ]);
-      expect(outcome.messagesForUi.toastFallback).toBe(
+      expect(outcome.messagesForUi.messageFallback).toBe(
         expectedSummary,
       );
 
@@ -276,10 +278,9 @@ describe('ContactFormOutcome', () => {
 
     expect(outcome.messagesForUi.globals).toEqual([]);
     expect(outcome.messagesForUi.blocks).toEqual([]);
-    expect(outcome.messagesForUi.toastFallback).toBeUndefined();
+    expect(outcome.messagesForUi.messageFallback).toBeUndefined();
     expect(outcome.priority.message).toBeNull();
     expect(outcome.hasErrors).toBe(false);
     expect(outcome.isCatastrophic).toBe(false);
   });
-
 });

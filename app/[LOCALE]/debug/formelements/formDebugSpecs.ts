@@ -25,7 +25,7 @@ export type DebugCardSpec = {
     status: FormStatusKey;
     message?: string;
   };
-  toastScenarioId?: ApiScenarioId;
+  messageCentreScenarioId?: ApiScenarioId;
 };
 
 export const debugCardSpecs: readonly DebugCardSpec[] = [
@@ -158,7 +158,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     ui: { global: 'invalid' },
     logFocus: true,
     showSubmitOverlay: true,
-    toastScenarioId: 'validation_error',
+    messageCentreScenarioId: 'validation_error',
   },
   {
     id: 'api-rate-limited',
@@ -167,7 +167,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     apiScenarioId: 'rate_limited',
     ui: { global: 'readonlyPending' },
     showSubmitOverlay: true,
-    toastScenarioId: 'rate_limited',
+    messageCentreScenarioId: 'rate_limited',
   },
   {
     id: 'api-service-down',
@@ -176,7 +176,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     apiScenarioId: 'service_unavailable',
     ui: { global: 'readonlyPending' },
     showSubmitOverlay: true,
-    toastScenarioId: 'service_unavailable',
+    messageCentreScenarioId: 'service_unavailable',
   },
   {
     id: 'api-blocked',
@@ -186,7 +186,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     apiScenarioId: 'blocked',
     ui: { global: 'disabled' },
     revealHoneypot: true,
-    toastScenarioId: 'blocked',
+    messageCentreScenarioId: 'blocked',
   },
   {
     id: 'api-blocked-focus-visible',
@@ -201,7 +201,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
       },
     },
     revealHoneypot: true,
-    toastScenarioId: 'blocked',
+    messageCentreScenarioId: 'blocked',
   },
   {
     id: 'api-generic-error',
@@ -211,7 +211,7 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     apiScenarioId: 'generic_error',
     ui: { global: 'validEntry' },
     showSubmitOverlay: true,
-    toastScenarioId: 'generic_error',
+    messageCentreScenarioId: 'generic_error',
   },
   {
     id: 'api-not-configured',
@@ -223,6 +223,6 @@ export const debugCardSpecs: readonly DebugCardSpec[] = [
     info: [
       'Shows new localized copy for the not-configured state.',
     ],
-    toastScenarioId: 'not_configured',
+    messageCentreScenarioId: 'not_configured',
   },
 ] as const;

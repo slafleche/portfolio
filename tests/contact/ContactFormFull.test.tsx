@@ -49,7 +49,9 @@ const buildDeliveryResult = (
 const buildCopy = () =>
   buildContactFormCopy(
     ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
+      enFormCopy[
+        key as keyof typeof enFormCopy
+      ]) as unknown as Translator,
   );
 
 const buildStatusMessages = (copy = buildCopy()) =>
@@ -99,9 +101,7 @@ describe('ContactForm — full stack happy path', () => {
     mockedDeliver.mockResolvedValue(buildDeliveryResult());
   });
 
-  it(
-    'submits successfully through the real /api/contact route and shows success status',
-    async () => {
+  it('submits successfully through the real /api/contact route and shows success status', async () => {
     const copy = buildCopy();
     const statusMessages = buildStatusMessages(copy);
 
@@ -114,22 +114,23 @@ describe('ContactForm — full stack happy path', () => {
 
     const fetchMock = vi.fn(
       async (input: RequestInfo | URL, init?: RequestInit) => {
-      const urlString =
-        typeof input === 'string' || input instanceof URL
-          ? input.toString()
-          : input.url;
+        const urlString =
+          typeof input === 'string' || input instanceof URL
+            ? input.toString()
+            : input.url;
 
-      if (urlString.endsWith('/api/contact')) {
-        const bodyJson = init?.body
-          ? JSON.parse(init.body as string)
-          : {};
-        const request = buildRequest(bodyJson);
-        const response = await contactRoute(request);
-        return response as unknown as Response;
-      }
+        if (urlString.endsWith('/api/contact')) {
+          const bodyJson = init?.body
+            ? JSON.parse(init.body as string)
+            : {};
+          const request = buildRequest(bodyJson);
+          const response = await contactRoute(request);
+          return response as unknown as Response;
+        }
 
-      return originalFetch(input as never, init as never);
-    });
+        return originalFetch(input as never, init as never);
+      },
+    );
 
     global.fetch = fetchMock as unknown as typeof fetch;
 
@@ -178,10 +179,10 @@ describe('ContactForm — full stack happy path', () => {
 
         expect(inlineRegion.textContent ?? '').toBe('');
 
-        const toastRegion = container.querySelector(
+        const messageCentreRegion = container.querySelector(
           '[role="status"]:not([aria-atomic]):not([data-form="loading"])',
         ) as HTMLElement | null;
-        expect(toastRegion).toBeNull();
+        expect(messageCentreRegion).toBeNull();
 
         // No "jump to first issue" control should be present once the
         // form has successfully submitted with no validation errors.
@@ -191,6 +192,5 @@ describe('ContactForm — full stack happy path', () => {
       global.fetch = originalFetch;
       turnstileHarness.restore();
     }
-    },
-  );
+  });
 });
