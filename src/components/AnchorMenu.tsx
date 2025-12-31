@@ -1,10 +1,12 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import * as s from '@/styles/components/anchorMenu.css.ts';
 import clsx from 'clsx';
 import { useSafeId } from '@/lib/dom';
 import { visuallyHidden } from '@/styles/components/forms.css.ts';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 
 export type AnchorLink = {
   title: string;
@@ -26,19 +28,90 @@ export default function AnchorMenu({
   activeHref,
   onActivate,
 }: MenuProps) {
-  const labelId = useSafeId('anchor-menu');
+  const idPrefix = useSafeId('anchorMenu-');
+  const rootId = `${idPrefix}-root`;
+  const anchorListId = `${idPrefix}-anchorList`;
+  const [hideAnchors, setHideAnchors] = useState(false);
+  const { layoutTick } = useWindowSize();
+  const scheduleUpdateRef = useRef<(() => void) | null>(null);
 
-  if (anchorLinks.length === 0) {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const rootEl = document.getElementById(rootId);
+    const listEl = document.getElementById(anchorListId);
+    if (!rootEl || !listEl) return;
+
+    let frameId: number | null = null;
+
+    const updateVisibility = () => {
+      const styles = window.getComputedStyle(rootEl);
+      const paddingTop = Number.parseFloat(styles.paddingTop || '0');
+      const paddingBottom = Number.parseFloat(
+        styles.paddingBottom || '0',
+      );
+      const reservedSpace = paddingTop + paddingBottom;
+      const anchorsHeight = listEl.getBoundingClientRect().height;
+      const availableHeight = window.innerHeight - reservedSpace;
+
+      setHideAnchors(availableHeight < anchorsHeight);
+    };
+
+    const scheduleUpdate = () => {
+      if (frameId !== null) return;
+      frameId = window.requestAnimationFrame(() => {
+        frameId = null;
+        updateVisibility();
+      });
+    };
+
+    updateVisibility();
+    scheduleUpdateRef.current = scheduleUpdate;
+
+    let rootObserver: ResizeObserver | null = null;
+    let listObserver: ResizeObserver | null = null;
+
+    if (typeof ResizeObserver !== 'undefined') {
+      rootObserver = new ResizeObserver(scheduleUpdate);
+      listObserver = new ResizeObserver(scheduleUpdate);
+      rootObserver.observe(rootEl);
+      listObserver.observe(listEl);
+    }
+
+    window.addEventListener('resize', scheduleUpdate);
+
+    return () => {
+      window.removeEventListener('resize', scheduleUpdate);
+      rootObserver?.disconnect();
+      listObserver?.disconnect();
+      scheduleUpdateRef.current = null;
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, [
+    anchorListId,
+    rootId,
+  ]);
+
+  useEffect(() => {
+    scheduleUpdateRef.current?.();
+  }, [
+    layoutTick,
+  ]);
+
+  if (anchorLinks.length === 0 || hideAnchors) {
     return null;
   }
   return (
-    <div className={clsx(s.root, className)}>
-      <h2 id={labelId} className={visuallyHidden}>
+    <div id={rootId} className={clsx(s.root, className)}>
+      <h2 id={idPrefix} className={visuallyHidden}>
         {anchorNavLabel}
       </h2>
       <ul
+        id={anchorListId}
         className={s.list}
-        aria-labelledby={labelId}
+        aria-labelledby={idPrefix}
         data-ui="list-unordered"
       >
         {anchorLinks.map((anchor) => {

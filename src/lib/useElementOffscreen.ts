@@ -6,6 +6,7 @@ export type UseElementOffscreenOptions = {
   rootMargin?: string;
   threshold?: number | number[];
   mode?: 'outside' | 'above' | 'below';
+  layoutTick?: number;
 };
 
 const DEFAULT_DEBOUNCE_MS = 80;
@@ -52,6 +53,7 @@ export function useElementOffscreen(
   const lastIOSampleRef = useRef(0);
   const debounceTimeoutRef = useRef<number | null>(null);
   const scrollRafRef = useRef<number | null>(null);
+  const pollRef = useRef<(() => void) | null>(null);
 
   const {
     debounceMs = DEFAULT_DEBOUNCE_MS,
@@ -59,6 +61,7 @@ export function useElementOffscreen(
     rootMargin = DEFAULT_ROOT_MARGIN,
     threshold = DEFAULT_THRESHOLD,
     mode = DEFAULT_MODE,
+    layoutTick,
   } = options ?? {};
 
   const applySignal = useCallback(
@@ -152,6 +155,7 @@ export function useElementOffscreen(
       const off = computeOffscreen(rect, mode);
       applySignal(off, 'poll');
     };
+    pollRef.current = poll;
 
     const onScrollOrResize = () => {
       if (scrollRafRef.current !== null) {
@@ -171,6 +175,7 @@ export function useElementOffscreen(
       io.disconnect();
       window.removeEventListener('scroll', onScrollOrResize);
       window.removeEventListener('resize', onScrollOrResize);
+      pollRef.current = null;
       if (scrollRafRef.current !== null) {
         cancelAnimationFrame(scrollRafRef.current);
         scrollRafRef.current = null;
@@ -186,6 +191,13 @@ export function useElementOffscreen(
     threshold,
     applySignal,
     mode,
+  ]);
+
+  useEffect(() => {
+    if (layoutTick == null) return;
+    pollRef.current?.();
+  }, [
+    layoutTick,
   ]);
 
   return offscreen;

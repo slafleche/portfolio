@@ -6,6 +6,7 @@ import {
   type IMediaQueryProps,
 } from 'css-calipers/mediaQueries';
 import { layoutVars } from '../../tokens/layout.tokens';
+import { m } from 'css-calipers';
 
 const fullSizeMinWidth = layoutVars.contentWidth.add(
   layoutVars.contentPadding.multiply(2),
@@ -13,7 +14,7 @@ const fullSizeMinWidth = layoutVars.contentWidth.add(
 const fullSizeMaxWidth = fullSizeMinWidth.subtract(1);
 const noEdgeOnlyMinWidth = layoutVars.compact.contentWidth.add(1);
 
-export const globalMediaQueriesConf: IMediaQueries = {
+export const globalMediaQueries: IMediaQueries = {
   fullSize: {
     minWidth: fullSizeMinWidth,
   } as IMediaQueryProps,
@@ -35,17 +36,14 @@ export const globalMediaQueriesConf: IMediaQueries = {
   //   maxWidth: layoutVars.compressed.contentWidth.css(),
   // } as IMediaQueryProps,
 };
-const coreModules = defineMediaQueryModules('core');
 
 export const mediaQueryStyle = mediaQueryFactory({
-  queries: globalMediaQueriesConf,
+  queries: globalMediaQueries,
   config: {
     label: 'Global Media Queries',
-    modules: coreModules,
+    modules: defineMediaQueryModules('core'),
     output: mediaQueryOutputVanillaExtract,
   },
 });
-
-export const globalMediaQueries = globalMediaQueriesConf;
 
 export default globalMediaQueries;
