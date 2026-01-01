@@ -95,17 +95,12 @@ export default function ContentAsTiles<
       ) : null}
       {tiles.length > 0 ? (
         <TileGrid>
-          {tiles.map((tile) => (
-            <>
-              <GlassPanel>
-                <Tile key={tile.title} title={tile.title}>
-                  <Markdown
-                    source={tile.body}
-                    className={userContent}
-                  />
-                </Tile>
-              </GlassPanel>
-            </>
+          {tiles.map((tile, index) => (
+            <GlassPanel key={`${tile.title}-${index}`}>
+              <Tile title={tile.title}>
+                <Markdown source={tile.body} className={userContent} />
+              </Tile>
+            </GlassPanel>
           ))}
         </TileGrid>
       ) : null}
