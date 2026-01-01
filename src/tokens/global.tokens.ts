@@ -68,6 +68,11 @@ export const themeColours = {
     b: shapeGradientB.b,
     c: shapeGradientB.c,
   },
+  purples: {
+    dark: darkPurple,
+    mid: midPurple,
+    light: lightPurple,
+  },
   gradients: {
     main: {
       start: darkPurple,

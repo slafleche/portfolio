@@ -42,6 +42,7 @@ export type ColorWrapper = {
   };
   darken: (value?: number) => ColorWrapper;
   brighten: (value?: number) => ColorWrapper;
+  lighten: (value?: number) => ColorWrapper;
   saturate: (value?: number) => ColorWrapper;
   desaturate: (value?: number) => ColorWrapper;
   mix: (
@@ -175,6 +176,23 @@ const normalizeRgbChannel = (value: number) => {
 const normalizeAlpha = (value?: number) =>
   value === undefined ? undefined : normalizeFraction(value);
 
+const lerp = (start: number, end: number, t: number) =>
+  start + (end - start) * t;
+
+const normalizeModifier = (value?: number) => {
+  if (value === undefined) return 1;
+  if (Number.isNaN(value)) return 1;
+  const sign = Math.sign(value) || 1;
+  const magnitude = Math.abs(value);
+  const scaled =
+    magnitude > 1
+      ? magnitude <= 10
+        ? magnitude / 10
+        : magnitude / 100
+      : magnitude;
+  return sign * clamp01(scaled);
+};
+
 const formatHex = (value: string) => {
   const trimmed = value.trim();
   const bare = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
@@ -269,6 +287,42 @@ const formatRgba = (value: Color): string => {
   )}, ${formattedAlpha})`;
 };
 
+const isInGamut = (oklch: CuloriOKLCH) => {
+  const converted = fromCuloriOKLCH(oklch);
+  if (!converted || converted.mode !== 'rgb') return false;
+  return (
+    converted.r >= 0 &&
+    converted.r <= 1 &&
+    converted.g >= 0 &&
+    converted.g <= 1 &&
+    converted.b >= 0 &&
+    converted.b <= 1
+  );
+};
+
+const maxChromaFor = (l: number, h: number, alpha?: number) => {
+  let low = 0;
+  let high = 0.4;
+  const inGamut = (c: number) =>
+    isInGamut({ mode: 'oklch', l, c, h, alpha });
+
+  while (high < 2 && inGamut(high)) {
+    low = high;
+    high *= 2;
+  }
+
+  for (let i = 0; i < 24; i += 1) {
+    const mid = (low + high) / 2;
+    if (inGamut(mid)) {
+      low = mid;
+    } else {
+      high = mid;
+    }
+  }
+
+  return low;
+};
+
 export function wrap(input: ColorInput): ColorWrapper {
   // ---- special symbolic case ----
   if (input === 'currentColor') {
@@ -289,6 +343,7 @@ export function wrap(input: ColorInput): ColorWrapper {
       }) as ColorWrapper['alpha'],
       darken: () => err('darken'),
       brighten: () => err('brighten'),
+      lighten: () => err('lighten'),
       saturate: () => err('saturate'),
       desaturate: () => err('desaturate'),
       mix: () => err('mix'),
@@ -309,6 +364,44 @@ export function wrap(input: ColorInput): ColorWrapper {
     return derive(base, (draft) => draft.alpha(value));
   }) as ColorWrapper['alpha'];
 
+  const adjustOklch = (
+    adjuster: (oklch: CuloriOKLCH) => CuloriOKLCH,
+  ): ColorWrapper => {
+    const oklch = colorToCuloriOklch(base);
+    if (!oklch) {
+      return wrap(base);
+    }
+    return culoriOklchToWrapper(adjuster(oklch));
+  };
+
+  const lightenBy = (value?: number) => {
+    const delta = normalizeModifier(value);
+    const fade = Math.abs(delta);
+    return adjustOklch((oklch) => ({
+      ...oklch,
+      l:
+        delta >= 0
+          ? lerp(oklch.l, 1, delta)
+          : lerp(oklch.l, 0, Math.abs(delta)),
+      c: lerp(oklch.c, 0, fade),
+    }));
+  };
+
+  const saturateBy = (value?: number) => {
+    const delta = normalizeModifier(value);
+    return adjustOklch((oklch) => ({
+      ...oklch,
+      c:
+        delta >= 0
+          ? lerp(
+              oklch.c,
+              maxChromaFor(oklch.l, oklch.h, oklch.alpha),
+              delta,
+            )
+          : lerp(oklch.c, 0, Math.abs(delta)),
+    }));
+  };
+
   return {
     unsafeColor: base,
     css: (options?: CssOptions) => {
@@ -320,14 +413,11 @@ export function wrap(input: ColorInput): ColorWrapper {
       return result;
     },
     alpha,
-    darken: (value?: number) =>
-      derive(base, (draft) => draft.darken(value)),
-    brighten: (value?: number) =>
-      derive(base, (draft) => draft.brighten(value)),
-    saturate: (value?: number) =>
-      derive(base, (draft) => draft.saturate(value)),
-    desaturate: (value?: number) =>
-      derive(base, (draft) => draft.desaturate(value)),
+    darken: (value?: number) => lightenBy(-(value ?? 1)),
+    brighten: (value?: number) => lightenBy(value),
+    lighten: (value?: number) => lightenBy(value),
+    saturate: (value?: number) => saturateBy(value),
+    desaturate: (value?: number) => saturateBy(-(value ?? 1)),
     mix: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
       derive(base, (draft) =>
         draft.mix(toColor(target), clampRatio(ratio), mode),

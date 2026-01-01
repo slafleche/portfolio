@@ -16,6 +16,7 @@ import { resolveLocale } from '@/lib/locales/locale';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { userContent } from '@/styles/typography.css';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
+import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -91,6 +92,7 @@ export default async function SystemsPage({
   return (
     <>
       <Menu {...menuProps} />
+      <SystemsBgOverlay />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
           <Hero

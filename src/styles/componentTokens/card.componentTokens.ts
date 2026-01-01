@@ -1,7 +1,8 @@
 import { color } from '../helpers/colorWrap.helper';
 import type { CardGradientPack } from '../helpers/cardGradient.helper';
+import { themeColours } from '../../tokens/global.tokens';
 
-export const cardGradient_cc: CardGradientPack = {
+const cardGradient_cc: CardGradientPack = {
   linear: [
     {
       color: color('#F40009'),
@@ -48,7 +49,7 @@ export const cardGradient_cc: CardGradientPack = {
   ],
 };
 
-export const cardGradient_ea: CardGradientPack = {
+const cardGradient_ea: CardGradientPack = {
   linear: [
     {
       color: color('#0083B7'),
@@ -61,7 +62,7 @@ export const cardGradient_ea: CardGradientPack = {
   ],
 };
 
-export const cardGradient_banq: CardGradientPack = {
+const cardGradient_banq: CardGradientPack = {
   linear: [
     {
       color: color('#0e0d0f'),
@@ -74,7 +75,7 @@ export const cardGradient_banq: CardGradientPack = {
   ],
 };
 
-export const cardGradient_hs: CardGradientPack = {
+const cardGradient_hs: CardGradientPack = {
   linear: [
     {
       color: color('#E03035'),
@@ -87,7 +88,7 @@ export const cardGradient_hs: CardGradientPack = {
   ],
 };
 
-export const cardGradient_kg: CardGradientPack = {
+const cardGradient_kg: CardGradientPack = {
   linear: [
     {
       color: color('#FFB800'),
@@ -98,4 +99,21 @@ export const cardGradient_kg: CardGradientPack = {
       at: 100,
     },
   ],
+};
+
+export const cardColours = {
+  gradients: {
+    cc: cardGradient_cc,
+    ea: cardGradient_ea,
+    banq: cardGradient_banq,
+    hs: cardGradient_hs,
+    kg: cardGradient_kg,
+  },
+  logoAsBg: {
+    cc: color('#F40009').darken(0.5).alpha(0.8),
+    ea: color('#0083B7').darken(0.5).alpha(0.6),
+    banq: themeColours.purples.light,
+    hs: color('#E03035').desaturate(0.5),
+    kg: color('#FFB800').saturate(0.8),
+  },
 };

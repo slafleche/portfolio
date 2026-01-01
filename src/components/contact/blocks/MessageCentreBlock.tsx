@@ -1,7 +1,6 @@
 import { forwardRef, useMemo } from 'react';
 import type { Ref } from 'react';
 import * as s from '@/styles/components/messageCentre.css';
-import { status, statusText } from '@/styles/components/forms.css.ts';
 import type { MessageCentreMessages } from '../messageCentre.types';
 
 type MessageCentreBlockProps = {

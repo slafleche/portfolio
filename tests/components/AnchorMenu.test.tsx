@@ -45,8 +45,8 @@ const mockLayoutFns = () => {
 
   const getBoundingClientRectSpy = vi
     .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
-    .mockImplementation(function () {
-      const element = this as HTMLElement;
+    .mockImplementation(function (this: HTMLElement) {
+      const element = this;
       const height = Number(element.dataset.testHeight ?? '0');
       return {
         width: 0,

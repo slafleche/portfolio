@@ -11,6 +11,7 @@ type Props = IHeadingDepth &
     children?: ReactNode;
     type?: string;
     gradientClassName?: string;
+    logoAsBg?: ReactNode;
   };
 
 export default function Card({
@@ -20,6 +21,7 @@ export default function Card({
   type,
   children,
   gradientClassName,
+  logoAsBg,
   ...rest
 }: Props) {
   const isStringTitle = typeof title === 'string';
@@ -48,14 +50,17 @@ export default function Card({
           )}
         </div>
         <div className={s.content}>
+          {logoAsBg && (
+            <div className={s.logoAsBg} aria-hidden="true">
+              {logoAsBg}
+            </div>
+          )}
           <GlassPanel
             className={s.panel}
             surfaceClassName={s.panelSurface}
             contentClassName={s.panelContent}
           >
-            <div className={s.text}>
-              {children}
-            </div>
+            <div className={s.text}>{children}</div>
           </GlassPanel>
         </div>
       </div>

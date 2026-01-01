@@ -34,4 +34,23 @@ describe('colorWrap.helper', () => {
     expect(roundTrip.css()).toBe(base.css());
     expect(base.css()).toBe('rgb(0 255 0)');
   });
+
+  it('treats modifier scale as full-range in OKLCH', () => {
+    const lightened = color('#123456').lighten(1).value().rgb(false);
+    lightened.forEach((channel) => {
+      expect(channel).toBeGreaterThanOrEqual(254);
+    });
+
+    const darkened = color('#abcdef').darken(1).value().rgb(false);
+    darkened.forEach((channel) => {
+      expect(channel).toBeLessThanOrEqual(1);
+    });
+  });
+
+  it('desaturate(1) produces grayscale', () => {
+    const [r, g, b] = color('#E03035').desaturate(1).value().rgb(false);
+    expect(Math.abs(r - g)).toBeLessThanOrEqual(1);
+    expect(Math.abs(g - b)).toBeLessThanOrEqual(1);
+    expect(Math.abs(r - b)).toBeLessThanOrEqual(1);
+  });
 });

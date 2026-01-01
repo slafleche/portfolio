@@ -104,7 +104,7 @@ export const textStyleVars = {
       underlineOffset: m(3),
     },
     hover: {
-      color: colorVars.brand.brighten(0.1),
+      color: colorVars.brand.lighten(0.1),
       textDecorationThickness: m(0.75),
     },
     focusVisible: {

@@ -46,7 +46,7 @@ export const accordionItemTokens = {
   },
   rightArrow: {
     size: m(44),
-    color: themeColours.secondary.brighten(0.5),
+    color: themeColours.secondary.lighten(0.5),
   },
   chevronSize: m(44),
 } as const;

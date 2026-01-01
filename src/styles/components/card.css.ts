@@ -4,13 +4,8 @@ import { colorVars, gradients } from '../../tokens/global.tokens';
 import { m } from 'css-calipers';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
-import {
-  cardGradient_banq,
-  cardGradient_cc,
-  cardGradient_ea,
-  cardGradient_hs,
-  cardGradient_kg,
-} from '../componentTokens/card.componentTokens';
+import { cardColours } from '../componentTokens/card.componentTokens';
+import { glassVars } from '../../tokens/glassy.tokens';
 
 export const root = style({
   position: 'relative',
@@ -107,7 +102,7 @@ export const image = style({
 
 export const gradient = style({
   ...absolutePosition.fullSize(),
-  filter: 'blur(2px)',
+  // filter: 'blur(2px)',
   pointerEvents: 'none',
   zIndex: 0,
 });
@@ -128,30 +123,30 @@ export const cardGradientB = style(
 );
 
 export const gradientCC = style(
-  makeCardGradient(cardGradient_cc, {
+  makeCardGradient(cardColours.gradients.cc, {
     linearDirection: m(95, 'deg'),
   }),
 );
 export const gradientEa = style(
-  makeCardGradient(cardGradient_ea, {
+  makeCardGradient(cardColours.gradients.ea, {
     linearDirection: m(95, 'deg'),
   }),
 );
 
 export const gradientBanq = style(
-  makeCardGradient(cardGradient_banq, {
+  makeCardGradient(cardColours.gradients.banq, {
     linearDirection: m(95, 'deg'),
   }),
 );
 
 export const gradientHs = style(
-  makeCardGradient(cardGradient_hs, {
+  makeCardGradient(cardColours.gradients.hs, {
     linearDirection: m(95, 'deg'),
   }),
 );
 
 export const gradientKg = style(
-  makeCardGradient(cardGradient_kg, {
+  makeCardGradient(cardColours.gradients.kg, {
     linearDirection: m(95, 'deg'),
   }),
 );
@@ -202,4 +197,53 @@ export const wordMark_hs = style({
 export const wordMark_kg = style({
   width: '150px',
   height: 'auto',
+});
+
+export const logoAsBg = style({
+  position: 'absolute',
+  width: '100%',
+  height: '100%',
+  pointerEvents: 'none',
+  overflow: 'hidden',
+});
+
+export const logoAsBgSVG = style({
+  position: 'absolute',
+  top: '50%',
+  left: glassVars.backdropFilter.blur.add(m(5)).css(),
+  transformOrigin: '0 100%',
+  width: '100%',
+  height: 'auto',
+  mixBlendMode: 'multiply',
+  ...paddings({
+    horizontal: m(8),
+  }),
+});
+
+export const logoAsBg_cc = style({
+  width: '110%',
+  color: cardColours.logoAsBg.cc.css(),
+  transform: 'translate(0, -60%) rotate(4deg)',
+});
+export const logoAsBg_ea = style({
+  width: '100%',
+  transform: 'translate(0%, -50%) rotate(4deg)',
+  color: cardColours.logoAsBg.ea.css(),
+});
+export const logoAsBg_banq = style({
+  width: '100%',
+  transformOrigin: '50% 50%',
+  transform: 'translate(-20%, -50%) rotate(4deg) scale(1.9)',
+  color: cardColours.logoAsBg.banq.css(),
+});
+export const logoAsBg_hs = style({
+  width: '100%',
+  transform: 'translate(0%, -30%) rotate(-14deg) scale(1.1)',
+  color: cardColours.logoAsBg.hs.css(),
+});
+export const logoAsBg_kg = style({
+  width: '90%',
+  transform:
+    'translate(5%, -50%) rotate(-8deg) scaleX(1.2) scaleY(1)',
+  color: cardColours.logoAsBg.kg.css(),
 });

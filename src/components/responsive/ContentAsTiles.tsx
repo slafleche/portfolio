@@ -9,6 +9,7 @@ import TileGrid from '@/components/TileGrid';
 import { Markdown } from '@/components/Markdown';
 import { userContent } from '@/styles/typography.css';
 import Content from './Content';
+import { GlassPanel } from '../GlassPanel';
 
 type BaseProps<T extends ElementType> = {
   tag?: T;
@@ -95,9 +96,16 @@ export default function ContentAsTiles<
       {tiles.length > 0 ? (
         <TileGrid>
           {tiles.map((tile) => (
-            <Tile key={tile.title} title={tile.title}>
-              <Markdown source={tile.body} className={userContent} />
-            </Tile>
+            <>
+              <GlassPanel>
+                <Tile key={tile.title} title={tile.title}>
+                  <Markdown
+                    source={tile.body}
+                    className={userContent}
+                  />
+                </Tile>
+              </GlassPanel>
+            </>
           ))}
         </TileGrid>
       ) : null}
