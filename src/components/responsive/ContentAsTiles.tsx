@@ -8,6 +8,7 @@ import Tile from '@/components/Tile';
 import TileGrid from '@/components/TileGrid';
 import { Markdown } from '@/components/Markdown';
 import { userContent } from '@/styles/typography.css';
+import * as tileStyles from '@/styles/components/tiles.css';
 import Content from './Content';
 import { GlassPanel } from '../GlassPanel';
 
@@ -96,9 +97,16 @@ export default function ContentAsTiles<
       {tiles.length > 0 ? (
         <TileGrid>
           {tiles.map((tile, index) => (
-            <GlassPanel key={`${tile.title}-${index}`}>
+            <GlassPanel
+              key={`${tile.title}-${index}`}
+              className={tileStyles.tilePanel}
+              surfaceClassName={tileStyles.tilePanelSurface}
+            >
               <Tile title={tile.title}>
-                <Markdown source={tile.body} className={userContent} />
+                <Markdown
+                  source={tile.body}
+                  className={userContent}
+                />
               </Tile>
             </GlassPanel>
           ))}

@@ -240,7 +240,6 @@ globalStyle(
     padding: 0,
     border: 0,
     position: 'relative',
-    ...headingFontStyles,
   },
 );
 
@@ -250,6 +249,7 @@ for (let level = 1; level <= 6; level++) {
       `h${level}` as keyof typeof typographyFontVariants
     ];
   globalStyle(`h${level}:not([data-ui="heading"])`, {
+    ...headingFontStyles,
     ...fontStylesFromFontVariant(variant),
   });
 }

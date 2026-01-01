@@ -16,8 +16,10 @@ for (let level = 1; level <= 6; level++) {
     typographyFontVariants[
       `h${level}` as keyof typeof typographyFontVariants
     ];
-  globalStyle(`.${userContent} h${level}:not([data-ui="heading"])`, {
+  globalStyle(`h${level}:not([data-ui="heading"])`, {
     color: colorVars.bodyFg.css(),
+    // textAlign: 'center',
+    // textTransform: 'uppercase',
     ...fontStylesFromFontVariant(variant),
     ...margins(textStyleVars.paragraph.margins),
   });

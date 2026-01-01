@@ -17,6 +17,7 @@ import { sharedStrings } from '@/lib/sharedStrings';
 import { userContent } from '@/styles/typography.css';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
+import SystemsGooey from '../../../../src/components/SystemsGooey';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -92,8 +93,9 @@ export default async function SystemsPage({
   return (
     <>
       <Menu {...menuProps} />
-      <SystemsBgOverlay />
+
       <div className={layoutStyles.page}>
+        <SystemsBgOverlay className={layoutStyles.svgOverlay} />
         <main className={layoutStyles.main}>
           <Hero
             id="systems-hero"
@@ -101,6 +103,7 @@ export default async function SystemsPage({
             overlayClassName={systemsStyles.heroOverlay}
             withVideo={false}
             headingAnimated={false}
+            Gooey={SystemsGooey}
           />
 
           <ContentAsTiles

@@ -60,6 +60,8 @@ export type FontFamilyDef = {
     default: number;
     strong: number;
   };
+  textAlign?: CSSCore.Property.TextAlign;
+  textTransform?: CSSCore.Property.TextTransform;
   offsetToFlushTop: IMeasurement;
   spacing?: IMeasurement;
   lineHeight?: CSSCore.Property.LineHeight;
@@ -73,6 +75,8 @@ export type FontStyles = {
   fontFamily?: CSSCore.Property.FontFamily;
   fontWeight?: CSSCore.Property.FontWeight;
   weight?: CSSCore.Property.FontWeight;
+  textAlign?: CSSCore.Property.TextAlign;
+  textTransform?: CSSCore.Property.TextTransform;
   size?:
     | CssLike
     | string

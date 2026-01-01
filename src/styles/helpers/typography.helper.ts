@@ -99,7 +99,6 @@ export function fontStyles(vars: FontStyles): FontCSS {
   const normalizedWeight = resolveFontWeight(vars);
   if (normalizedWeight !== undefined)
     out.fontWeight = normalizedWeight;
-
   if (vars.css && typeof vars.css === 'object') {
     Object.assign(out, vars.css);
   }
@@ -165,6 +164,8 @@ export type FontWeightPercentOptions = {
 };
 
 export type ComposeFontStylesOptions = {
+  textAlign?: CSS_TYPES.Property.TextAlign | null;
+  textTransform?: CSS_TYPES.Property.TextTransform | null;
   weightPercents?: FontWeightPercentOptions | null;
 };
 
@@ -179,6 +180,8 @@ const familyToFontStyles = (family: FontFamilyDef): FontStyles => {
     familyDef: family,
     fontFamily: family.family,
     fontWeight: family.weights.default,
+    textAlign: family.textAlign,
+    textTransform: family.textTransform,
     weights: {
       default: family.weights.default,
       strong: family.weights.strong,
@@ -263,6 +266,13 @@ export function composeFontStyles(
     merged,
     options?.weightPercents ?? null,
   );
+
+  if (options?.textAlign) {
+    merged.textAlign = options.textAlign;
+  }
+  if (options?.textTransform) {
+    merged.textTransform = options.textTransform;
+  }
 
   if (overrides) {
     addLayer(merged, overrides);

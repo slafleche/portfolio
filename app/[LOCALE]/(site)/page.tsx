@@ -33,6 +33,7 @@ import {
 } from '@/components/wordmarks/wordmarks.tsx';
 import Menu from '../../../src/components/Menu';
 import { clsx } from 'clsx';
+import HeroGooey from '../../../src/components/HeroGooey';
 
 interface PageParams {
   LOCALE: string;
@@ -123,7 +124,12 @@ export default async function HomePage({
       <Menu {...menuProps} />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
-          <Hero id="hero" copy={heroCopy} headingAnimated={false} />
+          <Hero
+            id="hero"
+            copy={heroCopy}
+            headingAnimated={false}
+            Gooey={HeroGooey}
+          />
           <ConsoleCuriosity
             title={curiosityMessages.title}
             test={curiosityMessages.test}
@@ -176,7 +182,11 @@ export default async function HomePage({
                       textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
-                  logoAsBg={<CCWordmark className={clsx(cg.logoAsBgSVG, cg.logoAsBg_cc)} />}
+                  logoAsBg={
+                    <CCWordmark
+                      className={clsx(cg.logoAsBgSVG, cg.logoAsBg_cc)}
+                    />
+                  }
                   gradientClassName={cg.gradientCC}
                 >
                   <Markdown source={cocacola.content} />
@@ -191,7 +201,11 @@ export default async function HomePage({
                       textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
-                  logoAsBg={<EAWordmark className={clsx(cg.logoAsBgSVG, cg.logoAsBg_ea)} />}
+                  logoAsBg={
+                    <EAWordmark
+                      className={clsx(cg.logoAsBgSVG, cg.logoAsBg_ea)}
+                    />
+                  }
                   gradientClassName={cg.gradientEa}
                 >
                   <Markdown source={ea.content} />
@@ -208,7 +222,12 @@ export default async function HomePage({
                   }
                   gradientClassName={cg.gradientBanq}
                   logoAsBg={
-                    <BQWordmark className={clsx(cg.logoAsBgSVG, cg.logoAsBg_banq)} />
+                    <BQWordmark
+                      className={clsx(
+                        cg.logoAsBgSVG,
+                        cg.logoAsBg_banq,
+                      )}
+                    />
                   }
                 >
                   <Markdown source={banq.content} />
@@ -224,7 +243,11 @@ export default async function HomePage({
                     />
                   }
                   gradientClassName={cg.gradientHs}
-                  logoAsBg={<HSWordmark className={clsx(cg.logoAsBgSVG, cg.logoAsBg_hs)} />}
+                  logoAsBg={
+                    <HSWordmark
+                      className={clsx(cg.logoAsBgSVG, cg.logoAsBg_hs)}
+                    />
+                  }
                 >
                   <Markdown source={hootsuite.content} />
                 </Card>
@@ -244,7 +267,11 @@ export default async function HomePage({
                     />
                   }
                   gradientClassName={cg.gradientKg}
-                  logoAsBg={<KGWordmark className={clsx(cg.logoAsBgSVG, cg.logoAsBg_kg)} />}
+                  logoAsBg={
+                    <KGWordmark
+                      className={clsx(cg.logoAsBgSVG, cg.logoAsBg_kg)}
+                    />
+                  }
                 >
                   <Markdown source={kingGames.content} />
                 </Card>

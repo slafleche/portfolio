@@ -17,10 +17,10 @@ const defaultStopsB: GradientStop[] = [
 ];
 
 type SystemsBgOverlayProps = SVGProps<SVGSVGElement> & {
-  gradientStopsA?: GradientStop[];
-  gradientStopsB?: GradientStop[];
-  gradientStopsC?: GradientStop[];
-  gradientStopsD?: GradientStop[];
+  gradientStopsTop?: GradientStop[];
+  gradientStopsBottom?: GradientStop[];
+  gradientStopsLeft?: GradientStop[];
+  gradientStopsRight?: GradientStop[];
   spacing?: number;
   frequency?: number;
   strokeWidth?: number;
@@ -32,17 +32,17 @@ type SystemsBgOverlayProps = SVGProps<SVGSVGElement> & {
 
 export default function SystemsBgOverlay({
   className,
-  gradientStopsA = defaultStopsA,
-  gradientStopsB = defaultStopsB,
-  gradientStopsC = defaultStopsA,
-  gradientStopsD = defaultStopsB,
-  spacing = 40,
-  frequency = 10,
+  gradientStopsTop = defaultStopsA,
+  gradientStopsBottom = defaultStopsB,
+  gradientStopsLeft = defaultStopsA,
+  gradientStopsRight = defaultStopsB,
+  spacing = 100,
+  frequency = 4,
   strokeWidth = 8,
 
-  centerSpacing = 40,
+  centerSpacing = 100,
   centerFrequency = 10,
-  centerStrokeWidth = 4,
+  centerStrokeWidth = 6,
   centerAngle = 180,
   ...rest
 }: SystemsBgOverlayProps) {
@@ -55,9 +55,12 @@ export default function SystemsBgOverlay({
     'M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z';
   const blobBaseSize = 100;
   const blobHalf = blobBaseSize / 2;
-  const shapeGroup = Array.from({ length: frequency }, (_, index) => ({
-    radius: (frequency - index) * spacing,
-  }));
+  const shapeGroup = Array.from(
+    { length: frequency },
+    (_, index) => ({
+      radius: (frequency - index) * spacing,
+    }),
+  );
   const centerCircles = Array.from(
     { length: centerFrequency },
     (_, index) => ({
@@ -77,6 +80,11 @@ export default function SystemsBgOverlay({
     return `translate(${cx} ${cy}) scale(${scale}) translate(${-blobHalf} ${-blobHalf})${rotate}`;
   };
 
+  const middleOpacity = 1;
+  const nonMiddleOpacity = 1;
+  // const middleOpacity = 0.9;
+  // const nonMiddleOpacity = 0.6;
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +101,7 @@ export default function SystemsBgOverlay({
           y2="0%"
           id={gradientTop}
         >
-          {gradientStopsA.map((stop, index) => (
+          {gradientStopsTop.map((stop, index) => (
             <stop
               key={`top-${index}-${stop.offsetPercent}-${stop.color}`}
               stopColor={stop.color}
@@ -109,7 +117,7 @@ export default function SystemsBgOverlay({
           y2="100%"
           id={gradientBottom}
         >
-          {gradientStopsB.map((stop, index) => (
+          {gradientStopsBottom.map((stop, index) => (
             <stop
               key={`bottom-${index}-${stop.offsetPercent}-${stop.color}`}
               stopColor={stop.color}
@@ -126,7 +134,7 @@ export default function SystemsBgOverlay({
           gradientTransform="rotate(180 0.5 0.5)"
           id={gradientLeft}
         >
-          {gradientStopsC.map((stop, index) => (
+          {gradientStopsLeft.map((stop, index) => (
             <stop
               key={`left-${index}-${stop.offsetPercent}-${stop.color}`}
               stopColor={stop.color}
@@ -135,6 +143,7 @@ export default function SystemsBgOverlay({
             />
           ))}
         </linearGradient>
+        {/* Right Gradient */}
         <linearGradient
           x1="50%"
           y1="0%"
@@ -142,7 +151,7 @@ export default function SystemsBgOverlay({
           y2="100%"
           id={gradientRight}
         >
-          {gradientStopsD.map((stop, index) => (
+          {gradientStopsRight.map((stop, index) => (
             <stop
               key={`right-${index}-${stop.offsetPercent}-${stop.color}`}
               stopColor={stop.color}
@@ -158,6 +167,7 @@ export default function SystemsBgOverlay({
         stroke={`url(#${gradientTop})`}
         fill="none"
         strokeLinejoin="round"
+        opacity={nonMiddleOpacity}
       >
         {shapeGroup.map((circle) => (
           <path
@@ -174,6 +184,7 @@ export default function SystemsBgOverlay({
         stroke={`url(#${gradientBottom})`}
         fill="none"
         strokeLinejoin="round"
+        opacity={nonMiddleOpacity}
       >
         {shapeGroup.map((circle) => (
           <path
@@ -190,6 +201,7 @@ export default function SystemsBgOverlay({
         stroke={`url(#${gradientLeft})`}
         fill="none"
         strokeLinejoin="round"
+        opacity={nonMiddleOpacity}
       >
         {shapeGroup.map((circle) => (
           <path
@@ -206,6 +218,7 @@ export default function SystemsBgOverlay({
         stroke={`url(#${gradientRight})`}
         fill="none"
         strokeLinejoin="round"
+        opacity={nonMiddleOpacity}
       >
         {shapeGroup.map((circle) => (
           <path
@@ -222,6 +235,7 @@ export default function SystemsBgOverlay({
         stroke={`url(#${gradientTop})`}
         fill="none"
         strokeLinejoin="round"
+        opacity={middleOpacity}
       >
         {centerCircles.map((circle) => (
           <path

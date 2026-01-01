@@ -6,7 +6,9 @@ import {
   fontWeightStyle,
   relativeFontWeight,
 } from '@/styles/helpers/typography.helper';
+import { fontStylesFromFontVariant } from '@/styles/helpers/fontVariant.helper';
 import { fontFamilies } from '@/tokens/fontFamilies.tokens';
+import { typographyFontVariants } from '@/tokens/fontVariants/typography';
 import { m, mPercent } from 'css-calipers';
 
 describe('typography.helper', () => {
@@ -71,5 +73,32 @@ describe('typography.helper', () => {
     expect(result.letterSpacing).toBe('1px');
     expect(result.fontStyle).toBe('italic');
     expect(result.fontWeight).toBeGreaterThan(family.weights.default);
+  });
+
+  it('keeps heading defaults when merging h1 styles', () => {
+    const headingStyles = fontStylesFromFontVariant(
+      typographyFontVariants.heading,
+    );
+    const h1Styles = fontStylesFromFontVariant(
+      typographyFontVariants.h1,
+    );
+    const merged = { ...headingStyles, ...h1Styles };
+
+    expect(merged.textAlign).toBe('center');
+    expect(merged.textTransform).toBe('uppercase');
+    expect(merged.fontSize).toBeDefined();
+  });
+
+  it('keeps heading defaults when merging h2 styles', () => {
+    const headingStyles = fontStylesFromFontVariant(
+      typographyFontVariants.heading,
+    );
+    const h2Styles = fontStylesFromFontVariant(
+      typographyFontVariants.h2,
+    );
+    const merged = { ...headingStyles, ...h2Styles };
+
+    expect(merged.textAlign).toBe('center');
+    expect(merged.textTransform).toBe('uppercase');
   });
 });

@@ -1,6 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentType,
+  type CSSProperties,
+} from 'react';
 import clsx from 'clsx';
 import * as layoutStyles from '@/styles/layout.css';
 import * as s from '@/styles/components/hero.css';
@@ -41,6 +49,7 @@ type Props = {
   withVideo?: boolean;
   overlayClassName?: string;
   headingAnimated?: boolean;
+  Gooey?: ComponentType<{ style?: CSSProperties }> | null;
 };
 
 export default function Hero({
@@ -50,6 +59,7 @@ export default function Hero({
   withVideo = true,
   overlayClassName,
   headingAnimated = true,
+  Gooey = HeroGooey,
 }: Props) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const isHeadingAnimated = headingAnimated && !prefersReducedMotion;
@@ -194,8 +204,13 @@ export default function Hero({
     const deadline = revealDeadlineRef.current;
     if (!deadline) return;
     if (Date.now() < deadline) return;
-    setCtaReady(true);
-    setWaitingForReveal(false);
+    const frameId = requestAnimationFrame(() => {
+      setCtaReady(true);
+      setWaitingForReveal(false);
+    });
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
   }, [
     ctaReady,
     waitingForReveal,
@@ -265,14 +280,16 @@ export default function Hero({
         ) : null}
 
         {/* Banding-fix overlays (over video, under content) */}
-        <div className={clsx(s.overlays, overlayClassName)} aria-hidden>
+        <div
+          className={clsx(s.overlays, overlayClassName)}
+          aria-hidden
+        >
           <div className={s.grain} />
           <div className={s.wash} />
           <div className={s.centerSoften} />
           <div className={s.ringBreaker} />
+          {Gooey && <Gooey style={gooeyStyle} />}
         </div>
-
-        <HeroGooey style={gooeyStyle} />
 
         <div className={clsx(layoutStyles.content, s.content)}>
           <div className={clsx(layoutStyles.panel, s.panel)}>
@@ -285,7 +302,9 @@ export default function Hero({
                 >
                   <span
                     className={s.line}
-                    data-position={headingLastLine ? 'first' : 'single'}
+                    data-position={
+                      headingLastLine ? 'first' : 'single'
+                    }
                     data-text={headingFirstLine}
                   >
                     {headingFirstLine}
