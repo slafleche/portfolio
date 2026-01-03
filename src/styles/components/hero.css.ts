@@ -15,10 +15,10 @@ import {
   backgroundImageDecl,
   buildLinear,
 } from '../helpers/gradients.helper';
-import { projectorVars } from '../componentTokens/projector.componentTokens';
 import { glassVars } from '../../tokens/glassy.tokens';
 import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { heroFontVariants } from '../../tokens/fontVariants/hero';
+import { makeGlassSurface } from '../helpers/glassy.helper';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -83,6 +83,12 @@ export const overlays = style({
   inset: 0,
 });
 
+export const glassySurfaceOverwrite = style(
+  makeGlassSurface({
+    blur: m(15),
+  }),
+);
+
 /** Subtle static grain to break banding */
 export const grain = style({
   ...fullSizeOfParent(),
@@ -110,6 +116,7 @@ export const centerSoften = style({
     ${colorVars.shadow.alpha(0.15).css()} 42%,
     ${colorVars.shadow.alpha(0).css()} 70%
   )`,
+  opacity: 0.2,
 });
 
 /** Break ring radius with soft band */
@@ -249,13 +256,10 @@ export const ctaIcon = style({
   },
 });
 
-// Shared offsets for hero overlap framing.
-const offset = m(20);
-
 export const vennContainer = style({
   position: 'relative',
   isolation: 'isolate',
-  ...paddings(offset.multiply(4)),
+  ...paddings(m(80)),
 });
 
 export const consolePanel = style({

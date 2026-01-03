@@ -4,14 +4,21 @@ import { colorVars, gradients } from '../../tokens/global.tokens';
 import { m } from 'css-calipers';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
-import { cardColours } from '../componentTokens/card.componentTokens';
+import {
+  cardColours,
+  cardLayout,
+} from '../componentTokens/card.componentTokens';
 import { glassVars } from '../../tokens/glassy.tokens';
+import {
+  componentMediaQueries,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 
 export const root = style({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
-  minHeight: '250px',
+  minHeight: cardLayout.logoBox.minWidth.css(),
   selectors: {
     '&[data-type="left"]': {
       gridColumn: '1',
@@ -26,6 +33,7 @@ globalStyle(`.${root}[data-type="right"] *`, {
   borderTopLeftRadius: 0,
   borderBottomLeftRadius: 0,
 });
+
 globalStyle(`.${root}[data-type="left"] *`, {
   borderTopRightRadius: 0,
   borderBottomRightRadius: 0,
@@ -34,7 +42,7 @@ globalStyle(`.${root}[data-type="left"] *`, {
 export const container = style({
   display: 'grid',
   gridTemplateColumns: '1fr auto 1fr',
-  gap: '24px',
+  gap: cardLayout.grid.gap.css(),
   alignItems: 'stretch',
 });
 
@@ -46,14 +54,22 @@ export const frame = style({
   overflow: 'hidden',
   backgroundColor: colorVars.transparent.css(),
   height: '100%',
+  ...componentMediaQueries({
+    card_oneColumn: {
+      flexDirection: 'column',
+    },
+  }),
 });
 
 export const logoBox = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  ...paddings(m(40)),
-  minWidth: '250px',
+  ...paddings(cardLayout.logoBox.paddings),
+  minWidth: cardLayout.logoBox.minWidth.css(),
+  ...componentMediaQueries({
+    card_oneColumn: paddings(cardLayout.logoBox.mobile.paddings),
+  }),
 });
 
 export const content = style({
@@ -109,10 +125,7 @@ export const gradient = style({
 
 export const cardGradientA = style(
   makeCardGradient(gradients[0], {
-    // extrasPerSpan: 100,
     linearDirection: m(110, 'deg'),
-    // includeLinear: false,
-    // includeSpots: false,
   }),
 );
 
@@ -236,14 +249,21 @@ export const logoAsBg_banq = style({
   transform: 'translate(-20%, -50%) rotate(4deg) scale(1.9)',
   color: cardColours.logoAsBg.banq.css(),
 });
+
 export const logoAsBg_hs = style({
   width: '100%',
   transform: 'translate(0%, -30%) rotate(-14deg) scale(1.1)',
   color: cardColours.logoAsBg.hs.css(),
 });
+
 export const logoAsBg_kg = style({
   width: '90%',
   transform:
     'translate(5%, -50%) rotate(-8deg) scaleX(1.2) scaleY(1)',
   color: cardColours.logoAsBg.kg.css(),
+  ...mediaQueryStyle({
+    fullSize: {
+      height: '350px',
+    },
+  }),
 });

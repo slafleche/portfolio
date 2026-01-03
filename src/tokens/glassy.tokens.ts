@@ -11,7 +11,7 @@ export const glassVars = {
     blur: m(5),
     saturate: mPercent(200),
     contrast: mPercent(110),
-    brightness: 1.1,
+    brightness: mPercent(110),
   },
   backgrounds: {
     color: colorVars.white.alpha(0.18),

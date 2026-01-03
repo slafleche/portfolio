@@ -30,6 +30,7 @@ import { heroFontVariants } from '../tokens/fontVariants/hero';
 import HeroGooey from './HeroGooey';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import HeroWaypoint from './HeroWaypoint';
+import { m } from 'css-calipers';
 
 type HeroCopy = {
   videoTitle: string;
@@ -294,7 +295,11 @@ export default function Hero({
         <div className={clsx(layoutStyles.content, s.content)}>
           <div className={clsx(layoutStyles.panel, s.panel)}>
             <div className={s.glassWrap}>
-              <GlassPanel contentClassName={s.main}>
+              <GlassPanel
+                // opacity={0.8}
+                contentClassName={s.main}
+                surfaceClassNameOverride={s.glassySurfaceOverwrite}
+              >
                 <HeroHeading
                   label={headingLabel}
                   animate={isHeadingAnimated}

@@ -29,6 +29,8 @@ export type FontCSS = Partial<
     | 'fontWeight'
     | 'letterSpacing'
     | 'lineHeight'
+    | 'textAlign'
+    | 'textTransform'
     | 'fontVariationSettings'
     | 'fontStretch'
     | 'fontStyle'
@@ -99,6 +101,10 @@ export function fontStyles(vars: FontStyles): FontCSS {
   const normalizedWeight = resolveFontWeight(vars);
   if (normalizedWeight !== undefined)
     out.fontWeight = normalizedWeight;
+
+  if (vars.textAlign) out.textAlign = vars.textAlign;
+  if (vars.textTransform) out.textTransform = vars.textTransform;
+
   if (vars.css && typeof vars.css === 'object') {
     Object.assign(out, vars.css);
   }

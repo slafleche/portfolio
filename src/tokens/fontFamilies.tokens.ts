@@ -71,6 +71,10 @@ export const fontFamilies = {
   code: defineFontFamily({
     familyName: 'System+Code+Fonts',
     fallbacks: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      'Segoe UI',
+      'Noto Sans',
       'ui-monospace',
       'SFMono-Regular',
       'Menlo',

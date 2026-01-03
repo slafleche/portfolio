@@ -6,7 +6,6 @@ import { formTokens } from '../../tokens/forms.tokens';
 import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { boxShadow } from '../helpers/shadow.helper';
 import { colorVars } from '../../tokens/global.tokens';
-import borders from '../helpers/borders.helper';
 import { m } from 'css-calipers';
 
 export const container = style({

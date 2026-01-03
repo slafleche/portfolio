@@ -211,7 +211,12 @@ export default async function HomePage({
                   <Markdown source={ea.content} />
                 </Card>
               </Column>
-              <Column span={1}>
+              <Column
+                span={1}
+                mediaQuerySpan={{
+                  underMinWidth: 2,
+                }}
+              >
                 <Card
                   title={
                     <WordMarkInTitle
@@ -233,7 +238,12 @@ export default async function HomePage({
                   <Markdown source={banq.content} />
                 </Card>
               </Column>
-              <Column span={1}>
+              <Column
+                span={1}
+                mediaQuerySpan={{
+                  underMinWidth: 2,
+                }}
+              >
                 <Card
                   title={
                     <WordMarkInTitle

@@ -13,6 +13,7 @@ export const typographyFontVariants = {
     config: {
       overrides: {
         size: m(18),
+        lineHeight: 1.5,
       },
       options: {
         weightPercents: {

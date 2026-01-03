@@ -4,6 +4,8 @@ import type { BackdropFilterIntent } from './backdropFilter.helper';
 import { noiseStyle, type NoiseSvgOptions } from './noiseSVG.helper';
 import { buildLinear } from './gradients.helper';
 import { m, mPercent } from 'css-calipers';
+import backdropFilters from './backdropFilter.helper';
+import { style } from '@vanilla-extract/css';
 
 const defaultNoiseId = `${glassVars.noise.idPrefix}${Math.random()
   .toString(36)
@@ -14,7 +16,9 @@ export const glassNoise = (
   props?: NoiseSvgOptions,
 ) => noiseStyle(id, props);
 
-export const createGlassBackground = (): {
+export const createGlassBackground = (
+  overwrites?: BackdropFilterIntent,
+): {
   backgroundLayers: {
     overlay: string;
     glow: string;
@@ -23,6 +27,14 @@ export const createGlassBackground = (): {
   backgroundImageValue: CSS_TYPES.Property.BackgroundImage;
   backdropFilterIntent: BackdropFilterIntent;
 } => {
+  const blur = overwrites?.blur ?? glassVars.backdropFilter.blur;
+  const saturate =
+    overwrites?.saturate ?? glassVars.backdropFilter.saturate;
+  const contrast =
+    overwrites?.contrast ?? glassVars.backdropFilter.contrast;
+  const brightness =
+    overwrites?.brightness ?? glassVars.backdropFilter.brightness;
+
   const overlayGradient = buildLinear({
     angle: glassVars.overlay.direction,
     stops: [
@@ -78,10 +90,22 @@ export const createGlassBackground = (): {
     backgroundColorValue,
     backgroundImageValue,
     backdropFilterIntent: {
-      blur: glassVars.backdropFilter.blur,
-      saturate: glassVars.backdropFilter.saturate,
-      contrast: glassVars.backdropFilter.contrast,
-      brightness: glassVars.backdropFilter.brightness,
+      blur,
+      saturate,
+      contrast,
+      brightness,
     },
+  };
+};
+
+export const makeGlassSurface = (
+  overwrites?: BackdropFilterIntent,
+) => {
+  const glassBackground = createGlassBackground(overwrites);
+  return {
+    backgroundColor: glassBackground.backgroundColorValue,
+    backgroundImage: glassBackground.backgroundImageValue,
+    ...backdropFilters.style(glassBackground.backdropFilterIntent),
+    backgroundClip: 'padding-box',
   };
 };

@@ -395,7 +395,11 @@ export function wrap(input: ColorInput): ColorWrapper {
         delta >= 0
           ? lerp(
               oklch.c,
-              maxChromaFor(oklch.l, oklch.h, oklch.alpha),
+              maxChromaFor(
+                oklch.l,
+                oklch.h ?? 0,
+                oklch.alpha ?? 1,
+              ),
               delta,
             )
           : lerp(oklch.c, 0, Math.abs(delta)),

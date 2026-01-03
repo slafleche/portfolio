@@ -5,8 +5,10 @@ const contentPadding = logoVars.fullWidth.add(
   anchorMenuVars.borders.width,
 );
 
+const separatorMinimum = m(300);
+
 export const layoutVars = {
-  contentWidth: m(1400),
+  contentWidth: m(1600),
   contentPadding,
 
   noEdge: {
@@ -26,5 +28,6 @@ export const layoutVars = {
 
 export const gridLayoutVars = {
   columns: 1,
-  gap: m(6),
+  gap: m(24),
+  separatorMinimum,
 };

@@ -6,7 +6,7 @@ import {
   type IMediaQueryProps,
 } from 'css-calipers/mediaQueries';
 import { layoutVars } from '../../tokens/layout.tokens';
-import { m } from 'css-calipers';
+import { cardLayout } from '../componentTokens/card.componentTokens';
 
 const fullSizeMinWidth = layoutVars.contentWidth.add(
   layoutVars.contentPadding.multiply(2),
@@ -47,3 +47,20 @@ export const mediaQueryStyle = mediaQueryFactory({
 });
 
 export default globalMediaQueries;
+
+// Component specific media queries
+
+const componentSpecificQueries: IMediaQueries = {
+  card_oneColumn: {
+    maxWidth: cardLayout.oneColumn.minWidth,
+  },
+};
+
+export const componentMediaQueries = mediaQueryFactory({
+  queries: componentSpecificQueries,
+  config: {
+    label: 'Component Specific Queries',
+    modules: defineMediaQueryModules('core'),
+    output: mediaQueryOutputVanillaExtract,
+  },
+});

@@ -1,6 +1,7 @@
 import { color } from '../helpers/colorWrap.helper';
 import type { CardGradientPack } from '../helpers/cardGradient.helper';
 import { themeColours } from '../../tokens/global.tokens';
+import { m } from 'css-calipers';
 
 const cardGradient_cc: CardGradientPack = {
   linear: [
@@ -115,5 +116,26 @@ export const cardColours = {
     banq: themeColours.purples.light,
     hs: color('#E03035').desaturate(0.5),
     kg: color('#FFB800').saturate(0.8),
+  },
+};
+
+// layout
+const logoContainerMinWidth = m(300);
+
+export const cardLayout = {
+  grid: {
+    gap: m(24),
+  },
+  logoBox: {
+    minWidth: logoContainerMinWidth,
+    paddings: m(40),
+    mobile: {
+      paddings: m(20),
+    },
+  },
+  content: {},
+
+  oneColumn: {
+    minWidth: m(800),
   },
 };
