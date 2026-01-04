@@ -1,5 +1,6 @@
 import type {
   ComposeFontStylesConfig,
+  ComposeFontStylesOptions,
   FontStyleLayer,
   FontWeightPercentOptions,
 } from './typography.helper';
@@ -96,18 +97,30 @@ const combineConfig = (
     ...collectLayers(extra, false),
   ];
 
-  const mergedOptions =
+  const mergedWeightPercents =
     mergeWeightPercents(
       base.options?.weightPercents,
       extra.options?.weightPercents,
     ) ?? undefined;
 
-  const options =
-    mergedOptions !== undefined
-      ? {
-          weightPercents: mergedOptions,
-        }
-      : undefined;
+  const resolveOptionValue = <K extends keyof ComposeFontStylesOptions>(
+    key: K,
+  ): ComposeFontStylesOptions[K] | undefined => {
+    if (
+      extra.options &&
+      Object.prototype.hasOwnProperty.call(extra.options, key)
+    ) {
+      return extra.options[key];
+    }
+    return base.options?.[key];
+  };
+
+  const options: ComposeFontStylesOptions = {
+    textAlign: resolveOptionValue('textAlign'),
+    textTransform: resolveOptionValue('textTransform'),
+    letterSpacing: resolveOptionValue('letterSpacing'),
+    weightPercents: mergedWeightPercents,
+  };
 
   const overrides = extra.overrides ?? undefined;
 
@@ -305,11 +318,21 @@ export const defineFontVariant = (
   };
 };
 
-export function fontStylesFromFontVariant(
-  variant: FontVariantDefinition,
-  extraConfig?: ComposeFontStylesConfig,
-) {
-  const config = combineConfig(variant.config, extraConfig);
+type FontVariantStylesOptions = {
+  variant: FontVariantDefinition;
+  extraConfig?: ComposeFontStylesConfig;
+  baseVariant?: FontVariantDefinition;
+};
+
+export function fontStylesFromFontVariant({
+  variant,
+  extraConfig,
+  baseVariant,
+}: FontVariantStylesOptions) {
+  const withBase = baseVariant
+    ? combineConfig(baseVariant.config, variant.config)
+    : variant.config;
+  const config = combineConfig(withBase, extraConfig);
   return composeFontStyles(variant.family, config);
 }
 

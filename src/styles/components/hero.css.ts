@@ -360,7 +360,9 @@ export const title_break = style({
 export const heading = style({
   position: 'relative',
   textAlign: 'center',
-  ...fontStylesFromFontVariant(heroFontVariants.hero),
+  ...fontStylesFromFontVariant({
+    variant: heroFontVariants.hero,
+  }),
   fontSize: 'clamp(20px, 7vw, 100px)',
   ...margins({
     top: heroFontVariants.hero.family.offsetToFlushTop,

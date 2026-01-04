@@ -1,7 +1,7 @@
 import type * as CSSCore from 'csstype';
 export * as CSS_TYPES from 'csstype';
 import type { IMeasurement } from 'css-calipers';
-import type { Color } from './colorWrap.helper';
+import type { Color, ColorWrapper } from './colorWrap.helper';
 
 // Many tokens in .ts are objects (e.g., chroma colors, measurement objects)
 // that expose a `.css()` method to produce a CSS string on demand.
@@ -47,7 +47,7 @@ export type SpacingKeyword =
   | 'revert'
   | 'revert-layer';
 
-export type SpacingValue = IMeasurement | SpacingKeyword;
+export type SpacingValue = IMeasurement | SpacingKeyword | 0;
 
 // Four-side spacing shape (no axis shorthands).
 export type SpacingBasics = Record<Axis, SpacingValue>;
@@ -62,8 +62,8 @@ export type FontFamilyDef = {
   };
   textAlign?: CSSCore.Property.TextAlign;
   textTransform?: CSSCore.Property.TextTransform;
+  letterSpacing?: IMeasurement;
   offsetToFlushTop: IMeasurement;
-  spacing?: IMeasurement;
   lineHeight?: CSSCore.Property.LineHeight;
   css?: Partial<CSSCore.Properties>;
   axisDefaults?: Record<string, number | string>;
@@ -77,24 +77,16 @@ export type FontStyles = {
   weight?: CSSCore.Property.FontWeight;
   textAlign?: CSSCore.Property.TextAlign;
   textTransform?: CSSCore.Property.TextTransform;
-  size?:
-    | CssLike
-    | string
-    | { value: number; unit?: string }
-    | undefined;
+  letterSpacing?: IMeasurement;
+  size?: IMeasurement;
   weights?: {
     default: CSSCore.Property.FontWeight;
     strong: CSSCore.Property.FontWeight;
   };
   lineHeight?: CSSCore.Property.LineHeight;
-  spacing?:
-    | CssLike
-    | string
-    | { value: number; unit?: string }
-    | undefined;
   offsetToFlushTop?: IMeasurement;
   css?: Partial<CSSCore.Properties>;
-  color?: CssLike | Color | CSSCore.Property.Color;
+  color?: ColorWrapper;
   waitForFonts?: string[];
   waitForFontsTimeoutMs?: number;
 };

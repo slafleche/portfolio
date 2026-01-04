@@ -16,7 +16,7 @@ describe('typography.helper', () => {
     const styles = fontStyles({
       fontFamily: 'IBM Plex Sans',
       size: m(18),
-      spacing: m(0.5),
+      letterSpacing: m(0.5),
       lineHeight: 1.5,
       fontWeight: 600,
       css: {
@@ -59,7 +59,7 @@ describe('typography.helper', () => {
         },
       ],
       overrides: {
-        spacing: m(1),
+        letterSpacing: m(1),
       },
       options: {
         weightPercents: {
@@ -75,30 +75,117 @@ describe('typography.helper', () => {
     expect(result.fontWeight).toBeGreaterThan(family.weights.default);
   });
 
+  it('applies letterSpacing from options in composeFontStyles', () => {
+    const family = fontFamilies.ibm;
+    const result = composeFontStyles(family, {
+      options: {
+        letterSpacing: m(0.05, 'em'),
+      },
+    });
+
+    expect(result.letterSpacing).toBe('0.05em');
+  });
+
+  it('prefers overrides over options for letterSpacing', () => {
+    const family = fontFamilies.ibm;
+    const result = composeFontStyles(family, {
+      options: {
+        letterSpacing: m(0.05, 'em'),
+      },
+      overrides: {
+        letterSpacing: m(0.1, 'em'),
+      },
+    });
+
+    expect(result.letterSpacing).toBe('0.1em');
+  });
+
   it('keeps heading defaults when merging h1 styles', () => {
-    const headingStyles = fontStylesFromFontVariant(
-      typographyFontVariants.heading,
-    );
-    const h1Styles = fontStylesFromFontVariant(
-      typographyFontVariants.h1,
-    );
+    const headingStyles = fontStylesFromFontVariant({
+      variant: typographyFontVariants.heading,
+    });
+    const h1Styles = fontStylesFromFontVariant({
+      variant: typographyFontVariants.h1,
+    });
     const merged = { ...headingStyles, ...h1Styles };
 
     expect(merged.textAlign).toBe('center');
-    expect(merged.textTransform).toBe('uppercase');
     expect(merged.fontSize).toBeDefined();
   });
 
   it('keeps heading defaults when merging h2 styles', () => {
-    const headingStyles = fontStylesFromFontVariant(
-      typographyFontVariants.heading,
-    );
-    const h2Styles = fontStylesFromFontVariant(
-      typographyFontVariants.h2,
-    );
+    const headingStyles = fontStylesFromFontVariant({
+      variant: typographyFontVariants.heading,
+    });
+    const h2Styles = fontStylesFromFontVariant({
+      variant: typographyFontVariants.h2,
+    });
     const merged = { ...headingStyles, ...h2Styles };
 
     expect(merged.textAlign).toBe('center');
-    expect(merged.textTransform).toBe('uppercase');
+  });
+
+  it('includes letterSpacing from heading variant options', () => {
+    const headingStyles = fontStylesFromFontVariant({
+      variant: typographyFontVariants.heading,
+    });
+
+    expect(headingStyles.letterSpacing).toBe('0.05em');
+  });
+
+  it('inherits family defaults through heading and h1/h2 variants', () => {
+    const family = fontFamilies.objectSans;
+    const headingStyles = fontStylesFromFontVariant({
+      variant: typographyFontVariants.heading,
+    });
+    const h1Styles = fontStylesFromFontVariant({
+      variant: typographyFontVariants.h1,
+      baseVariant: typographyFontVariants.heading,
+    });
+    const h2Styles = fontStylesFromFontVariant({
+      variant: typographyFontVariants.h2,
+      baseVariant: typographyFontVariants.heading,
+    });
+
+    expect(headingStyles.fontFamily).toBe(family.family);
+    expect(headingStyles.lineHeight).toBe(family.lineHeight);
+    expect(headingStyles.letterSpacing).toBe('0.05em');
+    expect(h1Styles.lineHeight).toBe(family.lineHeight);
+    expect(h2Styles.lineHeight).toBe(family.lineHeight);
+    expect(h1Styles.letterSpacing).toBe(headingStyles.letterSpacing);
+    expect(h2Styles.letterSpacing).toBe(headingStyles.letterSpacing);
+
+    const expectedWeight = computeFontWeight(
+      family,
+      mPercent(100),
+    );
+    expect(headingStyles.fontWeight).toBe(expectedWeight);
+    expect(h1Styles.fontWeight).toBe(expectedWeight);
+    expect(h2Styles.fontWeight).toBe(expectedWeight);
+  });
+
+  it('allows overrides at the variant and extraConfig layers', () => {
+    const h1Base = fontStylesFromFontVariant({
+      variant: typographyFontVariants.h1,
+      baseVariant: typographyFontVariants.heading,
+    });
+    const h1Override = fontStylesFromFontVariant({
+      variant: typographyFontVariants.h1,
+      baseVariant: typographyFontVariants.heading,
+      extraConfig: {
+        options: {
+          textAlign: 'left',
+          letterSpacing: m(0.1, 'em'),
+        },
+        overrides: {
+          lineHeight: 2,
+        },
+      },
+    });
+
+    expect(h1Base.textAlign).toBe('center');
+    expect(h1Override.textAlign).toBe('left');
+    expect(h1Override.letterSpacing).toBe('0.1em');
+    expect(h1Override.lineHeight).toBe(2);
   });
 });

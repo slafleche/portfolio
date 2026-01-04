@@ -99,7 +99,7 @@ export default function HeroGooey({
                 stroke={`url(#${gradientAId})`}
                 strokeWidth="25"
                 strokeLinejoin="round"
-                transform="translate(20 31) scale(0.4)"
+                transform="translate(20 31) scale(0.3)"
               />
             </g>
           </g>
@@ -112,7 +112,7 @@ export default function HeroGooey({
                 stroke={`url(#${gradientBId})`}
                 strokeWidth="55"
                 fill="none"
-                transform="translate(45 33.4) scale(0.15)"
+                transform="translate(45 33.4) scale(0.11)"
               />
             </g>
           </g>

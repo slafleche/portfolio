@@ -15,6 +15,8 @@ import {
   gradientAsBgImg,
 } from './helpers/gradients.helper';
 import { themeColours } from '../tokens/global.tokens';
+import { textStyleVars } from '../tokens/textStyles.tokens';
+import { anchorMenuVars } from '../tokens/menu.tokens';
 
 const {
   palette: {
@@ -23,12 +25,9 @@ const {
   layout: { arch, scrollPaddingOffset },
 } = documentSurface;
 
-const bodyFontStyles = fontStylesFromFontVariant(
-  typographyFontVariants.body,
-);
-const headingFontStyles = fontStylesFromFontVariant(
-  typographyFontVariants.heading,
-);
+const bodyFontStyles = fontStylesFromFontVariant({
+  variant: typographyFontVariants.body,
+});
 
 const bgGradient = buildLinear({
   angle: m(120, 'deg'),
@@ -232,12 +231,6 @@ globalStyle('[hidden]', {
   display: 'none',
 });
 
-globalStyle('hr', {
-  boxSizing: 'content-box',
-  height: 0,
-  overflow: 'visible',
-});
-
 globalStyle('pre', {
   fontFamily: 'monospace, monospace',
   fontSize: '1em',
@@ -280,8 +273,10 @@ for (let level = 1; level <= 6; level++) {
       `h${level}` as keyof typeof typographyFontVariants
     ];
   globalStyle(`h${level}:not([data-ui="heading"])`, {
-    ...headingFontStyles,
-    ...fontStylesFromFontVariant(variant),
+    ...fontStylesFromFontVariant({
+      variant,
+      baseVariant: typographyFontVariants.heading,
+    }),
   });
 }
 
@@ -312,5 +307,10 @@ globalStyle('a[data-ui="link"]', {
 });
 
 globalStyle('hr', {
-  color: themeColours.electricBlue.css(),
+  width: `calc(100% - ${anchorMenuVars.handle.sizeWithBorder.multiply(2).css()})`,
+  maxWidth: '600px',
+  opacity: 0.5,
+  height: 0,
+  ...borders(textStyleVars.horizontalRule.borders),
+  ...margins(textStyleVars.horizontalRule.margins),
 });

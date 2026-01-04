@@ -19,7 +19,9 @@ export const form = style({
   display: 'grid',
   gap: formTokens.layout.sectionGap.css(),
   maxWidth: formTokens.layout.maxWidth.css(),
-  ...fontStylesFromFontVariant(formFontVariants.base),
+  ...fontStylesFromFontVariant({
+    variant: formFontVariants.base,
+  }),
   width: '100%',
   ...margins({
     horizontal: 'auto',
@@ -79,7 +81,9 @@ export const input = style({
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
   ...backgrounds(formTokens.field.backgrounds),
-  ...fontStylesFromFontVariant(formFontVariants.input),
+  ...fontStylesFromFontVariant({
+    variant: formFontVariants.input,
+  }),
   ...relativeFontWeight(formFontVariants.input, mPercent(60)),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
@@ -122,7 +126,9 @@ export const textarea = style({
   ...paddings(formTokens.field.paddings),
   ...borders(formTokens.field.borders),
   ...backgrounds(formTokens.field.backgrounds),
-  ...fontStylesFromFontVariant(formFontVariants.input),
+  ...fontStylesFromFontVariant({
+    variant: formFontVariants.input,
+  }),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -164,19 +170,25 @@ export const textarea = style({
 
 export const errorText = style({
   color: formTokens.field.error.text.color.css(),
-  ...fontStylesFromFontVariant(formFontVariants.hints),
+  ...fontStylesFromFontVariant({
+    variant: formFontVariants.hints,
+  }),
   fontSize: '0.85rem',
 });
 
 export const counter = style({
   color: formTokens.counter.text.color.css(),
-  ...fontStylesFromFontVariant(formFontVariants.hints),
+  ...fontStylesFromFontVariant({
+    variant: formFontVariants.hints,
+  }),
   fontSize: '0.85rem',
 });
 
 export const helperText = style({
   color: formTokens.counter.text.color.css(),
-  ...fontStylesFromFontVariant(formFontVariants.hints),
+  ...fontStylesFromFontVariant({
+    variant: formFontVariants.hints,
+  }),
   fontSize: '0.85rem',
 });
 
@@ -334,7 +346,10 @@ export const successCopy = style({
 
 export const successHeading = style({
   margin: 0,
-  ...fontStylesFromFontVariant(typographyFontVariants.h2),
+  ...fontStylesFromFontVariant({
+    variant: typographyFontVariants.h2,
+    baseVariant: typographyFontVariants.heading,
+  }),
   fontSize: '1.35rem',
   fontWeight: 700,
   color: colorVars.white.alpha(0.95).css(),

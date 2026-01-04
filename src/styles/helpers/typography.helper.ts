@@ -6,6 +6,7 @@ import type {
 import {
   hasCssMethod,
   isPercentMeasurement,
+  type IMeasurement,
   type PercentMeasurement,
 } from 'css-calipers';
 import { percentToDecimal } from '../../lib/math';
@@ -88,8 +89,8 @@ export function fontStyles(vars: FontStyles): FontCSS {
 
   // tokens with .css()
   if (hasCssMethod(vars.size)) out.fontSize = vars.size.css();
-  if (hasCssMethod(vars.spacing)) {
-    out.letterSpacing = vars.spacing.css();
+  if (hasCssMethod(vars.letterSpacing)) {
+    out.letterSpacing = vars.letterSpacing.css();
   }
   if (vars.lineHeight !== undefined) {
     out.lineHeight = hasCssMethod(vars.lineHeight)
@@ -172,6 +173,7 @@ export type FontWeightPercentOptions = {
 export type ComposeFontStylesOptions = {
   textAlign?: CSS_TYPES.Property.TextAlign | null;
   textTransform?: CSS_TYPES.Property.TextTransform | null;
+  letterSpacing?: IMeasurement | null;
   weightPercents?: FontWeightPercentOptions | null;
 };
 
@@ -188,14 +190,15 @@ const familyToFontStyles = (family: FontFamilyDef): FontStyles => {
     fontWeight: family.weights.default,
     textAlign: family.textAlign,
     textTransform: family.textTransform,
+    letterSpacing: family.letterSpacing,
     weights: {
       default: family.weights.default,
       strong: family.weights.strong,
     },
   };
 
-  if (family.spacing) {
-    styles.spacing = family.spacing;
+  if (family.letterSpacing) {
+    styles.letterSpacing = family.letterSpacing;
   }
 
   if (family.offsetToFlushTop) {
@@ -278,6 +281,9 @@ export function composeFontStyles(
   }
   if (options?.textTransform) {
     merged.textTransform = options.textTransform;
+  }
+  if (options?.letterSpacing != null) {
+    merged.letterSpacing = options.letterSpacing;
   }
 
   if (overrides) {

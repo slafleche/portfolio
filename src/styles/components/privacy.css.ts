@@ -59,7 +59,9 @@ export const backLink = style({
 export const privacyFinePrint = style({
   fontSize: '0.9rem',
   color: formTokens.privacy.text.color.css(),
-  ...fontStylesFromFontVariant(formFontVariants.hints),
+  ...fontStylesFromFontVariant({
+    variant: formFontVariants.hints,
+  }),
   textAlign: 'left',
 });
 

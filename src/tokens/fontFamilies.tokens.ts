@@ -18,7 +18,7 @@ export const fontFamilies = {
       'sans-serif',
     ],
     cfgMap: fontsConfig,
-    spacing: m(0.5, 'rem'),
+    letterSpacing: m(0.5, 'rem'),
     offsetToFlushTop: m(-0.3, 'rem'),
     lineHeight: 1.4,
     weights: {
@@ -41,7 +41,7 @@ export const fontFamilies = {
       'sans-serif',
     ],
     cfgMap: fontsConfig,
-    spacing: m(0.03, 'rem'),
+    letterSpacing: m(0.03, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
     lineHeight: 1.6,
     weights: {
@@ -60,7 +60,7 @@ export const fontFamilies = {
       'sans-serif',
     ],
     cfgMap: fontsConfig,
-    spacing: m(0, 'em'),
+    letterSpacing: m(0, 'em'),
     offsetToFlushTop: m(0, 'em'),
     lineHeight: 1.5,
     weights: {
@@ -85,7 +85,7 @@ export const fontFamilies = {
       'monospace',
     ],
     cfgMap: fontsConfig,
-    spacing: m(0, 'em'),
+    letterSpacing: m(0, 'em'),
     offsetToFlushTop: m(0, 'em'),
     lineHeight: 1.45,
     weights: {

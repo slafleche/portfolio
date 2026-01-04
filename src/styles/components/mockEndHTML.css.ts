@@ -21,7 +21,9 @@ export const root = style({
     width: m(1),
     color: 'rgba(255, 255, 255, 0.08)',
   }),
-  ...fontStylesFromFontVariant(mockHtmlFontVariants.code),
+  ...fontStylesFromFontVariant({
+    variant: mockHtmlFontVariants.code,
+  }),
   color: '#c9d1d9',
 });
 

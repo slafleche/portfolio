@@ -1,7 +1,7 @@
 import { m } from 'css-calipers';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { SpacingIntentInternal } from '../styles/helpers/spacing.helper';
-import { colorVars } from './global.tokens';
+import { colorVars, themeColours } from './global.tokens';
 
 const blockSpacing = m(20);
 const listIndent = m(24);
@@ -143,9 +143,10 @@ export const textStyleVars = {
   horizontalRule: {
     borders: {
       width: m(1),
-      color: colorVars.border,
+      color: themeColours.electricBlue,
     },
     margins: {
+      horizontal: 'auto',
       bottom: blockSpacing,
     },
   },

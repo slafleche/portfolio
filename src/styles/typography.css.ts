@@ -18,15 +18,18 @@ for (let level = 1; level <= 6; level++) {
     ];
   globalStyle(`h${level}:not([data-ui="heading"])`, {
     color: colorVars.bodyFg.css(),
-    // textAlign: 'center',
-    // textTransform: 'uppercase',
-    ...fontStylesFromFontVariant(variant),
+    ...fontStylesFromFontVariant({
+      variant,
+      baseVariant: typographyFontVariants.heading,
+    }),
     ...margins(textStyleVars.paragraph.margins),
   });
 }
 
 globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {
-  ...fontStylesFromFontVariant(typographyFontVariants.body),
+  ...fontStylesFromFontVariant({
+    variant: typographyFontVariants.body,
+  }),
   ...margins(textStyleVars.paragraph.margins),
   color: colorVars.bodyFg.css(),
 });
@@ -128,11 +131,4 @@ globalStyle('img', {
   height: 'auto',
   ...margins(textStyleVars.image.margins),
   ...borders(textStyleVars.image.borders),
-});
-
-globalStyle('hr', {
-  border: 'none',
-  width: '100%',
-  ...borders(textStyleVars.horizontalRule.borders),
-  ...margins(textStyleVars.horizontalRule.margins),
 });

@@ -82,7 +82,9 @@ export const heading = style({
 });
 
 export const body = style({
-  ...fontStylesFromFontVariant(typographyFontVariants.body),
+  ...fontStylesFromFontVariant({
+    variant: typographyFontVariants.body,
+  }),
   ...margins({
     top: m(4),
     horizontal: 'auto',

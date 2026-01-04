@@ -29,7 +29,7 @@ export const typographyFontVariants = {
     config: {
       options: {
         textAlign: 'center',
-        textTransform: 'uppercase',
+        letterSpacing: m(0.05, 'em'),
         weightPercents: {
           default: mPercent(100),
         },

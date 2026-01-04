@@ -74,12 +74,16 @@ layers:
       no_measurement_css: true
       prefer_radii_shorthand: true
       forbidden_properties:
-        - padding
+        - name: padding
+          allow_values:
+            - auto
         - paddingTop
         - paddingRight
         - paddingBottom
         - paddingLeft
-        - margin
+        - name: margin
+          allow_values:
+            - auto
         - marginTop
         - marginRight
         - marginBottom

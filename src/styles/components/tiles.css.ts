@@ -69,5 +69,8 @@ export const tileTitle = style({
   ...margins({
     bottom: m(8),
   }),
-  ...fontStylesFromFontVariant(typographyFontVariants.h3),
+  ...fontStylesFromFontVariant({
+    variant: typographyFontVariants.h3,
+    baseVariant: typographyFontVariants.heading,
+  }),
 });

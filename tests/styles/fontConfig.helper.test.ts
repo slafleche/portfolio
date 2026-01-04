@@ -48,7 +48,7 @@ describe('fontConfig.helper', () => {
         'sans-serif',
       ],
       cfgMap: sampleConfig,
-      spacing: m(0.2, 'rem'),
+      letterSpacing: m(0.2, 'rem'),
       offsetToFlushTop: m(0.1, 'rem'),
       weights: { default: 400, strong: 600 },
       css: { letterSpacing: '0.01em' },
@@ -84,13 +84,13 @@ describe('fontConfig.helper', () => {
       defineFontFamily({
         familyName: 'Sample Family',
         fallbacks: [
-          'sans-serif',
-        ],
-        cfgMap: sampleConfig,
-        spacing: m(0.1, 'rem'),
-        offsetToFlushTop: m(0, 'rem'),
-        weights: { low: 200, default: 400, strong: 500 },
-      })).toThrow(/conflicts with fonts\.config\.json range/);
+        'sans-serif',
+      ],
+      cfgMap: sampleConfig,
+      letterSpacing: m(0.1, 'rem'),
+      offsetToFlushTop: m(0, 'rem'),
+      weights: { low: 200, default: 400, strong: 500 },
+    })).toThrow(/conflicts with fonts\.config\.json range/);
   });
 
   it('coerces raw JSON objects into FontsConfig and validates structure', () => {

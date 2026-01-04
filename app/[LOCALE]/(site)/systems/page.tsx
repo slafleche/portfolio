@@ -105,17 +105,19 @@ export default async function SystemsPage({
             headingAnimated={false}
             Gooey={SystemsGooey}
           />
-
+          <hr />
           <ContentAsTiles
             id={systemsIntroId}
             title={systemsTitle}
             markdown={systemsIntroMarkdown}
           />
+          <hr />
           <ContentAsTiles
             id={systemsPrinciplesId}
             title={systemsPrinciplesTitle}
             markdown={systemsPrinciplesMarkdown}
           />
+          <hr />
           <ContentAsTiles
             id={systemsShapeId}
             title={systemsShapeTitle}

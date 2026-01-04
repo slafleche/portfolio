@@ -58,7 +58,9 @@ export const localeItem = style({
 
 export const localeLink = style({
   fontSize: localeSwitcherVars.fontSize.css(),
-  ...fontStylesFromFontVariant(menuFontVariants.menu),
+  ...fontStylesFromFontVariant({
+    variant: menuFontVariants.menu,
+  }),
   ...relativeFontWeight(menuFontVariants.menu, mPercent(50)),
   lineHeight: 1,
   textShadow: `0 0 2px ${localeSwitcherVars.shadow.css()}`,
