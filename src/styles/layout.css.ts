@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { margins, paddings } from './helpers/spacing.helper';
 import { layoutVars } from '../tokens/layout.tokens';
 import { mediaQueryStyle } from './responsive/mediaQueries';
+import { m } from 'css-calipers';
 
 export const content = style({
   position: 'relative',
@@ -17,7 +18,7 @@ export const content = style({
     ...mediaQueryStyle({
       compact: {
         ...paddings({
-          horizontal: layoutVars.compact.contentPadding,
+          horizontal: m(0),
         }),
       },
     }),

@@ -145,6 +145,7 @@ export const content = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  width: '100%',
 });
 
 export const main = style({
@@ -156,7 +157,7 @@ export const main = style({
   ...paddings(m(60)),
   selectors: {
     ...componentMediaQueries({
-      hero_compact: paddings(m(10)),
+      hero_compact: paddings(m(46)),
     }),
   },
 });
@@ -164,6 +165,7 @@ export const main = style({
 export const subtitle = style({
   opacity: 0,
   transition: 'opacity 220ms ease',
+  textAlign: 'center',
   selectors: {
     '&[data-ready="true"]': {
       opacity: 1,
@@ -277,18 +279,19 @@ export const consolePanel = style({
 
 export const panel = style({
   position: 'relative',
-  width: 'fit-content',
+  width: '100%',
   maxWidth: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  alignSelf: 'center',
+  alignSelf: 'stretch',
   ...margins({
     horizontal: 'auto',
   }),
 });
 
 export const glassWrap = style({
+  width: '100%',
   position: 'relative',
   zIndex: 1,
 });
@@ -356,11 +359,13 @@ export const title_break = style({
 
 export const heading = style({
   position: 'relative',
-  margin: 0,
   textAlign: 'center',
   ...fontStylesFromFontVariant(heroFontVariants.hero),
-  fontSize: 'clamp(32px, 6vw, 80px)',
-  marginTop: heroFontVariants.hero.family.offsetToFlushTop?.css(),
+  fontSize: 'clamp(20px, 7vw, 100px)',
+  ...margins({
+    top: heroFontVariants.hero.family.offsetToFlushTop,
+    bottom: m(1, 'em'),
+  }),
 });
 
 /**

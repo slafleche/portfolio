@@ -291,7 +291,7 @@ export default function Hero({
           {Gooey && <Gooey style={gooeyStyle} />}
         </div>
 
-        <div className={clsx(layoutStyles.content, s.content)}>
+        <div className={s.content}>
           <div className={clsx(layoutStyles.panel, s.panel)}>
             <div className={s.glassWrap}>
               <GlassPanel

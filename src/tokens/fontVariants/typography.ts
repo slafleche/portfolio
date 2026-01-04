@@ -17,7 +17,7 @@ export const typographyFontVariants = {
       },
       options: {
         weightPercents: {
-          default: mPercent(30),
+          default: mPercent(50),
           strong: mPercent(100),
         },
       },
@@ -30,6 +30,9 @@ export const typographyFontVariants = {
       options: {
         textAlign: 'center',
         textTransform: 'uppercase',
+        weightPercents: {
+          default: mPercent(100),
+        },
       },
     },
   }),
@@ -38,11 +41,6 @@ export const typographyFontVariants = {
     config: {
       overrides: {
         size: m(45),
-      },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
       },
     },
   }),
@@ -53,24 +51,13 @@ export const typographyFontVariants = {
       overrides: {
         size: m(26),
       },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
-      },
     },
   }),
   h3: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h3',
-
     config: {
       overrides: {
         size: m(23),
-      },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
       },
     },
   }),
@@ -81,11 +68,6 @@ export const typographyFontVariants = {
       overrides: {
         size: m(20),
       },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
-      },
     },
   }),
   h5: defineFontVariant(fontFamilies.objectSans, {
@@ -95,11 +77,6 @@ export const typographyFontVariants = {
       overrides: {
         size: m(18),
       },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
-      },
     },
   }),
   h6: defineFontVariant(fontFamilies.objectSans, {
@@ -108,11 +85,6 @@ export const typographyFontVariants = {
     config: {
       overrides: {
         size: m(17),
-      },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
       },
     },
   }),

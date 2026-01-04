@@ -62,7 +62,7 @@ export const fontFamilies = {
     cfgMap: fontsConfig,
     spacing: m(0, 'em'),
     offsetToFlushTop: m(0, 'em'),
-    lineHeight: 1,
+    lineHeight: 1.5,
     weights: {
       default: 400,
       strong: 600,

@@ -38,7 +38,7 @@ export default function SystemsBgOverlay({
   gradientStopsRight = defaultStopsB,
   spacing = 100,
   frequency = 4,
-  strokeWidth = 8,
+  strokeWidth = 4,
 
   centerSpacing = 100,
   centerFrequency = 10,
@@ -55,18 +55,18 @@ export default function SystemsBgOverlay({
     'M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z';
   const blobBaseSize = 100;
   const blobHalf = blobBaseSize / 2;
-  const shapeGroup = Array.from(
-    { length: frequency },
-    (_, index) => ({
-      radius: (frequency - index) * spacing,
-    }),
-  );
-  const centerCircles = Array.from(
-    { length: centerFrequency },
-    (_, index) => ({
-      radius: (centerFrequency - index) * centerSpacing,
-    }),
-  );
+  const shapeGroup = Array.from({ length: frequency }, (
+    _,
+    index,
+  ) => ({
+    radius: (frequency - index) * spacing,
+  }));
+  const centerCircles = Array.from({ length: centerFrequency }, (
+    _,
+    index,
+  ) => ({
+    radius: (centerFrequency - index) * centerSpacing,
+  }));
   const makeTransform = (
     cx: number,
     cy: number,
@@ -82,8 +82,6 @@ export default function SystemsBgOverlay({
 
   const middleOpacity = 1;
   const nonMiddleOpacity = 1;
-  // const middleOpacity = 0.9;
-  // const nonMiddleOpacity = 0.6;
 
   return (
     <svg

@@ -92,7 +92,7 @@ export default function ContentAsTiles<
       {...rest}
     >
       {intro ? (
-        <Markdown source={intro} className={userContent} />
+        <Markdown source={intro} className={clsx(userContent, tileStyles.intro)} />
       ) : null}
       {tiles.length > 0 ? (
         <TileGrid>

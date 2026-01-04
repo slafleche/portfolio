@@ -28,13 +28,18 @@ export const mediaQueryStyleConfig: IMediaQueries = {
     maxWidth: fullSizeMinWidth.subtract(1),
   } as IMediaQueryProps,
 
+  snug: {
+    maxWidth: layoutVars.snug.maxWidth,
+  } as IMediaQueryProps,
+
+  snugOnly: {
+    minWidth: layoutVars.compact.maxWidth.subtract(1),
+    maxWidth: layoutVars.snug.maxWidth,
+  } as IMediaQueryProps,
+
   compact: {
     maxWidth: layoutVars.compact.maxWidth,
   } as IMediaQueryProps,
-
-  // compressed: {
-  //   maxWidth: layoutVars.compressed.contentWidth.css(),
-  // } as IMediaQueryProps,
 };
 
 export const mediaQueryStyle = mediaQueryFactory({
@@ -48,8 +53,6 @@ export const mediaQueryStyle = mediaQueryFactory({
       }>(media),
   },
 });
-
-export default mediaQueryStyle;
 
 // Component specific media queries
 

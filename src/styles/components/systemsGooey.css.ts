@@ -1,10 +1,13 @@
 import { style } from '@vanilla-extract/css';
-import { fullSizeOfParent } from '../helpers/positioning.helper';
 
-export const blobWrap = style({
-  ...fullSizeOfParent(),
+export const root = style({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   overflow: 'visible',
   pointerEvents: 'none',
+  height: '120vh',
 });
 
 export const blobField = style({
@@ -96,8 +99,8 @@ export const blobSpin = style({
 export const blobShape = style({
   mixBlendMode: 'normal',
   opacity: 1,
-  transformBox: 'view-box',
-  transformOrigin: '0 0',
+  transformBox: 'fill-box',
+  transformOrigin: 'center',
 });
 
 // export const spin_a_animation = style({

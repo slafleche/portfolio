@@ -38,6 +38,7 @@ const dotSize = m(16);
 const borderSize = m(1);
 const dotPadding = logoVars.offsetY.add(borderSize);
 const handleHeight = dotPadding.multiply(2).add(dotSize);
+const handleSizeWithBorder = handleHeight.add(borderSize.multiply(2));
 
 const anchorMenuVars = {
   size: dotSize,
@@ -62,6 +63,7 @@ const anchorMenuVars = {
   },
   handle: {
     size: handleHeight,
+    sizeWithBorder: handleSizeWithBorder,
     spacing: dotPadding.add(borderSize.multiply(2)),
   },
   text: {

@@ -97,9 +97,9 @@ export default function HeroGooey({
                 d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
                 fill="none"
                 stroke={`url(#${gradientAId})`}
-                strokeWidth="35"
+                strokeWidth="25"
                 strokeLinejoin="round"
-                transform="translate(20 31) scale(0.3)"
+                transform="translate(20 31) scale(0.4)"
               />
             </g>
           </g>
@@ -110,9 +110,9 @@ export default function HeroGooey({
                 className={s.blobShape}
                 d="M 200.00 70.00 C 267.55 70.00, 247.53 103.45, 277.45 155.28 C 307.38 207.11, 346.36 206.50, 312.58 265.00 C 278.81 323.50, 259.85 289.43, 200.00 289.43 C 140.15 289.43, 121.19 323.50, 87.42 265.00 C 53.64 206.50, 92.62 207.11, 122.55 155.28 C 152.47 103.45, 132.45 70.00, 200.00 70.00 Z"
                 stroke={`url(#${gradientBId})`}
-                strokeWidth="75"
+                strokeWidth="55"
                 fill="none"
-                transform="translate(45 33.4) scale(0.11)"
+                transform="translate(45 33.4) scale(0.15)"
               />
             </g>
           </g>

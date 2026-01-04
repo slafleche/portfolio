@@ -33,11 +33,13 @@ const wine = color('hsl(310 40% 12%)'); // a bit more red
 const brand = color('#0D9488');
 const secondary = color('#0868b2');
 const brandMix = brand.mix(secondary, 0.5);
+const reddish = color('hsl(295 85% 24%)');
+const electricBlue = color('#3dcbff');
 
 const shapeGradientA = {
-  a: color('hsla(0, 77%, 65%, 1.00)').mix(wine, 0.2),
-  b: color('hsla(310, 56%, 21%, 1.00)'),
-  c: color('hsla(295, 85%, 24%, 1.00)'),
+  a: color('hsl(257 87% 21%)'),
+  b: color('hsl(310 56% 21%)'),
+  c: color('hsl(295 85% 24%)'),
 };
 
 const shapeGradientB = {
@@ -46,13 +48,56 @@ const shapeGradientB = {
   c: color('hsl(260 64% 31%)'),
 };
 
+// System - Triangle A
+const triangleA_blend = 0.7;
+const triangleA_alpha = 0.4;
+
+const triangleA_color_a = color('hsl(270, 50%, 36%)')
+  .mix(reddish, triangleA_blend)
+  .alpha(triangleA_alpha);
+const triangleA_color_b = color('hsl(280, 45%, 34%)')
+  .mix(reddish, triangleA_blend)
+  .alpha(triangleA_alpha);
+const triangleA_color_c = color('hsl(265, 48%, 38%)')
+  .mix(reddish, triangleA_blend)
+  .alpha(triangleA_alpha);
+const triangleA_color_d = color('hsl(275, 46%, 28%)').mix(
+  reddish,
+  triangleA_blend,
+);
+// System - Triangle B
+const triangleB_blend = 0.9;
+const triangleB_alpha = 0.4;
+const bMixer = color('#ff8000');
+const triangleB_color_a = color('hsl(255, 50%, 36%)')
+  .mix(bMixer, triangleB_blend)
+  .alpha(triangleB_alpha);
+const triangleB_color_b = color('hsl(265, 45%, 34%)')
+  .mix(bMixer, triangleB_blend)
+  .alpha(triangleB_alpha);
+const triangleB_color_c = color('hsl(250, 48%, 38%)')
+  .mix(bMixer, triangleB_blend)
+  .alpha(triangleB_alpha);
+const triangleB_color_d = color('hsl(260, 46%, 28%)')
+  .mix(bMixer, triangleB_blend)
+  .alpha(triangleB_alpha);
+
+// System - Triangle C
+const triangleC_alpha = 1;
+
+const triangleC_color_a = electricBlue.alpha(triangleC_alpha);
+const triangleC_color_b = electricBlue.alpha(triangleC_alpha);
+const triangleC_color_c = electricBlue.alpha(triangleC_alpha);
+const triangleC_color_d = electricBlue.alpha(triangleC_alpha);
+
 export const themeColours = {
   brand,
   secondary,
   brandMix,
+  electricBlue,
 
   lights: {
-    a: color('#00D9FF'), // Electric blue
+    a: electricBlue, // Electric blue
     b: color('#CCFF00'), // Electric lime
     c: color('#FF6B6B'), // Coral
     d: color('#FFB800'), // Amber
@@ -72,6 +117,28 @@ export const themeColours = {
     dark: darkPurple,
     mid: midPurple,
     light: lightPurple,
+    reddish,
+    wine,
+  },
+  systems: {
+    gradientA: {
+      a: triangleA_color_a,
+      b: triangleA_color_b,
+      d: triangleA_color_c,
+      c: triangleA_color_d,
+    },
+    gradientB: {
+      a: triangleB_color_a,
+      b: triangleB_color_b,
+      c: triangleB_color_c,
+      d: triangleB_color_d,
+    },
+    gradientC: {
+      a: triangleC_color_a,
+      b: triangleC_color_b,
+      c: triangleC_color_c,
+      d: triangleC_color_d,
+    },
   },
   gradients: {
     main: {

@@ -16,9 +16,11 @@ export const layoutVars = {
   noEdge: {
     contentPadding: m(26),
   },
+  snug: {
+    maxWidth: m(1000),
+  },
   compact: {
     maxWidth: m(800),
-    contentPadding: m(8),
   },
   // compressed: {
   // 	contentWidth: m(800),

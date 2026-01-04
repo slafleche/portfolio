@@ -1,5 +1,5 @@
 import { globalStyle } from '@vanilla-extract/css';
-import { m, mEm } from 'css-calipers';
+import { m, mEm, mPercent } from 'css-calipers';
 import { documentSurface } from '../modules/globals/document.module';
 import {
   ReducedMotion,
@@ -10,6 +10,11 @@ import borders from './helpers/borders.helper';
 import './utilities.css';
 import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
 import { typographyFontVariants } from '../tokens/fontVariants/typography';
+import {
+  buildLinear,
+  gradientAsBgImg,
+} from './helpers/gradients.helper';
+import { themeColours } from '../tokens/global.tokens';
 
 const {
   palette: {
@@ -25,11 +30,29 @@ const headingFontStyles = fontStylesFromFontVariant(
   typographyFontVariants.heading,
 );
 
+const bgGradient = buildLinear({
+  angle: m(120, 'deg'),
+  stops: [
+    {
+      at: mPercent(0),
+      color: bodyBg,
+    },
+    {
+      at: mPercent(100),
+      color: themeColours.purples.reddish.mix(
+        themeColours.purples.dark,
+        0.3,
+      ),
+    },
+  ],
+});
+
 globalStyle('body', {
   minHeight: '100vh',
   margin: 0,
   padding: 0,
   backgroundColor: bodyBg.css(),
+  ...gradientAsBgImg(bgGradient),
 });
 
 globalStyle('html', {
@@ -286,4 +309,8 @@ globalStyle('li[data-ui="list-item"]', {
 globalStyle('a[data-ui="link"]', {
   color: 'inherit',
   textDecoration: 'none',
+});
+
+globalStyle('hr', {
+  color: themeColours.electricBlue.css(),
 });

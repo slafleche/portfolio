@@ -22,6 +22,7 @@
  * fallbacks.
  */
 import chroma, { type Color } from 'chroma-js';
+import type { DegMeasurement } from 'css-calipers';
 import { converter, parse, type Oklch } from 'culori';
 import { notRelease } from '@/lib/runtimeEnv';
 export type { Color } from 'chroma-js';
@@ -45,6 +46,7 @@ export type ColorWrapper = {
   lighten: (value?: number) => ColorWrapper;
   saturate: (value?: number) => ColorWrapper;
   desaturate: (value?: number) => ColorWrapper;
+  hueShift: (value: DegMeasurement) => ColorWrapper;
   mix: (
     target: ColorInput,
     ratio?: number,
@@ -325,6 +327,17 @@ const maxChromaFor = (l: number, h: number, alpha?: number) => {
   return low;
 };
 
+const resolveDegrees = (value: DegMeasurement) => {
+  const raw = value.getValue();
+  if (raw == null || Number.isNaN(raw)) {
+    if (notRelease()) {
+      throw new Error('Expected a css-calipers degree measurement.');
+    }
+    return 0;
+  }
+  return normalizeHue(raw);
+};
+
 export function wrap(input: ColorInput): ColorWrapper {
   // ---- special symbolic case ----
   if (input === 'currentColor') {
@@ -348,6 +361,7 @@ export function wrap(input: ColorInput): ColorWrapper {
       lighten: () => err('lighten'),
       saturate: () => err('saturate'),
       desaturate: () => err('desaturate'),
+      hueShift: () => err('hueShift'),
       mix: () => err('mix'),
       mixSolid: () => err('mixSolid'),
       clone: () => symbolic,
@@ -420,6 +434,27 @@ export function wrap(input: ColorInput): ColorWrapper {
     lighten: (value?: number) => lightenBy(value),
     saturate: (value?: number) => saturateBy(value),
     desaturate: (value?: number) => saturateBy(-(value ?? 1)),
+    hueShift: (value: DegMeasurement) => {
+      const delta = resolveDegrees(value);
+      const oklch = colorToCuloriOklch(base);
+      if (oklch) {
+        const baseHue = oklch.h ?? 0;
+        return culoriOklchToWrapper({
+          ...oklch,
+          h: normalizeHue(baseHue + delta),
+          alpha: oklch.alpha ?? base.alpha(),
+        });
+      }
+      return derive(base, (draft) => {
+        const [
+          hue,
+        ] = draft.hsl();
+        const safeHue = Number.isFinite(hue) ? hue : 0;
+        const nextHue = normalizeHue(safeHue + delta);
+        const nextAlpha = draft.alpha();
+        return draft.set('hsl.h', nextHue).alpha(nextAlpha);
+      });
+    },
     mix: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
       derive(base, (draft) =>
         draft.mix(toColor(target), clampRatio(ratio), mode),

@@ -21,22 +21,22 @@ interface GridContextValue {
 const GridContext = createContext<GridContextValue | null>(null);
 
 export type GridProps = {
-  columns?: number;
+  // columns?: number;
   // mediaQueryColumns?: Record<string, number>;
   className?: string;
   children?: ReactNode;
 };
 
 export function Grid({
-  columns = 1,
+  // columns = 1,
   // mediaQueryColumns,
   className,
   children,
 }: GridProps) {
-  const matches = useMedia() as Record<
-    string,
-    boolean | undefined
-  >;
+  // const matches = useMedia() as Record<
+  //   string,
+  //   boolean | undefined
+  // >;
   // const matchedColumns: number[] = [];
   // if (mediaQueryColumns) {
   //   for (const [key, value] of Object.entries(mediaQueryColumns)) {

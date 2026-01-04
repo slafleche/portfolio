@@ -16,7 +16,7 @@ type Props = {
 
 export default function SystemsGooey({
   intensity = 'strong',
-  composite,
+  composite = true,
   filterId,
   className,
   style,
@@ -25,10 +25,11 @@ export default function SystemsGooey({
   const gooeyId = filterId ?? `${baseId}-systems-gooey-filter`;
   const gradientAId = `${baseId}-systems-gooey-gradient-a`;
   const gradientBId = `${baseId}-systems-gooey-gradient-b`;
+  const gradientCId = `${baseId}-systems-gooey-gradient-c`;
 
   return (
     <Goo
-      className={clsx(s.blobWrap, className)}
+      className={clsx(s.root, className)}
       intensity={intensity}
       composite={composite}
       id={gooeyId}
@@ -42,6 +43,7 @@ export default function SystemsGooey({
         focusable="false"
       >
         <defs>
+          {/* Triangle A */}
           <linearGradient
             id={gradientAId}
             x1="0%"
@@ -50,23 +52,24 @@ export default function SystemsGooey({
             y2="100%"
           >
             <stop
-              stopColor={themeColours.roundedTriangle.a.css()}
+              stopColor={themeColours.systems.gradientA.a.css()}
               offset="0%"
             />
             <stop
-              stopColor={themeColours.roundedTriangle.b.css()}
+              stopColor={themeColours.systems.gradientA.b.css()}
               offset="40%"
             />
             <stop
-              stopColor={themeColours.roundedTriangle.b.css()}
+              stopColor={themeColours.systems.gradientA.c.css()}
               offset="60%"
             />
             <stop
-              stopColor={themeColours.roundedTriangle.c.css()}
+              stopColor={themeColours.systems.gradientA.d.css()}
               offset="100%"
             />
           </linearGradient>
 
+          {/* Triangle B */}
           <linearGradient
             id={gradientBId}
             x1="0%"
@@ -75,50 +78,82 @@ export default function SystemsGooey({
             y2="100%"
           >
             <stop
-              stopColor={themeColours.nubbyTriangle.a.css()}
+              stopColor={themeColours.systems.gradientB.a.css()}
               offset="0%"
             />
             <stop
-              stopColor={themeColours.nubbyTriangle.b.css()}
+              stopColor={themeColours.systems.gradientB.b.css()}
+              offset="30%"
+            />
+            <stop
+              stopColor={themeColours.systems.gradientB.c.css()}
               offset="50%"
             />
             <stop
-              stopColor={themeColours.nubbyTriangle.c.css()}
+              stopColor={themeColours.systems.gradientB.d.css()}
+              offset="100%"
+            />
+          </linearGradient>
+
+          {/* Triangle C */}
+          <linearGradient
+            id={gradientCId}
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
+            <stop
+              stopColor={themeColours.systems.gradientC.a.css()}
+              offset="0%"
+            />
+            <stop
+              stopColor={themeColours.systems.gradientC.b.css()}
+              offset="30%"
+            />
+            <stop
+              stopColor={themeColours.systems.gradientC.c.css()}
+              offset="50%"
+            />
+            <stop
+              stopColor={themeColours.systems.gradientC.d.css()}
               offset="100%"
             />
           </linearGradient>
         </defs>
         <g className={s.blobGroup}>
-          {/* Triangle A */}
+          {/* Triangle A*/}
           <path
+            data-triangle="a"
             className={s.blobShape}
             d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
             fill="none"
             stroke={`url(#${gradientAId})`}
-            strokeWidth="5"
+            strokeWidth="2"
             strokeLinejoin="round"
-            transform="translate(50% 50%) scale(0.03)"
+            transform="rotate(180) translate(0 -6) scale(1.3 0.9)"
           />
           {/* Triangle B */}
-          ù
           <path
+            data-triangle="b"
             className={s.blobShape}
             d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
             fill="none"
-            stroke={`url(#${gradientAId})`}
-            strokeWidth="5"
+            stroke={`url(#${gradientBId})`}
+            strokeWidth="2"
             strokeLinejoin="round"
-            transform="translate(50% 50%) scale(0.002)"
+            transform="rotate(180) scale(1 0.7) translate(0 -6.9)"
           />
           {/* Triangle C */}
           <path
+            data-triangle="c"
             className={s.blobShape}
             d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
             fill="none"
-            stroke={`url(#${gradientAId})`}
-            strokeWidth="5"
             strokeLinejoin="round"
-            transform="translate(50% 50%) scale(0.005)"
+            strokeWidth={5}
+            stroke={`url(#${gradientCId})`}
+            transform="rotate(180) scale(0.6 0.4) translate(0 -5)"
           />
         </g>
       </svg>

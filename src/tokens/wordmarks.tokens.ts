@@ -1,7 +1,6 @@
 import { m } from 'css-calipers';
 import type { CardGradientPack } from '../styles/helpers/cardGradient.helper';
 import { color } from '../styles/helpers/colorWrap.helper';
-import { gradients } from './global.tokens';
 
 const cardGradient_cc: CardGradientPack = {
   linear: [

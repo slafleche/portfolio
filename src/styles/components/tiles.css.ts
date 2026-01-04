@@ -5,12 +5,37 @@ import { borders } from '../helpers/borders.helper';
 import { borderVars } from '../../tokens/global.tokens';
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import { mediaQueryStyle } from '../responsive/mediaQueries';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
 
 export const grid = style({
   display: 'grid',
   gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
   gap: '24px',
   alignItems: 'stretch',
+  selectors: {
+    ...mediaQueryStyle({
+      snug: {
+        gridTemplateColumns: '1fr',
+      },
+      // compact: {
+      //   gridTemplateColumns: '1fr',
+      // },
+    }),
+  },
+});
+
+export const intro = style({
+  textAlign: 'center',
+  selectors: {
+    ...mediaQueryStyle({
+      snug: {
+        ...paddings({
+          horizontal: anchorMenuVars.handle.sizeWithBorder,
+        }),
+      },
+    }),
+  },
 });
 
 export const tile = style({
@@ -18,7 +43,17 @@ export const tile = style({
   height: '100%',
   // backgroundColor: colorVars.bodyBg.alpha(0.9).css(),
   ...borders.radii(borderVars),
-  ...paddings(m(24)),
+  ...paddings(m(36)),
+  selectors: {
+    ...mediaQueryStyle({
+      snug: {
+        ...paddings({
+          vertical: m(36),
+          horizontal: anchorMenuVars.handle.sizeWithBorder,
+        }),
+      },
+    }),
+  },
 });
 
 export const tilePanel = style({

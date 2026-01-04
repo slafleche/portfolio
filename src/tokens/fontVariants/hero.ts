@@ -14,6 +14,7 @@ export const heroFontVariants = {
     waitForFonts: true,
     config: {
       overrides: {
+        lineHeight: 1.3,
         size: m(26),
       },
       options: {

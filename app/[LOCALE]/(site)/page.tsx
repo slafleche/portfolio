@@ -168,7 +168,7 @@ export default async function HomePage({
             id={projects.href}
           >
             <Grid
-              columns={1}
+            // columns={1}
             >
               <Column span={2}>
                 <Card

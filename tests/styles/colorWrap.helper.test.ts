@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { m } from 'css-calipers';
 import {
   color,
   mixWithAlpha,
@@ -52,5 +53,46 @@ describe('colorWrap.helper', () => {
     expect(Math.abs(r - g)).toBeLessThanOrEqual(1);
     expect(Math.abs(g - b)).toBeLessThanOrEqual(1);
     expect(Math.abs(r - b)).toBeLessThanOrEqual(1);
+  });
+
+  it('hueShift rotates hue while preserving alpha', () => {
+    const base = color('#ff0000').alpha(0.4);
+    const shifted = base.hueShift(m(120, 'deg'));
+
+    const baseOklch = color.toOKLCH(base);
+    const shiftedOklch = color.toOKLCH(shifted);
+    const circularDiff = (a: number, b: number) => {
+      const diff = Math.abs(a - b) % 360;
+      return diff > 180 ? 360 - diff : diff;
+    };
+
+    expect(base.css()).toBe('rgb(255 0 0 / 0.4)');
+    expect(baseOklch).toBeDefined();
+    expect(shiftedOklch).toBeDefined();
+    const expectedHue =
+      ((baseOklch!.h ?? 0) + 120 + 360) % 360;
+    expect(
+      circularDiff(shiftedOklch!.h ?? 0, expectedHue),
+    ).toBeLessThanOrEqual(10);
+    expect(shifted.alpha()).toBeCloseTo(0.4);
+  });
+
+  it('hueShift wraps hue for negative degrees', () => {
+    const base = color('#00ff00');
+    const shifted = base.hueShift(m(-120, 'deg'));
+    const baseOklch = color.toOKLCH(base);
+    const shiftedOklch = color.toOKLCH(shifted);
+    const circularDiff = (a: number, b: number) => {
+      const diff = Math.abs(a - b) % 360;
+      return diff > 180 ? 360 - diff : diff;
+    };
+
+    expect(baseOklch).toBeDefined();
+    expect(shiftedOklch).toBeDefined();
+    const expectedHue =
+      ((baseOklch!.h ?? 0) - 120 + 360) % 360;
+    expect(
+      circularDiff(shiftedOklch!.h ?? 0, expectedHue),
+    ).toBeLessThanOrEqual(10);
   });
 });

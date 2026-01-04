@@ -9,6 +9,7 @@ import { textShadow } from '../helpers/shadow.helper';
 import { makeGlassSurface } from '../helpers/glassy.helper';
 import { relativeFontWeight } from '../helpers/typography.helper';
 import { fontFamilies } from '../../tokens/fontFamilies.tokens';
+import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 export const root = style({
   position: 'fixed',
@@ -23,6 +24,13 @@ export const root = style({
   pointerEvents: 'none',
   justifyContent: 'center',
   ...paddings(anchorMenuVars.margins),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        left: 0,
+      },
+    }),
+  },
 });
 
 export const list = style({
@@ -155,7 +163,7 @@ globalStyle(
 );
 
 globalStyle(`.${link}:hover .${dot}, .${link}:focus .${dot}`, {
-  ...backgrounds({ color: themeColours.secondary }),
+  ...backgrounds({ color: themeColours.electricBlue }),
 });
 
 globalStyle(
