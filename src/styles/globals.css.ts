@@ -93,6 +93,10 @@ globalStyle('img', {
   borderStyle: 'none',
 });
 
+globalStyle('svg', {
+  display: 'block',
+});
+
 globalStyle('button, input, optgroup, select, textarea', {
   fontFamily: 'inherit',
   fontSize: '100%',
@@ -229,17 +233,21 @@ globalStyle(
   },
 );
 
+globalStyle('h1, h2, h3, h4, h5, h6', {
+  all: 'unset',
+  display: 'block',
+  padding: 0,
+  border: 0,
+  position: 'relative',
+});
+
 globalStyle(
   'h1:not([data-ui="heading"]), h2:not([data-ui="heading"]), h3:not([data-ui="heading"]), h4:not([data-ui="heading"]), h5:not([data-ui="heading"]), h6:not([data-ui="heading"])',
   {
-    all: 'unset',
+    display: 'block',
     ...margins({
       bottom: mEm(0.5),
     }),
-    display: 'block',
-    padding: 0,
-    border: 0,
-    position: 'relative',
   },
 );
 

@@ -1,6 +1,6 @@
 import { style, keyframes } from '@vanilla-extract/css';
 import {
-  backgroundImageDecl,
+  gradientAsBgImg,
   buildLinear,
 } from '../helpers/gradients.helper';
 import { backgrounds } from '../helpers/background.helper';
@@ -64,7 +64,7 @@ export const accordion = style({
   overflow: 'hidden',
   ...paddings(accordionSurfaceTokens.paddings),
   ...borders(accordionSurfaceTokens.borders),
-  ...backgroundImageDecl(surfaceGradient),
+  ...gradientAsBgImg(surfaceGradient),
 });
 
 export const item = style({

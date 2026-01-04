@@ -62,7 +62,9 @@ export type ColorWrapper = {
 
 type ColorInput = Color | ColorWrapper | string;
 
-const isColorWrapper = (value: ColorInput): value is ColorWrapper =>
+export const isColorWrapper = (
+  value: unknown,
+): value is ColorWrapper =>
   typeof value === 'object' &&
   value !== null &&
   'unsafeColor' in value;
@@ -395,11 +397,7 @@ export function wrap(input: ColorInput): ColorWrapper {
         delta >= 0
           ? lerp(
               oklch.c,
-              maxChromaFor(
-                oklch.l,
-                oklch.h ?? 0,
-                oklch.alpha ?? 1,
-              ),
+              maxChromaFor(oklch.l, oklch.h ?? 0, oklch.alpha ?? 1),
               delta,
             )
           : lerp(oklch.c, 0, Math.abs(delta)),
@@ -457,6 +455,70 @@ export const color = Object.assign(
     fromCss: (value: string) => wrap(value),
   },
 );
+
+export type OKLCH = {
+  l: number;
+  c: number;
+  h: number;
+  a?: number;
+};
+
+export type ColorInputWithOKLCH = OKLCH | string | ColorWrapper;
+
+export const isOKLCH = (value: unknown): value is OKLCH =>
+  typeof value === 'object' &&
+  value != null &&
+  'l' in value &&
+  'c' in value &&
+  'h' in value;
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, value));
+
+export const fmtOKLCH = ({ l, c, h, a }: OKLCH): string => {
+  const L = `${clamp(l, 0, 100).toFixed(3)}%`;
+  const C = clamp(c, 0, 0.4).toFixed(4);
+  const H = ((h % 360) + 360) % 360;
+  const A = a == null ? '' : ` / ${clamp(a, 0, 1)}`;
+  return `oklch(${L} ${C} ${H}${A})`;
+};
+
+export const oklchToRgbString = ({ l, c, h, a }: OKLCH): string => {
+  const normalized: CuloriOKLCH = {
+    mode: 'oklch',
+    l: clamp(l, 0, 100) / 100,
+    c: clamp(c, 0, 0.4),
+    h: ((h % 360) + 360) % 360,
+    alpha: a ?? 1,
+  };
+  return color.fromOKLCH(normalized).css();
+};
+
+export const toModernOKLCH = (
+  input: ColorInputWithOKLCH,
+): OKLCH | undefined => {
+  if (isOKLCH(input)) return input;
+  const culori = color.toOKLCH(input);
+  if (!culori) return undefined;
+  return {
+    l: culori.l * 100,
+    c: culori.c,
+    h: culori.h ?? 0,
+    a: culori.alpha,
+  };
+};
+
+export const colorFallback = (input: ColorInputWithOKLCH): string => {
+  if (isColorWrapper(input)) return input.css();
+  if (isOKLCH(input)) return oklchToRgbString(input);
+  return input;
+};
+
+export const colorModern = (input: ColorInputWithOKLCH): string => {
+  const oklch = toModernOKLCH(input);
+  if (oklch) return fmtOKLCH(oklch);
+  return colorFallback(input);
+};
 
 export const mixWithAlpha = (
   base: ColorWrapper,

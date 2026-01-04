@@ -30,7 +30,6 @@ import { heroFontVariants } from '../tokens/fontVariants/hero';
 import HeroGooey from './HeroGooey';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import HeroWaypoint from './HeroWaypoint';
-import { m } from 'css-calipers';
 
 type HeroCopy = {
   videoTitle: string;

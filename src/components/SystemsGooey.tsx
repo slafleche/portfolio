@@ -95,9 +95,9 @@ export default function SystemsGooey({
             d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
             fill="none"
             stroke={`url(#${gradientAId})`}
-            strokeWidth="20"
+            strokeWidth="5"
             strokeLinejoin="round"
-            transform="translate(20 31) scale(0.3)"
+            transform="translate(50% 50%) scale(0.03)"
           />
           {/* Triangle B */}
           ù
@@ -106,9 +106,9 @@ export default function SystemsGooey({
             d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
             fill="none"
             stroke={`url(#${gradientAId})`}
-            strokeWidth="20"
+            strokeWidth="5"
             strokeLinejoin="round"
-            transform="translate(50 31) scale(0.3)"
+            transform="translate(50% 50%) scale(0.002)"
           />
           {/* Triangle C */}
           <path
@@ -116,9 +116,9 @@ export default function SystemsGooey({
             d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
             fill="none"
             stroke={`url(#${gradientAId})`}
-            strokeWidth="20"
+            strokeWidth="5"
             strokeLinejoin="round"
-            transform="translate(60 41) scale(0.3)"
+            transform="translate(50% 50%) scale(0.005)"
           />
         </g>
       </svg>

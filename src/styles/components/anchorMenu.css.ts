@@ -6,7 +6,7 @@ import { backgrounds } from '../helpers/background.helper';
 import { m, mPercent } from 'css-calipers';
 import { themeColours } from '../../tokens/global.tokens';
 import { textShadow } from '../helpers/shadow.helper';
-import { glassySurface } from '../glassy.css';
+import { makeGlassSurface } from '../helpers/glassy.helper';
 import { relativeFontWeight } from '../helpers/typography.helper';
 import { fontFamilies } from '../../tokens/fontFamilies.tokens';
 
@@ -161,6 +161,6 @@ globalStyle(`.${link}:hover .${dot}, .${link}:focus .${dot}`, {
 globalStyle(
   `.${link}:hover .${handle}, .${link}:focus .${handle}, .${link}:focus-visible .${handle}`,
   {
-    ...glassySurface,
+    ...makeGlassSurface(),
   },
 );

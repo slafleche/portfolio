@@ -7,13 +7,14 @@ import borders from '../helpers/borders.helper';
 
 export const container = style({
   position: 'relative',
-  display: 'flex',
+  display: 'inline-flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
   isolation: 'isolate',
   overflow: 'visible',
   textAlign: 'center',
+  maxWidth: '100%',
 });
 
 export const backdrop = style({

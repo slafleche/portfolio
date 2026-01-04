@@ -12,13 +12,17 @@ import { paddings, margins } from '../helpers/spacing.helper';
 import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import {
-  backgroundImageDecl,
+  gradientAsBgImg,
   buildLinear,
 } from '../helpers/gradients.helper';
 import { glassVars } from '../../tokens/glassy.tokens';
 import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { heroFontVariants } from '../../tokens/fontVariants/hero';
 import { makeGlassSurface } from '../helpers/glassy.helper';
+import {
+  componentMediaQueries,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -61,12 +65,12 @@ export const video = style({
 
 export const contentWrap = style({
   ...fullSizeOfParent(),
-  ...backgroundImageDecl(bgGradients),
+  ...gradientAsBgImg(bgGradients),
 });
 
 export const videoBg = style({
   ...fullSizeOfParent(),
-  ...backgroundImageDecl(bgGradients),
+  ...gradientAsBgImg(bgGradients),
 });
 
 export const visualContent = style({
@@ -150,6 +154,11 @@ export const main = style({
   flexDirection: 'column',
   alignItems: 'center',
   ...paddings(m(60)),
+  selectors: {
+    ...componentMediaQueries({
+      hero_compact: paddings(m(10)),
+    }),
+  },
 });
 
 export const subtitle = style({
@@ -200,7 +209,7 @@ export const cta = style({
   gap: '3px',
   justifyContent: 'center',
   alignSelf: 'center',
-  ...backgroundImageDecl(ctaGradient),
+  ...gradientAsBgImg(ctaGradient),
   ...paddings({
     vertical: m(3),
     horizontal: m(6),
@@ -335,14 +344,22 @@ export const heroSurface = style({
   ].join(', '),
 });
 
-export const title_break = style({});
+export const title_break = style({
+  selectors: {
+    ...mediaQueryStyle({
+      noEdge: {
+        display: 'none',
+      },
+    }),
+  },
+});
 
 export const heading = style({
   position: 'relative',
   margin: 0,
   textAlign: 'center',
   ...fontStylesFromFontVariant(heroFontVariants.hero),
-  fontSize: 'clamp(32px, 7vw, 80px)',
+  fontSize: 'clamp(32px, 6vw, 80px)',
   marginTop: heroFontVariants.hero.family.offsetToFlushTop?.css(),
 });
 

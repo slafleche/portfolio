@@ -1,0 +1,147 @@
+import { m } from 'css-calipers';
+import type { CardGradientPack } from '../styles/helpers/cardGradient.helper';
+import { color } from '../styles/helpers/colorWrap.helper';
+import { gradients } from './global.tokens';
+
+const cardGradient_cc: CardGradientPack = {
+  linear: [
+    {
+      color: color('#F40009'),
+      at: 0,
+    },
+    {
+      color: color('#490C2A'),
+      at: 100,
+    },
+  ],
+  spots: [
+    // {
+    //   color: color('#ffae00'),
+    //   x: 80,
+    //   y: 100,
+    //   scale: 80,
+    // },
+    // {
+    //   color: color('#bd08b4').alpha(0.7),
+    //   x: 95,
+    //   y: 48,
+    //   scale: 80,
+    //   blendMode: 'normal',
+    // },
+    // {
+    //   color: color('#cbb358').alpha(0.8),
+    //   x: 20,
+    //   y: 100,
+    //   scale: 75,
+    //   blendMode: 'normal',
+    // },
+    // {
+    //   color: color('#b7910a').alpha(0.2),
+    //   x: 17,
+    //   y: 98,
+    //   scale: 85,
+    // },
+    // {
+    //   color: color('#4271bb').alpha(0.6),
+    //   x: 10,
+    //   y: 56,
+    //   scale: 100,
+    // },
+  ],
+};
+
+const cardGradient_ea: CardGradientPack = {
+  linear: [
+    {
+      color: color('#0083B7'),
+      at: 0,
+    },
+    {
+      color: color('#113fab'),
+      at: 100,
+    },
+  ],
+};
+
+const cardGradient_banq: CardGradientPack = {
+  linear: [
+    {
+      color: color('#0e0d0f'),
+      at: 0,
+    },
+    {
+      color: color('#221f28'),
+      at: 100,
+    },
+  ],
+};
+
+const cardGradient_hs: CardGradientPack = {
+  linear: [
+    {
+      color: color('#E03035'),
+      at: 0,
+    },
+    {
+      color: color('#ff4c46'),
+      at: 100,
+    },
+  ],
+};
+
+const cardGradient_kg: CardGradientPack = {
+  linear: [
+    {
+      color: color('#FFB800'),
+      at: 0,
+    },
+    {
+      color: color('#b16e08'),
+      at: 100,
+    },
+  ],
+};
+
+const defaultGradientDirection = m(95, 'deg');
+export const wordMarkVars = {
+  cc: {
+    gradients: {
+      colors: cardGradient_cc,
+      direction: defaultGradientDirection,
+    },
+    size: m(150),
+    logoAsBg: color('#F40009').darken(0.5).alpha(0.6),
+  },
+  ea: {
+    gradients: {
+      colors: cardGradient_ea,
+      direction: defaultGradientDirection,
+    },
+    size: m(150),
+    logoAsBg: color('#0083B7').darken(0.5).alpha(0.4),
+  },
+  banq: {
+    gradients: {
+      colors: cardGradient_banq,
+      direction: defaultGradientDirection,
+    },
+    size: m(150),
+    logoAsBg: color('#0e0d0f').darken(0.5),
+  },
+  hs: {
+    gradients: {
+      colors: cardGradient_hs,
+      direction: defaultGradientDirection,
+    },
+    size: m(150),
+    logoAsBg: color('#E03035').desaturate(0.5),
+  },
+  kg: {
+    gradients: {
+      colors: cardGradient_kg,
+      direction: defaultGradientDirection,
+    },
+    size: m(150),
+    logoAsBg: color('#FFB800').saturate(0.8),
+  },
+};

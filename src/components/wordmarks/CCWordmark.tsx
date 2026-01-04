@@ -1,8 +1,10 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
 import { wordMark_cc } from '../../styles/components/card.css';
+import { r } from 'css-calipers';
 
 const LABEL = 'Coca-Cola';
+const ratio = r(615.08, 192.94);
 
 export default function CCWordmark({
   className,
@@ -11,7 +13,7 @@ export default function CCWordmark({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 615.08 192.94"
+      viewBox={`0 0 ${ratio.numerator()} ${ratio.denominator()}`}
       shapeRendering="geometricPrecision"
       className={clsx(className, wordMark_cc)}
       role="img"

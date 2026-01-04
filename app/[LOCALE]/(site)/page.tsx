@@ -168,10 +168,7 @@ export default async function HomePage({
             id={projects.href}
           >
             <Grid
-              columns={2}
-              mediaQueryColumns={{
-                compact: 1,
-              }}
+              columns={1}
             >
               <Column span={2}>
                 <Card

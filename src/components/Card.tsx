@@ -59,6 +59,7 @@ export default function Card({
             className={s.panel}
             surfaceClassName={s.panelSurface}
             contentClassName={s.panelContent}
+            surfaceClassNameOverride={s.glassSurface}
           >
             <div className={s.text}>{children}</div>
           </GlassPanel>

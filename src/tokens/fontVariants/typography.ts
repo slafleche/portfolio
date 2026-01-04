@@ -12,12 +12,12 @@ export const typographyFontVariants = {
     sourcePath: SOURCE_PATH,
     config: {
       overrides: {
-        size: m(18),
+        size: m(20),
         lineHeight: 1.5,
       },
       options: {
         weightPercents: {
-          default: mPercent(0),
+          default: mPercent(30),
           strong: mPercent(100),
         },
       },

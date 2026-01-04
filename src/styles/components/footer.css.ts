@@ -8,7 +8,7 @@ import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import {
-  backgroundImageDecl,
+  gradientAsBgImg,
   buildLinear,
 } from '../helpers/gradients.helper';
 import { footerVars } from '../componentTokens/footer.componentTokens';
@@ -33,7 +33,7 @@ export const root = style({
     horizontal: m(24),
     bottom: m(120),
   }),
-  ...backgroundImageDecl(surfaceGradient),
+  ...gradientAsBgImg(surfaceGradient),
 
   display: 'flex',
   flexDirection: 'column',

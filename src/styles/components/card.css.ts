@@ -1,18 +1,15 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { makeCardGradient } from '../helpers/cardGradient.helper';
-import { colorVars, gradients } from '../../tokens/global.tokens';
+import { colorVars } from '../../tokens/global.tokens';
 import { m } from 'css-calipers';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
-import {
-  cardColours,
-  cardLayout,
-} from '../componentTokens/card.componentTokens';
+import { backgrounds } from '../helpers/background.helper';
+import { cardLayout } from '../componentTokens/card.componentTokens';
 import { glassVars } from '../../tokens/glassy.tokens';
-import {
-  componentMediaQueries,
-  mediaQueryStyle,
-} from '../responsive/mediaQueries';
+import { componentMediaQueries } from '../responsive/mediaQueries';
+import { makeGlassSurface } from '../helpers/glassy.helper';
+import { wordMarkVars } from '../../tokens/wordmarks.tokens';
 
 export const root = style({
   position: 'relative',
@@ -51,14 +48,15 @@ export const frame = style({
   display: 'flex',
   flexDirection: 'row',
   position: 'relative',
-  overflow: 'hidden',
   backgroundColor: colorVars.transparent.css(),
   height: '100%',
-  ...componentMediaQueries({
-    card_oneColumn: {
-      flexDirection: 'column',
-    },
-  }),
+  selectors: {
+    ...componentMediaQueries({
+      card_oneColumn: {
+        flexDirection: 'column',
+      },
+    }),
+  },
 });
 
 export const logoBox = style({
@@ -67,9 +65,21 @@ export const logoBox = style({
   justifyContent: 'center',
   ...paddings(cardLayout.logoBox.paddings),
   minWidth: cardLayout.logoBox.minWidth.css(),
-  ...componentMediaQueries({
-    card_oneColumn: paddings(cardLayout.logoBox.mobile.paddings),
-  }),
+  selectors: {
+    ...componentMediaQueries({
+      card_oneColumn: {
+        position: 'absolute',
+        top: '0%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        display: 'inline-flex',
+        minWidth: 0,
+        zIndex: 1,
+        ...paddings(cardLayout.logoBox.mobile.paddings),
+        ...backgrounds({ color: 'orange' }),
+      },
+    }),
+  },
 });
 
 export const content = style({
@@ -100,67 +110,83 @@ export const panelContent = style({
   height: '100%',
 });
 
+export const glassSurface = style(
+  makeGlassSurface({
+    blur: m(6),
+  }),
+);
+
 export const title = style({});
 export const text = style({
   ...paddings(m(40)),
 });
 
-export const image = style({
-  justifySelf: 'center',
-  alignSelf: 'center',
-  gridColumn: '2',
-  position: 'relative',
-  display: 'block',
-  width: '200px',
-  height: 'auto',
-  overflow: 'hidden',
-});
+// export const image = style({
+//   justifySelf: 'center',
+//   alignSelf: 'center',
+//   gridColumn: '2',
+//   position: 'relative',
+//   display: 'block',
+//   width: '200px',
+//   height: 'auto',
+//   overflow: 'hidden',
+// });
 
 export const gradient = style({
   ...absolutePosition.fullSize(),
-  // filter: 'blur(2px)',
   pointerEvents: 'none',
   zIndex: 0,
 });
 
-export const cardGradientA = style(
-  makeCardGradient(gradients[0], {
-    linearDirection: m(110, 'deg'),
-  }),
-);
+// export const gradientInLogoBox = style({
 
-export const cardGradientB = style(
-  makeCardGradient(gradients[1], {
-    linearDirection: m(95, 'deg'),
-  }),
-);
+//   selectors: {
+//     ...componentMediaQueries({
+//       card_oneColumn: {
+//         display: 'block',
+//       },
+//     }),
+//   },
+// });
+
+// export const cardGradientA = style(
+//   makeCardGradient(gradients[0], {
+//     linearDirection: m(110, 'deg'),
+//   }),
+// );
+
+// export const cardGradientB = style(
+//   makeCardGradient(gradients[1], {
+//     linearDirection: m(95, 'deg'),
+//   }),
+// );
 
 export const gradientCC = style(
-  makeCardGradient(cardColours.gradients.cc, {
-    linearDirection: m(95, 'deg'),
+  makeCardGradient(wordMarkVars.cc.gradients.colors, {
+    linearDirection: wordMarkVars.cc.gradients.direction,
   }),
 );
 export const gradientEa = style(
-  makeCardGradient(cardColours.gradients.ea, {
-    linearDirection: m(95, 'deg'),
+  makeCardGradient(wordMarkVars.ea.gradients.colors, {
+    linearDirection: wordMarkVars.ea.gradients.direction,
   }),
 );
 
 export const gradientBanq = style(
-  makeCardGradient(cardColours.gradients.banq, {
-    linearDirection: m(95, 'deg'),
+  makeCardGradient(wordMarkVars.banq.gradients.colors, {
+    linearDirection: wordMarkVars.banq.gradients.direction,
   }),
 );
 
 export const gradientHs = style(
-  makeCardGradient(cardColours.gradients.hs, {
-    linearDirection: m(95, 'deg'),
+  makeCardGradient(wordMarkVars.hs.gradients.colors, {
+    linearDirection: wordMarkVars.hs.gradients.direction,
   }),
 );
 
 export const gradientKg = style(
-  makeCardGradient(cardColours.gradients.kg, {
-    linearDirection: m(95, 'deg'),
+  makeCardGradient(wordMarkVars.kg.gradients.colors, {
+    linearDirection: wordMarkVars.kg.gradients.direction,
   }),
 );
 
@@ -180,35 +206,34 @@ export const wordmarkTextNoLogo = style({
 });
 
 const caseStudyLogoHeight = m(2.1, 'em');
-const caseStudyLogoOffset = caseStudyLogoHeight.divide(9.3).round(3);
 
 export const wordMark_vanilla = style({
   display: 'inline-block',
   height: caseStudyLogoHeight.css(),
-  transform: `translateY(${caseStudyLogoOffset.css()})`,
+  transform: `translateY(${caseStudyLogoHeight.divide(9.3).round(3).css()})`,
   width: 'auto',
   verticalAlign: 'baseline',
 });
 
 export const wordMark_cc = style({
-  width: '150px',
+  width: wordMarkVars.cc.size.css(),
   height: 'auto',
 });
 
 export const wordMark_ea = style({
-  width: '150px',
+  width: wordMarkVars.ea.size.css(),
   height: 'auto',
 });
 export const wordMark_banq = style({
-  width: '150px',
+  width: wordMarkVars.banq.size.css(),
   height: 'auto',
 });
 export const wordMark_hs = style({
-  width: '150px',
+  width: wordMarkVars.hs.size.css(),
   height: 'auto',
 });
 export const wordMark_kg = style({
-  width: '150px',
+  width: wordMarkVars.kg.size.css(),
   height: 'auto',
 });
 
@@ -235,35 +260,32 @@ export const logoAsBgSVG = style({
 
 export const logoAsBg_cc = style({
   width: '110%',
-  color: cardColours.logoAsBg.cc.css(),
+  color: wordMarkVars.cc.logoAsBg.css(),
   transform: 'translate(0, -60%) rotate(4deg)',
 });
+
 export const logoAsBg_ea = style({
   width: '100%',
   transform: 'translate(0%, -50%) rotate(4deg)',
-  color: cardColours.logoAsBg.ea.css(),
+  color: wordMarkVars.ea.logoAsBg.css(),
 });
+
 export const logoAsBg_banq = style({
   width: '100%',
   transformOrigin: '50% 50%',
-  transform: 'translate(-20%, -50%) rotate(4deg) scale(1.9)',
-  color: cardColours.logoAsBg.banq.css(),
+  transform: 'translate(20%, -50%) rotate(4deg) scale(1.9)',
+  color: wordMarkVars.banq.logoAsBg.css(),
 });
 
 export const logoAsBg_hs = style({
   width: '100%',
   transform: 'translate(0%, -30%) rotate(-14deg) scale(1.1)',
-  color: cardColours.logoAsBg.hs.css(),
+  color: wordMarkVars.hs.logoAsBg.css(),
 });
 
 export const logoAsBg_kg = style({
   width: '90%',
   transform:
     'translate(5%, -50%) rotate(-8deg) scaleX(1.2) scaleY(1)',
-  color: cardColours.logoAsBg.kg.css(),
-  ...mediaQueryStyle({
-    fullSize: {
-      height: '350px',
-    },
-  }),
+  color: wordMarkVars.kg.logoAsBg.css(),
 });

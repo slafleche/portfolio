@@ -8,13 +8,13 @@ import { colorVars } from './global.tokens';
  */
 export const glassVars = {
   backdropFilter: {
-    blur: m(5),
+    blur: m(4),
     saturate: mPercent(200),
     contrast: mPercent(110),
     brightness: mPercent(110),
   },
   backgrounds: {
-    color: colorVars.white.alpha(0.18),
+    color: colorVars.white.alpha(0.08),
   },
   surfaceGlowPrimaryTint: color('#0f0c18').alpha(0.5),
   surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),

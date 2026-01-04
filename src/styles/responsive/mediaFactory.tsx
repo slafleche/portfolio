@@ -41,9 +41,17 @@ export function useMediaQuery(queryString: string) {
     const frameId = requestAnimationFrame(() => {
       setMatches(mql.matches);
     });
-    mql.addEventListener?.('change', onChange);
+    if (typeof mql.addEventListener === 'function') {
+      mql.addEventListener('change', onChange);
+    } else {
+      mql.addListener?.(onChange);
+    }
     return () => {
-      mql.removeEventListener?.('change', onChange);
+      if (typeof mql.removeEventListener === 'function') {
+        mql.removeEventListener('change', onChange);
+      } else {
+        mql.removeListener?.(onChange);
+      }
       cancelAnimationFrame(frameId);
     };
   }, [
@@ -129,21 +137,17 @@ export function useMediaFromMap<T extends Record<string, string>>(
           } as Record<K, boolean | undefined>;
           return shallowEqual(prev, next) ? prev : next;
         });
-      mql.addEventListener?.('change', onChange);
-      return [
-        mql,
-        onChange,
-      ] as const;
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', onChange);
+        return () => mql.removeEventListener('change', onChange);
+      }
+      mql.addListener?.(onChange);
+      return () => mql.removeListener?.(onChange);
     });
 
     return () => {
       cancelAnimationFrame(frameId);
-      for (const [
-        mql,
-        onChange,
-      ] of handlers) {
-        mql.removeEventListener?.('change', onChange);
-      }
+      for (const cleanup of handlers) cleanup();
     };
   }, [
     entries,

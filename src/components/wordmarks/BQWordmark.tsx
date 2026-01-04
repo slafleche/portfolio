@@ -1,8 +1,11 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
 import { wordMark_banq } from '../../styles/components/card.css';
+import { r } from 'css-calipers';
 
 const LABEL = 'Bibliothèque et Archives nationales du Québec';
+
+const ratio = r(47.02762, 47.02762);
 
 export default function BQWordmark({
   className,
@@ -11,7 +14,7 @@ export default function BQWordmark({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 47.02762 47.02762"
+      viewBox={`0 0 ${ratio.numerator()} ${ratio.denominator()}`}
       shapeRendering="geometricPrecision"
       className={clsx(className, wordMark_banq)}
       role="img"

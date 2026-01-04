@@ -1,6 +1,7 @@
 import { m } from 'css-calipers';
 import { anchorMenuVars, logoVars } from './menu.tokens';
 
+const defaultContentWidth = m(1400);
 const contentPadding = logoVars.fullWidth.add(
   anchorMenuVars.borders.width,
 );
@@ -8,16 +9,16 @@ const contentPadding = logoVars.fullWidth.add(
 const separatorMinimum = m(300);
 
 export const layoutVars = {
-  contentWidth: m(1600),
+  contentWidth: defaultContentWidth,
   contentPadding,
+  contentWidthWithPadding: contentPadding,
 
   noEdge: {
-    contentWidth: m(1200),
     contentPadding: m(26),
   },
   compact: {
-    contentWidth: m(800),
-    contentPadding: m(26),
+    maxWidth: m(800),
+    contentPadding: m(8),
   },
   // compressed: {
   // 	contentWidth: m(800),

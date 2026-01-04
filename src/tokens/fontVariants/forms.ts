@@ -18,7 +18,7 @@ export const formFontVariants = {
       },
       options: {
         weightPercents: {
-          default: mPercent(0),
+          default: mPercent(40),
         },
       },
     },

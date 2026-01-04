@@ -6,7 +6,6 @@ import { m } from 'css-calipers';
 export const heroOverlay = style({
   position: 'relative',
   pointerEvents: 'none',
-  // zIndex: 1,
   ...makeCardGradient(systemsHeroGradient, {
     linearDirection: m(95, 'deg'),
   }),

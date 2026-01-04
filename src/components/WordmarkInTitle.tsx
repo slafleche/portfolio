@@ -22,7 +22,6 @@ export default function WordMarkInTitle(props: WordMarkInTitleProps) {
     className,
     wordMarkClassName,
     textClassName,
-    ignoreDataUI = false,
     ...rest
   } = props;
 
@@ -33,7 +32,7 @@ export default function WordMarkInTitle(props: WordMarkInTitleProps) {
     <Heading
       title={fullText}
       className={className}
-      ignoreDataUI={ignoreDataUI}
+      ignoreDataUI={false}
       {...rest}
     >
       {hasWordmark ? (

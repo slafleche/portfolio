@@ -3,8 +3,7 @@ import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { SpacingIntentInternal } from '../styles/helpers/spacing.helper';
 import { colorVars } from './global.tokens';
 
-const blockSpacing = m(16);
-// const compactSpacing = m(8);
+const blockSpacing = m(20);
 const listIndent = m(24);
 const codeBackground = colorVars.bodyFg.alpha(0.08);
 const codeBorder = colorVars.bodyFg.alpha(0.12);

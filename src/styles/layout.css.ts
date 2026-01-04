@@ -1,10 +1,10 @@
 import { style } from '@vanilla-extract/css';
 import { margins, paddings } from './helpers/spacing.helper';
 import { layoutVars } from '../tokens/layout.tokens';
+import { mediaQueryStyle } from './responsive/mediaQueries';
 
 export const content = style({
   position: 'relative',
-  width: '100%',
   maxWidth: layoutVars.contentWidth.css(),
   ...margins({
     horizontal: 'auto',
@@ -12,18 +12,16 @@ export const content = style({
   ...paddings({
     horizontal: layoutVars.contentPadding,
   }),
-  // ...globalMediaQueryStyles({
-  //   compact: {
-  //     ...paddings({
-  //       horizontal: layoutVars.compact.contentPadding,
-  //     }),
-  //   },
-  //   compressed: {
-  //     ...paddings({
-  //       horizontal: layoutVars.compressed.contentPadding,
-  //     }),
-  //   },
-  // }),
+
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...paddings({
+          horizontal: layoutVars.compact.contentPadding,
+        }),
+      },
+    }),
+  },
 });
 
 export const title = style({});

@@ -2,7 +2,6 @@ import type * as CSSCore from 'csstype';
 export * as CSS_TYPES from 'csstype';
 import type { IMeasurement } from 'css-calipers';
 import type { Color } from './colorWrap.helper';
-import type { CSSPropertiesWithVars } from 'css-calipers/mediaQueries';
 
 // Many tokens in .ts are objects (e.g., chroma colors, measurement objects)
 // that expose a `.css()` method to produce a CSS string on demand.

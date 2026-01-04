@@ -13,3 +13,7 @@ export const percentToDecimal = (
   }
   return measurement.getValue() / 100;
 };
+
+export const clamp = (v: number, min: number, max: number) => {
+  return Math.max(min, Math.min(max, v));
+};

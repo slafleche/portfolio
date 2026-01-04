@@ -5,31 +5,31 @@ import {
   type IMediaQueries,
   type IMediaQueryProps,
 } from 'css-calipers/mediaQueries';
+import type { StyleRule } from '@vanilla-extract/css';
 import { layoutVars } from '../../tokens/layout.tokens';
 import { cardLayout } from '../componentTokens/card.componentTokens';
+import { heroVars } from '../componentTokens/hero.componentTokens';
 
 const fullSizeMinWidth = layoutVars.contentWidth.add(
   layoutVars.contentPadding.multiply(2),
 );
-const fullSizeMaxWidth = fullSizeMinWidth.subtract(1);
-const noEdgeOnlyMinWidth = layoutVars.compact.contentWidth.add(1);
 
-export const globalMediaQueries: IMediaQueries = {
+export const mediaQueryStyleConfig: IMediaQueries = {
   fullSize: {
     minWidth: fullSizeMinWidth,
   } as IMediaQueryProps,
 
   noEdge: {
-    maxWidth: fullSizeMaxWidth,
+    maxWidth: fullSizeMinWidth.subtract(1),
   } as IMediaQueryProps,
 
   noEdgeOnly: {
-    minWidth: noEdgeOnlyMinWidth,
-    maxWidth: fullSizeMaxWidth,
+    minWidth: layoutVars.compact.maxWidth.subtract(1),
+    maxWidth: fullSizeMinWidth.subtract(1),
   } as IMediaQueryProps,
 
   compact: {
-    maxWidth: layoutVars.compact.contentWidth,
+    maxWidth: layoutVars.compact.maxWidth,
   } as IMediaQueryProps,
 
   // compressed: {
@@ -38,29 +38,38 @@ export const globalMediaQueries: IMediaQueries = {
 };
 
 export const mediaQueryStyle = mediaQueryFactory({
-  queries: globalMediaQueries,
+  queries: mediaQueryStyleConfig,
   config: {
     label: 'Global Media Queries',
     modules: defineMediaQueryModules('core'),
-    output: mediaQueryOutputVanillaExtract,
+    output: (media) =>
+      mediaQueryOutputVanillaExtract<{
+        [selector: string]: StyleRule;
+      }>(media),
   },
 });
 
-export default globalMediaQueries;
+export default mediaQueryStyle;
 
 // Component specific media queries
 
-const componentSpecificQueries: IMediaQueries = {
+const componentSpecificQueriesConfig: IMediaQueries = {
+  hero_compact: {
+    maxWidth: heroVars.queries.compact,
+  },
   card_oneColumn: {
-    maxWidth: cardLayout.oneColumn.minWidth,
+    maxWidth: cardLayout.oneColumn.maxWidth,
   },
 };
 
 export const componentMediaQueries = mediaQueryFactory({
-  queries: componentSpecificQueries,
+  queries: componentSpecificQueriesConfig,
   config: {
     label: 'Component Specific Queries',
     modules: defineMediaQueryModules('core'),
-    output: mediaQueryOutputVanillaExtract,
+    output: (media) =>
+      mediaQueryOutputVanillaExtract<{
+        [selector: string]: StyleRule;
+      }>(media),
   },
 });

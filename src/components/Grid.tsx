@@ -22,14 +22,14 @@ const GridContext = createContext<GridContextValue | null>(null);
 
 export type GridProps = {
   columns?: number;
-  mediaQueryColumns?: Record<string, number>;
+  // mediaQueryColumns?: Record<string, number>;
   className?: string;
   children?: ReactNode;
 };
 
 export function Grid({
   columns = 1,
-  mediaQueryColumns,
+  // mediaQueryColumns,
   className,
   children,
 }: GridProps) {
@@ -37,34 +37,33 @@ export function Grid({
     string,
     boolean | undefined
   >;
-  let overrideColumns: number | undefined;
-  if (mediaQueryColumns) {
-    for (const [key, value] of Object.entries(mediaQueryColumns)) {
-      if (matches[key] === true && Number.isFinite(value)) {
-        overrideColumns =
-          overrideColumns === undefined || value < overrideColumns
-            ? value
-            : overrideColumns;
-      }
-    }
-  }
+  // const matchedColumns: number[] = [];
+  // if (mediaQueryColumns) {
+  //   for (const [key, value] of Object.entries(mediaQueryColumns)) {
+  //     if (matches[key] === true && Number.isFinite(value)) {
+  //       matchedColumns.push(value);
+  //     }
+  //   }
+  // }
 
-  const requestedColumns = overrideColumns ?? columns;
-  const safeColumns = Math.max(1, requestedColumns);
+  // const requestedColumns = matchedColumns.length
+  //   ? Math.min(...matchedColumns)
+  //   : columns;
+  // const safeColumns = Math.max(1, requestedColumns);
 
   return (
-    <GridContext.Provider value={{ columnCount: safeColumns }}>
+    // <GridContext.Provider value={{ columnCount: safeColumns }}>
       <div
         className={clsx(s.root, className)}
-        style={
-          {
-            gridTemplateColumns: `repeat(${safeColumns}, minmax(0, 1fr))`,
-          } as CSSProperties
-        }
+        // style={
+        //   {
+        //     gridTemplateColumns: `repeat(${safeColumns}, minmax(0, 1fr))`,
+        //   } as CSSProperties
+        // }
       >
         {children}
       </div>
-    </GridContext.Provider>
+    // </GridContext.Provider>
   );
 }
 

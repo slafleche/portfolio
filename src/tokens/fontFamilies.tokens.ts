@@ -41,7 +41,7 @@ export const fontFamilies = {
       'sans-serif',
     ],
     cfgMap: fontsConfig,
-    spacing: m(0, 'rem'),
+    spacing: m(0.03, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
     lineHeight: 1.6,
     weights: {

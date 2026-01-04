@@ -2,7 +2,7 @@ import { color, type ColorWrapper } from './colorWrap.helper';
 import type { Property } from 'csstype';
 import { mPercent } from 'css-calipers';
 import {
-  buildLinear,
+  gradientAsBgImg,
   resolveGradientSpotStops,
   resolveLinearAngle,
   stackBackground,
@@ -278,11 +278,6 @@ export function makeCardGradient(
      */
     linearDirection?: LinearDirectionInput;
     /**
-     * Fallback angle when blend modes are unavailable. Defaults to
-     * the same value as `linearDirection` if unspecified.
-     */
-    linearFallbackDirection?: LinearDirectionInput;
-    /**
      * Whether to include the linear gradient layer. Useful for
      * debugging spot layers without the base wash.
      */
@@ -298,16 +293,11 @@ export function makeCardGradient(
     extrasPerSpan = 1,
     softenL = 0,
     linearDirection,
-    linearFallbackDirection,
     includeLinear = true,
     includeSpots = true,
   } = options;
 
   const linearAngle = resolveLinearAngle(linearDirection);
-  const fallbackAngle = resolveLinearAngle(
-    linearFallbackDirection ?? linearDirection,
-  );
-
   const linearSlices = Array.isArray(gradient.linear)
     ? gradient.linear
     : [];
@@ -380,44 +370,8 @@ export function makeCardGradient(
 	*/
 
   const gradientStack = stackBackground(layers);
-  const linearFallback = hasLinear
-    ? buildLinear({
-        stops: linearStops,
-        angle: fallbackAngle,
-      })
-    : undefined;
-
   const blendModeValue =
     blendModes.length > 0 ? blendModes.join(', ') : undefined;
 
-  const baseResult: Record<string, unknown> = {
-    backgroundImage: gradientStack.fallback,
-  };
-  if (blendModeValue) {
-    baseResult.backgroundBlendMode = blendModeValue;
-  }
-
-  const supportsColor: Record<string, unknown> = {
-    backgroundImage: gradientStack.modern,
-  };
-  if (blendModeValue) {
-    supportsColor.backgroundBlendMode = blendModeValue;
-  }
-
-  const supportsNoBlend = hasLinear
-    ? {
-        backgroundImage: linearFallback!.fallback,
-        backgroundBlendMode: 'normal',
-      }
-    : {
-        backgroundImage: gradientStack.fallback,
-      };
-
-  return {
-    ...baseResult,
-    '@supports': {
-      '(color: oklch(50% 0 0))': supportsColor,
-      'not (background-blend-mode: overlay)': supportsNoBlend,
-    },
-  };
+  return gradientAsBgImg(gradientStack, blendModeValue);
 }
