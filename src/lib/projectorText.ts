@@ -1,7 +1,7 @@
 import {
   projectorChannels,
   projectorVars,
-} from '../styles/componentTokens/projector.componentTokens';
+} from '../styles/componentTokens/projector.component.tokens';
 import type { IMeasurement } from 'css-calipers';
 
 type Tier = 'desktop';
@@ -133,21 +133,19 @@ const createBlurSeries = (
   totalCalibration: number,
 ): BlurPoint[] => {
   return Object.entries(blurCurve)
-    .map(
-      ([
-        percent,
-        measurementOrNumber,
-      ]) => {
-        const measurement =
-          typeof measurementOrNumber === 'number'
-            ? measurementOrNumber
-            : measurementOrNumber.getValue();
-        return {
-          time: (Number(percent) / 100) * totalCalibration,
-          value: measurement,
-        };
-      },
-    )
+    .map(([
+      percent,
+      measurementOrNumber,
+    ]) => {
+      const measurement =
+        typeof measurementOrNumber === 'number'
+          ? measurementOrNumber
+          : measurementOrNumber.getValue();
+      return {
+        time: (Number(percent) / 100) * totalCalibration,
+        value: measurement,
+      };
+    })
     .sort((a, b) => a.time - b.time);
 };
 
@@ -425,7 +423,6 @@ export function playProjectorText(
         ...state,
         blur,
       });
-
     });
 
     let masterOpacity = 0;

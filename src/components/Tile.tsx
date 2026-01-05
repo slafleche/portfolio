@@ -4,22 +4,23 @@ import * as s from '@/styles/components/tiles.css.ts';
 import Heading from './Heading';
 
 type TileProps = {
-  title: ReactNode;
+  contentTitle: ReactNode;
   children: ReactNode;
   className?: string;
   id?: string;
 };
 
 export default function Tile({
-  title,
+  contentTitle,
   children,
   className,
   id,
+  ...rest
 }: TileProps) {
   return (
-    <article id={id} className={clsx(s.tile, className)}>
+    <article id={id} className={clsx(s.tile, className)} {...rest}>
       <Heading depth={3} className={s.title}>
-        {title}
+        {contentTitle}
       </Heading>
       {children}
     </article>

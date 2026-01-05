@@ -14,7 +14,7 @@ import { GlassPanel } from '../GlassPanel';
 
 type BaseProps<T extends ElementType> = {
   tag?: T;
-  title?: ReactNode;
+  contentTitle?: ReactNode;
   headingDepth?: 2 | 3 | 4 | 5 | 6;
   className?: string;
 } & Omit<ComponentPropsWithoutRef<T>, 'className' | 'children'>;
@@ -24,7 +24,7 @@ type ContentAsTilesProps<T extends ElementType> = BaseProps<T> & {
 };
 
 type TileSlice = {
-  title: string;
+  contentTitle: string;
   body: string;
 };
 
@@ -45,7 +45,7 @@ function parseMarkdownIntoTiles(markdown: string): ParsedMarkdown {
     if (!currentTitle) return;
     const body = currentBodyLines.join('\n').trim();
     tiles.push({
-      title: currentTitle,
+      contentTitle: currentTitle,
       body,
     });
   };
@@ -78,14 +78,20 @@ function parseMarkdownIntoTiles(markdown: string): ParsedMarkdown {
 export default function ContentAsTiles<
   T extends ElementType = 'section',
 >(props: ContentAsTilesProps<T>) {
-  const { tag, title, headingDepth, className, markdown, ...rest } =
-    props;
+  const {
+    tag,
+    contentTitle,
+    headingDepth,
+    className,
+    markdown,
+    ...rest
+  } = props;
   const { intro, tiles } = parseMarkdownIntoTiles(markdown);
 
   return (
     <ContentWithTitle
       tag={tag}
-      title={title}
+      contentTitle={contentTitle}
       ignoreDataUI={true}
       headingDepth={headingDepth}
       className={clsx(className)}
@@ -101,11 +107,11 @@ export default function ContentAsTiles<
         <TileGrid>
           {tiles.map((tile, index) => (
             <GlassPanel
-              key={`${tile.title}-${index}`}
+              key={`${tile.contentTitle}-${index}`}
               className={tileStyles.tilePanel}
               surfaceClassName={tileStyles.tilePanelSurface}
             >
-              <Tile title={tile.title}>
+              <Tile contentTitle={tile.contentTitle}>
                 <Markdown
                   source={tile.body}
                   className={userContent}

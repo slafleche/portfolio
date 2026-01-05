@@ -5,7 +5,7 @@ import { m } from 'css-calipers';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { backgrounds } from '../helpers/background.helper';
-import { cardLayout } from '../componentTokens/card.componentTokens';
+import { cardLayout } from '../componentTokens/card.component.tokens';
 import { glassVars } from '../../tokens/glassy.tokens';
 import {
   componentMediaQueries,

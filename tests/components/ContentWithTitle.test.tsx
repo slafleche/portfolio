@@ -7,12 +7,13 @@ describe('ContentWithTitle', () => {
   it('renders the title and data-query attributes', () => {
     const { container } = render(
       <ContentWithTitle
-        title="Section title"
-        markdown="Body text"
+        contentTitle="Section title"
         queryDataAttributes={{
           compact: 'no-padding',
         }}
-      />,
+      >
+        <div>Body text</div>
+      </ContentWithTitle>,
     );
 
     expect(
@@ -22,9 +23,6 @@ describe('ContentWithTitle', () => {
     ).toBeInTheDocument();
 
     const root = container.querySelector('[data-ui="content"]');
-    expect(root).toHaveAttribute(
-      'data-query-compact',
-      'no-padding',
-    );
+    expect(root).toHaveAttribute('data-query-compact', 'no-padding');
   });
 });

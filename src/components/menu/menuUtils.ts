@@ -1,6 +1,6 @@
 import { assertUnit } from 'css-calipers';
 import { archVars } from '../../tokens/global.tokens';
-import { menuVars } from '../../styles/componentTokens/menu.componentTokens';
+import { menuVars } from '../../styles/componentTokens/menu.component.tokens';
 import { notRelease } from '@/lib/runtimeEnv';
 
 if (notRelease()) {

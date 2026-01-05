@@ -10,6 +10,7 @@ export type FontCfgInput = {
   ital?: boolean;
   axes?: Record<string, string | string[]>;
   subsets?: string[];
+  type?: 'googleFonts' | 'selfHosted' | 'system';
 };
 export type FontsConfig = Record<string, FontCfgInput>;
 
@@ -310,12 +311,14 @@ export function defineFontFamily({
 
   assertWeightOrder(finalWeights, familyName);
 
-  const familyParts = familyName
-    ? [
-        familyName.includes(' ') ? `"${familyName}"` : familyName,
-        ...fallbacks,
-      ]
-    : fallbacks;
+  const isSystemFamily = source?.type === 'system';
+  const familyParts =
+    familyName && !isSystemFamily
+      ? [
+          familyName.includes(' ') ? `"${familyName}"` : familyName,
+          ...fallbacks,
+        ]
+      : fallbacks;
 
   if (familyParts.length === 0) {
     throw new Error(

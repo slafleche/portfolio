@@ -7,7 +7,7 @@ import { backgrounds } from '../helpers/background.helper';
 import {
   accordionSurfaceTokens,
   accordionItemTokens,
-} from '../componentTokens/accordion.componentTokens';
+} from '../componentTokens/accordion.component.tokens';
 import { outlines } from '../helpers/outlines.helper';
 import { colorVars } from '../../tokens/global.tokens';
 import { m, mPercent } from 'css-calipers';

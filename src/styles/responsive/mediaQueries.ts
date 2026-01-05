@@ -8,8 +8,8 @@ import {
 } from 'css-calipers/mediaQueries';
 import type { StyleRule } from '@vanilla-extract/css';
 import { layoutVars } from '../../tokens/layout.tokens';
-import { cardLayout } from '../componentTokens/card.componentTokens';
-import { heroVars } from '../componentTokens/hero.componentTokens';
+import { cardLayout } from '../componentTokens/card.component.tokens';
+import { heroVars } from '../componentTokens/hero.component.tokens';
 
 const fullSizeMinWidth = layoutVars.contentWidth.add(
   layoutVars.contentPadding.multiply(2),

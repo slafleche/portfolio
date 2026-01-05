@@ -1,7 +1,7 @@
 import { style, globalStyle } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 import { colorVars } from '../../tokens/global.tokens';
-import { projectorVars } from '../componentTokens/projector.componentTokens';
+import { projectorVars } from '../componentTokens/projector.component.tokens';
 import { margins } from '../helpers/spacing.helper';
 import borders from '../helpers/borders.helper';
 

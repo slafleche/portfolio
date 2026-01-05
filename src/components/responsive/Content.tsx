@@ -1,9 +1,6 @@
 'use client';
-import type {
-  ComponentPropsWithoutRef,
-  ElementType,
-  ReactNode,
-} from 'react';
+import type { ElementType, ReactNode } from 'react';
+import type { HTMLAttributes } from 'react';
 
 import clsx from 'clsx';
 import { content as contentClass } from '@/styles/layout.css';
@@ -12,14 +9,17 @@ import {
   type DataAttributeMap,
 } from '@/lib/dataAttributesHelper';
 
-type BaseProps<T extends ElementType> = {
-  tag?: T;
-  className?: string;
+export type ContentBaseProps = HTMLAttributes<HTMLElement> & {
+  tag?: ElementType;
   queryDataAttributes?: DataAttributeMap;
-} & Omit<ComponentPropsWithoutRef<T>, 'className' | 'children'>;
-
-export type ContentProps<T extends ElementType> = BaseProps<T> & {
   children?: ReactNode;
+};
+
+type ContentProps<T extends ElementType = 'section'> = Omit<
+  ContentBaseProps,
+  'tag'
+> & {
+  tag?: T;
 };
 
 export default function Content<T extends ElementType = 'section'>({

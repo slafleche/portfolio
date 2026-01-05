@@ -89,3 +89,11 @@ export const footerVars = {
 } as const;
 
 export type FooterVars = typeof footerVars;
+
+export const footerGradientConfig = {
+  angle: footerVars.gradient.gradientAngle,
+  stops: footerVars.gradient.gradientStops.map((stop) => ({
+    color: stop.color,
+    at: stop.at,
+  })),
+};

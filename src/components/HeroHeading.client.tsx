@@ -17,11 +17,11 @@ import * as revealStyles from '@/styles/components/heroText.css';
 import { playProjectorText } from '@/lib/projectorText';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
-import { heroVars } from '../styles/componentTokens/hero.componentTokens';
+import { heroVars } from '../styles/componentTokens/hero.component.tokens';
 import {
   projectorVars,
   type ProjectorChannel,
-} from '../styles/componentTokens/projector.componentTokens';
+} from '../styles/componentTokens/projector.component.tokens';
 import { heroFontVariants } from '../tokens/fontVariants/hero';
 
 type Props = {

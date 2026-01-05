@@ -5,7 +5,7 @@ import {
   dropShadowVars,
   themeColours,
 } from '../../tokens/global.tokens';
-import { heroVars } from '../componentTokens/hero.componentTokens';
+import { heroVars } from '../componentTokens/hero.component.tokens';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { noiseBg } from '../helpers/noiseSVG.helper';
 import { paddings, margins } from '../helpers/spacing.helper';
