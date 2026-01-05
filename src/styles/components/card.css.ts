@@ -7,9 +7,13 @@ import { absolutePosition } from '../helpers/positioning.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { cardLayout } from '../componentTokens/card.componentTokens';
 import { glassVars } from '../../tokens/glassy.tokens';
-import { componentMediaQueries } from '../responsive/mediaQueries';
+import {
+  componentMediaQueries,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 import { makeGlassSurface } from '../helpers/glassy.helper';
 import { wordMarkVars } from '../../tokens/wordmarks.tokens';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
 
 export const root = style({
   position: 'relative',
@@ -119,6 +123,13 @@ export const glassSurface = style(
 export const title = style({});
 export const text = style({
   ...paddings(m(40)),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...paddings(anchorMenuVars.handle.sizeWithBorder),
+      },
+    }),
+  },
 });
 
 // export const image = style({
@@ -205,12 +216,12 @@ export const wordmarkTextNoLogo = style({
   },
 });
 
-const caseStudyLogoHeight = m(2.1, 'em');
+const caseStudyLogoHeight = m(1.4, 'em');
 
 export const wordMark_vanilla = style({
   display: 'inline-block',
   height: caseStudyLogoHeight.css(),
-  transform: `translateY(${caseStudyLogoHeight.divide(9.3).round(3).css()})`,
+  transform: `translateY(${caseStudyLogoHeight.divide(9).round(3).css()})`,
   width: 'auto',
   verticalAlign: 'baseline',
 });

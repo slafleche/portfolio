@@ -2,11 +2,12 @@ import { style } from '@vanilla-extract/css';
 import { margins, paddings } from './helpers/spacing.helper';
 import { layoutVars } from '../tokens/layout.tokens';
 import { mediaQueryStyle } from './responsive/mediaQueries';
-import { m } from 'css-calipers';
+import { anchorMenuVars } from '../tokens/menu.tokens';
 
 export const content = style({
   position: 'relative',
   maxWidth: layoutVars.contentWidth.css(),
+  width: '100%',
   ...margins({
     horizontal: 'auto',
   }),
@@ -14,15 +15,41 @@ export const content = style({
     horizontal: layoutVars.contentPadding,
   }),
 
-  selectors: {
-    ...mediaQueryStyle({
-      compact: {
-        ...paddings({
-          horizontal: m(0),
-        }),
+  // selectors: {
+  //   ...mediaQueryStyle({
+  //     compact: {
+  //       ...paddings({
+  //         horizontal: anchorMenuVars.handle.sizeWithBorder,
+  //       }),
+  //       selectors: {
+  //         "&[data-query-compact='no-padding']": {
+  //           ...paddings({
+  //             horizontal: 0,
+  //           }),
+  //         },
+  //       },
+  //     },
+  //   }),
+  // },
+
+selectors: {
+  ...mediaQueryStyle({
+    compact: {
+      ...paddings({
+        horizontal: anchorMenuVars.handle.sizeWithBorder,
+      }),
+      selectors: {
+        "&[data-query-compact='no-padding']": {
+          ...paddings({
+            horizontal: 0,
+          }),
+        },
       },
-    }),
-  },
+    },
+  }),
+},
+
+
 });
 
 export const title = style({});

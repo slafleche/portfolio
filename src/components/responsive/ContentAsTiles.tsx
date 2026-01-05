@@ -9,7 +9,7 @@ import TileGrid from '@/components/TileGrid';
 import { Markdown } from '@/components/Markdown';
 import { userContent } from '@/styles/typography.css';
 import * as tileStyles from '@/styles/components/tiles.css';
-import Content from './Content';
+import ContentWithTitle from './ContentWithTitle';
 import { GlassPanel } from '../GlassPanel';
 
 type BaseProps<T extends ElementType> = {
@@ -83,7 +83,7 @@ export default function ContentAsTiles<
   const { intro, tiles } = parseMarkdownIntoTiles(markdown);
 
   return (
-    <Content
+    <ContentWithTitle
       tag={tag}
       title={title}
       ignoreDataUI={true}
@@ -92,7 +92,10 @@ export default function ContentAsTiles<
       {...rest}
     >
       {intro ? (
-        <Markdown source={intro} className={clsx(userContent, tileStyles.intro)} />
+        <Markdown
+          source={intro}
+          className={clsx(userContent, tileStyles.intro)}
+        />
       ) : null}
       {tiles.length > 0 ? (
         <TileGrid>
@@ -112,6 +115,6 @@ export default function ContentAsTiles<
           ))}
         </TileGrid>
       ) : null}
-    </Content>
+    </ContentWithTitle>
   );
 }

@@ -29,9 +29,9 @@ export const typographyFontVariants = {
     config: {
       options: {
         textAlign: 'center',
-        letterSpacing: m(0.05, 'em'),
+        letterSpacing: m(0.08, 'em'),
         weightPercents: {
-          default: mPercent(100),
+          default: mPercent(0),
         },
       },
     },
@@ -42,6 +42,11 @@ export const typographyFontVariants = {
       overrides: {
         size: m(45),
       },
+      options: {
+        weightPercents: {
+          default: mPercent(50),
+        },
+      },
     },
   }),
   h2: defineFontVariant(fontFamilies.objectSans, {
@@ -49,7 +54,7 @@ export const typographyFontVariants = {
 
     config: {
       overrides: {
-        size: m(26),
+        size: m(36),
       },
     },
   }),

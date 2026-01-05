@@ -14,12 +14,12 @@ export const heroFontVariants = {
     waitForFonts: true,
     config: {
       overrides: {
-        lineHeight: 1.3,
-        size: m(26),
+        lineHeight: 1.1,
+        letterSpacing: m(0.02, 'em'),
       },
       options: {
         weightPercents: {
-          default: mPercent(50),
+          default: mPercent(100),
         },
       },
     },

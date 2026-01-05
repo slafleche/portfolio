@@ -14,10 +14,10 @@ import * as systemsStyles from '@/styles/components/systems.css';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { resolveLocale } from '@/lib/locales/locale';
 import { sharedStrings } from '@/lib/sharedStrings';
-import { userContent } from '@/styles/typography.css';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
 import SystemsGooey from '../../../../src/components/SystemsGooey';
+import Content from '../../../../src/components/responsive/Content';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -105,7 +105,6 @@ export default async function SystemsPage({
             headingAnimated={false}
             Gooey={SystemsGooey}
           />
-          <hr />
           <ContentAsTiles
             id={systemsIntroId}
             title={systemsTitle}
@@ -123,12 +122,9 @@ export default async function SystemsPage({
             title={systemsShapeTitle}
             markdown={systemsShapeMarkdown}
           />
-          <div className={layoutStyles.content}>
-            <Markdown
-              source={systemsShapeBlurbMarkdown}
-              className={userContent}
-            />
-          </div>
+          <Content>
+            <Markdown source={systemsShapeBlurbMarkdown} />
+          </Content>
         </main>
         <Footer
           contact={contactCopy}

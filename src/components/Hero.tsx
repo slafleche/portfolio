@@ -24,7 +24,6 @@ import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMo
 import ImageByName from './ImageByName';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import { Markdown } from '@/components/Markdown';
-import { userContent } from '@/styles/typography.css';
 import { GlassPanel } from './GlassPanel';
 import { heroFontVariants } from '../tokens/fontVariants/hero';
 import HeroGooey from './HeroGooey';
@@ -295,7 +294,6 @@ export default function Hero({
           <div className={clsx(layoutStyles.panel, s.panel)}>
             <div className={s.glassWrap}>
               <GlassPanel
-                // opacity={0.8}
                 contentClassName={s.main}
                 surfaceClassNameOverride={s.glassySurfaceOverwrite}
               >
@@ -333,7 +331,7 @@ export default function Hero({
                   >
                     <Markdown
                       source={copy.subtitle}
-                      className={userContent}
+                      className={s.subtitleMarkdown}
                     />
                   </div>
                 ) : null}

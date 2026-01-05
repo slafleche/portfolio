@@ -1,5 +1,6 @@
 import Hero from '@/components/Hero';
 import Content from '@/components/responsive/Content';
+import ContentWithTitle from '@/components/responsive/ContentWithTitle';
 import CaseStudy from '@/components/CaseStudy';
 import { Grid, Column } from '@/components/Grid';
 import Card from '@/components/Card';
@@ -121,6 +122,13 @@ export default async function HomePage({
 
   return (
     <>
+      <ConsoleCuriosity
+        title={curiosityMessages.title}
+        test={curiosityMessages.test}
+        result={curiosityMessages.result}
+        hint={curiosityMessages.hint}
+        targetHref={curiosityTarget}
+      />
       <Menu {...menuProps} />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
@@ -130,46 +138,45 @@ export default async function HomePage({
             headingAnimated={false}
             Gooey={HeroGooey}
           />
-          <ConsoleCuriosity
-            title={curiosityMessages.title}
-            test={curiosityMessages.test}
-            result={curiosityMessages.result}
-            hint={curiosityMessages.hint}
-            targetHref={curiosityTarget}
-          />
-          <Content
+          <ContentWithTitle
             id={approach.href}
             title={approach.title}
             ignoreDataUI={true}
-            markdown={approach.content}
-          />
-          <Content
+          >
+            <Markdown source={approach.content} />
+          </ContentWithTitle>
+          <ContentWithTitle
             id={about.href}
             title={about.title}
             ignoreDataUI={true}
-            markdown={about.content}
-          />
+          >
+            <Markdown source={about.content} />
+          </ContentWithTitle>
+          
           <Content id={caseStudies.href}>
             <WordMarkInTitle
               WordMark={VNWordmark}
               ignoreDataUI={true}
               textTemplate={caseStudies.title}
               textClassName={cg.wordmarkTextNoLogo}
-            />
-            <CaseStudy
-              id={caseStudies.href}
-              intro={caseStudies.intro}
-              caseStudies={caseStudies.list}
+              depth={2}
             />
           </Content>
-          <Content
+          <CaseStudy
+            id={caseStudies.href}
+            intro={caseStudies.intro}
+            caseStudies={caseStudies.list}
+          />
+
+          <ContentWithTitle
             ignoreDataUI={true}
             title={projects.title}
             id={projects.href}
+            queryDataAttributes={{
+              compact: 'no-padding',
+            }}
           >
-            <Grid
-            // columns={1}
-            >
+            <Grid>
               <Column span={2}>
                 <Card
                   title={
@@ -284,7 +291,7 @@ export default async function HomePage({
                 </Card>
               </Column>
             </Grid>
-          </Content>
+          </ContentWithTitle>
         </main>
         <Footer
           contact={contact}

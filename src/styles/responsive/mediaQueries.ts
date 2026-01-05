@@ -1,7 +1,8 @@
 import {
   defineMediaQueryModules,
   mediaQueryFactory,
-  mediaQueryOutputVanillaExtract,
+  preprocessorVanillaExtract,
+  outputVanillaExtract,
   type IMediaQueries,
   type IMediaQueryProps,
 } from 'css-calipers/mediaQueries';
@@ -42,17 +43,19 @@ export const mediaQueryStyleConfig: IMediaQueries = {
   } as IMediaQueryProps,
 };
 
-export const mediaQueryStyle = mediaQueryFactory({
+const baseMediaQueryStyle = mediaQueryFactory({
   queries: mediaQueryStyleConfig,
   config: {
     label: 'Global Media Queries',
     modules: defineMediaQueryModules('core'),
-    output: (media) =>
-      mediaQueryOutputVanillaExtract<{
-        [selector: string]: StyleRule;
-      }>(media),
+    preProcessor: preprocessorVanillaExtract,
+    output: outputVanillaExtract,
   },
 });
+export const mediaQueryStyle = (
+  styles: Parameters<typeof baseMediaQueryStyle>[0],
+): Record<string, StyleRule> =>
+  baseMediaQueryStyle(styles) as unknown as Record<string, StyleRule>;
 
 // Component specific media queries
 
@@ -65,14 +68,19 @@ const componentSpecificQueriesConfig: IMediaQueries = {
   },
 };
 
-export const componentMediaQueries = mediaQueryFactory({
+const baseComponentMediaQueries = mediaQueryFactory({
   queries: componentSpecificQueriesConfig,
   config: {
     label: 'Component Specific Queries',
     modules: defineMediaQueryModules('core'),
-    output: (media) =>
-      mediaQueryOutputVanillaExtract<{
-        [selector: string]: StyleRule;
-      }>(media),
+    preProcessor: preprocessorVanillaExtract,
+    output: outputVanillaExtract,
   },
 });
+export const componentMediaQueries = (
+  styles: Parameters<typeof baseComponentMediaQueries>[0],
+): Record<string, StyleRule> =>
+  baseComponentMediaQueries(styles) as unknown as Record<
+    string,
+    StyleRule
+  >;

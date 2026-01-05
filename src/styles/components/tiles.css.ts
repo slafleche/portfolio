@@ -18,9 +18,6 @@ export const grid = style({
       snug: {
         gridTemplateColumns: '1fr',
       },
-      // compact: {
-      //   gridTemplateColumns: '1fr',
-      // },
     }),
   },
 });
@@ -65,9 +62,9 @@ export const tilePanelSurface = style({
   height: '100%',
 });
 
-export const tileTitle = style({
+export const title = style({
   ...margins({
-    bottom: m(8),
+    bottom: m(1, 'em'),
   }),
   ...fontStylesFromFontVariant({
     variant: typographyFontVariants.h3,

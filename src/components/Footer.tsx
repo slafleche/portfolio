@@ -9,6 +9,7 @@ import SocialLinkedInIcon from './icons/SocialLinkedInIcon';
 import SocialGitHubIcon from './icons/SocialGitHubIcon';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import PageCurl from './PageCurl';
+import Content from './responsive/Content';
 
 type FooterProps = {
   contact: ContactCopy;
@@ -36,53 +37,55 @@ export default function Footer({
       id={footerId}
       aria-labelledby={headingId}
     >
-      {/* Put gradient on overlay */}
-      <div className={s.overlay}></div>
-      <Heading
-        data-visible="sc-only"
-        id={headingId}
-        className={s.heading}
-      >
-        {contact.title}
-      </Heading>
-      <Markdown className={s.content} source={contact.content} />
+      <Content>
+        {/* Put gradient on overlay */}
+        <div className={s.overlay}></div>
+        <Heading
+          data-visible="sc-only"
+          id={headingId}
+          className={s.heading}
+        >
+          {contact.title}
+        </Heading>
+        <Markdown className={s.content} source={contact.content} />
 
-      {/* Just a simple wrapper for links, since we have multiple elements to position */}
-      <div className={s.links}>
-        {/* Modal trigger */}
-        <ContactDialogTrigger
-          className={s.glassLink}
-          aria-label={contact.emailLabel}
-          title={contact.emailLabel}
-        >
-          <div className={s.glassLinkShine} aria-hidden="true" />
-          <ContactIcon className={s.contactIcon} aria-hidden />
-        </ContactDialogTrigger>
-        <GlassyLink
-          href={sharedStrings.linkedInUrl}
-          label="LinkedIn"
-          className={s.glassLink}
-          target="_blank"
-        >
-          <div className={s.glassLinkShine} aria-hidden="true" />
-          <SocialLinkedInIcon className={s.linkedInIcon} />
-        </GlassyLink>
-        <GlassyLink
-          href={sharedStrings.githubUrl}
-          label="GitHub"
-          className={s.glassLink}
-          target="_blank"
-        >
-          <div className={s.glassLinkShine} aria-hidden="true" />
-          <SocialGitHubIcon className={s.gitHubIcon} />
-        </GlassyLink>
-      </div>
-      {systemsLink && !hideSystemsLink ? (
-        <PageCurl
-          href={systemsLink.href}
-          mockEndHtmlLabel={contact.systemsSnippetLabel}
-        />
-      ) : null}
+        {/* Just a simple wrapper for links, since we have multiple elements to position */}
+        <div className={s.links}>
+          {/* Modal trigger */}
+          <ContactDialogTrigger
+            className={s.glassLink}
+            aria-label={contact.emailLabel}
+            title={contact.emailLabel}
+          >
+            <div className={s.glassLinkShine} aria-hidden="true" />
+            <ContactIcon className={s.contactIcon} aria-hidden />
+          </ContactDialogTrigger>
+          <GlassyLink
+            href={sharedStrings.linkedInUrl}
+            label="LinkedIn"
+            className={s.glassLink}
+            target="_blank"
+          >
+            <div className={s.glassLinkShine} aria-hidden="true" />
+            <SocialLinkedInIcon className={s.linkedInIcon} />
+          </GlassyLink>
+          <GlassyLink
+            href={sharedStrings.githubUrl}
+            label="GitHub"
+            className={s.glassLink}
+            target="_blank"
+          >
+            <div className={s.glassLinkShine} aria-hidden="true" />
+            <SocialGitHubIcon className={s.gitHubIcon} />
+          </GlassyLink>
+        </div>
+        {systemsLink && !hideSystemsLink ? (
+          <PageCurl
+            href={systemsLink.href}
+            mockEndHtmlLabel={contact.systemsSnippetLabel}
+          />
+        ) : null}
+      </Content>
     </footer>
   );
 }

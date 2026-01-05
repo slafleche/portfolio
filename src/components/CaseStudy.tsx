@@ -6,6 +6,7 @@ import { Accordion } from '@/components/Accordion';
 import { createDomId } from '@/lib/dom';
 import { Markdown } from '@/components/Markdown';
 import * as s from '@/styles/components/accordion.css';
+import Content from './responsive/Content';
 
 type CaseStudyProps = {
   id?: string;
@@ -26,7 +27,12 @@ export default function CaseStudy({
   );
 
   return (
-    <div className={s.root}>
+    <Content
+      queryDataAttributes={{
+        compact: 'no-padding',
+      }}
+      className={s.root}
+    >
       {intro ? (
         <div className={s.intro}>
           <Markdown source={intro} />
@@ -41,6 +47,6 @@ export default function CaseStudy({
           defaultOpen: index === 0,
         }))}
       />
-    </div>
+    </Content>
   );
 }

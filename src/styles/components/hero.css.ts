@@ -154,7 +154,10 @@ export const main = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  ...paddings(m(60)),
+  ...paddings({
+    vertical: m(80),
+    horizontal: m(46),
+  }),
   selectors: {
     ...componentMediaQueries({
       hero_compact: paddings(m(46)),
@@ -171,6 +174,13 @@ export const subtitle = style({
       opacity: 1,
     },
   },
+});
+
+export const subtitleMarkdown = style({});
+
+globalStyle(`.${subtitleMarkdown} p`, {
+  fontSize: '22px',
+  margin: 0,
 });
 
 // export const paragraph = style({
@@ -205,7 +215,7 @@ const ctaGradient = buildLinear({
 });
 
 export const cta = style({
-  ...margins({ top: m(16) }),
+  ...margins({ top: m(40) }),
   display: 'inline-flex',
   alignItems: 'center',
   gap: '3px',
@@ -363,11 +373,18 @@ export const heading = style({
   ...fontStylesFromFontVariant({
     variant: heroFontVariants.hero,
   }),
-  fontSize: 'clamp(20px, 7vw, 100px)',
+  fontSize: 'clamp(20px, 8vw, 100px)',
   ...margins({
     top: heroFontVariants.hero.family.offsetToFlushTop,
-    bottom: m(1, 'em'),
+    bottom: m(40),
   }),
+  selectors: {
+    ...mediaQueryStyle({
+      snug: {
+        fontSize: 'clamp(20px, 7vw, 100px)',
+      },
+    }),
+  },
 });
 
 /**

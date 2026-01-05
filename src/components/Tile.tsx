@@ -18,11 +18,10 @@ export default function Tile({
 }: TileProps) {
   return (
     <article id={id} className={clsx(s.tile, className)}>
-      <Heading depth={3} className={s.tileTitle}>
+      <Heading depth={3} className={s.title}>
         {title}
       </Heading>
       {children}
     </article>
   );
 }
-

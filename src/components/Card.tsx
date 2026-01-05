@@ -12,6 +12,7 @@ type Props = IHeadingDepth &
     type?: string;
     gradientClassName?: string;
     logoAsBg?: ReactNode;
+
   };
 
 export default function Card({
@@ -49,7 +50,8 @@ export default function Card({
             title
           )}
         </div>
-        <div className={s.content}>
+        <div className={s.content}
+        >
           {logoAsBg && (
             <div className={s.logoAsBg} aria-hidden="true">
               {logoAsBg}

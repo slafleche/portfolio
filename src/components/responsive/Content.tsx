@@ -7,76 +7,43 @@ import type {
 
 import clsx from 'clsx';
 import { content as contentClass } from '@/styles/layout.css';
-import Heading from '../Heading';
-import { userContent } from '@/styles/typography.css';
-import { Markdown } from '@/components/Markdown';
-import { notRelease } from '@/lib/runtimeEnv';
+import {
+  dataAttributesHelper,
+  type DataAttributeMap,
+} from '@/lib/dataAttributesHelper';
 
 type BaseProps<T extends ElementType> = {
   tag?: T;
-  title?: ReactNode;
-  ignoreDataUI?: boolean;
-  headingDepth?: 2 | 3 | 4 | 5 | 6;
   className?: string;
+  queryDataAttributes?: DataAttributeMap;
 } & Omit<ComponentPropsWithoutRef<T>, 'className' | 'children'>;
 
-type MarkdownOnly = {
-  markdown: string;
-  children?: never;
-};
-
-type ChildrenOnly = {
-  markdown?: undefined;
+export type ContentProps<T extends ElementType> = BaseProps<T> & {
   children?: ReactNode;
 };
 
-type ContentProps<T extends ElementType> = BaseProps<T> &
-  (MarkdownOnly | ChildrenOnly);
-
 export default function Content<T extends ElementType = 'section'>({
-  tag,
-  title,
-  headingDepth: headingDepthProp,
   className,
-  markdown,
-  ignoreDataUI = false,
   children,
+  tag,
+  queryDataAttributes = {},
   ...rest
 }: ContentProps<T>) {
   const Component: ElementType = tag ?? 'section';
 
-  if (
-    notRelease() &&
-    typeof markdown === 'string' &&
-    children !== undefined
-  ) {
-    console.error(
-      'Content: pass either `markdown` or `children`, but not both.',
-    );
-  }
-
-  const renderedBody =
-    typeof markdown === 'string' ? (
-      <Markdown source={markdown} className={userContent} />
-    ) : (
-      children
-    );
+  const dataQueryAttributes = dataAttributesHelper(
+    'query',
+    queryDataAttributes,
+  );
 
   return (
     <Component
       data-ui="content"
       className={clsx(contentClass, className)}
+      {...dataQueryAttributes}
       {...rest}
     >
-      {title ? (
-        <Heading
-          ignoreDataUI={ignoreDataUI}
-          depth={headingDepthProp ?? 2}
-        >
-          {title}
-        </Heading>
-      ) : null}
-      {renderedBody}
+      {children}
     </Component>
   );
 }

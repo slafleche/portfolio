@@ -29,9 +29,8 @@ export const root = style({
     bottom: m(0),
   }),
   ...paddings({
-    top: m(80),
-    horizontal: m(24),
-    bottom: m(120),
+    vertical: m(48),
+    // horizontal: m(24),
   }),
   ...gradientAsBgImg(surfaceGradient),
 

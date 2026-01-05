@@ -3,7 +3,7 @@ import type {
   ComponentType,
   SVGProps,
 } from 'react';
-import Heading from './Heading';
+import Heading, { type IHeadingDepth } from './Heading';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 
 type WordMarkInTitleProps = {
@@ -13,7 +13,8 @@ type WordMarkInTitleProps = {
   textClassName?: string;
   wordMarkClassName?: string;
   ignoreDataUI?: boolean;
-} & Pick<ComponentPropsWithoutRef<'h2'>, 'id'>;
+} & Pick<ComponentPropsWithoutRef<'h2'>, 'id'> &
+  IHeadingDepth;
 
 export default function WordMarkInTitle(props: WordMarkInTitleProps) {
   const {
@@ -22,6 +23,7 @@ export default function WordMarkInTitle(props: WordMarkInTitleProps) {
     className,
     wordMarkClassName,
     textClassName,
+    depth = 3,
     ...rest
   } = props;
 
@@ -33,6 +35,7 @@ export default function WordMarkInTitle(props: WordMarkInTitleProps) {
       title={fullText}
       className={className}
       ignoreDataUI={false}
+      depth={depth}
       {...rest}
     >
       {hasWordmark ? (
