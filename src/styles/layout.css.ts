@@ -78,5 +78,5 @@ export const svgOverlay = style({
   width: '100vw',
   height: '100vh',
   pointerEvents: 'none',
-  opacity: 0.1,
+  opacity: 0.02,
 });

@@ -37,11 +37,11 @@ export default function SystemsBgOverlay({
   gradientStopsLeft = defaultStopsA,
   gradientStopsRight = defaultStopsB,
   spacing = 100,
-  frequency = 4,
+  frequency = 3,
   strokeWidth = 4,
 
   centerSpacing = 100,
-  centerFrequency = 10,
+  centerFrequency = 4,
   centerStrokeWidth = 6,
   centerAngle = 180,
   ...rest
