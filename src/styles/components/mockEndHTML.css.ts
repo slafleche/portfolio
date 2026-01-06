@@ -5,12 +5,12 @@ import { backgrounds } from '../helpers/background.helper';
 import { m, mPercent } from 'css-calipers';
 import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { mockHtmlFontVariants } from '../../tokens/fontVariants/mockHtml';
-import { absolutePosition } from '../helpers/positioning.helper';
+// import { absolutePosition } from '../helpers/positioning.helper';
 
 export const root = style({
-  textAlign: 'left',
-  userSelect: 'none',
-  ...absolutePosition.bottomLeft(),
+  // textAlign: 'left',
+  // userSelect: 'none',
+  // ...absolutePosition.bottomLeft(),
   ...backgrounds({
     color: '#0f111a',
     image:

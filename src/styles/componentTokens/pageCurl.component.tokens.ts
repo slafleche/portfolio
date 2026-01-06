@@ -6,8 +6,8 @@ export const curlVars = {
   width: m(350),
   height: m(350),
   closed: {
-    width: m(100),
-    height: m(100),
+    width: m(150),
+    height: m(150),
   },
   open: {
     width: m(250),

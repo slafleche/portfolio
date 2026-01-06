@@ -40,7 +40,7 @@ export default function Footer({
         <PageCurl
           label={systemsLink.label}
           href={systemsLink.href}
-          mockEndHtmlLabel={contact.systemsSnippetLabel}
+          mockHtmlAlt={contact.mockHtmlAlt}
         />
       ) : null}
       <Content>

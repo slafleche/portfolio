@@ -185,6 +185,14 @@ export const cornerButtonLabel = style({
   fontWeight: 700,
 });
 
+export const mockHtml = style({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  width: '400px',
+  height: '400px',
+});
+
 export const bottomRightSlope = style({
   position: 'absolute',
   left: '100%',

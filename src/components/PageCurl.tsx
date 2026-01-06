@@ -1,23 +1,22 @@
-'use client';
 import Link from 'next/link';
 import * as s from '@/styles/components/pageCurl.css';
-import MockEndHTML from './MockEndHTML';
+import ImageByName from './ImageByName';
 
 type PageCurlProps = {
   href: string;
-  mockEndHtmlLabel: string;
+  mockHtmlAlt: string;
   label: string;
 };
 
 export default function PageCurl({
   href,
-  mockEndHtmlLabel,
+  mockHtmlAlt,
   label,
 }: PageCurlProps) {
   return (
     <div className={s.root}>
       <Link
-        aria-label={label}
+        title={label}
         href={href}
         className={s.link}
         data-ui="link"
@@ -31,7 +30,11 @@ export default function PageCurl({
               <div className={s.bottomRightSlope} />
             </div>
             <div className={s.cornerContents}>
-              <MockEndHTML ariaLabel={mockEndHtmlLabel} />
+              <ImageByName
+                className={s.mockHtml}
+                name="mock-end-html@3x"
+                alt={mockHtmlAlt}
+              />
               <div className={s.fakeCodeShadow} />
             </div>
           </div>

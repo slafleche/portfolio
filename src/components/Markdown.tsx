@@ -34,13 +34,17 @@ function MarkdownBase({
   const html = openLinksInNewTab
     ? marked.parse(trimmed, { renderer: createTargetBlankRenderer() })
     : marked.parse(trimmed);
+  const sanitizedHtml =
+    typeof html === 'string'
+      ? html.replace(/<div>\s*<\/div>/g, '')
+      : '';
 
   return (
     <div
       id={id}
       className={className}
       dangerouslySetInnerHTML={{
-        __html: typeof html === 'string' ? html : '',
+        __html: sanitizedHtml,
       }}
     />
   );
