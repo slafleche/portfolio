@@ -32,18 +32,80 @@ describe('Markdown component', () => {
     expect(container.textContent?.trim()).toBe('Hello');
   });
 
-  it('does not render empty divs from raw html blocks', () => {
+  it('does not render empty paragraphs from repeated blank lines', () => {
     const { container } = render(
-      <Markdown source={'First\n\n<div></div>\n\nSecond'} />,
+      <Markdown source={'First\n\n\n\nSecond'} />,
     );
     const markdownRoot = container.firstElementChild;
-    const emptyBlocks = markdownRoot
-      ? Array.from(markdownRoot.querySelectorAll('div')).filter(
-          (node) =>
-            node.textContent?.trim() === '' &&
-            node.childElementCount === 0,
+    const emptyParagraphs = markdownRoot
+      ? Array.from(markdownRoot.querySelectorAll('p')).filter(
+          (node) => node.textContent?.trim() === '',
         )
       : [];
-    expect(emptyBlocks).toHaveLength(0);
+    expect(emptyParagraphs).toHaveLength(0);
+  });
+
+  it('prevents empty paragraphs from whitespace-only spacing', () => {
+    const { container } = render(
+      <Markdown source={'One\n\n \n\t\n\nTwo'} />,
+    );
+    const markdownRoot = container.firstElementChild;
+    const emptyParagraphs = markdownRoot
+      ? Array.from(markdownRoot.querySelectorAll('p')).filter(
+          (node) => node.textContent?.trim() === '',
+        )
+      : [];
+    expect(emptyParagraphs).toHaveLength(0);
+  });
+
+  it('treats whitespace-only lines as blank and collapses them', () => {
+    const { container } = render(
+      <Markdown source={'First\n \t \n\t\nSecond'} />,
+    );
+    const markdownRoot = container.firstElementChild;
+    const paragraphs = markdownRoot
+      ? Array.from(markdownRoot.querySelectorAll('p'))
+      : [];
+    expect(paragraphs).toHaveLength(2);
+    expect(paragraphs[0]?.textContent?.trim()).toBe('First');
+    expect(paragraphs[1]?.textContent?.trim()).toBe('Second');
+  });
+
+  it('handles Windows newlines when normalizing blank lines', () => {
+    const { container } = render(
+      <Markdown source={'First\r\n\r\n\r\nSecond'} />,
+    );
+    const markdownRoot = container.firstElementChild;
+    const paragraphs = markdownRoot
+      ? Array.from(markdownRoot.querySelectorAll('p'))
+      : [];
+    expect(paragraphs).toHaveLength(2);
+  });
+
+  it('keeps a single blank line between paragraphs', () => {
+    const { container } = render(
+      <Markdown source={'Alpha\n\nBeta'} />,
+    );
+    const markdownRoot = container.firstElementChild;
+    const paragraphs = markdownRoot
+      ? Array.from(markdownRoot.querySelectorAll('p'))
+      : [];
+    expect(paragraphs).toHaveLength(2);
+  });
+
+  it('does not strip inline HTML content', () => {
+    const { container } = render(
+      <Markdown source={'Hello <span>world</span>!\n\nNext'} />,
+    );
+    const span = container.querySelector('span');
+    expect(span?.textContent).toBe('world');
+  });
+
+  it('preserves blank lines inside fenced code blocks', () => {
+    const { container } = render(
+      <Markdown source={'```\nLine 1\n\nLine 3\n```'} />,
+    );
+    const codeBlock = container.querySelector('pre code');
+    expect(codeBlock?.textContent).toContain('Line 1\n\nLine 3');
   });
 });

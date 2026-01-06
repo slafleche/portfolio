@@ -1,108 +1,84 @@
 {
   "mock-end-html@3x": {
     "name": "mock-end-html@3x",
-    "hash": "e8629e3d",
-    "basePath": "img-mock-end-html@3x-e8629e3d",
-    "dirName": "img-mock-end-html@3x-e8629e3d",
-    "width": 1878,
+    "hash": "aded3be0",
+    "basePath": "img-mock-end-html@3x-aded3be0",
+    "dirName": "img-mock-end-html@3x-aded3be0",
+    "width": 931,
     "height": 931,
-    "aspect": 2.0171858216970997,
-    "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAMABgDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAECBv/EABwQAQACAgMBAAAAAAAAAAAAAAEAAhExEyFBUf/EABYBAQEBAAAAAAAAAAAAAAAAAAABAv/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AOXDNDrMw1fCVs1wEnJb7NIiJuIbLuIH/9k=",
+    "aspect": 1,
+    "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAYABgDASIAAhEBAxEB/8QAGAABAQADAAAAAAAAAAAAAAAAAAECAwb/xAAcEAACAgMBAQAAAAAAAAAAAAAAAQIRAxMhMRL/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAEf/aAAwDAQACEQMRAD8A5fEk0010PC79QxLtllCf06bNI1yj8ugZa5sAWDUI3fSbnfiAAu534gASD//Z",
     "variants": {
       "avif": [
         {
           "w": 320,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/320.avif"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/320.avif"
         },
         {
           "w": 480,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/480.avif"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/480.avif"
         },
         {
           "w": 640,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/640.avif"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/640.avif"
         },
         {
           "w": 750,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/750.avif"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/750.avif"
         },
         {
           "w": 828,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/828.avif"
-        },
-        {
-          "w": 1080,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/1080.avif"
-        },
-        {
-          "w": 1200,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/1200.avif"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/828.avif"
         }
       ],
       "webp": [
         {
           "w": 320,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/320.webp"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/320.webp"
         },
         {
           "w": 480,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/480.webp"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/480.webp"
         },
         {
           "w": 640,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/640.webp"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/640.webp"
         },
         {
           "w": 750,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/750.webp"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/750.webp"
         },
         {
           "w": 828,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/828.webp"
-        },
-        {
-          "w": 1080,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/1080.webp"
-        },
-        {
-          "w": 1200,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/1200.webp"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/828.webp"
         }
       ],
       "jpg": [
         {
           "w": 320,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/320.jpg"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/320.jpg"
         },
         {
           "w": 480,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/480.jpg"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/480.jpg"
         },
         {
           "w": 640,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/640.jpg"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/640.jpg"
         },
         {
           "w": 750,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/750.jpg"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/750.jpg"
         },
         {
           "w": 828,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/828.jpg"
-        },
-        {
-          "w": 1080,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/1080.jpg"
-        },
-        {
-          "w": 1200,
-          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/1200.jpg"
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/828.jpg"
         }
       ]
     },
     "original": {
-      "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-e8629e3d/orig.png",
-      "width": 1878,
+      "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/orig.png",
+      "width": 931,
       "height": 931
     }
   },

@@ -26,6 +26,5 @@ export const buildContactCopy = (t: Translator): ContactCopy => ({
   content: t(CONTACT_KEYS.content),
   emailLabel: t(CONTACT_KEYS.emailLabel),
   href: t(CONTACT_KEYS.href),
-  mockHtmlLabel: t(CONTACT_KEYS.mockHtmlLabel),
   mockHtmlAlt: t(CONTACT_KEYS.mockHtmlAlt),
 });

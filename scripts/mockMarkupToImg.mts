@@ -124,7 +124,6 @@ const page = await browser.newPage({
   viewport: {
     width: 1200,
     height: 1200,
-    deviceScaleFactor: 1,
   },
 });
 
@@ -142,7 +141,6 @@ if (!box) {
 await page.setViewportSize({
   width: Math.ceil(box.width),
   height: Math.ceil(box.height),
-  deviceScaleFactor: 1,
 });
 
 const squareSize = Math.min(box.width, box.height);
