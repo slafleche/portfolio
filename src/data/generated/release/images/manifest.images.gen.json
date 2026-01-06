@@ -1,4 +1,87 @@
 {
+  "mock-end-html@3x": {
+    "name": "mock-end-html@3x",
+    "hash": "aded3be0",
+    "basePath": "img-mock-end-html@3x-aded3be0",
+    "dirName": "img-mock-end-html@3x-aded3be0",
+    "width": 931,
+    "height": 931,
+    "aspect": 1,
+    "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAYABgDASIAAhEBAxEB/8QAGAABAQADAAAAAAAAAAAAAAAAAAECAwb/xAAcEAACAgMBAQAAAAAAAAAAAAAAAQIRAxMhMRL/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAEf/aAAwDAQACEQMRAD8A5fEk0010PC79QxLtllCf06bNI1yj8ugZa5sAWDUI3fSbnfiAAu534gASD//Z",
+    "variants": {
+      "avif": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/320.avif"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/480.avif"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/640.avif"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/750.avif"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/828.avif"
+        }
+      ],
+      "webp": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/320.webp"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/480.webp"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/640.webp"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/750.webp"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/828.webp"
+        }
+      ],
+      "jpg": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/320.jpg"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/480.jpg"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/640.jpg"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/750.jpg"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/828.jpg"
+        }
+      ]
+    },
+    "original": {
+      "url": "https://cdn.lafleche.dev/release/images/v1/img-mock-end-html@3x-aded3be0/orig.png",
+      "width": 931,
+      "height": 931
+    }
+  },
   "night_forest": {
     "name": "night_forest",
     "hash": "ab62ae31",

@@ -68,11 +68,12 @@ export default function MockEndHTML({ ariaLabel }: MockEndHTMLProps) {
           <Tag>{'</section>'}</Tag>
         </Row>
         <Row>
-          <Indent />
+          <Indent count={2} />
           <Guide />
           <Tag>{'</main>'}</Tag>
         </Row>
         <Row>
+          <Indent count={2} />
           <Tag>{'<footer'}</Tag>
           <Text> </Text>
           <Attr>{'class'}</Attr>
@@ -81,7 +82,7 @@ export default function MockEndHTML({ ariaLabel }: MockEndHTMLProps) {
           <Tag>{'>'}</Tag>
         </Row>
         <Row>
-          <Indent />
+          <Indent count={3} />
           <Guide />
           <Tag>{'<div'}</Tag>
           <Text> </Text>
@@ -91,17 +92,21 @@ export default function MockEndHTML({ ariaLabel }: MockEndHTMLProps) {
           <Tag>{'>'}</Tag>
         </Row>
         <Row>
+          <Indent count={3} />
           <Indent />
           <Guide />
           <Tag>{'</div>'}</Tag>
         </Row>
         <Row>
+          <Indent count={2} />
           <Tag>{'</footer>'}</Tag>
         </Row>
         <Row>
+          <Indent count={2} />
           <Comment>{'<!-- scripts -->'}</Comment>
         </Row>
         <Row>
+          <Indent count={2} />
           <Tag>{'<script'}</Tag>
           <Text> </Text>
           <Attr>{'type'}</Attr>
@@ -114,6 +119,7 @@ export default function MockEndHTML({ ariaLabel }: MockEndHTMLProps) {
           <Tag>{'></script>'}</Tag>
         </Row>
         <Row>
+          <Indent count={2} />
           <Disc>{'▸'}</Disc>
           <Tag>{'<script'}</Tag>
           <Text> </Text>
@@ -126,6 +132,7 @@ export default function MockEndHTML({ ariaLabel }: MockEndHTMLProps) {
           <Hint>{'collapsed'}</Hint>
         </Row>
         <Row>
+          <Indent count={2} />
           <Disc>{'▸'}</Disc>
           <Tag>{'<script'}</Tag>
           <Text> </Text>
@@ -142,6 +149,7 @@ export default function MockEndHTML({ ariaLabel }: MockEndHTMLProps) {
           <Hint>{'collapsed'}</Hint>
         </Row>
         <Row>
+          <Indent count={1} />
           <Tag>{'</body>'}</Tag>
         </Row>
         <Row>

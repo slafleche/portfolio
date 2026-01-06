@@ -21,7 +21,9 @@ import { installTestEnv } from '../helpers/testEnvVars';
 const buildFormCopy = () =>
   buildContactFormCopy(
     ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
+      enFormCopy[
+        key as keyof typeof enFormCopy
+      ]) as unknown as Translator,
   );
 
 const buildPrivacy = () =>
@@ -38,7 +40,7 @@ const getInlineStatusRegion = () =>
     '[role="status"][aria-atomic="true"]',
   ) as HTMLElement | null;
 
-const getToastStatusRegion = () =>
+const getmessageCentreStatusRegion = () =>
   document.querySelector(
     '[role="status"]:not([aria-atomic])',
   ) as HTMLElement | null;
@@ -82,13 +84,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const { formCopy, statusMessages } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -110,13 +112,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const { statusMessages } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -134,13 +136,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const { statusMessages } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -150,19 +152,21 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
   });
 
   it('dev scenario recoverable-validation_server shows a server validation_error summary on the form view', async () => {
-    const scenarioUrl = buildScenarioUrl('recoverable-validation_server');
+    const scenarioUrl = buildScenarioUrl(
+      'recoverable-validation_server',
+    );
     window.history.pushState({}, '', scenarioUrl);
 
     const { statusMessages } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -180,13 +184,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const { statusMessages } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -197,19 +201,21 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
   it('dev scenario field_errors-name_required shows only the name required error', async () => {
-    const scenarioUrl = buildScenarioUrl('field_errors-name_required');
+    const scenarioUrl = buildScenarioUrl(
+      'field_errors-name_required',
+    );
     window.history.pushState({}, '', scenarioUrl);
 
     const { formCopy } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -232,19 +238,21 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
   it('dev scenario field_errors-email_invalid shows only the email invalid error', async () => {
-    const scenarioUrl = buildScenarioUrl('field_errors-email_invalid');
+    const scenarioUrl = buildScenarioUrl(
+      'field_errors-email_invalid',
+    );
     window.history.pushState({}, '', scenarioUrl);
 
     const { formCopy } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -275,13 +283,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const { formCopy } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -312,13 +320,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const { formCopy } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -349,13 +357,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const { formCopy } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -386,13 +394,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const { formCopy } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -421,13 +429,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     const { formCopy } = renderScenarioDialog();
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -471,13 +479,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     );
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -509,13 +517,17 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(turnstileHint).not.toBeNull();
     if (!turnstileHint) return;
     expect(turnstileHint.dataset.formHint).toBe('error');
-    expect(turnstileHint.textContent ?? '').toContain(tokenMissingText);
+    expect(turnstileHint.textContent ?? '').toContain(
+      tokenMissingText,
+    );
   });
 
   // NOTE: This scenario models a server-driven validation_error where
   // only the Turnstile token is invalid while all fields remain valid.
   it('dev scenario field_errors-token_missing shows only the token missing error while fields stay valid', async () => {
-    const scenarioUrl = buildScenarioUrl('field_errors-token_missing');
+    const scenarioUrl = buildScenarioUrl(
+      'field_errors-token_missing',
+    );
     window.history.pushState({}, '', scenarioUrl);
 
     const formCopy = buildFormCopy();
@@ -532,13 +544,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     );
 
     await waitFor(() => {
-      const formPanel = document.querySelector(
-        '[data-form="form"]',
-      );
+      const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
     });
 
-    const loadingPanel = document.querySelector('[data-form="loading"]');
+    const loadingPanel = document.querySelector(
+      '[data-form="loading"]',
+    );
     const errorPanel = document.querySelector('[data-form="error"]');
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
@@ -572,6 +584,8 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(turnstileHint).not.toBeNull();
     if (!turnstileHint) return;
     expect(turnstileHint.dataset.formHint).toBe('error');
-    expect(turnstileHint.textContent ?? '').toContain(tokenMissingText);
+    expect(turnstileHint.textContent ?? '').toContain(
+      tokenMissingText,
+    );
   });
 });

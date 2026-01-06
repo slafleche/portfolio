@@ -75,6 +75,10 @@ const forbiddenPropertyRule = {
             type: 'array',
             items: { type: 'string' },
           },
+          allowValues: {
+            type: 'array',
+            items: { type: 'string' },
+          },
           rootDir: { type: 'string' },
         },
         additionalProperties: false,
@@ -83,16 +87,41 @@ const forbiddenPropertyRule = {
   },
   create(context) {
     const option = context.options?.[0] ?? {};
-    const { property, message, allowPatterns = [], rootDir } = option;
+    const {
+      property,
+      message,
+      allowPatterns = [],
+      allowValues = [],
+      rootDir,
+    } = option;
     if (!property || !rootDir) {
       return {};
     }
     const matcher = compileMatchers(allowPatterns);
+    const allowedValues = new Set(allowValues);
     const projectRoot = rootDir;
     return {
       Property(node) {
         const propName = getPropertyName(node);
         if (propName !== property) return;
+        if (allowedValues.size > 0) {
+          const value = node.value;
+          if (
+            value?.type === 'Literal' &&
+            typeof value.value === 'string' &&
+            allowedValues.has(value.value)
+          ) {
+            return;
+          }
+          if (
+            value?.type === 'TemplateLiteral' &&
+            value.expressions.length === 0 &&
+            value.quasis.length === 1 &&
+            allowedValues.has(value.quasis[0]?.value?.cooked ?? '')
+          ) {
+            return;
+          }
+        }
         const filename = context.getFilename();
         const normalizedFile = normalizePath(filename);
         const relative = normalizePath(

@@ -1,95 +1,95 @@
 import { m, mPercent } from 'css-calipers';
 import { fontFamilies } from '../fontFamilies.tokens';
-import { defineFontVariant, type FontVariantMap } from './core';
+import {
+  defineFontVariant,
+  type FontVariantMap,
+} from '../../styles/helpers/fontVariant.helper';
 
-const SOURCE_PATH = 'src/tokens/fontVariants/headings.ts';
-
-export const headingVariants = {
+const SOURCE_PATH = 'src/tokens/fontVariants/typography.ts';
+export const typographyFontVariants = {
+  body: defineFontVariant(fontFamilies.ibm, {
+    label: 'body',
+    sourcePath: SOURCE_PATH,
+    config: {
+      overrides: {
+        size: m(20),
+        lineHeight: 1.5,
+      },
+      options: {
+        weightPercents: {
+          default: mPercent(50),
+          strong: mPercent(100),
+        },
+      },
+    },
+  }),
   heading: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading',
     sourcePath: SOURCE_PATH,
+    config: {
+      options: {
+        textAlign: 'center',
+        letterSpacing: m(0.08, 'em'),
+        weightPercents: {
+          default: mPercent(0),
+        },
+      },
+    },
   }),
   h1: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h1',
-    sourcePath: SOURCE_PATH,
     config: {
       overrides: {
         size: m(45),
       },
       options: {
         weightPercents: {
-          default: mPercent(100),
+          default: mPercent(50),
         },
       },
     },
   }),
   h2: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h2',
-    sourcePath: SOURCE_PATH,
+
     config: {
       overrides: {
-        size: m(26),
-      },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
+        size: m(36),
       },
     },
   }),
   h3: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h3',
-    sourcePath: SOURCE_PATH,
     config: {
       overrides: {
         size: m(23),
-      },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
       },
     },
   }),
   h4: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h4',
-    sourcePath: SOURCE_PATH,
+
     config: {
       overrides: {
         size: m(20),
-      },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
       },
     },
   }),
   h5: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h5',
-    sourcePath: SOURCE_PATH,
+
     config: {
       overrides: {
         size: m(18),
-      },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
       },
     },
   }),
   h6: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h6',
-    sourcePath: SOURCE_PATH,
+
     config: {
       overrides: {
         size: m(17),
-      },
-      options: {
-        weightPercents: {
-          default: mPercent(100),
-        },
       },
     },
   }),

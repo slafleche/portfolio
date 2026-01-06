@@ -17,12 +17,12 @@ import * as revealStyles from '@/styles/components/heroText.css';
 import { playProjectorText } from '@/lib/projectorText';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
-import { fontVariants } from '../tokens/fontVariants.tokens';
-import { heroVars } from '../styles/componentTokens/hero.componentTokens';
+import { heroVars } from '../styles/componentTokens/hero.component.tokens';
 import {
   projectorVars,
   type ProjectorChannel,
-} from '../styles/componentTokens/projector.componentTokens';
+} from '../styles/componentTokens/projector.component.tokens';
+import { heroFontVariants } from '../tokens/fontVariants/hero';
 
 type Props = {
   label: string; // for accessibility
@@ -159,7 +159,7 @@ export default function HeroHeading({
     setStaticReadyAsync(false);
 
     const { fonts, timeoutMs } = collectWaitForFonts(
-      fontVariants.hero,
+      heroFontVariants.hero,
       heroVars.fontLoading,
     );
     const finalize = () => {
@@ -218,7 +218,7 @@ export default function HeroHeading({
 
     const start = async () => {
       const { fonts, timeoutMs } = collectWaitForFonts(
-        fontVariants.hero,
+        heroFontVariants.hero,
         heroVars.fontLoading,
       );
       if (fonts.length > 0) {
@@ -276,6 +276,7 @@ export default function HeroHeading({
         <h1
           data-text={label}
           data-static-ready={staticReady ? 'true' : 'false'}
+          data-ui="heading"
           className={clsx(
             heroStyles.heading,
             revealStyles.layer,

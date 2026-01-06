@@ -1,7 +1,8 @@
 import {
   color,
+  colorFallback,
+  colorModern,
   type ColorWrapper,
-  type CuloriOKLCH,
 } from './colorWrap.helper';
 import {
   m,
@@ -15,19 +16,11 @@ import {
   easing,
   type EasingFunction,
 } from './easingCurves.helper';
-
-/** OKLCH tuple (percents for L, chroma as 0..~0.4, hue in degrees) */
-export type OKLCH = {
-  l: number;
-  c: number;
-  h: number;
-  a?: number;
-};
-export type ColorInput = OKLCH | string | ColorWrapper; // supports wrapped theme colors
+import { clamp } from '../../components/menu/menuUtils';
+import type { Property } from 'csstype';
 
 export type Stop = {
-  color: ColorInput;
-  /** Percent position (css-calipers percent unit). */
+  color: ColorWrapper;
   at: PercentMeasurement;
 };
 
@@ -37,11 +30,11 @@ export type LinearOpts = {
   globalAlpha?: number;
 };
 
+/**
+ * Ellipse or circle sizes (CSS values). Example: "120px 140px" or
+ * "closest-side"
+ */
 export type RadialOpts = {
-  /**
-   * Ellipse or circle sizes (CSS values). Example: "120px 140px" or
-   * "closest-side"
-   */
   size?: string; // default: "farthest-corner"
   at?: string; // e.g. "20% 30%"; default: "50% 50%"
   shape?: 'circle' | 'ellipse'; // default: "ellipse"
@@ -57,7 +50,7 @@ export type Built = {
   modern: string;
 };
 
-type MeasurementValue = number | IMeasurement;
+type MeasurementValue = IMeasurement | 0;
 
 export type GradientAlphaStop = {
   at: number;
@@ -65,16 +58,10 @@ export type GradientAlphaStop = {
   blend?: number;
 };
 
-type NamedGradientEasing =
-  | { name: 'linear' }
-  | { name: 'easeOutQuad' }
-  | { name: 'easeOutCubic' }
-  | { name: 'powerDecay'; exponent?: number };
-
 export type GradientSpotStopCurveOptions = {
   count?: number;
   positions?: readonly number[];
-  easing?: NamedGradientEasing | EasingFunction;
+  easing?: EasingFunction;
   minAlpha?: number;
   maxAlpha?: number;
   includeZero?: boolean;
@@ -146,70 +133,10 @@ export function resolveLinearAngle(
   return input;
 }
 
-function isColorWrapper(value: unknown): value is ColorWrapper {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'unsafeColor' in (value as Record<string, unknown>)
-  );
-}
-
-/** Format OKLCH -> CSS oklch() */
-function fmtOKLCH({ l, c, h, a }: OKLCH): string {
-  const L = `${clamp(l, 0, 100).toFixed(3)}%`;
-  const C = clamp(c, 0, 0.4).toFixed(4); // practical range
-  const H = ((h % 360) + 360) % 360;
-  const A = a == null ? '' : ` / ${clamp(a, 0, 1)}`;
-  return `oklch(${L} ${C} ${H}${A})`;
-}
-
-/**
- * Approximate OKLCH -> sRGB using LCH as a stand-in (close enough for
- * UI gradients).
- */
-function oklchToRgbString({ l, c, h, a }: OKLCH): string {
-  const normalized: CuloriOKLCH = {
-    mode: 'oklch',
-    l: clamp(l, 0, 100) / 100,
-    c: clamp(c, 0, 0.4),
-    h: ((h % 360) + 360) % 360,
-    alpha: a ?? 1,
-  };
-  return color.fromOKLCH(normalized).css(); // rely on your wrapper's output
-}
-
-function isOKLCH(x: ColorInput): x is OKLCH {
-  return (
-    typeof x === 'object' &&
-    x != null &&
-    'l' in x &&
-    'c' in x &&
-    'h' in x
-  );
-}
-
-function toModernOKLCH(input: ColorInput): OKLCH | undefined {
-  if (isOKLCH(input)) return input;
-  const source = isColorWrapper(input)
-    ? input
-    : typeof input === 'string'
-      ? input
-      : undefined;
-  if (!source) return undefined;
-  const culori = color.toOKLCH(source);
-  if (!culori) return undefined;
-  return {
-    l: culori.l * 100,
-    c: culori.c,
-    h: culori.h ?? 0,
-    a: culori.alpha,
-  };
-}
-
 type RequiredSpotStopCurveOptions = {
   count: number;
   positions?: readonly number[];
-  easing: NamedGradientEasing | EasingFunction;
+  easing: EasingFunction;
   minAlpha: number;
   maxAlpha: number;
   includeZero: boolean;
@@ -218,30 +145,11 @@ type RequiredSpotStopCurveOptions = {
 
 const defaultSpotStopCurve: RequiredSpotStopCurveOptions = {
   count: 5,
-  easing: { name: 'powerDecay', exponent: 1.6 },
+  easing: easing.powerDecay(1.6),
   minAlpha: 0,
   maxAlpha: 1,
   includeZero: true,
   includeOne: true,
-};
-
-const resolveEasingOption = (
-  option: NamedGradientEasing | EasingFunction,
-): EasingFunction => {
-  if (typeof option === 'function') {
-    return option;
-  }
-  switch (option.name) {
-    case 'linear':
-      return easing.linear;
-    case 'easeOutQuad':
-      return easing.easeOutQuad;
-    case 'easeOutCubic':
-      return easing.easeOutCubic;
-    case 'powerDecay':
-    default:
-      return easing.powerDecay(option.exponent);
-  }
 };
 
 const generateCurveStops = (
@@ -260,7 +168,7 @@ const generateCurveStops = (
     maxAlpha,
   } = curve;
 
-  const easingFn = resolveEasingOption(curve.easing);
+  const easingFn = curve.easing;
   const hasCustomPositions =
     Array.isArray(positions) && positions.length >= 2;
   const sampleCount = hasCustomPositions
@@ -279,8 +187,16 @@ const generateCurveStops = (
   return samples.map(({ position, value }) => {
     const alpha = maxAlpha - (maxAlpha - minAlpha) * value;
     return {
-      at: Math.round(clamp(position * 100, 0, 100)),
-      alpha: Number(clamp(alpha, minAlpha, maxAlpha).toFixed(3)),
+      at: Number(
+        clamp(position * 100, 0, 100).toFixed(
+          GRADIENT_STOP_PRECISION,
+        ),
+      ),
+      alpha: Number(
+        clamp(alpha, minAlpha, maxAlpha).toFixed(
+          GRADIENT_ALPHA_PRECISION,
+        ),
+      ),
     };
   });
 };
@@ -319,19 +235,26 @@ export const resolveGradientSpotStops = (
   return generateCurveStops();
 };
 
-function colorFallback(c: ColorInput): string {
-  if (isColorWrapper(c)) return c.css();
-  if (isOKLCH(c)) return oklchToRgbString(c);
-  return c;
-}
+const GRADIENT_STOP_PRECISION = 2;
+const GRADIENT_ANGLE_PRECISION = 2;
+const GRADIENT_ALPHA_PRECISION = 3;
 
-function colorModern(c: ColorInput): string {
-  const oklch = toModernOKLCH(c);
-  if (oklch) return fmtOKLCH(oklch);
-  return colorFallback(c);
-}
+const angleToCss = (angle: DegMeasurement): string =>
+  angle.round(GRADIENT_ANGLE_PRECISION).css();
 
-const angleToCss = (angle: DegMeasurement): string => angle.css();
+const clampAlpha = (value?: number): number | undefined => {
+  if (value == null || Number.isNaN(value)) return undefined;
+  const percent = mPercent(value * 100)
+    .clamp(mPercent(0), mPercent(100))
+    .getValue();
+  return Number((percent / 100).toFixed(GRADIENT_ALPHA_PRECISION));
+};
+
+const stopPositionCss = (percentage: PercentMeasurement): string =>
+  percentage
+    .clamp(mPercent(0), mPercent(100))
+    .round(GRADIENT_STOP_PRECISION)
+    .css();
 
 export function buildLinear({
   angle,
@@ -339,19 +262,20 @@ export function buildLinear({
   globalAlpha,
 }: LinearOpts): Built {
   const direction = angleToCss(resolveLinearAngle(angle)); // always returns something (90° default)
-  const targetAlpha =
-    globalAlpha == null ? undefined : clamp(globalAlpha, 0, 1);
-  const withAlpha = (input: ColorInput): ColorInput => {
-    if (targetAlpha == null) return input;
-    if (isColorWrapper(input)) return input.alpha(targetAlpha);
-    if (isOKLCH(input)) return { ...input, a: targetAlpha };
-    return color(input).alpha(targetAlpha);
-  };
+  const targetAlpha = clampAlpha(globalAlpha);
+  const withAlpha = (input: ColorWrapper): ColorWrapper =>
+    targetAlpha == null ? input : input.alpha(targetAlpha);
   const fStops = stops
-    .map((s) => `${colorFallback(withAlpha(s.color))} ${s.at.css()}`)
+    .map(
+      (s) =>
+        `${colorFallback(withAlpha(s.color))} ${stopPositionCss(s.at)}`,
+    )
     .join(', ');
   const mStops = stops
-    .map((s) => `${colorModern(withAlpha(s.color))} ${s.at.css()}`)
+    .map(
+      (s) =>
+        `${colorModern(withAlpha(s.color))} ${stopPositionCss(s.at)}`,
+    )
     .join(', ');
   return {
     fallback: `linear-gradient(${direction}, ${fStops})`,
@@ -367,10 +291,10 @@ export function buildRadial({
 }: RadialOpts): Built {
   const header = `${shape} ${size} at ${at}`;
   const fStops = stops
-    .map((s) => `${colorFallback(s.color)} ${s.at.css()}`)
+    .map((s) => `${colorFallback(s.color)} ${stopPositionCss(s.at)}`)
     .join(', ');
   const mStops = stops
-    .map((s) => `${colorModern(s.color)} ${s.at.css()}`)
+    .map((s) => `${colorModern(s.color)} ${stopPositionCss(s.at)}`)
     .join(', ');
   return {
     fallback: `radial-gradient(${header}, ${fStops})`,
@@ -383,17 +307,26 @@ export function stackBackground(layers: Layer[]): Built {
   const parts = layers.map((l) =>
     l.kind === 'linear'
       ? buildLinear(l.options)
-      : buildRadial(l.options),
-  );
+      : buildRadial(l.options));
+  const [
+    first,
+    ...rest
+  ] = parts;
+  if (
+    first &&
+    rest.every(
+      (part) =>
+        part.fallback === first.fallback &&
+        part.modern === first.modern,
+    )
+  ) {
+    return first;
+  }
   return {
     fallback: parts.map((p) => p.fallback).join(', '),
     modern: parts.map((p) => p.modern).join(', '),
   };
 }
-
-/* ========================================================================== */
-/*                          VANILLA-EXTRACT HELPERS                           */
-/* ========================================================================== */
 
 export const OKLCH_SUPPORTS = '(color: oklch(50% 0 0))';
 
@@ -402,7 +335,7 @@ export const OKLCH_SUPPORTS = '(color: oklch(50% 0 0))';
  * via @supports. (No `as const` to avoid TS1355 when values are
  * computed.)
  */
-export function backgroundImageDecl(
+export function gradientAsBgImg(
   built: Built,
   blendMode?: string | string[],
 ) {
@@ -419,6 +352,10 @@ export function backgroundImageDecl(
     base.backgroundBlendMode = bm;
   }
 
+  if (!built.modern.includes('oklch(')) {
+    return base;
+  }
+
   return {
     ...base,
     '@supports': {
@@ -430,42 +367,81 @@ export function backgroundImageDecl(
   };
 }
 
-/**
- * Compose color + image in one go (keeps @supports only for the
- * image).
- */
-export function backgroundDecl(opts: {
-  color?: string; // plain color string
-  image?: Built; // from buildLinear/buildRadial/stackBackground
-  blendMode?: string | string[];
-}) {
-  const { color: bgColor, image, blendMode } = opts;
-  const base: Record<string, unknown> = {};
-  if (bgColor) base.backgroundColor = bgColor;
-  if (!image) return base;
+export type MaskSupportStyles = {
+  mask: Property.Mask;
+  WebkitMask: Property.WebkitMask;
+};
+
+export type MaskSupportPartStyles = {
+  styles: {
+    mask: Property.Mask;
+    WebkitMask: Property.WebkitMask;
+  };
+};
+
+const normalizeMaskColor = (value: string): string =>
+  value
+    .replace(
+      /rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0(?:\.0+)?\s*\)/g,
+      'transparent',
+    )
+    .replace(
+      /rgb\(\s*0\s+0\s+0\s*\/\s*0(?:\.0+)?\s*\)/g,
+      'transparent',
+    )
+    .replace(
+      /rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*1(?:\.0+)?\s*\)/g,
+      '#000',
+    )
+    .replace(
+      /rgb\(\s*0\s+0\s+0\s*\/\s*1(?:\.0+)?\s*\)/g,
+      '#000',
+    )
+    .replace(/rgb\(\s*0\s*,\s*0\s*,\s*0\s*\)/g, '#000')
+    .replace(/rgb\(\s*0\s+0\s+0\s*\)/g, '#000');
+
+export function maskByLinearGradient(
+  options: LinearOpts,
+): MaskSupportStyles {
+  const alphaStops = options.stops.map((stop) => ({
+    ...stop,
+    color: color('#000').alpha(stop.color.alpha()),
+  }));
+  const built = buildLinear({
+    angle: options.angle,
+    stops: alphaStops,
+    globalAlpha: options.globalAlpha,
+  });
+  const mask = normalizeMaskColor(built.fallback);
 
   return {
-    ...base,
-    ...backgroundImageDecl(image, blendMode),
+    mask,
+    WebkitMask: mask,
+  };
+}
+
+export function maskByLinearGradientParts(
+  options: LinearOpts,
+): MaskSupportPartStyles {
+  const mask = maskByLinearGradient(options);
+  return {
+    styles: {
+      mask: mask.mask,
+      WebkitMask: mask.WebkitMask,
+    },
   };
 }
 
 /** Utility: build evenly-spaced stops from a list of colors */
 export function stopsFromColors(
-  colors: ColorInput[],
+  colors: ColorWrapper[],
   alpha?: number,
 ): Stop[] {
   const n = Math.max(1, colors.length - 1);
   return colors.map((c, i) => {
     const pos = (i / n) * 100;
-    if (isOKLCH(c) && alpha != null)
-      return { color: { ...c, a: alpha }, at: mPercent(pos) };
-    if (isColorWrapper(c) && alpha != null)
+    if (alpha != null)
       return { color: c.alpha(alpha), at: mPercent(pos) };
     return { color: c, at: mPercent(pos) };
   });
-}
-
-function clamp(v: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, v));
 }

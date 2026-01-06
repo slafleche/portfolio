@@ -20,19 +20,55 @@ const createTargetBlankRenderer = () => {
   return renderer;
 };
 
+const normalizeSource = (source: string): string => {
+  const lines = source
+    .split(/\r?\n/)
+    .map((line) => (line.trim() === '' ? '' : line));
+
+  const collapsed: string[] = [];
+  let previousBlank = false;
+  let inFencedBlock = false;
+
+  for (const line of lines) {
+    const isFence = /^\s*(```|~~~)/.test(line);
+    if (isFence) {
+      inFencedBlock = !inFencedBlock;
+      collapsed.push(line);
+      previousBlank = false;
+      continue;
+    }
+
+    if (inFencedBlock) {
+      collapsed.push(line);
+      previousBlank = false;
+      continue;
+    }
+
+    const isBlank = line === '';
+    if (isBlank && previousBlank) {
+      continue;
+    }
+    collapsed.push(line);
+    previousBlank = isBlank;
+  }
+
+  return collapsed.join('\n').trim();
+};
+
 function MarkdownBase({
   id,
   source,
   className,
   openLinksInNewTab = true,
 }: MarkdownProps): ReactElement | null {
-  if (typeof source !== 'string' || source.trim() === '') {
+  const normalized = typeof source === 'string' ? normalizeSource(source) : '';
+  if (normalized === '') {
     return null;
   }
 
-  const html = openLinksInNewTab
-    ? marked.parse(source, { renderer: createTargetBlankRenderer() })
-    : marked.parse(source);
+  const html = marked.parse(normalized, {
+    renderer: openLinksInNewTab ? createTargetBlankRenderer() : undefined,
+  });
 
   return (
     <div

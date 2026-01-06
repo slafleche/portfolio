@@ -1,6 +1,6 @@
 import { forwardRef, useMemo } from 'react';
 import type { Ref } from 'react';
-import * as s from '@/styles/components/forms.css';
+import * as s from '@/styles/components/messageCentre.css';
 import type { MessageCentreMessages } from '../messageCentre.types';
 
 type MessageCentreBlockProps = {
@@ -12,26 +12,34 @@ export const MessageCentreBlock = forwardRef<
   MessageCentreBlockProps
 >(function MessageCentreBlock({ messages }, ref) {
   const inlineMessages = useMemo(
-    () => [...messages.blocks],
-    [messages.blocks],
+    () => [
+      ...messages.blocks,
+    ],
+    [
+      messages.blocks,
+    ],
   );
 
   const inlineCodes = useMemo(
-    () => [...(messages.blockCodes ?? [])],
-    [messages.blockCodes],
+    () => [
+      ...(messages.blockCodes ?? []),
+    ],
+    [
+      messages.blockCodes,
+    ],
   );
 
   const globalMessage = useMemo(() => {
     if (messages.globals.length > 0) return messages.globals[0];
     if (messages.blocks.length === 1) return messages.blocks[0];
-    if (messages.blocks.length > 1 && messages.toastFallback) {
-      return messages.toastFallback;
+    if (messages.blocks.length > 1 && messages.messageFallback) {
+      return messages.messageFallback;
     }
     return null;
   }, [
     messages.blocks,
     messages.globals,
-    messages.toastFallback,
+    messages.messageFallback,
   ]);
 
   return (
@@ -42,8 +50,8 @@ export const MessageCentreBlock = forwardRef<
       data-form="messages"
     >
       {globalMessage ? (
-        <div className={s.toastRoot} role="status" aria-live="polite">
-          <span className={s.toastTitle}>{globalMessage}</span>
+        <div className={s.root} role="status" aria-live="polite">
+          <span className={s.title}>{globalMessage}</span>
         </div>
       ) : null}
       <div

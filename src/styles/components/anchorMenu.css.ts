@@ -5,19 +5,32 @@ import { borders } from '../helpers/borders.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { m, mPercent } from 'css-calipers';
 import { themeColours } from '../../tokens/global.tokens';
+import { textShadow } from '../helpers/shadow.helper';
+import { makeGlassSurface } from '../helpers/glassy.helper';
+import { relativeFontWeight } from '../helpers/typography.helper';
+import { fontFamilies } from '../../tokens/fontFamilies.tokens';
+import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 export const root = style({
   position: 'fixed',
   top: 0,
-  left: logoVars.offsetX.css(),
+  left: logoVars.offsetX
+    .add(logoVars.width.subtract(anchorMenuVars.handle.size).half())
+    .subtract(anchorMenuVars.dot.borders.width)
+    .css(),
   height: '100%',
   display: 'flex',
   alignItems: 'center',
   pointerEvents: 'none',
   justifyContent: 'center',
-
-  // width: logoVars.width.css(),
   ...paddings(anchorMenuVars.margins),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        left: 0,
+      },
+    }),
+  },
 });
 
 export const list = style({
@@ -48,6 +61,7 @@ export const link = style({
   textDecoration: 'none',
   outline: 'none',
   pointerEvents: 'auto',
+  cursor: 'pointer',
 });
 
 export const dot = style({
@@ -55,11 +69,7 @@ export const dot = style({
   width: anchorMenuVars.size.css(),
   height: anchorMenuVars.size.css(),
   ...backgrounds({ color: 'transparent' }),
-  ...borders({
-    radius: mPercent(50),
-    width: m(1),
-    color: 'rgba(255, 255, 255, 0.8)',
-  }),
+  ...borders(anchorMenuVars.dot.borders),
 });
 
 export const handle = style({
@@ -69,6 +79,7 @@ export const handle = style({
   minWidth: anchorMenuVars.handle.size.css(),
   height: anchorMenuVars.handle.size.css(),
   width: 'auto',
+
   ...borders({
     radius: anchorMenuVars.handle.size.half(),
     width: m(1),
@@ -108,6 +119,8 @@ export const label = style({
   whiteSpace: 'nowrap',
   lineHeight: 1,
   transformOrigin: '0 50%',
+  ...relativeFontWeight(fontFamilies.ibm, mPercent(50)),
+  ...textShadow(anchorMenuVars.text.textShadow),
   selectors: {
     '&::after': {
       content: '""',
@@ -150,5 +163,12 @@ globalStyle(
 );
 
 globalStyle(`.${link}:hover .${dot}, .${link}:focus .${dot}`, {
-  ...backgrounds({ color: themeColours.secondary }),
+  ...backgrounds({ color: themeColours.electricBlue }),
 });
+
+globalStyle(
+  `.${link}:hover .${handle}, .${link}:focus .${handle}, .${link}:focus-visible .${handle}`,
+  {
+    ...makeGlassSurface(),
+  },
+);

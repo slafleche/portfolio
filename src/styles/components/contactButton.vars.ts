@@ -31,7 +31,9 @@ export const kAnticY = 1 / kAntic;
 export const kEnterY = 1 / kEnter;
 
 /* ---------- Core geometry/timings ---------- */
-export const offsetPx = m(26);
+
+// need to wire up breakpoints 
+export const offsetPx = m(36);
 export const buttonSizePx = m(66);
 export const iconSizePx = m(36);
 

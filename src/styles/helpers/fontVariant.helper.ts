@@ -1,20 +1,24 @@
 import type {
   ComposeFontStylesConfig,
+  ComposeFontStylesOptions,
   FontStyleLayer,
   FontWeightPercentOptions,
-} from '../../styles/helpers/typography.helper';
+} from './typography.helper';
 import {
   composeFontStyles,
   computeFontWeight,
-} from '../../styles/helpers/typography.helper';
+} from './typography.helper';
 import type {
   FontFamilyDef,
+  FontFamilyForPercentWeights,
   CSS_TYPES,
-} from '../../styles/helpers/types.helper';
+} from './types.helper';
 import { notRelease } from '../../lib/runtimeEnv';
 
-export type FontVariantDefinition = {
-  family: FontFamilyDef;
+export type FontVariantDefinition<
+  Family extends FontFamilyDef | FontFamilyForPercentWeights = FontFamilyDef,
+> = {
+  family: Family;
   config?: ComposeFontStylesConfig;
   weights: {
     default: CSS_TYPES.Property.FontWeight;
@@ -99,18 +103,30 @@ const combineConfig = (
     ...collectLayers(extra, false),
   ];
 
-  const mergedOptions =
+  const mergedWeightPercents =
     mergeWeightPercents(
       base.options?.weightPercents,
       extra.options?.weightPercents,
     ) ?? undefined;
 
-  const options =
-    mergedOptions !== undefined
-      ? {
-          weightPercents: mergedOptions,
-        }
-      : undefined;
+  const resolveOptionValue = <K extends keyof ComposeFontStylesOptions>(
+    key: K,
+  ): ComposeFontStylesOptions[K] | undefined => {
+    if (
+      extra.options &&
+      Object.prototype.hasOwnProperty.call(extra.options, key)
+    ) {
+      return extra.options[key];
+    }
+    return base.options?.[key];
+  };
+
+  const options: ComposeFontStylesOptions = {
+    textAlign: resolveOptionValue('textAlign'),
+    textTransform: resolveOptionValue('textTransform'),
+    letterSpacing: resolveOptionValue('letterSpacing'),
+    weightPercents: mergedWeightPercents,
+  };
 
   const overrides = extra.overrides ?? undefined;
 
@@ -246,6 +262,35 @@ const resolveVariantWeights = (
   return enforceWeightOrder(defaultWeight, strongWeight);
 };
 
+// const fontVariants = {
+//   ...menuVariants,
+//   ...heroVariants,
+//   ...headingVariants,
+//   ...bodyVariants,
+// } as const satisfies Record<string, FontVariantDefinition>;
+
+// export type FontVariantKey = keyof typeof fontVariants;
+
+// export function getFontVariant<Key extends FontVariantKey>(
+//   key: Key,
+// ): (typeof fontVariants)[Key] {
+//   return fontVariants[key];
+// }
+
+// type ComposeVariantConfig = Parameters<
+//   typeof fontStylesFromFontVariant
+// >[1];
+
+// export function fontVariantStyles<Key extends FontVariantKey>(
+//   key: Key,
+//   extraConfig?: ComposeVariantConfig,
+// ) {
+//   return fontStylesFromFontVariant(fontVariants[key], extraConfig);
+// }
+
+// export { fontStylesFromFontVariant as fontStylesFromFontVariant };
+// export type { FontVariantDefinition };
+
 export const defineFontVariant = (
   family: FontFamilyDef,
   options: DefineFontVariantOptions = {},
@@ -262,7 +307,11 @@ export const defineFontVariant = (
     waitForFonts === true
       ? ((): readonly string[] | undefined => {
           const primaryName = resolvePrimaryFamilyName(family);
-          return primaryName ? [primaryName] : undefined;
+          return primaryName
+            ? [
+                primaryName,
+              ]
+            : undefined;
         })()
       : waitForFonts;
 
@@ -275,11 +324,21 @@ export const defineFontVariant = (
   };
 };
 
-export function composeFontVariantStyles(
-  variant: FontVariantDefinition,
-  extraConfig?: ComposeFontStylesConfig,
-) {
-  const config = combineConfig(variant.config, extraConfig);
+type FontVariantStylesOptions = {
+  variant: FontVariantDefinition;
+  extraConfig?: ComposeFontStylesConfig;
+  baseVariant?: FontVariantDefinition;
+};
+
+export function fontStylesFromFontVariant({
+  variant,
+  extraConfig,
+  baseVariant,
+}: FontVariantStylesOptions) {
+  const withBase = baseVariant
+    ? combineConfig(baseVariant.config, variant.config)
+    : variant.config;
+  const config = combineConfig(withBase, extraConfig);
   return composeFontStyles(variant.family, config);
 }
 

@@ -1,0 +1,22 @@
+import { m } from 'css-calipers';
+
+// layout
+const logoContainerMinWidth = m(300);
+
+export const cardLayout = {
+  grid: {
+    gap: m(24),
+  },
+  logoBox: {
+    minWidth: logoContainerMinWidth,
+    paddings: m(40),
+    mobile: {
+      paddings: m(20),
+    },
+  },
+  content: {},
+
+  oneColumn: {
+    maxWidth: m(800),
+  },
+};

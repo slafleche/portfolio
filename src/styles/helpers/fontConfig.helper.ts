@@ -10,6 +10,7 @@ export type FontCfgInput = {
   ital?: boolean;
   axes?: Record<string, string | string[]>;
   subsets?: string[];
+  type?: 'googleFonts' | 'selfHosted' | 'system';
 };
 export type FontsConfig = Record<string, FontCfgInput>;
 
@@ -203,7 +204,7 @@ function deriveAxisDefaults(
  * @param fallbacks E.g. ['Poppins','Helvetica','Arial','sans-serif']
  * @param cfgMap Parsed + validated FontsConfig (use the default
  *   export `fontsConfig`)
- * @param spacing IMeasurement only (e.g., m(0.3, 'rem'))
+ * @param letterSpacing IMeasurement only (e.g., m(0.3, 'rem'))
  */
 type WeightConfig = {
   low?: number;
@@ -216,7 +217,7 @@ type FontFamilyArgs = {
   familyName?: string;
   fallbacks: string[];
   cfgMap?: FontsConfig;
-  spacing: IMeasurement;
+  letterSpacing: IMeasurement;
   offsetToFlushTop: IMeasurement;
   weights: WeightConfig;
   lineHeight?: FontFamilyDef['lineHeight'];
@@ -251,7 +252,7 @@ export function defineFontFamily({
   familyName,
   fallbacks,
   cfgMap,
-  spacing,
+  letterSpacing,
   offsetToFlushTop,
   weights,
   lineHeight,
@@ -310,12 +311,14 @@ export function defineFontFamily({
 
   assertWeightOrder(finalWeights, familyName);
 
-  const familyParts = familyName
-    ? [
-        familyName.includes(' ') ? `"${familyName}"` : familyName,
-        ...fallbacks,
-      ]
-    : fallbacks;
+  const isSystemFamily = source?.type === 'system';
+  const familyParts =
+    familyName && !isSystemFamily
+      ? [
+          familyName.includes(' ') ? `"${familyName}"` : familyName,
+          ...fallbacks,
+        ]
+      : fallbacks;
 
   if (familyParts.length === 0) {
     throw new Error(
@@ -339,7 +342,7 @@ export function defineFontFamily({
   return {
     family: familyParts.join(', '),
     weights: finalWeights,
-    spacing,
+    letterSpacing,
     offsetToFlushTop,
     lineHeight,
     css: Object.keys(mergedCss).length > 0 ? mergedCss : undefined,
@@ -421,6 +424,13 @@ export function asFontsConfig(input: unknown): FontsConfig {
       }
     }
 
+    const type =
+      cfg.type === 'googleFonts' ||
+      cfg.type === 'selfHosted' ||
+      cfg.type === 'system'
+        ? cfg.type
+        : undefined;
+
     out[family] = {
       texts,
       keys,
@@ -428,6 +438,7 @@ export function asFontsConfig(input: unknown): FontsConfig {
       ital,
       axes,
       subsets,
+      type,
     };
   }
 

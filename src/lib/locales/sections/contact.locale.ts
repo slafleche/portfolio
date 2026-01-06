@@ -8,7 +8,7 @@ export const CONTACT_KEYS = {
   content: 'contact-content',
   emailLabel: 'contact-email-label',
   href: 'contact-href',
-  systemsSnippetLabel: 'footer-systems-snippet-label',
+  mockHtmlAlt: 'systems-mock-html-alt',
   bgDescription: 'contact-bg-description',
   bgTitle: 'contact-bg-title',
 } as const satisfies Record<string, MessageKey>;
@@ -18,7 +18,7 @@ export type ContactCopy = {
   content: string;
   emailLabel: string;
   href: string;
-  systemsSnippetLabel: string;
+  mockHtmlAlt: string;
 };
 
 export const buildContactCopy = (t: Translator): ContactCopy => ({
@@ -26,5 +26,5 @@ export const buildContactCopy = (t: Translator): ContactCopy => ({
   content: t(CONTACT_KEYS.content),
   emailLabel: t(CONTACT_KEYS.emailLabel),
   href: t(CONTACT_KEYS.href),
-  systemsSnippetLabel: t(CONTACT_KEYS.systemsSnippetLabel),
+  mockHtmlAlt: t(CONTACT_KEYS.mockHtmlAlt),
 });

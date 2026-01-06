@@ -7,13 +7,13 @@ import { renderMessageCentre } from './helpers/messageCentre.harness';
 const emptyMessages: MessageCentreMessages = {
   globals: [],
   blocks: [],
-  toastFallback: undefined,
+  messageFallback: undefined,
 };
 
 describe('Contact form message centre: MessageCentreBlock', () => {
   describe('rendering and accessibility', () => {
-    it('renders a live-region shell with no inline text or toast when there are no messages', () => {
-      const { getInlineRegion, queryToastRegion, container } =
+    it('renders a live-region shell with no inline text or messageCentre when there are no messages', () => {
+      const { getInlineRegion, querymessageCentreRegion, container } =
         renderMessageCentre(emptyMessages);
 
       const liveRegion = getInlineRegion();
@@ -32,7 +32,7 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       );
 
       expect(liveRegion.textContent?.trim() ?? '').toBe('');
-      expect(queryToastRegion()).toBeNull();
+      expect(querymessageCentreRegion()).toBeNull();
     });
 
     it('switches the inline status wrapper to visible when messages appear', () => {
@@ -41,7 +41,7 @@ describe('Contact form message centre: MessageCentreBlock', () => {
           'Global error',
         ],
         blocks: [],
-        toastFallback: undefined,
+        messageFallback: undefined,
       };
 
       const { getInlineRegion, container } =
@@ -60,22 +60,22 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       expect(liveRegion.textContent).toContain('Global error');
     });
 
-    it('hides inline status and toast again when messages clear', () => {
+    it('hides inline status and messageCentre again when messages clear', () => {
       const messagesWithContent: MessageCentreMessages = {
         globals: [
           'Global error',
         ],
         blocks: [],
-        toastFallback: undefined,
+        messageFallback: undefined,
       };
 
       const {
         container,
         getInlineRegion,
-        queryToastRegion,
+        querymessageCentreRegion,
         rerenderWithMessages,
       } = renderMessageCentre(messagesWithContent);
-      expect(queryToastRegion()).not.toBeNull();
+      expect(querymessageCentreRegion()).not.toBeNull();
 
       rerenderWithMessages(emptyMessages);
 
@@ -89,7 +89,7 @@ describe('Contact form message centre: MessageCentreBlock', () => {
         'false',
       );
       expect(liveRegion.textContent?.trim() ?? '').toBe('');
-      expect(queryToastRegion()).toBeNull();
+      expect(querymessageCentreRegion()).toBeNull();
     });
   });
 
@@ -101,7 +101,7 @@ describe('Contact form message centre: MessageCentreBlock', () => {
           'Second global',
         ],
         blocks: [],
-        toastFallback: undefined,
+        messageFallback: undefined,
       };
 
       const { container } = renderMessageCentre(messages);
@@ -126,7 +126,7 @@ describe('Contact form message centre: MessageCentreBlock', () => {
           'Name error',
           'Email error',
         ],
-        toastFallback: undefined,
+        messageFallback: undefined,
       };
 
       const { container } = renderMessageCentre(messages);
@@ -156,7 +156,7 @@ describe('Contact form message centre: MessageCentreBlock', () => {
           'Name error',
           'Email error',
         ],
-        toastFallback: undefined,
+        messageFallback: undefined,
       };
 
       const { container } = renderMessageCentre(messages);
@@ -178,13 +178,14 @@ describe('Contact form message centre: MessageCentreBlock', () => {
     });
   });
 
-  describe('toast behaviour and shapes', () => {
-    it('does not render a toast when there are no messages', () => {
-      const { queryToastRegion } = renderMessageCentre(emptyMessages);
-      expect(queryToastRegion()).toBeNull();
+  describe('messageCentre behaviour and shapes', () => {
+    it('does not render a messageCentre when there are no messages', () => {
+      const { querymessageCentreRegion } =
+        renderMessageCentre(emptyMessages);
+      expect(querymessageCentreRegion()).toBeNull();
     });
 
-    it('uses the first global message as the toast when globals are present', () => {
+    it('uses the first global message as the messageCentre when globals are present', () => {
       const messages: MessageCentreMessages = {
         globals: [
           'Global one',
@@ -193,104 +194,108 @@ describe('Contact form message centre: MessageCentreBlock', () => {
         blocks: [
           'Block message',
         ],
-        toastFallback: 'Fallback summary',
+        messageFallback: 'Fallback summary',
       };
 
-      const { queryToastRegion, getToastText } =
+      const { querymessageCentreRegion, getmessageCentreText } =
         renderMessageCentre(messages);
 
-      const toastRegion = queryToastRegion();
-      expect(toastRegion).not.toBeNull();
-      if (!toastRegion) return;
-      expect(getToastText()).toBe('Global one');
+      const messageCentreRegion = querymessageCentreRegion();
+      expect(messageCentreRegion).not.toBeNull();
+      if (!messageCentreRegion) return;
+      expect(getmessageCentreText()).toBe('Global one');
     });
 
-    it('uses the single block message as the toast when there are no globals', () => {
+    it('uses the single block message as the messageCentre when there are no globals', () => {
       const messages: MessageCentreMessages = {
         globals: [],
         blocks: [
           'Only block error',
         ],
-        toastFallback: undefined,
+        messageFallback: undefined,
       };
 
-      const { queryToastRegion, getToastText } =
+      const { querymessageCentreRegion, getmessageCentreText } =
         renderMessageCentre(messages);
 
-      expect(queryToastRegion()).not.toBeNull();
-      expect(getToastText()).toBe('Only block error');
+      expect(querymessageCentreRegion()).not.toBeNull();
+      expect(getmessageCentreText()).toBe('Only block error');
     });
 
-    it('does not render a toast when there are multiple block messages and no fallback', () => {
+    it('does not render a messageCentre when there are multiple block messages and no fallback', () => {
       const messages: MessageCentreMessages = {
         globals: [],
         blocks: [
           'Block one',
           'Block two',
         ],
-        toastFallback: undefined,
+        messageFallback: undefined,
       };
 
-      const { queryToastRegion } = renderMessageCentre(messages);
+      const { querymessageCentreRegion } =
+        renderMessageCentre(messages);
 
-      expect(queryToastRegion()).toBeNull();
+      expect(querymessageCentreRegion()).toBeNull();
     });
 
-    it('uses toastFallback as toast text when there are multiple block messages and no globals', () => {
+    it('uses messageFallback as messageCentre text when there are multiple block messages and no globals', () => {
       const messages: MessageCentreMessages = {
         globals: [],
         blocks: [
           'Block one',
           'Block two',
         ],
-        toastFallback: 'Summary toast',
+        messageFallback: 'Summary messageCentre',
       };
 
-      const { queryToastRegion, getToastText } =
+      const { querymessageCentreRegion, getmessageCentreText } =
         renderMessageCentre(messages);
 
-      expect(queryToastRegion()).not.toBeNull();
-      expect(getToastText()).toBe('Summary toast');
+      expect(querymessageCentreRegion()).not.toBeNull();
+      expect(getmessageCentreText()).toBe('Summary messageCentre');
     });
 
-    it('removes the toast when messages change to a non-toast shape', () => {
-      const messagesWithToast: MessageCentreMessages = {
+    it('removes the messageCentre when messages change to a non-messageCentre shape', () => {
+      const messagesWithmessageCentre: MessageCentreMessages = {
         globals: [],
         blocks: [
           'Only block error',
         ],
-        toastFallback: undefined,
+        messageFallback: undefined,
       };
 
-      const { queryToastRegion, rerenderWithMessages } =
-        renderMessageCentre(messagesWithToast);
+      const { querymessageCentreRegion, rerenderWithMessages } =
+        renderMessageCentre(messagesWithmessageCentre);
 
-      expect(queryToastRegion()).not.toBeNull();
+      expect(querymessageCentreRegion()).not.toBeNull();
 
       rerenderWithMessages(emptyMessages);
 
-      expect(queryToastRegion()).toBeNull();
+      expect(querymessageCentreRegion()).toBeNull();
     });
 
-    it('exposes the toast via a live region with status role', () => {
+    it('exposes the messageCentre via a live region with status role', () => {
       const messages: MessageCentreMessages = {
         globals: [
           'Global one',
         ],
         blocks: [],
-        toastFallback: undefined,
+        messageFallback: undefined,
       };
 
-      const { queryToastRegion, getToastText } =
+      const { querymessageCentreRegion, getmessageCentreText } =
         renderMessageCentre(messages);
 
-      const toastRegion = queryToastRegion();
-      expect(toastRegion).not.toBeNull();
-      if (!toastRegion) return;
+      const messageCentreRegion = querymessageCentreRegion();
+      expect(messageCentreRegion).not.toBeNull();
+      if (!messageCentreRegion) return;
 
-      expect(toastRegion).toHaveAttribute('role', 'status');
-      expect(toastRegion).toHaveAttribute('aria-live', 'polite');
-      expect(getToastText()).toBe('Global one');
+      expect(messageCentreRegion).toHaveAttribute('role', 'status');
+      expect(messageCentreRegion).toHaveAttribute(
+        'aria-live',
+        'polite',
+      );
+      expect(getmessageCentreText()).toBe('Global one');
     });
   });
 });

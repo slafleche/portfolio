@@ -1,22 +1,28 @@
 import { style, globalStyle } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
-import { colorVars, themeColours } from '../../tokens/global.tokens';
 import {
-  composeFontVariantStyles,
-  fontVariants,
-} from '../../tokens/fontVariants.tokens';
-import { heroVars } from '../componentTokens/hero.componentTokens';
+  colorVars,
+  dropShadowVars,
+  themeColours,
+} from '../../tokens/global.tokens';
+import { heroVars } from '../componentTokens/hero.component.tokens';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { noiseBg } from '../helpers/noiseSVG.helper';
 import { paddings, margins } from '../helpers/spacing.helper';
 import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import {
-  backgroundImageDecl,
+  gradientAsBgImg,
   buildLinear,
 } from '../helpers/gradients.helper';
-import { projectorVars } from '../componentTokens/projector.componentTokens';
 import { glassVars } from '../../tokens/glassy.tokens';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import { heroFontVariants } from '../../tokens/fontVariants/hero';
+import { makeGlassSurface } from '../helpers/glassy.helper';
+import {
+  componentMediaQueries,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -59,12 +65,12 @@ export const video = style({
 
 export const contentWrap = style({
   ...fullSizeOfParent(),
-  ...backgroundImageDecl(bgGradients),
+  ...gradientAsBgImg(bgGradients),
 });
 
 export const videoBg = style({
   ...fullSizeOfParent(),
-  ...backgroundImageDecl(bgGradients),
+  ...gradientAsBgImg(bgGradients),
 });
 
 export const visualContent = style({
@@ -80,6 +86,12 @@ export const overlays = style({
   position: 'absolute',
   inset: 0,
 });
+
+export const glassySurfaceOverwrite = style(
+  makeGlassSurface({
+    blur: m(15),
+  }),
+);
 
 /** Subtle static grain to break banding */
 export const grain = style({
@@ -108,6 +120,7 @@ export const centerSoften = style({
     ${colorVars.shadow.alpha(0.15).css()} 42%,
     ${colorVars.shadow.alpha(0).css()} 70%
   )`,
+  opacity: 0.2,
 });
 
 /** Break ring radius with soft band */
@@ -132,6 +145,7 @@ export const content = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  width: '100%',
 });
 
 export const main = style({
@@ -140,12 +154,21 @@ export const main = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  ...paddings(m(60)),
+  ...paddings({
+    vertical: m(80),
+    horizontal: m(46),
+  }),
+  selectors: {
+    ...componentMediaQueries({
+      hero_compact: paddings(m(46)),
+    }),
+  },
 });
 
 export const subtitle = style({
   opacity: 0,
   transition: 'opacity 220ms ease',
+  textAlign: 'center',
   selectors: {
     '&[data-ready="true"]': {
       opacity: 1,
@@ -153,10 +176,17 @@ export const subtitle = style({
   },
 });
 
+export const subtitleMarkdown = style({});
+
+globalStyle(`.${subtitleMarkdown} p`, {
+  fontSize: '22px',
+  margin: 0,
+});
+
 // export const paragraph = style({
 //   position: 'relative',
 //   textAlign: 'center',
-//   ...composeFontVariantStyles(fontVariants.hero, {
+//   ...fontStylesFromFontVariant(fontVariants.hero, {
 //     options: {
 //       weightPercents: {
 //         default: mPercent(0),
@@ -185,13 +215,13 @@ const ctaGradient = buildLinear({
 });
 
 export const cta = style({
-  ...margins({ top: m(16) }),
+  ...margins({ top: m(40) }),
   display: 'inline-flex',
   alignItems: 'center',
   gap: '3px',
   justifyContent: 'center',
   alignSelf: 'center',
-  ...backgroundImageDecl(ctaGradient),
+  ...gradientAsBgImg(ctaGradient),
   ...paddings({
     vertical: m(3),
     horizontal: m(6),
@@ -247,85 +277,33 @@ export const ctaIcon = style({
   },
 });
 
-// Shared offsets for hero overlap framing.
-const offset = m(20);
-
 export const vennContainer = style({
   position: 'relative',
   isolation: 'isolate',
-  ...paddings(offset.multiply(4)),
+  ...paddings(m(80)),
 });
 
 export const consolePanel = style({
   position: 'relative',
 });
 
-// export const console = style({
-//   position: 'absolute',
-//   top: 0,
-//   left: 0,
-//   width: `calc(100% + ${offset.multiply(1.5).css()})`,
-//   transform: transforms.value(...consoleTransforms),
-//   transformOrigin: '50% 50%',
-//   display: 'flex',
-//   flexDirection: 'column',
-//   overflow: 'hidden',
-//   pointerEvents: 'auto',
-//   zIndex: 0,
-//   minHeight: '55vh',
-//   selectors: {
-// '&:after': {
-// 	content: '""',
-// 	position: 'absolute',
-// 	inset: 0,
-// 	background:
-// 		'radial-gradient(34% 28% at 60% 62%, rgba(92,204,229,0.18), transparent 72%)',
-// 	mixBlendMode: 'screen',
-// 	filter: 'blur(10px)',
-// 	pointerEvents: 'none',
-// },
-//   },
-// });
-
-// export const designPanel = style({
-//   transform: transforms.value(...designTransforms),
-//   position: 'relative',
-//   zIndex: 1,
-//   selectors: {
-// '&:after': {
-// 	content: '""',
-// 	position: 'absolute',
-// 	inset: 0,
-// 	background:
-// 		'radial-gradient(30% 24% at 64% 60%, rgba(255,255,255,0.32), transparent 70%)',
-// 	mixBlendMode: 'screen',
-// 	filter: 'blur(12px)',
-// 	pointerEvents: 'none',
-// },
-//   },
-// });
-
-// export const vennContents = style({
-//   transform: transforms.value(
-//     transforms.rotate(designRotation.negation()),
-//   ),
-// });
-
-// export const vennMiddle = style({
-// 	padding: offset.multiply(2).css(),
-// });
-
 export const panel = style({
   position: 'relative',
-  width: 'fit-content',
+  width: '100%',
   maxWidth: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  alignSelf: 'center',
+  alignSelf: 'stretch',
   ...margins({
     horizontal: 'auto',
   }),
+});
+
+export const glassWrap = style({
+  width: '100%',
+  position: 'relative',
+  zIndex: 1,
 });
 
 export const panelContents = style({
@@ -377,57 +355,36 @@ export const heroSurface = style({
     heroSurfaceOverlay,
     heroSurfaceGlow,
   ].join(', '),
-  // backgroundColor: glassVars.backgrounds.color.css(),
 });
 
-export const title_break = style({});
-
-/** Exact colour math from original HTML */
-// const TITLE_LEFT = themeColours.lights.a.saturate(0); // Electric blue
-// const TITLE_RIGHT = themeColours.lights.b.saturate(0.2); // Pink
-// const TITLE_MERGE = themeColours.lights.d.darken(0.2); // Light Purple
-
-/** Identical sweep timing (R→L then idle) — single-layer (::after) */
-// const shimmerSweep = keyframes({
-// 	'0%': {
-// 		backgroundPosition: '120% 50%',
-// 	},
-// 	'70%': {
-// 		backgroundPosition: '-120% 50%',
-// 	},
-// 	'100%': {
-// 		backgroundPosition: '-120% 50%',
-// 	},
-// });
+export const title_break = style({
+  selectors: {
+    ...mediaQueryStyle({
+      noEdge: {
+        display: 'none',
+      },
+    }),
+  },
+});
 
 export const heading = style({
   position: 'relative',
-  margin: 0,
   textAlign: 'center',
-  ...composeFontVariantStyles(fontVariants.hero),
-  fontSize: 'clamp(32px, 7vw, 80px)',
-  marginTop: fontVariants.hero.family.offsetToFlushTop?.css(),
-  // selectors: {
-  // 	'&::after': {
-  // 		content: '',
-  // 		position: 'absolute',
-  // 		left: '50%',
-  // 		top: '50%',
-  // 		transform: 'translate(-50%, -50%)',
-  // 		width: 'min(60%, 28rem)',
-  // 		height: '52px',
-  // 		filter: 'blur(24px)',
-  // 		background: `radial-gradient(
-  //     45% 70% at 50% 50%,
-  //     ${colorVars.white.alpha(0.22).css()},
-  //     ${colorVars.white.alpha(0).css()} 65%
-  //   )`,
-  // 		pointerEvents: 'none',
-  // 		zIndex: 0,
-  // 		animation: `${mergePulse} 11s ease-in-out infinite`,
-  // 		'@media': { '(prefers-reduced-motion: reduce)': { animation: 'none' } },
-  // 	},
-  // },
+  ...fontStylesFromFontVariant({
+    variant: heroFontVariants.hero,
+  }),
+  fontSize: 'clamp(20px, 8vw, 100px)',
+  ...margins({
+    top: heroFontVariants.hero.family.offsetToFlushTop,
+    bottom: m(40),
+  }),
+  selectors: {
+    ...mediaQueryStyle({
+      snug: {
+        fontSize: 'clamp(20px, 7vw, 100px)',
+      },
+    }),
+  },
 });
 
 /**
@@ -437,7 +394,7 @@ export const heading = style({
  * content on a data attribute (data-text="...") so ::after can render
  * it.
  */
-const shadow = projectorVars.textShadow;
+
 export const line = style({
   display: 'inline-block',
   position: 'relative',
@@ -445,48 +402,5 @@ export const line = style({
 
   color: colorVars.white.css(),
   WebkitTextFillColor: colorVars.white.css(),
-
-  // use your black var for shadows (no rgba)
-  // textShadow: [
-  //   `0 1px 0 ${colorVars.black.alpha(0.12).css()}`,
-  //   `0 6px 24px ${colorVars.black.alpha(0.1).css()}`,
-  // ].join(', '),
-
-  textShadow: `${shadow.offsetX.css()} ${shadow.offsetY.css()} ${shadow.blur.css()} ${shadow.color.css()}`,
-
-  // selectors: {
-  //   '&[data-position="first"]': {
-  //     backgroundImage: `linear-gradient(to right, ${TITLE_LEFT.css()} 30%, ${TITLE_MERGE.css()} 60%)`,
-  //   },
-  //   '&[data-position="last"]': {
-  //     marginTop: '-0.08em',
-  //     backgroundImage: `linear-gradient(to right, ${TITLE_MERGE.css()} 20%, ${TITLE_RIGHT.css()} 80%)`,
-  //   },
-  //
-  //   // sheen layer — matches the HTML ".line::after" approach
-  //   '&::after': {
-  //     content: 'attr(data-text)', // requires the same text on data-text
-  //     position: 'absolute',
-  //     inset: 0,
-  //
-  //     // mask the pseudo to the text as well
-  //     color: 'transparent',
-  //     WebkitTextFillColor: 'transparent',
-  //     backgroundClip: 'text',
-  //     WebkitBackgroundClip: 'text',
-  //
-  //     // moving highlight only (uses colorVars.white)
-  //     backgroundImage: `linear-gradient(75deg,
-  //       ${colorVars.white.alpha(0).css()} 42%,
-  //       ${colorVars.white.alpha(0.85).css()} 50%,
-  //       ${colorVars.white.alpha(0).css()} 58%
-  //     )`,
-  //     backgroundRepeat: 'no-repeat',
-  //     backgroundSize: '200% 100%',
-  //     backgroundPosition: '120% 50%',
-  //
-  //     mixBlendMode: 'screen',
-  //     pointerEvents: 'none',
-  //   },
-  // },
+  textShadow: `${dropShadowVars.offsetX.css()} ${dropShadowVars.offsetY.css()} ${dropShadowVars.blur.css()} ${dropShadowVars.color.css()}`,
 });

@@ -26,6 +26,14 @@ const SELF_HOSTED_PATH = path.join(
   'fonts',
   'selfhostedFontsSources.json',
 );
+const SYSTEM_FONTS_PATH = path.join(
+  REPO_ROOT,
+  'cdn',
+  'media',
+  'fonts',
+  'localFontsSrc',
+  'systemFonts.json',
+);
 const VERSIONS_PATH = path.join(
   REPO_ROOT,
   'cdn',
@@ -50,7 +58,8 @@ type SelfHostedEntry = {
 
 type FontsConfigEntry =
   | (GoogleEntry & { type: 'googleFonts' })
-  | (SelfHostedEntry & { type: 'selfHosted' });
+  | (SelfHostedEntry & { type: 'selfHosted' })
+  | (GoogleEntry & { type: 'system' });
 type FontsConfig = Record<string, FontsConfigEntry>;
 
 type FontFileEntry = {
@@ -454,8 +463,10 @@ async function main() {
 
   const googleRaw = await readJson<unknown>(GOOGLE_FONTS_PATH);
   const selfRaw = await readJson<unknown>(SELF_HOSTED_PATH);
+  const systemRaw = await readJson<unknown>(SYSTEM_FONTS_PATH);
   const google = ensureRecord(googleRaw, 'googleFonts.json');
   const selfHosted = ensureRecord(selfRaw, 'selfhostedFontsSources.json');
+  const systemFonts = ensureRecord(systemRaw, 'systemFonts.json');
 
   const merged: FontsConfig = {};
   for (const [key, value] of Object.entries(google)) {
@@ -478,6 +489,18 @@ async function main() {
     merged[key] = {
       ...entry,
       type: 'selfHosted',
+    };
+  }
+
+  for (const [key, value] of Object.entries(systemFonts)) {
+    if (merged[key]) {
+      throw new Error(
+        `Duplicate font key "${key}" in systemFonts.json and existing config.`,
+      );
+    }
+    merged[key] = {
+      ...(value as GoogleEntry),
+      type: 'system',
     };
   }
 

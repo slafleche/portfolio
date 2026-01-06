@@ -59,7 +59,8 @@ const isSpacingKeyword = (value: unknown): value is SpacingKeyword =>
   typeof value === 'string' &&
   SPACING_KEYWORDS.has(value as SpacingKeyword);
 
-const spacingToCss = (v: SpacingValue): string => {
+const spacingToCss = (v: SpacingValue | 0): string => {
+  if (v === 0) return m(0).css();
   if (isMeasurement(v)) return v.css();
   if (isSpacingKeyword(v)) return v;
   throw new Error(
@@ -83,6 +84,12 @@ const normalize = (
   input?: SpacingInput | SpacingInputPublic,
 ): SpacingIntentInternal | undefined => {
   if (input === undefined) return undefined;
+
+  if (input === 0) {
+    return {
+      all: m(0),
+    } as SpacingIntentInternal;
+  }
 
   if (isMeasurement(input) || isSpacingKeyword(input)) {
     return {

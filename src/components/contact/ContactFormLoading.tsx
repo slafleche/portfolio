@@ -1,4 +1,4 @@
-import * as s from '@/styles/components/forms.css';
+import * as s from '@/styles/components/messageCentre.css';
 import PulseLoader from './PulseLoader';
 
 type ContactFormLoadingProps = {

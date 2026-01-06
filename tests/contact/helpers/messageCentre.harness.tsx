@@ -5,8 +5,8 @@ import type { MessageCentreMessages } from '@/components/contact/messageCentre.t
 
 export type MessageCentreHarnessResult = ReturnType<typeof render> & {
   getInlineRegion: () => HTMLElement;
-  queryToastRegion: () => HTMLElement | null;
-  getToastText: () => string | null;
+  querymessageCentreRegion: () => HTMLElement | null;
+  getmessageCentreText: () => string | null;
   rerenderWithMessages: (messages: MessageCentreMessages) => void;
 };
 
@@ -27,17 +27,17 @@ export const renderMessageCentre = (
     return inlineRegion as HTMLElement;
   };
 
-  const queryToastRegion = () => {
-    const toastRegion = renderResult.container.querySelector(
+  const querymessageCentreRegion = () => {
+    const messageCentreRegion = renderResult.container.querySelector(
       '[role="status"]:not([aria-atomic])',
     );
-    return toastRegion as HTMLElement | null;
+    return messageCentreRegion as HTMLElement | null;
   };
 
-  const getToastText = () => {
-    const toastRegion = queryToastRegion();
-    if (!toastRegion) return null;
-    return toastRegion.textContent?.trim() ?? null;
+  const getmessageCentreText = () => {
+    const messageCentreRegion = querymessageCentreRegion();
+    if (!messageCentreRegion) return null;
+    return messageCentreRegion.textContent?.trim() ?? null;
   };
 
   const rerenderWithMessages = (
@@ -51,8 +51,8 @@ export const renderMessageCentre = (
   return {
     ...renderResult,
     getInlineRegion,
-    queryToastRegion,
-    getToastText,
+    querymessageCentreRegion,
+    getmessageCentreText,
     rerenderWithMessages,
   };
 };

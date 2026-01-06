@@ -3,7 +3,7 @@ import { m, mPercent } from 'css-calipers';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import {
-  backgroundImageDecl,
+  gradientAsBgImg,
   buildLinear,
 } from '../helpers/gradients.helper';
 import { outlines } from '../helpers/outlines.helper';
@@ -72,7 +72,7 @@ export const root = style({
   height: containerSizePx.css(),
   zIndex: 30,
   overflow: 'hidden',
-  pointerEvents: 'auto',
+  pointerEvents: 'none',
 });
 
 export const rail = style({
@@ -223,7 +223,7 @@ export const gradient = style({
   position: 'absolute',
   inset: 0,
   borderRadius: buttonRadius.css(),
-  ...backgroundImageDecl(buttonGradient),
+  ...gradientAsBgImg(buttonGradient),
   opacity: 0,
   transition: `opacity ${gradientFadeMs.css()} ease`,
   zIndex: 0,

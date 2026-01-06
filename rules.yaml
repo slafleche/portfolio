@@ -74,6 +74,20 @@ layers:
       no_measurement_css: true
       prefer_radii_shorthand: true
       forbidden_properties:
+        - name: padding
+          allow_values:
+            - auto
+        - paddingTop
+        - paddingRight
+        - paddingBottom
+        - paddingLeft
+        - name: margin
+          allow_values:
+            - auto
+        - marginTop
+        - marginRight
+        - marginBottom
+        - marginLeft
         - name: backdropFilter
           message:
             'Use backdropFilters.style() or

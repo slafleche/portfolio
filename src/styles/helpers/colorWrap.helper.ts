@@ -22,6 +22,7 @@
  * fallbacks.
  */
 import chroma, { type Color } from 'chroma-js';
+import type { DegMeasurement } from 'css-calipers';
 import { converter, parse, type Oklch } from 'culori';
 import { notRelease } from '@/lib/runtimeEnv';
 export type { Color } from 'chroma-js';
@@ -42,8 +43,10 @@ export type ColorWrapper = {
   };
   darken: (value?: number) => ColorWrapper;
   brighten: (value?: number) => ColorWrapper;
+  lighten: (value?: number) => ColorWrapper;
   saturate: (value?: number) => ColorWrapper;
   desaturate: (value?: number) => ColorWrapper;
+  hueShift: (value: DegMeasurement) => ColorWrapper;
   mix: (
     target: ColorInput,
     ratio?: number,
@@ -61,7 +64,9 @@ export type ColorWrapper = {
 
 type ColorInput = Color | ColorWrapper | string;
 
-const isColorWrapper = (value: ColorInput): value is ColorWrapper =>
+export const isColorWrapper = (
+  value: unknown,
+): value is ColorWrapper =>
   typeof value === 'object' &&
   value !== null &&
   'unsafeColor' in value;
@@ -175,6 +180,23 @@ const normalizeRgbChannel = (value: number) => {
 const normalizeAlpha = (value?: number) =>
   value === undefined ? undefined : normalizeFraction(value);
 
+const lerp = (start: number, end: number, t: number) =>
+  start + (end - start) * t;
+
+const normalizeModifier = (value?: number) => {
+  if (value === undefined) return 1;
+  if (Number.isNaN(value)) return 1;
+  const sign = Math.sign(value) || 1;
+  const magnitude = Math.abs(value);
+  const scaled =
+    magnitude > 1
+      ? magnitude <= 10
+        ? magnitude / 10
+        : magnitude / 100
+      : magnitude;
+  return sign * clamp01(scaled);
+};
+
 const formatHex = (value: string) => {
   const trimmed = value.trim();
   const bare = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
@@ -269,6 +291,53 @@ const formatRgba = (value: Color): string => {
   )}, ${formattedAlpha})`;
 };
 
+const isInGamut = (oklch: CuloriOKLCH) => {
+  const converted = fromCuloriOKLCH(oklch);
+  if (!converted || converted.mode !== 'rgb') return false;
+  return (
+    converted.r >= 0 &&
+    converted.r <= 1 &&
+    converted.g >= 0 &&
+    converted.g <= 1 &&
+    converted.b >= 0 &&
+    converted.b <= 1
+  );
+};
+
+const maxChromaFor = (l: number, h: number, alpha?: number) => {
+  let low = 0;
+  let high = 0.4;
+  const inGamut = (c: number) =>
+    isInGamut({ mode: 'oklch', l, c, h, alpha });
+
+  while (high < 2 && inGamut(high)) {
+    low = high;
+    high *= 2;
+  }
+
+  for (let i = 0; i < 24; i += 1) {
+    const mid = (low + high) / 2;
+    if (inGamut(mid)) {
+      low = mid;
+    } else {
+      high = mid;
+    }
+  }
+
+  return low;
+};
+
+const resolveDegrees = (value: DegMeasurement) => {
+  const raw = value.getValue();
+  if (raw == null || Number.isNaN(raw)) {
+    if (notRelease()) {
+      throw new Error('Expected a css-calipers degree measurement.');
+    }
+    return 0;
+  }
+  return normalizeHue(raw);
+};
+
 export function wrap(input: ColorInput): ColorWrapper {
   // ---- special symbolic case ----
   if (input === 'currentColor') {
@@ -289,8 +358,10 @@ export function wrap(input: ColorInput): ColorWrapper {
       }) as ColorWrapper['alpha'],
       darken: () => err('darken'),
       brighten: () => err('brighten'),
+      lighten: () => err('lighten'),
       saturate: () => err('saturate'),
       desaturate: () => err('desaturate'),
+      hueShift: () => err('hueShift'),
       mix: () => err('mix'),
       mixSolid: () => err('mixSolid'),
       clone: () => symbolic,
@@ -309,6 +380,44 @@ export function wrap(input: ColorInput): ColorWrapper {
     return derive(base, (draft) => draft.alpha(value));
   }) as ColorWrapper['alpha'];
 
+  const adjustOklch = (
+    adjuster: (oklch: CuloriOKLCH) => CuloriOKLCH,
+  ): ColorWrapper => {
+    const oklch = colorToCuloriOklch(base);
+    if (!oklch) {
+      return wrap(base);
+    }
+    return culoriOklchToWrapper(adjuster(oklch));
+  };
+
+  const lightenBy = (value?: number) => {
+    const delta = normalizeModifier(value);
+    const fade = Math.abs(delta);
+    return adjustOklch((oklch) => ({
+      ...oklch,
+      l:
+        delta >= 0
+          ? lerp(oklch.l, 1, delta)
+          : lerp(oklch.l, 0, Math.abs(delta)),
+      c: lerp(oklch.c, 0, fade),
+    }));
+  };
+
+  const saturateBy = (value?: number) => {
+    const delta = normalizeModifier(value);
+    return adjustOklch((oklch) => ({
+      ...oklch,
+      c:
+        delta >= 0
+          ? lerp(
+              oklch.c,
+              maxChromaFor(oklch.l, oklch.h ?? 0, oklch.alpha ?? 1),
+              delta,
+            )
+          : lerp(oklch.c, 0, Math.abs(delta)),
+    }));
+  };
+
   return {
     unsafeColor: base,
     css: (options?: CssOptions) => {
@@ -320,14 +429,32 @@ export function wrap(input: ColorInput): ColorWrapper {
       return result;
     },
     alpha,
-    darken: (value?: number) =>
-      derive(base, (draft) => draft.darken(value)),
-    brighten: (value?: number) =>
-      derive(base, (draft) => draft.brighten(value)),
-    saturate: (value?: number) =>
-      derive(base, (draft) => draft.saturate(value)),
-    desaturate: (value?: number) =>
-      derive(base, (draft) => draft.desaturate(value)),
+    darken: (value?: number) => lightenBy(-(value ?? 1)),
+    brighten: (value?: number) => lightenBy(value),
+    lighten: (value?: number) => lightenBy(value),
+    saturate: (value?: number) => saturateBy(value),
+    desaturate: (value?: number) => saturateBy(-(value ?? 1)),
+    hueShift: (value: DegMeasurement) => {
+      const delta = resolveDegrees(value);
+      const oklch = colorToCuloriOklch(base);
+      if (oklch) {
+        const baseHue = oklch.h ?? 0;
+        return culoriOklchToWrapper({
+          ...oklch,
+          h: normalizeHue(baseHue + delta),
+          alpha: oklch.alpha ?? base.alpha(),
+        });
+      }
+      return derive(base, (draft) => {
+        const [
+          hue,
+        ] = draft.hsl();
+        const safeHue = Number.isFinite(hue) ? hue : 0;
+        const nextHue = normalizeHue(safeHue + delta);
+        const nextAlpha = draft.alpha();
+        return draft.set('hsl.h', nextHue).alpha(nextAlpha);
+      });
+    },
     mix: (target: ColorInput, ratio?: number, mode?: MixArgs[2]) =>
       derive(base, (draft) =>
         draft.mix(toColor(target), clampRatio(ratio), mode),
@@ -363,6 +490,70 @@ export const color = Object.assign(
     fromCss: (value: string) => wrap(value),
   },
 );
+
+export type OKLCH = {
+  l: number;
+  c: number;
+  h: number;
+  a?: number;
+};
+
+export type ColorInputWithOKLCH = OKLCH | string | ColorWrapper;
+
+export const isOKLCH = (value: unknown): value is OKLCH =>
+  typeof value === 'object' &&
+  value != null &&
+  'l' in value &&
+  'c' in value &&
+  'h' in value;
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, value));
+
+export const fmtOKLCH = ({ l, c, h, a }: OKLCH): string => {
+  const L = `${clamp(l, 0, 100).toFixed(3)}%`;
+  const C = clamp(c, 0, 0.4).toFixed(4);
+  const H = ((h % 360) + 360) % 360;
+  const A = a == null ? '' : ` / ${clamp(a, 0, 1)}`;
+  return `oklch(${L} ${C} ${H}${A})`;
+};
+
+export const oklchToRgbString = ({ l, c, h, a }: OKLCH): string => {
+  const normalized: CuloriOKLCH = {
+    mode: 'oklch',
+    l: clamp(l, 0, 100) / 100,
+    c: clamp(c, 0, 0.4),
+    h: ((h % 360) + 360) % 360,
+    alpha: a ?? 1,
+  };
+  return color.fromOKLCH(normalized).css();
+};
+
+export const toModernOKLCH = (
+  input: ColorInputWithOKLCH,
+): OKLCH | undefined => {
+  if (isOKLCH(input)) return input;
+  const culori = color.toOKLCH(input);
+  if (!culori) return undefined;
+  return {
+    l: culori.l * 100,
+    c: culori.c,
+    h: culori.h ?? 0,
+    a: culori.alpha,
+  };
+};
+
+export const colorFallback = (input: ColorInputWithOKLCH): string => {
+  if (isColorWrapper(input)) return input.css();
+  if (isOKLCH(input)) return oklchToRgbString(input);
+  return input;
+};
+
+export const colorModern = (input: ColorInputWithOKLCH): string => {
+  const oklch = toModernOKLCH(input);
+  if (oklch) return fmtOKLCH(oklch);
+  return colorFallback(input);
+};
 
 export const mixWithAlpha = (
   base: ColorWrapper,

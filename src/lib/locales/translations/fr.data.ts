@@ -97,9 +97,8 @@ const frBaseData = {
     'systems-system-shape-blurb',
   ),
   'systems-back-home-label': "Retour à la page d'accueil",
-  'systems-link-label': 'Systèmes',
-  'footer-systems-snippet-label':
-    'Extrait HTML décoratif inspiré des outils de développement, qui montre la fin du code de la page.',
+  'systems-link-label': 'Naviguez vers la page Systèmes',
+  'systems-mock-html-alt': 'HTML décoratif de style devtools montrant la fin du code source de la page.',
 
   contact: 'contact',
   'contact-href': 'contact',

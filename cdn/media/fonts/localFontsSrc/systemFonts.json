@@ -1,0 +1,7 @@
+{
+  "System+Code+Fonts": {
+    "type": "system",
+    "weights": "100..900",
+    "ital": true
+  }
+}

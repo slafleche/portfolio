@@ -1,5 +1,4 @@
 import { useId } from 'react';
-import * as s from '@/styles/components/forms.css';
 import type { HoneypotBlockLocale } from '@/lib/locales/form/form.honeypot';
 
 export type HoneypotBlockProps = {
@@ -14,7 +13,7 @@ export function HoneypotBlock({
   const inputId = useId();
 
   return (
-    <div aria-hidden className={s.visuallyHidden}>
+    <div aria-hidden data-visible="sc-only">
       <label htmlFor={inputId}>{copy.label}</label>
       <input
         id={inputId}

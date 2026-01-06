@@ -8,11 +8,13 @@ import Tile from '@/components/Tile';
 import TileGrid from '@/components/TileGrid';
 import { Markdown } from '@/components/Markdown';
 import { userContent } from '@/styles/typography.css';
-import Content from './Content';
+import * as tileStyles from '@/styles/components/tiles.css';
+import ContentWithTitle from './ContentWithTitle';
+import { GlassPanel } from '../GlassPanel';
 
 type BaseProps<T extends ElementType> = {
   tag?: T;
-  title?: ReactNode;
+  contentTitle?: ReactNode;
   headingDepth?: 2 | 3 | 4 | 5 | 6;
   className?: string;
 } & Omit<ComponentPropsWithoutRef<T>, 'className' | 'children'>;
@@ -22,7 +24,7 @@ type ContentAsTilesProps<T extends ElementType> = BaseProps<T> & {
 };
 
 type TileSlice = {
-  title: string;
+  contentTitle: string;
   body: string;
 };
 
@@ -43,7 +45,7 @@ function parseMarkdownIntoTiles(markdown: string): ParsedMarkdown {
     if (!currentTitle) return;
     const body = currentBodyLines.join('\n').trim();
     tiles.push({
-      title: currentTitle,
+      contentTitle: currentTitle,
       body,
     });
   };
@@ -78,7 +80,7 @@ export default function ContentAsTiles<
 >(props: ContentAsTilesProps<T>) {
   const {
     tag,
-    title,
+    contentTitle,
     headingDepth,
     className,
     markdown,
@@ -87,28 +89,41 @@ export default function ContentAsTiles<
   const { intro, tiles } = parseMarkdownIntoTiles(markdown);
 
   return (
-    <Content
+    <ContentWithTitle
       tag={tag}
-      title={title}
+      contentTitle={contentTitle}
+      ignoreDataUI={true}
       headingDepth={headingDepth}
       className={clsx(className)}
+      queryDataAttributes={{
+        compact: 'no-padding',
+      }}
       {...rest}
     >
       {intro ? (
-        <Markdown source={intro} className={userContent} />
+        <Markdown
+          source={intro}
+          className={clsx(userContent, tileStyles.intro)}
+        />
       ) : null}
       {tiles.length > 0 ? (
         <TileGrid>
-          {tiles.map((tile) => (
-            <Tile key={tile.title} title={tile.title}>
-              <Markdown
-                source={tile.body}
-                className={userContent}
-              />
-            </Tile>
+          {tiles.map((tile, index) => (
+            <GlassPanel
+              key={`${tile.contentTitle}-${index}`}
+              className={tileStyles.tilePanel}
+              surfaceClassName={tileStyles.tilePanelSurface}
+            >
+              <Tile contentTitle={tile.contentTitle}>
+                <Markdown
+                  source={tile.body}
+                  className={userContent}
+                />
+              </Tile>
+            </GlassPanel>
           ))}
         </TileGrid>
       ) : null}
-    </Content>
+    </ContentWithTitle>
   );
 }

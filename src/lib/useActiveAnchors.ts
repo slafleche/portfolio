@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react';
 import { sharedStrings } from './sharedStrings';
+import { getViewportSize } from './responsive/viewport';
 
 export type AnchorTarget = {
   id: string;
@@ -16,6 +17,7 @@ export type UseActiveAnchorsOptions = {
   rootMargin?: string;
   threshold?: number | number[];
   manualHoldMs?: number;
+  layoutTick?: number;
   hashSync?: {
     enabled?: boolean;
     debounceMs?: number;
@@ -52,7 +54,7 @@ const pickActiveId = (
 ): string | null => {
   if (typeof window === 'undefined') return null;
 
-  const viewportHeight = window.innerHeight || 0;
+  const viewportHeight = getViewportSize().height ?? 0;
   const scrolledToTop = (window.scrollY || 0) <= 0;
   let bestVisibleId: string | null = null;
   let bestVisibleTop = Number.POSITIVE_INFINITY;
@@ -99,6 +101,7 @@ export function useActiveAnchors(
     rootMargin = DEFAULT_ROOT_MARGIN,
     threshold = DEFAULT_THRESHOLD,
     manualHoldMs = DEFAULT_MANUAL_HOLD_MS,
+    layoutTick,
     hashSync,
   } = options ?? {};
 
@@ -136,6 +139,7 @@ export function useActiveAnchors(
   } | null>(null);
   const ioRef = useRef<IntersectionObserver | null>(null);
   const rafRef = useRef<number | null>(null);
+  const updateFromScrollRef = useRef<(() => void) | null>(null);
   const hashDebounceRef = useRef<number | null>(null);
   const lastSetHashRef = useRef<string | null>(null);
   const initialHashAppliedRef = useRef(false);
@@ -285,6 +289,7 @@ export function useActiveAnchors(
         resolveActiveFromRects();
       });
     };
+    updateFromScrollRef.current = updateFromScroll;
 
     window.addEventListener('scroll', updateFromScroll, { passive: true });
     window.addEventListener('resize', updateFromScroll);
@@ -296,6 +301,7 @@ export function useActiveAnchors(
       ioRef.current = null;
       window.removeEventListener('scroll', updateFromScroll);
       window.removeEventListener('resize', updateFromScroll);
+      updateFromScrollRef.current = null;
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
@@ -308,6 +314,13 @@ export function useActiveAnchors(
     resolveActiveFromRects,
     rootMargin,
     threshold,
+  ]);
+
+  useEffect(() => {
+    if (layoutTick == null) return;
+    updateFromScrollRef.current?.();
+  }, [
+    layoutTick,
   ]);
 
   useEffect(() => {

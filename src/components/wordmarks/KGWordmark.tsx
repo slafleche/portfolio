@@ -1,8 +1,11 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
-import { caseStudyLogo } from '@/styles/components/richMarkdown.css';
+import { wordMark_kg } from '../../styles/components/card.css';
+
+import { r } from 'css-calipers';
 
 const LABEL = 'King Games';
+const ratio = r(684.9532, 463.6684);
 
 export default function KGWordmark({
   className,
@@ -11,10 +14,10 @@ export default function KGWordmark({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 684.9532 463.6684"
+      viewBox={`0 0 ${ratio.numerator()} ${ratio.denominator()}`}
       shapeRendering="geometricPrecision"
       fill="currentColor"
-      className={clsx(className, caseStudyLogo)}
+      className={clsx(className, wordMark_kg)}
       role="img"
       aria-label={LABEL}
       {...props}

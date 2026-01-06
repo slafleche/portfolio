@@ -8,13 +8,13 @@ import { colorVars } from './global.tokens';
  */
 export const glassVars = {
   backdropFilter: {
-    blur: m(5),
-    saturate: mPercent(180),
-    contrast: mPercent(90),
-    brightness: 1.1,
+    blur: m(4),
+    saturate: mPercent(200),
+    contrast: mPercent(110),
+    brightness: mPercent(110),
   },
   backgrounds: {
-    color: colorVars.white.alpha(0.06),
+    color: colorVars.white.alpha(0.08),
   },
   surfaceGlowPrimaryTint: color('#0f0c18').alpha(0.5),
   surfaceGlowSecondaryTint: color('#0f0c18').alpha(0.14),
@@ -24,16 +24,6 @@ export const glassVars = {
     radius: m(18),
     width: m(2),
   },
-
-  // innerBorderHighlight: {
-  //   radialStrength: 0.5,
-  //   opacity: 1,
-  // },
-  // outerBorderHighlight: {
-  //   strength: 0.35,
-  //   spread: mPercent(70),
-  //   angle: m(130, 'deg'),
-  // },
 
   surfaceGlow: {
     opacity: 0.5,

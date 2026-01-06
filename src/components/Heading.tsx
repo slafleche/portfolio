@@ -5,13 +5,17 @@ export interface IHeadingDepth {
   depth?: 2 | 3 | 4 | 5 | 6;
 }
 
-type HeadingProps = IHeadingDepth &
+type HeadingProps = {
+  className?: string;
+  ignoreDataUI?: boolean;
+} & IHeadingDepth &
   ComponentPropsWithoutRef<'h2'> & {
     children: ReactNode;
   };
 
 export default function Heading({
   depth = 3,
+  ignoreDataUI = false,
   className,
   children,
   id,
@@ -19,7 +23,7 @@ export default function Heading({
 }: HeadingProps) {
   const Tag = `h${depth || 2}` as 'h2';
   return (
-    <Tag id={id} className={className} data-ui="heading" {...rest}>
+    <Tag id={id} className={className} data-ui={ignoreDataUI ? undefined : "heading"} {...rest}>
       {typeof children === 'string' && isLocaleRichText(children) ? (
         <span
           dangerouslySetInnerHTML={{

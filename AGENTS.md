@@ -14,6 +14,8 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   Git-mutating commands unless the user explicitly asks.
 - Must: Treat staged changes as a protected snapshot; do not modify staged files
   without explicit confirmation.
+- User preference: Staged files may be modified without extra confirmation; the
+  user keeps staged changes as a backup unless they say otherwise.
 
 ## Workflow and TODOs (`workflow-and-todos`)
 
@@ -98,6 +100,8 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Must: When a user implies a bug (for example, "why is..." or "X doesn't do Y"),
   inspect the relevant code first and respond with the fix, not a summary or
   guessed explanation.
+- Must: When the user asks to explain or diagnose, do not modify code unless
+  they explicitly ask for a fix; provide analysis only.
 - Must: Do not provide summaries unless the user explicitly asks for one.
 - Must: When a user message (non-code text) contains a `?`, reply using
   text-only responses—no code blocks or other non-text output.

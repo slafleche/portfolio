@@ -2,7 +2,6 @@ import Hero from '@/components/Hero';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
 import Menu from '@/components/Menu';
-import HeroWaypoint from '@/components/HeroWaypoint';
 import ContentAsTiles from '@/components/responsive/ContentAsTiles';
 import { Markdown } from '@/components/Markdown';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
@@ -15,8 +14,10 @@ import * as systemsStyles from '@/styles/components/systems.css';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { resolveLocale } from '@/lib/locales/locale';
 import { sharedStrings } from '@/lib/sharedStrings';
-import { userContent } from '@/styles/typography.css';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
+import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
+import SystemsGooey from '../../../../src/components/SystemsGooey';
+import Content from '../../../../src/components/responsive/Content';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -68,9 +69,18 @@ export default async function SystemsPage({
     localeChangeLabel: menuCopy.languageLabel,
     anchorNavLabel: menuCopy.anchorLabel,
     anchorLinks: [
-      { title: parseWordmarkTemplate(systemsTitle).fullText, href: `#${systemsIntroId}` },
-      { title: parseWordmarkTemplate(systemsPrinciplesTitle).fullText, href: `#${systemsPrinciplesId}` },
-      { title: parseWordmarkTemplate(systemsShapeTitle).fullText, href: `#${systemsShapeId}` },
+      {
+        title: parseWordmarkTemplate(systemsTitle).fullText,
+        href: `#${systemsIntroId}`,
+      },
+      {
+        title: parseWordmarkTemplate(systemsPrinciplesTitle).fullText,
+        href: `#${systemsPrinciplesId}`,
+      },
+      {
+        title: parseWordmarkTemplate(systemsShapeTitle).fullText,
+        href: `#${systemsShapeId}`,
+      },
     ],
     localeLinks: AVAILABLE_LOCALES.filter(
       (code) => code !== locale,
@@ -83,7 +93,9 @@ export default async function SystemsPage({
   return (
     <>
       <Menu {...menuProps} />
+
       <div className={layoutStyles.page}>
+        <SystemsBgOverlay className={layoutStyles.svgOverlay} />
         <main className={layoutStyles.main}>
           <Hero
             id="systems-hero"
@@ -91,29 +103,28 @@ export default async function SystemsPage({
             overlayClassName={systemsStyles.heroOverlay}
             withVideo={false}
             headingAnimated={false}
+            Gooey={SystemsGooey}
           />
-          <HeroWaypoint />
           <ContentAsTiles
             id={systemsIntroId}
             title={systemsTitle}
             markdown={systemsIntroMarkdown}
           />
+          <hr />
           <ContentAsTiles
             id={systemsPrinciplesId}
             title={systemsPrinciplesTitle}
             markdown={systemsPrinciplesMarkdown}
           />
+          <hr />
           <ContentAsTiles
             id={systemsShapeId}
             title={systemsShapeTitle}
             markdown={systemsShapeMarkdown}
           />
-          <div className={layoutStyles.content}>
-            <Markdown
-              source={systemsShapeBlurbMarkdown}
-              className={userContent}
-            />
-          </div>
+          <Content>
+            <Markdown source={systemsShapeBlurbMarkdown} />
+          </Content>
         </main>
         <Footer
           contact={contactCopy}

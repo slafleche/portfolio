@@ -48,7 +48,12 @@ const buildForbiddenPropertyConfigs = (layerName, layerConfig) => {
     .map((entry) => {
       const normalized =
         typeof entry === 'string' ? { name: entry } : entry;
-      const { name, message, allow_in: allowIn = [] } = normalized;
+      const {
+        name,
+        message,
+        allow_in: allowIn = [],
+        allow_values: allowValues = [],
+      } = normalized;
       if (!name) return null;
       const ruleMessage =
         message ?? `${layerName} restricted property "${name}"`;
@@ -56,6 +61,11 @@ const buildForbiddenPropertyConfigs = (layerName, layerConfig) => {
         ? allowIn.filter(Boolean)
         : [
             allowIn,
+          ].filter(Boolean);
+      const allowedValues = Array.isArray(allowValues)
+        ? allowValues.filter(Boolean)
+        : [
+            allowValues,
           ].filter(Boolean);
       return {
         files: [
@@ -69,6 +79,7 @@ const buildForbiddenPropertyConfigs = (layerName, layerConfig) => {
               property: name,
               message: ruleMessage,
               allowPatterns,
+              allowValues: allowedValues,
               rootDir,
             },
           ],

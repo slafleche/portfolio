@@ -1,5 +1,5 @@
 import type { FC, PropsWithChildren } from 'react';
-import mediaQueries from '@/styles/responsive/mediaQueries'; // <-- default export (globalMediaQueries)
+import { mediaQueryStyleConfig } from '@/styles/responsive/mediaQueries';
 import {
   queriesToStrings,
   useMediaQuery,
@@ -8,7 +8,7 @@ import {
 } from './mediaFactory';
 
 // 1) Normalize to plain query strings (e.g., "screen and (min-width: 1280px)")
-export const mqStrings = queriesToStrings(mediaQueries);
+export const mqStrings = queriesToStrings(mediaQueryStyleConfig);
 
 // 2) Hooks (SSR-safe: undefined on server)
 export const useIsFullwidth = () => useMediaQuery(mqStrings.fullSize);

@@ -1,12 +1,11 @@
 import Hero from '@/components/Hero';
-import Content from '@/components/responsive/Content';
+import ContentWithTitle from '@/components/responsive/ContentWithTitle';
 import CaseStudy from '@/components/CaseStudy';
 import { Grid, Column } from '@/components/Grid';
 import Card from '@/components/Card';
 import { Markdown } from '@/components/Markdown';
 import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
-import HeroWaypoint from '@/components/HeroWaypoint';
 import ConsoleCuriosity from '@/components/ConsoleCuriosity';
 import * as layoutStyles from '@/styles/layout.css';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
@@ -30,10 +29,10 @@ import {
   EAWordmark,
   HSWordmark,
   KGWordmark,
-  VNWordmark,
-  rms,
 } from '@/components/wordmarks/wordmarks.tsx';
 import Menu from '../../../src/components/Menu';
+import { clsx } from 'clsx';
+import HeroGooey from '../../../src/components/HeroGooey';
 
 interface PageParams {
   LOCALE: string;
@@ -75,8 +74,6 @@ export default async function HomePage({
   const systemsLink = buildSystemsLink(locale, translator);
   const menuCopy: ReturnType<typeof buildMenuCopy> =
     buildMenuCopy(translator);
-  // const menuSections = buildHomeMenuSections(translator);
-  // const systemsMenuSections = buildSystemsMenuSections(translator);
 
   const curiosityMessages = {
     title: translator('console-curiosity-title'),
@@ -123,55 +120,65 @@ export default async function HomePage({
 
   return (
     <>
+      <ConsoleCuriosity
+        title={curiosityMessages.title}
+        test={curiosityMessages.test}
+        result={curiosityMessages.result}
+        hint={curiosityMessages.hint}
+        targetHref={curiosityTarget}
+      />
       <Menu {...menuProps} />
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
-          <Hero id="hero" copy={heroCopy} headingAnimated={false} />
-          <HeroWaypoint />
-          <ConsoleCuriosity
-            title={curiosityMessages.title}
-            test={curiosityMessages.test}
-            result={curiosityMessages.result}
-            hint={curiosityMessages.hint}
-            targetHref={curiosityTarget}
+          <Hero
+            id="hero"
+            copy={heroCopy}
+            headingAnimated={false}
+            Gooey={HeroGooey}
           />
-          <Content
+          <ContentWithTitle
             id={approach.href}
-            title={approach.title}
-            markdown={approach.content}
-          />
-          <Content
+            contentTitle={approach.title}
+            ignoreDataUI={true}
+          >
+            <Markdown source={approach.content} />
+          </ContentWithTitle>
+          <ContentWithTitle
             id={about.href}
-            title={about.title}
-            markdown={about.content}
+            contentTitle={about.title}
+            ignoreDataUI={true}
+          >
+            <Markdown source={about.content} />
+          </ContentWithTitle>
+
+          <CaseStudy
+            id={caseStudies.href}
+            intro={caseStudies.intro}
+            title={caseStudies.title}
+            caseStudies={caseStudies.list}
+            wordMarkClassName={cg.wordmarkTextNoLogo}
           />
-          <Content id={caseStudies.href}>
-            <WordMarkInTitle
-              WordMark={VNWordmark}
-              textTemplate={caseStudies.title}
-              textClassName={rms.wordmarkTextNoLogo}
-            />
-            <CaseStudy
-              id={caseStudies.href}
-              intro={caseStudies.intro}
-              caseStudies={caseStudies.list}
-            />
-          </Content>
-          <Content title={projects.title} id={projects.href}>
-            <Grid
-              columns={2}
-              mediaQueryColumns={{
-                noBleed: 1,
-              }}
-            >
+          <ContentWithTitle
+            ignoreDataUI={true}
+            contentTitle={projects.title}
+            id={projects.href}
+            queryDataAttributes={{
+              compact: 'no-padding',
+            }}
+          >
+            <Grid>
               <Column span={2}>
                 <Card
                   title={
                     <WordMarkInTitle
-                      className={rms.cocacolaTitle}
                       WordMark={CCWordmark}
                       textTemplate={cocacola.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
+                    />
+                  }
+                  logoAsBg={
+                    <CCWordmark
+                      className={clsx(cg.logoAsBgSVG, cg.logoAsBg_cc)}
                     />
                   }
                   gradientClassName={cg.gradientCC}
@@ -185,7 +192,12 @@ export default async function HomePage({
                     <WordMarkInTitle
                       WordMark={EAWordmark}
                       textTemplate={ea.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
+                    />
+                  }
+                  logoAsBg={
+                    <EAWordmark
+                      className={clsx(cg.logoAsBgSVG, cg.logoAsBg_ea)}
                     />
                   }
                   gradientClassName={cg.gradientEa}
@@ -193,32 +205,53 @@ export default async function HomePage({
                   <Markdown source={ea.content} />
                 </Card>
               </Column>
-              <Column span={1}>
+              <Column
+                span={1}
+                mediaQuerySpan={{
+                  underMinWidth: 2,
+                }}
+              >
                 <Card
                   title={
                     <WordMarkInTitle
-                      className={rms.banqTitle}
                       WordMark={BQWordmark}
                       textTemplate={banq.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
                   gradientClassName={cg.gradientBanq}
+                  logoAsBg={
+                    <BQWordmark
+                      className={clsx(
+                        cg.logoAsBgSVG,
+                        cg.logoAsBg_banq,
+                      )}
+                    />
+                  }
                 >
                   <Markdown source={banq.content} />
                 </Card>
               </Column>
-              <Column span={1}>
+              <Column
+                span={1}
+                mediaQuerySpan={{
+                  underMinWidth: 2,
+                }}
+              >
                 <Card
                   title={
                     <WordMarkInTitle
-                      className={rms.hootsuiteTitle}
                       WordMark={HSWordmark}
                       textTemplate={hootsuite.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
                   gradientClassName={cg.gradientHs}
+                  logoAsBg={
+                    <HSWordmark
+                      className={clsx(cg.logoAsBgSVG, cg.logoAsBg_hs)}
+                    />
+                  }
                 >
                   <Markdown source={hootsuite.content} />
                 </Card>
@@ -226,25 +259,29 @@ export default async function HomePage({
               <Column
                 span={2}
                 mediaQuerySpan={{
-                  noBleed: 1,
+                  compact: 1,
                 }}
               >
                 <Card
                   title={
                     <WordMarkInTitle
-                      className={rms.kingGamesTitle}
                       WordMark={KGWordmark}
                       textTemplate={kingGames.title}
-                      textClassName={rms.wordmarkTextNoLogo}
+                      textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
-                  gradientClassName={cg.gradientKing}
+                  gradientClassName={cg.gradientKg}
+                  logoAsBg={
+                    <KGWordmark
+                      className={clsx(cg.logoAsBgSVG, cg.logoAsBg_kg)}
+                    />
+                  }
                 >
                   <Markdown source={kingGames.content} />
                 </Card>
               </Column>
             </Grid>
-          </Content>
+          </ContentWithTitle>
         </main>
         <Footer
           contact={contact}

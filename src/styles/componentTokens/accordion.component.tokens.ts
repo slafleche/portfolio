@@ -29,15 +29,24 @@ export const accordionSurfaceTokens = {
     vertical: m(6),
   },
   drawerBackgrounds: {
-    color: color("#912eee"),
+    color: color('#912eee'),
   },
   gap: m(3),
 } as const;
 
 export const accordionItemTokens = {
   borderRadius: m(12),
-  gap: m(2),
-  paddingX: m(4),
-  paddingY: m(4),
-  iconSize: m(44),
+  handle: {
+    // paddings: {},
+    spacing: m(8),
+  },
+  paddings: {
+    horizontal: m(8),
+    vertical: m(4),
+  },
+  rightArrow: {
+    size: m(44),
+    color: themeColours.secondary.lighten(0.5),
+  },
+  chevronSize: m(44),
 } as const;

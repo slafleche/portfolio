@@ -1,15 +1,18 @@
 import type {
   CSS_TYPES,
   FontFamilyDef,
+  FontFamilyForPercentWeights,
   FontStyles,
 } from '@/styles/helpers/types.helper';
 import {
   hasCssMethod,
   isPercentMeasurement,
+  type IMeasurement,
   type PercentMeasurement,
 } from 'css-calipers';
 import { percentToDecimal } from '../../lib/math';
 import { notRelease } from '../../lib/runtimeEnv';
+import type { FontVariantDefinition } from './fontVariant.helper';
 
 const typographyWarning = (message: string): void => {
   const prefixed = `[Typography] ${message}`;
@@ -28,6 +31,8 @@ export type FontCSS = Partial<
     | 'fontWeight'
     | 'letterSpacing'
     | 'lineHeight'
+    | 'textAlign'
+    | 'textTransform'
     | 'fontVariationSettings'
     | 'fontStretch'
     | 'fontStyle'
@@ -85,8 +90,8 @@ export function fontStyles(vars: FontStyles): FontCSS {
 
   // tokens with .css()
   if (hasCssMethod(vars.size)) out.fontSize = vars.size.css();
-  if (hasCssMethod(vars.spacing)) {
-    out.letterSpacing = vars.spacing.css();
+  if (hasCssMethod(vars.letterSpacing)) {
+    out.letterSpacing = vars.letterSpacing.css();
   }
   if (vars.lineHeight !== undefined) {
     out.lineHeight = hasCssMethod(vars.lineHeight)
@@ -99,6 +104,9 @@ export function fontStyles(vars: FontStyles): FontCSS {
   if (normalizedWeight !== undefined)
     out.fontWeight = normalizedWeight;
 
+  if (vars.textAlign) out.textAlign = vars.textAlign;
+  if (vars.textTransform) out.textTransform = vars.textTransform;
+
   if (vars.css && typeof vars.css === 'object') {
     Object.assign(out, vars.css);
   }
@@ -106,23 +114,31 @@ export function fontStyles(vars: FontStyles): FontCSS {
   return out;
 }
 
+type RelativeFontWeightInput =
+  | FontFamilyForPercentWeights
+  | FontVariantDefinition<FontFamilyForPercentWeights>;
+
 export function relativeFontWeight(
-  family: FontFamilyDef,
+  fontFamily: RelativeFontWeightInput,
   percent: PercentMeasurement,
-): CSS_TYPES.Property.FontWeight {
+) {
   if (!isPercentMeasurement(percent)) {
     throw new TypeError(
       '[Typography] relativeFontWeight expected a PercentMeasurement.',
     );
   }
-  const { high, low } = family.weights;
-  const normalized = percentToDecimal(percent);
-  const value = low + (high - low) * normalized;
-  return value as CSS_TYPES.Property.FontWeight;
+  const targetFont = (
+    typeof fontFamily.family === 'string'
+      ? fontFamily
+      : fontFamily.family
+  ) as FontFamilyForPercentWeights;
+  return {
+    fontWeight: computeFontWeight(targetFont, percent),
+  };
 }
 
 export function computeFontWeight(
-  family: FontFamilyDef,
+  family: FontFamilyForPercentWeights,
   percent: PercentMeasurement,
 ): CSS_TYPES.Property.FontWeight {
   if (!isPercentMeasurement(percent)) {
@@ -130,9 +146,14 @@ export function computeFontWeight(
       '[Typography] computeFontWeight expected a PercentMeasurement.',
     );
   }
-  const { high, low } = family.weights;
+  const { default: base, strong } = family.weights;
+  if (!Number.isFinite(base) || !Number.isFinite(strong)) {
+    throw new TypeError(
+      '[Typography] computeFontWeight expected numeric weights.default and weights.strong.',
+    );
+  }
   const normalized = percentToDecimal(percent);
-  const value = low + (high - low) * normalized;
+  const value = base + (strong - base) * normalized;
   return value as CSS_TYPES.Property.FontWeight;
 }
 
@@ -155,6 +176,9 @@ export type FontWeightPercentOptions = {
 };
 
 export type ComposeFontStylesOptions = {
+  textAlign?: CSS_TYPES.Property.TextAlign | null;
+  textTransform?: CSS_TYPES.Property.TextTransform | null;
+  letterSpacing?: IMeasurement | null;
   weightPercents?: FontWeightPercentOptions | null;
 };
 
@@ -169,14 +193,17 @@ const familyToFontStyles = (family: FontFamilyDef): FontStyles => {
     familyDef: family,
     fontFamily: family.family,
     fontWeight: family.weights.default,
+    textAlign: family.textAlign,
+    textTransform: family.textTransform,
+    letterSpacing: family.letterSpacing,
     weights: {
       default: family.weights.default,
       strong: family.weights.strong,
     },
   };
 
-  if (family.spacing) {
-    styles.spacing = family.spacing;
+  if (family.letterSpacing) {
+    styles.letterSpacing = family.letterSpacing;
   }
 
   if (family.offsetToFlushTop) {
@@ -253,6 +280,16 @@ export function composeFontStyles(
     merged,
     options?.weightPercents ?? null,
   );
+
+  if (options?.textAlign) {
+    merged.textAlign = options.textAlign;
+  }
+  if (options?.textTransform) {
+    merged.textTransform = options.textTransform;
+  }
+  if (options?.letterSpacing != null) {
+    merged.letterSpacing = options.letterSpacing;
+  }
 
   if (overrides) {
     addLayer(merged, overrides);

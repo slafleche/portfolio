@@ -6,6 +6,7 @@ import type {
   PosterImagePayload,
   VideoByNameProps,
 } from './VideoByName.types';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 
 type ClientProps = Omit<VideoByNameProps, 'name'> & {
   video: VideoEntry;
@@ -55,6 +56,7 @@ export default function VideoByNameClient({
   const ref = React.useRef<HTMLVideoElement | null>(null);
   const ioRef = React.useRef<IntersectionObserver | null>(null);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
+  const { layoutTick } = useWindowSize();
   const [
     shouldLoadVideo,
     setShouldLoadVideo,
@@ -122,6 +124,7 @@ export default function VideoByNameClient({
       observer.disconnect();
     };
   }, [
+    layoutTick,
     priority,
     shouldLoadVideo,
   ]);
@@ -210,6 +213,7 @@ export default function VideoByNameClient({
     priority,
     playbackRate,
     shouldLoadVideo,
+    layoutTick,
   ]);
 
   React.useEffect(() => {

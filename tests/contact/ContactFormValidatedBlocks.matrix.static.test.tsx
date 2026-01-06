@@ -103,10 +103,10 @@ describe('ContactForm validated blocks — static matrix', () => {
       expect(inlineRegion).not.toBeNull();
       expect(inlineRegion?.textContent ?? '').toBe('');
 
-      const toastRegion = container.querySelector(
+      const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
-      expect(toastRegion).toBeNull();
+      expect(messageCentreRegion).toBeNull();
 
       expect(queryByTestId('jump-to-first-issue')).toBeNull();
     });
@@ -368,7 +368,9 @@ describe('ContactForm validated blocks — static matrix', () => {
     const jumpButton = queryByTestId('jump-to-first-issue');
     expect(jumpButton).not.toBeNull();
     if (!jumpButton) {
-      throw new Error('Expected jump-to-first-issue control to render.');
+      throw new Error(
+        'Expected jump-to-first-issue control to render.',
+      );
     }
     jumpButton.click();
     expect(onJumpToFirstIssue).toHaveBeenCalledWith('name');
@@ -410,10 +412,12 @@ describe('ContactForm validated blocks — static matrix', () => {
       const text = inlineRegion?.textContent ?? '';
       expect(text).toContain('blocked');
 
-      const toastRegion = container.querySelector(
+      const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
-      expect(toastRegion?.textContent ?? '').toContain('blocked');
+      expect(messageCentreRegion?.textContent ?? '').toContain(
+        'blocked',
+      );
 
       expect(queryByTestId('jump-to-first-issue')).toBeNull();
     });

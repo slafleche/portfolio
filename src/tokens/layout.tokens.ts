@@ -1,21 +1,27 @@
 import { m } from 'css-calipers';
-import { logoVars } from './menu.tokens';
+import { anchorMenuVars, logoVars } from './menu.tokens';
 
-const contentPadding = logoVars.fullWidth;
+const defaultContentWidth = m(1400);
+const contentPadding = logoVars.fullWidth.add(
+  anchorMenuVars.borders.width,
+);
+
+const separatorMinimum = m(300);
 
 export const layoutVars = {
-  contentWidth: m(1400),
+  contentWidth: defaultContentWidth,
   contentPadding,
+  contentWidthWithPadding: contentPadding,
 
-  noBleed: {
-  	// contentWidth: m(1200),
-  	// contentPadding: m(26),
+  noEdge: {
+    contentPadding: m(26),
   },
-  // compact: {
-  // 	contentWidth: m(1200),
-  // 	contentPadding: m(26),
-  // 	halfContentPadding: compactContentPadding.half(),
-  // },
+  snug: {
+    maxWidth: m(1000),
+  },
+  compact: {
+    maxWidth: m(800),
+  },
   // compressed: {
   // 	contentWidth: m(800),
   // 	contentPadding: m(16),
@@ -25,5 +31,6 @@ export const layoutVars = {
 
 export const gridLayoutVars = {
   columns: 1,
-  gap: m(6),
+  gap: m(24),
+  separatorMinimum,
 };

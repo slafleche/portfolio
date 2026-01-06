@@ -23,6 +23,28 @@ const sampleConfig: FontsConfig = {
 };
 
 describe('fontConfig.helper', () => {
+  it('omits familyName when the config entry is system', () => {
+    const systemConfig: FontsConfig = {
+      'System+Code+Fonts': {
+        weights: '300..700',
+        type: 'system',
+      },
+    };
+    const family = defineFontFamily({
+      familyName: 'System+Code+Fonts',
+      fallbacks: [
+        'ui-monospace',
+        'monospace',
+      ],
+      cfgMap: systemConfig,
+      letterSpacing: m(0, 'em'),
+      offsetToFlushTop: m(0, 'em'),
+      weights: { default: 400, strong: 600 },
+    });
+
+    expect(family.family).toBe('ui-monospace, monospace');
+  });
+
   it('merges weight tokens into low/high ranges', () => {
     expect(weightRangeFromConfig('400..800')).toEqual({
       low: 400,
@@ -48,7 +70,7 @@ describe('fontConfig.helper', () => {
         'sans-serif',
       ],
       cfgMap: sampleConfig,
-      spacing: m(0.2, 'rem'),
+      letterSpacing: m(0.2, 'rem'),
       offsetToFlushTop: m(0.1, 'rem'),
       weights: { default: 400, strong: 600 },
       css: { letterSpacing: '0.01em' },
@@ -84,13 +106,13 @@ describe('fontConfig.helper', () => {
       defineFontFamily({
         familyName: 'Sample Family',
         fallbacks: [
-          'sans-serif',
-        ],
-        cfgMap: sampleConfig,
-        spacing: m(0.1, 'rem'),
-        offsetToFlushTop: m(0, 'rem'),
-        weights: { low: 200, default: 400, strong: 500 },
-      })).toThrow(/conflicts with fonts\.config\.json range/);
+        'sans-serif',
+      ],
+      cfgMap: sampleConfig,
+      letterSpacing: m(0.1, 'rem'),
+      offsetToFlushTop: m(0, 'rem'),
+      weights: { low: 200, default: 400, strong: 500 },
+    })).toThrow(/conflicts with fonts\.config\.json range/);
   });
 
   it('coerces raw JSON objects into FontsConfig and validates structure', () => {
@@ -115,6 +137,7 @@ describe('fontConfig.helper', () => {
           ],
           CASL: '0..1',
         },
+        type: 'system',
       },
     });
 
@@ -137,6 +160,7 @@ describe('fontConfig.helper', () => {
       ],
       CASL: '0..1',
     });
+    expect(config.objectSans.type).toBe('system');
 
     expect(() => asFontsConfig(null)).toThrow(
       /root must be an object/,

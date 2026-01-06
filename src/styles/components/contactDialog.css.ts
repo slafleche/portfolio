@@ -1,20 +1,18 @@
 import { style, globalStyle, keyframes } from '@vanilla-extract/css';
 import { colorVars } from '../../tokens/global.tokens';
-import {
-  composeFontVariantStyles,
-  fontVariants,
-} from '../../tokens/fontVariants.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import { backgrounds } from '../helpers/background.helper';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import borders from '../helpers/borders.helper';
-import { margins, paddings } from '../helpers/spacing.helper';
+import { margins } from '../helpers/spacing.helper';
 import { m } from 'css-calipers';
 import {
   absolutePosition,
   fullSizeOfParent,
 } from '../helpers/positioning.helper';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -53,10 +51,10 @@ export const panel = style({
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  ...paddings({
-    vertical: m(14),
-    horizontal: m(10),
-  }),
+  // ...paddings({
+  //   vertical: m(14),
+  //   horizontal: m(10),
+  // }),
   ...backgrounds({
     color: colorVars.bodyBg,
   }),
@@ -84,11 +82,13 @@ export const heading = style({
 });
 
 export const body = style({
+  ...fontStylesFromFontVariant({
+    variant: typographyFontVariants.body,
+  }),
   ...margins({
     top: m(4),
     horizontal: 'auto',
   }),
-  ...composeFontVariantStyles(fontVariants.body),
   color: colorVars.white.alpha(0.9).css(),
   maxWidth: '70ch',
 });
@@ -190,6 +190,7 @@ globalStyle(`.${panel} p`, {
 
 export const bgImage = style({
   ...fullSizeOfParent(),
+  position: 'fixed',
   zIndex: 0,
   inset: 0,
   pointerEvents: 'none',

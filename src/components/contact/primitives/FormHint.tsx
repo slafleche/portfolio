@@ -15,16 +15,15 @@ export function FormHint({
   id,
   children,
 }: FormHintProps) {
-  if (!children) {
-    return null;
-  }
   return (
     <p
       id={id}
       data-form-hint={tone}
-      className={clsx(tone === 'error' ? s.errorText : s.helperText)}
+      className={clsx(tone === 'error' ? s.errorText : s.helperText, { [s.empty]: !children })}
+      aria-hidden={!children}
     >
       {children}
+      {!children && '\u00A0'}
     </p>
   );
 }

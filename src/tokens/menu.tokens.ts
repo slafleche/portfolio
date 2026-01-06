@@ -1,5 +1,6 @@
 import { m, mPercent } from 'css-calipers';
 import { colorVars } from './global.tokens';
+import type { ITextShadow } from '../styles/helpers/shadow.helper';
 
 const logoWidth = m(48);
 const offsetY = m(12);
@@ -16,6 +17,11 @@ export const logoVars = {
     width: m(1),
     color: colorVars.white.alpha(0.5),
   },
+  compact: {
+    width: m(50),
+    offsetX: m(16),
+    offsetY: m(16),
+  },
 };
 
 export const localeSwitcherVars = {
@@ -25,6 +31,7 @@ export const localeSwitcherVars = {
   width: m(32),
   height: m(32),
   color: colorVars.white.alpha(0.8),
+  shadow: colorVars.shadow,
 };
 
 const anchorOuterGap = m(12);
@@ -36,6 +43,7 @@ const dotSize = m(16);
 const borderSize = m(1);
 const dotPadding = logoVars.offsetY.add(borderSize);
 const handleHeight = dotPadding.multiply(2).add(dotSize);
+const handleSizeWithBorder = handleHeight.add(borderSize.multiply(2));
 
 const anchorMenuVars = {
   size: dotSize,
@@ -52,10 +60,24 @@ const anchorMenuVars = {
     paddings: dotPadding,
     fontSize: dotSize,
     lineHeight: 1,
+    borders: {
+      width: m(1),
+      color: colorVars.white.alpha(0.8),
+      radius: mPercent(50),
+    },
   },
   handle: {
     size: handleHeight,
+    sizeWithBorder: handleSizeWithBorder,
     spacing: dotPadding.add(borderSize.multiply(2)),
+  },
+  text: {
+    textShadow: {
+      x: m(1),
+      y: m(1),
+      blur: m(1),
+      color: colorVars.shadow,
+    } as ITextShadow,
   },
 };
 

@@ -16,13 +16,17 @@ export const heroVars = {
     ] as Stop[],
     videoOpacity: 0.8,
   },
+  fontLoading: {
+    waitForFontsTimeoutMs: 1500,
+  },
+
   paddings: {
     top: m(40),
     bottom: m(40),
   },
-  fontLoading: {
-    waitForFontsTimeoutMs: 1500,
-  },
+  queries: {
+    compact: m(800),
+  }
 } as const;
 
 export type HeroVars = typeof heroVars;

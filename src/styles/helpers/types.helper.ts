@@ -1,7 +1,7 @@
 import type * as CSSCore from 'csstype';
 export * as CSS_TYPES from 'csstype';
 import type { IMeasurement } from 'css-calipers';
-import type { Color } from './colorWrap.helper';
+import type { Color, ColorWrapper } from './colorWrap.helper';
 
 // Many tokens in .ts are objects (e.g., chroma colors, measurement objects)
 // that expose a `.css()` method to produce a CSS string on demand.
@@ -47,24 +47,38 @@ export type SpacingKeyword =
   | 'revert'
   | 'revert-layer';
 
-export type SpacingValue = IMeasurement | SpacingKeyword;
+export type SpacingValue = IMeasurement | SpacingKeyword | 0;
 
 // Four-side spacing shape (no axis shorthands).
 export type SpacingBasics = Record<Axis, SpacingValue>;
 
+export type FontFamilyWeightRange = {
+  low: number;
+  high: number;
+};
+
+export type FontFamilyWeightPresets = {
+  default: number;
+  strong: number;
+};
+
 export type FontFamilyDef = {
   family: CSSCore.Property.FontFamily;
-  weights: {
-    low: number;
-    high: number;
-    default: number;
-    strong: number;
-  };
+  weights: FontFamilyWeightRange & FontFamilyWeightPresets;
+  textAlign?: CSSCore.Property.TextAlign;
+  textTransform?: CSSCore.Property.TextTransform;
+  letterSpacing?: IMeasurement;
   offsetToFlushTop: IMeasurement;
-  spacing?: IMeasurement;
   lineHeight?: CSSCore.Property.LineHeight;
   css?: Partial<CSSCore.Properties>;
   axisDefaults?: Record<string, number | string>;
+};
+
+export type FontFamilyForPercentWeights = Omit<
+  FontFamilyDef,
+  'weights'
+> & {
+  weights: FontFamilyWeightPresets;
 };
 
 export type FontStyles = {
@@ -73,24 +87,18 @@ export type FontStyles = {
   fontFamily?: CSSCore.Property.FontFamily;
   fontWeight?: CSSCore.Property.FontWeight;
   weight?: CSSCore.Property.FontWeight;
-  size?:
-    | CssLike
-    | string
-    | { value: number; unit?: string }
-    | undefined;
+  textAlign?: CSSCore.Property.TextAlign;
+  textTransform?: CSSCore.Property.TextTransform;
+  letterSpacing?: IMeasurement;
+  size?: IMeasurement;
   weights?: {
     default: CSSCore.Property.FontWeight;
     strong: CSSCore.Property.FontWeight;
   };
   lineHeight?: CSSCore.Property.LineHeight;
-  spacing?:
-    | CssLike
-    | string
-    | { value: number; unit?: string }
-    | undefined;
   offsetToFlushTop?: IMeasurement;
   css?: Partial<CSSCore.Properties>;
-  color?: CssLike | Color | CSSCore.Property.Color;
+  color?: ColorWrapper;
   waitForFonts?: string[];
   waitForFontsTimeoutMs?: number;
 };

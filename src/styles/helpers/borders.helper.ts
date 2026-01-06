@@ -225,7 +225,7 @@ const resolveIntentToEdges = (
       if (!e.style && applyDefaults) e.style = dS;
       if (!e.color && applyDefaults) e.color = dC;
     } else {
-      e.width = '0';
+      if (applyDefaults) e.width = '0';
     }
   });
 
@@ -530,34 +530,78 @@ const resolve = (
   ] = widths;
   const widthsDefined = widths.every((w) => w !== undefined);
   if (widthsDefined) {
-    css.borderWidth = compressSides(
-      tw as string,
-      rw as string,
-      bw as string,
-      lw as string,
-    );
+    if (options?.skipDefaults) {
+      css.borderTopWidth =
+        tw as CSS_TYPES.Property.BorderTopWidth;
+      css.borderRightWidth =
+        rw as CSS_TYPES.Property.BorderRightWidth;
+      css.borderBottomWidth =
+        bw as CSS_TYPES.Property.BorderBottomWidth;
+      css.borderLeftWidth =
+        lw as CSS_TYPES.Property.BorderLeftWidth;
+    } else {
+      css.borderWidth = compressSides(
+        tw as string,
+        rw as string,
+        bw as string,
+        lw as string,
+      );
+    }
+  } else {
+    if (tw !== undefined) {
+      css.borderTopWidth =
+        tw as CSS_TYPES.Property.BorderTopWidth;
+    }
+    if (rw !== undefined) {
+      css.borderRightWidth =
+        rw as CSS_TYPES.Property.BorderRightWidth;
+    }
+    if (bw !== undefined) {
+      css.borderBottomWidth =
+        bw as CSS_TYPES.Property.BorderBottomWidth;
+    }
+    if (lw !== undefined) {
+      css.borderLeftWidth =
+        lw as CSS_TYPES.Property.BorderLeftWidth;
+    }
   }
 
   if (styleAllEq) {
     css.borderStyle = styles[0];
-  } else if (styles.every((s) => s !== undefined)) {
-    css.borderTopStyle =
-      styles[0] as CSS_TYPES.Property.BorderTopStyle;
-    css.borderRightStyle =
-      styles[1] as CSS_TYPES.Property.BorderRightStyle;
-    css.borderBottomStyle =
-      styles[2] as CSS_TYPES.Property.BorderBottomStyle;
-    css.borderLeftStyle =
-      styles[3] as CSS_TYPES.Property.BorderLeftStyle;
+  } else {
+    if (styles[0] !== undefined) {
+      css.borderTopStyle =
+        styles[0] as CSS_TYPES.Property.BorderTopStyle;
+    }
+    if (styles[1] !== undefined) {
+      css.borderRightStyle =
+        styles[1] as CSS_TYPES.Property.BorderRightStyle;
+    }
+    if (styles[2] !== undefined) {
+      css.borderBottomStyle =
+        styles[2] as CSS_TYPES.Property.BorderBottomStyle;
+    }
+    if (styles[3] !== undefined) {
+      css.borderLeftStyle =
+        styles[3] as CSS_TYPES.Property.BorderLeftStyle;
+    }
   }
 
   if (colorAllEq) {
     css.borderColor = colors[0];
-  } else if (colors.every((c) => c !== undefined)) {
-    css.borderTopColor = colors[0];
-    css.borderRightColor = colors[1];
-    css.borderBottomColor = colors[2];
-    css.borderLeftColor = colors[3];
+  } else {
+    if (colors[0] !== undefined) {
+      css.borderTopColor = colors[0];
+    }
+    if (colors[1] !== undefined) {
+      css.borderRightColor = colors[1];
+    }
+    if (colors[2] !== undefined) {
+      css.borderBottomColor = colors[2];
+    }
+    if (colors[3] !== undefined) {
+      css.borderLeftColor = colors[3];
+    }
   }
 
   const radiusVal = resolveRadiusCompass(intent?.radius, {

@@ -1,17 +1,22 @@
 import { globalStyle } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
+import { m, mEm, mPercent } from 'css-calipers';
 import { documentSurface } from '../modules/globals/document.module';
-import {
-  composeFontVariantStyles,
-  fontVariants,
-} from '../tokens/fontVariants.tokens';
 import {
   ReducedMotion,
   reducedMotion,
 } from './helpers/accessibility.helper';
-import { paddings } from './helpers/spacing.helper';
+import { margins, paddings } from './helpers/spacing.helper';
 import borders from './helpers/borders.helper';
 import './utilities.css';
+import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
+import { typographyFontVariants } from '../tokens/fontVariants/typography';
+import {
+  buildLinear,
+  gradientAsBgImg,
+} from './helpers/gradients.helper';
+import { themeColours } from '../tokens/global.tokens';
+import { textStyleVars } from '../tokens/textStyles.tokens';
+import { anchorMenuVars } from '../tokens/menu.tokens';
 
 const {
   palette: {
@@ -20,16 +25,33 @@ const {
   layout: { arch, scrollPaddingOffset },
 } = documentSurface;
 
-const bodyFontStyles = composeFontVariantStyles(fontVariants.body);
-const headingFontStyles = composeFontVariantStyles(
-  fontVariants.heading,
-);
+const bodyFontStyles = fontStylesFromFontVariant({
+  variant: typographyFontVariants.body,
+});
+
+const bgGradient = buildLinear({
+  angle: m(120, 'deg'),
+  stops: [
+    {
+      at: mPercent(0),
+      color: bodyBg,
+    },
+    {
+      at: mPercent(100),
+      color: themeColours.purples.reddish.mix(
+        themeColours.purples.dark,
+        0.3,
+      ),
+    },
+  ],
+});
 
 globalStyle('body', {
   minHeight: '100vh',
   margin: 0,
   padding: 0,
   backgroundColor: bodyBg.css(),
+  ...gradientAsBgImg(bgGradient),
 });
 
 globalStyle('html', {
@@ -91,6 +113,10 @@ globalStyle('sup', {
 
 globalStyle('img', {
   borderStyle: 'none',
+});
+
+globalStyle('svg', {
+  display: 'block',
 });
 
 globalStyle('button, input, optgroup, select, textarea', {
@@ -205,12 +231,6 @@ globalStyle('[hidden]', {
   display: 'none',
 });
 
-globalStyle('hr', {
-  boxSizing: 'content-box',
-  height: 0,
-  overflow: 'visible',
-});
-
 globalStyle('pre', {
   fontFamily: 'monospace, monospace',
   fontSize: '1em',
@@ -221,20 +241,44 @@ globalStyle('code, kbd, samp', {
   fontSize: '1em',
 });
 
-globalStyle('ul, ol', {
-  margin: 0,
-  padding: 0,
-});
+globalStyle(
+  'ul[data-ui="list-unordered"], ol[data-ui="list-ordered"]',
+  {
+    margin: 0,
+    padding: 0,
+  },
+);
 
 globalStyle('h1, h2, h3, h4, h5, h6', {
   all: 'unset',
-  margin: 0,
   display: 'block',
   padding: 0,
   border: 0,
   position: 'relative',
-  ...headingFontStyles,
 });
+
+globalStyle(
+  'h1:not([data-ui="heading"]), h2:not([data-ui="heading"]), h3:not([data-ui="heading"]), h4:not([data-ui="heading"]), h5:not([data-ui="heading"]), h6:not([data-ui="heading"])',
+  {
+    display: 'block',
+    ...margins({
+      bottom: mEm(0.5),
+    }),
+  },
+);
+
+for (let level = 1; level <= 6; level++) {
+  const variant =
+    typographyFontVariants[
+      `h${level}` as keyof typeof typographyFontVariants
+    ];
+  globalStyle(`h${level}:not([data-ui="heading"])`, {
+    ...fontStylesFromFontVariant({
+      variant,
+      baseVariant: typographyFontVariants.heading,
+    }),
+  });
+}
 
 globalStyle("*, *:after, *:before, input[type='search']", {
   boxSizing: 'border-box',
@@ -260,4 +304,13 @@ globalStyle('li[data-ui="list-item"]', {
 globalStyle('a[data-ui="link"]', {
   color: 'inherit',
   textDecoration: 'none',
+});
+
+globalStyle('hr', {
+  width: `calc(100% - ${anchorMenuVars.handle.sizeWithBorder.multiply(2).css()})`,
+  maxWidth: '600px',
+  opacity: 0.5,
+  height: 0,
+  ...borders(textStyleVars.horizontalRule.borders),
+  ...margins(textStyleVars.horizontalRule.margins),
 });

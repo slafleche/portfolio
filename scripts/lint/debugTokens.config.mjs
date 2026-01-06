@@ -50,6 +50,20 @@ export const STYLE_LITERAL_RESETS = {
     (line) =>
       /\bboxShadow\s*:\s*['"]none(?:\s*!important)?['"]/.test(line),
   ],
+  'padding-inline': [
+    // Allow explicit auto padding values when requested.
+    (line) =>
+      /\bpadding(?:Top|Right|Bottom|Left)?\s*:\s*['"]auto(?:\s*!important)?['"]/.test(
+        line,
+      ),
+  ],
+  'margin-inline': [
+    // Allow explicit auto margin values when requested.
+    (line) =>
+      /\bmargin(?:Top|Right|Bottom|Left)?\s*:\s*['"]auto(?:\s*!important)?['"]/.test(
+        line,
+      ),
+  ],
 };
 
 // Per-page token import whitelists for debug sandboxes.

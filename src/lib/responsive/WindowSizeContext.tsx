@@ -7,28 +7,17 @@ import {
   useEffect,
   type ReactNode,
 } from 'react';
+import { getViewportSize } from './viewport';
 
 interface WindowSizeContextType {
   width: number | null;
   height: number | null;
+  layoutTick: number;
 }
 
 const WindowSizeContext = createContext<
   WindowSizeContextType | undefined
 >(undefined);
-
-const getViewportSize = (): WindowSizeContextType => {
-  if (typeof window === 'undefined') {
-    return {
-      width: null,
-      height: null,
-    };
-  }
-  return {
-    width: document.documentElement.clientWidth,
-    height: document.documentElement.clientHeight,
-  };
-};
 
 export function WindowSizeProvider({
   children,
@@ -38,17 +27,39 @@ export function WindowSizeProvider({
   const [
     size,
     setSize,
-  ] = useState<WindowSizeContextType>(getViewportSize);
+  ] = useState<WindowSizeContextType>(() => ({
+    ...getViewportSize(),
+    layoutTick: 0,
+  }));
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const handleResize = () => setSize(getViewportSize);
+    const updateSize = () => {
+      setSize((prev) => ({
+        ...getViewportSize(),
+        layoutTick: prev.layoutTick + 1,
+      }));
+    };
 
-    handleResize(); // set initial
-    window.addEventListener('resize', handleResize);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== 'visible') return;
+      updateSize();
+    };
 
-    return () => window.removeEventListener('resize', handleResize);
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    window.addEventListener('focus', updateSize);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('resize', updateSize);
+      window.removeEventListener('focus', updateSize);
+      document.removeEventListener(
+        'visibilitychange',
+        handleVisibilityChange,
+      );
+    };
   }, []);
 
   return (

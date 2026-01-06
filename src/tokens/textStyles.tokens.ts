@@ -1,10 +1,9 @@
 import { m } from 'css-calipers';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { SpacingIntentInternal } from '../styles/helpers/spacing.helper';
-import { colorVars } from './global.tokens';
+import { colorVars, themeColours } from './global.tokens';
 
-const blockSpacing = m(16);
-// const compactSpacing = m(8);
+const blockSpacing = m(20);
 const listIndent = m(24);
 const codeBackground = colorVars.bodyFg.alpha(0.08);
 const codeBorder = colorVars.bodyFg.alpha(0.12);
@@ -104,7 +103,7 @@ export const textStyleVars = {
       underlineOffset: m(3),
     },
     hover: {
-      color: colorVars.brand.brighten(0.1),
+      color: colorVars.brand.lighten(0.1),
       textDecorationThickness: m(0.75),
     },
     focusVisible: {
@@ -144,9 +143,10 @@ export const textStyleVars = {
   horizontalRule: {
     borders: {
       width: m(1),
-      color: colorVars.border,
+      color: themeColours.electricBlue,
     },
     margins: {
+      horizontal: 'auto',
       bottom: blockSpacing,
     },
   },

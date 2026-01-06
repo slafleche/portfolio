@@ -1,7 +1,7 @@
-import { fontVariants } from '../../tokens/fontVariants.tokens';
 import { textStyleVars } from '../../tokens/textStyles.tokens';
 import { m, mPercent } from 'css-calipers';
 import { themeColours } from '../../tokens/global.tokens';
+import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 
 // const footerGradient: CardGradientPack = {
 //   linear: [
@@ -83,9 +83,24 @@ export const gradient = {
 } as const;
 
 export const footerVars = {
-  heading: fontVariants.h2,
+  heading: typographyFontVariants.h2,
   body: textStyleVars.paragraph,
   gradient,
+  glassyLinks: {
+    gap: m(40),
+    size: m(100),
+    hoverFocus: {
+      translateY: m(-20),
+    },
+  },
 } as const;
 
 export type FooterVars = typeof footerVars;
+
+export const footerGradientConfig = {
+  angle: footerVars.gradient.gradientAngle,
+  stops: footerVars.gradient.gradientStops.map((stop) => ({
+    color: stop.color,
+    at: stop.at,
+  })),
+};

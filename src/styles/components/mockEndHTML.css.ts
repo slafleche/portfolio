@@ -3,29 +3,23 @@ import { paddings, margins } from '../helpers/spacing.helper';
 import { borders } from '../helpers/borders.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { m, mPercent } from 'css-calipers';
-
-const codeFontStack =
-  'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import { mockHtmlFontVariants } from '../../tokens/fontVariants/mockHtml';
+// import { absolutePosition } from '../helpers/positioning.helper';
 
 export const root = style({
-  ...paddings({
-    top: m(18),
-    bottom: m(20),
-    horizontal: m(18),
-  }),
+  // textAlign: 'left',
+  // userSelect: 'none',
+  // ...absolutePosition.bottomLeft(),
   ...backgrounds({
     color: '#0f111a',
     image:
       'linear-gradient(180deg, rgba(15,17,26,0) 0%, rgba(15,17,26,0.55) 18%, rgba(15,17,26,0.9) 100%)',
   }),
-  ...borders.top({
-    width: m(1),
-    color: 'rgba(255, 255, 255, 0.08)',
+  ...fontStylesFromFontVariant({
+    variant: mockHtmlFontVariants.code,
   }),
-  fontFamily: codeFontStack,
-  fontSize: '12px',
-  lineHeight: 1.45,
-  color: '#c9d1d9',
+  ...paddings(m(16)),
 });
 
 export const rows = style({

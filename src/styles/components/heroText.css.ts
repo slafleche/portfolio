@@ -1,19 +1,20 @@
 import { style, globalStyle } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 import { colorVars } from '../../tokens/global.tokens';
-import { projectorVars } from '../componentTokens/projector.componentTokens';
+import { projectorVars } from '../componentTokens/projector.component.tokens';
 import { margins } from '../helpers/spacing.helper';
 import borders from '../helpers/borders.helper';
 
 export const container = style({
   position: 'relative',
-  display: 'flex',
+  display: 'inline-flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
   isolation: 'isolate',
   overflow: 'visible',
   textAlign: 'center',
+  maxWidth: '100%',
 });
 
 export const backdrop = style({
