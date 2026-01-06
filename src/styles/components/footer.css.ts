@@ -73,6 +73,7 @@ export const content = style({
 export const links = style({
   position: 'relative',
   zIndex: 1,
+  pointerEvents: 'none',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -90,6 +91,10 @@ export const links = style({
       },
     }),
   },
+});
+
+globalStyle(`${links} > *`, {
+  pointerEvents: 'auto',
 });
 
 const glassLinkBase: ComplexStyleRule = {
@@ -121,17 +126,24 @@ const glassLinkBase: ComplexStyleRule = {
 export const glassLink = style([
   glassLinkBase,
   {
+    zIndex: 1,
     selectors: {
-      '&:hover': {
-        cursor: 'pointer',
-        transform: `translateY(${footerVars.glassyLinks.hoverFocus.translateY.css()})`,
-        ...boxShadow({
-          x: m(0),
-          y: m(24),
-          blur: m(36),
-          alpha: 0.25,
-        }),
-      },
+      ...mediaQueryStyle({
+        notCompact: {
+          selectors: {
+            '&:hover': {
+              cursor: 'pointer',
+              transform: `translateY(${footerVars.glassyLinks.hoverFocus.translateY.css()})`,
+              ...boxShadow({
+                x: m(0),
+                y: m(24),
+                blur: m(36),
+                alpha: 0.25,
+              }),
+            },
+          },
+        },
+      }),
     },
   },
 ]);

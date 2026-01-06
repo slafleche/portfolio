@@ -1,4 +1,4 @@
-import { style, keyframes } from '@vanilla-extract/css';
+import { style, keyframes, globalStyle } from '@vanilla-extract/css';
 import {
   gradientAsBgImg,
   buildLinear,
@@ -50,6 +50,10 @@ const slideUp = keyframes({
 
 export const root = style({});
 export const intro = style({});
+
+globalStyle(`.${intro} p`, {
+  marginTop: 0,
+});
 
 // border-radius: 16px;
 // padding: 16px;

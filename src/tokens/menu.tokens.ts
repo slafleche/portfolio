@@ -17,6 +17,11 @@ export const logoVars = {
     width: m(1),
     color: colorVars.white.alpha(0.5),
   },
+  compact: {
+    width: m(50),
+    offsetX: m(16),
+    offsetY: m(16),
+  },
 };
 
 export const localeSwitcherVars = {

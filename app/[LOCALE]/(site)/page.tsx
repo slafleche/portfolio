@@ -1,5 +1,4 @@
 import Hero from '@/components/Hero';
-import Content from '@/components/responsive/Content';
 import ContentWithTitle from '@/components/responsive/ContentWithTitle';
 import CaseStudy from '@/components/CaseStudy';
 import { Grid, Column } from '@/components/Grid';
@@ -30,7 +29,6 @@ import {
   EAWordmark,
   HSWordmark,
   KGWordmark,
-  VNWordmark,
 } from '@/components/wordmarks/wordmarks.tsx';
 import Menu from '../../../src/components/Menu';
 import { clsx } from 'clsx';
@@ -140,37 +138,29 @@ export default async function HomePage({
           />
           <ContentWithTitle
             id={approach.href}
-            title={approach.title}
+            contentTitle={approach.title}
             ignoreDataUI={true}
           >
             <Markdown source={approach.content} />
           </ContentWithTitle>
           <ContentWithTitle
             id={about.href}
-            title={about.title}
+            contentTitle={about.title}
             ignoreDataUI={true}
           >
             <Markdown source={about.content} />
           </ContentWithTitle>
 
-          <Content id={caseStudies.href}>
-            <WordMarkInTitle
-              WordMark={VNWordmark}
-              ignoreDataUI={true}
-              textTemplate={caseStudies.title}
-              textClassName={cg.wordmarkTextNoLogo}
-              depth={2}
-            />
-          </Content>
           <CaseStudy
             id={caseStudies.href}
             intro={caseStudies.intro}
+            title={caseStudies.title}
             caseStudies={caseStudies.list}
+            wordMarkClassName={cg.wordmarkTextNoLogo}
           />
-
           <ContentWithTitle
             ignoreDataUI={true}
-            title={projects.title}
+            contentTitle={projects.title}
             id={projects.href}
             queryDataAttributes={{
               compact: 'no-padding',

@@ -16,6 +16,7 @@ import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { menuFontVariants } from '../../tokens/fontVariants/menu';
 import { relativeFontWeight } from '../helpers/typography.helper';
 import { mPercent } from 'css-calipers';
+import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 // import { m, mPercent } from 'css-calipers';
 // import transforms from '../helpers/transforms.helper';
@@ -36,6 +37,16 @@ export const homeLink = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        width: logoVars.compact.width.css(),
+        height: logoVars.compact.width.css(),
+        top: logoVars.compact.offsetY.css(),
+        left: logoVars.compact.offsetX.css(),
+      },
+    }),
+  },
 });
 
 export const items = style({});

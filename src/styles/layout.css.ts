@@ -17,6 +17,15 @@ export const content = style({
 
   selectors: {
     ...mediaQueryStyle({
+      fullSize: {
+        selectors: {
+          "&[data-query-fullsize='no-padding']": {
+            ...paddings({
+              horizontal: 0,
+            }),
+          },
+        },
+      },
       compact: {
         ...paddings({
           horizontal: anchorMenuVars.handle.sizeWithBorder,

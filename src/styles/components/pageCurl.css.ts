@@ -12,6 +12,7 @@ import {
 import { color } from '../helpers/colorWrap.helper';
 import { outlines } from '../helpers/outlines.helper';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
+import { globalComponentMediaQueryStyle } from '../responsive/mediaQueries';
 
 // Match gradient in footer
 const bgMatch = themeColours.gradients.main.end;
@@ -39,6 +40,8 @@ export const link = style({
   color: 'inherit',
   textDecoration: 'none',
   overflow: 'visible',
+  cursor: 'pointer',
+  zIndex: 1,
   selectors: {
     '&:focus-visible': outlines(),
   },
@@ -206,7 +209,6 @@ export const bottomRightSlope = style({
     ${bgMatch.alpha(0).css()} 30%
   )`,
   zIndex: 2,
-  // transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
 export const topLeftSlope = style({
@@ -225,11 +227,6 @@ export const topLeftSlope = style({
       sw: pageCurlRadius,
     },
   }),
-  // ...borders.radii({
-  //   radius: {
-  //     sw: pageCurlRadius,
-  //   },
-  // }),
   backgroundImage: `linear-gradient(
     33deg,
     ${bgMatch.darken(0.8).css()} 0%,
@@ -241,7 +238,16 @@ export const topLeftSlope = style({
 });
 
 // Hover interactions: grow the corner and accent the curl when the box is hovered
-globalStyle(`.${link}:hover .${cornerBox}, .${link}:focus-visible .${cornerBox}`, {
-  width: curlVars.open.width.css(),
-  height: curlVars.open.height.css(),
-});
+globalStyle(
+  `.${link}:hover .${cornerBox},
+  .${link}:focus .${cornerBox}, 
+  .${link}:focus-visible .${cornerBox}`,
+  {
+    ...globalComponentMediaQueryStyle({
+      not_footer_oneColumn: {
+        width: curlVars.open.width.css(),
+        height: curlVars.open.height.css(),
+      },
+    }),
+  },
+);

@@ -42,6 +42,10 @@ export const mediaQueryStyleConfig: IMediaQueries = {
   compact: {
     maxWidth: layoutVars.compact.maxWidth,
   } as IMediaQueryProps,
+
+  notCompact: {
+    minWidth: layoutVars.compact.maxWidth.add(1),
+  } as IMediaQueryProps,
 };
 
 const baseMediaQueryStyle = mediaQueryFactory({
@@ -58,7 +62,22 @@ export const mediaQueryStyle = (
 ): Record<string, StyleRule> =>
   baseMediaQueryStyle(styles) as unknown as Record<string, StyleRule>;
 
+export const globalMediaQueryStyle = (
+  styles: Parameters<typeof baseMediaQueryStyle>[0],
+): StyleRule => {
+  const scopedStyles = baseMediaQueryStyle(styles) as unknown as Record<
+    string,
+    StyleRule
+  >;
+  return scopedStyles['&'] ?? {};
+};
+
 // Component specific media queries
+
+const footerOneCol = curlVars.open.height
+      .multiply(2)
+      .add(footerVars.glassyLinks.size.multiply(3))
+      .add(footerVars.glassyLinks.gap.multiply(4));
 
 const componentSpecificQueriesConfig: IMediaQueries = {
   hero_compact: {},
@@ -66,11 +85,11 @@ const componentSpecificQueriesConfig: IMediaQueries = {
     maxWidth: cardLayout.oneColumn.maxWidth,
   },
   footer_oneColumn: {
-    maxWidth: curlVars.open.height
-      .multiply(2)
-      .add(footerVars.glassyLinks.size.multiply(3))
-      .add(footerVars.glassyLinks.gap.multiply(2)),
+    maxWidth: footerOneCol,
   },
+  not_footer_oneColumn: {
+    minWidth: footerOneCol.add(1),
+  }
 };
 
 const baseComponentMediaQueries = mediaQueryFactory({
@@ -82,6 +101,7 @@ const baseComponentMediaQueries = mediaQueryFactory({
     output: outputVanillaExtract,
   },
 });
+
 export const componentMediaQueries = (
   styles: Parameters<typeof baseComponentMediaQueries>[0],
 ): Record<string, StyleRule> =>
@@ -89,3 +109,13 @@ export const componentMediaQueries = (
     string,
     StyleRule
   >;
+
+export const globalComponentMediaQueryStyle = (
+  styles: Parameters<typeof baseComponentMediaQueries>[0],
+): StyleRule => {
+  const scopedStyles = baseComponentMediaQueries(styles) as unknown as Record<
+    string,
+    StyleRule
+  >;
+  return scopedStyles['&'] ?? {};
+};

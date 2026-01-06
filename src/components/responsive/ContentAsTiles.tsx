@@ -95,6 +95,9 @@ export default function ContentAsTiles<
       ignoreDataUI={true}
       headingDepth={headingDepth}
       className={clsx(className)}
+      queryDataAttributes={{
+        compact: 'no-padding',
+      }}
       {...rest}
     >
       {intro ? (

@@ -26,13 +26,14 @@ function MarkdownBase({
   className,
   openLinksInNewTab = true,
 }: MarkdownProps): ReactElement | null {
-  if (typeof source !== 'string' || source.trim() === '') {
+  const trimmed = typeof source === 'string' ? source.trim() : '';
+  if (trimmed === '') {
     return null;
   }
 
   const html = openLinksInNewTab
-    ? marked.parse(source, { renderer: createTargetBlankRenderer() })
-    : marked.parse(source);
+    ? marked.parse(trimmed, { renderer: createTargetBlankRenderer() })
+    : marked.parse(trimmed);
 
   return (
     <div

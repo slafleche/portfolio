@@ -9,10 +9,12 @@ export type ContentWithTitleBaseProps = ContentBaseProps & {
   headingDepth?: 2 | 3 | 4 | 5 | 6;
 };
 
-type ContentWithTitleProps<T extends ElementType = 'section'> =
-  Omit<ContentWithTitleBaseProps, 'tag'> & {
-    tag?: T;
-  };
+type ContentWithTitleProps<T extends ElementType = 'section'> = Omit<
+  ContentWithTitleBaseProps,
+  'tag'
+> & {
+  tag?: T;
+};
 
 export default function ContentWithTitle<
   T extends ElementType = 'section',

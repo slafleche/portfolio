@@ -26,4 +26,24 @@ describe('Markdown component', () => {
     const { container } = render(<Markdown source="   " />);
     expect(container).toBeEmptyDOMElement();
   });
+
+  it('trims leading and trailing whitespace before parsing', () => {
+    const { container } = render(<Markdown source="  Hello  " />);
+    expect(container.textContent?.trim()).toBe('Hello');
+  });
+
+  it('does not render empty divs from raw html blocks', () => {
+    const { container } = render(
+      <Markdown source={'First\n\n<div></div>\n\nSecond'} />,
+    );
+    const markdownRoot = container.firstElementChild;
+    const emptyBlocks = markdownRoot
+      ? Array.from(markdownRoot.querySelectorAll('div')).filter(
+          (node) =>
+            node.textContent?.trim() === '' &&
+            node.childElementCount === 0,
+        )
+      : [];
+    expect(emptyBlocks).toHaveLength(0);
+  });
 });
