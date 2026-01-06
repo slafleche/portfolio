@@ -37,9 +37,14 @@ export default function Footer({
       id={footerId}
       aria-labelledby={headingId}
     >
+      {systemsLink && !hideSystemsLink ? (
+        <PageCurl
+          label={systemsLink.label}
+          href={systemsLink.href}
+          mockEndHtmlLabel={contact.systemsSnippetLabel}
+        />
+      ) : null}
       <Content>
-        {/* Put gradient on overlay */}
-        <div className={s.overlay}></div>
         <Heading
           data-visible="sc-only"
           id={headingId}
@@ -47,7 +52,7 @@ export default function Footer({
         >
           {contact.title}
         </Heading>
-        <Markdown className={s.content} source={contact.content} />
+        <p className={s.content}>{contact.content}</p>
 
         {/* Just a simple wrapper for links, since we have multiple elements to position */}
         <div className={s.links}>
@@ -79,12 +84,6 @@ export default function Footer({
             <SocialGitHubIcon className={s.gitHubIcon} />
           </GlassyLink>
         </div>
-        {systemsLink && !hideSystemsLink ? (
-          <PageCurl
-            href={systemsLink.href}
-            mockEndHtmlLabel={contact.systemsSnippetLabel}
-          />
-        ) : null}
       </Content>
     </footer>
   );

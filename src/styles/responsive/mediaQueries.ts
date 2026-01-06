@@ -10,6 +10,8 @@ import type { StyleRule } from '@vanilla-extract/css';
 import { layoutVars } from '../../tokens/layout.tokens';
 import { cardLayout } from '../componentTokens/card.component.tokens';
 import { heroVars } from '../componentTokens/hero.component.tokens';
+import { footerVars } from '../componentTokens/footer.component.tokens';
+import { curlVars } from '../componentTokens/pageCurl.component.tokens';
 
 const fullSizeMinWidth = layoutVars.contentWidth.add(
   layoutVars.contentPadding.multiply(2),
@@ -60,11 +62,15 @@ export const mediaQueryStyle = (
 // Component specific media queries
 
 const componentSpecificQueriesConfig: IMediaQueries = {
-  hero_compact: {
-    maxWidth: heroVars.queries.compact,
-  },
+  hero_compact: {},
   card_oneColumn: {
     maxWidth: cardLayout.oneColumn.maxWidth,
+  },
+  footer_oneColumn: {
+    maxWidth: curlVars.open.height
+      .multiply(2)
+      .add(footerVars.glassyLinks.size.multiply(3))
+      .add(footerVars.glassyLinks.gap.multiply(2)),
   },
 };
 

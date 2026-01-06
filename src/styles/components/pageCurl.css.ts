@@ -10,6 +10,7 @@ import {
   maskByLinearGradient,
 } from '../helpers/gradients.helper';
 import { color } from '../helpers/colorWrap.helper';
+import { outlines } from '../helpers/outlines.helper';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
 
 // Match gradient in footer
@@ -39,6 +40,9 @@ export const link = style({
   color: 'inherit',
   textDecoration: 'none',
   overflow: 'visible',
+  selectors: {
+    '&:focus-visible': outlines(),
+  },
 });
 
 const transitionGradient = buildRadial({
@@ -83,6 +87,19 @@ export const pageTip = style({
   )`,
   }),
   transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
+});
+
+export const fakeTipShadow = style({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  transform: `translate(8px, -10px)`,
+  ...backgrounds({
+    color: colorVars.shadow.alpha(0.2),
+  }),
+  filter: 'blur(4px)',
 });
 
 export const pageTipBorder = style({
@@ -136,7 +153,7 @@ export const cornerContents = style({
   transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
-export const fakeShadow = style({
+export const fakeCodeShadow = style({
   position: 'absolute',
   top: 0,
   left: 0,
@@ -144,18 +161,10 @@ export const fakeShadow = style({
   height: '150%',
   transform: `rotate(-45deg) translate(85%, 0%)`,
   ...backgrounds({
-    color: colorVars.shadow.alpha(1),
+    color: colorVars.shadow.alpha(0.9),
   }),
   filter: 'blur(8px)',
 });
-
-// export const cornerBase = style({
-//   position: 'absolute',
-//   bottom: 0,
-//   left: 0,
-//   width: '100%',
-//   height: '100%',
-// });
 
 export const cornerHighlight = style({
   position: 'absolute',
@@ -190,12 +199,15 @@ export const bottomRightSlope = style({
       sw: pageCurlRadius,
     },
   }),
-  ...backgrounds({
-    // color: themeColours.gradients.main.start,
-    image: `linear-gradient(45deg, rgba(255,255,255,0), rgba(255,255,255,0)), radial-gradient(circle at 180% -200%, rgba(255,255,255,0) 80%, rgba(0,0,0,0.2) 100%)`,
-  }),
+  backgroundImage: `linear-gradient(
+    66deg,
+    ${bgMatch.darken(0.8).css()} 0%,
+    ${bgMatch.darken(0.8).alpha(0.3).css()} 5%,
+    ${bgMatch.darken(0.7).alpha(0.1).css()} 20%,
+    ${bgMatch.alpha(0).css()} 30%
+  )`,
   zIndex: 2,
-  transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
+  // transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
 export const topLeftSlope = style({
@@ -219,42 +231,18 @@ export const topLeftSlope = style({
   //     sw: pageCurlRadius,
   //   },
   // }),
-  ...backgrounds({
-    image: `linear-gradient(45deg, rgba(255,255,255,0), rgba(255,255,255,0)), radial-gradient(circle at 180% -200%, rgba(255,255,255,0) 80%, rgba(0,0,0,0.2) 100%)`,
-  }),
+  backgroundImage: `linear-gradient(
+    33deg,
+    ${bgMatch.darken(0.8).css()} 0%,
+    ${bgMatch.darken(0.8).alpha(0.3).css()} 5%,
+    ${bgMatch.darken(0.7).alpha(0.1).css()} 20%,
+    ${bgMatch.alpha(0).css()} 30%
+  )`,
   zIndex: 2,
-  transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
 
 // Hover interactions: grow the corner and accent the curl when the box is hovered
-globalStyle(`.${link}:hover .${cornerBox}`, {
-  // globalStyle(`.${root} .${cornerBox}`, {
+globalStyle(`.${link}:hover .${cornerBox}, .${link}:focus-visible .${cornerBox}`, {
   width: curlVars.open.width.css(),
   height: curlVars.open.height.css(),
 });
-
-// globalStyle(`.${link}:hover .${bottomRightSlope}`, {
-//   // globalStyle(`.${root} .${bottomRightSlope}`, {
-//   ...borders(
-//     {
-//       left: {
-//         width: pageEdgeThickness,
-//         color: pageEdgeColor,
-//       },
-//     },
-//     { skipDefaults: true },
-//   ),
-// });
-
-// globalStyle(`.${link}:hover .${topLeftSlope}`, {
-//   // globalStyle(`.${root} .${topLeftSlope}`, {
-//   ...borders(
-//     {
-//       right: {
-//         width: pageEdgeThickness,
-//         color: pageEdgeColor,
-//       },
-//     },
-//     { skipDefaults: true },
-//   ),
-// });

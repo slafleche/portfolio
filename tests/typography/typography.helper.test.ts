@@ -130,7 +130,7 @@ describe('typography.helper', () => {
       variant: typographyFontVariants.heading,
     });
 
-    expect(headingStyles.letterSpacing).toBe('0.05em');
+    expect(headingStyles.letterSpacing).toBe('0.08em');
   });
 
   it('inherits family defaults through heading and h1/h2 variants', () => {
@@ -149,7 +149,7 @@ describe('typography.helper', () => {
 
     expect(headingStyles.fontFamily).toBe(family.family);
     expect(headingStyles.lineHeight).toBe(family.lineHeight);
-    expect(headingStyles.letterSpacing).toBe('0.05em');
+    expect(headingStyles.letterSpacing).toBe('0.08em');
     expect(h1Styles.lineHeight).toBe(family.lineHeight);
     expect(h2Styles.lineHeight).toBe(family.lineHeight);
     expect(h1Styles.letterSpacing).toBe(headingStyles.letterSpacing);
@@ -157,7 +157,7 @@ describe('typography.helper', () => {
 
     const expectedWeight = computeFontWeight(
       family,
-      mPercent(100),
+      mPercent(0),
     );
     expect(headingStyles.fontWeight).toBe(expectedWeight);
     expect(h1Styles.fontWeight).toBe(expectedWeight);

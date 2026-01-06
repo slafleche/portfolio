@@ -1,7 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import type { ComplexStyleRule } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
-import { noiseBg } from '../helpers/noiseSVG.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
@@ -10,23 +9,23 @@ import {
   gradientAsBgImg,
   buildLinear,
 } from '../helpers/gradients.helper';
-import { footerGradientConfig } from '../componentTokens/footer.component.tokens';
+import {
+  footerGradientConfig,
+  footerVars,
+} from '../componentTokens/footer.component.tokens';
+import { layoutVars } from '../../tokens/layout.tokens';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
+import { margins, paddings } from '../helpers/spacing.helper';
+import {
+  componentMediaQueries,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 
 const surfaceGradient = buildLinear(footerGradientConfig);
 
 export const root = style({
   position: 'relative',
-  // ...margins({
-  //   top: m(96),
-  //   horizontal: m(0),
-  //   bottom: m(0),
-  // }),
-  // ...paddings({
-  //   vertical: m(48),
-  //   // horizontal: m(24),
-  // }),
   ...gradientAsBgImg(surfaceGradient),
-
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -34,9 +33,22 @@ export const root = style({
   rowGap: '32px',
   color: '#ffffff',
   width: '100%',
-  minHeight: '420px',
   textAlign: 'center',
   overflow: 'hidden',
+
+  ...paddings({
+    vertical: layoutVars.contentPadding.multiply(1.5),
+  }),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...paddings({
+          top: anchorMenuVars.handle.sizeWithBorder.multiply(2),
+          bottom: anchorMenuVars.handle.sizeWithBorder.multiply(1.5),
+        }),
+      },
+    }),
+  },
 });
 
 export const heading = style({
@@ -50,11 +62,14 @@ export const heading = style({
 export const content = style({
   position: 'relative',
   zIndex: 1,
+  lineHeight: 1,
   textAlign: 'center',
-  maxWidth: '680px',
   fontSize: '28px',
   margin: 'auto',
   opacity: 0.9,
+  ...paddings({
+    bottom: m(0.5, 'em'),
+  }),
 });
 
 export const links = style({
@@ -64,31 +79,25 @@ export const links = style({
   justifyContent: 'center',
   alignItems: 'center',
   flexWrap: 'wrap',
-  gap: '40px',
-  margin: 0,
+  gap: footerVars.glassyLinks.gap.css(),
+  ...margins({
+    top: m(24),
+  }),
   padding: 0,
   listStyle: 'none',
-});
-
-export const overlay = style({
-  position: 'absolute',
-  inset: '0',
-  ...borders({
-    top: {
-      width: m(1),
-      color: 'rgba(255, 255, 255, 0.2)',
-    },
-  }),
-  ...backgrounds({ color: 'rgba(255, 255, 255, 0.06)' }),
-  ...backdropFilters.style({ blur: m(5) }),
-  zIndex: 0,
-  ...noiseBg({ opacity: 0.07 }),
+  selectors: {
+    ...componentMediaQueries({
+      footer_oneColumn: {
+        flexDirection: 'column',
+      },
+    }),
+  },
 });
 
 const glassLinkBase: ComplexStyleRule = {
   position: 'relative',
-  width: '100px',
-  height: '100px',
+  width: footerVars.glassyLinks.size.css(),
+  height: footerVars.glassyLinks.size.css(),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -117,7 +126,7 @@ export const glassLink = style([
     selectors: {
       '&:hover': {
         cursor: 'pointer',
-        transform: 'translateY(-20px)',
+        transform: `translateY(${footerVars.glassyLinks.hoverFocus.translateY.css()})`,
         ...boxShadow({
           x: m(0),
           y: m(24),

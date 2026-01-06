@@ -8,8 +8,9 @@ import { mockHtmlFontVariants } from '../../tokens/fontVariants/mockHtml';
 import { absolutePosition } from '../helpers/positioning.helper';
 
 export const root = style({
-  ...absolutePosition.bottomLeft(),
   textAlign: 'left',
+  userSelect: 'none',
+  ...absolutePosition.bottomLeft(),
   ...backgrounds({
     color: '#0f111a',
     image:
@@ -18,8 +19,7 @@ export const root = style({
   ...fontStylesFromFontVariant({
     variant: mockHtmlFontVariants.code,
   }),
-  color: '#c9d1d9',
-  userSelect: 'none',
+  ...paddings(m(16)),
 });
 
 export const rows = style({

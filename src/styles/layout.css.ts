@@ -15,41 +15,22 @@ export const content = style({
     horizontal: layoutVars.contentPadding,
   }),
 
-  // selectors: {
-  //   ...mediaQueryStyle({
-  //     compact: {
-  //       ...paddings({
-  //         horizontal: anchorMenuVars.handle.sizeWithBorder,
-  //       }),
-  //       selectors: {
-  //         "&[data-query-compact='no-padding']": {
-  //           ...paddings({
-  //             horizontal: 0,
-  //           }),
-  //         },
-  //       },
-  //     },
-  //   }),
-  // },
-
-selectors: {
-  ...mediaQueryStyle({
-    compact: {
-      ...paddings({
-        horizontal: anchorMenuVars.handle.sizeWithBorder,
-      }),
-      selectors: {
-        "&[data-query-compact='no-padding']": {
-          ...paddings({
-            horizontal: 0,
-          }),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...paddings({
+          horizontal: anchorMenuVars.handle.sizeWithBorder,
+        }),
+        selectors: {
+          "&[data-query-compact='no-padding']": {
+            ...paddings({
+              horizontal: 0,
+            }),
+          },
         },
       },
-    },
-  }),
-},
-
-
+    }),
+  },
 });
 
 export const title = style({});
@@ -71,6 +52,23 @@ export const main = style({
   display: 'flex',
   flexDirection: 'column',
   rowGap: 'clamp(2rem, 4vw, 4rem)',
+  ...paddings({
+    bottom: layoutVars.contentPadding.multiply(1.5),
+  }),
+  selectors: {
+    ...mediaQueryStyle({
+      noEdge: {
+        ...paddings({
+          bottom: layoutVars.contentPadding,
+        }),
+      },
+      compact: {
+        ...paddings({
+          bottom: anchorMenuVars.handle.sizeWithBorder,
+        }),
+      },
+    }),
+  },
 });
 
 export const svgOverlay = style({

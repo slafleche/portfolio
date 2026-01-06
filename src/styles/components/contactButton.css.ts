@@ -72,7 +72,7 @@ export const root = style({
   height: containerSizePx.css(),
   zIndex: 30,
   overflow: 'hidden',
-  pointerEvents: 'auto',
+  pointerEvents: 'none',
 });
 
 export const rail = style({

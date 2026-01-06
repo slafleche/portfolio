@@ -3,8 +3,8 @@ import { footerGradientConfig } from './footer.component.tokens';
 import { colorVars } from '../../tokens/global.tokens';
 
 export const curlVars = {
-  width: m(500),
-  height: m(500),
+  width: m(350),
+  height: m(350),
   closed: {
     width: m(100),
     height: m(100),

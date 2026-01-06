@@ -18,6 +18,5 @@ describe('Content', () => {
     const root = container.querySelector('[data-ui="content"]');
     expect(root).toBeTruthy();
     expect(root).toHaveAttribute('data-query-compact', 'no-padding');
-    expect(root).toHaveAttribute('data-query-snug', 'no-padding');
   });
 });

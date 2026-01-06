@@ -386,10 +386,19 @@ const normalizeMaskColor = (value: string): string =>
       'transparent',
     )
     .replace(
+      /rgb\(\s*0\s+0\s+0\s*\/\s*0(?:\.0+)?\s*\)/g,
+      'transparent',
+    )
+    .replace(
       /rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*1(?:\.0+)?\s*\)/g,
       '#000',
     )
-    .replace(/rgb\(\s*0\s*,\s*0\s*,\s*0\s*\)/g, '#000');
+    .replace(
+      /rgb\(\s*0\s+0\s+0\s*\/\s*1(?:\.0+)?\s*\)/g,
+      '#000',
+    )
+    .replace(/rgb\(\s*0\s*,\s*0\s*,\s*0\s*\)/g, '#000')
+    .replace(/rgb\(\s*0\s+0\s+0\s*\)/g, '#000');
 
 export function maskByLinearGradient(
   options: LinearOpts,

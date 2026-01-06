@@ -86,6 +86,13 @@ export const footerVars = {
   heading: typographyFontVariants.h2,
   body: textStyleVars.paragraph,
   gradient,
+  glassyLinks: {
+    gap: m(40),
+    size: m(100),
+    hoverFocus: {
+      translateY: m(-20),
+    },
+  },
 } as const;
 
 export type FooterVars = typeof footerVars;

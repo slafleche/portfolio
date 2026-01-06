@@ -152,7 +152,7 @@ export default async function HomePage({
           >
             <Markdown source={about.content} />
           </ContentWithTitle>
-          
+
           <Content id={caseStudies.href}>
             <WordMarkInTitle
               WordMark={VNWordmark}
