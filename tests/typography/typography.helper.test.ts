@@ -49,6 +49,38 @@ describe('typography.helper', () => {
     expect(style.fontWeight).toBe(relative);
   });
 
+  it('computes weights between default and strong only', () => {
+    const family = {
+      ...fontFamilies.objectSans,
+      weights: {
+        ...fontFamilies.objectSans.weights,
+        low: 100,
+        high: 900,
+        default: 400,
+        strong: 600,
+      },
+    };
+
+    expect(computeFontWeight(family, mPercent(25))).toBe(450);
+  });
+
+  it('throws when default/strong weights are not numeric', () => {
+    const family = {
+      ...fontFamilies.objectSans,
+      weights: {
+        ...fontFamilies.objectSans.weights,
+        default: Number.NaN,
+        strong: 600,
+      },
+    } as unknown as typeof fontFamilies.objectSans;
+
+    expect(() =>
+      computeFontWeight(family, mPercent(50)),
+    ).toThrow(
+      '[Typography] computeFontWeight expected numeric weights.default and weights.strong.',
+    );
+  });
+
   it('composes layered font styles with overrides and weight percents', () => {
     const family = fontFamilies.ibm;
     const result = composeFontStyles(family, {
@@ -155,13 +187,17 @@ describe('typography.helper', () => {
     expect(h1Styles.letterSpacing).toBe(headingStyles.letterSpacing);
     expect(h2Styles.letterSpacing).toBe(headingStyles.letterSpacing);
 
-    const expectedWeight = computeFontWeight(
+    const defaultWeight = computeFontWeight(
       family,
       mPercent(0),
     );
-    expect(headingStyles.fontWeight).toBe(expectedWeight);
-    expect(h1Styles.fontWeight).toBe(expectedWeight);
-    expect(h2Styles.fontWeight).toBe(expectedWeight);
+    const h1Weight = computeFontWeight(
+      family,
+      mPercent(50),
+    );
+    expect(headingStyles.fontWeight).toBe(defaultWeight);
+    expect(h1Styles.fontWeight).toBe(h1Weight);
+    expect(h2Styles.fontWeight).toBe(defaultWeight);
   });
 
   it('allows overrides at the variant and extraConfig layers', () => {

@@ -9,7 +9,6 @@ import {
 import type { StyleRule } from '@vanilla-extract/css';
 import { layoutVars } from '../../tokens/layout.tokens';
 import { cardLayout } from '../componentTokens/card.component.tokens';
-import { heroVars } from '../componentTokens/hero.component.tokens';
 import { footerVars } from '../componentTokens/footer.component.tokens';
 import { curlVars } from '../componentTokens/pageCurl.component.tokens';
 

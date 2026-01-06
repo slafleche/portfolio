@@ -1,6 +1,7 @@
 import type {
   CSS_TYPES,
   FontFamilyDef,
+  FontFamilyForPercentWeights,
   FontStyles,
 } from '@/styles/helpers/types.helper';
 import {
@@ -113,7 +114,9 @@ export function fontStyles(vars: FontStyles): FontCSS {
   return out;
 }
 
-type RelativeFontWeightInput = FontFamilyDef | FontVariantDefinition;
+type RelativeFontWeightInput =
+  | FontFamilyForPercentWeights
+  | FontVariantDefinition<FontFamilyForPercentWeights>;
 
 export function relativeFontWeight(
   fontFamily: RelativeFontWeightInput,
@@ -128,17 +131,14 @@ export function relativeFontWeight(
     typeof fontFamily.family === 'string'
       ? fontFamily
       : fontFamily.family
-  ) as FontFamilyDef;
-  const { high, low } = targetFont.weights;
-  const normalized = percentToDecimal(percent);
-  const value = low + (high - low) * normalized;
+  ) as FontFamilyForPercentWeights;
   return {
-    fontWeight: value as CSS_TYPES.Property.FontWeight,
+    fontWeight: computeFontWeight(targetFont, percent),
   };
 }
 
 export function computeFontWeight(
-  family: FontFamilyDef,
+  family: FontFamilyForPercentWeights,
   percent: PercentMeasurement,
 ): CSS_TYPES.Property.FontWeight {
   if (!isPercentMeasurement(percent)) {
@@ -146,9 +146,14 @@ export function computeFontWeight(
       '[Typography] computeFontWeight expected a PercentMeasurement.',
     );
   }
-  const { high, low } = family.weights;
+  const { default: base, strong } = family.weights;
+  if (!Number.isFinite(base) || !Number.isFinite(strong)) {
+    throw new TypeError(
+      '[Typography] computeFontWeight expected numeric weights.default and weights.strong.',
+    );
+  }
   const normalized = percentToDecimal(percent);
-  const value = low + (high - low) * normalized;
+  const value = base + (strong - base) * normalized;
   return value as CSS_TYPES.Property.FontWeight;
 }
 

@@ -8,11 +8,17 @@ import {
   composeFontStyles,
   computeFontWeight,
 } from './typography.helper';
-import type { FontFamilyDef, CSS_TYPES } from './types.helper';
+import type {
+  FontFamilyDef,
+  FontFamilyForPercentWeights,
+  CSS_TYPES,
+} from './types.helper';
 import { notRelease } from '../../lib/runtimeEnv';
 
-export type FontVariantDefinition = {
-  family: FontFamilyDef;
+export type FontVariantDefinition<
+  Family extends FontFamilyDef | FontFamilyForPercentWeights = FontFamilyDef,
+> = {
+  family: Family;
   config?: ComposeFontStylesConfig;
   weights: {
     default: CSS_TYPES.Property.FontWeight;

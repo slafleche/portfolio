@@ -21,11 +21,9 @@ import {
   mediaQueryStyle,
 } from '../responsive/mediaQueries';
 
-const surfaceGradient = buildLinear(footerGradientConfig);
-
 export const root = style({
   position: 'relative',
-  ...gradientAsBgImg(surfaceGradient),
+  ...gradientAsBgImg(buildLinear(footerGradientConfig)),
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',

@@ -15,7 +15,11 @@ export const curlVars = {
   },
 };
 
-export const pageCurlGradientConfig = footerGradientConfig;
-pageCurlGradientConfig.stops[
-  pageCurlGradientConfig.stops.length - 1
-].color = colorVars.transparent;
+export const pageCurlGradientConfig = {
+  ...footerGradientConfig,
+  stops: footerGradientConfig.stops.map((stop, index, arr) => ({
+    ...stop,
+    color:
+      index === arr.length - 1 ? colorVars.transparent : stop.color,
+  })),
+};

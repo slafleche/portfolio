@@ -14,7 +14,6 @@ import { outlines } from '../helpers/outlines.helper';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
 
 // Match gradient in footer
-// const surfaceGradient = buildLinear(pageCurlGradientConfig);
 const bgMatch = themeColours.gradients.main.end;
 const bgContrast = themeColours.gradients.main.start;
 

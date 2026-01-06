@@ -1,5 +1,4 @@
 import type { ContactCopy } from '@/lib/locales/sections/contact.locale';
-import { Markdown } from '@/components/Markdown';
 import * as s from '@/styles/components/footer.css';
 import Heading from './Heading';
 import { sharedStrings } from '@/lib/sharedStrings';

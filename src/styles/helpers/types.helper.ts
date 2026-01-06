@@ -52,14 +52,19 @@ export type SpacingValue = IMeasurement | SpacingKeyword | 0;
 // Four-side spacing shape (no axis shorthands).
 export type SpacingBasics = Record<Axis, SpacingValue>;
 
+export type FontFamilyWeightRange = {
+  low: number;
+  high: number;
+};
+
+export type FontFamilyWeightPresets = {
+  default: number;
+  strong: number;
+};
+
 export type FontFamilyDef = {
   family: CSSCore.Property.FontFamily;
-  weights: {
-    low: number;
-    high: number;
-    default: number;
-    strong: number;
-  };
+  weights: FontFamilyWeightRange & FontFamilyWeightPresets;
   textAlign?: CSSCore.Property.TextAlign;
   textTransform?: CSSCore.Property.TextTransform;
   letterSpacing?: IMeasurement;
@@ -67,6 +72,13 @@ export type FontFamilyDef = {
   lineHeight?: CSSCore.Property.LineHeight;
   css?: Partial<CSSCore.Properties>;
   axisDefaults?: Record<string, number | string>;
+};
+
+export type FontFamilyForPercentWeights = Omit<
+  FontFamilyDef,
+  'weights'
+> & {
+  weights: FontFamilyWeightPresets;
 };
 
 export type FontStyles = {
