@@ -1,4 +1,5 @@
 import {
+  color,
   colorFallback,
   colorModern,
   type ColorWrapper,
@@ -16,6 +17,7 @@ import {
   type EasingFunction,
 } from './easingCurves.helper';
 import { clamp } from '../../components/menu/menuUtils';
+import type { Property } from 'csstype';
 
 export type Stop = {
   color: ColorWrapper;
@@ -305,8 +307,7 @@ export function stackBackground(layers: Layer[]): Built {
   const parts = layers.map((l) =>
     l.kind === 'linear'
       ? buildLinear(l.options)
-      : buildRadial(l.options),
-  );
+      : buildRadial(l.options));
   const [
     first,
     ...rest
@@ -351,6 +352,10 @@ export function gradientAsBgImg(
     base.backgroundBlendMode = bm;
   }
 
+  if (!built.modern.includes('oklch(')) {
+    return base;
+  }
+
   return {
     ...base,
     '@supports': {
@@ -358,6 +363,62 @@ export function gradientAsBgImg(
         backgroundImage: built.modern,
         ...(bm ? { backgroundBlendMode: bm } : {}),
       },
+    },
+  };
+}
+
+export type MaskSupportStyles = {
+  mask: Property.Mask;
+  WebkitMask: Property.WebkitMask;
+};
+
+export type MaskSupportPartStyles = {
+  styles: {
+    mask: Property.Mask;
+    WebkitMask: Property.WebkitMask;
+  };
+};
+
+const normalizeMaskColor = (value: string): string =>
+  value
+    .replace(
+      /rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0(?:\.0+)?\s*\)/g,
+      'transparent',
+    )
+    .replace(
+      /rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*1(?:\.0+)?\s*\)/g,
+      '#000',
+    )
+    .replace(/rgb\(\s*0\s*,\s*0\s*,\s*0\s*\)/g, '#000');
+
+export function maskByLinearGradient(
+  options: LinearOpts,
+): MaskSupportStyles {
+  const alphaStops = options.stops.map((stop) => ({
+    ...stop,
+    color: color('#000').alpha(stop.color.alpha()),
+  }));
+  const built = buildLinear({
+    angle: options.angle,
+    stops: alphaStops,
+    globalAlpha: options.globalAlpha,
+  });
+  const mask = normalizeMaskColor(built.fallback);
+
+  return {
+    mask,
+    WebkitMask: mask,
+  };
+}
+
+export function maskByLinearGradientParts(
+  options: LinearOpts,
+): MaskSupportPartStyles {
+  const mask = maskByLinearGradient(options);
+  return {
+    styles: {
+      mask: mask.mask,
+      WebkitMask: mask.WebkitMask,
     },
   };
 }

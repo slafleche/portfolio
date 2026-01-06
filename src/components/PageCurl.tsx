@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 import * as s from '@/styles/components/pageCurl.css';
 import MockEndHTML from './MockEndHTML';
@@ -12,22 +13,30 @@ export default function PageCurl({
   mockEndHtmlLabel,
 }: PageCurlProps) {
   return (
-    <Link href={href} className={s.root} data-ui="link">
-      <div className={s.box}>
-        <div className={s.cornerBox} aria-hidden="true">
-          <div className={s.pageTip}>
-            <div className={s.pageTipShadeRight} />
-            <div className={s.pageTipShadeTop} />
-          </div>
-          <div className={s.cornerContents}>
-            <div className={s.cornerBase} />
-            <div className={s.behindCode}>
-              <MockEndHTML ariaLabel={mockEndHtmlLabel} />
+    <div className={s.root}>
+      <Link
+        href={href}
+        className={s.link}
+        data-ui="link"
+        onClick={(e) => {
+          e.preventDefault();
+          return false;
+        }}
+      >
+        <div className={s.box}>
+          <div className={s.cornerBox} aria-hidden="true">
+            <div className={s.pageTip}>
+              <div className={s.pageTipBorder} />
+              <div className={s.topLeftSlope} />
+              <div className={s.bottomRightSlope} />
             </div>
-            {/* <div className={s.cornerHighlight} /> */}
+            <div className={s.cornerContents}>
+              <MockEndHTML ariaLabel={mockEndHtmlLabel} />
+              <div className={s.fakeShadow} />
+            </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }

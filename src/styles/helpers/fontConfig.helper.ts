@@ -424,6 +424,13 @@ export function asFontsConfig(input: unknown): FontsConfig {
       }
     }
 
+    const type =
+      cfg.type === 'googleFonts' ||
+      cfg.type === 'selfHosted' ||
+      cfg.type === 'system'
+        ? cfg.type
+        : undefined;
+
     out[family] = {
       texts,
       keys,
@@ -431,6 +438,7 @@ export function asFontsConfig(input: unknown): FontsConfig {
       ital,
       axes,
       subsets,
+      type,
     };
   }
 

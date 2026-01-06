@@ -1,6 +1,5 @@
 'use client';
-import type { ElementType, ReactNode } from 'react';
-import type { HTMLAttributes } from 'react';
+import type { ElementType, ReactNode, HTMLAttributes } from 'react';
 
 import clsx from 'clsx';
 import { content as contentClass } from '@/styles/layout.css';

@@ -3,6 +3,7 @@ import {
   gradientAsBgImg,
   buildLinear,
   buildRadial,
+  maskByLinearGradient,
   OKLCH_SUPPORTS,
   resolveGradientSpotStops,
   resolveLinearAngle,
@@ -158,9 +159,14 @@ describe('gradients.helper', () => {
     const bgImages = gradientAsBgImg(gradient);
 
     expect(bgImages.backgroundImage).not.toContain('oklch(');
-    expect(bgImages['@supports'][OKLCH_SUPPORTS]).toBeDefined();
+    const supports =
+      '@supports' in bgImages ? bgImages['@supports'] : undefined;
+    expect(supports).toBeDefined();
+    if (!supports) {
+      throw new Error('Expected @supports for OKLCH fallback');
+    }
     expect(
-      bgImages['@supports'][OKLCH_SUPPORTS].backgroundImage,
+      supports[OKLCH_SUPPORTS].backgroundImage,
     ).toContain('oklch(');
   });
 
@@ -173,11 +179,63 @@ describe('gradients.helper', () => {
 
     expect(bgImages.backgroundImage).toContain('), ');
     expect(bgImages.backgroundImage).not.toContain('oklch(');
+    const supports =
+      '@supports' in bgImages ? bgImages['@supports'] : undefined;
+    expect(supports).toBeDefined();
+    if (!supports) {
+      throw new Error('Expected @supports for OKLCH fallback');
+    }
     expect(
-      bgImages['@supports'][OKLCH_SUPPORTS].backgroundImage,
+      supports[OKLCH_SUPPORTS].backgroundImage,
     ).toContain('), ');
     expect(
-      bgImages['@supports'][OKLCH_SUPPORTS].backgroundImage,
+      supports[OKLCH_SUPPORTS].backgroundImage,
     ).toContain('oklch(');
+  });
+
+  it('skips OKLCH @supports when gradients contain no oklch colors', () => {
+    const built = {
+      fallback: 'linear-gradient(90deg, #000 0%, #fff 100%)',
+      modern: 'linear-gradient(90deg, #000 0%, #fff 100%)',
+    };
+    const bgImages = gradientAsBgImg(built);
+    expect('@supports' in bgImages).toBe(false);
+  });
+
+  it('emits mask styles with mask + webkit branches', () => {
+    const styles = maskByLinearGradient({
+      angle: m(225, 'deg'),
+      stops: [
+        {
+          color: color('#000').alpha(0),
+          at: mPercent(49),
+        },
+        {
+          color: color('#000').alpha(1),
+          at: mPercent(53),
+        },
+      ],
+    });
+    expect(styles.mask).toBeDefined();
+    expect(styles.WebkitMask).toBeDefined();
+  });
+
+  it('accepts explicit mask and webkit mask gradients', () => {
+    const mask = 'linear-gradient(225deg, transparent 49%, #000 53%)';
+    const styles = maskByLinearGradient({
+      angle: m(225, 'deg'),
+      stops: [
+        {
+          color: color('#000').alpha(0),
+          at: mPercent(49),
+        },
+        {
+          color: color('#000').alpha(1),
+          at: mPercent(53),
+        },
+      ],
+    });
+    expect(styles.mask).toBe(mask);
+    expect(styles.WebkitMask).toBe(mask);
   });
 });

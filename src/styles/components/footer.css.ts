@@ -2,7 +2,6 @@ import { globalStyle, style } from '@vanilla-extract/css';
 import type { ComplexStyleRule } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 import { noiseBg } from '../helpers/noiseSVG.helper';
-import { paddings, margins } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
@@ -11,27 +10,21 @@ import {
   gradientAsBgImg,
   buildLinear,
 } from '../helpers/gradients.helper';
-import { footerVars } from '../componentTokens/footer.componentTokens';
+import { footerGradientConfig } from '../componentTokens/footer.component.tokens';
 
-const surfaceGradient = buildLinear({
-  angle: footerVars.gradient.gradientAngle,
-  stops: footerVars.gradient.gradientStops.map((stop) => ({
-    color: stop.color,
-    at: stop.at,
-  })),
-});
+const surfaceGradient = buildLinear(footerGradientConfig);
 
 export const root = style({
   position: 'relative',
-  ...margins({
-    top: m(96),
-    horizontal: m(0),
-    bottom: m(0),
-  }),
-  ...paddings({
-    vertical: m(48),
-    // horizontal: m(24),
-  }),
+  // ...margins({
+  //   top: m(96),
+  //   horizontal: m(0),
+  //   bottom: m(0),
+  // }),
+  // ...paddings({
+  //   vertical: m(48),
+  //   // horizontal: m(24),
+  // }),
   ...gradientAsBgImg(surfaceGradient),
 
   display: 'flex',
@@ -44,11 +37,6 @@ export const root = style({
   minHeight: '420px',
   textAlign: 'center',
   overflow: 'hidden',
-});
-
-globalStyle(`${root} > *:not(:first-child)`, {
-  position: 'relative',
-  zIndex: 1,
 });
 
 export const heading = style({
@@ -64,9 +52,8 @@ export const content = style({
   zIndex: 1,
   textAlign: 'center',
   maxWidth: '680px',
-  margin: 0,
   fontSize: '28px',
-  // lineHeight: 1.6,
+  margin: 'auto',
   opacity: 0.9,
 });
 
