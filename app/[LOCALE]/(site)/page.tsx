@@ -109,6 +109,10 @@ export default async function HomePage({
         title: parseWordmarkTemplate(projects.title).fullText,
         href: `#${projects.href}`,
       },
+      {
+        title: contact.title,
+        href: '#contact',
+      },
     ],
     localeLinks: AVAILABLE_LOCALES.filter(
       (code) => code !== locale,
@@ -143,6 +147,7 @@ export default async function HomePage({
           >
             <Markdown source={approach.content} />
           </ContentWithTitle>
+
           <ContentWithTitle
             id={about.href}
             contentTitle={about.title}
@@ -158,6 +163,7 @@ export default async function HomePage({
             caseStudies={caseStudies.list}
             wordMarkClassName={cg.wordmarkTextNoLogo}
           />
+          
           <ContentWithTitle
             ignoreDataUI={true}
             contentTitle={projects.title}
@@ -181,6 +187,7 @@ export default async function HomePage({
                       className={clsx(cg.logoAsBgSVG, cg.logoAsBg_cc)}
                     />
                   }
+                  logoBoxClassName={cg.gradientCC}
                   gradientClassName={cg.gradientCC}
                 >
                   <Markdown source={cocacola.content} />
@@ -200,6 +207,7 @@ export default async function HomePage({
                       className={clsx(cg.logoAsBgSVG, cg.logoAsBg_ea)}
                     />
                   }
+                  logoBoxClassName={cg.gradientEa}
                   gradientClassName={cg.gradientEa}
                 >
                   <Markdown source={ea.content} />
@@ -219,6 +227,7 @@ export default async function HomePage({
                       textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
+                  logoBoxClassName={cg.gradientBanq}
                   gradientClassName={cg.gradientBanq}
                   logoAsBg={
                     <BQWordmark
@@ -246,6 +255,7 @@ export default async function HomePage({
                       textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
+                  logoBoxClassName={cg.gradientHs}
                   gradientClassName={cg.gradientHs}
                   logoAsBg={
                     <HSWordmark
@@ -271,6 +281,7 @@ export default async function HomePage({
                     />
                   }
                   gradientClassName={cg.gradientKg}
+                  logoBoxClassName={cg.gradientKg}
                   logoAsBg={
                     <KGWordmark
                       className={clsx(cg.logoAsBgSVG, cg.logoAsBg_kg)}
@@ -285,7 +296,7 @@ export default async function HomePage({
         </main>
         <Footer
           contact={contact}
-          id={contact.href}
+          id="contact"
           systemsLink={systemsLink}
         />
         {heroCopy.ctaLabel ? (

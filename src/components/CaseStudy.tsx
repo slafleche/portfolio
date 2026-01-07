@@ -34,32 +34,25 @@ export default function CaseStudy({
   const hasIntro = typeof intro === 'string' && intro.trim() !== '';
 
   return (
-    <section>
-      <WordMarkInTitle
-        WordMark={VNWordmark}
-        ignoreDataUI={true}
-        textTemplate={title}
-        textClassName={wordMarkClassName}
-        depth={2}
-      />
-      {hasIntro ? (
-        <Content
-          tag="div"
-          queryDataAttributes={{
-            fullsize: 'no-padding',
-          }}
-        >
-          <div className={s.intro}>
-            <Markdown source={intro} />
-          </div>
-        </Content>
-      ) : null}
+    <section id={baseId} className={s.root}>
+      <Content tag={'div'}>
+        <WordMarkInTitle
+          WordMark={VNWordmark}
+          ignoreDataUI={true}
+          textTemplate={title}
+          textClassName={wordMarkClassName}
+          depth={2}
+        />
+        {hasIntro ? (
+          <Markdown className={s.intro} source={intro} />
+        ) : null}
+      </Content>
+
       <Content
-        tag="div"
+        tag={'div'}
         queryDataAttributes={{
           compact: 'no-padding',
         }}
-        className={s.root}
       >
         <Accordion
           items={caseStudies.map((study, index) => ({

@@ -1,10 +1,23 @@
 import { keyframes, style } from '@vanilla-extract/css';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 
+const fadeIn = keyframes({
+  '0%': { opacity: 0 },
+  '100%': { opacity: 1 },
+});
+
 export const blobWrap = style({
   ...fullSizeOfParent(),
   overflow: 'visible',
   pointerEvents: 'none',
+  opacity: 0,
+  animation: `${fadeIn} 800ms ease-out 120ms forwards`,
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      animation: 'none',
+      opacity: 1,
+    },
+  },
 });
 
 export const blobField = style({

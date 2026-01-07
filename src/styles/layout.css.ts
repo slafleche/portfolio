@@ -6,7 +6,9 @@ import { anchorMenuVars } from '../tokens/menu.tokens';
 
 export const content = style({
   position: 'relative',
-  maxWidth: layoutVars.contentWidth.css(),
+  maxWidth: layoutVars.contentWidth
+    .add(layoutVars.contentPadding.double())
+    .css(),
   width: '100%',
   ...margins({
     horizontal: 'auto',

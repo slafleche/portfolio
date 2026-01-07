@@ -1,7 +1,7 @@
 import { m } from 'css-calipers';
 import { anchorMenuVars, logoVars } from './menu.tokens';
 
-const defaultContentWidth = m(1400);
+const defaultContentWidth = m(1200);
 const contentPadding = logoVars.fullWidth.add(
   anchorMenuVars.borders.width,
 );

@@ -24,6 +24,10 @@ export const buildHomeMenuSections = (
     id: t('projects-href'),
     label: t('projects'),
   },
+  {
+    id: 'contact',
+    label: t('contact'),
+  },
 ];
 
 export const buildSystemsMenuSections = (
@@ -42,7 +46,7 @@ export const buildSystemsMenuSections = (
     label: t('systems-system-shape'),
   },
   {
-    id: t('contact-href'),
+    id: 'contact',
     label: t('contact'),
   },
 ];

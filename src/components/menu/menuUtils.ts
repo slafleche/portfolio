@@ -79,6 +79,9 @@ export const BASE_ANCHORS: readonly AnchorEntry[] = [
   {
     hrefKey: 'projects',
   },
+  {
+    hrefKey: 'contact',
+  },
 ];
 
 export const clamp = (value: number, min: number, max: number) =>

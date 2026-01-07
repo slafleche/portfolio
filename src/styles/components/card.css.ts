@@ -4,7 +4,6 @@ import { colorVars } from '../../tokens/global.tokens';
 import { m } from 'css-calipers';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
-import { backgrounds } from '../helpers/background.helper';
 import { cardLayout } from '../componentTokens/card.component.tokens';
 import { glassVars } from '../../tokens/glassy.tokens';
 import {
@@ -80,7 +79,6 @@ export const logoBox = style({
         minWidth: 0,
         zIndex: 1,
         ...paddings(cardLayout.logoBox.mobile.paddings),
-        ...backgrounds({ color: 'orange' }),
       },
     }),
   },

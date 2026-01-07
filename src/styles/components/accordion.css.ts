@@ -66,7 +66,7 @@ export const accordion = style({
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
-  ...paddings(accordionSurfaceTokens.paddings),
+  // ...paddings(accordionSurfaceTokens.paddings),
   ...borders(accordionSurfaceTokens.borders),
   ...gradientAsBgImg(surfaceGradient),
 });
@@ -89,7 +89,7 @@ export const button = style({
   border: 'none',
   alignItems: 'center',
   width: '100%',
-  ...paddings(accordionItemTokens.paddings),
+  // ...paddings(accordionItemTokens.paddings),
   cursor: 'pointer',
   textAlign: 'left',
   color: colorVars.white.css(),

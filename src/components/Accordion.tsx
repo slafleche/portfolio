@@ -76,7 +76,10 @@ export function Accordion({
           value={item.value}
           className={s.item}
         >
-          <AccordionPrimitive.Header className={s.header}>
+          <AccordionPrimitive.Header
+            className={s.header}
+            data-ui="heading"
+          >
             <AccordionPrimitive.Trigger className={s.button}>
               <span className={s.triggerText}>
                 <span className={s.triggerLabel}>

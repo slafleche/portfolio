@@ -12,7 +12,7 @@ export const typographyFontVariants = {
     sourcePath: SOURCE_PATH,
     config: {
       overrides: {
-        size: m(20),
+        size: m(18),
         lineHeight: 1.5,
       },
       options: {
@@ -54,7 +54,7 @@ export const typographyFontVariants = {
 
     config: {
       overrides: {
-        size: m(36),
+        size: m(28),
       },
     },
   }),

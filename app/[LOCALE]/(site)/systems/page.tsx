@@ -81,6 +81,10 @@ export default async function SystemsPage({
         title: parseWordmarkTemplate(systemsShapeTitle).fullText,
         href: `#${systemsShapeId}`,
       },
+      {
+        title: contactCopy.title,
+        href: '#contact',
+      },
     ],
     localeLinks: AVAILABLE_LOCALES.filter(
       (code) => code !== locale,
@@ -128,7 +132,7 @@ export default async function SystemsPage({
         </main>
         <Footer
           contact={contactCopy}
-          id={contactCopy.href}
+          id="contact"
           systemsLink={systemsLink}
           hideSystemsLink
           backHref={homeHref}

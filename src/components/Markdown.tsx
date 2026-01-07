@@ -1,13 +1,18 @@
-import { memo } from 'react';
-import type { ReactElement } from 'react';
+import { createElement, memo } from 'react';
+import type {
+  ComponentPropsWithoutRef,
+  ReactElement,
+  JSX,
+} from 'react';
 import { marked, Renderer } from 'marked';
+import { userContent } from '../styles/typography.css';
+import { clsx } from 'clsx';
 
 type MarkdownProps = {
-  id?: string;
+  tag?: keyof JSX.IntrinsicElements;
   source?: string | null;
-  className?: string;
   openLinksInNewTab?: boolean;
-};
+} & Omit<ComponentPropsWithoutRef<'div'>, 'children'>;
 
 const createTargetBlankRenderer = () => {
   const renderer = new Renderer();
@@ -56,29 +61,37 @@ const normalizeSource = (source: string): string => {
 };
 
 function MarkdownBase({
-  id,
   source,
-  className,
   openLinksInNewTab = true,
+  tag,
+  id,
+  className,
+  ...rest
 }: MarkdownProps): ReactElement | null {
-  const normalized = typeof source === 'string' ? normalizeSource(source) : '';
+  const normalized =
+    typeof source === 'string' ? normalizeSource(source) : '';
+
   if (normalized === '') {
     return null;
   }
 
-  const html = marked.parse(normalized, {
-    renderer: openLinksInNewTab ? createTargetBlankRenderer() : undefined,
+  const html = marked.parseInline(normalized, {
+    renderer: openLinksInNewTab
+      ? createTargetBlankRenderer()
+      : undefined,
   });
 
-  return (
-    <div
-      id={id}
-      className={className}
-      dangerouslySetInnerHTML={{
-        __html: typeof html === 'string' ? html : '',
-      }}
-    />
-  );
+  if (typeof html !== 'string') {
+    return null;
+  }
+
+  const Tag = tag ?? 'div';
+  return createElement(Tag, {
+    id,
+    className: clsx(className, userContent),
+    ...rest,
+    dangerouslySetInnerHTML: { __html: html },
+  });
 }
 
 export const Markdown = memo(MarkdownBase);

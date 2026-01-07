@@ -12,7 +12,7 @@ type Props = IHeadingDepth &
     type?: string;
     gradientClassName?: string;
     logoAsBg?: ReactNode;
-
+    logoBoxClassName?: string;
   };
 
 export default function Card({
@@ -22,6 +22,7 @@ export default function Card({
   type,
   children,
   gradientClassName,
+  logoBoxClassName,
   logoAsBg,
   ...rest
 }: Props) {
@@ -41,7 +42,7 @@ export default function Card({
       )}
 
       <div className={s.frame}>
-        <div className={s.logoBox}>
+        <div className={clsx(s.logoBox, logoBoxClassName)}>
           {isStringTitle ? (
             <Heading className={s.title} depth={depth}>
               {title}
