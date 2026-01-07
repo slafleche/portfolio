@@ -28,6 +28,50 @@ describe('checkLintRules radii intent rule', () => {
     );
   });
 
+  it('flags borders.radii shorthand with all', () => {
+    const filePath = 'src/styles/components/exampleRadiiAll.css.ts';
+    const content = `
+      import { style } from '@vanilla-extract/css';
+      import borders from '../helpers/borders.helper';
+      import { m } from 'css-calipers';
+
+      export const example = style({
+        ...borders.radii({
+          all: m(8),
+        }),
+      });
+    `;
+
+    const violations = scanBordersRadiiIntent(filePath, content);
+    expect(violations.length).toBe(1);
+    expect(violations[0]?.rule.id).toBe(
+      'borders-radii-intent-redundant',
+    );
+  });
+
+  it('flags redundant compass combos in borders.radii shorthand', () => {
+    const filePath =
+      'src/styles/components/exampleRadiiCompass.css.ts';
+    const content = `
+      import { style } from '@vanilla-extract/css';
+      import borders from '../helpers/borders.helper';
+      import { m } from 'css-calipers';
+
+      export const example = style({
+        ...borders.radii({
+          north: m(8),
+          ne: m(8),
+        }),
+      });
+    `;
+
+    const violations = scanBordersRadiiIntent(filePath, content);
+    expect(violations.length).toBe(1);
+    expect(violations[0]?.rule.id).toBe(
+      'borders-radii-intent-redundant',
+    );
+  });
+
   it('flags use of radius shorthand plus all edge intent in borders(...) calls', () => {
     const filePath = 'src/styles/components/mockEndHTML.css.ts';
     const content = `
@@ -93,6 +137,25 @@ describe('checkLintRules radii intent rule', () => {
             north: m(8),
             south: m(4),
           },
+        }),
+      });
+    `;
+
+    const violations = scanBordersRadiiIntent(filePath, content);
+    expect(violations.length).toBe(0);
+  });
+
+  it('does not flag borders.radii shorthand without redundant combinations', () => {
+    const filePath =
+      'src/styles/components/exampleRadiiShorthandOk.css.ts';
+    const content = `
+      import { style } from '@vanilla-extract/css';
+      import borders from '../helpers/borders.helper';
+      import { m } from 'css-calipers';
+
+      export const exampleOk = style({
+        ...borders.radii({
+          nw: m(8),
         }),
       });
     `;

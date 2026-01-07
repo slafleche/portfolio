@@ -38,14 +38,36 @@ describe('borders.helper', () => {
     const result = borders.radii({
       radius: { nw: m(8), ne: m(8) },
     });
-    expect(result).toEqual({ borderRadius: '8px 8px 0 0' });
+    expect(result).toEqual({
+      borderTopLeftRadius: '8px',
+      borderTopRightRadius: '8px',
+      borderBottomRightRadius: '0',
+      borderBottomLeftRadius: '0',
+    });
   });
 
-  it('resolves radius-only all-intents from explicit all compass', () => {
-    const result = borders.radii({
-      radius: { all: m(12) },
+  it('accepts radius shorthand without the radius wrapper', () => {
+    const result = borders.radii(m(12));
+    expect(result).toEqual({
+      borderTopLeftRadius: '12px',
+      borderTopRightRadius: '12px',
+      borderBottomRightRadius: '12px',
+      borderBottomLeftRadius: '12px',
     });
-    expect(result).toEqual({ borderRadius: '12px' });
+  });
+
+  it('accepts corner shorthand without the radius wrapper', () => {
+    const result = borders.radii({
+      nw: m(8),
+      ne: m(8),
+      sw: m(4),
+    });
+    expect(result).toEqual({
+      borderTopLeftRadius: '8px',
+      borderTopRightRadius: '8px',
+      borderBottomRightRadius: '0',
+      borderBottomLeftRadius: '4px',
+    });
   });
 
   it('accepts per-edge color + radius details', () => {
@@ -61,7 +83,10 @@ describe('borders.helper', () => {
       },
     });
     expect(result.borderBottomColor).toBe('purple');
-    expect(result.borderRadius).toBe('6px 4px 4px 0px');
+    expect(result.borderTopLeftRadius).toBe('6px');
+    expect(result.borderTopRightRadius).toBe('4px');
+    expect(result.borderBottomRightRadius).toBe('0px');
+    expect(result.borderBottomLeftRadius).toBe('0px');
     expect(result.borderWidth).toBe('1px 2px 3px 4px');
   });
 
@@ -73,7 +98,10 @@ describe('borders.helper', () => {
     });
     expect(result.borderWidth).toBe('1px');
     expect(result.borderColor).toBe('red');
-    expect(result.borderRadius).toBe('50%');
+    expect(result.borderTopLeftRadius).toBe('50%');
+    expect(result.borderTopRightRadius).toBe('50%');
+    expect(result.borderBottomRightRadius).toBe('50%');
+    expect(result.borderBottomLeftRadius).toBe('50%');
   });
 
   it('skips defaults when requested', () => {

@@ -520,13 +520,13 @@ export function scanBordersRadiiIntent(filePath, content) {
   let match;
   while ((match = callPattern.exec(content)) !== null) {
     const callBody = match[1];
+    const isRadiiCall = /borders\.radii/.test(match[0]);
 
     // Optional radius object: radius: { ... }
     const radiusMatch = /radius\s*:\s*{([\s\S]*?)}/.exec(callBody);
     const radiusKeys = new Set();
 
-    if (radiusMatch) {
-      const radiusBody = radiusMatch[1];
+    const collectRadiusKeys = (radiusBody) => {
       const lines = radiusBody.split('\n');
       for (const rawLine of lines) {
         const line = rawLine.trim();
@@ -549,6 +549,12 @@ export function scanBordersRadiiIntent(filePath, content) {
           radiusKeys.add(key);
         }
       }
+    };
+
+    if (isRadiiCall) {
+      collectRadiusKeys(callBody);
+    } else if (radiusMatch) {
+      collectRadiusKeys(radiusMatch[1]);
     }
 
     const hasRadiusKeys = radiusKeys.size > 0;

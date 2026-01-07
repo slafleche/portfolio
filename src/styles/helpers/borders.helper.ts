@@ -39,6 +39,10 @@ interface FinalBorderCSS {
   borderStyle?: CSS_TYPES.Property.BorderStyle;
   borderWidth?: CSS_TYPES.Property.BorderWidth;
   borderRadius?: CSS_TYPES.Property.BorderRadius;
+  borderTopLeftRadius?: CSS_TYPES.Property.BorderTopLeftRadius;
+  borderTopRightRadius?: CSS_TYPES.Property.BorderTopRightRadius;
+  borderBottomRightRadius?: CSS_TYPES.Property.BorderBottomRightRadius;
+  borderBottomLeftRadius?: CSS_TYPES.Property.BorderBottomLeftRadius;
 
   borderTopColor?: CSS_TYPES.Property.BorderTopColor;
   borderRightColor?: CSS_TYPES.Property.BorderRightColor;
@@ -271,10 +275,17 @@ const zoneKeys: CompassRegion[] = [
   'west',
 ];
 
+type ResolvedRadius = {
+  tl: string;
+  tr: string;
+  br: string;
+  bl: string;
+};
+
 const resolveRadiusCompass = (
   radius: BorderIntent['radius'],
   edges: ReturnType<typeof resolveIntentToEdges>,
-): string | undefined => {
+): ResolvedRadius | undefined => {
   if (radius === 0 || radius === null) return undefined;
   const rc = isRadiusCompass(radius) ? radius : undefined;
 
@@ -359,18 +370,17 @@ const resolveRadiusCompass = (
   const fbr = br ?? '0';
   const fbl = bl ?? '0';
 
-  const allEq = ftl === ftr && ftr === fbr && fbr === fbl;
-  if (allEq) return ftl;
+  const allZero = [ftl, ftr, fbr, fbl].every(
+    (value) => value === '0' || value === '0px',
+  );
+  if (allZero) return undefined;
 
-  const oppositeEq = ftl === fbr && ftr === fbl;
-  if (oppositeEq) {
-    const adjacentEq = ftl === ftr;
-    if (!adjacentEq) return `${ftl} ${ftr}`;
-  }
-
-  if (ftr === fbl && ftl !== fbr) return `${ftl} ${ftr} ${fbr}`;
-
-  return `${ftl} ${ftr} ${fbr} ${fbl}`;
+  return {
+    tl: ftl,
+    tr: ftr,
+    br: fbr,
+    bl: fbl,
+  };
 };
 
 /* --------------------------
@@ -604,21 +614,60 @@ const resolve = (
     }
   }
 
-  const radiusVal = resolveRadiusCompass(intent?.radius, {
+  const radiusCorners = resolveRadiusCompass(intent?.radius, {
     t,
     r,
     b,
     l,
   });
-  if (radiusVal && radiusVal !== '0' && radiusVal !== '0px') {
-    css.borderRadius = radiusVal;
+  if (radiusCorners) {
+    css.borderTopLeftRadius = radiusCorners.tl;
+    css.borderTopRightRadius = radiusCorners.tr;
+    css.borderBottomRightRadius = radiusCorners.br;
+    css.borderBottomLeftRadius = radiusCorners.bl;
   }
 
   return css;
 };
 
 const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
-  const intent = normalizeIntent(input);
+  const isMeasurementList = (
+    value: unknown,
+  ): value is ReadonlyArray<BorderMeasurementInput> =>
+    Array.isArray(value) && value.every(isMeasurement);
+
+  const radiusShorthandKeys = new Set([
+    'topLeft',
+    'topRight',
+    'bottomRight',
+    'bottomLeft',
+    'north',
+    'south',
+    'east',
+    'west',
+    'nw',
+    'ne',
+    'se',
+    'sw',
+  ]);
+
+  const hasRadiusShorthand = (value: unknown): boolean => {
+    if (!value || typeof value !== 'object') return false;
+    if (Array.isArray(value) || isMeasurement(value)) return false;
+    return Object.entries(value).some(
+      ([key, entry]) =>
+        radiusShorthandKeys.has(key) &&
+        (isMeasurement(entry) || isMeasurementList(entry)),
+    );
+  };
+
+  const intent = normalizeIntent(
+    isMeasurement(input) ||
+      isMeasurementList(input) ||
+      hasRadiusShorthand(input)
+      ? { radius: input as BorderRadiusInput }
+      : input,
+  );
   if (!intent) return {};
   if (!hasRadiusIntent(intent) || hasEdgeIntent(intent)) return {};
 
@@ -640,18 +689,26 @@ const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
       if (!allVal || allVal === '0' || allVal === '0px') {
         return {};
       }
-      return { borderRadius: allVal };
+      return {
+        borderTopLeftRadius: allVal,
+        borderTopRightRadius: allVal,
+        borderBottomRightRadius: allVal,
+        borderBottomLeftRadius: allVal,
+      };
     }
   }
 
   const edges = resolveIntentToEdges(intent);
-  const radiusVal = resolveRadiusCompass(intent.radius, edges);
+  const radiusCorners = resolveRadiusCompass(intent.radius, edges);
 
-  if (!radiusVal || radiusVal === '0' || radiusVal === '0px') {
-    return {};
-  }
+  if (!radiusCorners) return {};
 
-  return { borderRadius: radiusVal };
+  return {
+    borderTopLeftRadius: radiusCorners.tl,
+    borderTopRightRadius: radiusCorners.tr,
+    borderBottomRightRadius: radiusCorners.br,
+    borderBottomLeftRadius: radiusCorners.bl,
+  };
 };
 
 /* --------------------------
