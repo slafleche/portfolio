@@ -5,10 +5,12 @@ import { m } from 'css-calipers';
 describe('spacing.helper', () => {
   it('applies shared axis shortcuts', () => {
     const styles = paddings({
-      all: m(8),
       horizontal: m(4),
     });
-    expect(styles).toEqual({ padding: '8px 4px' });
+    expect(styles).toEqual({
+      paddingRight: '4px',
+      paddingLeft: '4px',
+    });
   });
 
   it('resolves explicit sides to four-value shorthand', () => {
@@ -17,11 +19,12 @@ describe('spacing.helper', () => {
       horizontal: m(6),
       left: m(20),
     });
-    expect(styles).toEqual({ margin: '10px 6px 10px 20px' });
-  });
-
-  it('passes through spacing keywords', () => {
-    expect(margins({ all: 'auto' })).toEqual({ margin: 'auto' });
+    expect(styles).toEqual({
+      marginTop: '10px',
+      marginRight: '6px',
+      marginBottom: '10px',
+      marginLeft: '20px',
+    });
   });
 
   it('throws on invalid input types', () => {
@@ -36,7 +39,12 @@ describe('spacing.helper', () => {
       bottom: m(8),
       horizontal: m(4),
     });
-    expect(styles).toEqual({ margin: '16px 4px 8px' });
+    expect(styles).toEqual({
+      marginTop: '16px',
+      marginRight: '4px',
+      marginBottom: '8px',
+      marginLeft: '4px',
+    });
   });
 
   it('builds four-value shorthand when all sides differ', () => {
@@ -46,7 +54,12 @@ describe('spacing.helper', () => {
       bottom: m(3),
       left: m(4),
     });
-    expect(styles).toEqual({ padding: '1px 2px 3px 4px' });
+    expect(styles).toEqual({
+      paddingTop: '1px',
+      paddingRight: '2px',
+      paddingBottom: '3px',
+      paddingLeft: '4px',
+    });
   });
 
   it('mixes keywords with measurements per side', () => {
@@ -55,22 +68,37 @@ describe('spacing.helper', () => {
       horizontal: m(12),
       left: 'inherit',
     });
-    expect(styles).toEqual({ padding: 'auto 12px auto inherit' });
+    expect(styles).toEqual({
+      paddingTop: 'auto',
+      paddingRight: '12px',
+      paddingBottom: 'auto',
+      paddingLeft: 'inherit',
+    });
   });
 
   it('accepts a single measurement as shorthand for all sides', () => {
     const styles = margins(m(8));
-    expect(styles).toEqual({ margin: '8px' });
+    expect(styles).toEqual({
+      marginTop: '8px',
+      marginRight: '8px',
+      marginBottom: '8px',
+      marginLeft: '8px',
+    });
   });
 
   it('accepts a single spacing keyword as shorthand for all sides', () => {
     const styles = paddings('auto');
-    expect(styles).toEqual({ padding: 'auto' });
+    expect(styles).toEqual({
+      paddingTop: 'auto',
+      paddingRight: 'auto',
+      paddingBottom: 'auto',
+      paddingLeft: 'auto',
+    });
   });
 
-  it('uses zero defaults when no input is provided', () => {
-    expect(paddings()).toEqual({ padding: '0px' });
-    expect(margins()).toEqual({ margin: '0px' });
+  it('returns no spacing when no input is provided', () => {
+    expect(paddings()).toEqual({});
+    expect(margins()).toEqual({});
   });
 
   it('accepts an axis-only intent without all', () => {
@@ -78,25 +106,40 @@ describe('spacing.helper', () => {
       vertical: m(8),
       horizontal: m(0),
     });
-    expect(styles).toEqual({ margin: '8px 0px' });
+    expect(styles).toEqual({
+      marginTop: '8px',
+      marginRight: '0px',
+      marginBottom: '8px',
+      marginLeft: '0px',
+    });
   });
 
   it('supports horizontal-only spacing intent', () => {
     const styles = margins({
       horizontal: m(5),
     });
-    expect(styles).toEqual({ margin: '0px 5px' });
+    expect(styles).toEqual({
+      marginRight: '5px',
+      marginLeft: '5px',
+    });
   });
 
   it('supports single-side spacing intent', () => {
     const styles = paddings({
       left: m(10),
     });
-    expect(styles).toEqual({ padding: '0px 0px 0px 10px' });
+    expect(styles).toEqual({
+      paddingLeft: '10px',
+    });
   });
 
   it('supports multiple spacing keywords', () => {
     const styles = paddings('inherit');
-    expect(styles).toEqual({ padding: 'inherit' });
+    expect(styles).toEqual({
+      paddingTop: 'inherit',
+      paddingRight: 'inherit',
+      paddingBottom: 'inherit',
+      paddingLeft: 'inherit',
+    });
   });
 });

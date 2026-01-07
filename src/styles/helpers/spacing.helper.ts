@@ -110,74 +110,104 @@ const normalize = (
   );
 };
 
-const spacing = (
+type SpacingResolved = Partial<{
+  top: string;
+  right: string;
+  bottom: string;
+  left: string;
+}>;
+
+const spacingSides = (
   input?: SpacingInput | SpacingInputPublic,
-): string => {
-  const defaults = defaultSpacing();
+): SpacingResolved => {
   const props = normalize(input);
+  if (!props) return {};
 
-  const topSpacing = resolve(
-    [
-      props?.top,
-      props?.vertical,
-      props?.all,
-    ],
-    defaults.top,
-  );
-  const rightSpacing = resolve(
-    [
-      props?.right,
-      props?.horizontal,
-      props?.all,
-    ],
-    defaults.right,
-  );
-  const bottomSpacing = resolve(
-    [
-      props?.bottom,
-      props?.vertical,
-      props?.all,
-    ],
-    defaults.bottom,
-  );
-  const leftSpacing = resolve(
-    [
-      props?.left,
-      props?.horizontal,
-      props?.all,
-    ],
-    defaults.left,
-  );
+  const spacing: SpacingResolved = {};
 
-  const allEqual =
-    topSpacing === rightSpacing &&
-    rightSpacing === bottomSpacing &&
-    bottomSpacing === leftSpacing;
-
-  if (allEqual) return topSpacing;
-
-  const verticalSymmetry = topSpacing === bottomSpacing;
-  const horizontalSymmetry = leftSpacing === rightSpacing;
-
-  if (verticalSymmetry && horizontalSymmetry) {
-    return `${topSpacing} ${rightSpacing}`;
+  if (
+    props.top !== undefined ||
+    props.vertical !== undefined ||
+    props.all !== undefined
+  ) {
+    spacing.top = resolve(
+      [props.top, props.vertical, props.all],
+      defaultSpacing().top,
+    );
   }
 
-  if (horizontalSymmetry) {
-    return `${topSpacing} ${rightSpacing} ${bottomSpacing}`;
+  if (
+    props.right !== undefined ||
+    props.horizontal !== undefined ||
+    props.all !== undefined
+  ) {
+    spacing.right = resolve(
+      [props.right, props.horizontal, props.all],
+      defaultSpacing().right,
+    );
   }
 
-  return `${topSpacing} ${rightSpacing} ${bottomSpacing} ${leftSpacing}`;
+  if (
+    props.bottom !== undefined ||
+    props.vertical !== undefined ||
+    props.all !== undefined
+  ) {
+    spacing.bottom = resolve(
+      [props.bottom, props.vertical, props.all],
+      defaultSpacing().bottom,
+    );
+  }
+
+  if (
+    props.left !== undefined ||
+    props.horizontal !== undefined ||
+    props.all !== undefined
+  ) {
+    spacing.left = resolve(
+      [props.left, props.horizontal, props.all],
+      defaultSpacing().left,
+    );
+  }
+
+  return spacing;
 };
 
 export const paddings = (
   props?: SpacingInput | SpacingInputPublic,
-) => ({
-  padding: spacing(props),
-});
+) => {
+  const spacing = spacingSides(props);
+  const styles: Partial<{
+    paddingTop: string;
+    paddingRight: string;
+    paddingBottom: string;
+    paddingLeft: string;
+  }> = {};
+  if (spacing.top !== undefined) styles.paddingTop = spacing.top;
+  if (spacing.right !== undefined)
+    styles.paddingRight = spacing.right;
+  if (spacing.bottom !== undefined)
+    styles.paddingBottom = spacing.bottom;
+  if (spacing.left !== undefined)
+    styles.paddingLeft = spacing.left;
+  return styles;
+};
 
 export const margins = (
   props?: SpacingInput | SpacingInputPublic,
-) => ({
-  margin: spacing(props),
-});
+) => {
+  const spacing = spacingSides(props);
+  const styles: Partial<{
+    marginTop: string;
+    marginRight: string;
+    marginBottom: string;
+    marginLeft: string;
+  }> = {};
+  if (spacing.top !== undefined) styles.marginTop = spacing.top;
+  if (spacing.right !== undefined)
+    styles.marginRight = spacing.right;
+  if (spacing.bottom !== undefined)
+    styles.marginBottom = spacing.bottom;
+  if (spacing.left !== undefined)
+    styles.marginLeft = spacing.left;
+  return styles;
+};

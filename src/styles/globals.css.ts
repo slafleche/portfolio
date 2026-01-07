@@ -257,15 +257,29 @@ globalStyle('h1, h2, h3, h4, h5, h6', {
   position: 'relative',
 });
 
-globalStyle(
-  'h1:not([data-ui="heading"]), h2:not([data-ui="heading"]), h3:not([data-ui="heading"]), h4:not([data-ui="heading"]), h5:not([data-ui="heading"]), h6:not([data-ui="heading"])',
-  {
-    display: 'block',
-    ...margins({
-      bottom: mEm(0.5),
-    }),
-  },
-);
+
+
+// globalStyle(
+//   'h1:not([data-ui="heading"]), h2:not([data-ui="heading"]), h3:not([data-ui="heading"]), h4:not([data-ui="heading"]), h5:not([data-ui="heading"]), h6:not([data-ui="heading"])',
+//   {
+//     display: 'block',
+//     ...margins({
+//       top: variant.family.offsetToFlushTop,
+//       bottom: variant.family.offsetBottom || mEm(0.25),
+//     }),
+//     // selectors: {
+//     //   "&::after": {
+//     //     content: '""',
+//     //     ...absolutePosition.bottomLeft(),
+//     //     backgroundColor: bodyFg.css(),
+//     //     transform: 'translateY(${headingBottomMargin.add()})',
+//     //     display: 'block',
+//     //     height: m(0.2, "em"),
+//     //     width: "20px",
+
+//     // }
+//   },
+// );
 
 for (let level = 1; level <= 6; level++) {
   const variant =

@@ -246,7 +246,6 @@ export const submitButton = style({
   },
 });
 
-
 export const turnstileSection = style({
   display: 'flex',
   flexDirection: 'column',
@@ -299,7 +298,6 @@ export const turnstileReset = style({
   cursor: 'pointer',
 });
 
-
 export const successPanel = style({
   display: 'grid',
   gap: formTokens.layout.fieldGap.css(),
@@ -345,7 +343,6 @@ export const successCopy = style({
 });
 
 export const successHeading = style({
-  margin: 0,
   ...fontStylesFromFontVariant({
     variant: typographyFontVariants.h2,
     baseVariant: typographyFontVariants.heading,

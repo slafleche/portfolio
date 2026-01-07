@@ -7,6 +7,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
 import importPluginFlatRecommended from 'eslint-plugin-import/config/flat/recommended.js';
 import promisePlugin from 'eslint-plugin-promise';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
 
@@ -164,6 +165,7 @@ export default [
     ],
     plugins: {
       import: importPlugin,
+      'simple-import-sort': simpleImportSort,
     },
     settings: {
       'import/resolver': {
@@ -176,7 +178,11 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
     },
-    rules: importFlatConfig.rules ?? {},
+    rules: {
+      ...(importFlatConfig.rules ?? {}),
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+    },
   },
   {
     ...promiseFlatConfig,

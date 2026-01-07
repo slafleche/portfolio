@@ -14,9 +14,12 @@ import type {
   CSS_TYPES,
 } from './types.helper';
 import { notRelease } from '../../lib/runtimeEnv';
+import { margins } from './spacing.helper';
 
 export type FontVariantDefinition<
-  Family extends FontFamilyDef | FontFamilyForPercentWeights = FontFamilyDef,
+  Family extends
+    | FontFamilyDef
+    | FontFamilyForPercentWeights = FontFamilyDef,
 > = {
   family: Family;
   config?: ComposeFontStylesConfig;
@@ -109,7 +112,9 @@ const combineConfig = (
       extra.options?.weightPercents,
     ) ?? undefined;
 
-  const resolveOptionValue = <K extends keyof ComposeFontStylesOptions>(
+  const resolveOptionValue = <
+    K extends keyof ComposeFontStylesOptions,
+  >(
     key: K,
   ): ComposeFontStylesOptions[K] | undefined => {
     if (

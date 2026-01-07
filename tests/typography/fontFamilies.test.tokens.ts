@@ -1,6 +1,7 @@
-
-import { m } from 'css-calipers';
-import fontsConfig, { defineFontFamily } from '../../src/styles/helpers/fontConfig.helper';
+import { m, mRem } from 'css-calipers';
+import fontsConfig, {
+  defineFontFamily,
+} from '../../src/styles/helpers/fontConfig.helper';
 import type { FontFamilyDef } from '../../src/styles/helpers/types.helper';
 
 export const fontFamilies = {
@@ -19,6 +20,7 @@ export const fontFamilies = {
     cfgMap: fontsConfig,
     letterSpacing: m(0.5, 'rem'),
     offsetToFlushTop: m(-0.3, 'rem'),
+    offsetBottom: mRem(1),
     lineHeight: 1.4,
     weights: {
       low: 400,
@@ -42,6 +44,7 @@ export const fontFamilies = {
     cfgMap: fontsConfig,
     letterSpacing: m(0.03, 'rem'),
     offsetToFlushTop: m(0, 'rem'),
+    offsetBottom: mRem(2),
     lineHeight: 1.6,
     weights: {
       default: 400,
@@ -61,6 +64,7 @@ export const fontFamilies = {
     cfgMap: fontsConfig,
     letterSpacing: m(0, 'em'),
     offsetToFlushTop: m(0, 'em'),
+    offsetBottom: mRem(3),
     lineHeight: 1.5,
     weights: {
       default: 400,

@@ -68,7 +68,8 @@ export type FontFamilyDef = {
   textAlign?: CSSCore.Property.TextAlign;
   textTransform?: CSSCore.Property.TextTransform;
   letterSpacing?: IMeasurement;
-  offsetToFlushTop: IMeasurement;
+  offsetToFlushTop?: IMeasurement;
+  offsetBottom?: IMeasurement;
   lineHeight?: CSSCore.Property.LineHeight;
   css?: Partial<CSSCore.Properties>;
   axisDefaults?: Record<string, number | string>;
@@ -96,7 +97,8 @@ export type FontStyles = {
     strong: CSSCore.Property.FontWeight;
   };
   lineHeight?: CSSCore.Property.LineHeight;
-  offsetToFlushTop?: IMeasurement;
+  offsetToFlushTop?: IMeasurement; // Meant to align top of text with top of element
+  offsetBottom?: IMeasurement; // Intentionally not specifying margin or padding
   css?: Partial<CSSCore.Properties>;
   color?: ColorWrapper;
   waitForFonts?: string[];

@@ -9,21 +9,29 @@ import { textStyleVars } from '../tokens/textStyles.tokens';
 import { typographyFontVariants } from '../tokens/fontVariants/typography';
 import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
 import { globalMediaQueryStyle } from './responsive/mediaQueries';
+import { mEm } from 'css-calipers';
 
 export const userContent = style({});
 
+// Generte styles for each heading level
 for (let level = 1; level <= 6; level++) {
   const variant =
     typographyFontVariants[
       `h${level}` as keyof typeof typographyFontVariants
     ];
   globalStyle(`h${level}:not([data-ui="heading"])`, {
+    display: 'block',
     color: colorVars.bodyFg.css(),
     ...fontStylesFromFontVariant({
       variant,
       baseVariant: typographyFontVariants.heading,
     }),
-    ...margins(textStyleVars.paragraph.margins),
+
+    ...margins({
+      top: variant.family.offsetToFlushTop,
+      bottom: variant.family.offsetBottom,
+    }),
+
     ...globalMediaQueryStyle({
       compact: {
         textAlign: 'center',

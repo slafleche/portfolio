@@ -153,10 +153,8 @@ export function computeFontWeight(
     );
   }
   const weights = family.weights as FontFamilyDef['weights'];
-  const low =
-    Number.isFinite(weights.low) ? weights.low : base;
-  const high =
-    Number.isFinite(weights.high) ? weights.high : strong;
+  const low = Number.isFinite(weights.low) ? weights.low : base;
+  const high = Number.isFinite(weights.high) ? weights.high : strong;
   const normalized = percentToDecimal(percent);
   const value = low + (high - low) * normalized;
   const rounded = Math.round(value / 100) * 100;
@@ -203,6 +201,7 @@ const familyToFontStyles = (family: FontFamilyDef): FontStyles => {
     textAlign: family.textAlign,
     textTransform: family.textTransform,
     letterSpacing: family.letterSpacing,
+    offsetBottom: family.offsetBottom,
     weights: {
       default: family.weights.default,
       strong: family.weights.strong,
@@ -215,6 +214,10 @@ const familyToFontStyles = (family: FontFamilyDef): FontStyles => {
 
   if (family.offsetToFlushTop) {
     styles.offsetToFlushTop = family.offsetToFlushTop;
+  }
+
+  if (family.offsetBottom) {
+    styles.offsetBottom = family.offsetBottom;
   }
 
   if (family.lineHeight !== undefined) {

@@ -18,7 +18,7 @@ export type FontsConfig = Record<string, FontCfgInput>;
 // If your toolchain requires, keep the assert; otherwise you can drop it.
 import releaseConfig from '@/data/generated/release/fonts/config.fonts.gen.json' assert { type: 'json' };
 import stagingConfig from '@/data/generated/_staging/fonts/config.fonts.gen.json' assert { type: 'json' };
-import type { IMeasurement } from 'css-calipers';
+import { mRem, type IMeasurement } from 'css-calipers';
 
 const target = getManifestTarget();
 const rawJson = target === 'release' ? releaseConfig : stagingConfig;
@@ -219,6 +219,7 @@ type FontFamilyArgs = {
   cfgMap?: FontsConfig;
   letterSpacing: IMeasurement;
   offsetToFlushTop: IMeasurement;
+  offsetBottom?: IMeasurement;
   weights: WeightConfig;
   lineHeight?: FontFamilyDef['lineHeight'];
   fontStyle?: NonNullable<FontFamilyDef['css']>['fontStyle'];
@@ -254,6 +255,7 @@ export function defineFontFamily({
   cfgMap,
   letterSpacing,
   offsetToFlushTop,
+  offsetBottom = mRem(0),
   weights,
   lineHeight,
   fontStyle,
@@ -344,6 +346,7 @@ export function defineFontFamily({
     weights: finalWeights,
     letterSpacing,
     offsetToFlushTop,
+    offsetBottom,
     lineHeight,
     css: Object.keys(mergedCss).length > 0 ? mergedCss : undefined,
     axisDefaults:
