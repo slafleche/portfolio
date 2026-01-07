@@ -152,9 +152,16 @@ export function computeFontWeight(
       '[Typography] computeFontWeight expected numeric weights.default and weights.strong.',
     );
   }
+  const weights = family.weights as FontFamilyDef['weights'];
+  const low =
+    Number.isFinite(weights.low) ? weights.low : base;
+  const high =
+    Number.isFinite(weights.high) ? weights.high : strong;
   const normalized = percentToDecimal(percent);
-  const value = base + (strong - base) * normalized;
-  return value as CSS_TYPES.Property.FontWeight;
+  const value = low + (high - low) * normalized;
+  const rounded = Math.round(value / 100) * 100;
+  const clamped = Math.min(rounded, high);
+  return clamped as CSS_TYPES.Property.FontWeight;
 }
 
 export function fontWeightStyle(

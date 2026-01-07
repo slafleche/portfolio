@@ -1,11 +1,9 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
 import { wordMark_kg } from '../../styles/components/card.css';
-
-import { r } from 'css-calipers';
+import wordMarkMeta from '../../styles/helpers/wordmark.helper';
 
 const LABEL = 'King Games';
-const ratio = r(684.9532, 463.6684);
 
 export default function KGWordmark({
   className,
@@ -14,7 +12,7 @@ export default function KGWordmark({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 ${ratio.numerator()} ${ratio.denominator()}`}
+      viewBox={wordMarkMeta.kg.viewBox}
       shapeRendering="geometricPrecision"
       fill="currentColor"
       className={clsx(className, wordMark_kg)}

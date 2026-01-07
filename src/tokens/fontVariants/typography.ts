@@ -17,7 +17,7 @@ export const typographyFontVariants = {
       },
       options: {
         weightPercents: {
-          default: mPercent(50),
+          default: mPercent(30),
           strong: mPercent(100),
         },
       },
@@ -28,7 +28,7 @@ export const typographyFontVariants = {
     sourcePath: SOURCE_PATH,
     config: {
       options: {
-        textAlign: 'center',
+        textAlign: 'left',
         letterSpacing: m(0.08, 'em'),
         weightPercents: {
           default: mPercent(0),

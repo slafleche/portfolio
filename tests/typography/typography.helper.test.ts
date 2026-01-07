@@ -53,15 +53,17 @@ describe('typography.helper', () => {
     const family = {
       ...fontFamilies.objectSans,
       weights: {
-        ...fontFamilies.objectSans.weights,
-        low: 100,
-        high: 900,
         default: 400,
         strong: 600,
       },
     };
 
     expect(computeFontWeight(family, mPercent(25))).toBe(450);
+  });
+
+  it('maps 0% to the configured low weight for IBM Plex Sans', () => {
+    const family = fontFamilies.ibm;
+    expect(computeFontWeight(family, mPercent(0))).toBe(100);
   });
 
   it('throws when default/strong weights are not numeric', () => {

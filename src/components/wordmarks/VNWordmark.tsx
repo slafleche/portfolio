@@ -4,7 +4,7 @@ import { wordMark_vanilla } from '../../styles/components/card.css';
 import { r } from 'css-calipers';
 
 const LABEL = 'Vanilla';
-const ratio = r(78.54572, 31.72025);
+export const ratioVN = r(78.54572, 31.72025);
 
 export default function VNWordmark({
   className,
@@ -13,7 +13,7 @@ export default function VNWordmark({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 ${ratio.numerator()} ${ratio.denominator()}`}
+      viewBox={`0 0 ${ratioVN.numerator()} ${ratioVN.denominator()}`}
       fill="currentColor"
       className={clsx(className, wordMark_vanilla)}
       shapeRendering="geometricPrecision"

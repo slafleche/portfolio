@@ -138,7 +138,7 @@ function MaskIconPreview({
         style={{
           width: '96px',
           height: '96px',
-          ...borders.radii({ radius: m(50, '%') }),
+          ...borders.radii(mPercent(50)),
           backgroundColor: theme === 'dark' ? '#0d0a17' : '#dcd5ff',
           ...boxShadow({
             x: m(0),
@@ -1166,49 +1166,47 @@ export default function FavIconPreview({
                 'repeat(auto-fit, minmax(200px, 1fr))',
             }}
           >
-            {Object.entries(previewThemeColors).map(
-              ([
-                key,
-                value,
-              ]) => (
+            {Object.entries(previewThemeColors).map(([
+              key,
+              value,
+            ]) => (
+              <div
+                key={key}
+                style={{ display: 'flex', gap: '0.75rem' }}
+              >
+                <span
+                  style={{
+                    width: '42px',
+                    height: '42px',
+                    ...borders({
+                      radius: { all: m(12) },
+                      all: {
+                        width: m(1),
+                        color: previewColors.border,
+                      },
+                    }),
+                    backgroundColor: value,
+                    flexShrink: 0,
+                  }}
+                />
                 <div
-                  key={key}
-                  style={{ display: 'flex', gap: '0.75rem' }}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
                 >
-                  <span
+                  <span style={{ fontWeight: 600 }}>{key}</span>
+                  <code
                     style={{
-                      width: '42px',
-                      height: '42px',
-                      ...borders({
-                        radius: { all: m(12) },
-                        all: {
-                          width: m(1),
-                          color: previewColors.border,
-                        },
-                      }),
-                      backgroundColor: value,
-                      flexShrink: 0,
-                    }}
-                  />
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
+                      fontSize: '0.8rem',
+                      color: previewColors.subtle,
                     }}
                   >
-                    <span style={{ fontWeight: 600 }}>{key}</span>
-                    <code
-                      style={{
-                        fontSize: '0.8rem',
-                        color: previewColors.subtle,
-                      }}
-                    >
-                      {value}
-                    </code>
-                  </div>
+                    {value}
+                  </code>
                 </div>
-              ),
-            )}
+              </div>
+            ))}
           </div>
         </div>
 

@@ -17,6 +17,7 @@ import {
 import { themeColours } from '../tokens/global.tokens';
 import { textStyleVars } from '../tokens/textStyles.tokens';
 import { anchorMenuVars } from '../tokens/menu.tokens';
+import { globalMediaQueryStyle } from './responsive/mediaQueries';
 
 const {
   palette: {

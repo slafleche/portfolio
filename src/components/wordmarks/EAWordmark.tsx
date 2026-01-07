@@ -1,10 +1,9 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
 import { wordMark_ea } from '../../styles/components/card.css';
-import { r } from 'css-calipers';
+import wordMarkMeta from '../../styles/helpers/wordmark.helper';
 
 const LABEL = 'Electronic Arts';
-const ratio = r(998.014, 998.025);
 
 export default function EAWordmark({
   className,
@@ -13,7 +12,7 @@ export default function EAWordmark({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 ${ratio.numerator()} ${ratio.denominator()}`}
+      viewBox={wordMarkMeta.ea.viewBox}
       shapeRendering="geometricPrecision"
       className={clsx(className, wordMark_ea)}
       role="img"

@@ -1,12 +1,9 @@
 import type { SVGProps } from 'react';
 import clsx from 'clsx';
 import { wordMark_hs } from '../../styles/components/card.css';
-import { r } from 'css-calipers';
+import wordMarkMeta from '../../styles/helpers/wordmark.helper';
 
 const LABEL = 'Hootsuite';
-
-const ratio = r(88.71465, 88.8469);
-
 export default function HSWordmark({
   className,
   ...props
@@ -14,7 +11,7 @@ export default function HSWordmark({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 ${ratio.numerator()} ${ratio.denominator()}`}
+      viewBox={wordMarkMeta.hs.viewBox}
       fill="currentColor"
       shapeRendering="geometricPrecision"
       className={clsx(className, wordMark_hs)}

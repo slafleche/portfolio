@@ -75,7 +75,7 @@ function MarkdownBase({
     return null;
   }
 
-  const html = marked.parseInline(normalized, {
+  const html = marked.parse(normalized, {
     renderer: openLinksInNewTab
       ? createTargetBlankRenderer()
       : undefined,

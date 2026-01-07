@@ -8,11 +8,15 @@ import { cardLayout } from '../componentTokens/card.component.tokens';
 import { glassVars } from '../../tokens/glassy.tokens';
 import {
   componentMediaQueries,
+  globalComponentMediaQueryStyle,
   mediaQueryStyle,
 } from '../responsive/mediaQueries';
 import { makeGlassSurface } from '../helpers/glassy.helper';
 import { wordMarkVars } from '../../tokens/wordmarks.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
+import wordMarkMeta from '../helpers/wordmark.helper';
+import { globalDropShadowFilter } from '../helpers/shadow.helper';
+import borders from '../helpers/borders.helper';
 
 export const root = style({
   position: 'relative',
@@ -26,6 +30,11 @@ export const root = style({
     '&[data-type="right"]': {
       gridColumn: '3',
     },
+    ...mediaQueryStyle({
+      compact: {
+        minHeight: 0,
+      },
+    }),
   },
 });
 
@@ -74,11 +83,16 @@ export const logoBox = style({
         position: 'absolute',
         top: '0%',
         left: '50%',
-        transform: 'translate(-50%, -50%)',
+        transform: `translate(-50%, ${wordMarkVars.compact.offset.css()})`,
         display: 'inline-flex',
         minWidth: 0,
         zIndex: 1,
+        ...borders.radii(m(10)),
+        overflow: 'hidden',
         ...paddings(cardLayout.logoBox.mobile.paddings),
+        filter: globalDropShadowFilter({
+          blur: m(4),
+        }),
       },
     }),
   },
@@ -130,74 +144,87 @@ export const text = style({
   },
 });
 
-// export const image = style({
-//   justifySelf: 'center',
-//   alignSelf: 'center',
-//   gridColumn: '2',
-//   position: 'relative',
-//   display: 'block',
-//   width: '200px',
-//   height: 'auto',
-//   overflow: 'hidden',
-// });
-
 export const gradient = style({
   ...absolutePosition.fullSize(),
   pointerEvents: 'none',
   zIndex: 0,
 });
 
-// export const gradientInLogoBox = style({
+export const spacer = style({
+  display: 'none',
+  selectors: {
+    ...componentMediaQueries({
+      card_oneColumn: {
+        display: 'block',
+      },
+    }),
+  },
+});
 
-//   selectors: {
-//     ...componentMediaQueries({
-//       card_oneColumn: {
-//         display: 'block',
-//       },
-//     }),
-//   },
-// });
+export const cardCC = style({
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      marginTop: wordMarkMeta.cc.spacing.north.css(),
+    },
+  }),
+});
+export const cardEa = style({
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      marginTop: wordMarkMeta.ea.spacing.north.css(),
+    },
+  }),
+});
+export const cardBanq = style({
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      marginTop: wordMarkMeta.banq.spacing.north.css(),
+    },
+  }),
+});
+export const cardHs = style({
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      marginTop: wordMarkMeta.hs.spacing.north.css(),
+    },
+  }),
+});
+export const cardKg = style({
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      marginTop: wordMarkMeta.kg.spacing.north.css(),
+    },
+  }),
+});
 
-// export const cardGradientA = style(
-//   makeCardGradient(gradients[0], {
-//     linearDirection: m(110, 'deg'),
-//   }),
-// );
-
-// export const cardGradientB = style(
-//   makeCardGradient(gradients[1], {
-//     linearDirection: m(95, 'deg'),
-//   }),
-// );
-
-export const gradientCC = style(
-  makeCardGradient(wordMarkVars.cc.gradients.colors, {
+export const gradientCC = style({
+  ...makeCardGradient(wordMarkVars.cc.gradients.colors, {
     linearDirection: wordMarkVars.cc.gradients.direction,
   }),
-);
-export const gradientEa = style(
-  makeCardGradient(wordMarkVars.ea.gradients.colors, {
+});
+export const gradientEa = style({
+  ...makeCardGradient(wordMarkVars.ea.gradients.colors, {
     linearDirection: wordMarkVars.ea.gradients.direction,
   }),
-);
+});
 
-export const gradientBanq = style(
-  makeCardGradient(wordMarkVars.banq.gradients.colors, {
+export const gradientBanq = style({
+  ...makeCardGradient(wordMarkVars.banq.gradients.colors, {
     linearDirection: wordMarkVars.banq.gradients.direction,
   }),
-);
+});
 
-export const gradientHs = style(
-  makeCardGradient(wordMarkVars.hs.gradients.colors, {
+export const gradientHs = style({
+  ...makeCardGradient(wordMarkVars.hs.gradients.colors, {
     linearDirection: wordMarkVars.hs.gradients.direction,
   }),
-);
+});
 
-export const gradientKg = style(
-  makeCardGradient(wordMarkVars.kg.gradients.colors, {
+export const gradientKg = style({
+  ...makeCardGradient(wordMarkVars.kg.gradients.colors, {
     linearDirection: wordMarkVars.kg.gradients.direction,
   }),
-);
+});
 
 export const wordmarkTextNoLogo = style({
   selectors: {
@@ -229,21 +256,64 @@ export const wordMark_cc = style({
   height: 'auto',
 });
 
+globalStyle(`.${cardCC} .${spacer}`, {
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      height: wordMarkMeta.cc.spacing.south.css(),
+    },
+  }),
+});
+
 export const wordMark_ea = style({
   width: wordMarkVars.ea.size.css(),
   height: 'auto',
 });
+
+globalStyle(`.${cardEa} .${spacer}`, {
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      height: wordMarkMeta.ea.spacing.south.css(),
+    },
+  }),
+});
+
 export const wordMark_banq = style({
   width: wordMarkVars.banq.size.css(),
   height: 'auto',
 });
+
+globalStyle(`.${cardBanq} .${spacer}`, {
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      height: wordMarkMeta.banq.spacing.south.css(),
+    },
+  }),
+});
+
 export const wordMark_hs = style({
   width: wordMarkVars.hs.size.css(),
   height: 'auto',
 });
+
+globalStyle(`.${cardHs} .${spacer}`, {
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      height: wordMarkMeta.hs.spacing.south.css(),
+    },
+  }),
+});
+
 export const wordMark_kg = style({
   width: wordMarkVars.kg.size.css(),
   height: 'auto',
+});
+
+globalStyle(`.${cardKg} .${spacer}`, {
+  ...globalComponentMediaQueryStyle({
+    card_oneColumn: {
+      height: wordMarkMeta.kg.spacing.south.css(),
+    },
+  }),
 });
 
 export const logoAsBg = style({

@@ -8,6 +8,7 @@ import { colorVars } from '../tokens/global.tokens';
 import { textStyleVars } from '../tokens/textStyles.tokens';
 import { typographyFontVariants } from '../tokens/fontVariants/typography';
 import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
+import { globalMediaQueryStyle } from './responsive/mediaQueries';
 
 export const userContent = style({});
 
@@ -23,6 +24,11 @@ for (let level = 1; level <= 6; level++) {
       baseVariant: typographyFontVariants.heading,
     }),
     ...margins(textStyleVars.paragraph.margins),
+    ...globalMediaQueryStyle({
+      compact: {
+        textAlign: 'center',
+      },
+    }),
   });
 }
 

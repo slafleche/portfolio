@@ -1,15 +1,14 @@
 import clsx from 'clsx';
 import * as s from '../styles/glassy.css';
 
-export type GlassyPanelProps = {
-  className?: string;
+export type GlassyPanelProps =
+  React.ComponentPropsWithoutRef<'div'> & {
   contentClassName?: string;
   surfaceClassName?: string;
   surfaceClassNameOverride?: string;
   shineClassName?: string;
   grainClassName?: string;
   opacity?: number;
-  children: React.ReactNode;
 };
 
 export function GlassPanel({
@@ -19,9 +18,10 @@ export function GlassPanel({
   grainClassName,
   surfaceClassNameOverride,
   children,
+  ...rest
 }: GlassyPanelProps) {
   return (
-    <div className={clsx(s.root, className)}>
+    <div className={clsx(s.root, className)} {...rest}>
       <div
         className={clsx(
           surfaceClassName,

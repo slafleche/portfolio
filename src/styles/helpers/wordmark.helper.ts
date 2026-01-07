@@ -1,0 +1,105 @@
+import { m, type IMeasurement, type IRatio } from 'css-calipers';
+import { wordMarkVars } from '../../tokens/wordmarks.tokens';
+
+// const spacingNorthMultiplier = 0.8;
+const spacingNorth = m(20);
+const spacingSouthMultiplier = 1;
+
+const getViewBox = (ratio: IRatio) => {
+  return `0 0 ${ratio.numerator()} ${ratio.denominator()}`;
+};
+
+const getHeightFromWidthAndRatio = (
+  width: IMeasurement,
+  ratio: IRatio,
+) => {
+  return width
+    .multiply(ratio.denominator())
+    .divide(ratio.numerator())
+    .round();
+};
+
+const banqHeight = getHeightFromWidthAndRatio(
+  wordMarkVars.banq.size,
+  wordMarkVars.banq.ratio,
+);
+
+const ccHeight = getHeightFromWidthAndRatio(
+  wordMarkVars.cc.size,
+  wordMarkVars.cc.ratio,
+);
+
+const eaHeight = getHeightFromWidthAndRatio(
+  wordMarkVars.ea.size,
+  wordMarkVars.ea.ratio,
+);
+
+const hsHeight = getHeightFromWidthAndRatio(
+  wordMarkVars.hs.size,
+  wordMarkVars.hs.ratio,
+);
+
+const kgHeight = getHeightFromWidthAndRatio(
+  wordMarkVars.kg.size,
+  wordMarkVars.kg.ratio,
+);
+
+const wordMarkMeta = {
+  banq: {
+    ratio: wordMarkVars.banq.ratio,
+    width: wordMarkVars.banq.size,
+    height: banqHeight,
+    viewBox: getViewBox(wordMarkVars.banq.ratio),
+    spacing: {
+      // north: banqHeight.multiply(spacingNorthMultiplier),
+      north: spacingNorth,
+      south: banqHeight.multiply(spacingSouthMultiplier),
+    },
+  },
+  cc: {
+    ratio: wordMarkVars.cc.ratio,
+    width: wordMarkVars.cc.size,
+    height: ccHeight,
+    viewBox: getViewBox(wordMarkVars.cc.ratio),
+    spacing: {
+      // north: ccHeight.multiply(spacingNorthMultiplier),
+      north: spacingNorth,
+      south: ccHeight.multiply(spacingSouthMultiplier),
+    },
+  },
+  ea: {
+    ratio: wordMarkVars.ea.ratio,
+    width: wordMarkVars.ea.size,
+    height: eaHeight,
+    viewBox: getViewBox(wordMarkVars.ea.ratio),
+    spacing: {
+      // north: eaHeight.multiply(spacingNorthMultiplier),
+      north: spacingNorth,
+      south: eaHeight.multiply(spacingSouthMultiplier),
+    },
+  },
+  hs: {
+    ratio: wordMarkVars.hs.ratio,
+    width: wordMarkVars.hs.size,
+    height: hsHeight,
+    viewBox: getViewBox(wordMarkVars.hs.ratio),
+    spacing: {
+      // north: hsHeight.multiply(spacingNorthMultiplier),
+      north: spacingNorth,
+      south: hsHeight.multiply(spacingSouthMultiplier),
+    },
+  },
+  kg: {
+    ratio: wordMarkVars.kg.ratio,
+    width: wordMarkVars.kg.size,
+    height: kgHeight,
+    viewBox: getViewBox(wordMarkVars.kg.ratio),
+    spacing: {
+      // north: kgHeight.multiply(spacingNorthMultiplier),
+      north: spacingNorth,
+      south: kgHeight.multiply(spacingSouthMultiplier),
+    },
+  },
+};
+
+export default wordMarkMeta;

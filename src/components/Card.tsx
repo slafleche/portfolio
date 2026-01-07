@@ -12,7 +12,6 @@ type Props = IHeadingDepth &
     type?: string;
     gradientClassName?: string;
     logoAsBg?: ReactNode;
-    logoBoxClassName?: string;
   };
 
 export default function Card({
@@ -22,7 +21,6 @@ export default function Card({
   type,
   children,
   gradientClassName,
-  logoBoxClassName,
   logoAsBg,
   ...rest
 }: Props) {
@@ -42,7 +40,9 @@ export default function Card({
       )}
 
       <div className={s.frame}>
-        <div className={clsx(s.logoBox, logoBoxClassName)}>
+        <div
+          className={clsx(s.logoBox, gradientClassName)}
+        >
           {isStringTitle ? (
             <Heading className={s.title} depth={depth}>
               {title}
@@ -51,8 +51,7 @@ export default function Card({
             title
           )}
         </div>
-        <div className={s.content}
-        >
+        <div className={s.content}>
           {logoAsBg && (
             <div className={s.logoAsBg} aria-hidden="true">
               {logoAsBg}
@@ -64,6 +63,7 @@ export default function Card({
             contentClassName={s.panelContent}
             surfaceClassNameOverride={s.glassSurface}
           >
+            <div className={s.spacer} />
             <div className={s.text}>{children}</div>
           </GlassPanel>
         </div>

@@ -163,7 +163,7 @@ export default async function HomePage({
             caseStudies={caseStudies.list}
             wordMarkClassName={cg.wordmarkTextNoLogo}
           />
-          
+
           <ContentWithTitle
             ignoreDataUI={true}
             contentTitle={projects.title}
@@ -175,6 +175,8 @@ export default async function HomePage({
             <Grid>
               <Column span={2}>
                 <Card
+                  className={cg.cardCC}
+                  gradientClassName={cg.gradientCC}
                   title={
                     <WordMarkInTitle
                       WordMark={CCWordmark}
@@ -187,14 +189,14 @@ export default async function HomePage({
                       className={clsx(cg.logoAsBgSVG, cg.logoAsBg_cc)}
                     />
                   }
-                  logoBoxClassName={cg.gradientCC}
-                  gradientClassName={cg.gradientCC}
                 >
                   <Markdown source={cocacola.content} />
                 </Card>
               </Column>
               <Column span={2}>
                 <Card
+                  className={cg.cardEa}
+                  gradientClassName={cg.gradientEa}
                   title={
                     <WordMarkInTitle
                       WordMark={EAWordmark}
@@ -207,8 +209,6 @@ export default async function HomePage({
                       className={clsx(cg.logoAsBgSVG, cg.logoAsBg_ea)}
                     />
                   }
-                  logoBoxClassName={cg.gradientEa}
-                  gradientClassName={cg.gradientEa}
                 >
                   <Markdown source={ea.content} />
                 </Card>
@@ -220,6 +220,8 @@ export default async function HomePage({
                 }}
               >
                 <Card
+                  className={cg.cardBanq}
+                  gradientClassName={cg.gradientBanq}
                   title={
                     <WordMarkInTitle
                       WordMark={BQWordmark}
@@ -227,8 +229,6 @@ export default async function HomePage({
                       textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
-                  logoBoxClassName={cg.gradientBanq}
-                  gradientClassName={cg.gradientBanq}
                   logoAsBg={
                     <BQWordmark
                       className={clsx(
@@ -248,6 +248,8 @@ export default async function HomePage({
                 }}
               >
                 <Card
+                  className={cg.cardHs}
+                  gradientClassName={cg.gradientHs}
                   title={
                     <WordMarkInTitle
                       WordMark={HSWordmark}
@@ -255,8 +257,6 @@ export default async function HomePage({
                       textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
-                  logoBoxClassName={cg.gradientHs}
-                  gradientClassName={cg.gradientHs}
                   logoAsBg={
                     <HSWordmark
                       className={clsx(cg.logoAsBgSVG, cg.logoAsBg_hs)}
@@ -273,6 +273,8 @@ export default async function HomePage({
                 }}
               >
                 <Card
+                  className={cg.cardKg}
+                  gradientClassName={cg.gradientKg}
                   title={
                     <WordMarkInTitle
                       WordMark={KGWordmark}
@@ -280,8 +282,6 @@ export default async function HomePage({
                       textClassName={cg.wordmarkTextNoLogo}
                     />
                   }
-                  gradientClassName={cg.gradientKg}
-                  logoBoxClassName={cg.gradientKg}
                   logoAsBg={
                     <KGWordmark
                       className={clsx(cg.logoAsBgSVG, cg.logoAsBg_kg)}
