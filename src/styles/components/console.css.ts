@@ -43,7 +43,7 @@ export const header = style({
 export const windowDot = style({
   width: '10px',
   height: '10px',
-  ...borders.radii({ radius: mPercent(50) }),
+  ...borders.radii(mPercent(50)),
   ...backgrounds({ color: '#ff5f56' }),
   selectors: {
     '&[data-variant="warn"]': {

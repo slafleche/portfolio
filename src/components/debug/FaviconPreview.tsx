@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 import { paddings, margins } from '@/styles/helpers/spacing.helper';
 import borders from '@/styles/helpers/borders.helper';
 import { boxShadow } from '@/styles/helpers/shadow.helper';

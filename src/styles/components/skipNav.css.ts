@@ -16,7 +16,7 @@ export const link = style({
     vertical: m(2),
     horizontal: m(4),
   }),
-  ...borders.radii({ radius: m(2) }),
+  ...borders.radii(m(2)),
   textDecoration: 'none',
   ...boxShadow({
     x: m(0),

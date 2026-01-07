@@ -22,7 +22,7 @@ export const backdrop = style({
   zIndex: 0,
   inset: '0 -16px',
   ...margins({ horizontal: 'auto' }),
-  ...borders.radii({ radius: m(28) }),
+  ...borders.radii(m(28)),
   backgroundColor: colorVars.black.alpha(0).css(),
   pointerEvents: 'none',
   transition: 'none',

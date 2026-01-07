@@ -43,6 +43,25 @@ describe('checkLintRules radii shorthand rule', () => {
     expect(violations.length).toBe(0);
   });
 
+  it('flags borders.radii calls that use a radius wrapper', () => {
+    const filePath = 'src/styles/components/exampleRadiusWrapper.css.ts';
+    const content = `
+      import { style } from '@vanilla-extract/css';
+      import borders from '../helpers/borders.helper';
+      import { m } from 'css-calipers';
+
+      export const example = style({
+        ...borders.radii({
+          radius: m(12),
+        }),
+      });
+    `;
+
+    const violations = scanBordersRadiiShorthand(filePath, content);
+    expect(violations.length).toBe(1);
+    expect(violations[0]?.rule.id).toBe('borders-radii-shorthand');
+  });
+
   it('ignores non-style files', () => {
     const filePath = 'src/tokens/someConfig.ts';
     const content = readFileSync(
@@ -54,4 +73,3 @@ describe('checkLintRules radii shorthand rule', () => {
     expect(violations.length).toBe(0);
   });
 });
-

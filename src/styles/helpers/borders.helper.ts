@@ -84,21 +84,6 @@ const fallbackStyle = (): CSS_TYPES.Property.BorderStyle =>
 const fallbackColor = (): string =>
   colorVars.border.css() ?? 'transparent';
 
-const compressSides = (
-  t: string,
-  r: string,
-  b: string,
-  l: string,
-) => {
-  const allEq = t === r && r === b && b === l;
-  if (allEq) return t;
-  const vr = t === b;
-  const hr = r === l;
-  if (vr && hr) return `${t} ${r}`;
-  if (hr) return `${t} ${r} ${b}`;
-  return `${t} ${r} ${b} ${l}`;
-};
-
 const asWidth = (
   v: BorderWidthInput | undefined,
 ): string | undefined => {
@@ -510,26 +495,6 @@ const resolve = (
     b.width,
     l.width,
   ];
-  const styles = [
-    t.style,
-    r.style,
-    b.style,
-    l.style,
-  ];
-  const colors = [
-    t.color,
-    r.color,
-    b.color,
-    l.color,
-  ];
-
-  const styleAllEq =
-    styles.every((s) => s !== undefined) &&
-    styles.every((s) => s === styles[0]);
-  const colorAllEq =
-    colors.every((c) => c !== undefined) &&
-    colors.every((c) => c === colors[0]);
-
   const css: FinalBorderCSS = {};
 
   const [
@@ -540,23 +505,14 @@ const resolve = (
   ] = widths;
   const widthsDefined = widths.every((w) => w !== undefined);
   if (widthsDefined) {
-    if (options?.skipDefaults) {
-      css.borderTopWidth =
-        tw as CSS_TYPES.Property.BorderTopWidth;
-      css.borderRightWidth =
-        rw as CSS_TYPES.Property.BorderRightWidth;
-      css.borderBottomWidth =
-        bw as CSS_TYPES.Property.BorderBottomWidth;
-      css.borderLeftWidth =
-        lw as CSS_TYPES.Property.BorderLeftWidth;
-    } else {
-      css.borderWidth = compressSides(
-        tw as string,
-        rw as string,
-        bw as string,
-        lw as string,
-      );
-    }
+    css.borderTopWidth =
+      tw as CSS_TYPES.Property.BorderTopWidth;
+    css.borderRightWidth =
+      rw as CSS_TYPES.Property.BorderRightWidth;
+    css.borderBottomWidth =
+      bw as CSS_TYPES.Property.BorderBottomWidth;
+    css.borderLeftWidth =
+      lw as CSS_TYPES.Property.BorderLeftWidth;
   } else {
     if (tw !== undefined) {
       css.borderTopWidth =
@@ -576,42 +532,34 @@ const resolve = (
     }
   }
 
-  if (styleAllEq) {
-    css.borderStyle = styles[0];
-  } else {
-    if (styles[0] !== undefined) {
-      css.borderTopStyle =
-        styles[0] as CSS_TYPES.Property.BorderTopStyle;
-    }
-    if (styles[1] !== undefined) {
-      css.borderRightStyle =
-        styles[1] as CSS_TYPES.Property.BorderRightStyle;
-    }
-    if (styles[2] !== undefined) {
-      css.borderBottomStyle =
-        styles[2] as CSS_TYPES.Property.BorderBottomStyle;
-    }
-    if (styles[3] !== undefined) {
-      css.borderLeftStyle =
-        styles[3] as CSS_TYPES.Property.BorderLeftStyle;
-    }
+  if (t.style !== undefined) {
+    css.borderTopStyle =
+      t.style as CSS_TYPES.Property.BorderTopStyle;
+  }
+  if (r.style !== undefined) {
+    css.borderRightStyle =
+      r.style as CSS_TYPES.Property.BorderRightStyle;
+  }
+  if (b.style !== undefined) {
+    css.borderBottomStyle =
+      b.style as CSS_TYPES.Property.BorderBottomStyle;
+  }
+  if (l.style !== undefined) {
+    css.borderLeftStyle =
+      l.style as CSS_TYPES.Property.BorderLeftStyle;
   }
 
-  if (colorAllEq) {
-    css.borderColor = colors[0];
-  } else {
-    if (colors[0] !== undefined) {
-      css.borderTopColor = colors[0];
-    }
-    if (colors[1] !== undefined) {
-      css.borderRightColor = colors[1];
-    }
-    if (colors[2] !== undefined) {
-      css.borderBottomColor = colors[2];
-    }
-    if (colors[3] !== undefined) {
-      css.borderLeftColor = colors[3];
-    }
+  if (t.color !== undefined) {
+    css.borderTopColor = t.color;
+  }
+  if (r.color !== undefined) {
+    css.borderRightColor = r.color;
+  }
+  if (b.color !== undefined) {
+    css.borderBottomColor = b.color;
+  }
+  if (l.color !== undefined) {
+    css.borderLeftColor = l.color;
   }
 
   const radiusCorners = resolveRadiusCompass(intent?.radius, {

@@ -152,7 +152,7 @@ export const icon = style({
   justifyContent: 'center',
   width: accordionItemTokens.chevronSize.css(),
   height: accordionItemTokens.chevronSize.css(),
-  ...borders.radii({ radius: mPercent(50) }),
+  ...borders.radii(mPercent(50)),
   ...backgrounds({ color: colorVars.white.alpha(0.1) }),
   selectors: {
     [`.${button}[data-state="open"] &`]: {

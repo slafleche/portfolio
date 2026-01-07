@@ -317,7 +317,7 @@ export const successPanel = style({
 export const successIconWrapper = style({
   width: '64px',
   height: '64px',
-  // ...borders.radii({ radius: m(32) }),
+  // ...borders.radii(m(32)),
   ...backgrounds({
     color: formTokens.successPanel.icon.background,
   }),

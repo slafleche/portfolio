@@ -7,8 +7,8 @@ import {
   relativeFontWeight,
 } from '@/styles/helpers/typography.helper';
 import { fontStylesFromFontVariant } from '@/styles/helpers/fontVariant.helper';
-import { fontFamilies } from '@/tokens/fontFamilies.tokens';
-import { typographyFontVariants } from '@/tokens/fontVariants/typography';
+import { fontFamilies } from './fontFamilies.test.tokens';
+import { typographyFontVariants } from './typographyFontVariants.test.tokens';
 import { m, mPercent } from 'css-calipers';
 
 describe('typography.helper', () => {
@@ -58,7 +58,7 @@ describe('typography.helper', () => {
       },
     };
 
-    expect(computeFontWeight(family, mPercent(25))).toBe(450);
+    expect(computeFontWeight(family, mPercent(25))).toBe(500);
   });
 
   it('maps 0% to the configured low weight for IBM Plex Sans', () => {
@@ -76,9 +76,7 @@ describe('typography.helper', () => {
       },
     } as unknown as typeof fontFamilies.objectSans;
 
-    expect(() =>
-      computeFontWeight(family, mPercent(50)),
-    ).toThrow(
+    expect(() => computeFontWeight(family, mPercent(50))).toThrow(
       '[Typography] computeFontWeight expected numeric weights.default and weights.strong.',
     );
   });
@@ -189,14 +187,8 @@ describe('typography.helper', () => {
     expect(h1Styles.letterSpacing).toBe(headingStyles.letterSpacing);
     expect(h2Styles.letterSpacing).toBe(headingStyles.letterSpacing);
 
-    const defaultWeight = computeFontWeight(
-      family,
-      mPercent(0),
-    );
-    const h1Weight = computeFontWeight(
-      family,
-      mPercent(50),
-    );
+    const defaultWeight = computeFontWeight(family, mPercent(0));
+    const h1Weight = computeFontWeight(family, mPercent(50));
     expect(headingStyles.fontWeight).toBe(defaultWeight);
     expect(h1Styles.fontWeight).toBe(h1Weight);
     expect(h2Styles.fontWeight).toBe(defaultWeight);

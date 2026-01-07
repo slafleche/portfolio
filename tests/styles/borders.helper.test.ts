@@ -7,9 +7,18 @@ import borders from '../../src/styles/helpers/borders.helper';
 describe('borders.helper', () => {
   it('returns defaults for all edges when enabled', () => {
     const result = borders.defaults();
-    expect(result.borderWidth).toBe('4px');
-    expect(result.borderStyle).toBe('solid');
-    expect(result.borderColor).toBe(colorVars.border.css());
+    expect(result.borderTopWidth).toBe('4px');
+    expect(result.borderRightWidth).toBe('4px');
+    expect(result.borderBottomWidth).toBe('4px');
+    expect(result.borderLeftWidth).toBe('4px');
+    expect(result.borderTopStyle).toBe('solid');
+    expect(result.borderRightStyle).toBe('solid');
+    expect(result.borderBottomStyle).toBe('solid');
+    expect(result.borderLeftStyle).toBe('solid');
+    expect(result.borderTopColor).toBe(colorVars.border.css());
+    expect(result.borderRightColor).toBe(colorVars.border.css());
+    expect(result.borderBottomColor).toBe(colorVars.border.css());
+    expect(result.borderLeftColor).toBe(colorVars.border.css());
   });
 
   it('merges shorthand width/color/style overrides', () => {
@@ -19,9 +28,18 @@ describe('borders.helper', () => {
       style: 'dashed',
       left: { width: m(0) },
     });
-    expect(result.borderWidth).toBe('2px 2px 2px 0px');
-    expect(result.borderStyle).toBe('dashed');
-    expect(result.borderColor).toBe('red');
+    expect(result.borderTopWidth).toBe('2px');
+    expect(result.borderRightWidth).toBe('2px');
+    expect(result.borderBottomWidth).toBe('2px');
+    expect(result.borderLeftWidth).toBe('0px');
+    expect(result.borderTopStyle).toBe('dashed');
+    expect(result.borderRightStyle).toBe('dashed');
+    expect(result.borderBottomStyle).toBe('dashed');
+    expect(result.borderLeftStyle).toBe('dashed');
+    expect(result.borderTopColor).toBe('red');
+    expect(result.borderRightColor).toBe('red');
+    expect(result.borderBottomColor).toBe('red');
+    expect(result.borderLeftColor).toBe('red');
   });
 
   it('prefers top-level shorthand for all edges', () => {
@@ -29,9 +47,18 @@ describe('borders.helper', () => {
       width: m(1),
       color: 'red',
     });
-    expect(result.borderWidth).toBe('1px');
-    expect(result.borderStyle).toBe('solid');
-    expect(result.borderColor).toBe('red');
+    expect(result.borderTopWidth).toBe('1px');
+    expect(result.borderRightWidth).toBe('1px');
+    expect(result.borderBottomWidth).toBe('1px');
+    expect(result.borderLeftWidth).toBe('1px');
+    expect(result.borderTopStyle).toBe('solid');
+    expect(result.borderRightStyle).toBe('solid');
+    expect(result.borderBottomStyle).toBe('solid');
+    expect(result.borderLeftStyle).toBe('solid');
+    expect(result.borderTopColor).toBe('red');
+    expect(result.borderRightColor).toBe('red');
+    expect(result.borderBottomColor).toBe('red');
+    expect(result.borderLeftColor).toBe('red');
   });
 
   it('resolves radius-only intents when allowed', () => {
@@ -85,9 +112,12 @@ describe('borders.helper', () => {
     expect(result.borderBottomColor).toBe('purple');
     expect(result.borderTopLeftRadius).toBe('6px');
     expect(result.borderTopRightRadius).toBe('4px');
-    expect(result.borderBottomRightRadius).toBe('0px');
+    expect(result.borderBottomRightRadius).toBe('4px');
     expect(result.borderBottomLeftRadius).toBe('0px');
-    expect(result.borderWidth).toBe('1px 2px 3px 4px');
+    expect(result.borderTopWidth).toBe('1px');
+    expect(result.borderRightWidth).toBe('2px');
+    expect(result.borderBottomWidth).toBe('3px');
+    expect(result.borderLeftWidth).toBe('4px');
   });
 
   it('keeps uniform radius when provided as a measurement shorthand', () => {
@@ -96,8 +126,14 @@ describe('borders.helper', () => {
       color: 'red',
       radius: mPercent(50),
     });
-    expect(result.borderWidth).toBe('1px');
-    expect(result.borderColor).toBe('red');
+    expect(result.borderTopWidth).toBe('1px');
+    expect(result.borderRightWidth).toBe('1px');
+    expect(result.borderBottomWidth).toBe('1px');
+    expect(result.borderLeftWidth).toBe('1px');
+    expect(result.borderTopColor).toBe('red');
+    expect(result.borderRightColor).toBe('red');
+    expect(result.borderBottomColor).toBe('red');
+    expect(result.borderLeftColor).toBe('red');
     expect(result.borderTopLeftRadius).toBe('50%');
     expect(result.borderTopRightRadius).toBe('50%');
     expect(result.borderBottomRightRadius).toBe('50%');
@@ -111,8 +147,17 @@ describe('borders.helper', () => {
       },
       { skipDefaults: true },
     );
-    expect(result.borderWidth).toBeUndefined();
-    expect(result.borderStyle).toBeUndefined();
-    expect(result.borderColor).toBe('blue');
+    expect(result.borderTopWidth).toBeUndefined();
+    expect(result.borderRightWidth).toBeUndefined();
+    expect(result.borderBottomWidth).toBeUndefined();
+    expect(result.borderLeftWidth).toBeUndefined();
+    expect(result.borderTopStyle).toBeUndefined();
+    expect(result.borderRightStyle).toBeUndefined();
+    expect(result.borderBottomStyle).toBeUndefined();
+    expect(result.borderLeftStyle).toBeUndefined();
+    expect(result.borderTopColor).toBe('blue');
+    expect(result.borderRightColor).toBe('blue');
+    expect(result.borderBottomColor).toBe('blue');
+    expect(result.borderLeftColor).toBe('blue');
   });
 });

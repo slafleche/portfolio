@@ -197,7 +197,7 @@ const BORDERS_RADII_SHORTHAND_RULE = {
   id: 'borders-radii-shorthand',
   groupTitle: 'Prefer shorthand radii helpers.',
   solution:
-    'When using shared border radius tokens (for example, borderVars.radius), call borders.radii(borderVars) instead of wrapping radius values in { all: ... } or { radius: ... } objects.',
+    'Use borders.radii(<measurement>) for uniform radius and avoid radius wrapper objects; for shared tokens, call borders.radii(borderVars) instead of { radius: ... }.',
 };
 
 const ALL_RULES = [
@@ -700,8 +700,9 @@ export function scanBordersRadiiShorthand(filePath, content) {
     const usesBorderVarsRadius =
       /all\s*:\s*borderVars\.radius/.test(snippet) ||
       /radius\s*:\s*borderVars\.radius/.test(snippet);
+    const usesRadiusWrapper = /radius\s*:/.test(snippet);
 
-    if (!usesBorderVarsRadius) continue;
+    if (!usesBorderVarsRadius && !usesRadiusWrapper) continue;
 
     const lineNumber = content
       .slice(0, startIndex)

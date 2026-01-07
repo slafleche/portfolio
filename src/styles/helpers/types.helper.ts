@@ -151,6 +151,7 @@ export interface BorderRadiusConfig {
 export type BorderRadiusInput =
   | IMeasurement
   | ReadonlyArray<IMeasurement>
+  | CompassCorners<BorderMeasurementInput>
   | BorderRadiusConfig
   | null
   | undefined;

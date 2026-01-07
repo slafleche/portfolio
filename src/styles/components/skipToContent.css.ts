@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { assertUnit, m } from 'css-calipers';
+import { assertUnit, mPercent } from 'css-calipers';
 import { chevronVars, colorVars } from '../../tokens/global.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import borders from '../helpers/borders.helper';
@@ -35,7 +35,7 @@ export const link = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  ...borders.radii({ radius: m(50, '%') }),
+  ...borders.radii(mPercent(50)),
   width: chevronVars.width.add(chevronVars.padding.double()).css(),
   height: chevronVars.width.add(chevronVars.padding.double()).css(),
   transition: 'background 0.3s ease-in',

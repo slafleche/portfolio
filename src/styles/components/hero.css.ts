@@ -226,7 +226,7 @@ export const cta = style({
     vertical: m(3),
     horizontal: m(6),
   }),
-  ...borders.radii({ radius: m(3) }),
+  ...borders.radii(m(3)),
 
   // backgroundColor: themeColours.brand.css(),
   // backgroundColor: colorVars.white.alpha(0.85).css(),
