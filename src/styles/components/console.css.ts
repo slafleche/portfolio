@@ -1,10 +1,11 @@
 import { style } from '@vanilla-extract/css';
+import { m, mPercent } from 'css-calipers';
+
 import { colorVars, consoleVars } from '../../tokens/global.tokens';
-import { paddings, margins } from '../helpers/spacing.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
-import { m, mPercent } from 'css-calipers';
+import { margins,paddings } from '../helpers/spacing.helper';
 
 const consoleFontStack = `"JetBrains Mono", "Fira Code", "SFMono-Regular", "Menlo", "Consolas", "Liberation Mono", monospace`;
 

@@ -1,22 +1,23 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { makeCardGradient } from '../helpers/cardGradient.helper';
-import { colorVars } from '../../tokens/global.tokens';
 import { m } from 'css-calipers';
-import { margins, paddings } from '../helpers/spacing.helper';
-import { absolutePosition } from '../helpers/positioning.helper';
-import { cardLayout } from '../componentTokens/card.component.tokens';
+
 import { glassVars } from '../../tokens/glassy.tokens';
+import { colorVars } from '../../tokens/global.tokens';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
+import { wordMarkVars } from '../../tokens/wordmarks.tokens';
+import { cardLayout } from '../componentTokens/card.component.tokens';
+import borders from '../helpers/borders.helper';
+import { makeCardGradient } from '../helpers/cardGradient.helper';
+import { makeGlassSurface } from '../helpers/glassy.helper';
+import { absolutePosition } from '../helpers/positioning.helper';
+import { globalDropShadowFilter } from '../helpers/shadow.helper';
+import { margins, paddings } from '../helpers/spacing.helper';
+import wordMarkMeta from '../helpers/wordmark.helper';
 import {
   componentMediaQueries,
   globalComponentMediaQueryStyle,
   mediaQueryStyle,
 } from '../responsive/mediaQueries';
-import { makeGlassSurface } from '../helpers/glassy.helper';
-import { wordMarkVars } from '../../tokens/wordmarks.tokens';
-import { anchorMenuVars } from '../../tokens/menu.tokens';
-import wordMarkMeta from '../helpers/wordmark.helper';
-import { globalDropShadowFilter } from '../helpers/shadow.helper';
-import borders from '../helpers/borders.helper';
 
 export const root = style({
   position: 'relative',

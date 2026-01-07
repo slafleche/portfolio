@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { dataAttributesHelper } from '@/lib/dataAttributesHelper';
 
 describe('dataAttributesHelper', () => {

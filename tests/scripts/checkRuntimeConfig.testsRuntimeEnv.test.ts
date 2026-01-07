@@ -1,11 +1,13 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import {
   describe,
   expect,
   it,
 } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-import { readFileSync } from 'node:fs';
+
 import { scanRuntimeEnvUsageInTests } from '../../scripts/checkRuntimeConfig.mjs';
 import {
   NON_TEST_NODE_ENV_SNIPPET,

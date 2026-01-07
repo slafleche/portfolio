@@ -1,12 +1,13 @@
 import { style } from '@vanilla-extract/css';
-import { margins, paddings } from '../helpers/spacing.helper';
+import { m } from 'css-calipers';
+
+import { formFontVariants } from '../../tokens/fontVariants/forms';
+import { formTokens } from '../../tokens/forms.tokens';
+import { colorVars } from '../../tokens/global.tokens';
 import { privacyTokens } from '../../tokens/privacy.tokens';
 import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
-import { formTokens } from '../../tokens/forms.tokens';
-import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { boxShadow } from '../helpers/shadow.helper';
-import { colorVars } from '../../tokens/global.tokens';
-import { m } from 'css-calipers';
+import { margins, paddings } from '../helpers/spacing.helper';
 
 export const container = style({
   position: 'relative',

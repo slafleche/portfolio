@@ -1,8 +1,9 @@
 import { style } from '@vanilla-extract/css';
-import { margins, paddings } from './helpers/spacing.helper';
+
 import { layoutVars } from '../tokens/layout.tokens';
-import { mediaQueryStyle } from './responsive/mediaQueries';
 import { anchorMenuVars } from '../tokens/menu.tokens';
+import { margins, paddings } from './helpers/spacing.helper';
+import { mediaQueryStyle } from './responsive/mediaQueries';
 
 export const content = style({
   position: 'relative',

@@ -1,4 +1,6 @@
+import { m } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
+
 import {
   boxShadow,
   globalDropShadowFilter,
@@ -7,7 +9,6 @@ import {
   shadowTotalY,
 } from '@/styles/helpers/shadow.helper';
 import { colorVars } from '@/tokens/global.tokens';
-import { m } from 'css-calipers';
 
 describe('shadow.helper', () => {
   it('formats single and multiple box shadows', () => {

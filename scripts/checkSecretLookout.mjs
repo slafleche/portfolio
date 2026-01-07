@@ -3,6 +3,11 @@ import { execSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+
+import {
+  scanAllRuntimeConfigUsage,
+  scanRuntimeEnvUsageInTests,
+} from './checkRuntimeConfig.mjs';
 import {
   SECRET_API_KEY_PATTERNS,
   SECRET_EMAIL_PATTERN,
@@ -12,10 +17,6 @@ import {
   SECRET_LOOKOUT_SCAN_EXTENSIONS,
   SECRET_LOOKOUT_SCAN_PATH_SUBSTRINGS,
 } from './lint/secretLookoutRules.mjs';
-import {
-  scanAllRuntimeConfigUsage,
-  scanRuntimeEnvUsageInTests,
-} from './checkRuntimeConfig.mjs';
 
 const ROOT = path.resolve(process.cwd());
 

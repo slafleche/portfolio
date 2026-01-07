@@ -1,7 +1,9 @@
-import { describe, expect, it } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
 import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { describe, expect, it } from 'vitest';
+
 import { scanBordersRadiiShorthand } from '../../scripts/checkLintRules.mjs';
 
 const __filename = fileURLToPath(import.meta.url);

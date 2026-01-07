@@ -1,17 +1,18 @@
-import { style, keyframes, globalStyle } from '@vanilla-extract/css';
-import {
-  gradientAsBgImg,
-  buildLinear,
-} from '../helpers/gradients.helper';
-import { backgrounds } from '../helpers/background.helper';
-import {
-  accordionSurfaceTokens,
-  accordionItemTokens,
-} from '../componentTokens/accordion.component.tokens';
-import { outlines } from '../helpers/outlines.helper';
-import { colorVars } from '../../tokens/global.tokens';
+import { globalStyle,keyframes, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
+
+import { colorVars } from '../../tokens/global.tokens';
+import {
+  accordionItemTokens,
+  accordionSurfaceTokens,
+} from '../componentTokens/accordion.component.tokens';
+import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
+import {
+  buildLinear,
+  gradientAsBgImg,
+} from '../helpers/gradients.helper';
+import { outlines } from '../helpers/outlines.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 // import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 // import { bodyVariants, headingVariants } from '../../tokens/fontVariants/typography';

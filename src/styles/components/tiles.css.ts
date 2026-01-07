@@ -1,12 +1,13 @@
 import { style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
-import { paddings, margins } from '../helpers/spacing.helper';
-import { borders } from '../helpers/borders.helper';
-import { borderVars } from '../../tokens/global.tokens';
+
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
-import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
-import { mediaQueryStyle } from '../responsive/mediaQueries';
+import { borderVars } from '../../tokens/global.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
+import { borders } from '../helpers/borders.helper';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import { margins,paddings } from '../helpers/spacing.helper';
+import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 export const grid = style({
   display: 'grid',

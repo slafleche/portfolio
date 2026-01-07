@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-import { optimize } from 'svgo';
-import fg from 'fast-glob';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+
+import fg from 'fast-glob';
 import pc from 'picocolors';
+import { optimize } from 'svgo';
 
 // CLI usage:
 //   node scripts/optimize-svgs.mjs "public/**/*.svg" --write

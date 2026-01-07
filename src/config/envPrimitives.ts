@@ -1,17 +1,17 @@
 import {
   isDev,
-  notDev,
-  isStaging,
-  notStaging,
   isRelease,
+  isStaging,
+  notDev,
   notRelease,
+  notStaging,
 } from '../../envPrimitives.mjs';
 
 export {
   isDev,
-  notDev,
-  isStaging,
-  notStaging,
   isRelease,
+  isStaging,
+  notDev,
   notRelease,
+  notStaging,
 };

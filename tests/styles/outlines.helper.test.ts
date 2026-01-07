@@ -1,7 +1,8 @@
-import { describe, expect, it } from 'vitest';
-import { outlines } from '@/styles/helpers/outlines.helper';
-import { color } from '@/styles/helpers/colorWrap.helper';
 import { m } from 'css-calipers';
+import { describe, expect, it } from 'vitest';
+
+import { color } from '@/styles/helpers/colorWrap.helper';
+import { outlines } from '@/styles/helpers/outlines.helper';
 
 describe('outlines.helper', () => {
   it('uses token defaults when no overrides provided', () => {

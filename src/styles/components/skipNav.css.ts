@@ -1,9 +1,10 @@
 import { style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
+
 import { colorVars } from '../../tokens/global.tokens';
-import { paddings } from '../helpers/spacing.helper';
 import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
+import { paddings } from '../helpers/spacing.helper';
 
 export const link = style({
   position: 'fixed',

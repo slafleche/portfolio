@@ -1,9 +1,10 @@
-import { style, globalStyle } from '@vanilla-extract/css';
+import { globalStyle,style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
+
 import { colorVars } from '../../tokens/global.tokens';
 import { projectorVars } from '../componentTokens/projector.component.tokens';
-import { margins } from '../helpers/spacing.helper';
 import borders from '../helpers/borders.helper';
+import { margins } from '../helpers/spacing.helper';
 
 export const container = style({
   position: 'relative',

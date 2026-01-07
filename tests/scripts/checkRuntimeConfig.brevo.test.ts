@@ -1,11 +1,13 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import {
   describe,
   expect,
   it,
 } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-import { readFileSync } from 'node:fs';
+
 import { scanBrevoEnvUsage } from '../../scripts/checkRuntimeConfig.mjs';
 import {
   BREVO_DIRECT_SNIPPET,

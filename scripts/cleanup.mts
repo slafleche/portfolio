@@ -1,12 +1,14 @@
 import { ESLint } from 'eslint';
 import unusedImports from 'eslint-plugin-unused-imports';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import { notHosted } from '../src/lib/runtimeEnv';
 
 const inputs = process.argv.slice(2);
 const targets = inputs.length > 0 ? inputs : ['.'];
 
-if (process.env.NODE_ENV !== 'development') {
+if (!notHosted()) {
   console.log(
-    '[cleanup] Skipped: NODE_ENV is not "development".',
+    '[cleanup] Skipped: hosted environment.',
   );
   process.exit(0);
 }
@@ -21,6 +23,7 @@ const eslint = new ESLint({
       ],
       plugins: {
         'unused-imports': unusedImports,
+        'simple-import-sort': simpleImportSort,
       },
       rules: {
         'unused-imports/no-unused-imports': 'error',
@@ -34,6 +37,8 @@ const eslint = new ESLint({
             ignoreRestSiblings: true,
           },
         ],
+        'simple-import-sort/imports': 'error',
+        'simple-import-sort/exports': 'error',
       },
     },
   ],

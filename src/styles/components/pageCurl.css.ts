@@ -1,17 +1,18 @@
 import { globalStyle, style } from '@vanilla-extract/css';
+import { m, mPercent } from 'css-calipers';
+
+import { colorVars, themeColours } from '../../tokens/global.tokens';
+import { curlVars } from '../componentTokens/pageCurl.component.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
-import { m, mPercent } from 'css-calipers';
-import { absolutePosition } from '../helpers/positioning.helper';
-import { curlVars } from '../componentTokens/pageCurl.component.tokens';
+import { color } from '../helpers/colorWrap.helper';
 import {
   buildRadial,
   gradientAsBgImg,
   maskByLinearGradient,
 } from '../helpers/gradients.helper';
-import { color } from '../helpers/colorWrap.helper';
 import { outlines } from '../helpers/outlines.helper';
-import { colorVars, themeColours } from '../../tokens/global.tokens';
+import { absolutePosition } from '../helpers/positioning.helper';
 import { globalComponentMediaQueryStyle } from '../responsive/mediaQueries';
 
 // Match gradient in footer

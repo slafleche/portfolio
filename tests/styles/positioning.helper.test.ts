@@ -1,4 +1,6 @@
+import { m } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
+
 import {
   absolutePosition,
   flexMiddle,
@@ -6,7 +8,6 @@ import {
   fullSizeOfParent,
   inheritHeight,
 } from '@/styles/helpers/positioning.helper';
-import { m } from 'css-calipers';
 
 describe('positioning.helper', () => {
   it('builds absolute corner helpers with measurement defaults', () => {

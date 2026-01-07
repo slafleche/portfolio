@@ -1,6 +1,7 @@
+import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
+
 import { notRelease } from './envPrimitives.mjs';
 
 const __filename = fileURLToPath(import.meta.url);

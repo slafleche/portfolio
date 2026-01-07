@@ -1,4 +1,4 @@
-import { keyframes, style, globalStyle } from '@vanilla-extract/css';
+import { globalStyle,keyframes, style } from '@vanilla-extract/css';
 
 export const core = style({
   width: '85%',

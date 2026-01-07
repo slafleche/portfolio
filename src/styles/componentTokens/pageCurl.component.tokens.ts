@@ -1,6 +1,7 @@
 import { m } from 'css-calipers';
-import { footerGradientConfig } from './footer.component.tokens';
+
 import { colorVars } from '../../tokens/global.tokens';
+import { footerGradientConfig } from './footer.component.tokens';
 
 export const curlVars = {
   width: m(350),

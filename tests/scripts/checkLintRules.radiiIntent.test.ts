@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { scanBordersRadiiIntent } from '../../scripts/checkLintRules.mjs';
 
 describe('checkLintRules radii intent rule', () => {

@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 import { execSync } from 'node:child_process';
-import { readFileSync, existsSync } from 'node:fs';
+import { existsSync,readFileSync } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import { findMeasurementAliasViolations } from './measurementAliasesCheck.mjs';
+
 import {
   DEBUG_TOKEN_WHITELISTS,
   LINT_FILE_IGNORE_SUBSTRINGS,
-  STYLE_RULE_SKIP_PATHS,
   STYLE_LITERAL_RESETS,
+  STYLE_RULE_SKIP_PATHS,
 } from './lint/debugTokens.config.mjs';
+import { findMeasurementAliasViolations } from './measurementAliasesCheck.mjs';
 
 const ROOT = path.resolve(process.cwd());
 

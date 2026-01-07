@@ -1,8 +1,9 @@
+import { m, mPercent } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
+
 import backdropFilters, {
   backdropFilterValue,
 } from '@/styles/helpers/backdropFilter.helper';
-import { m, mPercent } from 'css-calipers';
 
 describe('backdropFilter.helper', () => {
   it('builds filter strings from multiple intents', () => {

@@ -1,9 +1,10 @@
+import { m } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
+
 import {
   queriesToStrings,
   toQueryString,
 } from '@/styles/responsive/mediaFactory';
-import { m } from 'css-calipers';
 
 describe('mediaFactory', () => {
   it('creates valid media query strings', () => {

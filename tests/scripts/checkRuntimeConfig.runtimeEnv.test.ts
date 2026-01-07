@@ -1,19 +1,21 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import {
   describe,
   expect,
   it,
 } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-import { readFileSync } from 'node:fs';
+
 import { scanRuntimeEnvUsage } from '../../scripts/checkRuntimeConfig.mjs';
 import {
   BRANCH_ENV_BARE_SNIPPET,
   BRANCH_ENV_DIRECT_SNIPPET,
   NODE_ENV_DIRECT_SNIPPET,
   NODE_ENV_VARIANTS_SNIPPET,
-  PRIVATE_LAUNCH_ENV_SNIPPET,
   PRIVATE_LAUNCH_CONSOLE_LOG_SNIPPET,
+  PRIVATE_LAUNCH_ENV_SNIPPET,
   VERCEL_ENV_DIRECT_SNIPPET,
   VERCEL_ENV_VARIANTS_SNIPPET,
 } from './runtimeEnvScannerFixtures';

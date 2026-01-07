@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
+
 import {
   normalizeInput,
   validateDraft,
 } from '@/modules/contactForm/validation';
 import {
-  MESSAGE_URL_LIMIT,
   MESSAGE_MAX_LENGTH,
+  MESSAGE_URL_LIMIT,
 } from '@/modules/contactForm/validation.constants';
 
 const baseInput = {

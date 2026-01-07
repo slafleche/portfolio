@@ -1,7 +1,8 @@
 import { style } from '@vanilla-extract/css';
-import { makeCardGradient } from '../helpers/cardGradient.helper';
-import { systemsHeroGradient } from '../componentTokens/systems.component.tokens';
 import { m } from 'css-calipers';
+
+import { systemsHeroGradient } from '../componentTokens/systems.component.tokens';
+import { makeCardGradient } from '../helpers/cardGradient.helper';
 
 export const heroOverlay = style({
   position: 'relative',

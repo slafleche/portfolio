@@ -1,7 +1,9 @@
-import { describe, expect, it } from 'vitest';
 import { m, mPercent } from 'css-calipers';
+import { describe, expect, it } from 'vitest';
+
 import { color } from '@/styles/helpers/colorWrap.helper';
 import { colorVars } from '@/tokens/global.tokens';
+
 import borders from '../../src/styles/helpers/borders.helper';
 
 describe('borders.helper', () => {

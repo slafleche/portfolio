@@ -1,10 +1,12 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import yaml from 'yaml';
+
+import ariaIdRefHelperRule from './ariaIdRefHelperRule.mjs';
 import forbiddenPropertyRule from './forbiddenPropertyRule.mjs';
 import preferMeasurementShorthandRule from './preferMeasurementShorthandRule.mjs';
-import ariaIdRefHelperRule from './ariaIdRefHelperRule.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
