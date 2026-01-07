@@ -1,7 +1,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { NextResponse } from 'next/server';
+
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+
 import {
   getManifestTarget,
   type ManifestTarget,

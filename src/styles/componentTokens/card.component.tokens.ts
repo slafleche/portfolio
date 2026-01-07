@@ -1,7 +1,7 @@
 import { m } from 'css-calipers';
 
 // layout
-const logoContainerMinWidth = m(300);
+const logoContainerMinWidth = m(200);
 
 export const cardLayout = {
   grid: {

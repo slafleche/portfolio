@@ -1,5 +1,6 @@
-import type { SVGProps } from 'react';
 import clsx from 'clsx';
+import type { SVGProps } from 'react';
+
 import { wordMark_ea } from '../../styles/components/card.css';
 import wordMarkMeta from '../../styles/helpers/wordmark.helper';
 

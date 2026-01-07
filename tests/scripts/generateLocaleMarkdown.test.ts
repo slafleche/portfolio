@@ -1,7 +1,9 @@
-import { describe, expect, it, afterAll } from 'vitest';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+
+import { afterAll,describe, expect, it } from 'vitest';
+
 import {
   buildFileContents,
   readMarkdownFiles,

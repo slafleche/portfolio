@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
-import * as s from '@/styles/components/anchorMenu.css.ts';
 import clsx from 'clsx';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+
 import { useSafeId } from '@/lib/dom';
-import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import { shouldHideAnchors } from '@/lib/responsive/anchorMenuMeasurements';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
+import * as s from '@/styles/components/anchorMenu.css.ts';
 
 export type AnchorLink = {
   title: string;

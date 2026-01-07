@@ -1,5 +1,7 @@
 import { m, mPercent } from 'css-calipers';
+
 import { defineFontVariant } from '@/styles/helpers/fontVariant.helper';
+
 import { fontFamilies } from './fontFamilies.test.tokens';
 
 export const typographyFontVariants = {

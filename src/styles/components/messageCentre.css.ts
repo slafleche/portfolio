@@ -1,5 +1,6 @@
-import { style, type ComplexStyleRule } from '@vanilla-extract/css';
+import { type ComplexStyleRule,style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
+
 import { formTokens } from '../../tokens/forms.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import { colorVars } from '../../tokens/global.tokens';

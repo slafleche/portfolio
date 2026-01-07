@@ -1,21 +1,22 @@
-import React from 'react';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
+import React from 'react';
+import { afterEach,beforeEach, describe, expect, it } from 'vitest';
+
 import { ContactDialogProvider } from '@/components/contact/ContactDialogProvider';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import {
   buildContactFormCopy,
-  FORM_ERROR_KEYS,
   type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
-import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
-import {
-  enData,
-  type EnData,
-} from '@/lib/locales/translations/en.data';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
+import {
+  type EnData,
+  enData,
+} from '@/lib/locales/translations/en.data';
+import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { sharedStrings } from '@/lib/sharedStrings';
+
 import { installTestEnv } from '../helpers/testEnvVars';
 
 const buildFormCopy = () =>

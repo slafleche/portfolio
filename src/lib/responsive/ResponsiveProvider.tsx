@@ -2,12 +2,13 @@
 
 import {
   createContext,
+  type PropsWithChildren,
   useContext,
   useMemo,
-  type PropsWithChildren,
 } from 'react';
-import { useMedia } from '../../styles/responsive';
+
 import type { IMode } from '../../styles/responsive';
+import { useMedia } from '../../styles/responsive';
 
 export type ResponsiveState = {
   fullSize?: boolean;

@@ -1,27 +1,14 @@
-import Hero from '@/components/Hero';
-import ContentWithTitle from '@/components/responsive/ContentWithTitle';
-import CaseStudy from '@/components/CaseStudy';
-import { Grid, Column } from '@/components/Grid';
+import { clsx } from 'clsx';
+
 import Card from '@/components/Card';
-import { Markdown } from '@/components/Markdown';
-import Footer from '@/components/Footer';
-import ContactButton from '@/components/ContactButton';
+import CaseStudy from '@/components/CaseStudy';
 import ConsoleCuriosity from '@/components/ConsoleCuriosity';
-import * as layoutStyles from '@/styles/layout.css';
-import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
-import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
-import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale';
-import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
-import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
-import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
-import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
-import * as cg from '@/styles/components/card.css';
-import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
-import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
-import { sharedStrings } from '@/lib/sharedStrings';
-import { resolveLocale } from '@/lib/locales/locale';
-import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
+import ContactButton from '@/components/ContactButton';
+import Footer from '@/components/Footer';
+import { Column,Grid } from '@/components/Grid';
+import Hero from '@/components/Hero';
+import { Markdown } from '@/components/Markdown';
+import ContentWithTitle from '@/components/responsive/ContentWithTitle';
 import WordMarkInTitle from '@/components/WordmarkInTitle';
 import {
   BQWordmark,
@@ -30,9 +17,24 @@ import {
   HSWordmark,
   KGWordmark,
 } from '@/components/wordmarks/wordmarks.tsx';
-import Menu from '../../../src/components/Menu';
-import { clsx } from 'clsx';
+import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+import { resolveLocale } from '@/lib/locales/locale';
+import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale';
+import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
+import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
+import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
+import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
+import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
+import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
+import { buildSystemsLink } from '@/lib/routes/systemsLink';
+import { sharedStrings } from '@/lib/sharedStrings';
+import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
+import * as cg from '@/styles/components/card.css';
+import * as layoutStyles from '@/styles/layout.css';
+
 import HeroGooey from '../../../src/components/HeroGooey';
+import Menu from '../../../src/components/Menu';
 
 interface PageParams {
   LOCALE: string;

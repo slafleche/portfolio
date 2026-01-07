@@ -1,7 +1,8 @@
-import type { ReactNode } from 'react';
 import clsx from 'clsx';
-import * as s from '@/styles/components/forms.css';
+import type { ReactNode } from 'react';
+
 import { notRelease } from '@/lib/runtimeEnv';
+import * as s from '@/styles/components/forms.css';
 
 type FormLabelProps = {
   className?: string;

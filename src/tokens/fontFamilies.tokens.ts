@@ -1,8 +1,9 @@
-import type { FontFamilyDef } from '../styles/helpers/types.helper';
 import { m, mRem } from 'css-calipers';
+
 import fontsConfig, {
   defineFontFamily,
 } from '../styles/helpers/fontConfig.helper';
+import type { FontFamilyDef } from '../styles/helpers/types.helper';
 
 export const fontFamilies = {
   system: defineFontFamily({

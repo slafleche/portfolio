@@ -1,6 +1,6 @@
 import {
-  NAME_LIMIT,
   MESSAGE_MAX_LENGTH,
+  NAME_LIMIT,
 } from '@/modules/contactForm/validation.constants';
 
 export type ContactFormScenarioConfig = {

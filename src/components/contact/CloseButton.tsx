@@ -1,5 +1,6 @@
-import { forwardRef } from 'react';
 import type { ComponentPropsWithoutRef } from 'react';
+import { forwardRef } from 'react';
+
 import CloseIcon from '@/components/icons/CloseIcon';
 
 type BaseProps = {

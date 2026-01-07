@@ -1,4 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+
 import { isLocaleRichText } from '@/lib/stringUtils';
 
 export interface IHeadingDepth {

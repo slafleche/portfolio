@@ -1,11 +1,12 @@
+import { m } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
+
 import {
   asFontsConfig,
   defineFontFamily,
   type FontsConfig,
   weightRangeFromConfig,
 } from '@/styles/helpers/fontConfig.helper';
-import { m } from 'css-calipers';
 
 const sampleConfig: FontsConfig = {
   'Sample Family': {

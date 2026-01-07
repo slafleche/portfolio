@@ -1,7 +1,7 @@
-import { markdownRefs } from './markdownRefs';
 import { enAbbreviations } from './abbreviations/en.abbr';
 import { enCaseStudies } from './caseStudies/en.caseStudies';
 import { enFormCopy } from './forms/en.form';
+import { markdownRefs } from './markdownRefs';
 import { mergeLocaleSections } from './mergeLocaleSections';
 
 const enBaseData = {

@@ -1,6 +1,7 @@
 import { m, mPercent } from 'css-calipers';
-import { colorVars } from './global.tokens';
+
 import type { ITextShadow } from '../styles/helpers/shadow.helper';
+import { colorVars } from './global.tokens';
 
 const logoWidth = m(48);
 const offsetY = m(12);

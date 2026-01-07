@@ -1,19 +1,21 @@
 'use client';
 
+import clsx from 'clsx';
 import Link from 'next/link';
+import { useMemo } from 'react';
+
+import type { Locale } from '@/data/locales';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
+import {
+  type AnchorTarget,
+  useActiveAnchors,
+} from '@/lib/useActiveAnchors';
+import * as s from '@/styles/components/menu.css.ts';
+
+import { surface } from '../styles/glassy.css';
+import AnchorMenu from './AnchorMenu';
 import Logo from './Logo';
 import { SkipNavLink } from './SkipNavLink';
-import type { Locale } from '@/data/locales';
-import AnchorMenu from './AnchorMenu';
-import * as s from '@/styles/components/menu.css.ts';
-import clsx from 'clsx';
-import { useMemo } from 'react';
-import {
-  useActiveAnchors,
-  type AnchorTarget,
-} from '@/lib/useActiveAnchors';
-import { surface } from '../styles/glassy.css';
-import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 
 type LocaleLink = {
   locale: Locale;

@@ -1,6 +1,8 @@
-import path from 'node:path';
 import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+
 import { type ComponentProps } from 'react';
+
 import ProjectorPathDebug from '@/components/debug/ProjectorPathDebug';
 import { projectorVars } from '@/styles/componentTokens/projector.component.tokens';
 import { fontFamilies } from '@/tokens/fontFamilies.tokens';

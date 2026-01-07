@@ -1,23 +1,24 @@
 import {
+  type DegMeasurement,
+  type IMeasurement,
+  m,
+  mPercent,
+  type PercentMeasurement,
+} from 'css-calipers';
+import type { Property } from 'csstype';
+
+import { clamp } from '../../components/menu/menuUtils';
+import {
   color,
   colorFallback,
   colorModern,
   type ColorWrapper,
 } from './colorWrap.helper';
 import {
-  m,
-  type IMeasurement,
-  type DegMeasurement,
-  mPercent,
-  type PercentMeasurement,
-} from 'css-calipers';
-import {
   buildCurve,
   easing,
   type EasingFunction,
 } from './easingCurves.helper';
-import { clamp } from '../../components/menu/menuUtils';
-import type { Property } from 'csstype';
 
 export type Stop = {
   color: ColorWrapper;

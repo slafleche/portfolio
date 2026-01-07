@@ -1,13 +1,14 @@
-import type { FormErrorKey } from '@/lib/locales/sections/form.locale';
 import type { FormStatusKey } from '@/lib/locales/form/form.status';
+import type { FormErrorKey } from '@/lib/locales/sections/form.locale';
+
 import {
-  NAME_LIMIT,
   EMAIL_MAX_LENGTH,
   EMAIL_PATTERN,
-  URL_PATTERN,
-  MESSAGE_URL_LIMIT,
-  MESSAGE_MIN_LENGTH,
   MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
+  MESSAGE_URL_LIMIT,
+  NAME_LIMIT,
+  URL_PATTERN,
 } from './validation.constants';
 
 export type RawContactFormInput = {

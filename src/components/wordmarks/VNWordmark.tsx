@@ -1,7 +1,8 @@
-import type { SVGProps } from 'react';
 import clsx from 'clsx';
-import { wordMark_vanilla } from '../../styles/components/card.css';
 import { r } from 'css-calipers';
+import type { SVGProps } from 'react';
+
+import { wordMark_vanilla } from '../../styles/components/card.css';
 
 const LABEL = 'Vanilla';
 export const ratioVN = r(78.54572, 31.72025);

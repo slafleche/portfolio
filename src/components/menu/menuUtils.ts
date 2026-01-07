@@ -1,7 +1,9 @@
 import { assertUnit } from 'css-calipers';
-import { archVars } from '../../tokens/global.tokens';
-import { menuVars } from '../../styles/componentTokens/menu.component.tokens';
+
 import { notRelease } from '@/lib/runtimeEnv';
+
+import { menuVars } from '../../styles/componentTokens/menu.component.tokens';
+import { archVars } from '../../tokens/global.tokens';
 
 if (notRelease()) {
   assertUnit(menuVars.height, 'px', 'menuUtils menu height');

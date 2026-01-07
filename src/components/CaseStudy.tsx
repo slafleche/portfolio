@@ -1,11 +1,13 @@
 'use client';
 
 import { useMemo } from 'react';
-import type { CaseStudyListItem } from '@/lib/locales/sections/caseStudies.locale';
+
 import { Accordion } from '@/components/Accordion';
-import { createDomId } from '@/lib/dom';
 import { Markdown } from '@/components/Markdown';
+import { createDomId } from '@/lib/dom';
+import type { CaseStudyListItem } from '@/lib/locales/sections/caseStudies.locale';
 import * as s from '@/styles/components/accordion.css';
+
 import Content from './responsive/Content';
 import WordMarkInTitle from './WordmarkInTitle';
 import VNWordmark from './wordmarks/VNWordmark';

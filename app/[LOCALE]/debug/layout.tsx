@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+
 import { backgrounds } from '@/styles/helpers/background.helper';
 
 export default function DebugLayout({

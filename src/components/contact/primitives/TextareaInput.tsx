@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+import type { ComponentPropsWithoutRef } from 'react';
 import {
   forwardRef,
   useCallback,
@@ -5,10 +7,9 @@ import {
   useLayoutEffect,
   useRef,
 } from 'react';
-import type { ComponentPropsWithoutRef } from 'react';
-import clsx from 'clsx';
-import * as s from '@/styles/components/forms.css';
+
 import { notRelease } from '@/lib/runtimeEnv';
+import * as s from '@/styles/components/forms.css';
 
 type AutoResizeHandlers = {
   onInit: (node: HTMLTextAreaElement) => void;

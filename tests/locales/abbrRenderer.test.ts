@@ -1,8 +1,10 @@
-import { describe, expect, it, beforeEach, afterEach } from 'vitest';
 import type { RendererThis, TokenizerThis, TokensList } from 'marked';
-import { createAbbrShortcodeExtension } from '@/lib/markdown/abbrShortcode';
+import { afterEach,beforeEach, describe, expect, it } from 'vitest';
+
 import { renderAbbreviation } from '@/lib/locales/translations/abbrRenderer';
+import { createAbbrShortcodeExtension } from '@/lib/markdown/abbrShortcode';
 import { abbrSlug } from '@/lib/stringUtils';
+
 import { installTestEnv } from '../helpers/testEnvVars';
 
 const lookup = (slug: string) =>

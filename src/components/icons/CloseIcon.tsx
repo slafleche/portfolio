@@ -1,5 +1,6 @@
-import type { SVGProps } from 'react';
 import clsx from 'clsx';
+import type { SVGProps } from 'react';
+
 import * as s from '@/styles/components/closeIcon.css';
 
 type CloseIconProps = SVGProps<SVGSVGElement> & {

@@ -1,6 +1,8 @@
-import type { ReactNode } from 'react';
 import clsx from 'clsx';
+import type { ReactNode } from 'react';
+
 import * as s from '@/styles/components/tiles.css.ts';
+
 import Heading from './Heading';
 
 type TileProps = {

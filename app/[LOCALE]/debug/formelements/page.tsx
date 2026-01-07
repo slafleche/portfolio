@@ -1,7 +1,8 @@
 'use client';
 
 import { m } from 'css-calipers';
-import { paddings, margins } from '@/styles/helpers/spacing.helper';
+
+import { margins,paddings } from '@/styles/helpers/spacing.helper';
 
 // Debug sandbox: inline every bit of styling so we don't share space with "real" styles.
 // No shared CSS, no production polish—just enough layout to preview primitives in isolation.

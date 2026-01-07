@@ -1,11 +1,12 @@
-import { renderBlockWithFormBlocks } from './formBlocks.harness';
-import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
 import type { EmailBlockProps } from '@/components/contact/blocks/EmailBlock';
+import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
+import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
 import type {
   ContactFormBlockContract,
   ContactFormBlockValidationResult,
 } from '@/components/contact/types/form.types';
-import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
+
+import { renderBlockWithFormBlocks } from './formBlocks.harness';
 
 type EmailBlockHarnessResult = ReturnType<
   typeof renderBlockWithFormBlocks<EmailBlockProps>

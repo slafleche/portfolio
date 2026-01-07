@@ -2,6 +2,7 @@ import { ESLint } from 'eslint';
 import unusedImports from 'eslint-plugin-unused-imports';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import { notHosted } from '../src/lib/runtimeEnv';
+import tsParser from '@typescript-eslint/parser';
 
 const inputs = process.argv.slice(2);
 const targets = inputs.length > 0 ? inputs : ['.'];
@@ -24,6 +25,16 @@ const eslint = new ESLint({
       plugins: {
         'unused-imports': unusedImports,
         'simple-import-sort': simpleImportSort,
+      },
+      languageOptions: {
+        parser: tsParser,
+        parserOptions: {
+          ecmaVersion: 'latest',
+          sourceType: 'module',
+          ecmaFeatures: {
+            jsx: true,
+          },
+        },
       },
       rules: {
         'unused-imports/no-unused-imports': 'error',

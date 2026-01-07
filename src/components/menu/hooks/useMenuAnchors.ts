@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { BASE_ANCHORS, type AnchorEntry } from '../menuUtils';
+
+import { type AnchorEntry,BASE_ANCHORS } from '../menuUtils';
 
 export function useMenuAnchors(sectionIds: readonly string[]) {
   const sectionIdList = useMemo(

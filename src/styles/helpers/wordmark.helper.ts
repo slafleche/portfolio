@@ -1,8 +1,9 @@
-import { m, type IMeasurement, type IRatio } from 'css-calipers';
+import { type IMeasurement, type IRatio, m } from 'css-calipers';
+
 import { wordMarkVars } from '../../tokens/wordmarks.tokens';
 
 // const spacingNorthMultiplier = 0.8;
-const spacingNorth = m(20);
+const spacingNorth = m(10);
 const spacingSouthMultiplier = 1;
 
 const getViewBox = (ratio: IRatio) => {
@@ -24,10 +25,7 @@ const banqHeight = getHeightFromWidthAndRatio(
   wordMarkVars.banq.ratio,
 );
 
-const ccHeight = getHeightFromWidthAndRatio(
-  wordMarkVars.cc.size,
-  wordMarkVars.cc.ratio,
-);
+const ccHeight = wordMarkVars.cc.size; // exception
 
 const eaHeight = getHeightFromWidthAndRatio(
   wordMarkVars.ea.size,

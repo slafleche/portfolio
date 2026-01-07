@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'vitest';
 import type { StyleRule } from '@vanilla-extract/css';
+import { describe, expect, it } from 'vitest';
+
 import {
-  globalMediaQueryStyle,
   globalComponentMediaQueryStyle,
+  globalMediaQueryStyle,
 } from '@/styles/responsive/mediaQueries';
 
 const findQueryKey = (styles: StyleRule) => {

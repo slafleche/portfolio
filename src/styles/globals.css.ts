@@ -1,22 +1,24 @@
+import './utilities.css';
+
 import { globalStyle } from '@vanilla-extract/css';
-import { m, mEm, mPercent } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
+
 import { documentSurface } from '../modules/globals/document.module';
+import { typographyFontVariants } from '../tokens/fontVariants/typography';
+import { themeColours } from '../tokens/global.tokens';
+import { anchorMenuVars } from '../tokens/menu.tokens';
+import { textStyleVars } from '../tokens/textStyles.tokens';
 import {
   ReducedMotion,
   reducedMotion,
 } from './helpers/accessibility.helper';
-import { margins, paddings } from './helpers/spacing.helper';
 import borders from './helpers/borders.helper';
-import './utilities.css';
 import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
-import { typographyFontVariants } from '../tokens/fontVariants/typography';
 import {
   buildLinear,
   gradientAsBgImg,
 } from './helpers/gradients.helper';
-import { themeColours } from '../tokens/global.tokens';
-import { textStyleVars } from '../tokens/textStyles.tokens';
-import { anchorMenuVars } from '../tokens/menu.tokens';
+import { margins, paddings } from './helpers/spacing.helper';
 
 const {
   palette: {

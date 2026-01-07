@@ -1,6 +1,7 @@
 import { m } from 'css-calipers';
-import { colorVars } from './global.tokens';
+
 import { glassyButtonTokens } from './glassy.tokens';
+import { colorVars } from './global.tokens';
 import { layoutVars } from './layout.tokens';
 
 const horizontalPadding = m(24);

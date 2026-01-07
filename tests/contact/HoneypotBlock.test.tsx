@@ -1,11 +1,13 @@
-import React from 'react';
-import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FocusSentinelWrapper } from './components/FocusSentinelWrapper';
+import React from 'react';
+import { describe, expect,it } from 'vitest';
+
 import { HoneypotBlock } from '@/components/contact/blocks/HoneypotBlock';
 import type { HoneypotBlockLocale } from '@/lib/locales/form/form.honeypot';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
+
+import { FocusSentinelWrapper } from './components/FocusSentinelWrapper';
 
 const copy: HoneypotBlockLocale = {
   label: enFormCopy['form-honeypot-label'],

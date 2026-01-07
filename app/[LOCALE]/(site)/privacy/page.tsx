@@ -1,16 +1,17 @@
-import Footer from '@/components/Footer';
+import Link from 'next/link';
+
 import ContactButton from '@/components/ContactButton';
+import Footer from '@/components/Footer';
 import { Markdown } from '@/components/Markdown';
-import * as layoutStyles from '@/styles/layout.css';
-import * as privacyStyles from '@/styles/components/privacy.css';
-import { userContent } from '@/styles/typography.css';
-import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
+import { SkipNavLink } from '@/components/SkipNavLink';
+import { resolveLocale } from '@/lib/locales/locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
+import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import Link from 'next/link';
-import { resolveLocale } from '@/lib/locales/locale';
-import { SkipNavLink } from '@/components/SkipNavLink';
+import * as privacyStyles from '@/styles/components/privacy.css';
+import * as layoutStyles from '@/styles/layout.css';
+import { userContent } from '@/styles/typography.css';
 
 type PrivacyPageParams = Promise<{ LOCALE: string }>;
 

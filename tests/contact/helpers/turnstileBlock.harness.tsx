@@ -1,11 +1,12 @@
-import { renderBlockWithFormBlocks } from './formBlocks.harness';
-import { TurnstileBlock } from '@/components/contact/blocks/TurnstileBlock';
 import type { TurnstileBlockProps } from '@/components/contact/blocks/TurnstileBlock';
+import { TurnstileBlock } from '@/components/contact/blocks/TurnstileBlock';
+import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
 import type {
   ContactFormBlockContract,
   ContactFormBlockValidationResult,
 } from '@/components/contact/types/form.types';
-import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
+
+import { renderBlockWithFormBlocks } from './formBlocks.harness';
 
 type TurnstileBlockHarnessResult = ReturnType<
   typeof renderBlockWithFormBlocks<TurnstileBlockProps>

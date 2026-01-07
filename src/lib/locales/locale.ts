@@ -1,14 +1,15 @@
 import {
   AVAILABLE_LOCALES,
-  LOCALE_LOADERS,
   type Locale,
+  LOCALE_LOADERS,
   type Messages,
 } from '@/lib/locales/translations';
-import {
-  MARKDOWN_MESSAGE_KEYS,
-  type LocaleMessagesShape,
-} from './localeTypes';
 import { notRelease } from '@/lib/runtimeEnv';
+
+import {
+  type LocaleMessagesShape,
+  MARKDOWN_MESSAGE_KEYS,
+} from './localeTypes';
 
 export const DEFAULT_LOCALE: Locale = 'en';
 

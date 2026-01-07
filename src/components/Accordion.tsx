@@ -1,14 +1,15 @@
 'use client';
 
-import { useMemo } from 'react';
-import type { ReactNode } from 'react';
 import * as AccordionPrimitive from '@radix-ui/react-accordion';
 import clsx from 'clsx';
+import type { ReactNode } from 'react';
+import { useMemo } from 'react';
 
-import { createDomId } from '@/lib/dom';
 import ChevronDown from '@/components/icons/ChevronDown';
-import * as s from '@/styles/components/accordion.css';
+import { createDomId } from '@/lib/dom';
 import { isLocaleRichText } from '@/lib/stringUtils';
+import * as s from '@/styles/components/accordion.css';
+
 import RightArrow from './icons/RightArrow';
 
 type AccordionItemData = {

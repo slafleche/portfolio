@@ -1,11 +1,13 @@
+import type { GlobalStyleRule } from '@vanilla-extract/css';
+import { hasCssMethod } from 'css-calipers';
+
+import type { ImageEntry } from '@/lib/images';
 import type {
   CSS_TYPES,
   CssLike,
 } from '@/styles/helpers/types.helper';
-import type { GlobalStyleRule } from '@vanilla-extract/css';
-import type { ImageEntry } from '@/lib/images';
+
 import type { ColorWrapper } from './colorWrap.helper';
-import { hasCssMethod } from 'css-calipers';
 import { margins } from './spacing.helper';
 
 export interface IBackgrounds {

@@ -1,26 +1,28 @@
 'use client';
 
+import clsx from 'clsx';
 import {
   Children,
+  type CSSProperties,
+  type ReactElement,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
-  type ReactElement,
-  type ReactNode,
 } from 'react';
-import clsx from 'clsx';
+
+import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
+import { collectWaitForFonts,waitForFonts } from '@/lib/fontLoading';
+import { playProjectorText } from '@/lib/projectorText';
 import * as heroStyles from '@/styles/components/hero.css';
 import * as revealStyles from '@/styles/components/heroText.css';
-import { playProjectorText } from '@/lib/projectorText';
-import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
-import { waitForFonts, collectWaitForFonts } from '@/lib/fontLoading';
+
 import { heroVars } from '../styles/componentTokens/hero.component.tokens';
 import {
-  projectorVars,
   type ProjectorChannel,
+  projectorVars,
 } from '../styles/componentTokens/projector.component.tokens';
 import { heroFontVariants } from '../tokens/fontVariants/hero';
 

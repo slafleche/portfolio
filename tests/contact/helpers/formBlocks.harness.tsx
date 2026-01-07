@@ -1,17 +1,19 @@
-import React, {
-  type ReactElement,
-  type ReactNode,
-  type ComponentType,
-  useEffect,
-} from 'react';
 import {
+  act,
   render,
   type RenderResult,
-  act,
 } from '@testing-library/react';
-import { FocusSentinelWrapper } from '../components/FocusSentinelWrapper';
-import * as formBlocksModule from '@/components/contact/formBlocks.context';
+import React, {
+  type ComponentType,
+  type ReactElement,
+  type ReactNode,
+  useEffect,
+} from 'react';
+
 import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
+import * as formBlocksModule from '@/components/contact/formBlocks.context';
+
+import { FocusSentinelWrapper } from '../components/FocusSentinelWrapper';
 
 type RenderBlockOptions = {
   wrapWithFocusSentinels?: boolean;

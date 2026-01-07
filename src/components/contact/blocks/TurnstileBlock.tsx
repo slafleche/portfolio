@@ -1,20 +1,22 @@
+import clsx from 'clsx';
 import {
+  type MouseEventHandler,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type MouseEventHandler,
 } from 'react';
-import clsx from 'clsx';
-import * as s from '@/styles/components/forms.css';
-import { useFormBlock } from '../formBlocks.context';
+
 import { FormHint } from '@/components/contact/primitives/FormHint';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
+import * as s from '@/styles/components/forms.css';
+
+import { useFormBlock } from '../formBlocks.context';
 import type {
   ContactFormBlockBaseProps,
-  ContactFormBlockValidationResult,
   ContactFormBlockContract,
   ContactFormBlockPayload,
+  ContactFormBlockValidationResult,
 } from '../types/form.types';
 
 export type TurnstileBlockProps = Omit<

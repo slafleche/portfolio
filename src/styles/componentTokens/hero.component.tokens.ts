@@ -1,5 +1,6 @@
-import { color } from '../helpers/colorWrap.helper';
 import { m, mPercent } from 'css-calipers';
+
+import { color } from '../helpers/colorWrap.helper';
 import type { Stop } from '../helpers/gradients.helper';
 
 export const heroVars = {

@@ -1,10 +1,12 @@
-import { forwardRef, useId } from 'react';
-import type { ChangeEventHandler, FocusEventHandler } from 'react';
 import clsx from 'clsx';
-import { FormLabel } from '@/components/contact/primitives/FormLabel';
+import type { ChangeEventHandler, FocusEventHandler } from 'react';
+import { forwardRef, useId } from 'react';
+
 import { FormHint } from '@/components/contact/primitives/FormHint';
+import { FormLabel } from '@/components/contact/primitives/FormLabel';
 import { TextInput } from '@/components/contact/primitives/TextInput';
 import * as s from '@/styles/components/forms.css';
+
 import type { ContactFormBlockBaseProps } from '../types/form.types';
 
 type BaseProps = Omit<ContactFormBlockBaseProps, 'order'> & {

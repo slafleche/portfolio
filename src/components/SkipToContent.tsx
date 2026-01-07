@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
-import SkipToContentClient from './SkipToContent.client';
-import ChevronDown from './icons/ChevronDown';
+
 import * as chevronStyles from '@/styles/components/chevrons.css';
+
+import ChevronDown from './icons/ChevronDown';
+import SkipToContentClient from './SkipToContent.client';
 
 type Props = {
   className?: string;

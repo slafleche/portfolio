@@ -1,5 +1,7 @@
 import Link from 'next/link';
+
 import * as s from '@/styles/components/pageCurl.css';
+
 import ImageByName from './ImageByName';
 
 type PageCurlProps = {

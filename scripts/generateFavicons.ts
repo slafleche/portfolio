@@ -1,38 +1,40 @@
 #!/usr/bin/env node
-import fs from 'node:fs/promises';
-import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import crypto from 'node:crypto';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
 import sharp from 'sharp';
+
 import {
-  faviconTokens,
-  faviconAssetPlan,
-  faviconThemeColors,
-  faviconCacheTokens,
-  faviconOptions,
-  faviconAppConfig,
-  faviconFormatManifest,
-  type FaviconBackgroundVariant,
-} from '../src/tokens/favicon.tokens';
+  DEFAULT_LOCALE,
+  loadMessages,
+} from '../src/lib/locales/locale';
 import {
-  writeHashedFile,
-  type HashedWriteResult,
-} from './lib/cacheBusting';
+  buildFaviconMetaBundle,
+  type FaviconMetaBundle,
+} from '../src/lib/locales/sections/favicons.locale';
+import { createSectionTranslator } from '../src/lib/locales/sections/helpers.locale';
 import {
   AVAILABLE_LOCALES,
   type Locale,
   type Messages,
 } from '../src/lib/locales/translations/index';
-import {
-  DEFAULT_LOCALE,
-  loadMessages,
-} from '../src/lib/locales/locale';
-import { createSectionTranslator } from '../src/lib/locales/sections/helpers.locale';
-import {
-  buildFaviconMetaBundle,
-  type FaviconMetaBundle,
-} from '../src/lib/locales/sections/favicons.locale';
 import { notHosted, notRelease } from '../src/lib/runtimeEnv';
+import {
+  faviconAppConfig,
+  faviconAssetPlan,
+  type FaviconBackgroundVariant,
+  faviconCacheTokens,
+  faviconFormatManifest,
+  faviconOptions,
+  faviconThemeColors,
+  faviconTokens,
+} from '../src/tokens/favicon.tokens';
+import {
+  type HashedWriteResult,
+  writeHashedFile,
+} from './lib/cacheBusting';
 
 const OUT_ROOT = path.resolve('public', 'favicons');
 const TEMP_ROOT = path.resolve('tmp', 'favicons.gen');

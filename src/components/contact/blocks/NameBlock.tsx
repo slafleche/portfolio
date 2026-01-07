@@ -1,18 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEventHandler } from 'react';
-import { TextInputBlock } from './TextInputBlock';
-import { useFormBlock } from '../formBlocks.context';
-import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
-import { evaluateNameField } from '@/modules/contactForm/validation';
-import type { NameValidationReason } from '@/modules/contactForm/validation';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import type { NameBlockLocale } from '@/lib/locales/form/form.name';
+import type { NameValidationReason } from '@/modules/contactForm/validation';
+import { evaluateNameField } from '@/modules/contactForm/validation';
+import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
+
+import { useFormBlock } from '../formBlocks.context';
 import type {
   ContactFormBlockBaseProps,
-  ContactFormBlockValidationResult,
   ContactFormBlockContract,
-  ContactFormBlockPayload,
   ContactFormBlockInitialConfig,
+  ContactFormBlockPayload,
+  ContactFormBlockValidationResult,
 } from '../types/form.types';
+import { TextInputBlock } from './TextInputBlock';
 
 export type NameBlockProps = ContactFormBlockBaseProps & {
   copy: NameBlockLocale;

@@ -1,11 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import type { CSSProperties } from 'react';
 import { m, mPercent } from 'css-calipers';
-import { paddings, margins } from '@/styles/helpers/spacing.helper';
+import type { CSSProperties } from 'react';
+import { useMemo, useState } from 'react';
+
 import borders from '@/styles/helpers/borders.helper';
 import { boxShadow } from '@/styles/helpers/shadow.helper';
+import { margins,paddings } from '@/styles/helpers/spacing.helper';
 
 type BasicIcon = {
   src: string;

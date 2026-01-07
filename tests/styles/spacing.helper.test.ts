@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'vitest';
-import { paddings, margins } from '@/styles/helpers/spacing.helper';
 import { m } from 'css-calipers';
+import { describe, expect, it } from 'vitest';
+
+import { margins,paddings } from '@/styles/helpers/spacing.helper';
 
 describe('spacing.helper', () => {
   it('applies shared axis shortcuts', () => {

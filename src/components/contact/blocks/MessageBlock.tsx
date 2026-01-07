@@ -1,26 +1,28 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { TextareaInput } from '@/components/contact/primitives/TextareaInput';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
+
 import { FormHint } from '@/components/contact/primitives/FormHint';
 import { FormLabel } from '@/components/contact/primitives/FormLabel';
-import * as s from '@/styles/components/forms.css';
-import { useFormBlock } from '../formBlocks.context';
-import {
-  MESSAGE_URL_LIMIT,
-  MESSAGE_MIN_LENGTH,
-  MESSAGE_MAX_LENGTH,
-} from '@/modules/contactForm/validation.constants';
+import { TextareaInput } from '@/components/contact/primitives/TextareaInput';
+import type { MessageBlockLocale } from '@/lib/locales/form/form.message';
 import {
   evaluateMessageField,
   type MessageValidationReason,
 } from '@/modules/contactForm/validation';
-import type { MessageBlockLocale } from '@/lib/locales/form/form.message';
+import {
+  MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
+  MESSAGE_URL_LIMIT,
+} from '@/modules/contactForm/validation.constants';
+import * as s from '@/styles/components/forms.css';
+
+import { useFormBlock } from '../formBlocks.context';
 import type {
   ContactFormBlockBaseProps,
-  ContactFormBlockValidationResult,
   ContactFormBlockContract,
-  ContactFormBlockPayload,
   ContactFormBlockInitialConfig,
+  ContactFormBlockPayload,
+  ContactFormBlockValidationResult,
 } from '../types/form.types';
 
 

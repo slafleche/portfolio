@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
 import clsx from 'clsx';
+import type { ReactNode } from 'react';
+
 import * as s from '@/styles/components/forms.css';
 
 type FormHintTone = 'error' | 'helper';

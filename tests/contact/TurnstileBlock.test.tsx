@@ -1,21 +1,23 @@
+import { act, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import {
-  describe,
-  it,
-  expect,
-  beforeEach,
   afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
   vi,
 } from 'vitest';
-import { render, screen, act, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { renderTurnstileBlockWithFormBlocks } from './helpers/turnstileBlock.harness';
+
 import { TurnstileBlock } from '@/components/contact/blocks/TurnstileBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
+
 import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
 import { installTestEnv } from '../helpers/testEnvVars';
+import { renderTurnstileBlockWithFormBlocks } from './helpers/turnstileBlock.harness';
 
 type TurnstileApi = NonNullable<Window['turnstile']>;
 type TurnstileApiOptions = Parameters<TurnstileApi['render']>[1];

@@ -1,9 +1,10 @@
 // app/layout.tsx
 import '@/styles/globals.css';
-import type { ReactNode } from 'react';
+
 import { headers } from 'next/headers';
-import { resolveLocale } from '@/lib/locales/locale';
-import { GOOGLE_FONT_URLS } from '@/data/generated/fonts/googleFonts.gen';
+import type { ReactNode } from 'react';
+
+import debugRoutes from '@/data/debugRoutes.json';
 import {
   FAVICON_DEFAULT_WEB_MANIFEST,
   FAVICON_LINK_DESCRIPTORS_BY_LOCALE,
@@ -11,8 +12,10 @@ import {
   FAVICON_META_BUNDLES_BY_LOCALE,
   FAVICON_META_TAGS,
 } from '@/data/generated/favicons/manifest.favicons.gen';
+import { GOOGLE_FONT_URLS } from '@/data/generated/fonts/googleFonts.gen';
+import { resolveLocale } from '@/lib/locales/locale';
 import { type Locale } from '@/lib/locales/translations';
-import debugRoutes from '@/data/debugRoutes.json';
+
 import {
   isIndexingAllowed,
   isRelease,

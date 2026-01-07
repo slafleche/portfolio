@@ -1,5 +1,6 @@
-import { colorVars, themeColours } from '@/tokens/global.tokens';
 import { m } from 'css-calipers';
+
+import { colorVars, themeColours } from '@/tokens/global.tokens';
 
 // import { relativeFontWeight } from '../styles/helpers/typography.helper';
 // import { fontFamilies } from './fontFamilies.tokens';

@@ -1,7 +1,8 @@
+import { render } from '@testing-library/react';
 import React from 'react';
-import { describe, expect, it, beforeEach, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { FullwidthOnly, CompactOnly } from '@/styles/responsive';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { CompactOnly,FullwidthOnly } from '@/styles/responsive';
 
 const mockUseMediaQuery = vi.fn<(...args: unknown[]) => boolean>(
   () => true,

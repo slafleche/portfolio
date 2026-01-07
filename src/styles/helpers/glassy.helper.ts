@@ -1,10 +1,12 @@
-import { glassVars } from '@/tokens/glassy.tokens';
-import type { CSS_TYPES } from '@/styles/helpers/types.helper';
-import type { BackdropFilterIntent } from './backdropFilter.helper';
-import { noiseStyle, type NoiseSvgOptions } from './noiseSVG.helper';
-import { buildLinear } from './gradients.helper';
 import { m, mPercent } from 'css-calipers';
+
+import type { CSS_TYPES } from '@/styles/helpers/types.helper';
+import { glassVars } from '@/tokens/glassy.tokens';
+
+import type { BackdropFilterIntent } from './backdropFilter.helper';
 import backdropFilters from './backdropFilter.helper';
+import { buildLinear } from './gradients.helper';
+import { noiseStyle, type NoiseSvgOptions } from './noiseSVG.helper';
 
 const defaultNoiseId = `${glassVars.noise.idPrefix}${Math.random()
   .toString(36)

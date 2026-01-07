@@ -1,4 +1,5 @@
 import { m } from 'css-calipers';
+
 import { anchorMenuVars, logoVars } from './menu.tokens';
 
 const defaultContentWidth = m(1200);

@@ -3,8 +3,10 @@ import type {
   ComponentType,
   SVGProps,
 } from 'react';
-import Heading, { type IHeadingDepth } from './Heading';
+
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
+
+import Heading, { type IHeadingDepth } from './Heading';
 
 type WordMarkInTitleProps = {
   WordMark: ComponentType<SVGProps<SVGSVGElement>>;

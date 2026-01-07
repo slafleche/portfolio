@@ -1,4 +1,7 @@
+import { m, mPercent } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
+
+import { fontStylesFromFontVariant } from '@/styles/helpers/fontVariant.helper';
 import {
   composeFontStyles,
   computeFontWeight,
@@ -6,10 +9,9 @@ import {
   fontWeightStyle,
   relativeFontWeight,
 } from '@/styles/helpers/typography.helper';
-import { fontStylesFromFontVariant } from '@/styles/helpers/fontVariant.helper';
+
 import { fontFamilies } from './fontFamilies.test.tokens';
 import { typographyFontVariants } from './typographyFontVariants.test.tokens';
-import { m, mPercent } from 'css-calipers';
 
 describe('typography.helper', () => {
   it('normalizes FontStyles into CSS-ready properties', () => {

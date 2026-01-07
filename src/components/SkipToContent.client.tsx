@@ -1,12 +1,13 @@
 'use client';
 
+import clsx from 'clsx';
+import Link from 'next/link';
 import {
-  useCallback,
   type MouseEventHandler,
   type ReactNode,
+  useCallback,
 } from 'react';
-import Link from 'next/link';
-import clsx from 'clsx';
+
 import * as s from '@/styles/components/skipToContent.css';
 
 type Props = {

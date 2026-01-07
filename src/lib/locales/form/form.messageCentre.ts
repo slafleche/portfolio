@@ -1,4 +1,5 @@
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+
 import { FORM_STATUS_KEYS, type FormStatusKey } from './form.status';
 
 export type MessageCentreBlockLocale = {

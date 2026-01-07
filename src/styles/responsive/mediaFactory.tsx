@@ -2,7 +2,7 @@ import {
   buildMediaQueryString,
   type IMediaQueryProps,
 } from 'css-calipers/mediaQueries';
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useCallback,useEffect, useMemo, useState } from 'react';
 
 // ---------- Query shaping ----------
 export function toQueryString(q: IMediaQueryProps): string {

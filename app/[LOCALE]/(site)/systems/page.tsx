@@ -1,23 +1,24 @@
-import Hero from '@/components/Hero';
-import Footer from '@/components/Footer';
 import ContactButton from '@/components/ContactButton';
+import Footer from '@/components/Footer';
+import Hero from '@/components/Hero';
+import { Markdown } from '@/components/Markdown';
 import Menu from '@/components/Menu';
 import ContentAsTiles from '@/components/responsive/ContentAsTiles';
-import { Markdown } from '@/components/Markdown';
+import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+import { resolveLocale } from '@/lib/locales/locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
-import * as layoutStyles from '@/styles/layout.css';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import * as systemsStyles from '@/styles/components/systems.css';
-import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
-import { resolveLocale } from '@/lib/locales/locale';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
+import * as systemsStyles from '@/styles/components/systems.css';
+import * as layoutStyles from '@/styles/layout.css';
+
+import Content from '../../../../src/components/responsive/Content';
 import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
 import SystemsGooey from '../../../../src/components/SystemsGooey';
-import Content from '../../../../src/components/responsive/Content';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 

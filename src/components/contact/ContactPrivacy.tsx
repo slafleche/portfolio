@@ -1,10 +1,12 @@
 'use client';
 
-import { useCallback, type MouseEvent } from 'react';
-import * as s from '@/styles/components/privacy.css';
-import { sharedStrings } from '@/lib/sharedStrings';
-import { useContactDialog } from './ContactDialogProvider';
+import { type MouseEvent,useCallback } from 'react';
+
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
+import { sharedStrings } from '@/lib/sharedStrings';
+import * as s from '@/styles/components/privacy.css';
+
+import { useContactDialog } from './ContactDialogProvider';
 
 type ContactPrivacyProps = {
   copy: ContactFormCopy['privacy'];

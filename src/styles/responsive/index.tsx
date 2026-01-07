@@ -1,10 +1,12 @@
 import type { FC, PropsWithChildren } from 'react';
+
 import { mediaQueryStyleConfig } from '@/styles/responsive/mediaQueries';
+
 import {
-  queriesToStrings,
-  useMediaQuery,
-  useMediaFromMap,
   makeClientFns,
+  queriesToStrings,
+  useMediaFromMap,
+  useMediaQuery,
 } from './mediaFactory';
 
 // 1) Normalize to plain query strings (e.g., "screen and (min-width: 1280px)")

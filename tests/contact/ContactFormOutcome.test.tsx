@@ -1,6 +1,11 @@
-import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, expect,it } from 'vitest';
+
+import {
+  type ContactFormOutcomeResult,
+  useContactFormOutcome,
+} from '@/components/contact/useContactFormOutcome';
 import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+
 import type { ContactFormFlowSnapshot } from './helpers/flowSnapshot.helpers';
 import { makeFlowSnapshot } from './helpers/flowSnapshot.helpers';
 import {
@@ -8,13 +13,9 @@ import {
   makeValidationResult,
 } from './helpers/messageFactories.helpers';
 import {
-  renderOutcomeHook,
   type OutcomeHook,
+  renderOutcomeHook,
 } from './helpers/outcome.harness';
-import {
-  useContactFormOutcome,
-  type ContactFormOutcomeResult,
-} from '@/components/contact/useContactFormOutcome';
 
 const STATUS_MESSAGES: Record<FormStatusKey, string> = {
   sending: 'sending',

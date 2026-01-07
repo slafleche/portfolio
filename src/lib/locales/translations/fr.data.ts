@@ -1,7 +1,7 @@
-import { markdownRefs } from './markdownRefs';
 import { frAbbreviations } from './abbreviations/fr.abbr';
 import { frCaseStudies } from './caseStudies/fr.caseStudies';
 import { frFormCopy } from './forms/fr.form';
+import { markdownRefs } from './markdownRefs';
 import { mergeLocaleSections } from './mergeLocaleSections';
 
 const frBaseData = {

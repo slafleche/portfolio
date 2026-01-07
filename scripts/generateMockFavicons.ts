@@ -2,8 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
 import { DEFAULT_LOCALE } from '../src/lib/locales/locale.ts';
+import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
 import {
   faviconAssetPlan,
   faviconThemeColors,

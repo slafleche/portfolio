@@ -1,14 +1,15 @@
 import {
+  afterEach,
+  beforeEach,
   describe,
   expect,
   it,
-  beforeEach,
-  afterEach,
   vi,
 } from 'vitest';
+
 import { GET as healthRoute } from '../../app/api/contact/health/route';
-import { installTestEnv } from '../helpers/testEnvVars';
 import { withEnvOverrides } from '../helpers/runtimeEnvHarness';
+import { installTestEnv } from '../helpers/testEnvVars';
 
 let restoreEnv: (() => void) | null = null;
 

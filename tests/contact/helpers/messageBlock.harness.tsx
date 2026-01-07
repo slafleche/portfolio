@@ -1,11 +1,12 @@
-import { renderBlockWithFormBlocks } from './formBlocks.harness';
-import { MessageBlock } from '@/components/contact/blocks/MessageBlock';
 import type { MessageBlockProps } from '@/components/contact/blocks/MessageBlock';
+import { MessageBlock } from '@/components/contact/blocks/MessageBlock';
+import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
 import type {
   ContactFormBlockContract,
   ContactFormBlockValidationResult,
 } from '@/components/contact/types/form.types';
-import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
+
+import { renderBlockWithFormBlocks } from './formBlocks.harness';
 
 type MessageBlockHarnessResult = ReturnType<
   typeof renderBlockWithFormBlocks<MessageBlockProps>

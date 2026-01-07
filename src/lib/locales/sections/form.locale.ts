@@ -1,6 +1,5 @@
-import type { Messages } from '@/data/locales';
-import type { Translator } from './helpers.locale';
 import { formConfig } from '@/config/formsConfig';
+import type { Messages } from '@/data/locales';
 import {
   buildFormBlockLocales,
   type FormBlockLocales,
@@ -9,6 +8,8 @@ import {
   FORM_STATUS_KEYS,
   type FormStatusKey,
 } from '@/lib/locales/form/form.status';
+
+import type { Translator } from './helpers.locale';
 
 export const FORM_KEYS = {
   heading: 'form-heading',

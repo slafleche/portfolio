@@ -1,8 +1,10 @@
 'use client';
-import * as React from 'react';
 import type { ReactElement } from 'react';
-import type { VideoEntry } from '@/lib/videos';
+import * as React from 'react';
+
 import type { ImageEntry } from '@/lib/images';
+import type { VideoEntry } from '@/lib/videos';
+
 import VideoByNameClient from './VideoByName.client';
 import type {
   PosterImagePayload,

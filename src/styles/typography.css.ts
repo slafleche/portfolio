@@ -1,15 +1,15 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { paddings, margins } from './helpers/spacing.helper';
-import borders from './helpers/borders.helper';
-import { backgrounds } from './helpers/background.helper';
-import { color } from './helpers/colorWrap.helper';
-import { outlines } from './helpers/outlines.helper';
+
+import { typographyFontVariants } from '../tokens/fontVariants/typography';
 import { colorVars } from '../tokens/global.tokens';
 import { textStyleVars } from '../tokens/textStyles.tokens';
-import { typographyFontVariants } from '../tokens/fontVariants/typography';
+import { backgrounds } from './helpers/background.helper';
+import borders from './helpers/borders.helper';
+import { color } from './helpers/colorWrap.helper';
 import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
+import { outlines } from './helpers/outlines.helper';
+import { margins, paddings } from './helpers/spacing.helper';
 import { globalMediaQueryStyle } from './responsive/mediaQueries';
-import { mEm } from 'css-calipers';
 
 export const userContent = style({});
 
@@ -46,6 +46,16 @@ globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {
   }),
   ...margins(textStyleVars.paragraph.margins),
   color: colorVars.bodyFg.css(),
+});
+
+globalStyle(`.${userContent} [data-first]`, {
+  marginTop: 0,
+  paddingTop: 0,
+});
+
+globalStyle(`.${userContent} [data-last]`, {
+  marginBottom: 0,
+  paddingBottom: 0,
 });
 
 globalStyle('blockquote', {

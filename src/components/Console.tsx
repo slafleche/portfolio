@@ -1,6 +1,7 @@
 import clsx from 'clsx';
-import * as s from '@/styles/components/console.css';
 import type { ReactNode } from 'react';
+
+import * as s from '@/styles/components/console.css';
 
 type ConsoleLine = {
   content: ReactNode;

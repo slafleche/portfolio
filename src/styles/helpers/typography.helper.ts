@@ -1,15 +1,17 @@
+import {
+  hasCssMethod,
+  type IMeasurement,
+  isPercentMeasurement,
+  type PercentMeasurement,
+} from 'css-calipers';
+
 import type {
   CSS_TYPES,
   FontFamilyDef,
   FontFamilyForPercentWeights,
   FontStyles,
 } from '@/styles/helpers/types.helper';
-import {
-  hasCssMethod,
-  isPercentMeasurement,
-  type IMeasurement,
-  type PercentMeasurement,
-} from 'css-calipers';
+
 import { percentToDecimal } from '../../lib/math';
 import { notRelease } from '../../lib/runtimeEnv';
 import type { FontVariantDefinition } from './fontVariant.helper';

@@ -1,12 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
 import {
   getBrevoEnvConfig,
   getManifestTarget,
-  getTurnstileEnvConfig,
   getPrivateLaunchEnvConfig,
+  getTurnstileEnvConfig,
   isHostedEnv,
   isIndexingAllowed,
 } from '@/lib/runtimeEnv';
+
 import { buildTestEnv, installTestEnv } from './testEnvVars';
 
 let restoreEnv: (() => void) | null = null;

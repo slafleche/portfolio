@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, type RenderResult } from '@testing-library/react';
+import React from 'react';
+
 import type { ContactFormFlowSnapshot } from './flowSnapshot.helpers';
 
 export type OutcomeHook<TResult> = (

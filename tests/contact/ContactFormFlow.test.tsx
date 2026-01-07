@@ -1,22 +1,23 @@
-import React, { useEffect, useMemo } from 'react';
-import { describe, it, expect, vi } from 'vitest';
 import {
   fireEvent,
   render,
   screen,
   waitFor,
 } from '@testing-library/react';
+import React, { useEffect, useMemo } from 'react';
+import { describe, expect, it, vi } from 'vitest';
+
+import {
+  TestFormBlocksProvider,
+  useFormBlock,
+} from '@/components/contact/formBlocks.context';
 import type {
   ContactFormBlockPayload,
   ContactFormBlockValidationResult,
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
-import {
-  TestFormBlocksProvider,
-  useFormBlock,
-} from '@/components/contact/formBlocks.context';
-import { useContactFormFlow } from '@/components/contact/useContactFormFlow';
 import type { ContactFormFlowState } from '@/components/contact/useContactFormFlow';
+import { useContactFormFlow } from '@/components/contact/useContactFormFlow';
 import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 
 type StubBlockConfig = {

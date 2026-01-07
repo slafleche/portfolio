@@ -1,16 +1,18 @@
+import clsx from 'clsx';
 import type {
   ComponentPropsWithoutRef,
   ElementType,
   ReactNode,
 } from 'react';
-import clsx from 'clsx';
+
+import { Markdown } from '@/components/Markdown';
 import Tile from '@/components/Tile';
 import TileGrid from '@/components/TileGrid';
-import { Markdown } from '@/components/Markdown';
-import { userContent } from '@/styles/typography.css';
 import * as tileStyles from '@/styles/components/tiles.css';
-import ContentWithTitle from './ContentWithTitle';
+import { userContent } from '@/styles/typography.css';
+
 import { GlassPanel } from '../GlassPanel';
+import ContentWithTitle from './ContentWithTitle';
 
 type BaseProps<T extends ElementType> = {
   tag?: T;

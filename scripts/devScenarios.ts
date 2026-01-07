@@ -1,6 +1,6 @@
 import fs from 'node:fs';
-import readline from 'node:readline';
 import path from 'node:path';
+import readline from 'node:readline';
 import { pathToFileURL } from 'node:url';
 
 import { execa } from 'execa';

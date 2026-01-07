@@ -1,11 +1,12 @@
 'use client';
 
 import { isRelease } from '@/lib/runtimeEnv';
+import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
+
 import type {
   ContactFormBlockValidationResult,
   ContactFormSubmitStatus,
 } from './types/form.types';
-import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 
 export type ContactFormDebugEventType =
   | 'submit_attempt'

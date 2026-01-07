@@ -1,6 +1,7 @@
 import { resolveLocale } from '@/lib/locales/locale';
-import { canonicalToLocalizedSlugs } from './localeSlugs';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+
+import { canonicalToLocalizedSlugs } from './localeSlugs';
 
 export type SystemsLink = {
   href: string;

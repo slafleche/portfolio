@@ -1,7 +1,7 @@
-import { MARKDOWN_MESSAGE_KEYS } from './generated/markdown.gen';
 import type { MarkdownMessageKey } from './generated/markdown.gen';
-import type { EnData } from './translations/en.data';
+import { MARKDOWN_MESSAGE_KEYS } from './generated/markdown.gen';
 import type { MarkdownContent } from './markdownTypes';
+import type { EnData } from './translations/en.data';
 
 type DeepWiden<T> = T extends MarkdownContent
   ? MarkdownContent

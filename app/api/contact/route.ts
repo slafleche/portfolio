@@ -1,26 +1,28 @@
-import { NextResponse, type NextRequest } from 'next/server';
 import { createHash, randomUUID } from 'node:crypto';
+
+import { type NextRequest,NextResponse } from 'next/server';
+
+import { DEFAULT_LOCALE } from '@/lib/locales/locale';
 import {
   buildContactFormCopy,
   type ContactFormCopy,
   type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
-import {
-  validateDraft,
-  type RawContactFormInput,
-} from '@/modules/contactForm/validation';
 import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
-import { verifyTurnstileToken } from '@/server/turnstile/verifyTurnstileToken';
-import { consumeContactRateLimit } from '@/server/rateLimit/contactRateLimit';
-import { deliverContactMessage } from '@/server/contact/deliverContactMessage';
+import {
+  type RawContactFormInput,
+  validateDraft,
+} from '@/modules/contactForm/validation';
 import {
   maybeTriggerContactAlert,
   recordBrevoAttempts,
   recordRetryMetric,
   recordSubmissionMetric,
 } from '@/server/contact/contactTelemetry';
-import { DEFAULT_LOCALE } from '@/lib/locales/locale';
+import { deliverContactMessage } from '@/server/contact/deliverContactMessage';
+import { consumeContactRateLimit } from '@/server/rateLimit/contactRateLimit';
+import { verifyTurnstileToken } from '@/server/turnstile/verifyTurnstileToken';
 
 export const runtime = 'nodejs';
 

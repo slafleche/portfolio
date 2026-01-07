@@ -1,12 +1,14 @@
 'use client';
 
 import * as React from 'react';
+
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 import type { VideoEntry } from '@/lib/videos';
+
 import type {
   PosterImagePayload,
   VideoByNameProps,
 } from './VideoByName.types';
-import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 
 type ClientProps = Omit<VideoByNameProps, 'name'> & {
   video: VideoEntry;

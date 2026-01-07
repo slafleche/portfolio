@@ -1,4 +1,5 @@
 import { sharedStrings } from '@/lib/sharedStrings';
+
 import { isRelease, notRelease } from '../../lib/runtimeEnv';
 
 export function resolveContactFormScenarioIdFromLocation():

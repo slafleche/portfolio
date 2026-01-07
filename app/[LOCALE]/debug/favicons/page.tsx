@@ -1,23 +1,24 @@
-import path from 'node:path';
 import { access } from 'node:fs/promises';
+import path from 'node:path';
+
 import FavIconPreview from '@/components/debug/FaviconPreview';
 import {
   FAVICON_ANDROID_ICONS,
   FAVICON_APPLE_TOUCH_ICON,
   FAVICON_BROWSERCONFIG,
   FAVICON_DEFAULT_WEB_MANIFEST,
+  FAVICON_DEV_MASK_SVG_PATH,
+  FAVICON_DEV_TILE_FOREGROUND_SVG_PATH,
   FAVICON_ICO,
   FAVICON_LINK_DESCRIPTORS_BY_LOCALE,
   FAVICON_MANIFEST_META_BY_LOCALE,
-  FAVICON_MASKABLE_ICON,
   FAVICON_MASK_ICON,
+  FAVICON_MASKABLE_ICON,
   FAVICON_META_TAGS,
   FAVICON_MS_TILE,
   FAVICON_PNG_VARIANTS,
   FAVICON_SVG,
   FAVICON_WEB_MANIFESTS,
-  FAVICON_DEV_MASK_SVG_PATH,
-  FAVICON_DEV_TILE_FOREGROUND_SVG_PATH,
 } from '@/data/generated/favicons/manifest.favicons.gen';
 import {
   faviconAssetPlan,

@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback } from 'react';
-import type { ComponentPropsWithoutRef, MouseEvent } from 'react';
 import clsx from 'clsx';
+import type { ComponentPropsWithoutRef, MouseEvent } from 'react';
+import { useCallback } from 'react';
+
 import * as skipNavStyles from '@/styles/components/skipNav.css';
 
 type SkipNavLinkProps = ComponentPropsWithoutRef<'a'> & {

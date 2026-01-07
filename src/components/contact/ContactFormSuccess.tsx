@@ -1,7 +1,9 @@
 import { useLayoutEffect, useRef } from 'react';
+
 import * as s from '@/styles/components/forms.css';
-import { Markdown } from '../Markdown';
+
 import CircledCheckIcon from '../icons/CircledCheckIcon';
+import { Markdown } from '../Markdown';
 
 type ContactFormSuccessProps = {
   title: string;

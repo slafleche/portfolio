@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import { m } from 'css-calipers';
+import { describe, expect, it } from 'vitest';
+
 import {
   color,
   mixWithAlpha,

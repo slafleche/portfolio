@@ -1,7 +1,8 @@
-import { textStyleVars } from '../../tokens/textStyles.tokens';
 import { m, mPercent } from 'css-calipers';
-import { themeColours } from '../../tokens/global.tokens';
+
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
+import { themeColours } from '../../tokens/global.tokens';
+import { textStyleVars } from '../../tokens/textStyles.tokens';
 
 // const footerGradient: CardGradientPack = {
 //   linear: [

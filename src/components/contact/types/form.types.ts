@@ -1,5 +1,6 @@
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
+
 import type {
   MessageBase,
   TranslatedErrorMessage,

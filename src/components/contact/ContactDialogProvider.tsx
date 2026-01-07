@@ -1,5 +1,7 @@
 'use client';
 
+import * as Dialog from '@radix-ui/react-dialog';
+import type { ReactNode } from 'react';
 import {
   createContext,
   useCallback,
@@ -9,23 +11,23 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { ReactNode } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
-import * as dialogStyles from '@/styles/components/contactDialog.css';
-import * as privacyStyles from '@/styles/components/privacy.css';
+
+import { Markdown } from '@/components/Markdown';
+import { stripContactFormScenarioFromLocation } from '@/dev/scenarios/contactForm.adapter';
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
-import { Markdown } from '@/components/Markdown';
 import { sharedStrings } from '@/lib/sharedStrings';
-import ContactForm from './ContactForm';
+import * as dialogStyles from '@/styles/components/contactDialog.css';
+import * as privacyStyles from '@/styles/components/privacy.css';
+
+import { GlassPanel } from '../GlassPanel';
+import ImageByName from '../ImageByName';
 import { CloseButton } from './CloseButton';
 import {
   ContactDialogTitleContext,
   type ContactDialogTitleKey,
 } from './contactDialogTitle.context';
-import { stripContactFormScenarioFromLocation } from '@/dev/scenarios/contactForm.adapter';
-import ImageByName from '../ImageByName';
-import { GlassPanel } from '../GlassPanel';
+import ContactForm from './ContactForm';
 
 type ModalIntent = 'none' | 'contact' | 'contact-policy';
 

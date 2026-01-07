@@ -1,12 +1,13 @@
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
-import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+import { waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+
 import type {
   ContactFormBlockPayload,
   ContactFormBlockValidationResult,
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
+import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
 import {
   makeMessageBase,

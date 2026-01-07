@@ -1,8 +1,8 @@
-import { fontFamilies } from '../fontFamilies.tokens';
 import {
   defineFontVariant,
   type FontVariantMap,
 } from '../../styles/helpers/fontVariant.helper';
+import { fontFamilies } from '../fontFamilies.tokens';
 
 const SOURCE_PATH = 'src/tokens/fontVariants/mockHtml.ts';
 

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { debugCardSpecs } from '../../app/[LOCALE]/debug/formelements/formDebugSpecs';
+
 import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
+
 import type { ApiScenarioId } from '../../app/[LOCALE]/debug/formelements/formDebugApiScenarios';
+import { debugCardSpecs } from '../../app/[LOCALE]/debug/formelements/formDebugSpecs';
 
 const RESPONSE_CODES: readonly FormServerResponseCode[] = [
   'success',

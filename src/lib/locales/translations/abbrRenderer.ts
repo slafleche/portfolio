@@ -1,5 +1,5 @@
-import { abbrSlug, escapeHtml } from '@/lib/stringUtils';
 import { notRelease } from '@/lib/runtimeEnv';
+import { abbrSlug, escapeHtml } from '@/lib/stringUtils';
 
 export type AbbrLocaleEntry = {
   label?: string | null;

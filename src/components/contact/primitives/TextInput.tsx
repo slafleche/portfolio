@@ -1,6 +1,7 @@
-import { forwardRef } from 'react';
-import type { ComponentPropsWithoutRef } from 'react';
 import clsx from 'clsx';
+import type { ComponentPropsWithoutRef } from 'react';
+import { forwardRef } from 'react';
+
 import * as s from '@/styles/components/forms.css';
 
 type TextInputProps = ComponentPropsWithoutRef<'input'>;

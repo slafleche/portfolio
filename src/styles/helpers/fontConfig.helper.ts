@@ -1,5 +1,6 @@
 // One-stop helpers for font weights + family defs + loading/validating fonts.config.json.
 import { getManifestTarget } from '@/lib/runtimeEnv';
+
 import type { FontFamilyDef } from './types.helper';
 
 // ---- Types expected from your JSON config ----
@@ -16,9 +17,10 @@ export type FontsConfig = Record<string, FontCfgInput>;
 
 // ---- Load raw JSON (Next.js/modern TS supports JSON imports) ----
 // If your toolchain requires, keep the assert; otherwise you can drop it.
-import releaseConfig from '@/data/generated/release/fonts/config.fonts.gen.json' assert { type: 'json' };
+import { type IMeasurement,mRem } from 'css-calipers';
+
 import stagingConfig from '@/data/generated/_staging/fonts/config.fonts.gen.json' assert { type: 'json' };
-import { mRem, type IMeasurement } from 'css-calipers';
+import releaseConfig from '@/data/generated/release/fonts/config.fonts.gen.json' assert { type: 'json' };
 
 const target = getManifestTarget();
 const rawJson = target === 'release' ? releaseConfig : stagingConfig;

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+
 import {
   useFormBlocksContext,
 } from '@/components/contact/formBlocks.context';

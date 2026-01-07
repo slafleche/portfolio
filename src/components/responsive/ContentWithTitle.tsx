@@ -1,7 +1,8 @@
 'use client';
 import type { ElementType, ReactNode } from 'react';
-import Content, { type ContentBaseProps } from './Content';
+
 import Heading from '../Heading';
+import Content, { type ContentBaseProps } from './Content';
 
 export type ContentWithTitleBaseProps = ContentBaseProps & {
   contentTitle?: ReactNode;

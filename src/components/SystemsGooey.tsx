@@ -1,9 +1,11 @@
 'use client';
 
-import { useId, type CSSProperties } from 'react';
-import clsx from 'clsx';
 import Goo from '@lafleche/gooey-react';
+import clsx from 'clsx';
+import { type CSSProperties,useId } from 'react';
+
 import * as s from '@/styles/components/systemsGooey.css';
+
 import { themeColours } from '../tokens/global.tokens';
 
 type Props = {

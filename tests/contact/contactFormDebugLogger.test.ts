@@ -1,21 +1,23 @@
 import {
-  describe,
-  it,
-  expect,
-  vi,
-  beforeEach,
   afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
 } from 'vitest';
-import type {
-  ContactFormBlockValidationResult,
-  ContactFormSubmitStatus,
-} from '@/components/contact/types/form.types';
-import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
+
 import {
   buildInvalidFieldSummary,
   logContactFormDebugEvent,
   setContactFormDebugLogger,
 } from '@/components/contact/contactFormDebugLogger';
+import type {
+  ContactFormBlockValidationResult,
+  ContactFormSubmitStatus,
+} from '@/components/contact/types/form.types';
+import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
+
 import { installTestEnv } from '../helpers/testEnvVars';
 
 let restoreEnv: (() => void) | null = null;

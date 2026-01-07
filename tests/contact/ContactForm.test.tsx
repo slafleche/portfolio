@@ -1,39 +1,41 @@
-import React from 'react';
-import {
-  describe,
-  it,
-  expect,
-  vi,
-  beforeEach,
-  afterEach,
-} from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
+
+import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
+import { MessageBlock } from '@/components/contact/blocks/MessageBlock';
+import { NameBlock } from '@/components/contact/blocks/NameBlock';
+import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
 import ContactForm from '@/components/contact/ContactForm';
+import { setContactFormDebugLogger } from '@/components/contact/contactFormDebugLogger';
+import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
+import {
+  type ContactFormBlockValidationResult,
+  type ContactFormFlowSubmitHelper,
+} from '@/components/contact/types/form.types';
+import { useContactFormFlow } from '@/components/contact/useContactFormFlow';
 import {
   buildContactFormCopy,
   type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
-import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
-import { setContactFormDebugLogger } from '@/components/contact/contactFormDebugLogger';
-import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
-import { NameBlock } from '@/components/contact/blocks/NameBlock';
-import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
-import { MessageBlock } from '@/components/contact/blocks/MessageBlock';
-import { useContactFormFlow } from '@/components/contact/useContactFormFlow';
-import {
-  type ContactFormFlowSubmitHelper,
-  type ContactFormBlockValidationResult,
-} from '@/components/contact/types/form.types';
-import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { MESSAGE_MIN_LENGTH } from '@/modules/contactForm/validation.constants';
+
+import { installTestEnv } from '../helpers/testEnvVars';
+import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
 } from './helpers/turnstileTestHarness';
-import { installTestEnv } from '../helpers/testEnvVars';
 
 const buildCopy = () =>
   buildContactFormCopy(

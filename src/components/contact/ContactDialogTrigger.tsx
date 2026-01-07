@@ -1,7 +1,8 @@
 'use client';
 
-import { forwardRef, useCallback } from 'react';
 import type { ComponentPropsWithoutRef, MouseEvent } from 'react';
+import { forwardRef, useCallback } from 'react';
+
 import { useContactDialog } from './ContactDialogProvider';
 
 type ContactDialogTriggerProps =

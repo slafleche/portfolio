@@ -1,10 +1,11 @@
-import { color } from '../helpers/colorWrap.helper';
 import { m, mPercent } from 'css-calipers';
+
 import {
   archVars,
   colorVars,
   themeColours,
 } from '../../tokens/global.tokens';
+import { color } from '../helpers/colorWrap.helper';
 
 export const menuVars = {
   height: archVars.top,

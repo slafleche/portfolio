@@ -1,30 +1,30 @@
-import React, { useMemo } from 'react';
 import {
+  fireEvent,
   render,
   type RenderResult,
-  fireEvent,
 } from '@testing-library/react';
+import React, { useMemo } from 'react';
+
+import { MessageCentreBlock } from '@/components/contact/blocks/MessageCentreBlock';
 import {
   TestFormBlocksProvider,
   useFormBlock,
 } from '@/components/contact/formBlocks.context';
-import {
-  useContactFormFlow,
-  type ContactFormFlowState,
-} from '@/components/contact/useContactFormFlow';
-import {
-  useContactFormOutcome,
-  type ContactFormOutcomeResult,
-} from '@/components/contact/useContactFormOutcome';
-import { MessageCentreBlock } from '@/components/contact/blocks/MessageCentreBlock';
 import { SubmitButton } from '@/components/contact/primitives/SubmitButton';
 import type {
   ContactFormBlockPayload,
   ContactFormBlockValidationResult,
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
+import {
+  type ContactFormFlowState,
+  useContactFormFlow,
+} from '@/components/contact/useContactFormFlow';
+import {
+  type ContactFormOutcomeResult,
+  useContactFormOutcome,
+} from '@/components/contact/useContactFormOutcome';
 import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
-import type { MessageBase } from '@/components/contact/messageCentre.types';
 
 export type ShellStubBlockConfig = {
   key: string;

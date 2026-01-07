@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
+
 import * as s from '@/styles/components/forms.css';
-import { Markdown } from '../Markdown';
+
 import CircledPauseIcon from '../icons/CircledPauseIcon';
+import { Markdown } from '../Markdown';
 
 type ContactFormErrorProps = {
   title: string;

@@ -1,7 +1,8 @@
 'use client';
-import * as React from 'react';
-import type { ImageEntry } from '@/lib/images';
 import clsx from 'clsx';
+import * as React from 'react';
+
+import type { ImageEntry } from '@/lib/images';
 import * as s from '@/styles/components/imageByName.css';
 
 const IMAGES_MANIFEST_URL = '/cdn/manifest/images.json';

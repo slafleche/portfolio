@@ -1,5 +1,7 @@
-import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 import type { IMeasurement, PercentMeasurement } from 'css-calipers';
+
+import type { CSS_TYPES } from '@/styles/helpers/types.helper';
+
 import { createSupportsFallback } from './supportsFallback.helper';
 
 /**

@@ -1,4 +1,5 @@
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+
 import { FORM_REQUIRED_INDICATOR_KEY } from './shared';
 
 export type TurnstileBlockLocale = {

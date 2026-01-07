@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { isIndexingAllowed, isRelease } from '@/lib/runtimeEnv';
 
 const TEXT_CONTENT_TYPE = 'text/plain; charset=utf-8';

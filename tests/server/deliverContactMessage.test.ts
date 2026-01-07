@@ -6,9 +6,11 @@ import {
   it,
   vi,
 } from 'vitest';
+
 import type { ContactFormDraft } from '@/modules/contactForm/validation';
-import { installTestEnv } from '../helpers/testEnvVars';
+
 import { withEnvOverrides } from '../helpers/runtimeEnvHarness';
+import { installTestEnv } from '../helpers/testEnvVars';
 
 let restoreEnv: (() => void) | null = null;
 

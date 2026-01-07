@@ -1,7 +1,7 @@
 import { MARKDOWN_MESSAGES } from '../generated/markdown.gen';
 import type { LocaleMessagesShape } from '../localeTypes';
-import { resolveMarkdownPlaceholders } from './markdownRefs';
 import { frData } from './fr.data';
+import { resolveMarkdownPlaceholders } from './markdownRefs';
 import { resolveAbbrShortcodes } from './resolveAbbrShortcodes';
 
 const frResolved = resolveAbbrShortcodes(

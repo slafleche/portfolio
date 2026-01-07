@@ -1,17 +1,18 @@
+import { m, mPercent } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
+
+import { color } from '@/styles/helpers/colorWrap.helper';
+import { easing } from '@/styles/helpers/easingCurves.helper';
 import {
-  gradientAsBgImg,
   buildLinear,
   buildRadial,
+  gradientAsBgImg,
   maskByLinearGradient,
   OKLCH_SUPPORTS,
   resolveGradientSpotStops,
   resolveLinearAngle,
   stackBackground,
 } from '@/styles/helpers/gradients.helper';
-import { easing } from '@/styles/helpers/easingCurves.helper';
-import { color } from '@/styles/helpers/colorWrap.helper';
-import { m, mPercent } from 'css-calipers';
 
 const stops = [
   {

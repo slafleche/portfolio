@@ -1,16 +1,17 @@
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
-import { renderNameBlockWithFormBlocks } from './helpers/nameBlock.harness';
-import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
+
 import { NameBlock } from '@/components/contact/blocks/NameBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { NameBlockLocale } from '@/lib/locales/form/form.name';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
-import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
+
+import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
+import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
+import { renderNameBlockWithFormBlocks } from './helpers/nameBlock.harness';
 
 type NameBlockValidationSnapshot = {
   results: unknown[];

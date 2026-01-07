@@ -1,13 +1,14 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+
+import { isDev, isRelease, isStaging } from '@/config/envPrimitives';
+import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
 import {
   DEFAULT_LOCALE,
   pickLocaleFromAcceptLanguage,
 } from '@/lib/locales/locale';
-import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
 import { localizedToCanonicalSlugs } from '@/lib/routes/localeSlugs';
 import * as runtimeEnv from '@/lib/runtimeEnv';
-import { isDev, isRelease, isStaging } from '@/config/envPrimitives';
 
 const LOCALES = new Set<Locale>(
   AVAILABLE_LOCALES as readonly Locale[],

@@ -1,11 +1,12 @@
-import { renderBlockWithFormBlocks } from './formBlocks.harness';
-import { NameBlock } from '@/components/contact/blocks/NameBlock';
 import type { NameBlockProps } from '@/components/contact/blocks/NameBlock';
+import { NameBlock } from '@/components/contact/blocks/NameBlock';
+import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
 import type {
   ContactFormBlockContract,
   ContactFormBlockValidationResult,
 } from '@/components/contact/types/form.types';
-import type { FormBlockRegistration } from '@/components/contact/formBlocks.context';
+
+import { renderBlockWithFormBlocks } from './formBlocks.harness';
 
 type NameBlockHarnessResult = ReturnType<
   typeof renderBlockWithFormBlocks<NameBlockProps>

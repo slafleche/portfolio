@@ -1,6 +1,8 @@
-import { describe, expect, it, beforeEach, afterEach } from 'vitest';
+import { afterEach,beforeEach, describe, expect, it } from 'vitest';
+
 import { resolveAbbrShortcodes } from '@/lib/locales/translations/resolveAbbrShortcodes';
 import { isLocaleRichText } from '@/lib/stringUtils';
+
 import { installTestEnv } from '../helpers/testEnvVars';
 
 let restoreEnv: (() => void) | null = null;

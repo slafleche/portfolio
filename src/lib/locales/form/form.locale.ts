@@ -1,28 +1,29 @@
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import {
-  buildNameBlockLocale,
-  type NameBlockLocale,
-} from './form.name';
+
 import {
   buildEmailBlockLocale,
   type EmailBlockLocale,
 } from './form.email';
 import {
-  buildMessageBlockLocale,
-  type MessageBlockLocale,
-} from './form.message';
-import {
-  buildTurnstileBlockLocale,
-  type TurnstileBlockLocale,
-} from './form.turnstile';
-import {
   buildHoneypotBlockLocale,
   type HoneypotBlockLocale,
 } from './form.honeypot';
 import {
+  buildMessageBlockLocale,
+  type MessageBlockLocale,
+} from './form.message';
+import {
   buildMessageCentreLocale,
   type MessageCentreBlockLocale,
 } from './form.messageCentre';
+import {
+  buildNameBlockLocale,
+  type NameBlockLocale,
+} from './form.name';
+import {
+  buildTurnstileBlockLocale,
+  type TurnstileBlockLocale,
+} from './form.turnstile';
 
 /**
  * Eventually this file will hold only the sparse form-level copy we

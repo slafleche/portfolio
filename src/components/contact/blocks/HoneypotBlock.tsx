@@ -1,4 +1,5 @@
 import { useId } from 'react';
+
 import type { HoneypotBlockLocale } from '@/lib/locales/form/form.honeypot';
 
 export type HoneypotBlockProps = {

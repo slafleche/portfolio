@@ -1,6 +1,7 @@
 import type { VideoHTMLAttributes } from 'react';
-import type { VideoEntry } from '@/lib/videos';
+
 import type { ImageEntry } from '@/lib/images';
+import type { VideoEntry } from '@/lib/videos';
 
 export type VideoByNameProps =
   VideoHTMLAttributes<HTMLVideoElement> & {

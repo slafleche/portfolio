@@ -1,6 +1,6 @@
+import { getBrevoEnvConfig } from '@/lib/runtimeEnv';
 import type { ContactFormDraft } from '@/modules/contactForm/validation';
 import type { RetryReason } from '@/server/contact/contactTelemetry';
-import { getBrevoEnvConfig } from '@/lib/runtimeEnv';
 
 export type DeliveryAttempt = {
   attempt: number;

@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { createSupportsFallback } from '@/styles/helpers/supportsFallback.helper';
 
 const globalStyleMock = vi.fn();

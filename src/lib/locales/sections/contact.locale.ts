@@ -1,4 +1,5 @@
 import type { Messages } from '@/data/locales';
+
 import type { Translator } from './helpers.locale';
 
 type MessageKey = keyof Messages;

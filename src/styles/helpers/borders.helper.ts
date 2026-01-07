@@ -1,3 +1,6 @@
+import { hasCssMethod,isMeasurement } from 'css-calipers';
+
+import { notRelease } from '@/lib/runtimeEnv';
 import type {
   AxisValues,
   CompassCorners,
@@ -5,15 +8,14 @@ import type {
   CornerPosition,
   CSS_TYPES,
 } from '@/styles/helpers/types.helper';
-import { borderVars, colorVars } from '../../tokens/global.tokens';
+
 import type {
-  IBorder,
-  BorderWidthInput,
-  BorderRadiusInput,
   BorderMeasurementInput,
+  BorderRadiusInput,
+  BorderWidthInput,
+  IBorder,
 } from '../../tokens/global.tokens';
-import { isMeasurement, hasCssMethod } from 'css-calipers';
-import { notRelease } from '@/lib/runtimeEnv';
+import { borderVars, colorVars } from '../../tokens/global.tokens';
 
 /**
  * Public UX: Border({ bottom: true, bottom: { width: m(6) }, radius:

@@ -1,8 +1,9 @@
+import type { IMeasurement } from 'css-calipers';
+
 import {
   projectorChannels,
   projectorVars,
 } from '../styles/componentTokens/projector.component.tokens';
-import type { IMeasurement } from 'css-calipers';
 
 type Tier = 'desktop';
 

@@ -1,6 +1,8 @@
-import { forwardRef, useMemo } from 'react';
 import type { Ref } from 'react';
+import { forwardRef, useMemo } from 'react';
+
 import * as s from '@/styles/components/messageCentre.css';
+
 import type { MessageCentreMessages } from '../messageCentre.types';
 
 type MessageCentreBlockProps = {

@@ -1,16 +1,17 @@
-import { color, type ColorWrapper } from './colorWrap.helper';
-import type { Property } from 'csstype';
 import { mPercent } from 'css-calipers';
+import type { Property } from 'csstype';
+
+import { color, type ColorWrapper } from './colorWrap.helper';
 import {
-  gradientAsBgImg,
-  resolveGradientSpotStops,
-  resolveLinearAngle,
-  stackBackground,
   type GradientAlphaStop,
+  gradientAsBgImg,
   type GradientSpotStopCurveOptions,
   type GradientSpotStopInput,
   type Layer,
   type LinearDirectionInput,
+  resolveGradientSpotStops,
+  resolveLinearAngle,
+  stackBackground,
   type Stop,
 } from './gradients.helper';
 

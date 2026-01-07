@@ -1,5 +1,6 @@
-import React from 'react';
 import { render } from '@testing-library/react';
+import React from 'react';
+
 import { MessageCentreBlock } from '@/components/contact/blocks/MessageCentreBlock';
 import type { MessageCentreMessages } from '@/components/contact/messageCentre.types';
 

@@ -1,20 +1,22 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEventHandler } from 'react';
-import { TextInputBlock } from './TextInputBlock';
-import { useFormBlock } from '../formBlocks.context';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
 import {
-  evaluateEmailField,
   type EmailValidationReason,
+  evaluateEmailField,
 } from '@/modules/contactForm/validation';
 import { EMAIL_MAX_LENGTH } from '@/modules/contactForm/validation.constants';
-import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
+
+import { useFormBlock } from '../formBlocks.context';
 import type {
   ContactFormBlockBaseProps,
-  ContactFormBlockValidationResult,
   ContactFormBlockContract,
-  ContactFormBlockPayload,
   ContactFormBlockInitialConfig,
+  ContactFormBlockPayload,
+  ContactFormBlockValidationResult,
 } from '../types/form.types';
+import { TextInputBlock } from './TextInputBlock';
 
 export type EmailBlockProps = ContactFormBlockBaseProps & {
   copy: EmailBlockLocale;

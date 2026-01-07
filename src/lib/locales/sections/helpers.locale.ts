@@ -1,9 +1,9 @@
+import type { Messages } from '@/data/locales';
 import {
   DEFAULT_LOCALE,
   loadMessages,
   resolveLocale,
 } from '@/lib/locales/locale';
-import type { Messages } from '@/data/locales';
 import type { EnData } from '@/lib/locales/translations/en.data';
 
 export type MessageKey = keyof EnData;

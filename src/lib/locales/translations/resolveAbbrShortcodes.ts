@@ -1,6 +1,7 @@
+import { toLocaleRichText } from '@/lib/stringUtils';
+
 import type { AbbrLocaleEntry } from './abbrRenderer';
 import { renderAbbreviation } from './abbrRenderer';
-import { toLocaleRichText } from '@/lib/stringUtils';
 
 type AnyRecord = Record<string, unknown>;
 

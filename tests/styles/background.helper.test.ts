@@ -1,8 +1,9 @@
-import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import {
   backgroundFromManifest,
-  backgroundImageForWidth,
   backgroundImageForStep,
+  backgroundImageForWidth,
   backgrounds,
 } from '@/styles/helpers/background.helper';
 import { color } from '@/styles/helpers/colorWrap.helper';

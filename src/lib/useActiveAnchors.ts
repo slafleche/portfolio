@@ -5,8 +5,9 @@ import {
   useRef,
   useState,
 } from 'react';
-import { sharedStrings } from './sharedStrings';
+
 import { getViewportSize } from './responsive/viewport';
+import { sharedStrings } from './sharedStrings';
 
 export type AnchorTarget = {
   id: string;

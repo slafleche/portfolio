@@ -1,9 +1,10 @@
+import { act,render, screen } from '@testing-library/react';
 import React from 'react';
-import { describe, expect, it, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { beforeEach,describe, expect, it } from 'vitest';
+
 import {
-  WindowSizeProvider,
   useWindowSize,
+  WindowSizeProvider,
 } from '@/lib/responsive/WindowSizeContext';
 
 const TestConsumer = () => {

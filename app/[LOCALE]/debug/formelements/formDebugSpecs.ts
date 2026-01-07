@@ -1,6 +1,7 @@
+import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+
 import type { ApiScenarioId } from './formDebugApiScenarios';
 import type { FieldKey, UiPermutationId } from './formDebugUiStates';
-import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
 
 // Each card in the debug gallery composes a UI permutation (focus, hover, etc.)
 // with an optional API scenario (success, rate_limited, etc.). The renderer

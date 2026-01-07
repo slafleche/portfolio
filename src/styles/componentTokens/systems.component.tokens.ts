@@ -1,5 +1,5 @@
-import { color } from '../helpers/colorWrap.helper';
 import type { CardGradientPack } from '../helpers/cardGradient.helper';
+import { color } from '../helpers/colorWrap.helper';
 
 const darkPurple = color('#020014');
 

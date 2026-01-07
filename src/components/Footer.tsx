@@ -1,12 +1,13 @@
-import type { ContactCopy } from '@/lib/locales/sections/contact.locale';
-import * as s from '@/styles/components/footer.css';
-import Heading from './Heading';
-import { sharedStrings } from '@/lib/sharedStrings';
-import GlassyLink from './GlassyLink';
-import ContactIcon from './icons/SendIcon';
-import SocialLinkedInIcon from './icons/SocialLinkedInIcon';
-import SocialGitHubIcon from './icons/SocialGitHubIcon';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
+import type { ContactCopy } from '@/lib/locales/sections/contact.locale';
+import { sharedStrings } from '@/lib/sharedStrings';
+import * as s from '@/styles/components/footer.css';
+
+import GlassyLink from './GlassyLink';
+import Heading from './Heading';
+import ContactIcon from './icons/SendIcon';
+import SocialGitHubIcon from './icons/SocialGitHubIcon';
+import SocialLinkedInIcon from './icons/SocialLinkedInIcon';
 import PageCurl from './PageCurl';
 import Content from './responsive/Content';
 

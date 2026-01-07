@@ -1,21 +1,20 @@
 'use client';
 
+import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import clsx from 'clsx';
 
-import * as s from '@/styles/components/contactButton.css';
-import SendIcon from '@/components/icons/SendIcon';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
-
+import SendIcon from '@/components/icons/SendIcon';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
+import { notRelease } from '@/lib/runtimeEnv';
+import { useElementOffscreen } from '@/lib/useElementOffscreen';
+import * as s from '@/styles/components/contactButton.css';
 import {
+  exitTranslationDelayMs,
   shuttleDurationMs,
   shuttleExitDurationMs,
-  exitTranslationDelayMs,
 } from '@/styles/components/contactButton.vars';
-import { useElementOffscreen } from '@/lib/useElementOffscreen';
-import { notRelease } from '@/lib/runtimeEnv';
-import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
 
 type Phase = 'hidden' | 'entering' | 'shown' | 'exiting';
 

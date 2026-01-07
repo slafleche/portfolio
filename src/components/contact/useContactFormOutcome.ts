@@ -1,15 +1,17 @@
 'use client';
 
 import { useMemo } from 'react';
-import type {
-  ContactFormBlockValidationResult,
-  ContactFormSubmitStatus,
-} from './types/form.types';
+
+import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+
 import type {
   MessageBase,
   MessageCentreMessages,
 } from './messageCentre.types';
-import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+import type {
+  ContactFormBlockValidationResult,
+  ContactFormSubmitStatus,
+} from './types/form.types';
 
 type PrioritySeverity = 'info' | 'warning' | 'error' | 'urgent';
 

@@ -1,4 +1,5 @@
 import { keyframes, style } from '@vanilla-extract/css';
+
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 
 const fadeIn = keyframes({

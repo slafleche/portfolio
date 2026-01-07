@@ -1,9 +1,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import { marked } from 'marked';
-import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
+
 import { loadMessages } from '../src/lib/locales/locale.ts';
+import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
 
 const markdownKeyPattern = /(?:^|[-_])content$/;
 function shouldConvert(key: string, value: unknown): value is string {

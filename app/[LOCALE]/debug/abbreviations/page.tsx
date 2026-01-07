@@ -1,12 +1,13 @@
-import type { CSSProperties } from 'react';
 import { m } from 'css-calipers';
-import borders from '@/styles/helpers/borders.helper';
-import { backgrounds } from '@/styles/helpers/background.helper';
-import { paddings, margins } from '@/styles/helpers/spacing.helper';
+import type { CSSProperties } from 'react';
+
 import { resolveLocale } from '@/lib/locales/locale';
 import { enAbbreviations } from '@/lib/locales/translations/abbreviations/en.abbr';
 import { frAbbreviations } from '@/lib/locales/translations/abbreviations/fr.abbr';
 import type { AbbrLocaleEntry } from '@/lib/locales/translations/abbrRenderer';
+import { backgrounds } from '@/styles/helpers/background.helper';
+import borders from '@/styles/helpers/borders.helper';
+import { margins,paddings } from '@/styles/helpers/spacing.helper';
 
 type PageParams = {
   LOCALE: string;

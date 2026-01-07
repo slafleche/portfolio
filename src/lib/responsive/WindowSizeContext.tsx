@@ -2,11 +2,12 @@
 
 import {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   type ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from 'react';
+
 import { getViewportSize } from './viewport';
 
 interface WindowSizeContextType {

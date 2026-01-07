@@ -11,6 +11,7 @@ import {
   useRef,
   useState,
 } from 'react';
+
 import { enData } from '@/lib/locales/translations/en.data';
 import { parseSplit } from '@/lib/locales/translations/splitShortcodes';
 

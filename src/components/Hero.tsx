@@ -1,34 +1,36 @@
 'use client';
 
+import clsx from 'clsx';
 import {
+  type ComponentType,
+  type CSSProperties,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type ComponentType,
-  type CSSProperties,
 } from 'react';
-import clsx from 'clsx';
-import * as layoutStyles from '@/styles/layout.css';
-import * as s from '@/styles/components/hero.css';
-import VideoByName from './VideoByName';
-import HeroHeading from './HeroHeading.client';
-import { toTrimmedOrNull } from '@/lib/stringUtils';
-import { parseSplit } from '@/lib/locales/translations/splitShortcodes';
+
+import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import SendIcon from '@/components/icons/SendIcon';
+import { Markdown } from '@/components/Markdown';
+import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { collectWaitForFonts, waitForFonts } from '@/lib/fontLoading';
+import { parseSplit } from '@/lib/locales/translations/splitShortcodes';
+import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
+import { toTrimmedOrNull } from '@/lib/stringUtils';
+import * as s from '@/styles/components/hero.css';
+import * as layoutStyles from '@/styles/layout.css';
+
 import { heroVars } from '../styles/componentTokens/hero.component.tokens';
 import { projectorVars } from '../styles/componentTokens/projector.component.tokens';
-import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
-import ImageByName from './ImageByName';
-import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
-import { Markdown } from '@/components/Markdown';
-import { GlassPanel } from './GlassPanel';
 import { heroFontVariants } from '../tokens/fontVariants/hero';
+import { GlassPanel } from './GlassPanel';
 import HeroGooey from './HeroGooey';
-import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
+import HeroHeading from './HeroHeading.client';
 import HeroWaypoint from './HeroWaypoint';
+import ImageByName from './ImageByName';
+import VideoByName from './VideoByName';
 
 type HeroCopy = {
   videoTitle: string;

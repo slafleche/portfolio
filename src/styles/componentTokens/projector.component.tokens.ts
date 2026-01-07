@@ -1,7 +1,9 @@
-import { color } from '../helpers/colorWrap.helper';
 import { assertCondition, assertUnit, m } from 'css-calipers';
-import { dropShadowVars } from '../../tokens/global.tokens';
+
 import { notRelease } from '@/lib/runtimeEnv';
+
+import { dropShadowVars } from '../../tokens/global.tokens';
+import { color } from '../helpers/colorWrap.helper';
 
 export type ProjectorChannel = 'blue' | 'green' | 'red';
 export type ProjectorStage = 'initial' | 'waypoint' | 'focus';

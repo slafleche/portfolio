@@ -1,7 +1,8 @@
-import { HTML_MESSAGES } from '@/lib/locales/generated/html.gen';
-import { DEFAULT_LOCALE } from './locale';
 import type { Locale } from '@/data/locales';
+import { HTML_MESSAGES } from '@/lib/locales/generated/html.gen';
 import { escapeHtml } from '@/lib/stringUtils';
+
+import { DEFAULT_LOCALE } from './locale';
 
 const TYPED_HTML_MESSAGES: Record<Locale, Record<string, string>> =
   HTML_MESSAGES as Record<Locale, Record<string, string>>;

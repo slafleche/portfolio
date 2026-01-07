@@ -1,8 +1,9 @@
-import React from 'react';
-import { describe, it, expect, vi, afterEach } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { WindowSizeProvider } from '@/lib/responsive/WindowSizeContext';
+import React from 'react';
+import { afterEach,describe, expect, it, vi } from 'vitest';
+
 import AnchorMenu from '@/components/AnchorMenu';
+import { WindowSizeProvider } from '@/lib/responsive/WindowSizeContext';
 
 vi.mock('next/link', () => ({
   default: ({

@@ -1,6 +1,8 @@
-import path from 'node:path';
 import { readFile, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
 import { NextResponse } from 'next/server';
+
 import { isDev } from '@/lib/runtimeEnv';
 
 const DEFAULTS_PATH = path.resolve(

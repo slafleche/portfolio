@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { getBrevoEnvConfig } from '@/lib/runtimeEnv';
 
 export const runtime = 'nodejs';

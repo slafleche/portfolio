@@ -1,12 +1,13 @@
-import { createElement, memo } from 'react';
+import { clsx } from 'clsx';
+import { marked, Renderer } from 'marked';
 import type {
   ComponentPropsWithoutRef,
-  ReactElement,
   JSX,
+  ReactElement,
 } from 'react';
-import { marked, Renderer } from 'marked';
+import { createElement, memo } from 'react';
+
 import { userContent } from '../styles/typography.css';
-import { clsx } from 'clsx';
 
 type MarkdownProps = {
   tag?: keyof JSX.IntrinsicElements;

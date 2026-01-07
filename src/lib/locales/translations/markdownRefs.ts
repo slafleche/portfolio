@@ -1,5 +1,5 @@
-import type { MarkdownContent } from '../markdownTypes';
 import type { MarkdownMessageKey } from '../generated/markdown.gen';
+import type { MarkdownContent } from '../markdownTypes';
 
 const MARKDOWN_REF_PREFIX = '__MARKDOWN_REF__:';
 

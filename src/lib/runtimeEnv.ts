@@ -1,19 +1,19 @@
 import {
   isDev,
-  notDev,
-  isStaging,
-  notStaging,
   isRelease,
+  isStaging,
+  notDev,
   notRelease,
+  notStaging,
 } from '../config/envPrimitives';
 
 export {
   isDev,
-  notDev,
-  isStaging,
-  notStaging,
   isRelease,
+  isStaging,
+  notDev,
   notRelease,
+  notStaging,
 };
 
 function parsePrivateLaunchFlag(

@@ -1,25 +1,26 @@
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
 import {
-  render,
-  screen,
   fireEvent,
+  render,
   waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
-import { renderMessageBlockWithFormBlocks } from './helpers/messageBlock.harness';
-import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
+
 import { MessageBlock } from '@/components/contact/blocks/MessageBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { MessageBlockLocale } from '@/lib/locales/form/form.message';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import {
-  MESSAGE_MIN_LENGTH,
   MESSAGE_MAX_LENGTH,
+  MESSAGE_MIN_LENGTH,
   MESSAGE_URL_LIMIT,
 } from '@/modules/contactForm/validation.constants';
+
 import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
+import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
+import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
+import { renderMessageBlockWithFormBlocks } from './helpers/messageBlock.harness';
 
 type MessageBlockValidationSnapshot = {
   results: unknown[];

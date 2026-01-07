@@ -1,16 +1,17 @@
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
-import { renderEmailBlockWithFormBlocks } from './helpers/emailBlock.harness';
-import { checkMatchingId } from '../helpers/ariaIdRef.helpers';
-import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
+
 import { EmailBlock } from '@/components/contact/blocks/EmailBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
 import type { EmailBlockLocale } from '@/lib/locales/form/form.email';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { EMAIL_MAX_LENGTH } from '@/modules/contactForm/validation.constants';
+
+import { renderEmailBlockWithFormBlocks } from './helpers/emailBlock.harness';
+import { createFocusSentinelHandles } from './helpers/focusSentinel.helpers';
+import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 
 type EmailBlockValidationSnapshot = {
   results: unknown[];

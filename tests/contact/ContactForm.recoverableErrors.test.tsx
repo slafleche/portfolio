@@ -1,15 +1,17 @@
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
+
+import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
 import ContactForm from '@/components/contact/ContactForm';
 import {
   buildContactFormCopy,
   type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
-import { ContactDialogContext } from '@/components/contact/ContactDialogProvider';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
+import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
+
 import {
   enableTurnstileHarness,
   type TurnstileHarnessController,

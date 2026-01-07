@@ -1,20 +1,21 @@
-import { globalStyle, style } from '@vanilla-extract/css';
 import type { ComplexStyleRule } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
-import { backgrounds } from '../helpers/background.helper';
-import { borders } from '../helpers/borders.helper';
-import { boxShadow } from '../helpers/shadow.helper';
-import backdropFilters from '../helpers/backdropFilter.helper';
-import {
-  gradientAsBgImg,
-  buildLinear,
-} from '../helpers/gradients.helper';
+
+import { layoutVars } from '../../tokens/layout.tokens';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
 import {
   footerGradientConfig,
   footerVars,
 } from '../componentTokens/footer.component.tokens';
-import { layoutVars } from '../../tokens/layout.tokens';
-import { anchorMenuVars } from '../../tokens/menu.tokens';
+import backdropFilters from '../helpers/backdropFilter.helper';
+import { backgrounds } from '../helpers/background.helper';
+import { borders } from '../helpers/borders.helper';
+import {
+  buildLinear,
+  gradientAsBgImg,
+} from '../helpers/gradients.helper';
+import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
   componentMediaQueries,
