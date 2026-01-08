@@ -5,10 +5,10 @@ import CaseStudy from '@/components/CaseStudy';
 import ConsoleCuriosity from '@/components/ConsoleCuriosity';
 import ContactButton from '@/components/ContactButton';
 import Footer from '@/components/Footer';
-import { Column,Grid } from '@/components/Grid';
+import { Column, Grid } from '@/components/Grid';
+import Heading from '@/components/Heading';
 import Hero from '@/components/Hero';
 import { Markdown } from '@/components/Markdown';
-import ContentWithTitle from '@/components/responsive/ContentWithTitle';
 import WordMarkInTitle from '@/components/WordmarkInTitle';
 import {
   BQWordmark,
@@ -142,21 +142,27 @@ export default async function HomePage({
             headingAnimated={false}
             Gooey={HeroGooey}
           />
-          <ContentWithTitle
+          <section
             id={approach.href}
-            contentTitle={approach.title}
-            ignoreDataUI={true}
+            className={layoutStyles.content}
+            data-ui="content"
           >
+            <Heading ignoreDataUI={true} depth={2}>
+              {approach.title}
+            </Heading>
             <Markdown source={approach.content} />
-          </ContentWithTitle>
+          </section>
 
-          <ContentWithTitle
+          <section
             id={about.href}
-            contentTitle={about.title}
-            ignoreDataUI={true}
+            className={layoutStyles.content}
+            data-ui="content"
           >
+            <Heading ignoreDataUI={true} depth={2}>
+              {about.title}
+            </Heading>
             <Markdown source={about.content} />
-          </ContentWithTitle>
+          </section>
 
           <CaseStudy
             id={caseStudies.href}
@@ -166,14 +172,15 @@ export default async function HomePage({
             wordMarkClassName={cg.wordmarkTextNoLogo}
           />
 
-          <ContentWithTitle
-            ignoreDataUI={true}
-            contentTitle={projects.title}
+          <section
             id={projects.href}
-            queryDataAttributes={{
-              compact: 'no-padding',
-            }}
+            className={layoutStyles.content}
+            data-ui="content"
+            data-query-compact="no-padding"
           >
+            <Heading ignoreDataUI={true} depth={2}>
+              {projects.title}
+            </Heading>
             <Grid>
               <Column span={2}>
                 <Card
@@ -294,7 +301,7 @@ export default async function HomePage({
                 </Card>
               </Column>
             </Grid>
-          </ContentWithTitle>
+          </section>
         </main>
         <Footer
           contact={contact}

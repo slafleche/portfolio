@@ -101,16 +101,16 @@ export const logoBox = style({
 
 export const content = style({
   position: 'relative',
-  flex: 1,
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
   height: '100%',
 });
 
 export const panel = style({
   position: 'relative',
-  flex: 1,
   display: 'flex',
+  flexDirection: 'column',
   height: '100%',
   selectors: {
     ...componentMediaQueries({

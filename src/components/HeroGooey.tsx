@@ -2,7 +2,7 @@
 
 import Goo from '@lafleche/gooey-react';
 import clsx from 'clsx';
-import { type CSSProperties,useId } from 'react';
+import { type CSSProperties, useId } from 'react';
 
 import * as s from '@/styles/components/heroGooey.css';
 
@@ -101,7 +101,7 @@ export default function HeroGooey({
                 stroke={`url(#${gradientAId})`}
                 strokeWidth="25"
                 strokeLinejoin="round"
-                transform="translate(20 31) scale(0.3)"
+                transform="translate(20 31) scale(0.4)"
               />
             </g>
           </g>
@@ -114,7 +114,7 @@ export default function HeroGooey({
                 stroke={`url(#${gradientBId})`}
                 strokeWidth="55"
                 fill="none"
-                transform="translate(45 33.4) scale(0.11)"
+                transform="translate(45 33.4) scale(0.13)"
               />
             </g>
           </g>

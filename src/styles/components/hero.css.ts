@@ -20,7 +20,6 @@ import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
-import { noiseBg } from '../helpers/noiseSVG.helper';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
@@ -178,7 +177,7 @@ export const main = style({
 
 export const subtitle = style({
   opacity: 0,
-  transition: 'opacity 220ms ease',
+  // transition: 'opacity 220ms ease',
   textAlign: 'center',
   fontSize: '22px',
   selectors: {
@@ -245,8 +244,6 @@ export const cta = style({
   color: colorVars.white.css(),
   fontWeight: 600,
   textDecoration: 'none',
-  transition:
-    'transform 150ms ease, box-shadow 150ms ease, opacity 220ms ease',
   ...boxShadow({
     x: m(0),
     y: m(1),
@@ -278,7 +275,6 @@ export const cta = style({
 export const ctaIcon = style({
   width: '14px',
   height: '14px',
-  transition: 'transform 160ms ease',
   selectors: {
     [`${cta}:hover &`]: {
       transform: 'translateX(6%)',

@@ -1,4 +1,4 @@
-import { m, mEm, mPercent } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 
 import {
   defineFontVariant,

@@ -92,11 +92,5 @@ export const master = style({
 });
 
 export const staticHeading = style({
-  opacity: 0,
-  transition: 'opacity 280ms ease',
-  selectors: {
-    '&[data-static-ready="true"]': {
-      opacity: 1,
-    },
-  },
+  opacity: 1,
 });
