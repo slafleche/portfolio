@@ -13,7 +13,7 @@ export const menuFontVariants = {
     label: 'menu',
     sourcePath: SOURCE_PATH,
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(16),
       },
       options: {

@@ -13,7 +13,7 @@ export const footerFontVariants = {
     label: 'footer-cta',
     sourcePath: SOURCE_PATH,
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(16),
       },
       options: {

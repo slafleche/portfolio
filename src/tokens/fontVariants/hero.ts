@@ -14,7 +14,7 @@ export const heroFontVariants = {
     sourcePath: SOURCE_PATH,
     waitForFonts: true,
     config: {
-      overrides: {
+      styleOverrides: {
         lineHeight: 1.1,
         offsetBottom: m(0),
       },

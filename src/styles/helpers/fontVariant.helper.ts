@@ -77,7 +77,7 @@ const collectLayers = (
 ): FontStyleLayer[] => {
   if (!config) return [];
   const layers: FontStyleLayer[] = [];
-  const { layers: configLayers, overrides } = config;
+  const { layers: configLayers, styleOverrides: overrides } = config;
 
   if (Array.isArray(configLayers)) {
     layers.push(...configLayers);
@@ -129,15 +129,17 @@ const combineConfig = (
     textAlign: resolveOptionValue('textAlign'),
     textTransform: resolveOptionValue('textTransform'),
     letterSpacing: resolveOptionValue('letterSpacing'),
+    offsetToFlushTop: resolveOptionValue('offsetToFlushTop'),
+    offsetBottom: resolveOptionValue('offsetBottom'),
     weightPercents: mergedWeightPercents,
   };
 
-  const overrides = extra.overrides ?? undefined;
+  const overrides = extra.styleOverrides ?? undefined;
 
   return {
     options,
     layers: mergedLayers.length > 0 ? mergedLayers : undefined,
-    overrides,
+    styleOverrides: overrides,
   };
 };
 
@@ -340,18 +342,42 @@ export function fontStylesFromFontVariant({
   extraConfig,
   baseVariant,
   includeFontMargins = false,
-}: FontVariantStylesOptions): Partial<Pick<CSS_TYPES.Properties<0 | (string & {}), string & {}>, "fontFamily" | "fontFeatureSettings" | "fontKerning" | "fontOpticalSizing" | "fontSize" | "fontStyle" | "fontVariationSettings" | "fontWeight" | "letterSpacing" | "lineHeight" | "marginBottom" | "marginTop" | "textAlign" | "textTransform" | "fontStretch">> {
+}: FontVariantStylesOptions): Partial<
+  Pick<
+    CSS_TYPES.Properties<0 | (string & {}), string & {}>,
+    | 'fontFamily'
+    | 'fontFeatureSettings'
+    | 'fontKerning'
+    | 'fontOpticalSizing'
+    | 'fontSize'
+    | 'fontStyle'
+    | 'fontVariationSettings'
+    | 'fontWeight'
+    | 'letterSpacing'
+    | 'lineHeight'
+    | 'marginBottom'
+    | 'marginTop'
+    | 'textAlign'
+    | 'textTransform'
+    | 'fontStretch'
+  >
+> {
   const withBase = baseVariant
     ? combineConfig(baseVariant.config, variant.config)
     : variant.config;
   const config = combineConfig(withBase, extraConfig);
   const styles = composeFontStyles(variant.family, config);
   if (includeFontMargins) {
-    if (variant.family.offsetToFlushTop) {
-      styles.marginTop = variant.family.offsetToFlushTop.css();
+    const offsetToFlushTop =
+      config?.options?.offsetToFlushTop ??
+      variant.family.offsetToFlushTop;
+    const offsetBottom =
+      config?.options?.offsetBottom ?? variant.family.offsetBottom;
+    if (offsetToFlushTop) {
+      styles.marginTop = offsetToFlushTop.css();
     }
-    if (variant.family.offsetBottom) {
-      styles.marginBottom = variant.family.offsetBottom.css();
+    if (offsetBottom) {
+      styles.marginBottom = offsetBottom.css();
     }
   }
   return styles;

@@ -1,4 +1,4 @@
-import { m, mPercent } from 'css-calipers';
+import { m, mEm, mPercent, mRem } from 'css-calipers';
 
 import {
   defineFontVariant,
@@ -12,7 +12,7 @@ export const typographyFontVariants = {
     label: 'body',
     sourcePath: SOURCE_PATH,
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(18),
         lineHeight: 1.5,
       },
@@ -30,7 +30,8 @@ export const typographyFontVariants = {
     config: {
       options: {
         textAlign: 'left',
-        letterSpacing: m(0.08, 'em'),
+        letterSpacing: mEm(0.08),
+        offsetBottom: mRem(0.1),
         weightPercents: {
           default: mPercent(0),
         },
@@ -40,7 +41,7 @@ export const typographyFontVariants = {
   h1: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h1',
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(45),
       },
       options: {
@@ -52,9 +53,11 @@ export const typographyFontVariants = {
   }),
   h2: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h2',
-
     config: {
-      overrides: {
+      options: {
+        offsetBottom: mEm(20),
+      },
+      styleOverrides: {
         size: m(28),
       },
     },
@@ -62,7 +65,7 @@ export const typographyFontVariants = {
   h3: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h3',
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(23),
       },
     },
@@ -71,7 +74,7 @@ export const typographyFontVariants = {
     label: 'heading-h4',
 
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(20),
       },
     },
@@ -80,7 +83,7 @@ export const typographyFontVariants = {
     label: 'heading-h5',
 
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(18),
       },
     },
@@ -89,7 +92,7 @@ export const typographyFontVariants = {
     label: 'heading-h6',
 
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(17),
       },
     },

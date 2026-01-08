@@ -180,20 +180,22 @@ export function fontWeightStyle(
 export type FontStyleLayer = FontStyles | null | undefined;
 
 export type FontWeightPercentOptions = {
-  default?: PercentMeasurement | null;
-  strong?: PercentMeasurement | null;
+  default?: PercentMeasurement;
+  strong?: PercentMeasurement;
 };
 
 export type ComposeFontStylesOptions = {
-  textAlign?: CSS_TYPES.Property.TextAlign | null;
-  textTransform?: CSS_TYPES.Property.TextTransform | null;
-  letterSpacing?: IMeasurement | null;
-  weightPercents?: FontWeightPercentOptions | null;
+  textAlign?: CSS_TYPES.Property.TextAlign;
+  textTransform?: CSS_TYPES.Property.TextTransform;
+  letterSpacing?: IMeasurement;
+  offsetToFlushTop?: IMeasurement;
+  offsetBottom?: IMeasurement;
+  weightPercents?: FontWeightPercentOptions;
 };
 
 export type ComposeFontStylesConfig = {
-  options?: ComposeFontStylesOptions | null;
-  overrides?: FontStyleLayer;
+  options?: ComposeFontStylesOptions;
+  styleOverrides?: FontStyleLayer;
   layers?: FontStyleLayer | FontStyleLayer[];
 };
 
@@ -279,7 +281,7 @@ export function composeFontStyles(
   config: ComposeFontStylesConfig = {},
 ): FontCSS {
   const merged: FontStyles = familyToFontStyles(family);
-  const { overrides, layers, options } = config;
+  const { styleOverrides: overrides, layers, options } = config;
 
   if (Array.isArray(layers)) {
     for (const layer of layers) {

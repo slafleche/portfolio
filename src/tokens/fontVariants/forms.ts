@@ -13,7 +13,7 @@ export const formFontVariants = {
     label: 'form-base',
     sourcePath: SOURCE_PATH,
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(18),
         lineHeight: 1.1,
       },
@@ -28,7 +28,7 @@ export const formFontVariants = {
     label: 'form-labels',
     sourcePath: SOURCE_PATH,
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(18),
       },
       options: {
@@ -42,7 +42,7 @@ export const formFontVariants = {
     label: 'form-input',
     sourcePath: SOURCE_PATH,
     config: {
-      overrides: {
+      styleOverrides: {
         lineHeight: 1.1,
         size: m(16),
       },
@@ -57,7 +57,7 @@ export const formFontVariants = {
     label: 'form-hints',
     sourcePath: SOURCE_PATH,
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(16),
       },
       options: {

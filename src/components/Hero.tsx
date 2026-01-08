@@ -1,8 +1,5 @@
 import clsx from 'clsx';
-import {
-  type ComponentType,
-  type CSSProperties,
-} from 'react';
+import { type ComponentType, type CSSProperties } from 'react';
 
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import SendIcon from '@/components/icons/SendIcon';
@@ -15,15 +12,9 @@ import * as layoutStyles from '@/styles/layout.css';
 import { GlassPanel } from './GlassPanel';
 import HeroGooey from './HeroGooey';
 import HeroWaypoint from './HeroWaypoint';
-// import VideoByName from './VideoByName';
 
 type HeroCopy = {
-  videoTitle: string;
-  videoLabel: string;
-  videoDescription: string;
   title: string;
-  consoleDescription: string;
-  videoErrorMessage: string;
   ctaLabel?: string;
   subtitle?: string;
 };
@@ -32,7 +23,6 @@ type Props = {
   id?: string;
   className?: string;
   copy: HeroCopy;
-  withVideo?: boolean;
   overlayClassName?: string;
   headingAnimated?: boolean;
   Gooey?: ComponentType<{ style?: CSSProperties }> | null;
@@ -50,8 +40,7 @@ export default function Hero({
   const headingLabel = toTrimmedOrNull(
     `${headingFirstLine} ${headingLastLine}`,
   );
-  // const showVideo = withVideo && !prefersReducedMotion;
-  // const showPoster = withVideo && prefersReducedMotion;
+
   const showCta = Boolean(copy.ctaLabel);
 
   if (!headingLabel) return null;
@@ -63,11 +52,8 @@ export default function Hero({
         className={clsx(s.root, className)}
         data-heading-animated="false"
       >
-        <div
-          className={clsx(s.overlays, overlayClassName)}
-          aria-hidden
-        >
-          <div className={s.fullGradient} />
+        <div className={clsx(s.overlays)} aria-hidden>
+          <div className={overlayClassName ?? s.fullGradient} />
           {Gooey && <Gooey />}
         </div>
 
@@ -88,9 +74,9 @@ export default function Hero({
                     data-ui="heading"
                     className={clsx(
                       s.heading,
-                      heroTextStyles.layer,
-                      heroTextStyles.master,
-                      heroTextStyles.staticHeading,
+                      // heroTextStyles.layer,
+                      // heroTextStyles.master,
+                      // heroTextStyles.staticHeading,
                     )}
                   >
                     <span
@@ -117,10 +103,7 @@ export default function Hero({
                   </h1>
                 </div>
                 {copy.subtitle ? (
-                  <div
-                    className={s.subtitle}
-                    data-ready="true"
-                  >
+                  <div className={s.subtitle} data-ready="true">
                     <p className={s.subtitleMarkdown}>
                       {copy.subtitle}
                     </p>

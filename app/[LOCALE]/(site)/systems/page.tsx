@@ -109,7 +109,6 @@ export default async function SystemsPage({
             id="systems-hero"
             copy={heroCopy}
             overlayClassName={systemsStyles.heroOverlay}
-            withVideo={false}
             headingAnimated={false}
             Gooey={() => (
               <DeferredIsland when="visible">

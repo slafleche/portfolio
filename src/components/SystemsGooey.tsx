@@ -2,7 +2,7 @@
 
 import Goo from '@lafleche/gooey-react';
 import clsx from 'clsx';
-import { type CSSProperties,useId } from 'react';
+import { type CSSProperties, useId } from 'react';
 
 import * as s from '@/styles/components/systemsGooey.css';
 
@@ -49,7 +49,7 @@ export default function SystemsGooey({
     <Wrapper {...wrapperProps}>
       <svg
         className={s.blobField}
-        viewBox="0 0 100 100"
+        viewBox="0 5 100 100"
         preserveAspectRatio="xMidYMid slice"
         aria-hidden
         focusable="false"
