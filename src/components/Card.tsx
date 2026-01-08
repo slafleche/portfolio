@@ -1,8 +1,9 @@
-import * as s from '@/styles/components/card.css.ts';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import Heading, { type IHeadingDepth } from './Heading';
 import clsx from 'clsx';
-import { GlassPanel } from './GlassPanel';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+
+import * as s from '@/styles/components/card.css.ts';
+
+import Heading, { type IHeadingDepth } from './Heading';
 // import * as glassFrameStyles from '@/styles/helpers/glassFrame.css';
 
 type Props = IHeadingDepth &
@@ -40,9 +41,7 @@ export default function Card({
       )}
 
       <div className={s.frame}>
-        <div
-          className={clsx(s.logoBox, gradientClassName)}
-        >
+        <div className={clsx(s.logoBox, gradientClassName)}>
           {isStringTitle ? (
             <Heading className={s.title} depth={depth}>
               {title}
@@ -57,15 +56,10 @@ export default function Card({
               {logoAsBg}
             </div>
           )}
-          <GlassPanel
-            className={s.panel}
-            surfaceClassName={s.panelSurface}
-            contentClassName={s.panelContent}
-            surfaceClassNameOverride={s.glassSurface}
-          >
+          <div className={s.panel}>
             <div className={s.spacer} />
             <div className={s.text}>{children}</div>
-          </GlassPanel>
+          </div>
         </div>
       </div>
     </div>

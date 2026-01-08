@@ -1,6 +1,7 @@
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+
 import { Markdown } from '@/components/Markdown';
 
 describe('Markdown component', () => {
@@ -107,5 +108,34 @@ describe('Markdown component', () => {
     );
     const codeBlock = container.querySelector('pre code');
     expect(codeBlock?.textContent).toContain('Line 1\n\nLine 3');
+  });
+
+  it('marks a single paragraph as first and last', () => {
+    const { container } = render(<Markdown source="Solo" />);
+    const paragraph = container.querySelector('p');
+    expect(paragraph?.getAttribute('data-first')).toBe('true');
+    expect(paragraph?.getAttribute('data-last')).toBe('true');
+  });
+
+  it('marks first and last paragraphs when multiple exist', () => {
+    const { container } = render(
+      <Markdown source={'First\n\nSecond'} />,
+    );
+    const paragraphs = Array.from(
+      container.querySelectorAll('p'),
+    );
+    expect(paragraphs).toHaveLength(2);
+    expect(paragraphs[0]?.getAttribute('data-first')).toBe(
+      'true',
+    );
+    expect(paragraphs[0]?.getAttribute('data-last')).toBe(
+      null,
+    );
+    expect(paragraphs[1]?.getAttribute('data-first')).toBe(
+      null,
+    );
+    expect(paragraphs[1]?.getAttribute('data-last')).toBe(
+      'true',
+    );
   });
 });

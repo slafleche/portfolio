@@ -10,9 +10,15 @@ const contentPadding = logoVars.fullWidth.add(
 const separatorMinimum = m(300);
 
 export const layoutVars = {
-  contentWidth: defaultContentWidth,
-  contentPadding,
-  contentWidthWithPadding: contentPadding,
+  content: {
+    width: defaultContentWidth,
+    padding: contentPadding,
+    widthWithPadding: contentPadding,
+    gap: m(48),
+  },
+  // contentWidth: defaultContentWidth,
+  // contentPadding,
+  // contentWidthWithPadding: contentPadding,
 
   noEdge: {
     contentPadding: m(26),

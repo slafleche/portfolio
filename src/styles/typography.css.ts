@@ -25,6 +25,7 @@ for (let level = 1; level <= 6; level++) {
     ...fontStylesFromFontVariant({
       variant,
       baseVariant: typographyFontVariants.heading,
+      includeFontMargins: true,
     }),
 
     ...margins({
@@ -48,15 +49,21 @@ globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {
   color: colorVars.bodyFg.css(),
 });
 
-globalStyle(`.${userContent} [data-first]`, {
-  marginTop: 0,
-  paddingTop: 0,
-});
+globalStyle(
+  `.${userContent} [data-first], p:not([data-ui])[data-first]`,
+  {
+    marginTop: 0,
+    paddingTop: 0,
+  },
+);
 
-globalStyle(`.${userContent} [data-last]`, {
-  marginBottom: 0,
-  paddingBottom: 0,
-});
+globalStyle(
+  `.${userContent} [data-last], p:not([data-ui])[data-last]`,
+  {
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
+);
 
 globalStyle('blockquote', {
   color: textStyleVars.blockquote.color.css(),

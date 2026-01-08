@@ -108,28 +108,36 @@ export const content = style({
 });
 
 export const panel = style({
+  position: 'relative',
   flex: 1,
   display: 'flex',
   height: '100%',
+  selectors: {
+    ...componentMediaQueries({
+      card_oneColumn: {
+        flexDirection: 'column',
+      },
+    }),
+  },
 });
 
-export const panelSurface = style({
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  height: '100%',
-});
+// export const panelSurface = style({
+//   flex: 1,
+//   display: 'flex',
+//   flexDirection: 'column',
+//   height: '100%',
+// });
 
-export const panelContent = style({
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  height: '100%',
-});
+// export const panelContent = style({
+//   flex: 1,
+//   display: 'flex',
+//   flexDirection: 'column',
+//   height: '100%',
+// });
 
 export const glassSurface = style(
   makeGlassSurface({
-    blur: m(6),
+    blur: m(3),
   }),
 );
 
@@ -153,6 +161,8 @@ export const gradient = style({
 
 export const spacer = style({
   display: 'none',
+  width: '100%',
+  pointerEvents: 'none',
   selectors: {
     ...componentMediaQueries({
       card_oneColumn: {
@@ -254,7 +264,7 @@ export const wordMark_vanilla = style({
 
 export const wordMark_cc = style({
   width: wordMarkVars.cc.size.css(),
-  height: 'auto',
+  height: wordMarkVars.cc.size.css(),
 });
 
 globalStyle(`.${cardCC} .${spacer}`, {
@@ -323,6 +333,7 @@ export const logoAsBg = style({
   height: '100%',
   pointerEvents: 'none',
   overflow: 'hidden',
+  filter: 'blur(1px)',
 });
 
 export const logoAsBgSVG = style({
@@ -353,19 +364,20 @@ export const logoAsBg_ea = style({
 export const logoAsBg_banq = style({
   width: '100%',
   transformOrigin: '50% 50%',
-  transform: 'translate(20%, -50%) rotate(4deg) scale(1.9)',
+  transform: 'translate(20%, -50%) rotate(4deg) scale(1.5)',
   color: wordMarkVars.banq.logoAsBg.css(),
 });
 
 export const logoAsBg_hs = style({
   width: '100%',
-  transform: 'translate(0%, -30%) rotate(-14deg) scale(1.1)',
+  transformOrigin: '50% 50%',
+  transform: 'translate(4%, -60%) rotate(6deg) scale(1.3)',
   color: wordMarkVars.hs.logoAsBg.css(),
 });
 
 export const logoAsBg_kg = style({
   width: '90%',
-  transform:
-    'translate(5%, -50%) rotate(-8deg) scaleX(1.2) scaleY(1)',
+  transformOrigin: '50% 50%',
+  transform: 'translate(5%, -64%) rotate(-3deg) scale(1.1)',
   color: wordMarkVars.kg.logoAsBg.css(),
 });

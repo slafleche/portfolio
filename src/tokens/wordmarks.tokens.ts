@@ -1,4 +1,5 @@
 import { m, r } from 'css-calipers';
+
 import type { CardGradientPack } from '../styles/helpers/cardGradient.helper';
 import { color } from '../styles/helpers/colorWrap.helper';
 
@@ -113,7 +114,7 @@ export const wordMarkVars = {
     },
     size: m(150),
     ratio: r(615.08, 192.94),
-    logoAsBg: color('#F40009').darken(0.5).alpha(0.6),
+    logoAsBg: color('rgba(77, 4, 17, 0.11)'),
   },
   ea: {
     gradients: {
@@ -122,7 +123,7 @@ export const wordMarkVars = {
     },
     size: m(150),
     ratio: r(998.014, 998.025),
-    logoAsBg: color('#0083B7').darken(0.5).alpha(0.4),
+    logoAsBg: color('#0083B7').darken(0.5).alpha(0.1),
   },
   banq: {
     gradients: {
@@ -131,7 +132,7 @@ export const wordMarkVars = {
     },
     size: m(150),
     ratio: r(47.02762, 47.02762),
-    logoAsBg: color('#0e0d0f').darken(0.5),
+    logoAsBg: color('#0e0d0f').lighten(0.5).alpha(0.04),
   },
   hs: {
     gradients: {
@@ -140,7 +141,7 @@ export const wordMarkVars = {
     },
     size: m(150),
     ratio: r(88.71465, 88.8469),
-    logoAsBg: color('#E03035').desaturate(0.5),
+    logoAsBg: color('#E03035').darken(0.9).alpha(0.05),
   },
   kg: {
     gradients: {
@@ -148,7 +149,7 @@ export const wordMarkVars = {
       direction: defaultGradientDirection,
     },
     size: m(150),
-    ratio: r(684.9532, 463.6684),
-    logoAsBg: color('#FFB800').saturate(0.8),
+    ratio: r(684.9532, 530),
+    logoAsBg: color('#FFB800').darken(0.6).alpha(0.05),
   },
 };

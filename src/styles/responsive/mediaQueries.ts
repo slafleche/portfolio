@@ -13,8 +13,8 @@ import { cardLayout } from '../componentTokens/card.component.tokens';
 import { footerVars } from '../componentTokens/footer.component.tokens';
 import { curlVars } from '../componentTokens/pageCurl.component.tokens';
 
-const fullSizeMinWidth = layoutVars.contentWidth.add(
-  layoutVars.contentPadding.multiply(2),
+const fullSizeMinWidth = layoutVars.content.width.add(
+  layoutVars.content.padding.multiply(2),
 );
 
 export const mediaQueryStyleConfig: IMediaQueries = {

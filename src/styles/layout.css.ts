@@ -7,15 +7,15 @@ import { mediaQueryStyle } from './responsive/mediaQueries';
 
 export const content = style({
   position: 'relative',
-  maxWidth: layoutVars.contentWidth
-    .add(layoutVars.contentPadding.double())
+  maxWidth: layoutVars.content.width
+    .add(layoutVars.content.padding.double())
     .css(),
   width: '100%',
   ...margins({
     horizontal: 'auto',
   }),
   ...paddings({
-    horizontal: layoutVars.contentPadding,
+    horizontal: layoutVars.content.padding,
   }),
 
   selectors: {
@@ -63,15 +63,15 @@ export const main = style({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  rowGap: 'clamp(2rem, 4vw, 4rem)',
+  gap: layoutVars.content.gap.css(),
   ...paddings({
-    bottom: layoutVars.contentPadding.multiply(1.5),
+    bottom: layoutVars.content.padding.multiply(1.5),
   }),
   selectors: {
     ...mediaQueryStyle({
       noEdge: {
         ...paddings({
-          bottom: layoutVars.contentPadding,
+          bottom: layoutVars.content.padding,
         }),
       },
       compact: {

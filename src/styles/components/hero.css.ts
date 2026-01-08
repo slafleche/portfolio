@@ -1,4 +1,4 @@
-import { globalStyle,style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
 import { heroFontVariants } from '../../tokens/fontVariants/hero';
@@ -8,8 +8,12 @@ import {
   dropShadowVars,
   themeColours,
 } from '../../tokens/global.tokens';
-import { heroVars } from '../componentTokens/hero.component.tokens';
+import {
+  heroGradient,
+  heroVars,
+} from '../componentTokens/hero.component.tokens';
 import borders from '../helpers/borders.helper';
+import { makeCardGradient } from '../helpers/cardGradient.helper';
 import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { makeGlassSurface } from '../helpers/glassy.helper';
 import {
@@ -19,11 +23,8 @@ import {
 import { noiseBg } from '../helpers/noiseSVG.helper';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { boxShadow } from '../helpers/shadow.helper';
-import { margins,paddings } from '../helpers/spacing.helper';
-import {
-  componentMediaQueries,
-  mediaQueryStyle,
-} from '../responsive/mediaQueries';
+import { margins, paddings } from '../helpers/spacing.helper';
+import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -95,46 +96,55 @@ export const glassySurfaceOverwrite = style(
 );
 
 /** Subtle static grain to break banding */
-export const grain = style({
+// export const grain = style({
+//   ...fullSizeOfParent(),
+//   ...noiseBg({ opacity: 0.03 }),
+// });
+
+export const fullGradient = style({
   ...fullSizeOfParent(),
-  ...noiseBg({ opacity: 0.03 }),
+  position: 'relative',
+  pointerEvents: 'none',
+  ...makeCardGradient(heroGradient, {
+    linearDirection: m(145, 'deg'),
+  }),
 });
 
 /** Faint multi-stop wash to even flat backgrounds */
-const washTop = colorVars.shadow.alpha(0.3).css();
-const washMid = colorVars.white.alpha(0.1).css();
-const washBot = colorVars.black.alpha(0.6).css();
+// const washTop = colorVars.shadow.alpha(0.3).css();
+// const washMid = colorVars.white.alpha(0.1).css();
+// const washBot = colorVars.black.alpha(0.6).css();
 
-export const wash = style({
-  ...fullSizeOfParent(),
-  backgroundImage: `linear-gradient(180deg, ${washTop} 0%, ${washMid} 45%, ${washBot} 100%)`,
-  mixBlendMode: 'soft-light',
-  opacity: 0.5,
-});
+// export const wash = style({
+//   ...fullSizeOfParent(),
+//   backgroundImage: `linear-gradient(180deg, ${washTop} 0%, ${washMid} 45%, ${washBot} 100%)`,
+//   mixBlendMode: 'soft-light',
+//   opacity: 0.5,
+// });
 
 /** Soften center area */
-export const centerSoften = style({
-  ...fullSizeOfParent(),
-  backgroundImage: `radial-gradient(
-    140% 100% at 50% 0%,
-    ${colorVars.shadow.alpha(1).css()} 0%,
-    ${colorVars.shadow.alpha(0.15).css()} 42%,
-    ${colorVars.shadow.alpha(0).css()} 70%
-  )`,
-  opacity: 0.2,
-});
+// export const centerSoften = style({
+//   ...fullSizeOfParent(),
+//   backgroundImage: `radial-gradient(
+//     140% 100% at 50% 0%,
+//     ${colorVars.shadow.alpha(1).css()} 0%,
+//     ${colorVars.shadow.alpha(0.15).css()} 42%,
+//     ${colorVars.shadow.alpha(0).css()} 70%
+//   )`,
+//   opacity: 0.2,
+// });
 
 /** Break ring radius with soft band */
-export const ringBreaker = style({
-  ...fullSizeOfParent(),
-  backgroundImage: `radial-gradient(
-    68% 52% at 50% 60%,
-    transparent 0%,
-    ${colorVars.black.alpha(0.028).css()} 52%,
-    ${colorVars.black.alpha(0.05).css()} 68%,
-    ${colorVars.black.alpha(0).css()} 86%
-  )`,
-});
+// export const ringBreaker = style({
+//   ...fullSizeOfParent(),
+//   backgroundImage: `radial-gradient(
+//     68% 52% at 50% 60%,
+//     transparent 0%,
+//     ${colorVars.black.alpha(0.028).css()} 52%,
+//     ${colorVars.black.alpha(0.05).css()} 68%,
+//     ${colorVars.black.alpha(0).css()} 86%
+//   )`,
+// });
 
 /* ============================================================================
    CONTENT / PANELS
@@ -156,20 +166,21 @@ export const main = style({
   flexDirection: 'column',
   alignItems: 'center',
   ...paddings({
-    vertical: m(80),
+    vertical: m(100),
     horizontal: m(46),
   }),
-  selectors: {
-    ...componentMediaQueries({
-      hero_compact: paddings(m(46)),
-    }),
-  },
+  // selectors: {
+  //   ...componentMediaQueries({
+  //     hero_compact: paddings(m(46)),
+  //   }),
+  // },
 });
 
 export const subtitle = style({
   opacity: 0,
   transition: 'opacity 220ms ease',
   textAlign: 'center',
+  fontSize: '22px',
   selectors: {
     '&[data-ready="true"]': {
       opacity: 1,
@@ -373,12 +384,9 @@ export const heading = style({
   textAlign: 'center',
   ...fontStylesFromFontVariant({
     variant: heroFontVariants.hero,
+    includeFontMargins: true,
   }),
   fontSize: 'clamp(20px, 8vw, 100px)',
-  ...margins({
-    top: heroFontVariants.hero.family.offsetToFlushTop,
-    bottom: m(40),
-  }),
   selectors: {
     ...mediaQueryStyle({
       snug: {

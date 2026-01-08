@@ -36,7 +36,7 @@ export const root = style({
   overflow: 'hidden',
 
   ...paddings({
-    vertical: layoutVars.contentPadding.multiply(1.5),
+    vertical: layoutVars.content.padding.multiply(1.5),
   }),
   selectors: {
     ...mediaQueryStyle({

@@ -9,6 +9,7 @@ import * as s from '@/styles/components/systemsGooey.css';
 import { themeColours } from '../tokens/global.tokens';
 
 type Props = {
+  enabled?: boolean;
   intensity?: 'weak' | 'medium' | 'strong';
   composite?: boolean;
   filterId?: string;
@@ -17,6 +18,7 @@ type Props = {
 };
 
 export default function SystemsGooey({
+  enabled = false,
   intensity = 'strong',
   composite = true,
   filterId,
@@ -29,14 +31,22 @@ export default function SystemsGooey({
   const gradientBId = `${baseId}-systems-gooey-gradient-b`;
   const gradientCId = `${baseId}-systems-gooey-gradient-c`;
 
+  const Wrapper = enabled ? Goo : 'div';
+  const wrapperProps = enabled
+    ? {
+        className: clsx(s.root, className),
+        intensity,
+        composite,
+        id: gooeyId,
+        style,
+      }
+    : {
+        className: clsx(s.root, className),
+        style,
+      };
+
   return (
-    <Goo
-      className={clsx(s.root, className)}
-      intensity={intensity}
-      composite={composite}
-      id={gooeyId}
-      style={style}
-    >
+    <Wrapper {...wrapperProps}>
       <svg
         className={s.blobField}
         viewBox="0 0 100 100"
@@ -159,6 +169,6 @@ export default function SystemsGooey({
           />
         </g>
       </svg>
-    </Goo>
+    </Wrapper>
   );
 }

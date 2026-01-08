@@ -41,6 +41,8 @@ export type FontCSS = Partial<
     | 'fontFeatureSettings'
     | 'fontKerning'
     | 'fontOpticalSizing'
+    | 'marginTop'
+    | 'marginBottom'
   >
 >;
 

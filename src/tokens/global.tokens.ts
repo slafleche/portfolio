@@ -1,4 +1,4 @@
-import { type IMeasurement,m } from 'css-calipers';
+import { type IMeasurement, m } from 'css-calipers';
 
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 
@@ -151,140 +151,6 @@ export const themeColours = {
   },
 };
 
-// export const cardGradients = {
-//   cc: {
-//     linear: [
-//       themeColours.lights.c,
-//     ],
-//   },
-// };
-
-export const gradients: CardGradientPack[] = [
-  {
-    linear: [
-      {
-        color: color('#51287a'),
-        at: 0,
-      },
-      {
-        color: color('#51287a'),
-        at: 30,
-        blend: 1,
-      },
-      {
-        color: color('#5B66D6'),
-        at: 80,
-        blend: 0.3,
-      },
-      {
-        color: color('#6E4DCC'),
-        at: 100,
-      },
-    ],
-    spots: [
-      {
-        color: color('#9BE8FB').alpha(0.5),
-        x: 20,
-        y: 110,
-        scale: 80,
-        blendMode: 'normal',
-      },
-      {
-        color: color('#51287a').alpha(0.4),
-        x: 90,
-        y: 53,
-        scale: 100,
-        softenL: 10,
-        blendMode: 'normal',
-      },
-      {
-        color: color('#287a52').alpha(0.7),
-        x: 63,
-        y: 100,
-        scale: 80,
-        blendMode: 'normal',
-      },
-      {
-        color: color('#00ff6e').alpha(0.3),
-        x: 80,
-        y: 60,
-        scale: 80,
-        blendMode: 'normal',
-      },
-      {
-        color: color('#ff00bf').alpha(0.6),
-        x: 66,
-        y: 70,
-        scale: 70,
-        blendMode: 'normal',
-      },
-    ],
-  },
-  {
-    linear: [
-      {
-        color: color('#51287a'),
-        at: 0,
-      },
-      {
-        color: color('#7139a5'),
-        at: 100,
-      },
-    ],
-    spots: [
-      {
-        color: color('#ffae00'),
-        x: 80,
-        y: 100,
-        scale: 80,
-      },
-      {
-        color: color('#bd08b4').alpha(0.7),
-        x: 95,
-        y: 48,
-        scale: 80,
-        blendMode: 'normal',
-      },
-      {
-        color: color('#cbb358').alpha(0.8),
-        x: 20,
-        y: 100,
-        scale: 75,
-        blendMode: 'normal',
-      },
-      {
-        color: color('#b7910a').alpha(0.2),
-        x: 17,
-        y: 98,
-        scale: 85,
-      },
-      {
-        color: color('#4271bb').alpha(0.6),
-        x: 10,
-        y: 56,
-        scale: 100,
-      },
-    ],
-  },
-];
-
-export const bokehVars = {
-  // Default Bokeh overlay settings (consumed by components)
-  colors: [
-    gradients[0]?.linear?.[0]?.color ?? themeColours.lights.a,
-    // gradients[0].linear[1].color,
-    // gradients[1].linear[2].color,
-    // gradients[1].spots[0].color,
-    // gradients[0].spots[0].color,
-    // gradients[0].spots[2].color,
-  ],
-  opacity: 0.2,
-  blendMode: 'screen' as CSS_TYPES.Property.MixBlendMode,
-  blur: 50,
-  blurScale: 1,
-  sizeScale: 0.7,
-  fadeMs: 300,
-};
 
 // export const gradientFull = {
 // 	overlayA: gradients.b_spot_a,
@@ -329,7 +195,6 @@ export const bokehVars = {
 const baseColours = {
   backgroundColour,
   shadow,
-  gradients,
   fg: color('#ffffff'),
   bg: color('#000000'),
 };

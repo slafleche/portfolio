@@ -107,7 +107,7 @@ export default function HeroHeading({
 
   const masterInitialStyle = useMemo(
     () => ({
-      opacity: 0,
+      opacity: 1,
       transform: 'scale(1)',
     }),
     [],

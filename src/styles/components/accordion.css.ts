@@ -1,4 +1,4 @@
-import { globalStyle,keyframes, style } from '@vanilla-extract/css';
+import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
 import { colorVars } from '../../tokens/global.tokens';
@@ -121,7 +121,6 @@ export const triggerText = style({
 });
 
 export const triggerLabel = style({
-  // ...fontStylesFromFontVariant(headingVariants.h4),
   color: colorVars.white.css(),
   ...paddings({
     right: accordionItemTokens.handle.spacing,

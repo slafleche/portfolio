@@ -107,7 +107,7 @@
     "test:api": "NODE_ENV=test vitest run tests/api tests/server",
     "test:brevo": "NODE_ENV=test vitest run tests/server/deliverContactMessage.test.ts tests/api/contact.route.test.ts tests/api/contact.health.route.test.ts",
     "test:watch": "NODE_ENV=test vitest --watch",
-    "lint": "yarn lint:cleanup && yarn lint:base && yarn lint:locales && yarn lint:secrets && yarn lint:rules",
+    "lint": "yarn lint:base && yarn lint:cleanup && yarn lint:locales && yarn lint:secrets && yarn lint:rules",
     "lint:cleanup": "tsx scripts/cleanup.mts",
     "lint:base": "eslint . && node -e \"console.log(String.fromCharCode(0x2705) + ' lint:base checks passed')\"",
     "lint:scripts": "eslint \"scripts/**/*.{js,cjs,mjs,ts,cts,mts}\" --max-warnings=0 && node -e \"console.log(String.fromCharCode(0x2705) + ' lint:scripts checks passed')\"",

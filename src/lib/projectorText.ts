@@ -385,7 +385,7 @@ export function playProjectorText(
   const baseGhostOpacity = firstChannelState?.opacity ?? 0.85;
 
   const applyInitialState = () => {
-    masterEl.style.opacity = '0';
+    masterEl.style.opacity = '1';
     masterEl.style.transform = 'scale(1)';
     masterEl.style.filter = 'none';
 
@@ -426,7 +426,6 @@ export function playProjectorText(
       });
     });
 
-    let masterOpacity = 0;
     let ghostOpacity = baseGhostOpacity;
 
     if (elapsed >= timings.revealStart) {
@@ -435,16 +434,14 @@ export function playProjectorText(
         Number.EPSILON,
       );
       const t = clamp((elapsed - timings.revealStart) / span, 0, 1);
-      masterOpacity = t;
       ghostOpacity = lerp(baseGhostOpacity, 0, t);
     }
 
     if (elapsed >= timings.revealEnd) {
-      masterOpacity = 1;
       ghostOpacity = 0;
     }
 
-    masterEl.style.opacity = masterOpacity.toFixed(3);
+    masterEl.style.opacity = '1';
     ghostEl.style.opacity = ghostOpacity.toFixed(3);
   };
 

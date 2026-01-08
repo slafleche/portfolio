@@ -332,18 +332,29 @@ type FontVariantStylesOptions = {
   variant: FontVariantDefinition;
   extraConfig?: ComposeFontStylesConfig;
   baseVariant?: FontVariantDefinition;
+  includeFontMargins?: boolean;
 };
 
 export function fontStylesFromFontVariant({
   variant,
   extraConfig,
   baseVariant,
+  includeFontMargins = false,
 }: FontVariantStylesOptions) {
   const withBase = baseVariant
     ? combineConfig(baseVariant.config, variant.config)
     : variant.config;
   const config = combineConfig(withBase, extraConfig);
-  return composeFontStyles(variant.family, config);
+  const styles = composeFontStyles(variant.family, config);
+  if (includeFontMargins) {
+    if (variant.family.offsetToFlushTop) {
+      styles.marginTop = variant.family.offsetToFlushTop.css();
+    }
+    if (variant.family.offsetBottom) {
+      styles.marginBottom = variant.family.offsetBottom.css();
+    }
+  }
+  return styles;
 }
 
 export type FontVariantMap = Record<string, FontVariantDefinition>;

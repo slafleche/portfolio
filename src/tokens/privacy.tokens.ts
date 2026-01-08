@@ -9,7 +9,7 @@ const horizontalPadding = m(24);
 export const privacyTokens = {
   blur: m(3),
   layout: {
-    maxWidth: layoutVars.contentWidth,
+    maxWidth: layoutVars.content.width,
     paddings: {
       horizontal: horizontalPadding,
       top: m(36),

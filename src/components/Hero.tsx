@@ -13,7 +13,6 @@ import {
 
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import SendIcon from '@/components/icons/SendIcon';
-import { Markdown } from '@/components/Markdown';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { collectWaitForFonts, waitForFonts } from '@/lib/fontLoading';
 import { parseSplit } from '@/lib/locales/translations/splitShortcodes';
@@ -29,8 +28,7 @@ import { GlassPanel } from './GlassPanel';
 import HeroGooey from './HeroGooey';
 import HeroHeading from './HeroHeading.client';
 import HeroWaypoint from './HeroWaypoint';
-import ImageByName from './ImageByName';
-import VideoByName from './VideoByName';
+// import VideoByName from './VideoByName';
 
 type HeroCopy = {
   videoTitle: string;
@@ -57,7 +55,6 @@ export default function Hero({
   id,
   className,
   copy,
-  withVideo = true,
   overlayClassName,
   headingAnimated = true,
   Gooey = HeroGooey,
@@ -90,8 +87,8 @@ export default function Hero({
       headingLastLine,
     ],
   );
-  const showVideo = withVideo && !prefersReducedMotion;
-  const showPoster = withVideo && prefersReducedMotion;
+  // const showVideo = withVideo && !prefersReducedMotion;
+  // const showPoster = withVideo && prefersReducedMotion;
   const showCta = Boolean(copy.ctaLabel);
 
   const headingKey = useMemo(
@@ -245,50 +242,11 @@ export default function Hero({
         className={clsx(s.root, className)}
         data-heading-animated={isHeadingAnimated ? 'true' : 'false'}
       >
-        {showVideo ? (
-          <VideoByName
-            name="hero"
-            title={copy.videoTitle}
-            label={copy.videoLabel}
-            kind="hero"
-            className={s.video}
-            contentWrapClassName={s.contentWrap}
-            visualItemClassName={s.visualContent}
-            backgroundClassName={s.videoBg}
-            autoPlay
-            muted
-            loop
-            playsInline
-            aria-hidden
-            role="presentation"
-            errorMessage={copy.videoErrorMessage}
-            fallbackLabel={copy.videoLabel}
-          />
-        ) : null}
-        {showPoster ? (
-          <div className={s.video} aria-hidden>
-            <div className={s.videoBg} />
-            <div className={s.contentWrap}>
-              <ImageByName
-                name="video-hero"
-                alt={copy.videoDescription}
-                size="lg"
-                className={s.visualContent}
-                priority
-              />
-            </div>
-          </div>
-        ) : null}
-
-        {/* Banding-fix overlays (over video, under content) */}
         <div
           className={clsx(s.overlays, overlayClassName)}
           aria-hidden
         >
-          <div className={s.grain} />
-          <div className={s.wash} />
-          <div className={s.centerSoften} />
-          <div className={s.ringBreaker} />
+          <div className={s.fullGradient} />
           {Gooey && <Gooey style={gooeyStyle} />}
         </div>
 
@@ -331,10 +289,9 @@ export default function Hero({
                     className={s.subtitle}
                     data-ready={ctaVisible ? 'true' : 'false'}
                   >
-                    <Markdown
-                      source={copy.subtitle}
-                      className={s.subtitleMarkdown}
-                    />
+                    <p className={s.subtitleMarkdown}>
+                      {copy.subtitle}
+                    </p>
                   </div>
                 ) : null}
                 {showCta ? (

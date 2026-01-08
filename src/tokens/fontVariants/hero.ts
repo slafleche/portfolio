@@ -1,4 +1,4 @@
-import { m, mPercent } from 'css-calipers';
+import { m, mEm, mPercent } from 'css-calipers';
 
 import {
   defineFontVariant,
@@ -16,7 +16,7 @@ export const heroFontVariants = {
     config: {
       overrides: {
         lineHeight: 1.1,
-        letterSpacing: m(0.02, 'em'),
+        offsetBottom: m(0),
       },
       options: {
         weightPercents: {
