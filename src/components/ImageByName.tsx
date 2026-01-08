@@ -9,8 +9,10 @@ import { getManifestTarget } from '@/lib/runtimeEnv';
 import * as s from '@/styles/components/imageByName.css';
 
 const target = getManifestTarget();
-const bakedImagesManifest =
-  target === 'release' ? releaseManifest : stagingManifest;
+const bakedImagesManifest: Record<string, ImageEntry> =
+  target === 'release'
+    ? (releaseManifest as Record<string, ImageEntry>)
+    : (stagingManifest as Record<string, ImageEntry>);
 
 const useImagesManifest = () => bakedImagesManifest;
 
