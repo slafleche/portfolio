@@ -25,12 +25,7 @@ for (let level = 1; level <= 6; level++) {
     ...fontStylesFromFontVariant({
       variant,
       baseVariant: typographyFontVariants.heading,
-      
-    }),
-
-    ...margins({
-      top: variant.family.offsetToFlushTop,
-      bottom: variant.family.offsetBottom,
+      includeFontMargins: true,
     }),
 
     ...globalMediaQueryStyle({

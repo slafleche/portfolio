@@ -55,7 +55,7 @@ export const typographyFontVariants = {
     label: 'heading-h2',
     config: {
       options: {
-        offsetBottom: mEm(20),
+        offsetBottom: mEm(0.8),
       },
       styleOverrides: {
         size: m(28),

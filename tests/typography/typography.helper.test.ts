@@ -1,7 +1,10 @@
 import { m, mPercent } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
 
-import { fontStylesFromFontVariant } from '@/styles/helpers/fontVariant.helper';
+import {
+  defineFontVariant,
+  fontStylesFromFontVariant,
+} from '@/styles/helpers/fontVariant.helper';
 import {
   composeFontStyles,
   computeFontWeight,
@@ -92,7 +95,7 @@ describe('typography.helper', () => {
           css: { fontStyle: 'italic' },
         },
       ],
-      overrides: {
+      styleOverrides: {
         letterSpacing: m(1),
       },
       options: {
@@ -126,7 +129,7 @@ describe('typography.helper', () => {
       options: {
         letterSpacing: m(0.05, 'em'),
       },
-      overrides: {
+      styleOverrides: {
         letterSpacing: m(0.1, 'em'),
       },
     });
@@ -165,6 +168,106 @@ describe('typography.helper', () => {
     });
 
     expect(headingStyles.letterSpacing).toBe('0.08em');
+  });
+
+  it('prefers offsetBottom from variant options over base options', () => {
+    const baseVariant = defineFontVariant(fontFamilies.objectSans, {
+      label: 'test-heading-offset-base',
+      sourcePath: 'tests/typography/typography.helper.test.ts',
+      config: {
+        options: {
+          offsetBottom: m(0.1, 'rem'),
+        },
+      },
+    });
+    const variant = defineFontVariant(fontFamilies.objectSans, {
+      label: 'test-heading-offset',
+      sourcePath: 'tests/typography/typography.helper.test.ts',
+      config: {
+        options: {
+          offsetBottom: m(2, 'rem'),
+        },
+      },
+    });
+
+    const styles = fontStylesFromFontVariant({
+      variant,
+      baseVariant,
+      includeFontMargins: true,
+    });
+
+    expect(styles.marginBottom).toBe('2rem');
+  });
+
+  it('prefers offsetToFlushTop from variant options over base options', () => {
+    const baseVariant = defineFontVariant(fontFamilies.objectSans, {
+      label: 'test-heading-offset-top-base',
+      sourcePath: 'tests/typography/typography.helper.test.ts',
+      config: {
+        options: {
+          offsetToFlushTop: m(0.2, 'rem'),
+        },
+      },
+    });
+    const variant = defineFontVariant(fontFamilies.objectSans, {
+      label: 'test-heading-offset-top',
+      sourcePath: 'tests/typography/typography.helper.test.ts',
+      config: {
+        options: {
+          offsetToFlushTop: m(1.5, 'rem'),
+        },
+      },
+    });
+
+    const styles = fontStylesFromFontVariant({
+      variant,
+      baseVariant,
+      includeFontMargins: true,
+    });
+
+    expect(styles.marginTop).toBe('1.5rem');
+  });
+
+  it('matches the heading loop with h2 offsetBottom overrides', () => {
+    const headingFamily = {
+      ...fontFamilies.objectSans,
+      offsetToFlushTop: m(-0.564, 'rem'),
+      offsetBottom: m(0.1, 'rem'),
+    };
+    const variants = {
+      heading: defineFontVariant(headingFamily, {
+        label: 'test-heading-loop-base',
+        sourcePath: 'tests/typography/typography.helper.test.ts',
+        config: {
+          options: {
+            textAlign: 'left',
+            letterSpacing: m(0.08, 'em'),
+            offsetBottom: m(0.1, 'rem'),
+          },
+        },
+      }),
+      h2: defineFontVariant(headingFamily, {
+        label: 'test-heading-loop-h2',
+        sourcePath: 'tests/typography/typography.helper.test.ts',
+        config: {
+          styleOverrides: {
+            size: m(28),
+          },
+          options: {
+            offsetBottom: m(20, 'em'),
+          },
+        },
+      }),
+    };
+
+    const h2Styles = fontStylesFromFontVariant({
+      variant: variants.h2,
+      baseVariant: variants.heading,
+      includeFontMargins: true,
+    });
+
+    expect(h2Styles.marginTop).toBe('-0.564rem');
+    expect(h2Styles.marginBottom).toBe('20em');
   });
 
   it('inherits family defaults through heading and h1/h2 variants', () => {
@@ -209,7 +312,7 @@ describe('typography.helper', () => {
           textAlign: 'left',
           letterSpacing: m(0.1, 'em'),
         },
-        overrides: {
+        styleOverrides: {
           lineHeight: 2,
         },
       },

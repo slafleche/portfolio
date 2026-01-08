@@ -7,7 +7,8 @@ import { fontFamilies } from './fontFamilies.test.tokens';
 export const typographyFontVariants = {
   heading: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading',
-    sourcePath: 'tests/typography/typographyFontVariants.test.tokens.ts',
+    sourcePath:
+      'tests/typography/typographyFontVariants.test.tokens.ts',
     config: {
       options: {
         textAlign: 'center',
@@ -20,9 +21,10 @@ export const typographyFontVariants = {
   }),
   h1: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h1',
-    sourcePath: 'tests/typography/typographyFontVariants.test.tokens.ts',
+    sourcePath:
+      'tests/typography/typographyFontVariants.test.tokens.ts',
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(45),
       },
       options: {
@@ -34,9 +36,10 @@ export const typographyFontVariants = {
   }),
   h2: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h2',
-    sourcePath: 'tests/typography/typographyFontVariants.test.tokens.ts',
+    sourcePath:
+      'tests/typography/typographyFontVariants.test.tokens.ts',
     config: {
-      overrides: {
+      styleOverrides: {
         size: m(28),
       },
     },
