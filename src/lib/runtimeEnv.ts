@@ -79,6 +79,11 @@ export function getTurnstileEnvConfig(): TurnstileEnvConfig {
   };
 }
 
+export function getTurnstileSiteKey(): string | null {
+  const { siteKey } = getTurnstileEnvConfig();
+  return siteKey ?? null;
+}
+
 export interface BrevoEnvConfig {
   apiKey: string | null;
   mailFrom: string | null;
