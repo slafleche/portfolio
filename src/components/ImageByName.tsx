@@ -2,66 +2,17 @@
 import clsx from 'clsx';
 import * as React from 'react';
 
+import stagingManifest from '@/data/generated/_staging/images/manifest.images.gen.json' assert { type: 'json' };
+import releaseManifest from '@/data/generated/release/images/manifest.images.gen.json' assert { type: 'json' };
 import type { ImageEntry } from '@/lib/images';
+import { getManifestTarget } from '@/lib/runtimeEnv';
 import * as s from '@/styles/components/imageByName.css';
 
-const IMAGES_MANIFEST_URL = '/cdn/manifest/images.json';
-let cachedImagesManifest: Record<string, ImageEntry> | null = null;
-let cachedImagesPromise: Promise<Record<string, ImageEntry>> | null =
-  null;
+const target = getManifestTarget();
+const bakedImagesManifest =
+  target === 'release' ? releaseManifest : stagingManifest;
 
-const fetchImagesManifest = async (): Promise<
-  Record<string, ImageEntry>
-> => {
-  if (cachedImagesManifest) return cachedImagesManifest;
-  if (!cachedImagesPromise) {
-    cachedImagesPromise = fetch(IMAGES_MANIFEST_URL)
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error(
-            `Failed to load images manifest (${response.status}).`,
-          );
-        }
-        return (await response.json()) as Record<string, ImageEntry>;
-      })
-      .catch((error) => {
-        cachedImagesPromise = null;
-        throw error;
-      });
-  }
-  cachedImagesManifest = await cachedImagesPromise;
-  return cachedImagesManifest;
-};
-
-const useImagesManifest = () => {
-  const [
-    manifest,
-    setManifest,
-  ] = React.useState<Record<string, ImageEntry> | null>(
-    () => cachedImagesManifest,
-  );
-
-  React.useEffect(() => {
-    let cancelled = false;
-    if (manifest) return;
-    fetchImagesManifest()
-      .then((data) => {
-        if (!cancelled) setManifest(data);
-        return data;
-      })
-      .catch(() => {
-        if (!cancelled) setManifest({});
-        return undefined;
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [
-    manifest,
-  ]);
-
-  return manifest;
-};
+const useImagesManifest = () => bakedImagesManifest;
 
 type ImageSize = 'auto' | 'sm' | 'md' | 'lg';
 

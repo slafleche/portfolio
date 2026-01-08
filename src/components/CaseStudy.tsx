@@ -1,6 +1,9 @@
+import { clsx } from 'clsx';
+
 import { Markdown } from '@/components/Markdown';
 import { createDomId } from '@/lib/dom';
 import * as s from '@/styles/components/accordion.css';
+import * as layoutStyles from '@/styles/layout.css';
 
 import Content from './responsive/Content';
 import WordMarkInTitle from './WordmarkInTitle';
@@ -11,6 +14,7 @@ type CaseStudyProps = {
   intro?: string;
   title: string;
   wordMarkClassName?: string;
+  className?: string;
   children: React.ReactNode;
 };
 
@@ -19,12 +23,16 @@ export default function CaseStudy({
   intro,
   title,
   wordMarkClassName,
-  children
+  className,
+  children,
 }: CaseStudyProps) {
   const baseId = id ?? createDomId('case-study');
   const hasIntro = typeof intro === 'string' && intro.trim() !== '';
   return (
-    <section id={baseId} className={s.root}>
+    <section
+      id={baseId}
+      className={clsx(s.root, layoutStyles.sectionSpacing, className)}
+    >
       <Content tag={'div'}>
         <WordMarkInTitle
           WordMark={VNWordmark}

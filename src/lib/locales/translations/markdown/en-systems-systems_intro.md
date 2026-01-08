@@ -1,4 +1,4 @@
-Type-safe CSS primitives for building **your** design system
+## Type-safe CSS primitives for building **your** design system
 
 ### Custom design systems
 

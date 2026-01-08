@@ -5,17 +5,20 @@ import Hero from '@/components/Hero';
 import { Markdown } from '@/components/Markdown';
 import Menu from '@/components/Menu';
 import ContentAsTiles from '@/components/responsive/ContentAsTiles';
-import SystemsGooey from '@/components/SystemsGooey';
+import SiteProviders from '@/components/site/SiteProviders.client';
+import SystemsGooeyLazy from '@/components/SystemsGooeyLazy.client';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { resolveLocale } from '@/lib/locales/locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
+import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
-import * as systemsStyles from '@/styles/components/systems.css';
+import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
 import * as layoutStyles from '@/styles/layout.css';
 
 import Content from '../../../../src/components/responsive/Content';
@@ -31,6 +34,10 @@ export default async function SystemsPage({
   const { LOCALE } = await params;
   const locale = resolveLocale(LOCALE);
   const translator = await loadTranslator(locale);
+  const contactFormCopy = buildContactFormCopy(translator);
+  const privacyCopy = buildPrivacyCopy(translator);
+  const closeLabel = translator('close-label');
+  const turnstileSiteKey = getTurnstileSiteKey();
 
   const heroCopyBase = buildHeroCopy(translator);
   const contactCopy = buildContactCopy(translator);
@@ -97,10 +104,13 @@ export default async function SystemsPage({
   };
 
   return (
-    <>
-      <DeferredIsland when="idle">
-        <Menu {...menuProps} />
-      </DeferredIsland>
+    <SiteProviders
+      formCopy={contactFormCopy}
+      privacyCopy={privacyCopy}
+      closeLabel={closeLabel}
+      turnstileSiteKey={turnstileSiteKey}
+    >
+      <Menu {...menuProps} />
 
       <div className={layoutStyles.page}>
         <SystemsBgOverlay className={layoutStyles.svgOverlay} />
@@ -111,48 +121,52 @@ export default async function SystemsPage({
             headingAnimated={false}
             Gooey={() => (
               <DeferredIsland when="visible">
-                <SystemsGooey />
+                <SystemsGooeyLazy />
               </DeferredIsland>
             )}
           />
-          <ContentAsTiles
-            id={systemsIntroId}
-            title={systemsTitle}
-            markdown={systemsIntroMarkdown}
-          />
-          <hr />
-          <ContentAsTiles
-            id={systemsPrinciplesId}
-            title={systemsPrinciplesTitle}
-            markdown={systemsPrinciplesMarkdown}
-          />
-          <hr />
-          <ContentAsTiles
-            id={systemsShapeId}
-            title={systemsShapeTitle}
-            markdown={systemsShapeMarkdown}
-          />
-          <Content>
-            <Markdown source={systemsShapeBlurbMarkdown} />
-          </Content>
-        </main>
-        <Footer
-          contact={contactCopy}
-          id="contact"
-          systemsLink={systemsLink}
-          hideSystemsLink
-          backHref={homeHref}
-          backLabel={translator('systems-back-home-label')}
-        />
-        {heroCopy.ctaLabel ? (
           <DeferredIsland when="idle">
-            <ContactButton
-              watchId={sharedStrings.heroWaypointId}
-              label={heroCopy.ctaLabel}
+            <ContentAsTiles
+              id={systemsIntroId}
+              title={systemsTitle}
+              markdown={systemsIntroMarkdown}
             />
+            <hr />
+            <ContentAsTiles
+              id={systemsPrinciplesId}
+              title={systemsPrinciplesTitle}
+              markdown={systemsPrinciplesMarkdown}
+            />
+            <hr />
+            <ContentAsTiles
+              id={systemsShapeId}
+              title={systemsShapeTitle}
+              markdown={systemsShapeMarkdown}
+            />
+            <Content>
+              <Markdown source={systemsShapeBlurbMarkdown} />
+            </Content>
           </DeferredIsland>
-        ) : null}
+        </main>
+        <DeferredIsland when="idle">
+          <Footer
+            contact={contactCopy}
+            id="contact"
+            systemsLink={systemsLink}
+            hideSystemsLink
+            backHref={homeHref}
+            backLabel={translator('systems-back-home-label')}
+          />
+          {heroCopy.ctaLabel ? (
+            <DeferredIsland when="idle">
+              <ContactButton
+                watchId={sharedStrings.heroWaypointId}
+                label={heroCopy.ctaLabel}
+              />
+            </DeferredIsland>
+          ) : null}
+        </DeferredIsland>
       </div>
-    </>
+    </SiteProviders>
   );
 }

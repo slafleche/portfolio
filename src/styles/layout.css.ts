@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 
 import { layoutVars } from '../tokens/layout.tokens';
 import { anchorMenuVars } from '../tokens/menu.tokens';
@@ -19,6 +19,9 @@ export const content = style({
   }),
 
   selectors: {
+    "&[data-margin='skip']": {
+      marginTop: 0,
+    },
     ...mediaQueryStyle({
       fullSize: {
         selectors: {
@@ -43,6 +46,14 @@ export const content = style({
       },
     }),
   },
+});
+
+globalStyle(`.${content} + .${content}`, {
+  marginTop: layoutVars.content.gap.css(),
+});
+
+export const sectionSpacing = style({
+  marginTop: layoutVars.content.gap.css(),
 });
 
 export const title = style({});

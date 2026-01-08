@@ -6,6 +6,7 @@ import Content, { type ContentBaseProps } from './Content';
 export type ContentWithTitleBaseProps = ContentBaseProps & {
   contentTitle?: ReactNode;
   ignoreDataUI?: boolean;
+  skipSectionMargin?: boolean;
   headingDepth?: 2 | 3 | 4 | 5 | 6;
 };
 
@@ -26,6 +27,7 @@ export default function ContentWithTitle<
     children,
     tag,
     className,
+    skipSectionMargin,
     queryDataAttributes,
     ...rest
   } = props;
@@ -34,6 +36,7 @@ export default function ContentWithTitle<
     <Content
       tag={tag}
       className={className}
+      data-margin={skipSectionMargin ? 'skip' : undefined}
       queryDataAttributes={queryDataAttributes}
       {...rest}
     >

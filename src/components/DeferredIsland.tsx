@@ -21,24 +21,25 @@ export default function DeferredIsland({
   rootMargin = '200px 0px',
   minDelayMs,
 }: DeferredIslandProps) {
-  const [ready, setReady] = useState(false);
+  const [
+    ready,
+    setReady,
+  ] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (ready) return;
 
-    const requestIdleCallback =
-      (
-        window as Window & {
-          requestIdleCallback?: RequestIdleCallback;
-        }
-      ).requestIdleCallback;
-    const cancelIdleCallback =
-      (
-        window as Window & {
-          cancelIdleCallback?: CancelIdleCallback;
-        }
-      ).cancelIdleCallback;
+    const requestIdleCallback = (
+      window as Window & {
+        requestIdleCallback?: RequestIdleCallback;
+      }
+    ).requestIdleCallback;
+    const cancelIdleCallback = (
+      window as Window & {
+        cancelIdleCallback?: CancelIdleCallback;
+      }
+    ).cancelIdleCallback;
 
     let idleId: number | null = null;
     let timeoutId: number | null = null;
@@ -46,7 +47,10 @@ export default function DeferredIsland({
 
     const scheduleReady = () => {
       if (minDelayMs && minDelayMs > 0) {
-        timeoutId = window.setTimeout(() => setReady(true), minDelayMs);
+        timeoutId = window.setTimeout(
+          () => setReady(true),
+          minDelayMs,
+        );
       } else {
         setReady(true);
       }
@@ -89,10 +93,15 @@ export default function DeferredIsland({
         observer.disconnect();
       }
     };
-  }, [minDelayMs, ready, rootMargin, when]);
+  }, [
+    minDelayMs,
+    ready,
+    rootMargin,
+    when,
+  ]);
 
   return (
-    <div ref={rootRef}>
+    <div data-deferred="island" ref={rootRef}>
       {ready ? children : null}
     </div>
   );
