@@ -177,7 +177,6 @@ export const main = style({
 
 export const subtitle = style({
   opacity: 0,
-  // transition: 'opacity 220ms ease',
   textAlign: 'center',
   fontSize: '22px',
   selectors: {

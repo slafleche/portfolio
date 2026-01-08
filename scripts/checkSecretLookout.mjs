@@ -20,16 +20,6 @@ import {
 
 const ROOT = path.resolve(process.cwd());
 
-function getStagedFiles() {
-  const output = execSync('git diff --cached --name-only', {
-    encoding: 'utf-8',
-  });
-  return output
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
-}
-
 function getAllTrackedFiles() {
   const output = execSync('git ls-files', {
     encoding: 'utf-8',

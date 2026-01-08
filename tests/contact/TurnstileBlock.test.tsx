@@ -398,8 +398,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(wrapper).toHaveAttribute('data-disabled', 'true');
       expect(wrapper).toHaveAttribute('aria-disabled', 'true');
 
-      const initialState = wrapper.getAttribute('data-state');
-
       const tokenInput = wrapper.querySelector(
         'input[name=\"token\"][type=\"hidden\"]',
       ) as HTMLInputElement | null;

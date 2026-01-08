@@ -1,6 +1,5 @@
-'use client';
 import clsx from 'clsx';
-import type { ElementType, HTMLAttributes,ReactNode } from 'react';
+import type { ElementType, HTMLAttributes, ReactNode } from 'react';
 
 import {
   type DataAttributeMap,

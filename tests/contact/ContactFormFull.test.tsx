@@ -8,7 +8,6 @@ import { ContactDialogContext } from '@/components/contact/ContactDialogProvider
 import ContactForm from '@/components/contact/ContactForm';
 import {
   buildContactFormCopy,
-  type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
 import type { Translator } from '@/lib/locales/sections/helpers.locale';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
@@ -56,9 +55,6 @@ const buildCopy = () =>
       ]) as unknown as Translator,
   );
 
-const buildStatusMessages = (copy = buildCopy()) =>
-  copy.blocks.messageCentre.statuses as Record<FormStatusKey, string>;
-
 function renderWrappedContactForm(
   copy = buildCopy(),
   actionUrl = '/api/contact',
@@ -105,7 +101,6 @@ describe('ContactForm — full stack happy path', () => {
 
   it('submits successfully through the real /api/contact route and shows success status', async () => {
     const copy = buildCopy();
-    const statusMessages = buildStatusMessages(copy);
 
     const turnstileHarness: TurnstileHarnessController =
       enableTurnstileHarness({

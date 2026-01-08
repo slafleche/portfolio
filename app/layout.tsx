@@ -4,6 +4,7 @@ import '@/styles/globals.css';
 import { headers } from 'next/headers';
 import type { ReactNode } from 'react';
 
+import SmoothScrollIdle from '@/components/SmoothScrollIdle';
 import debugRoutes from '@/data/debugRoutes.json';
 import {
   FAVICON_DEFAULT_WEB_MANIFEST,
@@ -141,7 +142,10 @@ export default async function RootLayout({
           />
         ) : null}
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <SmoothScrollIdle />
+      </body>
     </html>
   );
 }

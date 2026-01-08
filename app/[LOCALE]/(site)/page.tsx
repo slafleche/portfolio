@@ -4,11 +4,14 @@ import Card from '@/components/Card';
 import CaseStudy from '@/components/CaseStudy';
 import ConsoleCuriosity from '@/components/ConsoleCuriosity';
 import ContactButton from '@/components/ContactButton';
+import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
 import { Column, Grid } from '@/components/Grid';
-import Heading from '@/components/Heading';
 import Hero from '@/components/Hero';
+import HeroGooey from '@/components/HeroGooey';
 import { Markdown } from '@/components/Markdown';
+import Menu from '@/components/Menu';
+import ContentWithTitle from '@/components/responsive/ContentWithTitle';
 import WordMarkInTitle from '@/components/WordmarkInTitle';
 import {
   BQWordmark,
@@ -18,6 +21,7 @@ import {
   KGWordmark,
 } from '@/components/wordmarks/wordmarks.tsx';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+import { createDomId } from '@/lib/dom';
 import { resolveLocale } from '@/lib/locales/locale';
 import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
@@ -33,8 +37,7 @@ import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import * as cg from '@/styles/components/card.css';
 import * as layoutStyles from '@/styles/layout.css';
 
-import HeroGooey from '../../../src/components/HeroGooey';
-import Menu from '../../../src/components/Menu';
+import { Accordion } from '../../../src/components/Accordion';
 
 interface PageParams {
   LOCALE: string;
@@ -124,63 +127,77 @@ export default async function HomePage({
     })),
   };
 
+  const baseId = createDomId('case-study');
+
   return (
     <>
-      <ConsoleCuriosity
-        title={curiosityMessages.title}
-        test={curiosityMessages.test}
-        result={curiosityMessages.result}
-        hint={curiosityMessages.hint}
-        targetHref={curiosityTarget}
-      />
-      <Menu {...menuProps} />
+      <DeferredIsland when="idle">
+        <Menu {...menuProps} />
+      </DeferredIsland>
+      <DeferredIsland when="idle">
+        <ConsoleCuriosity
+          title={curiosityMessages.title}
+          test={curiosityMessages.test}
+          result={curiosityMessages.result}
+          hint={curiosityMessages.hint}
+          targetHref={curiosityTarget}
+        />
+      </DeferredIsland>
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
           <Hero
             id="hero"
             copy={heroCopy}
             headingAnimated={false}
-            Gooey={HeroGooey}
+            Gooey={() => (
+              <DeferredIsland when="visible">
+                <HeroGooey />
+              </DeferredIsland>
+            )}
           />
-          <section
+          <ContentWithTitle
             id={approach.href}
-            className={layoutStyles.content}
-            data-ui="content"
+            contentTitle={approach.title}
+            ignoreDataUI={true}
           >
-            <Heading ignoreDataUI={true} depth={2}>
-              {approach.title}
-            </Heading>
             <Markdown source={approach.content} />
-          </section>
+          </ContentWithTitle>
 
-          <section
+          <ContentWithTitle
             id={about.href}
-            className={layoutStyles.content}
-            data-ui="content"
+            contentTitle={about.title}
+            ignoreDataUI={true}
           >
-            <Heading ignoreDataUI={true} depth={2}>
-              {about.title}
-            </Heading>
             <Markdown source={about.content} />
-          </section>
+          </ContentWithTitle>
 
           <CaseStudy
             id={caseStudies.href}
             intro={caseStudies.intro}
             title={caseStudies.title}
-            caseStudies={caseStudies.list}
             wordMarkClassName={cg.wordmarkTextNoLogo}
-          />
-
-          <section
-            id={projects.href}
-            className={layoutStyles.content}
-            data-ui="content"
-            data-query-compact="no-padding"
           >
-            <Heading ignoreDataUI={true} depth={2}>
-              {projects.title}
-            </Heading>
+            <DeferredIsland when="visible">
+              <Accordion
+                items={caseStudies.list.map((study, index) => ({
+                  heading: study.title,
+                  subHeading: study.subTitle,
+                  content: <Markdown source={study.content} />,
+                  id: `${baseId}-${index}`,
+                  defaultOpen: index === 0,
+                }))}
+              />
+            </DeferredIsland>
+          </CaseStudy>
+
+          <ContentWithTitle
+            id={projects.href}
+            contentTitle={projects.title}
+            ignoreDataUI={true}
+            queryDataAttributes={{
+              compact: 'no-padding',
+            }}
+          >
             <Grid>
               <Column span={2}>
                 <Card
@@ -301,7 +318,7 @@ export default async function HomePage({
                 </Card>
               </Column>
             </Grid>
-          </section>
+          </ContentWithTitle>
         </main>
         <Footer
           contact={contact}
@@ -309,10 +326,12 @@ export default async function HomePage({
           systemsLink={systemsLink}
         />
         {heroCopy.ctaLabel ? (
-          <ContactButton
-            watchId={sharedStrings.heroWaypointId}
-            label={heroCopy.ctaLabel}
-          />
+          <DeferredIsland when="idle">
+            <ContactButton
+              watchId={sharedStrings.heroWaypointId}
+              label={heroCopy.ctaLabel}
+            />
+          </DeferredIsland>
         ) : null}
       </div>
     </>

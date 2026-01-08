@@ -1,9 +1,11 @@
 import ContactButton from '@/components/ContactButton';
+import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
 import { Markdown } from '@/components/Markdown';
 import Menu from '@/components/Menu';
 import ContentAsTiles from '@/components/responsive/ContentAsTiles';
+import SystemsGooey from '@/components/SystemsGooey';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { resolveLocale } from '@/lib/locales/locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
@@ -18,7 +20,6 @@ import * as layoutStyles from '@/styles/layout.css';
 
 import Content from '../../../../src/components/responsive/Content';
 import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
-import SystemsGooey from '../../../../src/components/SystemsGooey';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -97,7 +98,9 @@ export default async function SystemsPage({
 
   return (
     <>
-      <Menu {...menuProps} />
+      <DeferredIsland when="idle">
+        <Menu {...menuProps} />
+      </DeferredIsland>
 
       <div className={layoutStyles.page}>
         <SystemsBgOverlay className={layoutStyles.svgOverlay} />
@@ -108,7 +111,11 @@ export default async function SystemsPage({
             overlayClassName={systemsStyles.heroOverlay}
             withVideo={false}
             headingAnimated={false}
-            Gooey={SystemsGooey}
+            Gooey={() => (
+              <DeferredIsland when="visible">
+                <SystemsGooey />
+              </DeferredIsland>
+            )}
           />
           <ContentAsTiles
             id={systemsIntroId}
@@ -140,10 +147,12 @@ export default async function SystemsPage({
           backLabel={translator('systems-back-home-label')}
         />
         {heroCopy.ctaLabel ? (
-          <ContactButton
-            watchId={sharedStrings.heroWaypointId}
-            label={heroCopy.ctaLabel}
-          />
+          <DeferredIsland when="idle">
+            <ContactButton
+              watchId={sharedStrings.heroWaypointId}
+              label={heroCopy.ctaLabel}
+            />
+          </DeferredIsland>
         ) : null}
       </div>
     </>

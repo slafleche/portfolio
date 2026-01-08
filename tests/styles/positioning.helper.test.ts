@@ -40,7 +40,10 @@ describe('positioning.helper', () => {
       right: 0,
       bottom: 0,
       left: 0,
-      margin: 'auto',
+      marginTop: 'auto',
+      marginRight: 'auto',
+      marginBottom: 'auto',
+      marginLeft: 'auto',
     });
   });
 

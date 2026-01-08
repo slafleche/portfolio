@@ -1191,7 +1191,6 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
   it('emits a validation_error submit_result with message in the invalid field summary', async () => {
     const copy = buildCopy();
-    const statusMessages = buildStatusMessages(copy);
 
     const logger = vi.fn();
     setContactFormDebugLogger(logger);

@@ -88,9 +88,6 @@ describe('Contact form block tests: MessageBlock', () => {
         'test-message-block-hint',
       );
 
-      const initialCounterText = enFormCopy[
-        'form-counter-remaining'
-      ].replace('{count}', MESSAGE_MAX_LENGTH.toString());
       const counterHint = container.querySelector(
         '#test-message-block-hint',
       );

@@ -9,7 +9,7 @@ export const cardLayout = {
   },
   logoBox: {
     minWidth: logoContainerMinWidth,
-    paddings: m(40),
+    paddings: m(20),
     mobile: {
       paddings: m(20),
     },

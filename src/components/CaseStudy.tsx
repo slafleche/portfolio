@@ -1,11 +1,5 @@
-'use client';
-
-import { useMemo } from 'react';
-
-import { Accordion } from '@/components/Accordion';
 import { Markdown } from '@/components/Markdown';
 import { createDomId } from '@/lib/dom';
-import type { CaseStudyListItem } from '@/lib/locales/sections/caseStudies.locale';
 import * as s from '@/styles/components/accordion.css';
 
 import Content from './responsive/Content';
@@ -16,25 +10,19 @@ type CaseStudyProps = {
   id?: string;
   intro?: string;
   title: string;
-  caseStudies: CaseStudyListItem[];
   wordMarkClassName?: string;
+  children: React.ReactNode;
 };
 
 export default function CaseStudy({
   id,
   intro,
   title,
-  caseStudies,
   wordMarkClassName,
+  children
 }: CaseStudyProps) {
-  const baseId = useMemo(
-    () => id ?? createDomId('case-study'),
-    [
-      id,
-    ],
-  );
+  const baseId = id ?? createDomId('case-study');
   const hasIntro = typeof intro === 'string' && intro.trim() !== '';
-
   return (
     <section id={baseId} className={s.root}>
       <Content tag={'div'}>
@@ -56,15 +44,7 @@ export default function CaseStudy({
           compact: 'no-padding',
         }}
       >
-        <Accordion
-          items={caseStudies.map((study, index) => ({
-            heading: study.title,
-            subHeading: study.subTitle,
-            content: <Markdown source={study.content} />,
-            id: `${baseId}-${index}`,
-            defaultOpen: index === 0,
-          }))}
-        />
+        {children}
       </Content>
     </section>
   );

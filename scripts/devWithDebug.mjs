@@ -212,8 +212,6 @@ const NOISY_WARNING_PATTERNS = [
   /No serializer registered for (?:SimpleWebpackError|PostCSSSyntaxError)/,
 ];
 
-const HTTP_LOG_RE =
-  /^(GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD)\s+\/\S+/m;
 const RELOAD_MARKERS = [
   'Fast Refresh had to perform a full reload due to a runtime error.',
   'Fast Refresh had to perform a full reload.',

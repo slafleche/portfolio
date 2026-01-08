@@ -36,16 +36,6 @@ const buildPrivacy = () =>
 const buildStatusMessages = (copy = buildFormCopy()) =>
   copy.statuses as Record<FormStatusKey, string>;
 
-const getInlineStatusRegion = () =>
-  document.querySelector(
-    '[role="status"][aria-atomic="true"]',
-  ) as HTMLElement | null;
-
-const getmessageCentreStatusRegion = () =>
-  document.querySelector(
-    '[role="status"]:not([aria-atomic])',
-  ) as HTMLElement | null;
-
 const buildScenarioUrl = (id: string) =>
   `/en?scenario=${encodeURIComponent(id)}${sharedStrings.contactFormHash}`;
 

@@ -4,7 +4,6 @@ import { wordMarkVars } from '../../tokens/wordmarks.tokens';
 
 // const spacingNorthMultiplier = 0.8;
 const spacingNorth = m(10);
-const spacingSouthMultiplier = 1;
 
 const getViewBox = (ratio: IRatio) => {
   return `0 0 ${ratio.numerator()} ${ratio.denominator()}`;
@@ -49,9 +48,8 @@ const wordMarkMeta = {
     height: banqHeight,
     viewBox: getViewBox(wordMarkVars.banq.ratio),
     spacing: {
-      // north: banqHeight.multiply(spacingNorthMultiplier),
       north: spacingNorth,
-      south: banqHeight.multiply(spacingSouthMultiplier),
+      south: banqHeight.add(spacingNorth.double()),
     },
   },
   cc: {
@@ -60,9 +58,8 @@ const wordMarkMeta = {
     height: ccHeight,
     viewBox: getViewBox(wordMarkVars.cc.ratio),
     spacing: {
-      // north: ccHeight.multiply(spacingNorthMultiplier),
       north: spacingNorth,
-      south: ccHeight.multiply(spacingSouthMultiplier),
+      south: ccHeight.add(spacingNorth.double()),
     },
   },
   ea: {
@@ -71,9 +68,8 @@ const wordMarkMeta = {
     height: eaHeight,
     viewBox: getViewBox(wordMarkVars.ea.ratio),
     spacing: {
-      // north: eaHeight.multiply(spacingNorthMultiplier),
       north: spacingNorth,
-      south: eaHeight.multiply(spacingSouthMultiplier),
+      south: eaHeight.add(spacingNorth.double()),
     },
   },
   hs: {
@@ -82,9 +78,8 @@ const wordMarkMeta = {
     height: hsHeight,
     viewBox: getViewBox(wordMarkVars.hs.ratio),
     spacing: {
-      // north: hsHeight.multiply(spacingNorthMultiplier),
       north: spacingNorth,
-      south: hsHeight.multiply(spacingSouthMultiplier),
+      south: hsHeight.add(spacingNorth.double()),
     },
   },
   kg: {
@@ -93,9 +88,8 @@ const wordMarkMeta = {
     height: kgHeight,
     viewBox: getViewBox(wordMarkVars.kg.ratio),
     spacing: {
-      // north: kgHeight.multiply(spacingNorthMultiplier),
       north: spacingNorth,
-      south: kgHeight.multiply(spacingSouthMultiplier),
+      south: kgHeight.add(spacingNorth.double()),
     },
   },
 };

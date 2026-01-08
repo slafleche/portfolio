@@ -3,7 +3,6 @@ import { m } from 'css-calipers';
 
 import { glassVars } from '../../tokens/glassy.tokens';
 import { colorVars } from '../../tokens/global.tokens';
-import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { wordMarkVars } from '../../tokens/wordmarks.tokens';
 import { cardLayout } from '../componentTokens/card.component.tokens';
 import borders from '../helpers/borders.helper';
@@ -143,11 +142,18 @@ export const glassSurface = style(
 
 export const title = style({});
 export const text = style({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  height: '100%',
   ...paddings(m(40)),
   selectors: {
     ...mediaQueryStyle({
       compact: {
-        ...paddings(anchorMenuVars.handle.sizeWithBorder),
+        height: 'auto',
+        ...paddings({
+          top: m(20),
+        }),
       },
     }),
   },
@@ -333,7 +339,7 @@ export const logoAsBg = style({
   height: '100%',
   pointerEvents: 'none',
   overflow: 'hidden',
-  filter: 'blur(1px)',
+  // filter: 'blur(1px)',
 });
 
 export const logoAsBgSVG = style({

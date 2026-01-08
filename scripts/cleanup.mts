@@ -19,6 +19,11 @@ const eslint = new ESLint({
   overrideConfigFile: true,
   overrideConfig: [
     {
+      ignores: [
+        '**/.next/**',
+        '**/tmp/**',
+        '**/public/**/*.js',
+      ],
       files: [
         '**/*.{js,jsx,ts,tsx,mjs,cjs}',
       ],

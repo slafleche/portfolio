@@ -340,7 +340,7 @@ export function fontStylesFromFontVariant({
   extraConfig,
   baseVariant,
   includeFontMargins = false,
-}: FontVariantStylesOptions) {
+}: FontVariantStylesOptions): Partial<Pick<CSS_TYPES.Properties<0 | (string & {}), string & {}>, "fontFamily" | "fontFeatureSettings" | "fontKerning" | "fontOpticalSizing" | "fontSize" | "fontStyle" | "fontVariationSettings" | "fontWeight" | "letterSpacing" | "lineHeight" | "marginBottom" | "marginTop" | "textAlign" | "textTransform" | "fontStretch">> {
   const withBase = baseVariant
     ? combineConfig(baseVariant.config, variant.config)
     : variant.config;
