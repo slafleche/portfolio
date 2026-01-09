@@ -42,6 +42,14 @@ test.describe('systems page', () => {
     await page.evaluate(() =>
       window.scrollTo(0, document.body.scrollHeight),
     );
+    const heroWaypoint = page.locator('#hero-waypoint');
+    await expect
+      .poll(async () =>
+        heroWaypoint.evaluate(
+          (el) => el.getBoundingClientRect().bottom <= 0,
+        ),
+      )
+      .toBeTruthy();
     const stickyCta = page
       .locator('header')
       .getByRole('button', { name: /contact/i });
