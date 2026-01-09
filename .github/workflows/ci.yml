@@ -39,6 +39,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Generate locales
+        run: yarn locales
+
       - name: Run branch lint (main/staging/release)
         if: >
           (github.event_name == 'push' &&
