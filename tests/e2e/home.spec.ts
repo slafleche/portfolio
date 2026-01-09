@@ -1,0 +1,52 @@
+import { expect, test } from '@playwright/test';
+
+test.describe('home page', () => {
+  test('menu, anchors, home link, and CTAs are usable', async ({
+    page,
+  }) => {
+    await page.goto('/en');
+
+    await expect(
+      page
+        .locator('section#hero')
+        .getByRole('heading', { level: 1 }),
+    ).toBeVisible();
+
+    const homeLink = page.getByRole('link', { name: /home/i });
+    await expect(homeLink).toBeVisible();
+    await expect(homeLink).toHaveAttribute('href', '/en');
+
+    const approachLink = page.getByRole('link', {
+      name: /approach/i,
+    });
+    await expect(approachLink).toBeVisible();
+    await approachLink.click();
+    await expect(page).toHaveURL(/#approach/);
+    await expect(page.locator('#approach')).toBeVisible();
+
+    const heroCta = page
+      .locator('section#hero')
+      .getByRole('button', { name: /connect/i });
+    await expect(heroCta).toBeVisible();
+    await heroCta.click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page
+      .getByRole('button', { name: /close/i })
+      .click();
+
+    await page.locator('#contact').scrollIntoViewIfNeeded();
+    const stickyCta = page
+      .locator('header')
+      .getByRole('button', { name: /connect|contact/i });
+    await expect(stickyCta).toHaveAttribute('data-phase', 'shown');
+    await stickyCta.click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+
+    const systemsLink = page.getByRole('link', {
+      name: /open systems page/i,
+    });
+    await expect(systemsLink).toBeVisible();
+    await systemsLink.click();
+    await expect(page).toHaveURL(/\/en\/systems/);
+  });
+});

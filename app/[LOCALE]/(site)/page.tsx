@@ -34,6 +34,7 @@ import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
+import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
 import * as cg from '@/styles/components/card.css';
@@ -131,6 +132,8 @@ export default async function HomePage({
       locale: code,
       label: LOCALE_LABELS[code],
     })),
+    ctaLabel: heroCopy.ctaLabel,
+    ctaWatchId: sharedStrings.heroWaypointId,
   };
 
   const baseId = createDomId('case-study');

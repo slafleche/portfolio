@@ -103,7 +103,6 @@ pnpm-debug.log*
 tmp/*
 .local/*
 /test-results/**
-/tests/**
 
 # -----------------------
 # Epics (local by default)
