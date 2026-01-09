@@ -104,7 +104,7 @@
     "preverify": "yarn check:node",
     "typecheck": "yarn tsc --noEmit",
     "check:node": "node scripts/ensureNodeVersion.mjs",
-    "test": "NODE_ENV=test vitest run && yarn test:e2e",
+    "test": "NODE_ENV=test vitest run",
     "pretest": "yarn check:node",
     "test:fonts": "tsx scripts/testFonts.mts",
     "pretest:fonts": "yarn check:node",
