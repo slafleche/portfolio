@@ -1,4 +1,6 @@
-## Primitives CSS typées pour structurer votre système de design
+## Expertise
+
+Primitives CSS typées pour structurer votre système de design
 
 ### Design systems sur mesure
 

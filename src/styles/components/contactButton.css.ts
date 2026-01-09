@@ -64,7 +64,7 @@ const ANTIC = 'cubic-bezier(0.3, 0.9, 0.2, 1)';
 
 /* ROOT + RAIL */
 export const root = style({
-  position: 'fixed',
+  position: 'absolute',
   right: 0,
   bottom: 0,
   width: containerSizePx.css(),

@@ -83,17 +83,14 @@ const enBaseData = {
     'Type-safe CSS primitives for building **your** design system',
 
   'systems-title': 'Expertise',
-  ...markdownRefs('systems-intro'),
+  ...markdownRefs('expertise-content'),
   'systems-intro-href': 'systems-expertise',
   'systems-principles': 'Principles',
   'systems-principles-href': 'systems-principles',
-  ...markdownRefs('systems-principles-content'),
-  'systems-system-shape': 'System Shape',
-  'systems-system-shape-href': 'systems-system-shape',
-  ...markdownRefs(
-    'systems-system-shape-content',
-    'systems-system-shape-blurb',
-  ),
+  ...markdownRefs('principles-content'),
+  'systems-architecture': 'Architecture',
+  'systems-architecture-href': 'systems-architecture',
+  ...markdownRefs('architecture-content', 'blurb-content'),
   'systems-back-home-label': 'Back to home',
   'systems-link-label': 'Open systems page',
   'systems-mock-html-alt':

@@ -2,12 +2,13 @@ import { style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
-import { borderVars } from '../../tokens/global.tokens';
+import { borderVars, colorVars } from '../../tokens/global.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { borders } from '../helpers/borders.helper';
 import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
-import { margins,paddings } from '../helpers/spacing.helper';
+import { margins, paddings } from '../helpers/spacing.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
+import { layoutVars } from '../../tokens/layout.tokens';
 
 export const grid = style({
   display: 'grid',
@@ -24,16 +25,16 @@ export const grid = style({
 });
 
 export const intro = style({
-  textAlign: 'center',
-  selectors: {
-    ...mediaQueryStyle({
-      snug: {
-        ...paddings({
-          horizontal: anchorMenuVars.handle.sizeWithBorder,
-        }),
-      },
-    }),
-  },
+  marginBottom: layoutVars.content.gap.css(),
+  // selectors: {
+  //   ...mediaQueryStyle({
+  //     snug: {
+  //       ...paddings({
+  //         horizontal: anchorMenuVars.handle.sizeWithBorder,
+  //       }),
+  //     },
+  //   }),
+  // },
 });
 
 export const tile = style({
@@ -64,6 +65,12 @@ export const tilePanelSurface = style({
 });
 
 export const title = style({
+  ...borders({
+    bottom: {
+      width: m(1),
+      color: colorVars.white.alpha(0.2),
+    },
+  }),
   ...margins({
     bottom: m(1, 'em'),
   }),

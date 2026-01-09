@@ -37,7 +37,11 @@ export const root = style({
   display: 'flex',
   alignItems: 'center',
   position: 'relative',
-  minHeight: '100vh',
+  width: '100%',
+  height: [
+    '100vh',
+    '100dvh',
+  ],
   overflow: 'hidden',
   isolation: 'isolate',
 });
@@ -55,21 +59,7 @@ globalStyle(`.${image} img`, {
   objectFit: 'cover',
 });
 
-export const video = style({
-  ...fullSizeOfParent(),
-  zIndex: 0,
-  inset: 0,
-  pointerEvents: 'none',
-  objectFit: 'cover',
-  // mixBlendMode: 'screen',
-});
-
 export const contentWrap = style({
-  ...fullSizeOfParent(),
-  ...gradientAsBgImg(bgGradients),
-});
-
-export const videoBg = style({
   ...fullSizeOfParent(),
   ...gradientAsBgImg(bgGradients),
 });
@@ -88,17 +78,18 @@ export const overlays = style({
   inset: 0,
 });
 
-export const glassySurfaceOverwrite = style(
-  makeGlassSurface({
+export const glassySurfaceOverwrite = style({
+  ...makeGlassSurface({
     blur: m(15),
   }),
-);
-
-/** Subtle static grain to break banding */
-// export const grain = style({
-//   ...fullSizeOfParent(),
-//   ...noiseBg({ opacity: 0.03 }),
-// });
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        height: '100%',
+      },
+    }),
+  },
+});
 
 export const fullGradient = style({
   ...fullSizeOfParent(),
@@ -108,42 +99,6 @@ export const fullGradient = style({
     linearDirection: m(145, 'deg'),
   }),
 });
-
-/** Faint multi-stop wash to even flat backgrounds */
-// const washTop = colorVars.shadow.alpha(0.3).css();
-// const washMid = colorVars.white.alpha(0.1).css();
-// const washBot = colorVars.black.alpha(0.6).css();
-
-// export const wash = style({
-//   ...fullSizeOfParent(),
-//   backgroundImage: `linear-gradient(180deg, ${washTop} 0%, ${washMid} 45%, ${washBot} 100%)`,
-//   mixBlendMode: 'soft-light',
-//   opacity: 0.5,
-// });
-
-/** Soften center area */
-// export const centerSoften = style({
-//   ...fullSizeOfParent(),
-//   backgroundImage: `radial-gradient(
-//     140% 100% at 50% 0%,
-//     ${colorVars.shadow.alpha(1).css()} 0%,
-//     ${colorVars.shadow.alpha(0.15).css()} 42%,
-//     ${colorVars.shadow.alpha(0).css()} 70%
-//   )`,
-//   opacity: 0.2,
-// });
-
-/** Break ring radius with soft band */
-// export const ringBreaker = style({
-//   ...fullSizeOfParent(),
-//   backgroundImage: `radial-gradient(
-//     68% 52% at 50% 60%,
-//     transparent 0%,
-//     ${colorVars.black.alpha(0.028).css()} 52%,
-//     ${colorVars.black.alpha(0.05).css()} 68%,
-//     ${colorVars.black.alpha(0).css()} 86%
-//   )`,
-// });
 
 /* ============================================================================
    CONTENT / PANELS
@@ -156,6 +111,13 @@ export const content = style({
   flexDirection: 'column',
   alignItems: 'center',
   width: '100%',
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        height: '100%',
+      },
+    }),
+  },
 });
 
 export const main = style({
@@ -164,15 +126,12 @@ export const main = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  justifyContent: 'center',
+  height: '100%',
   ...paddings({
     vertical: m(100),
     horizontal: m(46),
   }),
-  // selectors: {
-  //   ...componentMediaQueries({
-  //     hero_compact: paddings(m(46)),
-  //   }),
-  // },
 });
 
 export const subtitle = style({
@@ -192,28 +151,6 @@ globalStyle(`.${subtitleMarkdown} p`, {
   fontSize: '22px',
   margin: 0,
 });
-
-// export const paragraph = style({
-//   position: 'relative',
-//   textAlign: 'center',
-//   ...fontStylesFromFontVariant(fontVariants.hero, {
-//     options: {
-//       weightPercents: {
-//         default: mPercent(0),
-//       },
-//     },
-//     overrides: {
-//       size: undefined,
-//     },
-//   }),
-//   fontSize: '26px',
-//   lineHeight: 1,
-//   textShadow: `2px 2px 5px ${colorVars.black.css()}`,
-//   ...margins({
-//     all: 0,
-//     top: m(30),
-//   }),
-// });
 
 const ctaGradient = buildLinear({
   angle: m(110, 'deg'),
@@ -237,9 +174,6 @@ export const cta = style({
     horizontal: m(6),
   }),
   ...borders.radii(m(3)),
-
-  // backgroundColor: themeColours.brand.css(),
-  // backgroundColor: colorVars.white.alpha(0.85).css(),
   color: colorVars.white.css(),
   fontWeight: 600,
   textDecoration: 'none',
@@ -270,6 +204,8 @@ export const cta = style({
     },
   },
 });
+
+export const ctaText = style({});
 
 export const ctaIcon = style({
   width: '14px',
@@ -305,12 +241,36 @@ export const panel = style({
   ...margins({
     horizontal: 'auto',
   }),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        height: '100%',
+      },
+    }),
+  },
+});
+
+export const glassPanel = style({
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        height: '100%',
+      },
+    }),
+  },
 });
 
 export const glassWrap = style({
   width: '100%',
   position: 'relative',
   zIndex: 1,
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        height: '100%',
+      },
+    }),
+  },
 });
 
 export const panelContents = style({

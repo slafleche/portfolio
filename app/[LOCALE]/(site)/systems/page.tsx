@@ -1,4 +1,3 @@
-import ContactButton from '@/components/ContactButton';
 import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
@@ -43,21 +42,15 @@ export default async function SystemsPage({
   const contactCopy = buildContactCopy(translator);
   const systemsLink = buildSystemsLink(locale, translator);
   const systemsTitle = translator('systems-title');
-  const systemsIntroMarkdown = translator('systems-intro');
+  const systemsIntroMarkdown = translator('expertise-content');
   const systemsIntroId = translator('systems-intro-href');
   const systemsPrinciplesId = translator('systems-principles-href');
   const systemsPrinciplesTitle = translator('systems-principles');
-  const systemsPrinciplesMarkdown = translator(
-    'systems-principles-content',
-  );
-  const systemsShapeId = translator('systems-system-shape-href');
-  const systemsShapeTitle = translator('systems-system-shape');
-  const systemsShapeMarkdown = translator(
-    'systems-system-shape-content',
-  );
-  const systemsShapeBlurbMarkdown = translator(
-    'systems-system-shape-blurb',
-  );
+  const systemsPrinciplesMarkdown = translator('principles-content');
+  const systemsShapeId = translator('systems-architecture-href');
+  const systemsShapeTitle = translator('systems-architecture');
+  const systemsShapeMarkdown = translator('architecture-content');
+  const systemsShapeBlurbMarkdown = translator('blurb-content');
 
   const heroCopy = {
     ...heroCopyBase,
@@ -101,6 +94,8 @@ export default async function SystemsPage({
       locale: code,
       label: LOCALE_LABELS[code],
     })),
+    ctaLabel: heroCopy.ctaLabel,
+    ctaWatchId: sharedStrings.heroWaypointId,
   };
 
   return (
@@ -157,14 +152,6 @@ export default async function SystemsPage({
             backHref={homeHref}
             backLabel={translator('systems-back-home-label')}
           />
-          {heroCopy.ctaLabel ? (
-            <DeferredIsland when="idle">
-              <ContactButton
-                watchId={sharedStrings.heroWaypointId}
-                label={heroCopy.ctaLabel}
-              />
-            </DeferredIsland>
-          ) : null}
         </DeferredIsland>
       </div>
     </SiteProviders>

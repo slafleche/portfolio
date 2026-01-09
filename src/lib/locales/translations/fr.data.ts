@@ -85,20 +85,21 @@ const frBaseData = {
     'Primitives CSS typées pour structurer **votre** système de design',
 
   'systems-title': 'Expertise',
-  ...markdownRefs('systems-intro'),
+  ...markdownRefs('expertise-content'),
   'systems-intro-href': 'systems-expertise',
   'systems-principles': 'Principes',
   'systems-principles-href': 'systems-principes',
-  ...markdownRefs('systems-principles-content'),
-  'systems-system-shape': 'Forme du système',
-  'systems-system-shape-href': 'systems-forme-du-systeme',
+  ...markdownRefs('principles-content'),
+  'systems-architecture': 'Forme du système',
+  'systems-architecture-href': 'systems-forme-du-systeme',
   ...markdownRefs(
-    'systems-system-shape-content',
-    'systems-system-shape-blurb',
+    'architecture-content',
+    'blurb-content',
   ),
   'systems-back-home-label': "Retour à la page d'accueil",
   'systems-link-label': 'Naviguez vers la page Systèmes',
-  'systems-mock-html-alt': 'HTML décoratif de style devtools montrant la fin du code source de la page.',
+  'systems-mock-html-alt':
+    'HTML décoratif de style devtools montrant la fin du code source de la page.',
 
   contact: 'contact',
   'contact-href': 'contact',

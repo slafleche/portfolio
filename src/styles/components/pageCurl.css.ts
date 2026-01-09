@@ -13,7 +13,10 @@ import {
 } from '../helpers/gradients.helper';
 import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
-import { globalComponentMediaQueryStyle } from '../responsive/mediaQueries';
+import {
+  globalComponentMediaQueryStyle,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 
 // Match gradient in footer
 const bgMatch = themeColours.gradients.main.end;
@@ -31,6 +34,14 @@ export const root = style({
   width: curlVars.width.css(),
   height: curlVars.height.css(),
   overflow: 'hidden',
+  transformOrigin: '0% 100%',
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        transform: 'scale(0.7)',
+      },
+    }),
+  },
 });
 
 export const link = style({

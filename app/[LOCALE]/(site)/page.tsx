@@ -3,7 +3,6 @@ import { clsx } from 'clsx';
 import Card from '@/components/Card';
 import CaseStudy from '@/components/CaseStudy';
 import ConsoleCuriosity from '@/components/ConsoleCuriosity';
-import ContactButton from '@/components/ContactButton';
 import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
 import { Column, Grid } from '@/components/Grid';
@@ -35,7 +34,6 @@ import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
 import * as cg from '@/styles/components/card.css';
@@ -145,15 +143,6 @@ export default async function HomePage({
       turnstileSiteKey={turnstileSiteKey}
     >
       <Menu {...menuProps} />
-      <DeferredIsland when="idle">
-        <ConsoleCuriosity
-          title={curiosityMessages.title}
-          test={curiosityMessages.test}
-          result={curiosityMessages.result}
-          hint={curiosityMessages.hint}
-          targetHref={curiosityTarget}
-        />
-      </DeferredIsland>
       <div className={layoutStyles.page}>
         <main className={layoutStyles.main}>
           <Hero
@@ -352,16 +341,17 @@ export default async function HomePage({
             id="contact"
             systemsLink={systemsLink}
           />
-          {heroCopy.ctaLabel ? (
-            <DeferredIsland when="idle">
-              <ContactButton
-                watchId={sharedStrings.heroWaypointId}
-                label={heroCopy.ctaLabel}
-              />
-            </DeferredIsland>
-          ) : null}
         </DeferredIsland>
       </div>
+      <DeferredIsland when="idle">
+        <ConsoleCuriosity
+          title={curiosityMessages.title}
+          test={curiosityMessages.test}
+          result={curiosityMessages.result}
+          hint={curiosityMessages.hint}
+          targetHref={curiosityTarget}
+        />
+      </DeferredIsland>
     </SiteProviders>
   );
 }

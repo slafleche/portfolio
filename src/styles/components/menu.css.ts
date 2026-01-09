@@ -28,8 +28,24 @@ export const root = style({
   zIndex: 100,
 });
 
-export const homeLink = style({
+export const viewportFrame = style({
   position: 'fixed',
+  inset: 0,
+  width: '100%',
+  height: '100%',
+  zIndex: 100,
+  pointerEvents: 'none',
+});
+
+export const nav = style({
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  pointerEvents: 'none',
+});
+
+export const homeLink = style({
+  position: 'absolute',
   top: logoVars.offsetY.css(),
   left: logoVars.offsetX.css(),
   width: logoVars.width.css(),
@@ -38,6 +54,8 @@ export const homeLink = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  pointerEvents: 'auto',
+  zIndex: 10,
   selectors: {
     ...mediaQueryStyle({
       compact: {
@@ -57,7 +75,7 @@ export const item = style({});
 export const logoItem = style({});
 
 export const localeItem = style({
-  position: 'fixed',
+  position: 'absolute',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -74,6 +92,7 @@ export const localeLink = style({
     variant: menuFontVariants.menu,
   }),
   ...relativeFontWeight(menuFontVariants.menu, mPercent(50)),
+  pointerEvents: 'auto',
   lineHeight: 1,
   textShadow: `0 0 2px ${localeSwitcherVars.shadow.css()}`,
   opacity: 0.8,

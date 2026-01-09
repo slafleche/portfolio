@@ -1,19 +1,24 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { m, mPercent } from 'css-calipers';
+import { m, mDeg, mPercent } from 'css-calipers';
 
 import { fontFamilies } from '../../tokens/fontFamilies.tokens';
 import { themeColours } from '../../tokens/global.tokens';
 import { anchorMenuVars, logoVars } from '../../tokens/menu.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
+import { color } from '../helpers/colorWrap.helper';
 import { makeGlassSurface } from '../helpers/glassy.helper';
+import {
+  buildLinear,
+  gradientAsBgImg,
+} from '../helpers/gradients.helper';
 import { textShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
 import { relativeFontWeight } from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 export const root = style({
-  position: 'fixed',
+  position: 'absolute',
   top: 0,
   left: logoVars.offsetX
     .add(logoVars.width.subtract(anchorMenuVars.handle.size).half())
@@ -139,7 +144,24 @@ export const item = style({
   width: 'auto',
   minWidth: anchorMenuVars.handle.size.css(),
   height: anchorMenuVars.handle.size.css(),
-  // width: 'auto', // Add this to allow growth
+});
+
+globalStyle(`.${link}[data-active='true'] .${dot}`, {
+  ...gradientAsBgImg(
+    buildLinear({
+      angle: mDeg(145),
+      stops: [
+        {
+          color: color('#cacaca').darken(0.6),
+          at: mPercent(0),
+        },
+        {
+          color: color('#f0f0f0'),
+          at: mPercent(100),
+        },
+      ],
+    }),
+  ),
 });
 
 globalStyle(
@@ -163,9 +185,30 @@ globalStyle(
   },
 );
 
-globalStyle(`.${link}:hover .${dot}, .${link}:focus .${dot}`, {
-  ...backgrounds({ color: themeColours.electricBlue }),
-});
+globalStyle(
+  `.${link}[data-active]:hover .${dot}, .${link}[data-active]:focus .${dot}`,
+  {
+    ...gradientAsBgImg(
+      buildLinear({
+        angle: mDeg(145),
+        stops: [
+          {
+            color: themeColours.electricBlue.darken(0.3),
+            at: mPercent(0),
+          },
+          {
+            color: themeColours.electricBlue,
+            at: mPercent(50),
+          },
+          {
+            color: themeColours.electricBlue.lighten(0.2),
+            at: mPercent(100),
+          },
+        ],
+      }),
+    ),
+  },
+);
 
 globalStyle(
   `.${link}:hover .${handle}, .${link}:focus .${handle}, .${link}:focus-visible .${handle}`,

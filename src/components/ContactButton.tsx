@@ -23,6 +23,7 @@ type ContactButtonProps = {
   label: string;
   className?: string;
   debugLog?: boolean;
+  portalTarget?: HTMLElement | null;
 };
 
 export default function ContactButton({
@@ -30,6 +31,7 @@ export default function ContactButton({
   label,
   className,
   debugLog = false,
+  portalTarget,
 }: ContactButtonProps) {
   const [
     mounted,
@@ -347,5 +349,11 @@ export default function ContactButton({
     </div>
   );
 
-  return mounted ? createPortal(content, document.body) : null;
+  if (!mounted) return null;
+
+  const portalHost =
+    portalTarget === undefined ? document.body : portalTarget;
+  if (!portalHost) return null;
+
+  return createPortal(content, portalHost);
 }

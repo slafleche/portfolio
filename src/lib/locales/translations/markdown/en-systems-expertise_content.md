@@ -1,4 +1,5 @@
-## Type-safe CSS primitives for building **your** design system
+## Expertise
+Type-safe CSS primitives for building **your** design system
 
 ### Custom design systems
 

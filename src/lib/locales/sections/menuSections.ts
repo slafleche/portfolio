@@ -42,8 +42,8 @@ export const buildSystemsMenuSections = (
     label: t('systems-principles'),
   },
   {
-    id: t('systems-system-shape-href'),
-    label: t('systems-system-shape'),
+    id: t('systems-architecture-href'),
+    label: t('systems-architecture'),
   },
   {
     id: 'contact',

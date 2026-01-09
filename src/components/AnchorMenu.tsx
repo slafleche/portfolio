@@ -150,7 +150,13 @@ export default function AnchorMenu({
                 href={anchor.href}
                 aria-label={anchor.title}
                 aria-current={isActive ? 'location' : undefined}
-                onClick={() => {
+                onClick={(event) => {
+                  if (isActive && anchorId) {
+                    event.preventDefault();
+                    document
+                      .getElementById(anchorId)
+                      ?.scrollIntoView({ block: 'start' });
+                  }
                   if (anchorId) {
                     onActivate?.(anchorId);
                   }

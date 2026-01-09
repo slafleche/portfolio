@@ -149,7 +149,7 @@ export const textStyleVars = {
     },
     margins: {
       horizontal: 'auto',
-      bottom: blockSpacing,
+      vertical: blockSpacing.multiply(2),
     },
   },
   break: {

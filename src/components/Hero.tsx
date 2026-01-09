@@ -61,6 +61,7 @@ export default function Hero({
           <div className={clsx(layoutStyles.panel, s.panel)}>
             <div className={s.glassWrap}>
               <GlassPanel
+                className={s.glassPanel}
                 contentClassName={s.main}
                 surfaceClassNameOverride={s.glassySurfaceOverwrite}
               >
@@ -110,20 +111,22 @@ export default function Hero({
                   </div>
                 ) : null}
                 {showCta ? (
-                  <ContactDialogTrigger
-                    className={s.cta}
-                    data-ready="true"
-                  >
-                    <span>{copy.ctaLabel}</span>
-                    <SendIcon className={s.ctaIcon} aria-hidden />
-                  </ContactDialogTrigger>
+                  <>
+                    <ContactDialogTrigger
+                      className={s.cta}
+                      data-ready="true"
+                    >
+                      <span className={s.ctaText}>{copy.ctaLabel}</span>
+                      <SendIcon className={s.ctaIcon} aria-hidden />
+                    </ContactDialogTrigger>
+                    <HeroWaypoint />
+                  </>
                 ) : null}
               </GlassPanel>
             </div>
           </div>
         </div>
       </section>
-      <HeroWaypoint />
     </>
   );
 }
