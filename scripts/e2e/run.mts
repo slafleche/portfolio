@@ -1,10 +1,14 @@
 import fs from 'node:fs/promises';
+import net from 'node:net';
 import path from 'node:path';
 
 import { execa } from 'execa';
 
 const ROOT = process.cwd();
 const RESULTS_DIR = path.join(ROOT, 'test-results');
+const LOCALHOST_PORT = 3000;
+const LOCALHOST_URL = `http://localhost:${LOCALHOST_PORT}`;
+const NEXT_DEV_LOCK = path.join(ROOT, '.next', 'dev', 'lock');
 
 type Options = {
   keep: number;
@@ -88,10 +92,79 @@ const removeOldRuns = async (keep: number) => {
   );
 };
 
+const isLocalhostUrl = (raw?: string): boolean => {
+  if (!raw) return true;
+  try {
+    const url = new URL(raw);
+    return [
+      'localhost',
+      '127.0.0.1',
+      '::1',
+    ].includes(url.hostname);
+  } catch {
+    return false;
+  }
+};
+
+const hasNextDevLock = async (): Promise<boolean> => {
+  try {
+    await fs.access(NEXT_DEV_LOCK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const isPortInUseAtHost = (
+  port: number,
+  host: string,
+): Promise<boolean> =>
+  new Promise((resolve) => {
+    const socket = new net.Socket();
+    const done = (result: boolean) => {
+      socket.destroy();
+      resolve(result);
+    };
+
+    socket.setTimeout(300);
+    socket.once('connect', () => done(true));
+    socket.once('timeout', () => done(false));
+    socket.once('error', () => done(false));
+    socket.connect(port, host);
+  });
+
+const isPortInUse = async (port: number): Promise<boolean> => {
+  const hosts = [
+    '127.0.0.1',
+    '::1',
+  ];
+  for (const host of hosts) {
+    if (await isPortInUseAtHost(port, host)) return true;
+  }
+  return false;
+};
+
 const main = async () => {
   const { keep, clear, passThrough } = parseArgs(
     process.argv.slice(2),
   );
+
+  const isLocalhost = isLocalhostUrl(
+    process.env.PLAYWRIGHT_BASE_URL,
+  );
+  const [
+    hasLock,
+    portInUse,
+  ] = await Promise.all([
+    hasNextDevLock(),
+    isPortInUse(LOCALHOST_PORT),
+  ]);
+
+  if (isLocalhost && hasLock && portInUse) {
+    process.env.PLAYWRIGHT_REUSE_EXISTING = '1';
+    process.env.PLAYWRIGHT_BASE_URL = LOCALHOST_URL;
+    process.env.PLAYWRIGHT_PORT = String(LOCALHOST_PORT);
+  }
 
   if (clear) {
     await fs.rm(RESULTS_DIR, { recursive: true, force: true });

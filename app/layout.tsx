@@ -24,11 +24,10 @@ import {
 } from '../src/lib/runtimeEnv';
 
 if (notRelease()) {
-  const globalTracker = globalThis as {
-    __debugRoutesLogged?: boolean;
-  };
-  if (!globalTracker.__debugRoutesLogged) {
-    globalTracker.__debugRoutesLogged = true;
+  const envKey = '__DEBUG_ROUTES_LOGGED__';
+  const envTracker = process.env as Record<string, string | undefined>;
+  if (envTracker[envKey] !== '1') {
+    envTracker[envKey] = '1';
     const debugLocale = debugRoutes.baseLocale;
     const debugRouteList = debugRoutes.pages.map(
       (page) => `/${debugLocale}/debug/${page}`,

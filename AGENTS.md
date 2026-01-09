@@ -108,6 +108,8 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Must: When the user asks to explain or diagnose, do not modify code unless
   they explicitly ask for a fix; provide analysis only.
 - Must: Do not provide summaries unless the user explicitly asks for one.
+- Must: When providing draft fixes, respond with code blocks instead of a text
+  summary.
 - Must: When a user message (non-code text) contains a `?`, reply using
   text-only responses—no code blocks or other non-text output.
 - Must: When AGENTS, user instructions, or existing code seem to conflict, call
@@ -144,6 +146,9 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Should: If you believe a removed markdown section is still useful (for
   example, a checklist or plan), propose the new structure in chat and wait for
   explicit approval instead of silently restoring it.
+- Must: When the user says `#tests:e2e`, inspect `test-results/` and use the
+  most recent run to propose code fixes only; do not edit files yet and do not
+  provide a summary.
 
 ## Linting and guardrails (`linting`)
 

@@ -151,11 +151,14 @@ export default function AnchorMenu({
                 aria-label={anchor.title}
                 aria-current={isActive ? 'location' : undefined}
                 onClick={(event) => {
-                  if (isActive && anchorId) {
+                  if (anchorId) {
                     event.preventDefault();
-                    document
-                      .getElementById(anchorId)
-                      ?.scrollIntoView({ block: 'start' });
+                    const node = document.getElementById(anchorId);
+                    if (node) {
+                      const top =
+                        window.scrollY + node.getBoundingClientRect().top;
+                      window.scrollTo({ top, behavior: 'auto' });
+                    }
                   }
                   if (anchorId) {
                     onActivate?.(anchorId);

@@ -120,6 +120,18 @@ export const shuttle = style({
       animation: `${shuttleExit} ${shuttleExitDurationMs.css()} ${SNAP} ${exitTranslationDelayMs.css()} both`,
     },
   },
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      selectors: {
+        "&[data-phase='exiting']": {
+          animation: `${shuttleExit} 0s ${SNAP} 0s both`,
+        },
+        "&[data-phase='entering']": {
+          animation: `${enterMotion} 0s ${FAST} 0s both`,
+        },
+      },
+    },
+  },
 });
 
 /* PAYLOAD — keep axes clean */
@@ -207,6 +219,19 @@ export const button = style({
     },
     '&[data-phase="shown"]': { pointerEvents: 'auto' },
   },
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      transition: 'none',
+      selectors: {
+        '&[data-phase="entering"]': {
+          animation: `${buttonScaleEnter} 0s ${SETTLE} 0s both`,
+        },
+        "&[data-phase='exiting']": {
+          animation: `${buttonScaleExit} 0s ${SETTLE} 0s both`,
+        },
+      },
+    },
+  },
 });
 
 const buttonGradient = buildLinear({
@@ -227,6 +252,11 @@ export const gradient = style({
   transition: `opacity ${gradientFadeMs.css()} ease`,
   zIndex: 0,
   pointerEvents: 'none',
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      transition: 'none',
+    },
+  },
 });
 export const gradientVisible = style({
   selectors: {
@@ -316,6 +346,7 @@ export const iconShell = style({
   height: '100%',
   willChange: 'transform',
 });
+
 export const iconTrack = style({
   display: 'grid',
   placeItems: 'center',
@@ -328,6 +359,15 @@ export const iconTrack = style({
     },
     '&[data-phase="exiting"]': {
       animation: 'none', // disable lag on exit so spin reads clean
+    },
+  },
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      selectors: {
+        '&[data-phase="entering"]': {
+          animation: `${iconLagIn} 0s 0s both`,
+        },
+      },
     },
   },
 });
@@ -347,8 +387,14 @@ export const iconGlyph = style({
       animation: `${iconRotateExit} ${iconExitTotalMs.css()} 0s both`,
     },
     [`${button}:hover &`]: { color: colorVars.white.css() },
-    [`${button}:focus-visible &`]: {
-      // color: themeColours.lights.a.css(),
+  },
+  '@media': {
+    '(prefers-reduced-motion: reduce)': {
+      selectors: {
+        "&[data-phase='exiting']": {
+          animation: `${iconRotateExit} 0s 0s both`,
+        },
+      },
     },
   },
 });

@@ -1,22 +1,4 @@
-import { expect, type Locator,test } from '@playwright/test';
-
-const waitForAnimationEnd = async (locator: Locator) => {
-  await locator.evaluate((el) => {
-    const element = el as HTMLElement;
-    const computed = window.getComputedStyle(element);
-    if (
-      computed.animationName === 'none' ||
-      computed.animationDuration === '0s'
-    ) {
-      return;
-    }
-    return new Promise<void>((resolve) => {
-      element.addEventListener('animationend', () => resolve(), {
-        once: true,
-      });
-    });
-  });
-};
+import { expect,test } from '@playwright/test';
 
 test.describe('home page', () => {
   test('menu, anchors, home link, and CTAs are usable', async ({
@@ -60,7 +42,6 @@ test.describe('home page', () => {
     const stickyCta = page
       .locator('header')
       .getByRole('button', { name: /connect|contact/i });
-    await waitForAnimationEnd(stickyCta);
     await expect(stickyCta).toHaveAttribute('data-phase', 'shown');
     await expect(stickyCta).toBeVisible();
     await stickyCta.click();
