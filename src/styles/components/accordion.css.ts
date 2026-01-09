@@ -9,15 +9,15 @@ import {
 } from '../componentTokens/accordion.component.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
+import { color } from '../helpers/colorWrap.helper';
 import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
 import { outlines } from '../helpers/outlines.helper';
+import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { relativeFontWeight } from '../helpers/typography.helper';
-import { absolutePosition } from '../helpers/positioning.helper';
-import { color } from '../helpers/colorWrap.helper';
 // import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 // import { bodyVariants, headingVariants } from '../../tokens/fontVariants/typography';
 

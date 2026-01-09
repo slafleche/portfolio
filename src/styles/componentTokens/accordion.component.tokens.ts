@@ -1,8 +1,8 @@
 import { m, mPercent } from 'css-calipers';
 
 import { colorVars, themeColours } from '../../tokens/global.tokens';
-import { color } from '../helpers/colorWrap.helper';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
+import { color } from '../helpers/colorWrap.helper';
 
 export const accordionSurfaceTokens = {
   gradientAngle: m(171, 'deg'),

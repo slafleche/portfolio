@@ -39,6 +39,18 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      - name: Run branch lint (main/staging/release)
+        if: >
+          (github.event_name == 'push' &&
+            (github.ref == 'refs/heads/main' ||
+             github.ref == 'refs/heads/staging' ||
+             github.ref == 'refs/heads/release')) ||
+          (github.event_name == 'pull_request' &&
+            (github.base_ref == 'main' ||
+             github.base_ref == 'staging' ||
+             github.base_ref == 'release'))
+        run: yarn tsx scripts/lintBranch.mts
+
       - name: Run candidate checks (lint + tests)
         if: >
           (github.event_name == 'push' &&

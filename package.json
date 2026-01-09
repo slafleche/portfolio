@@ -78,19 +78,13 @@
     "vitest": "^4.0.15",
     "wait-on": "^9.0.3"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,mjs}": [
-      "prettier --write",
-      "eslint --fix",
-      "node scripts/checkLintRules.mjs --plain"
-    ]
-  },
   "packageManager": "yarn@4.11.0",
   "engines": {
     "node": "20.19.6"
   },
   "scripts": {
     "ci": "yarn locales && yarn verify && yarn build",
+    "prepare": "husky",
     "generate": "tsx scripts/runGenerateAllPipeline.mts",
     "generate:staging": "tsx scripts/runGenerateAllPipeline.mts --target=_staging",
     "generate:staging:skipConfirmation": "tsx scripts/runGenerateAllPipeline.mts --target=_staging --yes",
