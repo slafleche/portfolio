@@ -24,6 +24,7 @@ import {
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { createDomId } from '@/lib/dom';
 import { resolveLocale } from '@/lib/locales/locale';
+import type { CaseStudyListItem } from '@/lib/locales/sections/caseStudies.locale';
 import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
@@ -187,10 +188,16 @@ export default async function HomePage({
             >
               <DeferredIsland when="visible">
                 <Accordion
-                  items={caseStudies.list.map((study, index) => ({
+                  items={caseStudies.list.map((
+                    study: CaseStudyListItem,
+                    index: number,
+                  ) => ({
                     heading: study.title,
                     subHeading: study.subTitle,
-                    content: <Markdown source={study.content} />,
+                    content: <Markdown source={study.content}            asUi={{
+              headings: true,
+              paragraphs: true,
+            }} />,
                     id: `${baseId}-${index}`,
                     defaultOpen: index === 0,
                   }))}

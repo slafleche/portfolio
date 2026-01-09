@@ -9,16 +9,29 @@ import { createElement, memo } from 'react';
 
 import { userContent } from '../styles/typography.css';
 
+type AsUiConfig = {
+  headings?: boolean;
+  paragraphs?: boolean;
+  links?: boolean;
+  listUnordered?: boolean;
+  listOrdered?: boolean;
+  blockquotes?: boolean;
+  codeBlocks?: boolean;
+};
+
 type MarkdownProps = {
   tag?: keyof JSX.IntrinsicElements;
   source?: string | null;
   openLinksInNewTab?: boolean;
+  asUi?: AsUiConfig;
 } & Omit<ComponentPropsWithoutRef<'div'>, 'children'>;
 
 type MarkedToken = {
   type: string;
+  ordered?: boolean;
   dataFirst?: boolean;
   dataLast?: boolean;
+  dataUi?: string;
 };
 
 const isRenderableToken = (token: MarkedToken): boolean =>
@@ -36,39 +49,38 @@ const getDataAttrs = (token: MarkedToken): string => {
   const attrs: string[] = [];
   if (token.dataFirst) attrs.push('data-first="true"');
   if (token.dataLast) attrs.push('data-last="true"');
+  if (token.dataUi) attrs.push(`data-ui="${token.dataUi}"`);
   return attrs.join(' ');
 };
 
-const injectDataAttrs = (html: string, token: MarkedToken): string => {
+const injectDataAttrs = (
+  html: string,
+  token: MarkedToken,
+): string => {
   const attrs = getDataAttrs(token);
   if (!attrs) return html;
-  return html.replace(
-    /^\s*<([a-z0-9-]+)([^>]*)>/i,
-    (match: string, tag: string, rest: string) => {
-      const leading = match.match(/^\s*/)?.[0] ?? '';
-      const normalizedRest = rest ?? '';
-      const spacer =
-        normalizedRest === ''
-          ? ' '
-          : normalizedRest.endsWith(' ')
-            ? ''
-            : ' ';
-      return `${leading}<${tag}${normalizedRest}${spacer}${attrs}>`;
-    },
-  );
+  return html.replace(/^\s*<([a-z0-9-]+)([^>]*)>/i, (
+    match: string,
+    tag: string,
+    rest: string,
+  ) => {
+    const leading = match.match(/^\s*/)?.[0] ?? '';
+    const normalizedRest = rest ?? '';
+    const spacer =
+      normalizedRest === ''
+        ? ' '
+        : normalizedRest.endsWith(' ')
+          ? ''
+          : ' ';
+    return `${leading}<${tag}${normalizedRest}${spacer}${attrs}>`;
+  });
 };
 
-const createMarkdownRenderer = (openLinksInNewTab: boolean) => {
+const createMarkdownRenderer = (
+  openLinksInNewTab: boolean,
+  asUi: AsUiConfig,
+) => {
   const renderer = new Renderer();
-
-  if (openLinksInNewTab) {
-    renderer.link = function ({ href, title, tokens }) {
-      const safeHref = href ?? '';
-      const titleAttr = title ? ` title="${title}"` : '';
-      const content = this.parser.parseInline(tokens ?? []);
-      return `<a href="${safeHref}"${titleAttr} target="_blank" rel="noopener noreferrer">${content}</a>`;
-    };
-  }
 
   type RendererMethod =
     | 'paragraph'
@@ -78,12 +90,62 @@ const createMarkdownRenderer = (openLinksInNewTab: boolean) => {
     | 'code'
     | 'table'
     | 'hr';
-  const wrap =
-    (method: RendererMethod) =>
+
+  const applyUi = (method: RendererMethod, token: MarkedToken) => {
+    switch (method) {
+      case 'heading':
+        if (asUi.headings) {
+          token.dataUi = 'heading';
+        }
+        break;
+      case 'paragraph':
+        if (asUi.paragraphs) {
+          token.dataUi = 'paragraph';
+        }
+        break;
+      case 'list':
+        if (token.ordered && asUi.listOrdered) {
+          token.dataUi = 'list-ordered';
+        }
+        if (!token.ordered && asUi.listUnordered) {
+          token.dataUi = 'list-unordered';
+        }
+        break;
+      case 'blockquote':
+        if (asUi.blockquotes) {
+          token.dataUi = 'blockquote';
+        }
+        break;
+      case 'code':
+        if (asUi.codeBlocks) {
+          token.dataUi = 'code-block';
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  if (openLinksInNewTab || asUi.links) {
+    renderer.link = function ({ href, title, tokens }) {
+      const safeHref = href ?? '';
+      const titleAttr = title ? ` title="${title}"` : '';
+      const dataUiAttr = asUi.links ? ' data-ui="link"' : '';
+      const targetAttrs = openLinksInNewTab
+        ? ' target="_blank" rel="noopener noreferrer"'
+        : '';
+      const content = this.parser.parseInline(tokens ?? []);
+      return `<a href="${safeHref}"${titleAttr}${dataUiAttr}${targetAttrs}>${content}</a>`;
+    };
+  }
+
+  const wrap = (method: RendererMethod) =>
     function (this: Renderer, token: MarkedToken) {
-      const baseRender = Renderer.prototype[
-        method
-      ] as (this: Renderer, token: MarkedToken) => string;
+      applyUi(method, token);
+      const baseRender = Renderer.prototype[method] as (
+        this: Renderer,
+        token: MarkedToken,
+      ) => string;
       const html = baseRender.call(this, token);
       return injectDataAttrs(html, token);
     };
@@ -140,18 +202,18 @@ function MarkdownBase({
   tag,
   id,
   className,
+  asUi = {},
   ...rest
 }: MarkdownProps): ReactElement | null {
   const normalized =
     typeof source === 'string' ? normalizeSource(source) : '';
-  const tokens =
-    normalized === '' ? [] : marked.lexer(normalized);
+  const tokens = normalized === '' ? [] : marked.lexer(normalized);
   markFirstLastTokens(tokens as MarkedToken[]);
   const html =
     normalized === ''
       ? ''
       : marked.parser(tokens, {
-          renderer: createMarkdownRenderer(openLinksInNewTab),
+          renderer: createMarkdownRenderer(openLinksInNewTab, asUi),
         });
 
   if (typeof html !== 'string') {

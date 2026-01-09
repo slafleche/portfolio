@@ -140,6 +140,7 @@ globalStyle('button, input, optgroup, select, textarea', {
   fontSize: '100%',
   lineHeight: 'inherit',
   margin: 0,
+  padding: 0,
 });
 
 globalStyle('button, input', {
@@ -272,7 +273,6 @@ globalStyle('h1, h2, h3, h4, h5, h6', {
   border: 0,
   position: 'relative',
 });
-
 
 // Heading Level Styles
 for (let level = 1; level <= 6; level++) {

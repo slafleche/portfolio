@@ -2,6 +2,7 @@ import { m, mPercent } from 'css-calipers';
 
 import { colorVars, themeColours } from '../../tokens/global.tokens';
 import { color } from '../helpers/colorWrap.helper';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
 
 export const accordionSurfaceTokens = {
   gradientAngle: m(171, 'deg'),
@@ -38,12 +39,21 @@ export const accordionSurfaceTokens = {
 export const accordionItemTokens = {
   borderRadius: m(12),
   handle: {
-    // paddings: {},
     spacing: m(8),
+    paddings: {
+      left: anchorMenuVars.handle.sizeWithBorder,
+      right: m(12),
+      vertical: m(12),
+    },
   },
-  paddings: {
-    horizontal: m(8),
-    vertical: m(4),
+  content: {
+    color: colorVars.white.css(),
+    backgroundColor: color('#181025'),
+    paddings: {
+      top: m(4),
+      horizontal: anchorMenuVars.handle.sizeWithBorder,
+      bottom: m(10),
+    },
   },
   rightArrow: {
     size: m(44),

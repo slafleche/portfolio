@@ -115,6 +115,7 @@ export function Accordion({
               </span>
               <span className={s.icon} aria-hidden>
                 <ChevronDown className={s.iconSvg} />
+                <span className={s.iconGradient} />
               </span>
             </AccordionPrimitive.Trigger>
           </AccordionPrimitive.Header>

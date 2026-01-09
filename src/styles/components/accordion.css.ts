@@ -1,6 +1,7 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import { m, mPercent } from 'css-calipers';
+import { m, mDeg, mPercent } from 'css-calipers';
 
+import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import { colorVars } from '../../tokens/global.tokens';
 import {
   accordionItemTokens,
@@ -14,6 +15,9 @@ import {
 } from '../helpers/gradients.helper';
 import { outlines } from '../helpers/outlines.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
+import { relativeFontWeight } from '../helpers/typography.helper';
+import { absolutePosition } from '../helpers/positioning.helper';
+import { color } from '../helpers/colorWrap.helper';
 // import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 // import { bodyVariants, headingVariants } from '../../tokens/fontVariants/typography';
 
@@ -86,11 +90,11 @@ export const button = style({
   flexDirection: 'row',
   flexWrap: 'wrap',
   appearance: 'none',
+  ...paddings(accordionItemTokens.handle.paddings),
   ...backgrounds({ color: 'transparent' }),
   border: 'none',
   alignItems: 'center',
   width: '100%',
-  // ...paddings(accordionItemTokens.paddings),
   cursor: 'pointer',
   textAlign: 'left',
   color: colorVars.white.css(),
@@ -122,6 +126,7 @@ export const triggerText = style({
 
 export const triggerLabel = style({
   color: colorVars.white.css(),
+  fontSize: '1.5em',
   ...paddings({
     right: accordionItemTokens.handle.spacing,
   }),
@@ -142,6 +147,8 @@ export const triggerSubtitle = style({
 });
 
 export const icon = style({
+  position: 'relative',
+  overflow: 'hidden',
   ...margins({
     left: 'auto',
   }),
@@ -161,6 +168,25 @@ export const icon = style({
   },
 });
 
+export const iconGradient = style({
+  ...absolutePosition.fullSize(),
+  ...gradientAsBgImg(
+    buildLinear({
+      angle: mDeg(145),
+      stops: [
+        {
+          color: color('#cacaca').darken(0.6),
+          at: mPercent(0),
+        },
+        {
+          color: color('#f0f0f0'),
+          at: mPercent(100),
+        },
+      ],
+    }),
+  ),
+});
+
 export const iconSvg = style({
   display: 'block',
   width: '65%',
@@ -168,8 +194,13 @@ export const iconSvg = style({
 });
 
 export const content = style({
-  // ...backgrounds(accordionSurfaceTokens.drawerBackgrounds),
   overflow: 'hidden',
+  color: accordionItemTokens.content.color,
+  ...backgrounds({
+    color: accordionItemTokens.content.backgroundColor,
+  }),
+  ...paddings(accordionItemTokens.content.paddings),
+  ...relativeFontWeight(typographyFontVariants.body, mPercent(80)),
   selectors: {
     '&[data-state="open"]': {
       animation: `${slideDown} 220ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards`,
@@ -180,8 +211,4 @@ export const content = style({
   },
 });
 
-export const contentInner = style({
-  // ...paddings(accordionItemTokens.paddings),
-  color: colorVars.white.alpha(0.88).css(),
-  lineHeight: 1.6,
-});
+export const contentInner = style({});

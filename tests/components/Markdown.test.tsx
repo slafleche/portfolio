@@ -138,4 +138,61 @@ describe('Markdown component', () => {
       'true',
     );
   });
+
+  it('adds data-ui attributes for all AsUiConfig flags', () => {
+    const { container } = render(
+      <Markdown
+        source={[
+          '# Heading',
+          '',
+          'Paragraph with a [link](https://example.com).',
+          '',
+          '- Item one',
+          '- Item two',
+          '',
+          '1. First',
+          '2. Second',
+          '',
+          '> A quote',
+          '',
+          '```',
+          'const value = 1;',
+          '```',
+        ].join('\n')}
+        asUi={{
+          headings: true,
+          paragraphs: true,
+          links: true,
+          listUnordered: true,
+          listOrdered: true,
+          blockquotes: true,
+          codeBlocks: true,
+        }}
+        openLinksInNewTab={false}
+      />,
+    );
+
+    const heading = container.querySelector('h1');
+    expect(heading?.getAttribute('data-ui')).toBe('heading');
+
+    const paragraph = container.querySelector('p');
+    expect(paragraph?.getAttribute('data-ui')).toBe('paragraph');
+
+    const link = container.querySelector('a');
+    expect(link?.getAttribute('data-ui')).toBe('link');
+
+    const unorderedList = container.querySelector('ul');
+    expect(unorderedList?.getAttribute('data-ui')).toBe(
+      'list-unordered',
+    );
+
+    const orderedList = container.querySelector('ol');
+    expect(orderedList?.getAttribute('data-ui')).toBe('list-ordered');
+
+    const blockquote = container.querySelector('blockquote');
+    expect(blockquote?.getAttribute('data-ui')).toBe('blockquote');
+
+    const codeBlock = container.querySelector('pre');
+    expect(codeBlock?.getAttribute('data-ui')).toBe('code-block');
+  });
 });

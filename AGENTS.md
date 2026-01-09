@@ -110,6 +110,7 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Must: Do not provide summaries unless the user explicitly asks for one.
 - Must: When providing draft fixes, respond with code blocks instead of a text
   summary.
+- Must: When providing a code draft, finish with a note saying it is a draft.
 - Must: When a user message (non-code text) contains a `?`, reply using
   text-only responses—no code blocks or other non-text output.
 - Must: When AGENTS, user instructions, or existing code seem to conflict, call
