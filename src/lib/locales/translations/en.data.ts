@@ -30,24 +30,15 @@ const enBaseData = {
     'personal',
   ],
 
-  'error-video': 'Sorry, your browser cannot play this video',
-
   'favicon-meta-description':
     "Metadata describing the favicon and manifest assets for Stéphane's portfolio.",
   'favicon-meta-keywords': 'favicon, icon, manifest, Stéphane',
   'favicon-meta-author': 'Stéphane',
 
-  'hero-video-title': 'Blue-magenta gradient rotation background',
-  'hero-video-alt':
-    'Slowly rotating diagonal gradient blending cool blue and soft magenta tones with subtle light bands',
-  'hero-video-description':
-    'Decorative blue-magenta gradient rotation background',
-
   'hero-title': 'Stéphane LaFlèche, [split] Front-end Developer',
   'hero-subTitle':
     'I specialize in React UI & design systems, keeping design and code aligned',
 
-  'hero-console_description': 'Decorative code backdrop',
   'hero-cta': "Let's connect!",
 
   'console-curiosity-title': '🔎 Curious?',

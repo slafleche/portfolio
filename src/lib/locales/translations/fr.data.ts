@@ -30,25 +30,15 @@ const frBaseData = {
     'personnel',
   ],
 
-  'error-video':
-    'Désolé, votre navigateur ne peut pas lire cette vidéo.',
-
   'favicon-meta-description':
     'Métadonnées décrivant les favicons et manifestes du portfolio par Stéphane',
   'favicon-meta-keywords': 'favicon, icône, manifeste, Stéphane',
   'favicon-meta-author': 'Stéphane',
 
-  'hero-video-title': 'Fond dégradé bleu et magenta en rotation',
-  'hero-video-alt':
-    'Dégradé diagonal en rotation lente mêlant des tons bleu froid et magenta doux, avec de légères bandes lumineuses',
-  'hero-video-description':
-    'Fond décoratif de dégradé bleu et magenta en rotation',
-
   'hero-title': 'Stéphane LaFlèche, [split] développeur front-end',
   'hero-subTitle':
     'Je me spécialise dans les interfaces React et les systèmes de design, en gardant design et code alignés.',
 
-  'hero-console_description': 'Arrière-plan de code décoratif',
   'hero-cta': 'Prenons contact !',
 
   'console-curiosity-title': '🔎 Curieux ?',

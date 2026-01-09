@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import type { CSSProperties, ReactNode } from 'react';
 
 import { backgrounds } from '@/styles/helpers/background.helper';
@@ -7,6 +8,10 @@ export default function DebugLayout({
 }: {
   children: ReactNode;
 }) {
+  if (process.env.NODE_ENV !== 'development') {
+    notFound();
+  }
+
   return (
     <div
       style={{
