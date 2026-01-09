@@ -23,6 +23,12 @@ export default defineConfig({
   expect: {
     timeout: 5_000,
   },
+  webServer: {
+    command: 'PORT=3000 yarn dev:e2e',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000',
     trace: 'retain-on-failure',
