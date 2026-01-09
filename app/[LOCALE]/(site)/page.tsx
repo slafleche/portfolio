@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 
+import { getLocaleSvgs } from '@/assets/SVG/generated/headingsAsSvgs';
 import Card from '@/components/Card';
 import CaseStudy from '@/components/CaseStudy';
 import ConsoleCuriosity from '@/components/ConsoleCuriosity';
@@ -53,6 +54,7 @@ export default async function HomePage({
 }) {
   const { LOCALE } = await params;
   const locale = resolveLocale(LOCALE);
+  const localeSvgs = getLocaleSvgs(locale);
   const translator = await loadTranslator(locale);
   const contactFormCopy = buildContactFormCopy(translator);
   const privacyCopy = buildPrivacyCopy(translator);
@@ -152,6 +154,7 @@ export default async function HomePage({
             id="hero"
             copy={heroCopy}
             headingAnimated={false}
+            TitleSvg={localeSvgs.home.heroHeading}
             Gooey={() => (
               <DeferredIsland when="visible">
                 <HeroGooeyLazy />

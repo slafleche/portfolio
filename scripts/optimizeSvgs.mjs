@@ -26,6 +26,7 @@ if (args.length === 0) {
 const globs = [];
 const flags = new Set();
 const opts = {
+  config: undefined,
   precision: undefined,
   shortenIds: false,
   write: false,
@@ -35,6 +36,8 @@ for (const a of args) {
   if (a.startsWith('--precision=')) {
     const n = Number(a.split('=')[1]);
     if (!Number.isNaN(n)) opts.precision = n;
+  } else if (a.startsWith('--config=')) {
+    opts.config = a.split('=')[1];
   } else if (a === '--shorten-ids') {
     opts.shortenIds = true;
   } else if (a === '--write') {
@@ -61,10 +64,12 @@ if (files.length === 0) {
   process.exit(0);
 }
 
-const configPaths = [
-  path.resolve('svgo.config.mts'),
-  path.resolve('svgo.config.mjs'),
-];
+const configPaths = opts.config
+  ? [path.resolve(opts.config)]
+  : [
+      path.resolve('svgo.config.mts'),
+      path.resolve('svgo.config.mjs'),
+    ];
 let baseConfig = {};
 let loaded = false;
 for (const configPath of configPaths) {
@@ -76,6 +81,10 @@ for (const configPath of configPaths) {
   } catch {
     // keep trying
   }
+}
+if (!loaded && opts.config) {
+  console.error(pc.red(`Failed to load config: ${opts.config}`));
+  process.exit(1);
 }
 if (!loaded) {
   baseConfig = {
@@ -114,10 +123,10 @@ if (opts.precision != null) {
 if (opts.shortenIds) {
   // Enable ID shortening on top of user's config
   baseConfig.plugins ??= [];
-  baseConfig.plugins.push([
-    'cleanupIds',
-    { remove: true, minify: true },
-  ]);
+  baseConfig.plugins.push({
+    name: 'cleanupIds',
+    params: { remove: true, minify: true },
+  });
 }
 
 let totalSaved = 0;

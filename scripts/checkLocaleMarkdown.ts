@@ -61,8 +61,16 @@ const loadLocaleMessages = async (
   }
 };
 
+const SYSTEMS_MARKDOWN_KEYS = new Set([
+  'architecture-content',
+  'blurb-content',
+  'expertise-content',
+  'principles-content',
+]);
+
 const getSectionForKey = (key: string) => {
   if (key.startsWith('systems-')) return 'systems';
+  if (SYSTEMS_MARKDOWN_KEYS.has(key)) return 'systems';
   if (key.startsWith('forms-')) return 'contact';
   return 'home';
 };

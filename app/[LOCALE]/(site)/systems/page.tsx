@@ -1,3 +1,4 @@
+import { getLocaleSvgs } from '@/assets/SVG/generated/headingsAsSvgs';
 import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
@@ -51,7 +52,7 @@ export default async function SystemsPage({
   const systemsShapeTitle = translator('systems-architecture');
   const systemsShapeMarkdown = translator('architecture-content');
   const systemsShapeBlurbMarkdown = translator('blurb-content');
-
+  const localeSvgs = getLocaleSvgs(locale);
   const heroCopy = {
     ...heroCopyBase,
     title: translator('systems-hero-title'),
@@ -114,6 +115,7 @@ export default async function SystemsPage({
             id="systems-hero"
             copy={heroCopy}
             headingAnimated={false}
+            TitleSvg={localeSvgs.systems.heroHeading}
             Gooey={() => (
               <DeferredIsland when="visible">
                 <SystemsGooeyLazy />

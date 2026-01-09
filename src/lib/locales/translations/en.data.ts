@@ -35,7 +35,7 @@ const enBaseData = {
   'favicon-meta-keywords': 'favicon, icon, manifest, Stéphane',
   'favicon-meta-author': 'Stéphane',
 
-  'hero-title': 'Stéphane LaFlèche, [split] Front-end Developer',
+  'hero-title': 'Stéphane LaFlèche [split] Front-end Developer',
   'hero-subTitle':
     'I specialize in React UI & design systems, keeping design and code aligned',
 

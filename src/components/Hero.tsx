@@ -1,14 +1,12 @@
 import clsx from 'clsx';
-import { type ComponentType, type CSSProperties } from 'react';
+import type { ComponentType, CSSProperties, SVGProps } from 'react';
 
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import SendIcon from '@/components/icons/SendIcon';
-import { parseSplit } from '@/lib/locales/translations/splitShortcodes';
-import { toTrimmedOrNull } from '@/lib/stringUtils';
 import * as s from '@/styles/components/hero.css';
-import * as heroTextStyles from '@/styles/components/heroText.css';
 import * as layoutStyles from '@/styles/layout.css';
 
+import splitText from '../styles/helpers/textSplit';
 import { GlassPanel } from './GlassPanel';
 import HeroGooey from './HeroGooey';
 import HeroWaypoint from './HeroWaypoint';
@@ -25,6 +23,7 @@ type Props = {
   copy: HeroCopy;
   overlayClassName?: string;
   headingAnimated?: boolean;
+  TitleSvg?: ComponentType<SVGProps<SVGSVGElement>>;
   Gooey?: ComponentType<{ style?: CSSProperties }> | null;
 };
 
@@ -34,16 +33,10 @@ export default function Hero({
   copy,
   overlayClassName,
   Gooey = HeroGooey,
+  TitleSvg,
 }: Props) {
-  const { first: headingFirstLine, second: headingLastLine } =
-    parseSplit(copy.title);
-  const headingLabel = toTrimmedOrNull(
-    `${headingFirstLine} ${headingLastLine}`,
-  );
-
+  const titleCopy = splitText(copy.title);
   const showCta = Boolean(copy.ctaLabel);
-
-  if (!headingLabel) return null;
 
   return (
     <>
@@ -62,46 +55,18 @@ export default function Hero({
             <div className={s.glassWrap}>
               <GlassPanel
                 className={s.glassPanel}
-                contentClassName={s.main}
+                contentClassName={clsx(s.main, layoutStyles.content)}
                 surfaceClassNameOverride={s.glassySurfaceOverwrite}
               >
                 <div
-                  className={heroTextStyles.container}
+                  className={s.container}
                   data-hero-text="heroText"
                 >
-                  <h1
-                    data-text={headingLabel}
-                    data-static-ready="true"
-                    data-ui="heading"
-                    className={clsx(
-                      s.heading,
-                      // heroTextStyles.layer,
-                      // heroTextStyles.master,
-                      // heroTextStyles.staticHeading,
-                    )}
-                  >
-                    <span
-                      className={s.line}
-                      data-position={
-                        headingLastLine ? 'first' : 'single'
-                      }
-                      data-text={headingFirstLine}
-                    >
-                      {headingFirstLine}
-                    </span>
-                    {headingLastLine ? (
-                      <>
-                        <br className={s.title_break} />
-                        <span
-                          className={s.line}
-                          data-position="last"
-                          data-text={headingLastLine}
-                        >
-                          {headingLastLine}
-                        </span>
-                      </>
-                    ) : null}
-                  </h1>
+                  <h1 data-visible="sc-only">{titleCopy.fullText}</h1>
+
+                  {TitleSvg && (
+                    <TitleSvg className={s.titleAsSvg} aria-hidden />
+                  )}
                 </div>
                 {copy.subtitle ? (
                   <div className={s.subtitle} data-ready="true">
@@ -116,7 +81,9 @@ export default function Hero({
                       className={s.cta}
                       data-ready="true"
                     >
-                      <span className={s.ctaText}>{copy.ctaLabel}</span>
+                      <span className={s.ctaText}>
+                        {copy.ctaLabel}
+                      </span>
                       <SendIcon className={s.ctaIcon} aria-hidden />
                     </ContactDialogTrigger>
                     <HeroWaypoint />

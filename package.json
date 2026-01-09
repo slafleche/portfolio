@@ -100,7 +100,7 @@
     "locales": "yarn locales:markdown && yarn locales:publish",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",
     "locales:publish": "tsx scripts/generateCopyHtml.ts",
-    "verify": "yarn typecheck && yarn lint && yarn test",
+    "verify": "yarn lint:cleanup && yarn typecheck && yarn lint && yarn test",
     "typecheck": "yarn tsc --noEmit",
     "test": "NODE_ENV=test vitest run && yarn test:e2e",
     "test:fonts": "tsx scripts/testFonts.mts",
@@ -125,6 +125,7 @@
     "build": "next build --webpack",
     "dev": "DEBUG_VE=1 node scripts/devWithDebug.mjs --webpack",
     "start": "next start",
-    "mock:markup-img": "tsx scripts/mockMarkupToImg.mts"
+    "mock:markup-img": "tsx scripts/mockMarkupToImg.mts",
+    "build:hero-svg": "tsx scripts/buildHeroHeadingSvg.mts"
   }
 }

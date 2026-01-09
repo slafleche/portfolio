@@ -57,6 +57,8 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   in this chat or is currently active in the IDE, re-read its current contents
   in this session and base changes only on that latest version, not on any
   earlier in-memory snapshot.
+- Must: Always re-read the full file before editing it, even if you believe you
+  just saw it moments ago.
 - Must: Before answering questions about code behavior or structure, re-read
   the relevant file(s) in this session and base the response on that latest
   content, not memory.

@@ -62,8 +62,8 @@ export const fontFamilies = {
     ],
     cfgMap: fontsConfig,
     letterSpacing: mRem(0.03),
-    offsetToFlushTop: mRem(-0.564),
-    offsetBottom: mRem(0.1),
+    offsetToFlushTop: mRem(-0.44),
+    offsetBottom: mRem(0),
     lineHeight: 1.5,
     weights: {
       default: 400,

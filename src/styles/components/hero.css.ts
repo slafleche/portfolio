@@ -1,20 +1,14 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
-import { heroFontVariants } from '../../tokens/fontVariants/hero';
-import { glassVars } from '../../tokens/glassy.tokens';
-import {
-  colorVars,
-  dropShadowVars,
-  themeColours,
-} from '../../tokens/global.tokens';
+import { colorVars, themeColours } from '../../tokens/global.tokens';
+import { layoutVars } from '../../tokens/layout.tokens';
 import {
   heroGradient,
   heroVars,
 } from '../componentTokens/hero.component.tokens';
 import borders from '../helpers/borders.helper';
 import { makeCardGradient } from '../helpers/cardGradient.helper';
-import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { makeGlassSurface } from '../helpers/glassy.helper';
 import {
   buildLinear,
@@ -130,7 +124,6 @@ export const main = style({
   height: '100%',
   ...paddings({
     vertical: m(100),
-    horizontal: m(46),
   }),
 });
 
@@ -143,6 +136,12 @@ export const subtitle = style({
       opacity: 1,
     },
   },
+});
+
+export const titleAsSvg = style({
+  display: 'block',
+  width: '100%',
+  height: 'auto',
 });
 
 export const subtitleMarkdown = style({});
@@ -220,16 +219,6 @@ export const ctaIcon = style({
   },
 });
 
-export const vennContainer = style({
-  position: 'relative',
-  isolation: 'isolate',
-  ...paddings(m(80)),
-});
-
-export const consolePanel = style({
-  position: 'relative',
-});
-
 export const panel = style({
   position: 'relative',
   width: '100%',
@@ -273,98 +262,87 @@ export const glassWrap = style({
   },
 });
 
-export const panelContents = style({
-  ...paddings(m(80)),
-});
-
-const heroSurfaceOverlay = buildLinear({
-  angle: glassVars.overlay.direction,
-  stops: [
-    {
-      color: glassVars.overlay.color.alpha(
-        glassVars.overlay.topAlpha,
-      ),
-      at: mPercent(0),
-    },
-    {
-      color: glassVars.overlay.color.alpha(0),
-      at: glassVars.overlay.midStop,
-    },
-    {
-      color: glassVars.overlay.color.alpha(
-        glassVars.overlay.bottomAlpha,
-      ),
-      at: mPercent(100),
-    },
-  ],
-}).modern;
-
-const heroSurfaceGlow = buildLinear({
-  angle: m(135, 'deg'),
-  stops: [
-    {
-      color: glassVars.surfaceGlowPrimaryTint.alpha(
-        glassVars.surfaceGlow.primaryTintAlpha,
-      ),
-      at: mPercent(0),
-    },
-    {
-      color: glassVars.surfaceGlowSecondaryTint.alpha(
-        glassVars.surfaceGlow.secondaryTintAlpha,
-      ),
-      at: mPercent(100),
-    },
-  ],
-}).modern;
-
-export const heroSurface = style({
-  background: [
-    heroSurfaceOverlay,
-    heroSurfaceGlow,
-  ].join(', '),
-});
-
-export const title_break = style({
-  selectors: {
-    ...mediaQueryStyle({
-      noEdge: {
-        display: 'none',
-      },
-    }),
-  },
-});
-
-export const heading = style({
+export const container = style({
   position: 'relative',
+  display: 'inline-flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  isolation: 'isolate',
+  overflow: 'visible',
   textAlign: 'center',
-  ...fontStylesFromFontVariant({
-    variant: heroFontVariants.hero,
-    includeFontMargins: true,
-  }),
-  fontSize: 'clamp(20px, 8vw, 100px)',
-  selectors: {
-    ...mediaQueryStyle({
-      snug: {
-        fontSize: 'clamp(20px, 7vw, 100px)',
-      },
-    }),
-  },
+  maxWidth: '100%',
+  width: `clamp(0px, max(70vw, 70vh), ${layoutVars.content.width.css()})`,
 });
 
-/**
- * Text lines — base gradient on the element (static), sheen on
- * ::after (animated). Uses only colorVars.white/black for
- * highlights/shadows. For the sheen to show, set the same text
- * content on a data attribute (data-text="...") so ::after can render
- * it.
- */
+// export const backdrop = style({
+//   position: 'absolute',
+//   zIndex: 0,
+//   inset: '0 -16px',
+//   ...margins({ horizontal: 'auto' }),
+//   ...borders.radii(m(28)),
+//   backgroundColor: colorVars.black.alpha(0).css(),
+//   pointerEvents: 'none',
+//   transition: 'none',
+// });
 
-export const line = style({
-  display: 'inline-block',
-  position: 'relative',
-  zIndex: 1,
+// export const panelContents = style({
+//   ...paddings(m(80)),
+// });
 
-  color: colorVars.white.css(),
-  WebkitTextFillColor: colorVars.white.css(),
-  textShadow: `${dropShadowVars.offsetX.css()} ${dropShadowVars.offsetY.css()} ${dropShadowVars.blur.css()} ${dropShadowVars.color.css()}`,
-});
+// const heroSurfaceOverlay = buildLinear({
+//   angle: glassVars.overlay.direction,
+//   stops: [
+//     {
+//       color: glassVars.overlay.color.alpha(
+//         glassVars.overlay.topAlpha,
+//       ),
+//       at: mPercent(0),
+//     },
+//     {
+//       color: glassVars.overlay.color.alpha(0),
+//       at: glassVars.overlay.midStop,
+//     },
+//     {
+//       color: glassVars.overlay.color.alpha(
+//         glassVars.overlay.bottomAlpha,
+//       ),
+//       at: mPercent(100),
+//     },
+//   ],
+// }).modern;
+
+// const heroSurfaceGlow = buildLinear({
+//   angle: m(135, 'deg'),
+//   stops: [
+//     {
+//       color: glassVars.surfaceGlowPrimaryTint.alpha(
+//         glassVars.surfaceGlow.primaryTintAlpha,
+//       ),
+//       at: mPercent(0),
+//     },
+//     {
+//       color: glassVars.surfaceGlowSecondaryTint.alpha(
+//         glassVars.surfaceGlow.secondaryTintAlpha,
+//       ),
+//       at: mPercent(100),
+//     },
+//   ],
+// }).modern;
+
+// export const heroSurface = style({
+//   background: [
+//     heroSurfaceOverlay,
+//     heroSurfaceGlow,
+//   ].join(', '),
+// });
+
+// export const line = style({
+//   display: 'inline-block',
+//   position: 'relative',
+//   zIndex: 1,
+
+//   color: colorVars.white.css(),
+//   WebkitTextFillColor: colorVars.white.css(),
+//   textShadow: `${dropShadowVars.offsetX.css()} ${dropShadowVars.offsetY.css()} ${dropShadowVars.blur.css()} ${dropShadowVars.color.css()}`,
+// });

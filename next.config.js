@@ -49,8 +49,7 @@ const nextConfig = {
       });
     }
 
-    // SVG as React component by default
-    config.module.rules.push({
+    const svgrRule = {
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
       resourceQuery: {
@@ -70,7 +69,17 @@ const nextConfig = {
           },
         },
       ],
-    });
+    };
+
+    // SVG as React component by default
+    const oneOfRule = config.module.rules.find(
+      (rule) => Array.isArray(rule?.oneOf),
+    );
+    if (oneOfRule) {
+      oneOfRule.oneOf.unshift(svgrRule);
+    } else {
+      config.module.rules.push(svgrRule);
+    }
 
     // Raw file URL when you add ?url
     config.module.rules.push({

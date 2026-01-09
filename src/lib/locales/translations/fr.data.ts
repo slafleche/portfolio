@@ -35,7 +35,7 @@ const frBaseData = {
   'favicon-meta-keywords': 'favicon, icône, manifeste, Stéphane',
   'favicon-meta-author': 'Stéphane',
 
-  'hero-title': 'Stéphane LaFlèche, [split] développeur front-end',
+  'hero-title': 'Stéphane LaFlèche [split] développeur front-end',
   'hero-subTitle':
     'Je me spécialise dans les interfaces React et les systèmes de design, en gardant design et code alignés.',
 
@@ -70,7 +70,7 @@ const frBaseData = {
   ...markdownRefs('projects-05-king-games-content'),
 
   'systems-hero-title':
-    'Interfaces conçues pour [split] la composition',
+    'Interfaces conçues [split] pour la composition',
   'systems-hero-subTitle':
     'Primitives CSS typées pour structurer **votre** système de design',
 

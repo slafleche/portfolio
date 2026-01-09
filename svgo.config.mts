@@ -18,8 +18,16 @@ export default {
         minify: true,
       },
     },
+    { name: 'cleanupAttrs' },
     { name: 'collapseGroups' },
+    { name: 'convertUseToGroup' },
+    { name: 'mergePaths' },
+    { name: 'convertShapeToPath' },
     { name: 'removeEmptyContainers' },
+    { name: 'removeTitle' },
+    { name: 'removeDesc' },
+    { name: 'removeMetadata' },
+    { name: 'removeEditorsNSData' },
 
     // Keep transform cleanup
     { name: 'convertTransform' },

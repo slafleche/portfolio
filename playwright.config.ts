@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 
-const pad = (value: number) => String(value).padStart(2, '0');
+const pad = (value) => String(value).padStart(2, '0');
 const now = new Date();
 const timestamp = [
   now.getFullYear(),
