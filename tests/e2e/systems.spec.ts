@@ -29,12 +29,14 @@ test.describe('systems page', () => {
     const heroCta = page
       .locator('section#systems-hero')
       .getByRole('button', { name: /contact/i });
+    await expect(heroCta).toBeVisible();
     await heroCta.click();
 
     await expect(page.getByRole('dialog')).toBeVisible();
     await page
       .getByRole('button', { name: /close/i })
       .click();
+    await expect(page.getByRole('dialog')).toBeHidden();
 
     await page.locator('#systems-expertise').scrollIntoViewIfNeeded();
 
@@ -42,6 +44,7 @@ test.describe('systems page', () => {
       .locator('header')
       .getByRole('button', { name: /contact/i });
     await expect(stickyCta).toHaveAttribute('data-phase', 'shown');
+    await expect(stickyCta).toBeVisible();
     await stickyCta.click();
 
     await expect(page.getByRole('dialog')).toBeVisible();

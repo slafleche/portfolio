@@ -33,17 +33,20 @@ test.describe('home page', () => {
     await page
       .getByRole('button', { name: /close/i })
       .click();
+    await expect(page.getByRole('dialog')).toBeHidden();
 
     await page.locator('#contact').scrollIntoViewIfNeeded();
     const stickyCta = page
       .locator('header')
       .getByRole('button', { name: /connect|contact/i });
     await expect(stickyCta).toHaveAttribute('data-phase', 'shown');
+    await expect(stickyCta).toBeVisible();
     await stickyCta.click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await page
       .getByRole('button', { name: /close/i })
       .click();
+    await expect(page.getByRole('dialog')).toBeHidden();
 
     const systemsLink = page.getByRole('link', {
       name: /open systems page/i,
