@@ -19,11 +19,10 @@ export default function HeroWaypoint({
       style={{
         position: 'relative',
         width: '100%',
-        height: 0,
+        height: 1,
         margin: 0,
         padding: 0,
       }}
     />
   );
 }
-

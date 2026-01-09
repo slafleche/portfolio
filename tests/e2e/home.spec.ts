@@ -41,6 +41,9 @@ test.describe('home page', () => {
     await expect(stickyCta).toHaveAttribute('data-phase', 'shown');
     await stickyCta.click();
     await expect(page.getByRole('dialog')).toBeVisible();
+    await page
+      .getByRole('button', { name: /close/i })
+      .click();
 
     const systemsLink = page.getByRole('link', {
       name: /open systems page/i,

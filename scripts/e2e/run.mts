@@ -56,6 +56,24 @@ const listRuns = async () => {
   }
 };
 
+const pruneBeforeRun = async (keep: number) => {
+  if (keep <= 0) {
+    await fs.rm(RESULTS_DIR, { recursive: true, force: true });
+    return;
+  }
+  const runs = await listRuns();
+  const targetMax = Math.max(0, keep - 1);
+  const toRemove = runs.slice(targetMax);
+  await Promise.all(
+    toRemove.map((dir) =>
+      fs.rm(path.join(RESULTS_DIR, dir), {
+        recursive: true,
+        force: true,
+      }),
+    ),
+  );
+};
+
 const removeOldRuns = async (keep: number) => {
   if (keep < 0) return;
   const runs = await listRuns();
@@ -79,11 +97,18 @@ const main = async () => {
     await fs.rm(RESULTS_DIR, { recursive: true, force: true });
   }
 
-  await execa('yarn', ['playwright', 'test', ...passThrough], {
-    stdio: 'inherit',
-  });
-
-  await removeOldRuns(keep);
+  try {
+    await pruneBeforeRun(keep);
+    await execa(
+      'yarn',
+      ['playwright', 'test', ...passThrough],
+      {
+        stdio: 'inherit',
+      },
+    );
+  } finally {
+    await removeOldRuns(keep);
+  }
 };
 
 main().catch((error) => {

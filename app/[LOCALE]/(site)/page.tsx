@@ -101,6 +101,7 @@ export default async function HomePage({
 
   const menuProps = {
     root: `/${locale}`,
+    locale,
     homeLabel: menuCopy.homeLabel,
     skipNavLabel: menuCopy.skipNavLabel,
     navLabel: menuCopy.navLabel,

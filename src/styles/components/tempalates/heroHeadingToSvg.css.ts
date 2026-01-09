@@ -1,8 +1,11 @@
 import { style } from '@vanilla-extract/css';
+import { m } from 'css-calipers';
 
 import { heroFontVariants } from '../../../tokens/fontVariants/hero';
 import { colorVars } from '../../../tokens/global.tokens';
+import { backgrounds } from '../../helpers/background.helper';
 import { fontStylesFromFontVariant } from '../../helpers/fontVariant.helper';
+import { margins, paddings } from '../../helpers/spacing.helper';
 
 export const root = style({
   display: 'flex',
@@ -10,15 +13,15 @@ export const root = style({
   alignItems: 'center',
   justifyContent: 'center',
   gap: '20px',
+  ...backgrounds({ color: colorVars.black }),
 });
 
 export const viewPort = style({
   display: 'inline-flex',
-  backgroundColor: colorVars.black.css(),
-  marginBottom: '20px',
+  ...backgrounds({ color: 'orange' }),
+  ...margins({ bottom: m(20) }),
   boxSizing: 'border-box',
-  background: 'orange',
-  padding: '1px 0',
+  ...paddings({ vertical: m(1), horizontal: m(0) }),
 });
 
 export const heading = style({

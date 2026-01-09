@@ -66,6 +66,7 @@ export default async function SystemsPage({
 
   const menuProps = {
     root: `/${locale}`,
+    locale,
     homeLabel: menuCopy.homeLabel,
     skipNavLabel: menuCopy.skipNavLabel,
     navLabel: menuCopy.navLabel,

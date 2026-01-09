@@ -2,11 +2,16 @@
 
 import clsx from 'clsx';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import type { Locale } from '@/data/locales';
+import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
 import { useVisualViewportFrame } from '@/lib/responsive/useVisualViewportFrame';
 import { useWindowSize } from '@/lib/responsive/WindowSizeContext';
+import {
+  canonicalToLocalizedSlugs,
+  localizedToCanonicalSlugs,
+} from '@/lib/routes/localeSlugs';
 import {
   type AnchorTarget,
   useActiveAnchors,
@@ -31,6 +36,7 @@ type AnchorLink = {
 
 type MenuProps = {
   root: string;
+  locale: Locale;
   homeLabel: string;
   skipNavLabel: string;
   navLabel: string;
@@ -44,6 +50,7 @@ type MenuProps = {
 
 export default function Menu({
   root,
+  locale,
   homeLabel,
   skipNavLabel,
   navLabel,
@@ -54,6 +61,7 @@ export default function Menu({
   ctaLabel,
   ctaWatchId,
 }: MenuProps) {
+  const pathname = usePathname();
   const { layoutTick } = useWindowSize();
   const { frame, frameStyle } = useVisualViewportFrame();
   const frameRef = useRef<HTMLDivElement | null>(null);
@@ -62,6 +70,16 @@ export default function Menu({
     setPortalTarget,
   ] = useState<HTMLElement | null>(null);
   const alternateLocale = localeLinks[0];
+  const localeHref =
+    alternateLocale && pathname
+      ? buildAlternateLocaleHref(
+          pathname,
+          locale,
+          alternateLocale.locale,
+        )
+      : alternateLocale
+        ? `/${alternateLocale.locale}`
+        : undefined;
   const anchorTargets = useMemo(
     () =>
       anchorLinks.reduce<AnchorTarget[]>((acc, link) => {
@@ -125,7 +143,7 @@ export default function Menu({
                 data-ui="list-item"
               >
                 <Link
-                  href={`/${alternateLocale.locale}`}
+                  href={localeHref ?? `/${alternateLocale.locale}`}
                   hrefLang={alternateLocale.locale}
                   aria-label={localeChangeLabel}
                   className={s.localeLink}
@@ -154,3 +172,30 @@ export default function Menu({
     </header>
   );
 }
+
+const buildAlternateLocaleHref = (
+  pathname: string,
+  currentLocale: Locale,
+  targetLocale: Locale,
+) => {
+  const segments = pathname.split('/').filter(Boolean);
+  const first = segments[0];
+  const hasLocale =
+    first && AVAILABLE_LOCALES.includes(first as Locale);
+  const rest = hasLocale ? segments.slice(1) : segments;
+  const canonicalSegments = rest.map(
+    (segment) =>
+      localizedToCanonicalSlugs[currentLocale]?.[segment] ??
+      segment,
+  );
+  const localizedSegments = canonicalSegments.map(
+    (segment) =>
+      canonicalToLocalizedSlugs[targetLocale]?.[segment] ??
+      segment,
+  );
+  return `/${targetLocale}${
+    localizedSegments.length
+      ? `/${localizedSegments.join('/')}`
+      : ''
+  }`;
+};

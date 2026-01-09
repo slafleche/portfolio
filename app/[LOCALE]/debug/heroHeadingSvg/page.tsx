@@ -2,6 +2,7 @@ import * as s from '@/styles/components/tempalates/heroHeadingToSvg.css';
 
 import HeroTitleTemplate from '../../../../src/assets/HeroTitleTemplate';
 import { loadTranslator } from '../../../../src/lib/locales/sections/helpers.locale';
+import { colorVars } from '../../../../src/tokens/global.tokens';
 
 export default async function HeroHeadingSvgDebugPage() {
   const translatorEn = await loadTranslator('en');
@@ -17,13 +18,16 @@ export default async function HeroHeadingSvgDebugPage() {
     fr: translatorFr('systems-hero-title'),
   };
 
+  const shadowDefault = {
+    x: 2,
+    y: 2,
+    color: colorVars.black.lighten(0.2).css(),
+    opacity: 0.8,
+    blur: 1,
+  };
+
   return (
-    <div
-      data-ignore="true"
-      id="container"
-      className={s.root}
-      style={{ background: 'black' }}
-    >
+    <div data-ignore="true" id="container" className={s.root}>
       <p data-ignore="true">FR - Hero Home</p>
 
       <div
@@ -37,6 +41,7 @@ export default async function HeroHeadingSvgDebugPage() {
           firstLineClassName={s.homeFirstLine_fr}
           secondLineClassName={s.homeSecondLine_fr}
           locale={'fr'}
+          shadow={shadowDefault}
         />
       </div>
       <p data-ignore="true">En - Hero Home</p>
@@ -51,6 +56,7 @@ export default async function HeroHeadingSvgDebugPage() {
           firstLineClassName={s.homeFirstLine_en}
           secondLineClassName={s.homeSecondLine_en}
           locale={'en'}
+          shadow={shadowDefault}
         />
       </div>
 
@@ -68,6 +74,7 @@ export default async function HeroHeadingSvgDebugPage() {
           secondLineClassName={s.systemsSecondLine_fr}
           copy={systemsCopy.fr}
           locale={'fr'}
+          shadow={shadowDefault}
         />
       </div>
       <p data-ignore="true">En - Hero Systems</p>
@@ -83,6 +90,7 @@ export default async function HeroHeadingSvgDebugPage() {
           secondLineClassName={s.systemsSecondLine_en}
           copy={systemsCopy.en}
           locale={'en'}
+          shadow={shadowDefault}
         />
       </div>
     </div>

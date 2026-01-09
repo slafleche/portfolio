@@ -12,6 +12,43 @@ const OUTPUT_DIR = '/tmp/heroTextSvg';
 const VIEWPORT_SELECTOR = '[data-target="viewport"]';
 const EXPORT_ATTR = 'data-export-target';
 const EXPORT_STYLE_ID = 'hero-heading-export-style';
+const SHADOW_CONFIG = {
+  attrName: 'data-shadow',
+  metaSuffix: '.shadow.json',
+};
+
+const parseShadowPayload = (raw) => {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      return parsed;
+    }
+  } catch {
+    console.warn(`Invalid shadow payload: ${raw}`);
+  }
+  return null;
+};
+
+const persistShadowMetadata = async (
+  svgDir,
+  baseName,
+  metadata,
+) => {
+  const metaPath = path.join(
+    svgDir,
+    `${baseName}${SHADOW_CONFIG.metaSuffix}`,
+  );
+  if (!metadata?.shadow) {
+    await fs.rm(metaPath, { force: true });
+    return;
+  }
+  await fs.writeFile(
+    metaPath,
+    JSON.stringify(metadata, null, 2),
+    'utf8',
+  );
+};
 
 try {
   execSync('inkscape --version', { stdio: 'ignore' });
@@ -93,6 +130,10 @@ for (let index = 0; index < count; index += 1) {
   const pageName = await viewport.getAttribute('data-page');
   const name =
     (await viewport.getAttribute('data-name')) ?? 'heroHeading';
+  const heading = viewport.locator('[data-target="hero-heading"]');
+  const shadowPayload = parseShadowPayload(
+    await heading.getAttribute(SHADOW_CONFIG.attrName),
+  );
 
   if (!locale) {
     await browser.close();
@@ -142,6 +183,7 @@ for (let index = 0; index < count; index += 1) {
   await fs.mkdir(svgDir, { recursive: true });
   const pdfPath = path.join(pdfDir, `${locale}-${name}.pdf`);
   const svgPath = path.join(svgDir, `${locale}-${name}.svg`);
+  let exportedSvgPath = svgPath;
 
   await page.pdf({
     path: pdfPath,
@@ -160,6 +202,7 @@ for (let index = 0; index < count; index += 1) {
       svgDir,
       `${locale}-${name}-live.svg`,
     );
+    exportedSvgPath = fallbackSvgPath;
     execSync(
       `inkscape "${pdfPath}" --pages=1 --pdf-poppler --export-plain-svg --export-area-drawing --export-type=svg --export-filename="${fallbackSvgPath}"`,
       { stdio: 'inherit' },
@@ -173,14 +216,26 @@ for (let index = 0; index < count; index += 1) {
   console.log(`Wrote ${pdfPath}`);
 
   try {
-    await fs.access(svgPath);
-    console.log(`Wrote ${svgPath}`);
+    await fs.access(exportedSvgPath);
+    await persistShadowMetadata(svgDir, `${locale}-${name}`, {
+      locale,
+      page: pageName,
+      name,
+      shadow: shadowPayload,
+    });
+    console.log(`Wrote ${exportedSvgPath}`);
   } catch {
     const fallbackSvgPath = path.join(
       svgDir,
       `${locale}-${name}-live.svg`,
     );
     await fs.access(fallbackSvgPath);
+    await persistShadowMetadata(svgDir, `${locale}-${name}`, {
+      locale,
+      page: pageName,
+      name,
+      shadow: shadowPayload,
+    });
     console.log(`Wrote ${fallbackSvgPath}`);
   }
 }

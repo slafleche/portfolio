@@ -20,9 +20,11 @@ export default function PageCurl({
       <Link
         title={label}
         href={href}
+        aria-label={label}
         className={s.link}
         data-ui="link"
       >
+        <span data-visible="sc-only">{label}</span>
         <div className={s.box} aria-hidden="true">
           <div className={s.cornerBox}>
             <div className={s.fakeTipShadow} />

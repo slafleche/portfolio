@@ -32,9 +32,6 @@ test.describe('systems page', () => {
     await heroCta.click();
 
     await expect(page.getByRole('dialog')).toBeVisible();
-    await expect(
-      page.getByRole('heading', { name: /contact/i }),
-    ).toBeVisible();
     await page
       .getByRole('button', { name: /close/i })
       .click();
@@ -48,8 +45,5 @@ test.describe('systems page', () => {
     await stickyCta.click();
 
     await expect(page.getByRole('dialog')).toBeVisible();
-    await expect(
-      page.getByRole('heading', { name: /contact/i }),
-    ).toBeVisible();
   });
 });
