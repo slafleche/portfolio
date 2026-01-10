@@ -10,6 +10,7 @@ import { content as contentClass } from '@/styles/layout.css';
 export type ContentBaseProps = HTMLAttributes<HTMLElement> & {
   tag?: ElementType;
   queryDataAttributes?: DataAttributeMap;
+  ignoreBottomMargin?: boolean;
   children?: ReactNode;
 };
 
@@ -24,6 +25,7 @@ export default function Content<T extends ElementType = 'section'>({
   className,
   children,
   tag,
+  ignoreBottomMargin,
   queryDataAttributes = {},
   ...rest
 }: ContentProps<T>) {
@@ -39,6 +41,7 @@ export default function Content<T extends ElementType = 'section'>({
       data-ui="content"
       className={clsx(contentClass, className)}
       {...dataQueryAttributes}
+      data-spacing={ignoreBottomMargin ? 'no-bottom' : null}
       {...rest}
     >
       {children}

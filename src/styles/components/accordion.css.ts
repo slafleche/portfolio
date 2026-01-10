@@ -10,6 +10,7 @@ import {
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
 import { color } from '../helpers/colorWrap.helper';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import {
   buildLinear,
   gradientAsBgImg,
@@ -17,9 +18,6 @@ import {
 import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
-import { relativeFontWeight } from '../helpers/typography.helper';
-import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
-import { formFontVariants } from '../../tokens/fontVariants/forms';
 
 const slideTokens = accordionItemTokens.animation.slide;
 
@@ -55,7 +53,11 @@ const slideUp = keyframes({
   },
 });
 
-export const root = style({});
+export const root = style({
+  ...margins({
+    bottom: m(64),
+  }),
+});
 export const intro = style({});
 
 globalStyle(`.${intro} p`, {
@@ -108,11 +110,7 @@ export const button = style({
       ...backgrounds({ color: colorVars.white.alpha(0.05) }),
     },
     '&:focus-visible': {
-      ...outlines({
-        color: themeColours.secondary,
-        width: m(2),
-        offset: m(-2),
-      }),
+      outline: 'none',
     },
     '&:before': {
       content: '""',
@@ -249,6 +247,13 @@ export const iconSvg = style({
 
 globalStyle(`.${item}[data-state="open"] .${iconSvg}`, {
   transform: 'rotate(45deg)',
+});
+
+globalStyle(`.${button}:focus-visible .${icon}`, {
+  ...outlines({
+    color: themeColours.secondary,
+    width: m(2),
+  }),
 });
 
 export const content = style({

@@ -151,7 +151,11 @@ export default async function HomePage({
     >
       <Menu {...menuProps} />
       <div className={layoutStyles.page}>
-        <main className={layoutStyles.main}>
+        <main
+          className={layoutStyles.main}
+          data-query-all="no-margin"
+          data-query-compact="no-padding"
+        >
           <Hero
             id="hero"
             copy={heroCopy}
@@ -216,7 +220,8 @@ export default async function HomePage({
               ignoreDataUI={true}
               className={layoutStyles.sectionSpacing}
               queryDataAttributes={{
-                compact: 'no-padding',
+                all: 'no-margin',
+                compact: 'no-padding-no-margin',
               }}
             >
               <Grid>

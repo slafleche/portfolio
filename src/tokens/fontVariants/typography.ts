@@ -56,6 +56,7 @@ export const typographyFontVariants = {
     config: {
       options: {
         offsetBottom: mEm(0.8),
+        textAlign: 'center',
       },
       styleOverrides: {
         size: m(28),

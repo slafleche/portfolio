@@ -48,19 +48,9 @@ globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {
 
 globalStyle(`p`, {
   display: 'block',
-  marginTop: 0,
-  paddingTop: 0,
+  ...margins(0),
+  ...paddings(0),
 });
-
-// globalStyle(`.${userContent} p:not([data-ui])[data-first]`, {
-//   marginTop: 0,
-//   paddingTop: 0,
-// });
-
-// globalStyle(`.${userContent} p:not([data-ui])[data-last]`, {
-//   marginBottom: 0,
-//   paddingBottom: 0,
-// });
 
 globalStyle('blockquote', {
   color: textStyleVars.blockquote.color.css(),

@@ -56,7 +56,7 @@ export default function CaseStudy({
       <Content
         tag={'div'}
         queryDataAttributes={{
-          compact: 'no-padding',
+          compact: 'no-padding-no-margin',
         }}
       >
         {children}

@@ -13,14 +13,22 @@ export const content = style({
   width: '100%',
   ...margins({
     horizontal: 'auto',
+    bottom: layoutVars.content.gap,
   }),
   ...paddings({
     horizontal: layoutVars.content.padding,
   }),
 
   selectors: {
-    "&[data-margin='skip']": {
-      marginTop: 0,
+    "&[data-query-all='no-margin']": {
+      ...margins({
+        bottom: 0,
+      }),
+    },
+    "&[data-spacing='no-bottom']": {
+      ...margins({
+        bottom: 0,
+      }),
     },
     ...mediaQueryStyle({
       fullSize: {
@@ -39,7 +47,20 @@ export const content = style({
         selectors: {
           "&[data-query-compact='no-padding']": {
             ...paddings({
+              bottom: 0,
+            }),
+          },
+          "&[data-query-compact='no-margin']": {
+            ...margins({
+              bottom: 0,
+            }),
+          },
+          "&[data-query-compact='no-padding-no-margin']": {
+            ...paddings({
               horizontal: 0,
+            }),
+            ...margins({
+              bottom: 0,
             }),
           },
         },
@@ -79,16 +100,23 @@ export const main = style({
     bottom: layoutVars.content.padding.multiply(1.5),
   }),
   selectors: {
+    "&[data-query-all='no-margin']": {
+      ...margins({
+        bottom: 0,
+      }),
+    },
     ...mediaQueryStyle({
-      noEdge: {
-        ...paddings({
-          bottom: layoutVars.content.padding,
-        }),
-      },
       compact: {
         ...paddings({
           bottom: anchorMenuVars.handle.sizeWithBorder,
         }),
+        selectors: {
+          "&[data-query-compact='no-padding']": {
+            ...paddings({
+              bottom: 0,
+            }),
+          },
+        },
       },
     }),
   },

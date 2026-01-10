@@ -32,7 +32,16 @@ export function SkipNavLink({
       const target = document.getElementById(targetId);
       if (!target) return;
       event.preventDefault();
-      target.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      const scrollPaddingTop = window.getComputedStyle(
+        document.documentElement,
+      ).scrollPaddingTop;
+      const paddingValue = Number.parseFloat(scrollPaddingTop);
+      const padding = Number.isFinite(paddingValue) ? paddingValue : 0;
+      const top = target.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: Math.max(0, top - padding),
+        behavior: 'smooth',
+      });
       if (typeof target.focus === 'function') {
         const previousTabIndex = target.getAttribute('tabindex');
         if (previousTabIndex == null) {

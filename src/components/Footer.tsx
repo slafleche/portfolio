@@ -44,7 +44,7 @@ export default function Footer({
           mockHtmlAlt={contact.mockHtmlAlt}
         />
       ) : null}
-      <Content>
+      <Content ignoreBottomMargin={true}>
         <Heading
           data-visible="sc-only"
           id={headingId}

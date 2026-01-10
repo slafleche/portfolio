@@ -8,6 +8,7 @@ import {
   footerGradientConfig,
   footerVars,
 } from '../componentTokens/footer.component.tokens';
+import { curlVars } from '../componentTokens/pageCurl.component.tokens';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
@@ -34,9 +35,9 @@ export const root = style({
   width: '100%',
   textAlign: 'center',
   overflow: 'hidden',
-
+  minHeight: curlVars.height.css(),
   ...paddings({
-    vertical: layoutVars.content.padding.multiply(1.5),
+    vertical: layoutVars.content.gap.multiply(1.5).round(),
   }),
   selectors: {
     ...mediaQueryStyle({

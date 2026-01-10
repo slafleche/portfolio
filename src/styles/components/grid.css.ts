@@ -13,7 +13,7 @@ export const root = style({
     ...componentMediaQueries({
       card_oneColumn: {
         ...paddings({
-          top: m(50),
+          top: m(18),
         }),
       },
     }),

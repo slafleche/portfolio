@@ -4,6 +4,7 @@ import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 
 import type { SpacingIntentInternal } from '../styles/helpers/spacing.helper';
 import { colorVars, themeColours } from './global.tokens';
+import { layoutVars } from './layout.tokens';
 
 const blockSpacing = m(20);
 const listIndent = m(24);
@@ -149,7 +150,7 @@ export const textStyleVars = {
     },
     margins: {
       horizontal: 'auto',
-      vertical: blockSpacing.multiply(2),
+      vertical: layoutVars.content.gap,
     },
   },
   break: {
