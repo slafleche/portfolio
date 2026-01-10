@@ -1,7 +1,11 @@
 import { keyframes, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
-import { colorVars, themeColours } from '../../tokens/global.tokens';
+import {
+  colors,
+  colorVars,
+  themeColours,
+} from '../../tokens/global.tokens';
 import {
   buildLinear,
   gradientAsBgImg,
@@ -55,6 +59,7 @@ import {
   t3dOvershootInSoft,
   t3dPushedOutSoft,
 } from './contactButton.vars';
+import borders from '../helpers/borders.helper';
 
 /* EASING */
 const SNAP = 'cubic-bezier(0.45, 0, 0.2, 1)';
@@ -200,16 +205,22 @@ export const button = style({
   transition: `box-shadow ${hoverTransitionMs.css()} ease`,
   transformOrigin: `0 50%`,
   willChange: 'transform',
+  ...borders({
+    color: colors.white,
+    width: m(2),
+  }),
   selectors: {
     '&:hover, &:focus-visible': {
+      color: colorVars.white.css(),
       ...boxShadow({ blur: hoverBlurPx }),
     },
-    '&:focus-visible': outlines({
-      // color: themeColours.lights.b.mix(themeColours.lights.d, 0.5),
-      // color: themeColours.lights.a.mix(themeColours.lights.e, 0.5),
-      width: focusWidthPx,
-      offset: focusOffsetPx,
-    }),
+    '&:focus-visible': {
+      color: colorVars.white.css(),
+      ...outlines({
+        width: focusWidthPx,
+        offset: focusOffsetPx,
+      }),
+    },
     '&[data-phase="entering"]': {
       animation: `${buttonScaleEnter} ${iconScaleEnterMs.css()} ${SETTLE} 0s both`,
     },
