@@ -1,5 +1,5 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import { m, mDeg, mEm, mPercent } from 'css-calipers';
+import { m, mDeg, mPercent } from 'css-calipers';
 
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
@@ -18,6 +18,8 @@ import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { relativeFontWeight } from '../helpers/typography.helper';
+import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
+import { formFontVariants } from '../../tokens/fontVariants/forms';
 
 const slideTokens = accordionItemTokens.animation.slide;
 
@@ -90,6 +92,11 @@ export const button = style({
   cursor: 'pointer',
   ...paddings(accordionItemTokens.button.paddings),
   ...backgrounds({ color: 'transparent' }),
+  ...fontStylesFromFontVariant({
+    variant: typographyFontVariants.body,
+    includeFontMargins: true,
+  }),
+  lineHeight: 1.1,
   border: 'none',
   alignItems: 'center',
   width: '100%',
@@ -101,11 +108,10 @@ export const button = style({
       ...backgrounds({ color: colorVars.white.alpha(0.05) }),
     },
     '&:focus-visible': {
-      ...backgrounds({ color: colorVars.white.alpha(0.08) }),
       ...outlines({
-        color: colorVars.white.alpha(0.4),
-        width: m(0.75),
-        offset: m(0.75),
+        color: themeColours.secondary,
+        width: m(2),
+        offset: m(-2),
       }),
     },
     '&:before': {
@@ -142,15 +148,18 @@ export const triggerText = style({
   position: 'relative',
   display: 'flex',
   flexDirection: 'row',
+  rowGap: '0.5em',
   alignItems: 'center',
   justifyContent: 'flex-start',
   flexWrap: 'wrap',
+  fontSize: '1.5em',
+  lineHeight: 1.1,
   maxWidth: `calc(100% - ${accordionItemTokens.button.size.css()})`,
 });
 
 export const triggerLabel = style({
   color: colorVars.white.css(),
-  fontSize: '1.5em',
+
   ...paddings({
     right: accordionItemTokens.button.spacing,
   }),
@@ -161,8 +170,7 @@ export const triggerSubtitle = style({
   flexDirection: 'row',
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
-  fontSize: '1.3em',
-  lineHeight: 1.1,
+
   color: colorVars.white.alpha(0.72).css(),
 });
 
@@ -173,11 +181,18 @@ export const triggerSubtitleText = style({
 });
 
 export const rightArrow = style({
-  display: 'inline-block',
-  width: '1.2em',
-  height: '1.2em',
+  display: 'block',
   position: 'relative',
+  top: '0.5em',
+  transform: 'translateY(-50%)',
   color: accordionItemTokens.rightArrow.color.css(),
+});
+
+export const iconContainer = style({
+  display: 'inline-block',
+  minWidth: '1em',
+  height: '1em',
+  alignSelf: 'center',
 });
 
 export const icon = style({
@@ -243,7 +258,7 @@ export const content = style({
     color: accordionItemTokens.content.backgroundColor,
   }),
   ...paddings(accordionItemTokens.content.paddings),
-  ...relativeFontWeight(typographyFontVariants.body, mPercent(80)),
+  // ...relativeFontWeight(typographyFontVariants.body, mPercent(30)),
   selectors: {
     '&[data-state="open"]': {
       animation: `${slideDown} ${slideTokens.open.timing.css()} ${slideTokens.open.easing} forwards`,

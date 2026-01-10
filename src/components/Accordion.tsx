@@ -76,8 +76,7 @@ export function Accordion({
           key={item.value}
           value={item.value}
           className={clsx(s.item, {
-            [s.separator]:
-              index !== 0 && index !== resolvedItems.length - 1,
+            [s.separator]: index !== resolvedItems.length - 1,
           })}
         >
           <AccordionPrimitive.Header
@@ -101,7 +100,9 @@ export function Accordion({
                 {item.subHeading ? (
                   <>
                     <span className={s.triggerSubtitle}>
-                      <RightArrow className={s.rightArrow} />
+                      <span className={s.iconContainer}>
+                        <RightArrow className={s.rightArrow} />
+                      </span>
                       <span className={s.triggerSubtitleText}>
                         {typeof item.subHeading === 'string' &&
                         isLocaleRichText(item.subHeading) ? (

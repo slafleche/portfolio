@@ -337,6 +337,11 @@ type FontVariantStylesOptions = {
   includeFontMargins?: boolean;
 };
 
+type FontVariantMarginOptions = Omit<
+  FontVariantStylesOptions,
+  'includeFontMargins'
+>;
+
 export function fontStylesFromFontVariant({
   variant,
   extraConfig,
@@ -381,6 +386,33 @@ export function fontStylesFromFontVariant({
     }
   }
   return styles;
+}
+
+export function fontMarginsFromFontVariant(
+  options: FontVariantMarginOptions,
+): Partial<
+  Pick<
+    CSS_TYPES.Properties<0 | (string & {}), string & {}>,
+    'marginBottom' | 'marginTop'
+  >
+> {
+  const styles = fontStylesFromFontVariant({
+    ...options,
+    includeFontMargins: true,
+  });
+  const margins: Partial<
+    Pick<
+      CSS_TYPES.Properties<0 | (string & {}), string & {}>,
+      'marginBottom' | 'marginTop'
+    >
+  > = {};
+  if (styles.marginTop !== undefined) {
+    margins.marginTop = styles.marginTop;
+  }
+  if (styles.marginBottom !== undefined) {
+    margins.marginBottom = styles.marginBottom;
+  }
+  return margins;
 }
 
 export type FontVariantMap = Record<string, FontVariantDefinition>;

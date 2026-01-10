@@ -1,4 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css';
+import { m } from 'css-calipers';
 
 import { typographyFontVariants } from '../tokens/fontVariants/typography';
 import { colorVars } from '../tokens/global.tokens';
@@ -169,7 +170,9 @@ export const headingDecoration = style({
       display: 'block',
       width: '40px',
       height: '2px',
-      marginTop: '-2px',
+      ...margins({
+        top: m(2),
+      }),
       backgroundColor: 'currentColor',
     },
   },

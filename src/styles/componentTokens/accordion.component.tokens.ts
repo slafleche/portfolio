@@ -59,9 +59,10 @@ export const accordionItemTokens = {
     size: m(44),
     spacing: m(12),
     paddings: {
+      top: m(25),
       left: anchorMenuVars.handle.sizeWithBorder,
       right: m(12),
-      vertical: m(12),
+      bottom: m(20),
     },
   },
   icon: {
@@ -73,7 +74,9 @@ export const accordionItemTokens = {
     paddings: {
       top: m(4),
       horizontal: anchorMenuVars.handle.sizeWithBorder,
-      bottom: m(10),
+      bottom: anchorMenuVars.handle.sizeWithBorder
+        .multiply(0.8)
+        .round(0),
     },
   },
   rightArrow: {
