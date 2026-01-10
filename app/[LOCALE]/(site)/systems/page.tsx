@@ -57,11 +57,12 @@ export default async function SystemsPage({
     ...heroCopyBase,
     title: translator('systems-hero-title'),
     subtitle: translator('systems-hero-subTitle'),
-    ctaLabel: contactCopy.title,
+    ctaLabel: contactCopy.labelHero,
   };
 
   const menuCopy: ReturnType<typeof buildMenuCopy> =
     buildMenuCopy(translator);
+
   const homeHref = `/${locale}`;
 
   const menuProps = {
@@ -96,7 +97,7 @@ export default async function SystemsPage({
       locale: code,
       label: LOCALE_LABELS[code],
     })),
-    ctaLabel: heroCopy.ctaLabel,
+    ctaLabel: contactCopy.labelFloating,
     ctaWatchId: sharedStrings.heroWaypointId,
   };
 

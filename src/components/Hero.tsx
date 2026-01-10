@@ -13,7 +13,8 @@ import HeroWaypoint from './HeroWaypoint';
 
 type HeroCopy = {
   title: string;
-  ctaLabel?: string;
+  ctaLabel: string;
+  ctaText: string;
   subtitle?: string;
 };
 
@@ -36,7 +37,6 @@ export default function Hero({
   TitleSvg,
 }: Props) {
   const titleCopy = splitText(copy.title);
-  const showCta = Boolean(copy.ctaLabel);
 
   return (
     <>
@@ -78,20 +78,18 @@ export default function Hero({
                     </p>
                   </div>
                 ) : null}
-                {showCta ? (
-                  <>
-                    <ContactDialogTrigger
-                      className={s.cta}
-                      data-ready="true"
-                    >
-                      <span className={s.ctaText}>
-                        {copy.ctaLabel}
-                      </span>
-                      <SendIcon className={s.ctaIcon} aria-hidden />
-                    </ContactDialogTrigger>
-                    <HeroWaypoint />
-                  </>
-                ) : null}
+
+                <>
+                  <ContactDialogTrigger
+                    className={s.cta}
+                    data-ready="true"
+                    aria-label={copy.ctaLabel}
+                  >
+                    <span className={s.ctaText}>{copy.ctaText}</span>
+                    <SendIcon className={s.ctaIcon} aria-hidden />
+                  </ContactDialogTrigger>
+                  <HeroWaypoint />
+                </>
               </GlassPanel>
             </div>
           </div>

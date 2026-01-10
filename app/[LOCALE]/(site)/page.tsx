@@ -65,7 +65,7 @@ export default async function HomePage({
   const heroCopyBase = buildHeroCopy(translator);
   const heroCopy = {
     ...heroCopyBase,
-    subtitle: translator('hero-subTitle'),
+    subtitle: translator('hero-subtitle'),
   };
   const [
     approach,
@@ -136,7 +136,7 @@ export default async function HomePage({
       locale: code,
       label: LOCALE_LABELS[code],
     })),
-    ctaLabel: heroCopy.ctaLabel,
+    ctaLabel: contact.labelFloating,
     ctaWatchId: sharedStrings.heroWaypointId,
   };
 

@@ -44,7 +44,7 @@ type MenuProps = {
   localeLinks: ReadonlyArray<LocaleLink>;
   anchorLinks?: ReadonlyArray<AnchorLink>;
   anchorNavLabel: string;
-  ctaLabel?: string;
+  ctaLabel: string;
   ctaWatchId?: string;
 };
 
@@ -69,6 +69,10 @@ export default function Menu({
     portalTarget,
     setPortalTarget,
   ] = useState<HTMLElement | null>(null);
+  const [
+    forceCtaVisible,
+    setForceCtaVisible,
+  ] = useState(false);
   const alternateLocale = localeLinks[0];
   const localeHref =
     alternateLocale && pathname
@@ -108,6 +112,41 @@ export default function Menu({
 
   useEffect(() => {
     setPortalTarget(frameRef.current);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
+      setForceCtaVisible(true);
+    };
+
+    const handlePointer = () => {
+      setForceCtaVisible(false);
+    };
+
+    window.addEventListener('keydown', handleKeyDown, {
+      capture: true,
+    });
+    window.addEventListener('mousedown', handlePointer, {
+      capture: true,
+    });
+    window.addEventListener('touchstart', handlePointer, {
+      capture: true,
+    });
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown, {
+        capture: true,
+      });
+      window.removeEventListener('mousedown', handlePointer, {
+        capture: true,
+      });
+      window.removeEventListener('touchstart', handlePointer, {
+        capture: true,
+      });
+    };
   }, []);
 
   const handleHomeClick = () => {
@@ -174,6 +213,7 @@ export default function Menu({
             watchId={ctaWatchId}
             label={ctaLabel}
             portalTarget={portalTarget}
+            forceVisible={forceCtaVisible}
           />
         ) : null}
       </div>
@@ -193,17 +233,13 @@ const buildAlternateLocaleHref = (
   const rest = hasLocale ? segments.slice(1) : segments;
   const canonicalSegments = rest.map(
     (segment) =>
-      localizedToCanonicalSlugs[currentLocale]?.[segment] ??
-      segment,
+      localizedToCanonicalSlugs[currentLocale]?.[segment] ?? segment,
   );
   const localizedSegments = canonicalSegments.map(
     (segment) =>
-      canonicalToLocalizedSlugs[targetLocale]?.[segment] ??
-      segment,
+      canonicalToLocalizedSlugs[targetLocale]?.[segment] ?? segment,
   );
   return `/${targetLocale}${
-    localizedSegments.length
-      ? `/${localizedSegments.join('/')}`
-      : ''
+    localizedSegments.length ? `/${localizedSegments.join('/')}` : ''
   }`;
 };

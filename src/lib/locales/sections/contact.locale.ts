@@ -6,6 +6,8 @@ type MessageKey = keyof Messages;
 
 export const CONTACT_KEYS = {
   title: 'contact',
+  labelFloating: 'contact-label-floating',
+  labelHero: 'contact-label-hero',
   content: 'contact-content',
   emailLabel: 'contact-email-label',
   href: 'contact-href',
@@ -16,6 +18,8 @@ export const CONTACT_KEYS = {
 
 export type ContactCopy = {
   title: string;
+  labelFloating: string;
+  labelHero: string;
   content: string;
   emailLabel: string;
   href: string;
@@ -24,6 +28,8 @@ export type ContactCopy = {
 
 export const buildContactCopy = (t: Translator): ContactCopy => ({
   title: t(CONTACT_KEYS.title),
+  labelFloating: t(CONTACT_KEYS.labelFloating),
+  labelHero: t(CONTACT_KEYS.labelHero),
   content: t(CONTACT_KEYS.content),
   emailLabel: t(CONTACT_KEYS.emailLabel),
   href: t(CONTACT_KEYS.href),

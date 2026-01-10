@@ -12,6 +12,7 @@ export const MENU_KEYS = {
   anchorLabel: 'menu-anchor_label',
   homeLabel: 'menu-home_label',
   navLabel: 'menu-nav_label',
+  ctaLabel: 'contact-label-hero',
 } as const satisfies Record<string, MessageKey>;
 
 export const buildMenuCopy = (t: Translator) => ({
@@ -22,4 +23,5 @@ export const buildMenuCopy = (t: Translator) => ({
   anchorLabel: t(MENU_KEYS.anchorLabel),
   homeLabel: t(MENU_KEYS.homeLabel),
   navLabel: t(MENU_KEYS.navLabel),
+  ctaLabel: t(MENU_KEYS.ctaLabel),
 });

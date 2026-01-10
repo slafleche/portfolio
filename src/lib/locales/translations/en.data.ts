@@ -36,10 +36,8 @@ const enBaseData = {
   'favicon-meta-author': 'Stéphane',
 
   'hero-title': 'Stéphane LaFlèche [split] Front-end Developer',
-  'hero-subTitle':
+  'hero-subtitle':
     'I specialize in React UI & design systems, keeping design and code aligned',
-
-  'hero-cta': "Let's connect!",
 
   'console-curiosity-title': '🔎 Curious?',
   'console-curiosity-test': '[test] 👀 Observer detected.',
@@ -70,7 +68,7 @@ const enBaseData = {
   ...markdownRefs('projects-05-king-games-content'),
 
   'systems-hero-title': 'Interfaces designed [split] for composition',
-  'systems-hero-subTitle':
+  'systems-hero-subtitle':
     'Type-safe CSS primitives for building **your** design system',
 
   'systems-title': 'Expertise',
@@ -91,6 +89,10 @@ const enBaseData = {
 
   contact: 'Contact',
   'contact-href': 'contact',
+  'contact-label-floating': 'Open Contact Form (floating)',
+  'contact-label-hero': 'Open Contact Form',
+  'contact-cta': "Let's connect!",
+
   'contact-content': "Think we'd work well together?",
   'contact-email-label': 'Shoot me an email!',
   'contact-bg-title': 'Starry night sky with tree line silhouette',

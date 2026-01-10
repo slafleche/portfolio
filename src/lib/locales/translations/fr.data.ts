@@ -36,10 +36,8 @@ const frBaseData = {
   'favicon-meta-author': 'Stéphane',
 
   'hero-title': 'Stéphane LaFlèche [split] développeur front-end',
-  'hero-subTitle':
+  'hero-subtitle':
     'Je me spécialise dans les interfaces React et les systèmes de design, en gardant design et code alignés.',
-
-  'hero-cta': 'Prenons contact !',
 
   'console-curiosity-title': '🔎 Curieux ?',
   'console-curiosity-test': '[test] 👀 Observateur détecté.',
@@ -71,7 +69,7 @@ const frBaseData = {
 
   'systems-hero-title':
     'Interfaces conçues [split] pour la composition',
-  'systems-hero-subTitle':
+  'systems-hero-subtitle':
     'Primitives CSS typées pour structurer **votre** système de design',
 
   'systems-title': 'Expertise',
@@ -91,8 +89,13 @@ const frBaseData = {
 
   contact: 'contact',
   'contact-href': 'contact',
+
   'contact-content': 'Envie de collaborer ?',
-  'contact-email-label': 'Envoyez-moi un courriel !',
+  'contact-label-floating':
+    'Ouvrir le formulaire de contact (flottant)',
+  'contact-label-hero': 'Ouvrir le formulaire de contact',
+  'contact-cta': 'Prenons contact !',
+
   'contact-bg-title': "Ciel étoilé avec silhouette de ligne d'arbres",
   'contact-bg-description':
     "Un ciel nocturne clair rempli d'étoiles et de la faible lueur de la Voie lactée, avec une silhouette noire d'une forêt dense au premier plan.",

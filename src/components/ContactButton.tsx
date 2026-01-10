@@ -24,6 +24,7 @@ type ContactButtonProps = {
   className?: string;
   debugLog?: boolean;
   portalTarget?: HTMLElement | null;
+  forceVisible?: boolean;
 };
 
 export default function ContactButton({
@@ -32,6 +33,7 @@ export default function ContactButton({
   className,
   debugLog = false,
   portalTarget,
+  forceVisible = false,
 }: ContactButtonProps) {
   const [
     mounted,
@@ -144,6 +146,7 @@ export default function ContactButton({
     mode: 'above',
     layoutTick,
   });
+  const visibleSignal = offscreen || forceVisible;
 
   /* keep phase dataset on shuttle + button (for CSS-driven keyframes) */
   useEffect(() => {
@@ -160,11 +163,9 @@ export default function ContactButton({
     const a = linkRef.current;
     if (!a) return;
 
-    if (
-      phase === 'exiting' ||
-      phase === 'hidden' ||
-      phase === 'entering'
-    ) {
+    const interactive =
+      phase === 'shown' || (phase === 'entering' && forceVisible);
+    if (!interactive) {
       a.setAttribute('inert', '');
       a.setAttribute('aria-disabled', 'true');
       // keep it out of tab order while not interactive
@@ -177,6 +178,7 @@ export default function ContactButton({
     }
   }, [
     phase,
+    forceVisible,
   ]);
 
   /* CSS animationend primary path */
@@ -264,20 +266,20 @@ export default function ContactButton({
     L,
   ]);
   useEffect(() => {
-    wantVisibleRef.current = offscreen;
+    wantVisibleRef.current = visibleSignal;
 
     const currentPhase = phaseRef.current;
     let enterTimeout: number | null = null;
     let exitTimeout: number | null = null;
 
-    if (currentPhase === 'hidden' && offscreen) {
+    if (currentPhase === 'hidden' && visibleSignal) {
       L('→ signal enter (offscreen hook)');
       enterTimeout = window.setTimeout(() => {
         setPhase('entering', 'signal->enter');
       }, 0);
     }
 
-    if (currentPhase === 'shown' && !offscreen) {
+    if (currentPhase === 'shown' && !visibleSignal) {
       L('→ signal exit (offscreen hook)');
       exitTimeout = window.setTimeout(() => {
         requestExitIfAllowed('signal->exit');
@@ -293,7 +295,7 @@ export default function ContactButton({
       }
     };
   }, [
-    offscreen,
+    visibleSignal,
     L,
     setPhase,
     requestExitIfAllowed,
