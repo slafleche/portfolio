@@ -30,7 +30,7 @@ export const typographyFontVariants = {
     config: {
       options: {
         textAlign: 'left',
-        letterSpacing: mEm(0.08),
+        letterSpacing: mEm(0.04),
         offsetBottom: mRem(0.1),
         weightPercents: {
           default: mPercent(0),

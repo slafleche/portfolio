@@ -10,6 +10,7 @@ import { style } from '@vanilla-extract/css';
 import { mPercent } from 'css-calipers';
 
 import { menuFontVariants } from '../../tokens/fontVariants/menu';
+import { themeColours } from '../../tokens/global.tokens';
 import {
   localeSwitcherVars,
   logoVars,
@@ -56,6 +57,7 @@ export const homeLink = style({
   justifyContent: 'center',
   pointerEvents: 'auto',
   zIndex: 10,
+  transform: 'background-color 0.5s ease-out',
   selectors: {
     ...mediaQueryStyle({
       compact: {
@@ -65,6 +67,12 @@ export const homeLink = style({
         left: logoVars.compact.offsetX.css(),
       },
     }),
+    '&:hover': {
+      backgroundColor: themeColours.secondary.alpha(0.5).css(),
+    },
+    // '&:focus-visible, &:focus': {
+    //   backgroundColor: themeColours.secondary.saturate(1).css(),
+    // },
   },
 });
 

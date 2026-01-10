@@ -1,4 +1,7 @@
+import { clsx } from 'clsx';
 import type { ElementType, ReactNode } from 'react';
+
+import { headingDecoration } from '@/styles/typography.css';
 
 import Heading from '../Heading';
 import Content, { type ContentBaseProps } from './Content';
@@ -7,6 +10,7 @@ export type ContentWithTitleBaseProps = ContentBaseProps & {
   contentTitle?: ReactNode;
   ignoreDataUI?: boolean;
   skipSectionMargin?: boolean;
+  showDecoration?: boolean;
   headingDepth?: 2 | 3 | 4 | 5 | 6;
 };
 
@@ -29,6 +33,7 @@ export default function ContentWithTitle<
     className,
     skipSectionMargin,
     queryDataAttributes,
+    showDecoration,
     ...rest
   } = props;
 
@@ -41,7 +46,11 @@ export default function ContentWithTitle<
       {...rest}
     >
       {contentTitle ? (
-        <Heading ignoreDataUI={ignoreDataUI} depth={headingDepth}>
+        <Heading
+          ignoreDataUI={ignoreDataUI}
+          depth={headingDepth}
+          className={clsx({ [headingDecoration]: showDecoration })}
+        >
           {contentTitle}
         </Heading>
       ) : null}

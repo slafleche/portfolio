@@ -46,7 +46,7 @@ export const fontFamilies = {
     offsetToFlushTop: mRem(-0.38),
     lineHeight: 1.6,
     weights: {
-      default: 400,
+      default: 300,
       strong: 600,
     },
   }),

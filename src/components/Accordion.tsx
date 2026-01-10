@@ -5,11 +5,11 @@ import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 
-import ChevronDown from '@/components/icons/ChevronDown';
 import { createDomId } from '@/lib/dom';
 import { isLocaleRichText } from '@/lib/stringUtils';
 import * as s from '@/styles/components/accordion.css';
 
+import PlusIcon from './icons/Plus';
 import RightArrow from './icons/RightArrow';
 
 type AccordionItemData = {
@@ -71,11 +71,14 @@ export function Accordion({
       {...rootProps}
       className={clsx(s.accordion, className)}
     >
-      {resolvedItems.map((item) => (
+      {resolvedItems.map((item, index) => (
         <AccordionPrimitive.Item
           key={item.value}
           value={item.value}
-          className={s.item}
+          className={clsx(s.item, {
+            [s.separator]:
+              index !== 0 && index !== resolvedItems.length - 1,
+          })}
         >
           <AccordionPrimitive.Header
             className={s.header}
@@ -97,25 +100,27 @@ export function Accordion({
                 </span>
                 {item.subHeading ? (
                   <>
-                    <RightArrow className={s.rightArrow} />
                     <span className={s.triggerSubtitle}>
-                      {typeof item.subHeading === 'string' &&
-                      isLocaleRichText(item.subHeading) ? (
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: item.subHeading,
-                          }}
-                        />
-                      ) : (
-                        item.subHeading
-                      )}
+                      <RightArrow className={s.rightArrow} />
+                      <span className={s.triggerSubtitleText}>
+                        {typeof item.subHeading === 'string' &&
+                        isLocaleRichText(item.subHeading) ? (
+                          <span
+                            dangerouslySetInnerHTML={{
+                              __html: item.subHeading,
+                            }}
+                          />
+                        ) : (
+                          item.subHeading
+                        )}
+                      </span>
                     </span>
                   </>
                 ) : null}
               </span>
               <span className={s.icon} aria-hidden>
-                <ChevronDown className={s.iconSvg} />
                 <span className={s.iconGradient} />
+                <PlusIcon className={s.iconSvg} />
               </span>
             </AccordionPrimitive.Trigger>
           </AccordionPrimitive.Header>

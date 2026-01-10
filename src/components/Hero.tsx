@@ -70,7 +70,10 @@ export default function Hero({
                 </div>
                 {copy.subtitle ? (
                   <div className={s.subtitle} data-ready="true">
-                    <p className={s.subtitleMarkdown}>
+                    <p
+                      data-ui="paragraph"
+                      className={s.subtitleMarkdown}
+                    >
                       {copy.subtitle}
                     </p>
                   </div>

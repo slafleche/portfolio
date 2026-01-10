@@ -144,7 +144,7 @@ export const textStyleVars = {
   },
   horizontalRule: {
     borders: {
-      width: m(1),
+      width: m(0.5),
       color: themeColours.electricBlue,
     },
     margins: {

@@ -1,5 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { m, mPercent } from 'css-calipers';
+import { m, mEm, mPercent } from 'css-calipers';
 
 import { colorVars, themeColours } from '../../tokens/global.tokens';
 import { layoutVars } from '../../tokens/layout.tokens';
@@ -131,6 +131,10 @@ export const subtitle = style({
   opacity: 0,
   textAlign: 'center',
   fontSize: '22px',
+  lineHeight: 1.3,
+  ...margins({
+    top: mEm(1),
+  }),
   selectors: {
     '&[data-ready="true"]': {
       opacity: 1,
@@ -272,7 +276,7 @@ export const container = style({
   overflow: 'visible',
   textAlign: 'center',
   maxWidth: '100%',
-  width: `clamp(0px, max(70vw, 70vh), ${layoutVars.content.width.css()})`,
+  width: `clamp(0px, max(70vw, 100vh), ${layoutVars.content.width.css()})`,
 });
 
 // export const backdrop = style({

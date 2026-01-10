@@ -110,6 +110,13 @@ export default function Menu({
     setPortalTarget(frameRef.current);
   }, []);
 
+  const handleHomeClick = () => {
+    if (typeof window === 'undefined') return;
+    if (pathname !== root && pathname !== `${root}/`) return;
+    setManualActive(null);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
   const viewportStyle =
     frame.width > 0 && frame.height > 0 ? frameStyle : undefined;
 
@@ -133,6 +140,7 @@ export default function Menu({
                 aria-label={homeLabel}
                 className={clsx(s.homeLink, surface)}
                 data-ui="link"
+                onClick={handleHomeClick}
               >
                 <Logo idBase="nav-logo" />
               </Link>

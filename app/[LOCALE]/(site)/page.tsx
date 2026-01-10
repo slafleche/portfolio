@@ -171,7 +171,7 @@ export default async function HomePage({
             >
               <Markdown source={approach.content} />
             </ContentWithTitle>
-
+            <hr />
             <ContentWithTitle
               id={about.href}
               contentTitle={about.title}
@@ -179,7 +179,7 @@ export default async function HomePage({
             >
               <Markdown source={about.content} />
             </ContentWithTitle>
-
+            <hr />
             <CaseStudy
               id={caseStudies.href}
               intro={caseStudies.intro}
@@ -194,17 +194,22 @@ export default async function HomePage({
                   ) => ({
                     heading: study.title,
                     subHeading: study.subTitle,
-                    content: <Markdown source={study.content}            asUi={{
-              headings: true,
-              paragraphs: true,
-            }} />,
+                    content: (
+                      <Markdown
+                        source={study.content}
+                        asUi={{
+                          headings: true,
+                          paragraphs: true,
+                        }}
+                      />
+                    ),
                     id: `${baseId}-${index}`,
                     defaultOpen: index === 0,
                   }))}
                 />
               </DeferredIsland>
             </CaseStudy>
-
+            <hr />
             <ContentWithTitle
               id={projects.href}
               contentTitle={projects.title}

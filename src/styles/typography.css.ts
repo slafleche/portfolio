@@ -8,6 +8,7 @@ import borders from './helpers/borders.helper';
 import { color } from './helpers/colorWrap.helper';
 import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
 import { outlines } from './helpers/outlines.helper';
+import { absolutePosition } from './helpers/positioning.helper';
 import { margins, paddings } from './helpers/spacing.helper';
 import { globalMediaQueryStyle } from './responsive/mediaQueries';
 
@@ -157,4 +158,19 @@ globalStyle('img', {
   height: 'auto',
   ...margins(textStyleVars.image.margins),
   ...borders(textStyleVars.image.borders),
+});
+
+export const headingDecoration = style({
+  selectors: {
+    '&::after': {
+      ...absolutePosition.bottomLeft(),
+      transform: 'translateY(-50%)',
+      content: '""',
+      display: 'block',
+      width: '40px',
+      height: '2px',
+      marginTop: '-2px',
+      backgroundColor: 'currentColor',
+    },
+  },
 });

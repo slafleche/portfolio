@@ -316,10 +316,18 @@ globalStyle('a[data-ui="link"]', {
 });
 
 globalStyle('hr', {
-  width: `calc(100% - ${anchorMenuVars.handle.sizeWithBorder.multiply(2).css()})`,
+  width: `calc(100% - ${anchorMenuVars.handle.sizeWithBorder.multiply(3).css()})`,
   maxWidth: '600px',
-  opacity: 0.5,
+  opacity: 0.3,
   height: 0,
   ...borders(textStyleVars.horizontalRule.borders),
   ...margins(textStyleVars.horizontalRule.margins),
+});
+
+globalStyle('p', {
+    marginBlockStart: 0,
+    marginBlockEnd: 0,
+    marginInlineStart: 0,
+    marginInlineEnd: 0,
+    unicodeBidi: 'isolate',
 });

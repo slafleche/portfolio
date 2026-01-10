@@ -32,6 +32,11 @@ export const STYLE_LITERAL_RESETS = {
       /\bbackground\s*:\s*['"]none(?:\s*!important)?['"]/.test(
         line,
       ) && !/\bbackgroundColor\b/.test(line),
+    // Allow currentColor as a deliberate transparent-ish background alias.
+    (line) =>
+      /\bbackgroundColor\s*:\s*['"]currentColor(?:\s*!important)?['"]/.test(
+        line,
+      ),
   ],
   'border-inline': [
     // Allow plain border resets (`border: 'none'`) but not side-specific

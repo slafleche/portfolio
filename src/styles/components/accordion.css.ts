@@ -1,8 +1,8 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import { m, mDeg, mPercent } from 'css-calipers';
+import { m, mDeg, mEm, mPercent } from 'css-calipers';
 
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
-import { colorVars } from '../../tokens/global.tokens';
+import { colorVars, themeColours } from '../../tokens/global.tokens';
 import {
   accordionItemTokens,
   accordionSurfaceTokens,
@@ -18,8 +18,8 @@ import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { relativeFontWeight } from '../helpers/typography.helper';
-// import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
-// import { bodyVariants, headingVariants } from '../../tokens/fontVariants/typography';
+
+const slideTokens = accordionItemTokens.animation.slide;
 
 const surfaceGradient = buildLinear({
   angle: accordionSurfaceTokens.gradientAngle,
@@ -60,18 +60,11 @@ globalStyle(`.${intro} p`, {
   marginTop: 0,
 });
 
-// border-radius: 16px;
-// padding: 16px;
-// border: 1px solid var(--ring);
-// box-shadow: 0 1px 0 hsl(0 0% 100% / .04) inset, 0 10px 30px hsl(0 0% 0% / .35);
-// background: linear-gradient(to bottom, hsl(260 40% 10%), hsl(280 40% 14%));
-
 export const accordion = style({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
-  // ...paddings(accordionSurfaceTokens.paddings),
   ...borders(accordionSurfaceTokens.borders),
   ...gradientAsBgImg(surfaceGradient),
 });
@@ -81,6 +74,10 @@ export const item = style({
   overflow: 'hidden',
 });
 
+export const separator = style({
+  ...borders(accordionSurfaceTokens.drawer.borders),
+});
+
 export const header = style({
   margin: 0,
 });
@@ -88,14 +85,14 @@ export const header = style({
 export const button = style({
   display: 'flex',
   flexDirection: 'row',
-  flexWrap: 'wrap',
+  flexWrap: 'nowrap',
   appearance: 'none',
-  ...paddings(accordionItemTokens.handle.paddings),
+  cursor: 'pointer',
+  ...paddings(accordionItemTokens.button.paddings),
   ...backgrounds({ color: 'transparent' }),
   border: 'none',
   alignItems: 'center',
   width: '100%',
-  cursor: 'pointer',
   textAlign: 'left',
   color: colorVars.white.css(),
   transition: 'background-color 180ms ease, transform 180ms ease',
@@ -111,39 +108,76 @@ export const button = style({
         offset: m(0.75),
       }),
     },
+    '&:before': {
+      content: '""',
+      ...absolutePosition.fullSize(),
+      pointerEvents: 'none',
+      opacity: 0,
+      transition: `opacity ${slideTokens.closed.timing.css()} ease-out`,
+      ...gradientAsBgImg(
+        buildLinear({
+          angle: mDeg(0),
+          stops: [
+            {
+              color: accordionItemTokens.content.backgroundColor,
+              at: mPercent(0),
+            },
+            {
+              color: color('#200a2e')
+                .mix(accordionItemTokens.content.backgroundColor, 0.5)
+                .lighten(0.2),
+              at: mPercent(100),
+            },
+          ],
+        }),
+      ),
+    },
+    "&[data-state='open']:before": {
+      opacity: 1,
+    },
   },
 });
 
 export const triggerText = style({
-  ...paddings({
-    right: m(8),
-  }),
+  position: 'relative',
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'flex-start',
+  flexWrap: 'wrap',
+  maxWidth: `calc(100% - ${accordionItemTokens.button.size.css()})`,
 });
 
 export const triggerLabel = style({
   color: colorVars.white.css(),
   fontSize: '1.5em',
   ...paddings({
-    right: accordionItemTokens.handle.spacing,
-  }),
-});
-
-export const rightArrow = style({
-  width: accordionItemTokens.rightArrow.size.css(),
-  height: 'auto',
-  color: accordionItemTokens.rightArrow.color.css(),
-  ...paddings({
-    right: accordionItemTokens.handle.spacing,
+    right: accordionItemTokens.button.spacing,
   }),
 });
 
 export const triggerSubtitle = style({
-  //
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+  fontSize: '1.3em',
+  lineHeight: 1.1,
   color: colorVars.white.alpha(0.72).css(),
+});
+
+export const triggerSubtitleText = style({
+  ...margins({
+    horizontal: accordionItemTokens.button.spacing,
+  }),
+});
+
+export const rightArrow = style({
+  display: 'inline-block',
+  width: '1.2em',
+  height: '1.2em',
+  position: 'relative',
+  color: accordionItemTokens.rightArrow.color.css(),
 });
 
 export const icon = style({
@@ -153,19 +187,15 @@ export const icon = style({
     left: 'auto',
   }),
   justifySelf: 'end',
+  alignSelf: 'flex-start',
   transition: 'transform 200ms ease',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: accordionItemTokens.chevronSize.css(),
-  height: accordionItemTokens.chevronSize.css(),
+  width: accordionItemTokens.button.size.css(),
+  height: accordionItemTokens.button.size.css(),
   ...borders.radii(mPercent(50)),
   ...backgrounds({ color: colorVars.white.alpha(0.1) }),
-  selectors: {
-    [`.${button}[data-state="open"] &`]: {
-      transform: 'rotate(180deg)',
-    },
-  },
 });
 
 export const iconGradient = style({
@@ -175,11 +205,13 @@ export const iconGradient = style({
       angle: mDeg(145),
       stops: [
         {
-          color: color('#cacaca').darken(0.6),
+          // color: color('#cacaca').darken(0.6),
+          color: themeColours.purples.light,
           at: mPercent(0),
         },
         {
-          color: color('#f0f0f0'),
+          // color: coldor('#f0f0f0'),
+          color: themeColours.purples.light.lighten(0.5),
           at: mPercent(100),
         },
       ],
@@ -188,9 +220,20 @@ export const iconGradient = style({
 });
 
 export const iconSvg = style({
+  position: 'relative',
   display: 'block',
-  width: '65%',
-  height: '65%',
+  height: accordionItemTokens.button.size.css(),
+  width: accordionItemTokens.button.size.css(),
+  transition: `transform ${slideTokens.closed.timing.css()} ${slideTokens.closed.easing}`,
+  selectors: {
+    '&[data-state="closed"]': {
+      transition: `transform ${slideTokens.open.timing.css()} ${slideTokens.open.easing}`,
+    },
+  },
+});
+
+globalStyle(`.${item}[data-state="open"] .${iconSvg}`, {
+  transform: 'rotate(45deg)',
 });
 
 export const content = style({
@@ -203,10 +246,10 @@ export const content = style({
   ...relativeFontWeight(typographyFontVariants.body, mPercent(80)),
   selectors: {
     '&[data-state="open"]': {
-      animation: `${slideDown} 220ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards`,
+      animation: `${slideDown} ${slideTokens.open.timing.css()} ${slideTokens.open.easing} forwards`,
     },
     '&[data-state="closed"]': {
-      animation: `${slideUp} 180ms cubic-bezier(0.5, 0, 0.75, 0.2) forwards`,
+      animation: `${slideUp} ${slideTokens.closed.timing.css()} ${slideTokens.closed.easing} forwards`,
     },
   },
 });
