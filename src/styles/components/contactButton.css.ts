@@ -6,6 +6,7 @@ import {
   colorVars,
   themeColours,
 } from '../../tokens/global.tokens';
+import borders from '../helpers/borders.helper';
 import {
   buildLinear,
   gradientAsBgImg,
@@ -59,7 +60,6 @@ import {
   t3dOvershootInSoft,
   t3dPushedOutSoft,
 } from './contactButton.vars';
-import borders from '../helpers/borders.helper';
 
 /* EASING */
 const SNAP = 'cubic-bezier(0.45, 0, 0.2, 1)';

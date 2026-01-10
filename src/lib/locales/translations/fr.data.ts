@@ -91,6 +91,7 @@ const frBaseData = {
   'contact-href': 'contact',
 
   'contact-content': 'Envie de collaborer ?',
+  'contact-email-label': 'Envoyez-moi un courriel !',
   'contact-label-floating':
     'Ouvrir le formulaire de contact (flottant)',
   'contact-label-hero': 'Ouvrir le formulaire de contact',

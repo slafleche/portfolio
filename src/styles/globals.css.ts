@@ -32,7 +32,7 @@ const bodyFontStyles = fontStylesFromFontVariant({
 });
 
 const bgGradient = buildLinear({
-  angle: m(120, 'deg'),
+  angle: m(100, 'deg'),
   stops: [
     {
       at: mPercent(0),

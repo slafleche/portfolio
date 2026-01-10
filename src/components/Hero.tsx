@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { marked } from 'marked';
 import type { ComponentType, CSSProperties, SVGProps } from 'react';
 
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
@@ -73,9 +74,14 @@ export default function Hero({
                     <p
                       data-ui="paragraph"
                       className={s.subtitleMarkdown}
-                    >
-                      {copy.subtitle}
-                    </p>
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          typeof marked.parseInline(copy.subtitle) ===
+                          'string'
+                            ? marked.parseInline(copy.subtitle)
+                            : '',
+                      }}
+                    ></p>
                   </div>
                 ) : null}
 

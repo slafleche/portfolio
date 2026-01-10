@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { marked } from 'marked';
 
-import { loadMessages } from '../src/lib/locales/locale.ts';
+import { DEFAULT_LOCALE, loadMessages } from '../src/lib/locales/locale.ts';
 import { AVAILABLE_LOCALES } from '../src/lib/locales/translations/index.ts';
 
 const markdownKeyPattern = /(?:^|[-_])content$/;
@@ -30,9 +30,28 @@ const makeBanner = () =>
 
 async function main() {
   const htmlByLocale: Record<string, Record<string, string>> = {};
+  const baseMessages = await loadMessages(DEFAULT_LOCALE);
+  const baseKeys = new Set(Object.keys(baseMessages));
 
   for (const locale of AVAILABLE_LOCALES) {
     const messages = await loadMessages(locale);
+    const localeKeys = new Set(Object.keys(messages));
+    const missingKeys = Array.from(baseKeys).filter(
+      (key) => !localeKeys.has(key),
+    );
+    const extraKeys = Array.from(localeKeys).filter(
+      (key) => !baseKeys.has(key),
+    );
+
+    if (missingKeys.length > 0 || extraKeys.length > 0) {
+      const missing = missingKeys.sort().join(', ');
+      const extra = extraKeys.sort().join(', ');
+      throw new Error(
+        `[locales] Key mismatch for "${locale}".` +
+          (missing ? ` Missing: ${missing}.` : '') +
+          (extra ? ` Extra: ${extra}.` : ''),
+      );
+    }
     const htmlMap: Record<string, string> = {};
 
     for (const [
