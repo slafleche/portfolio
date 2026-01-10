@@ -56,7 +56,7 @@ export default async function SystemsPage({
   const heroCopy = {
     ...heroCopyBase,
     title: translator('systems-hero-title'),
-    subtitle: translator('systems-hero-subTitle'),
+    subtitle: translator('systems-hero-subtitle'),
     ctaLabel: contactCopy.labelHero,
   };
 
