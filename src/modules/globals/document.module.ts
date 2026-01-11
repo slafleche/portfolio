@@ -1,8 +1,4 @@
-import {
-  archVars,
-  colorVars,
-  spacingVars,
-} from '../../tokens/global.tokens';
+import { colorVars, spacingVars } from '../../tokens/global.tokens';
 
 /**
  * Shared document-level styling data.
@@ -18,7 +14,6 @@ export const documentSurface = {
     },
   },
   layout: {
-    arch: archVars,
     scrollPaddingOffset: spacingVars.scrollPaddingOffset,
   },
 } as const;

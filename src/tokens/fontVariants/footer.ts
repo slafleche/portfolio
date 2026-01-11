@@ -3,7 +3,7 @@ import { m, mPercent } from 'css-calipers';
 import {
   defineFontVariant,
   type FontVariantMap,
-} from '../../styles/helpers/fontVariant.helper';
+} from '../../styles/helpers/typography.helper';
 import { fontFamilies } from '../fontFamilies.tokens';
 
 const SOURCE_PATH = 'src/tokens/fontVariants/footer.ts';

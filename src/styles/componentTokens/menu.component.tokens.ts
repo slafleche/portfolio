@@ -1,14 +1,15 @@
 import { m, mPercent } from 'css-calipers';
 
 import {
-  archVars,
   colorVars,
   themeColours,
 } from '../../tokens/global.tokens';
 import { color } from '../helpers/colorWrap.helper';
 
+const menuHeight = m(55);
+
 export const menuVars = {
-  height: archVars.top,
+  height: menuHeight,
   yOffset: m(0),
   rotationMax: m(2, 'deg'),
   skew: m(-10, 'deg'),

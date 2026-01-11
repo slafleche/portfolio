@@ -1,7 +1,6 @@
 import { type IMeasurement, m, mPercent } from 'css-calipers';
 
 import { color } from '../styles/helpers/colorWrap.helper';
-import { buildLinear } from '../styles/helpers/gradients.helper';
 export type ColorKeys = keyof typeof colors;
 
 export type {
@@ -146,13 +145,13 @@ export const themeColours = {
       middle: wine.mix(midPurple, 0.5),
       end: lightPurple,
     },
-    cta: buildLinear({
+    ctaConfig: {
       angle: m(45, 'deg'),
       stops: [
         { color: brand, at: mPercent(0) },
         { color: secondary, at: mPercent(100) },
       ],
-    }),
+    },
   },
 };
 
@@ -202,18 +201,6 @@ const baseColours = {
   fg: color('#ffffff'),
   bg: color('#000000'),
 };
-
-type PxMeasurement = IMeasurement<'px'>;
-
-interface ArchVars {
-  top: PxMeasurement;
-  curveHeight: PxMeasurement;
-  ry: PxMeasurement;
-  bumpHeight: PxMeasurement;
-  bumpWidth: PxMeasurement;
-  bumpBaseWidth: number;
-  bumpTipWidth: PxMeasurement;
-}
 
 export const colors = {
   // Main Colours

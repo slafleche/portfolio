@@ -1,4 +1,4 @@
-import { globalStyle, keyframes,style } from '@vanilla-extract/css';
+import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
@@ -7,13 +7,13 @@ import { colorVars } from '../../tokens/global.tokens';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
-import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import {
   absolutePosition,
   fullSizeOfParent,
 } from '../helpers/positioning.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins } from '../helpers/spacing.helper';
+import { fontStylesFromFontVariant } from '../helpers/typography.helper';
 
 const sheenSweep = keyframes({
   '0%': {

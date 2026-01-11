@@ -1,6 +1,7 @@
 import { m, mPercent } from 'css-calipers';
 
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
+import { glassVars } from '../../tokens/glassy.tokens';
 import { themeColours } from '../../tokens/global.tokens';
 import { textStyleVars } from '../../tokens/textStyles.tokens';
 
@@ -87,6 +88,7 @@ export const footerVars = {
   heading: typographyFontVariants.h2,
   body: textStyleVars.paragraph,
   gradient,
+  glassyLinks: glassVars.glassyLinks,
 } as const;
 
 export type FooterVars = typeof footerVars;

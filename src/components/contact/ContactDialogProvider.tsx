@@ -489,6 +489,7 @@ export function ContactDialogProvider({
                       <ContactForm
                         copy={formCopy}
                         turnstileSiteKey={turnstileSiteKey}
+                        onOpenPrivacy={openPrivacy}
                       />
                     </ContactDialogTitleContext.Provider>
                   </GlassPanel>

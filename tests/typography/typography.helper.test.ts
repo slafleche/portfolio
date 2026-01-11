@@ -2,13 +2,11 @@ import { m, mPercent } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
 
 import {
-  defineFontVariant,
-  fontStylesFromFontVariant,
-} from '@/styles/helpers/fontVariant.helper';
-import {
   composeFontStyles,
   computeFontWeight,
+  defineFontVariant,
   fontStyles,
+  fontStylesFromFontVariant,
   fontWeightStyle,
   relativeFontWeight,
 } from '@/styles/helpers/typography.helper';

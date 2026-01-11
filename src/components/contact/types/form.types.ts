@@ -115,6 +115,7 @@ export type ContactFormProps = {
    * rather than reading env vars directly in components.
    */
   turnstileSiteKey?: string | null;
+  onOpenPrivacy?: () => void;
 };
 
 export type BlockMessage = Omit<MessageBase, 'code'> & {

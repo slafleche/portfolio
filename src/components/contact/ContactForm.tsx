@@ -84,6 +84,7 @@ type ContactFormInnerProps = {
   onCatastrophic?: (source: string, reason: string) => void;
   initialBlocks?: ContactFormBlockInitialValues | null;
   turnstileSiteKey: string | null;
+  onOpenPrivacy?: () => void;
 };
 
 function ContactFormInner({
@@ -95,6 +96,7 @@ function ContactFormInner({
   onCatastrophic,
   initialBlocks,
   turnstileSiteKey,
+  onOpenPrivacy,
 }: ContactFormInnerProps) {
   const [
     initialBlocksSnapshot,
@@ -280,6 +282,14 @@ function ContactFormInner({
     scrollToPriorityTarget,
   ]);
 
+  const handleOpenPrivacy = useCallback(() => {
+    if (onOpenPrivacy) {
+      onOpenPrivacy();
+    }
+  }, [
+    onOpenPrivacy,
+  ]);
+
   useEffect(() => {
     const wasSubmitting = wasSubmittingRef.current;
     if (
@@ -387,7 +397,10 @@ function ContactFormInner({
         copy={copy.blocks.turnstile}
         turnstileSiteKey={turnstileSiteKey}
       />
-      <ContactPrivacy copy={copy.privacy} />
+      <ContactPrivacy
+        copy={copy.privacy}
+        onOpenPrivacy={handleOpenPrivacy}
+      />
       <HoneypotBlock copy={copy.blocks.honeypot} />
       {isInvalid ? (
         <button
@@ -411,6 +424,7 @@ export default function ContactForm({
   onSuccessStateChange,
   initialBlocks,
   turnstileSiteKey = null,
+  onOpenPrivacy,
 }: ContactFormProps) {
   const idPrefix = useSafeId('contact-form-');
   const { setTitleKey } = useContactDialogTitle();
@@ -657,6 +671,7 @@ export default function ContactForm({
           onCatastrophic={handleCatastrophic}
           initialBlocks={initialBlocks ?? scenarioInitialBlocks}
           turnstileSiteKey={turnstileSiteKey}
+          onOpenPrivacy={onOpenPrivacy}
         />
       )}
     </FormBlocksProvider>

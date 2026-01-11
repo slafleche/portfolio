@@ -13,18 +13,17 @@ import {
   reducedMotion,
 } from './helpers/accessibility.helper';
 import borders from './helpers/borders.helper';
-import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
 import {
   buildLinear,
   gradientAsBgImg,
 } from './helpers/gradients.helper';
 import { margins, paddings } from './helpers/spacing.helper';
+import { fontStylesFromFontVariant } from './helpers/typography.helper';
 
 const {
   palette: {
     body: { background: bodyBg, foreground: bodyFg },
   },
-  layout: { scrollPaddingOffset },
 } = documentSurface;
 
 const bodyFontStyles = fontStylesFromFontVariant({

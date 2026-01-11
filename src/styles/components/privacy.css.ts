@@ -5,9 +5,9 @@ import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { formTokens } from '../../tokens/forms.tokens';
 import { colorVars } from '../../tokens/global.tokens';
 import { privacyTokens } from '../../tokens/privacy.tokens';
-import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
+import { fontStylesFromFontVariant } from '../helpers/typography.helper';
 
 export const container = style({
   position: 'relative',

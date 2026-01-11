@@ -1,12 +1,10 @@
 import { m, mEm, mPercent, mRem } from 'css-calipers';
 
-import {
-  defineFontVariant,
-  type FontVariantMap,
-} from '../../styles/helpers/fontVariant.helper';
+import { defineFontVariant, type FontVariantMap } from '../../styles/helpers/typography.helper';
 import { fontFamilies } from '../fontFamilies.tokens';
 
 const SOURCE_PATH = 'src/tokens/fontVariants/typography.ts';
+
 export const typographyFontVariants = {
   body: defineFontVariant(fontFamilies.ibm, {
     label: 'body',

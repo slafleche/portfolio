@@ -7,10 +7,10 @@ import { textStyleVars } from '../tokens/textStyles.tokens';
 import { backgrounds } from './helpers/background.helper';
 import borders from './helpers/borders.helper';
 import { color } from './helpers/colorWrap.helper';
-import { fontStylesFromFontVariant } from './helpers/fontVariant.helper';
 import { outlines } from './helpers/outlines.helper';
 import { absolutePosition } from './helpers/positioning.helper';
 import { margins, paddings } from './helpers/spacing.helper';
+import { fontStylesFromFontVariant } from './helpers/typography.helper';
 import { globalMediaQueryStyle } from './responsive/mediaQueries';
 
 export const userContent = style({});

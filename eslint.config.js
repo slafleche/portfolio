@@ -180,6 +180,13 @@ export default [
     },
     rules: {
       ...(importFlatConfig.rules ?? {}),
+      'import/no-cycle': [
+        'error',
+        {
+          maxDepth: 1,
+          ignoreExternal: true,
+        },
+      ],
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
     },

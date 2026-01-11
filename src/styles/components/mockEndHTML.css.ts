@@ -4,8 +4,8 @@ import { m, mPercent } from 'css-calipers';
 import { mockHtmlFontVariants } from '../../tokens/fontVariants/mockHtml';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
-import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
-import { margins,paddings } from '../helpers/spacing.helper';
+import { margins, paddings } from '../helpers/spacing.helper';
+import { fontStylesFromFontVariant } from '../helpers/typography.helper';
 // import { absolutePosition } from '../helpers/positioning.helper';
 
 export const root = style({

@@ -42,6 +42,9 @@ jobs:
       - name: Generate locales
         run: yarn locales
 
+      - name: Run cycle checks
+        run: yarn lint:cycles
+
       - name: Run branch lint (main/staging/release)
         if: >
           (github.event_name == 'push' &&

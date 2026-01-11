@@ -8,6 +8,7 @@ import {
 } from '../../tokens/global.tokens';
 import borders from '../helpers/borders.helper';
 import {
+  buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
 import { outlines } from '../helpers/outlines.helper';
@@ -247,7 +248,7 @@ export const gradient = style({
   position: 'absolute',
   inset: 0,
   borderRadius: buttonRadius.css(),
-  ...gradientAsBgImg(themeColours.gradients.cta),
+  ...gradientAsBgImg(buildLinear(themeColours.gradients.ctaConfig)),
   opacity: 0,
   transition: `opacity ${gradientFadeMs.css()} ease`,
   zIndex: 0,

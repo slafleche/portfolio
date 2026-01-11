@@ -15,17 +15,12 @@ import { relativeFontWeight } from '../helpers/typography.helper';
 export const cta = style({
   position: 'relative',
   ...margins({ top: m(40) }),
-  ...gradientAsBgImg(themeColours.gradients.cta),
+  ...gradientAsBgImg(buildLinear(themeColours.gradients.ctaConfig)),
   fontSize: '22px',
   lineHeight: 1,
   ...relativeFontWeight(fontFamilies.objectSans, mPercent(0)),
-  ...paddings({
-    vertical: m(10),
-    horizontal: m(10),
-  }),
-  ...borders.radii({
-    radius: m(22),
-  }),
+  ...paddings(m(10)),
+  ...borders.radii(m(22)),
   userSelect: 'none',
   color: colorVars.black.lighten(0.1).css(),
   textDecoration: 'none',
@@ -77,7 +72,6 @@ export const ctaInner = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  borderRadius: '30px',
   zIndex: 2,
   ...paddings({
     vertical: m(16),

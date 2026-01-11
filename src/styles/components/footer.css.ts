@@ -9,14 +9,10 @@ import {
   footerVars,
 } from '../componentTokens/footer.component.tokens';
 import { curlVars } from '../componentTokens/pageCurl.component.tokens';
-import backdropFilters from '../helpers/backdropFilter.helper';
-import { backgrounds } from '../helpers/background.helper';
-import { borders } from '../helpers/borders.helper';
 import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
-import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
   componentMediaQueries,
@@ -98,7 +94,6 @@ export const links = style({
 globalStyle(`${links} > *`, {
   pointerEvents: 'auto',
 });
-
 
 const iconBase: ComplexStyleRule = {
   width: '36px',

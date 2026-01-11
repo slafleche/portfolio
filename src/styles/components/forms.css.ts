@@ -12,10 +12,12 @@ import {
 import { colorVars } from '../../tokens/global.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
-import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
-import { relativeFontWeight } from '../helpers/typography.helper';
+import {
+  fontStylesFromFontVariant,
+  relativeFontWeight,
+} from '../helpers/typography.helper';
 
 export const form = style({
   display: 'grid',

@@ -6,8 +6,8 @@ import { borderVars, colorVars } from '../../tokens/global.tokens';
 import { layoutVars } from '../../tokens/layout.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { borders } from '../helpers/borders.helper';
-import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
+import { fontStylesFromFontVariant } from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 export const grid = style({

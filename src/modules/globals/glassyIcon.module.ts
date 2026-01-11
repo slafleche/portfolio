@@ -1,9 +1,0 @@
-import { mPercent } from 'css-calipers';
-
-export const glassyIcons = {
-  borders: {
-    radius: mPercent(42),
-  },
-} as const;
-
-export type GlassyIcons = typeof glassyIcons;

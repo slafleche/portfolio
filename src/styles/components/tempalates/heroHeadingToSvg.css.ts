@@ -4,8 +4,8 @@ import { m } from 'css-calipers';
 import { heroFontVariants } from '../../../tokens/fontVariants/hero';
 import { colorVars } from '../../../tokens/global.tokens';
 import { backgrounds } from '../../helpers/background.helper';
-import { fontStylesFromFontVariant } from '../../helpers/fontVariant.helper';
 import { margins, paddings } from '../../helpers/spacing.helper';
+import { fontStylesFromFontVariant } from '../../helpers/typography.helper';
 
 export const root = style({
   display: 'flex',

@@ -8,8 +8,10 @@ import {
   logoVars,
 } from '../../tokens/menu.tokens';
 import borders from '../helpers/borders.helper';
-import { fontStylesFromFontVariant } from '../helpers/fontVariant.helper';
-import { relativeFontWeight } from '../helpers/typography.helper';
+import {
+  fontStylesFromFontVariant,
+  relativeFontWeight,
+} from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 // import { m, mPercent } from 'css-calipers';
