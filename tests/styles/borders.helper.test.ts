@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import borders from '@/styles/helpers/borders.helper';
 import { color } from '@/styles/helpers/colorWrap.helper';
-import { colorVars } from '@/tokens/global.tokens';
+import { colors, colorVars } from '@/tokens/global.tokens';
 
 describe('borders.helper', () => {
   it('returns defaults for all edges when enabled', () => {
@@ -139,6 +139,42 @@ describe('borders.helper', () => {
     expect(result.borderTopRightRadius).toBe('50%');
     expect(result.borderBottomRightRadius).toBe('50%');
     expect(result.borderBottomLeftRadius).toBe('50%');
+  });
+
+  it('emits rgba output for ColorWrapper borders with alpha', () => {
+    const result = borders({
+      color: colors.white.alpha(0),
+      width: m(2),
+    });
+
+    expect(result.borderTopColor).toBe('rgba(255, 255, 255, 0)');
+    expect(result.borderRightColor).toBe('rgba(255, 255, 255, 0)');
+    expect(result.borderBottomColor).toBe('rgba(255, 255, 255, 0)');
+    expect(result.borderLeftColor).toBe('rgba(255, 255, 255, 0)');
+  });
+
+  it('emits rgba output for ColorWrapper borders with partial alpha', () => {
+    const result = borders({
+      color: colors.white.alpha(0.5),
+      width: m(2),
+    });
+
+    expect(result.borderTopColor).toBe('rgba(255, 255, 255, 0.5)');
+    expect(result.borderRightColor).toBe('rgba(255, 255, 255, 0.5)');
+    expect(result.borderBottomColor).toBe('rgba(255, 255, 255, 0.5)');
+    expect(result.borderLeftColor).toBe('rgba(255, 255, 255, 0.5)');
+  });
+
+  it('emits rgb output for ColorWrapper borders without alpha', () => {
+    const result = borders({
+      color: colors.white,
+      width: m(2),
+    });
+
+    expect(result.borderTopColor).toBe('rgb(255 255 255)');
+    expect(result.borderRightColor).toBe('rgb(255 255 255)');
+    expect(result.borderBottomColor).toBe('rgb(255 255 255)');
+    expect(result.borderLeftColor).toBe('rgb(255 255 255)');
   });
 
   it('skips defaults when requested', () => {

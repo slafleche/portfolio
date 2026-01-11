@@ -17,6 +17,7 @@ import type {
   IBorder,
 } from '../../tokens/global.tokens';
 import { borderVars, colorVars } from '../../tokens/global.tokens';
+import { isColorWrapper } from './colorWrap.helper';
 
 /**
  * Public UX: Border({ bottom: true, bottom: { width: m(6) }, radius:
@@ -164,9 +165,13 @@ const applyEdgeSpec = (
     edge.color =
       typeof c === 'string'
         ? c // 'transparent' / 'currentColor' etc.
-        : hasCssMethod(c)
-          ? c.css()
-          : fallbackColor(); // dev-only: you can throw here if you prefer
+        : isColorWrapper(c)
+          ? c.alpha() < 1
+            ? c.css({ forceAlpha: true })
+            : c.css()
+          : hasCssMethod(c)
+            ? c.css()
+            : fallbackColor(); // dev-only: you can throw here if you prefer
     edge._cExp = true;
   }
 

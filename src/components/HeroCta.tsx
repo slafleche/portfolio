@@ -24,7 +24,12 @@ export function HeroCta({ copy }: HeroCtaProps) {
       data-ready="true"
       aria-label={copy.ctaLabel}
     >
-      <span className={ctaStyles.ctaInner}>
+      <span
+        className={clsx(
+          ctaStyles.ctaInner,
+          ctaStyles.scoopedGradient,
+        )}
+      >
         <SendIcon className={ctaStyles.ctaIcon} aria-hidden />
         <span className={ctaStyles.ctaText}>{copy.ctaText}</span>
       </span>

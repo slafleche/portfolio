@@ -1,7 +1,8 @@
 import { m, mPercent } from 'css-calipers';
 
 import { color } from '../styles/helpers/colorWrap.helper';
-import { colorVars } from './global.tokens';
+import { buildLinear } from '../styles/helpers/gradients.helper';
+import { colorVars, themeColours } from './global.tokens';
 
 /**
  * Shared glass tokens (data only). Helper layer is responsible for
@@ -139,6 +140,30 @@ export const glassyButtonTokens = {
     },
   },
 } as const;
+
+export const glassyButtonCupped = {
+  gradient: buildLinear({
+    angle: m(0, 'deg'),
+    stops: [
+      {
+        at: mPercent(0),
+        color: color('#e7e7e7')
+          .blend.multiply({
+            ratio: 0.5,
+          })
+          .alpha(0.2),
+      },
+      {
+        at: mPercent(100),
+        color: color('#f7f8f7')
+          .blend.multiply()
+          .darken(0.8)
+          .mix(themeColours.secondary, 0.1)
+          .alpha(0.4),
+      },
+    ],
+  }),
+};
 
 export const glassyPanelTokens = {
   backgrounds: {

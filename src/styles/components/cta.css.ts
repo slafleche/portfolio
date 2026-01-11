@@ -2,9 +2,9 @@ import { style } from '@vanilla-extract/css';
 import { m, mEm, mPercent } from 'css-calipers';
 
 import { fontFamilies } from '../../tokens/fontFamilies.tokens';
+import { glassyButtonCupped } from '../../tokens/glassy.tokens';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
 import borders from '../helpers/borders.helper';
-import { color } from '../helpers/colorWrap.helper';
 import {
   buildLinear,
   gradientAsBgImg,
@@ -55,29 +55,10 @@ export const ctaInner = style({
     m(30),
     m(40),
   ]),
-  ...gradientAsBgImg(
-    buildLinear({
-      angle: m(0, 'deg'),
-      stops: [
-        {
-          at: mPercent(0),
-          color: color('#e7e7e7')
-            .blend.multiply({
-              ratio: 0.5,
-            })
-            .alpha(0.2),
-        },
-        {
-          at: mPercent(100),
-          color: color('#f7f8f7')
-            .blend.multiply()
-            .darken(0.8)
-            .mix(themeColours.secondary, 0.1)
-            .alpha(0.4),
-        },
-      ],
-    }),
-  ),
+});
+
+export const scoopedGradient = style({
+  ...gradientAsBgImg(glassyButtonCupped.gradient),
 });
 
 export const ctaText = style({

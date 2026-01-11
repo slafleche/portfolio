@@ -258,7 +258,8 @@ export const colorVars = {
   border: colors.border,
 
   // SVGs
-  svgColor: shadow.alpha(1).mix(colors.white, 0.15),
+  // svgColor: colors.white,
+  // svgBg: themeColours.brand.lighten(0.3),
 
   // Contrast Section
   // contrastBg: colors.contrastBg,

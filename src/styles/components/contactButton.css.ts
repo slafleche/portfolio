@@ -106,8 +106,8 @@ export const shuttle = style({
   width: buttonSizePx.css(),
   transform: `${t3dOffscreen()} translateZ(0)`,
   willChange: 'transform',
-  backfaceVisibility: 'hidden',
   pointerEvents: 'auto',
+  backfaceVisibility: 'hidden',
   selectors: {
     '&[data-phase="hidden"]': {
       animation: 'none',
@@ -187,29 +187,30 @@ const buttonScaleExit = keyframes({
 
 export const button = style({
   position: 'absolute',
+  overflow: 'hidden',
   width: buttonSizePx.css(),
   height: buttonSizePx.css(),
   right: 0,
   bottom: 0,
-  borderRadius: buttonRadius.css(),
-  border: 'none',
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: colorVars.white.alpha(0.95).css(),
-  color: colorVars.svgColor.css(),
+  color: colorVars.white.css(),
   textDecoration: 'none',
+  background: 'none',
   ...boxShadow(),
   pointerEvents: 'auto',
-  transition: `box-shadow transform ${hoverTransitionMs.css()} ease`,
+  transition: `box-shadow, transform ${hoverTransitionMs.css()} ease`,
   transformOrigin: `0 50%`,
   willChange: 'transform',
   ...borders({
-    color: colors.white,
-    width: m(2),
+    color: colors.transparent,
+    width: m(0),
+    radius: buttonRadius,
   }),
   selectors: {
     '&:hover, &:focus-visible': {
+      transform: 'scale(1) translate(-5px, -5px)',
       color: colorVars.white.css(),
       ...boxShadow({ blur: hoverBlurPx }),
     },
@@ -244,12 +245,20 @@ export const button = style({
   },
 });
 
+export const scroopGradient = style({
+  position: 'absolute',
+  inset: '7px',
+  borderRadius: buttonRadius.css(),
+
+  zIndex: 2,
+  pointerEvents: 'none',
+});
+
 export const gradient = style({
   position: 'absolute',
   inset: 0,
   borderRadius: buttonRadius.css(),
   ...gradientAsBgImg(buildLinear(themeColours.gradients.ctaConfig)),
-  opacity: 0,
   transition: `opacity ${gradientFadeMs.css()} ease`,
   zIndex: 0,
   pointerEvents: 'none',
