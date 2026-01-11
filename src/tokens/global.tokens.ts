@@ -1,6 +1,7 @@
-import { type IMeasurement, m, mPercent } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 
 import { color } from '../styles/helpers/colorWrap.helper';
+import type { LinearOpts } from '../styles/helpers/gradients.helper';
 export type ColorKeys = keyof typeof colors;
 
 export type {
@@ -151,7 +152,7 @@ export const themeColours = {
         { color: brand, at: mPercent(0) },
         { color: secondary, at: mPercent(100) },
       ],
-    },
+    } as LinearOpts,
   },
 };
 

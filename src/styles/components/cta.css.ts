@@ -20,7 +20,12 @@ export const cta = style({
   lineHeight: 1,
   ...relativeFontWeight(fontFamilies.objectSans, mPercent(0)),
   ...paddings(m(10)),
-  ...borders.radii(m(22)),
+
+  ...borders.radii([
+    m(40),
+    m(60),
+  ]),
+
   userSelect: 'none',
   color: colorVars.black.lighten(0.1).css(),
   textDecoration: 'none',
@@ -77,7 +82,10 @@ export const ctaInner = style({
     vertical: m(16),
     horizontal: m(26),
   }),
-  ...borders.radii(m(30)),
+  ...borders.radii([
+    m(30),
+    m(40),
+  ]),
   ...gradientAsBgImg(
     buildLinear({
       angle: m(0, 'deg'),

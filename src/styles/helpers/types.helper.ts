@@ -34,10 +34,14 @@ export type AxisValues<T> = {
 } & Partial<Record<Axis, T>>;
 
 export type CompassRegion = 'north' | 'south' | 'east' | 'west';
+export type CompassRegionAlias = 'n' | 's' | 'e' | 'w';
 export type CornerPosition = 'nw' | 'ne' | 'se' | 'sw';
 
 export type CompassCorners<T> = Partial<
-  Record<'all' | CompassRegion | CornerPosition, T>
+  Record<
+    'all' | CompassRegion | CompassRegionAlias | CornerPosition,
+    T
+  >
 >;
 
 export type SpacingKeyword =
@@ -128,6 +132,9 @@ export type PageParams = {
 export type NonEmptyString = string & { __brand: 'NonEmptyString' };
 
 export type BorderMeasurementInput = IMeasurement | null | undefined;
+export type BorderRadiusCornerInput =
+  | BorderMeasurementInput
+  | Readonly<[IMeasurement, IMeasurement]>;
 
 export interface BorderWidthConfig {
   all?: BorderMeasurementInput;
@@ -144,17 +151,17 @@ export type BorderWidthInput =
   | BorderWidthConfig;
 
 export interface BorderRadiusConfig {
-  all?: BorderMeasurementInput;
-  topLeft?: BorderMeasurementInput;
-  topRight?: BorderMeasurementInput;
-  bottomRight?: BorderMeasurementInput;
-  bottomLeft?: BorderMeasurementInput;
+  all?: BorderRadiusCornerInput;
+  topLeft?: BorderRadiusCornerInput;
+  topRight?: BorderRadiusCornerInput;
+  bottomRight?: BorderRadiusCornerInput;
+  bottomLeft?: BorderRadiusCornerInput;
 }
 
 export type BorderRadiusInput =
   | IMeasurement
   | ReadonlyArray<IMeasurement>
-  | CompassCorners<BorderMeasurementInput>
+  | CompassCorners<BorderRadiusCornerInput>
   | BorderRadiusConfig
   | null
   | undefined;

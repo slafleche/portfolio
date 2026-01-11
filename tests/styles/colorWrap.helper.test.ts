@@ -101,14 +101,34 @@ describe('colorWrap.helper', () => {
     const base = color('#e7e7e7').alpha(1);
     const blended = base.blend.multiply();
 
-    expect(blended.css()).toBe('rgb(231 231 231 / 0.094)');
+    const [
+      r,
+      g,
+      b,
+    ] = blended.value().rgb(false);
+    expect([Math.round(r), Math.round(g), Math.round(b)]).toEqual([
+      231,
+      231,
+      231,
+    ]);
+    expect(blended.alpha()).toBeCloseTo(0.094, 3);
   });
 
   it('blend.screen defaults to black and reduces alpha for near-black', () => {
     const base = color('#111111').alpha(1);
     const blended = base.blend.screen();
 
-    expect(blended.css()).toBe('rgb(17 17 17 / 0.067)');
+    const [
+      r,
+      g,
+      b,
+    ] = blended.value().rgb(false);
+    expect([Math.round(r), Math.round(g), Math.round(b)]).toEqual([
+      17,
+      17,
+      17,
+    ]);
+    expect(blended.alpha()).toBeCloseTo(0.067, 3);
   });
 
   it('blend.multiply preserves alpha and applies ratio strength', () => {

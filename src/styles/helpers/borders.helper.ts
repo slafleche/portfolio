@@ -5,6 +5,7 @@ import type {
   AxisValues,
   CompassCorners,
   CompassRegion,
+  CompassRegionAlias,
   CornerPosition,
   CSS_TYPES,
 } from '@/styles/helpers/types.helper';
@@ -30,7 +31,10 @@ type RadiusSpec = CompassCorners<BorderRadiusInput>;
 
 const isRadiusCompass = (
   value: BorderIntent['radius'],
-): value is RadiusSpec => typeof value === 'object' && value !== null;
+): value is RadiusSpec =>
+  typeof value === 'object' &&
+  value !== null &&
+  !Array.isArray(value);
 
 export interface BorderIntent extends AxisValues<EdgeSpec> {
   radius?: RadiusSpec | 0 | null; // 0/null → explicit no radius
@@ -262,6 +266,14 @@ const zoneKeys: CompassRegion[] = [
   'west',
 ];
 
+const regionAliasLookup: Record<CompassRegion, CompassRegionAlias> =
+  {
+    north: 'n',
+    south: 's',
+    east: 'e',
+    west: 'w',
+  };
+
 type ResolvedRadius = {
   tl: string;
   tr: string;
@@ -282,6 +294,15 @@ const resolveRadiusCompass = (
     if (val) cornerVals[c] = val;
   };
 
+  const readZoneValue = (
+    zone: CompassRegion,
+  ): BorderRadiusInput | undefined => {
+    if (!rc) return undefined;
+    const direct = rc[zone];
+    if (direct !== undefined) return direct;
+    return rc[regionAliasLookup[zone]];
+  };
+
   const allR = asRadius(rc?.all);
   if (allR)
     cornerVals.tl =
@@ -291,7 +312,7 @@ const resolveRadiusCompass = (
         allR;
 
   zoneKeys.forEach((zone) => {
-    const zVal = asRadius(rc?.[zone]);
+    const zVal = asRadius(readZoneValue(zone));
     if (zVal)
       cornersForZone[zone].forEach((c) => (cornerVals[c] = zVal));
   });
@@ -409,7 +430,7 @@ type BorderShortcut = Partial<BorderLike> & {
     | BorderRadiusInput
     | Partial<
         Record<
-          'all' | CompassRegion | CornerPosition,
+          'all' | CompassRegion | CompassRegionAlias | CornerPosition,
           BorderRadiusInput
         >
       >;
@@ -463,7 +484,11 @@ const normalizeIntent = (
   }
 
   if (radius !== undefined) {
-    if (isMeasurement(radius)) {
+    if (Array.isArray(radius)) {
+      intent.radius = {
+        all: radius,
+      };
+    } else if (isMeasurement(radius)) {
       intent.radius = {
         all: radius,
       };
@@ -595,6 +620,10 @@ const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
     'south',
     'east',
     'west',
+    'n',
+    's',
+    'e',
+    'w',
     'nw',
     'ne',
     'se',

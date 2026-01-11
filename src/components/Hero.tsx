@@ -5,10 +5,13 @@ import type { ComponentType, CSSProperties, SVGProps } from 'react';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import SendIcon from '@/components/icons/SendIcon';
 import * as ctaStyles from '@/styles/components/cta.css';
+import {
+  glassLinkShine,
+  glassyHover,
+} from '@/styles/components/glassyButtons.css';
 import * as s from '@/styles/components/hero.css';
 import * as layoutStyles from '@/styles/layout.css';
 
-import { glassLinkShine, glassyHover } from '../styles/components/footer.css';
 import splitText from '../styles/helpers/textSplit';
 import { GlassPanel } from './GlassPanel';
 import HeroGooey from './HeroGooey';

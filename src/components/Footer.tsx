@@ -2,6 +2,10 @@ import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import type { ContactCopy } from '@/lib/locales/sections/contact.locale';
 import { sharedStrings } from '@/lib/sharedStrings';
 import * as s from '@/styles/components/footer.css';
+import {
+  glassLink,
+  glassLinkShine,
+} from '@/styles/components/glassyButtons.css';
 
 import GlassyLink from './GlassyLink';
 import Heading from './Heading';
@@ -58,29 +62,29 @@ export default function Footer({
         <div className={s.links}>
           {/* Modal trigger */}
           <ContactDialogTrigger
-            className={s.glassLink}
+            className={glassLink}
             aria-label={contact.emailLabel}
             title={contact.emailLabel}
           >
-            <div className={s.glassLinkShine} aria-hidden="true" />
+            <div className={glassLinkShine} aria-hidden="true" />
             <ContactIcon className={s.contactIcon} aria-hidden />
           </ContactDialogTrigger>
           <GlassyLink
             href={sharedStrings.linkedInUrl}
             label="LinkedIn"
-            className={s.glassLink}
+            className={glassLink}
             target="_blank"
           >
-            <div className={s.glassLinkShine} aria-hidden="true" />
+            <div className={glassLinkShine} aria-hidden="true" />
             <SocialLinkedInIcon className={s.linkedInIcon} />
           </GlassyLink>
           <GlassyLink
             href={sharedStrings.githubUrl}
             label="GitHub"
-            className={s.glassLink}
+            className={glassLink}
             target="_blank"
           >
-            <div className={s.glassLinkShine} aria-hidden="true" />
+            <div className={glassLinkShine} aria-hidden="true" />
             <SocialGitHubIcon className={s.gitHubIcon} />
           </GlassyLink>
         </div>

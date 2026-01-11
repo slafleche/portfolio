@@ -1,10 +1,9 @@
 import { m, mPercent } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
 
+import borders from '@/styles/helpers/borders.helper';
 import { color } from '@/styles/helpers/colorWrap.helper';
 import { colorVars } from '@/tokens/global.tokens';
-
-import borders from '../../src/styles/helpers/borders.helper';
 
 describe('borders.helper', () => {
   it('returns defaults for all edges when enabled', () => {
@@ -161,5 +160,74 @@ describe('borders.helper', () => {
     expect(result.borderRightColor).toBe('blue');
     expect(result.borderBottomColor).toBe('blue');
     expect(result.borderLeftColor).toBe('blue');
+  });
+
+  it('treats a two-value radii array as an all-corners shorthand', () => {
+    const styles = borders.radii([
+      m(40),
+      m(60),
+    ]);
+
+    expect(styles).toEqual({
+      borderTopLeftRadius: '40px 60px',
+      borderTopRightRadius: '40px 60px',
+      borderBottomRightRadius: '40px 60px',
+      borderBottomLeftRadius: '40px 60px',
+    });
+  });
+
+  it('accepts per-corner dual-axis radii arrays', () => {
+    const styles = borders.radii({
+      sw: [
+        m(40),
+        m(60),
+      ],
+    });
+
+    expect(styles).toEqual({
+      borderTopLeftRadius: '0',
+      borderTopRightRadius: '0',
+      borderBottomRightRadius: '0',
+      borderBottomLeftRadius: '40px 60px',
+    });
+  });
+
+  it('supports north alias + mixed single/dual radii with edge intent', () => {
+    const edgeColor = colorVars.white
+      .mix(colorVars.bodyBg, 0.5)
+      .css();
+
+    const styles = borders({
+      horizontal: {
+        width: m(1),
+        color: edgeColor,
+      },
+      radius: {
+        sw: m(40),
+        n: [
+          m(50),
+          m(10),
+        ],
+        se: [
+          m(30),
+          m(40),
+        ],
+      },
+    });
+
+    expect(styles).toEqual({
+      borderTopWidth: '0',
+      borderRightWidth: '1px',
+      borderBottomWidth: '0',
+      borderLeftWidth: '1px',
+      borderRightStyle: 'solid',
+      borderLeftStyle: 'solid',
+      borderRightColor: edgeColor,
+      borderLeftColor: edgeColor,
+      borderTopLeftRadius: '50px 10px',
+      borderTopRightRadius: '50px 10px',
+      borderBottomRightRadius: '30px 40px',
+      borderBottomLeftRadius: '40px',
+    });
   });
 });
