@@ -258,6 +258,7 @@ export const gradient = style({
     },
   },
 });
+
 export const gradientVisible = style({
   selectors: {
     [`${button}:hover &`]: { opacity: 1 },

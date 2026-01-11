@@ -43,7 +43,15 @@ export const glassVars = {
   noise: {
     idPrefix: 'glassy-noise-',
   },
+  glassyLinks: {
+    gap: m(40),
+    size: m(100),
+    hoverFocus: {
+      translateY: m(-20),
+    },
+  },
 } as const;
+
 
 export type GlassSurfaceTokens = typeof glassVars;
 

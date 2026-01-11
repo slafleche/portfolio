@@ -4,9 +4,11 @@ import type { ComponentType, CSSProperties, SVGProps } from 'react';
 
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import SendIcon from '@/components/icons/SendIcon';
+import * as ctaStyles from '@/styles/components/cta.css';
 import * as s from '@/styles/components/hero.css';
 import * as layoutStyles from '@/styles/layout.css';
 
+import { glassLinkShine, glassyHover } from '../styles/components/footer.css';
 import splitText from '../styles/helpers/textSplit';
 import { GlassPanel } from './GlassPanel';
 import HeroGooey from './HeroGooey';
@@ -87,13 +89,20 @@ export default function Hero({
 
                 <>
                   <ContactDialogTrigger
-                    className={s.cta}
+                    className={ctaStyles.cta}
                     data-ready="true"
                     aria-label={copy.ctaLabel}
                   >
-                    <span className={s.ctaInner}>
-                      <SendIcon className={s.ctaIcon} aria-hidden />
-                      <span className={s.ctaText}>
+                    <div
+                      className={clsx(glassLinkShine, glassyHover)}
+                      aria-hidden="true"
+                    />
+                    <span className={ctaStyles.ctaInner}>
+                      <SendIcon
+                        className={ctaStyles.ctaIcon}
+                        aria-hidden
+                      />
+                      <span className={ctaStyles.ctaText}>
                         {copy.ctaText}
                       </span>
                     </span>

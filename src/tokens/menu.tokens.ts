@@ -46,7 +46,7 @@ const dotPadding = logoVars.offsetY.add(borderSize);
 const handleHeight = dotPadding.multiply(2).add(dotSize);
 const handleSizeWithBorder = handleHeight.add(borderSize.multiply(2));
 
-const anchorMenuVars = {
+export const anchorMenuVars = {
   size: dotSize,
   innerGap: m(10),
   borders: {
@@ -81,5 +81,3 @@ const anchorMenuVars = {
     } as ITextShadow,
   },
 };
-
-export { anchorMenuVars };

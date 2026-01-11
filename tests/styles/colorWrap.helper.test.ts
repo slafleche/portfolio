@@ -96,4 +96,60 @@ describe('colorWrap.helper', () => {
       circularDiff(shiftedOklch!.h ?? 0, expectedHue),
     ).toBeLessThanOrEqual(10);
   });
+
+  it('blend.multiply defaults to white and reduces alpha for near-white', () => {
+    const base = color('#e7e7e7').alpha(1);
+    const blended = base.blend.multiply();
+
+    expect(blended.css()).toBe('rgb(231 231 231 / 0.094)');
+  });
+
+  it('blend.screen defaults to black and reduces alpha for near-black', () => {
+    const base = color('#111111').alpha(1);
+    const blended = base.blend.screen();
+
+    expect(blended.css()).toBe('rgb(17 17 17 / 0.067)');
+  });
+
+  it('blend.multiply preserves alpha and applies ratio strength', () => {
+    const base = color('#808080').alpha(0.5);
+    const target = color('#ffffff').alpha(0.25);
+
+    const full = base.blend.multiply({
+      stripColor: target,
+      ratio: 1,
+    });
+    const half = base.blend.multiply({
+      stripColor: target,
+      ratio: 0.5,
+    });
+    const none = base.blend.multiply({
+      stripColor: target,
+      ratio: 0,
+    });
+
+    expect(full.alpha()).toBeCloseTo(0.5 * 0.498, 3);
+    expect(half.alpha()).toBeCloseTo(0.5 * 0.749, 3);
+    expect(none.alpha()).toBeCloseTo(0.5, 3);
+  });
+
+  it('blend.screen supports ratio edge cases', () => {
+    const base = color('#808080').alpha(0.4);
+
+    const full = base.blend.screen({ ratio: 1 });
+    const half = base.blend.screen({ ratio: 0.5 });
+    const none = base.blend.screen({ ratio: 0 });
+
+    expect(full.alpha()).toBeCloseTo(0.4 * 0.502, 3);
+    expect(half.alpha()).toBeCloseTo(0.4 * 0.751, 3);
+    expect(none.alpha()).toBeCloseTo(0.4, 3);
+  });
+
+  it('blend.screen keeps color values while keying to custom target', () => {
+    const base = color('#123456').alpha(0.25);
+    const target = color('#123456');
+    const blended = base.blend.screen({ stripColor: target });
+
+    expect(blended.css()).toBe('rgb(18 52 86 / 0)');
+  });
 });

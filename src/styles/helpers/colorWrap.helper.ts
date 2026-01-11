@@ -58,12 +58,20 @@ export type ColorWrapper = {
     ratio?: number,
     mode?: MixArgs[2],
   ) => ColorWrapper;
+  blend: {
+    multiply: (options?: BlendOptions) => ColorWrapper;
+    screen: (options?: BlendOptions) => ColorWrapper;
+  };
   clone: () => ColorWrapper;
   value: () => Color;
   solid: () => ColorWrapper;
 };
 
 type ColorInput = Color | ColorWrapper | string;
+type BlendOptions = {
+  ratio?: number;
+  stripColor?: ColorInput;
+};
 
 export const isColorWrapper = (
   value: unknown,
@@ -365,6 +373,10 @@ export function wrap(input: ColorInput): ColorWrapper {
       hueShift: () => err('hueShift'),
       mix: () => err('mix'),
       mixSolid: () => err('mixSolid'),
+      blend: {
+        multiply: () => err('blend.multiply'),
+        screen: () => err('blend.screen'),
+      },
       clone: () => symbolic,
       value: () => chroma('black'),
       solid: () => symbolic,
@@ -419,6 +431,33 @@ export function wrap(input: ColorInput): ColorWrapper {
     }));
   };
 
+  const blendWith = (
+    mode: 'multiply' | 'screen',
+    options?: BlendOptions,
+  ): ColorWrapper => {
+    const fallback =
+      mode === 'multiply' ? '#ffffff' : '#000000';
+    const targetColor = toColor(options?.stripColor ?? fallback);
+    const [
+      r,
+      g,
+      b,
+    ] = cloneColor(base).rgb(false);
+    const [
+      tr,
+      tg,
+      tb,
+    ] = cloneColor(targetColor).rgb(false);
+    const dr = r - tr;
+    const dg = g - tg;
+    const db = b - tb;
+    const distance = Math.sqrt(dr * dr + dg * dg + db * db);
+    const maxDistance = Math.sqrt(3 * 255 * 255);
+    const ratioValue = clampRatio(options?.ratio) ?? 1;
+    const alphaFactor = lerp(1, distance / maxDistance, ratioValue);
+    return wrap(cloneColor(base).alpha(base.alpha() * alphaFactor));
+  };
+
   return {
     unsafeColor: base,
     css: (options?: CssOptions) => {
@@ -468,6 +507,12 @@ export function wrap(input: ColorInput): ColorWrapper {
       derive(base, (draft) =>
         draft.alpha(1).mix(toColor(target), clampRatio(ratio), mode),
       ),
+    blend: {
+      multiply: (options?: BlendOptions) =>
+        blendWith('multiply', options),
+      screen: (options?: BlendOptions) =>
+        blendWith('screen', options),
+    },
     clone: () => wrap(cloneColor(base)),
     value: () => cloneColor(base),
     solid: () => derive(base, (draft) => draft.alpha(1)),
