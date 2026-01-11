@@ -47,11 +47,10 @@ export const glassVars = {
     gap: m(40),
     size: m(100),
     hoverFocus: {
-      translateY: m(-20),
+      scale: 1.2,
     },
   },
 } as const;
-
 
 export type GlassSurfaceTokens = typeof glassVars;
 

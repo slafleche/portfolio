@@ -12,58 +12,27 @@ import {
 import { margins, paddings } from '../helpers/spacing.helper';
 import { relativeFontWeight } from '../helpers/typography.helper';
 
-export const cta = style({
+export const root = style({
+  overflow: 'hidden',
   position: 'relative',
   ...margins({ top: m(40) }),
   ...gradientAsBgImg(buildLinear(themeColours.gradients.ctaConfig)),
   fontSize: '22px',
   lineHeight: 1,
   ...relativeFontWeight(fontFamilies.objectSans, mPercent(0)),
-  ...paddings(m(10)),
-
+  ...paddings(m(12)),
   ...borders.radii([
     m(40),
     m(60),
   ]),
-
   userSelect: 'none',
   color: colorVars.black.lighten(0.1).css(),
   textDecoration: 'none',
-  // ...boxShadow({
-  //   x: m(0),
-  //   y: m(1),
-  //   blur: m(4),
-  //   alpha: 0.15,
-  //   color: colorVars.black,
-  // }),
-  // 3px 3px 6px #b8b9be, -3px -3px 6px #fff
-  // ...boxShadow([
-  //   {
-  //     x: m(3),
-  //     y: m(3),
-  //     blur: m(6),
-  //     color: color('#b8b9be'),
-  //   },
-  //   {
-  //     x: m(-3),
-  //     y: m(-3),
-  //     blur: m(6),
-  //     color: colorVars.white,
-  //   },
-  // ]),
   opacity: 0,
   pointerEvents: 'none',
   selectors: {
-    '&:hover, &:focus-visible': {
-      // transform: 'translateY(-2px)',
-      // ...boxShadow({
-      //   x: m(0),
-      //   y: m(2),
-      //   blur: m(8),
-      //   alpha: 0.25,
-      //   color: colorVars.black,
-      // }),
-      // outline: 'none',
+    '&:hover, &:focus': {
+      transform: 'scale(1.015)',
     },
     '&[data-ready="true"]': {
       opacity: 1,
@@ -77,10 +46,10 @@ export const ctaInner = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  zIndex: 2,
+  zIndex: 3,
   ...paddings({
-    vertical: m(16),
-    horizontal: m(26),
+    vertical: m(12),
+    horizontal: m(18),
   }),
   ...borders.radii([
     m(30),
@@ -92,16 +61,19 @@ export const ctaInner = style({
       stops: [
         {
           at: mPercent(0),
-          color: color('#e7e7e7').blend.multiply({
-            ratio: 0.5,
-          }),
+          color: color('#e7e7e7')
+            .blend.multiply({
+              ratio: 0.5,
+            })
+            .alpha(0.2),
         },
         {
           at: mPercent(100),
           color: color('#f7f8f7')
             .blend.multiply()
-            .darken(0.1)
-            .mix(themeColours.secondary, 0.1),
+            .darken(0.8)
+            .mix(themeColours.secondary, 0.1)
+            .alpha(0.4),
         },
       ],
     }),
@@ -115,27 +87,8 @@ export const ctaText = style({
 
 export const ctaIcon = style({
   color: colorVars.white.css(),
-  width: '46px',
-  height: '46px',
+  width: '36px',
+  height: '36px',
   transform: 'rotate(135deg)',
   ...margins({ right: mEm(0.5) }),
-  // selectors: {
-  //   [`${cta}:hover &`]: {
-  //     transform: 'translateX(6%)',
-  //   },
-  //   [`${cta}:focus-visible &`]: {
-  //     transform: 'translateX(6%)',
-  //   },
-  // },
 });
-
-// box-shadow: 3px 3px 6px #b8b9be, -3px -3px 6px #fff;
-
-// const ctaGradient = buildLinear({
-//   angle: m(110, 'deg'),
-//   stops: [
-//     { color: themeColours.secondary, at: mPercent(0) },
-//     { color: themeColours.brandMix, at: mPercent(50) },
-//     { color: themeColours.secondary, at: mPercent(100) },
-//   ],
-// });

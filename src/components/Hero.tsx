@@ -14,6 +14,7 @@ import * as layoutStyles from '@/styles/layout.css';
 
 import splitText from '../styles/helpers/textSplit';
 import { GlassPanel } from './GlassPanel';
+import { HeroCta } from './HeroCta';
 import HeroGooey from './HeroGooey';
 import HeroWaypoint from './HeroWaypoint';
 
@@ -91,25 +92,12 @@ export default function Hero({
                 ) : null}
 
                 <>
-                  <ContactDialogTrigger
-                    className={ctaStyles.cta}
-                    data-ready="true"
-                    aria-label={copy.ctaLabel}
-                  >
-                    <div
-                      className={clsx(glassLinkShine, glassyHover)}
-                      aria-hidden="true"
-                    />
-                    <span className={ctaStyles.ctaInner}>
-                      <SendIcon
-                        className={ctaStyles.ctaIcon}
-                        aria-hidden
-                      />
-                      <span className={ctaStyles.ctaText}>
-                        {copy.ctaText}
-                      </span>
-                    </span>
-                  </ContactDialogTrigger>
+                  <HeroCta
+                    copy={{
+                      ctaLabel: copy.ctaLabel,
+                      ctaText: copy.ctaText,
+                    }}
+                  />
                   <HeroWaypoint />
                 </>
               </GlassPanel>

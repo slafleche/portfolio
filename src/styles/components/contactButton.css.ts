@@ -201,7 +201,7 @@ export const button = style({
   textDecoration: 'none',
   ...boxShadow(),
   pointerEvents: 'auto',
-  transition: `box-shadow ${hoverTransitionMs.css()} ease`,
+  transition: `box-shadow transform ${hoverTransitionMs.css()} ease`,
   transformOrigin: `0 50%`,
   willChange: 'transform',
   ...borders({

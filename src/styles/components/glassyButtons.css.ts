@@ -12,6 +12,9 @@ import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 
+const glassyTransition =
+  'transform 200ms ease, box-shadow 200ms ease';
+
 const glassLinkBase: ComplexStyleRule = {
   position: 'relative',
   width: glassVars.glassyLinks.size.css(),
@@ -35,10 +38,10 @@ const glassLinkBase: ComplexStyleRule = {
     alpha: 0.15,
   }),
   overflow: 'hidden',
-  transition: 'transform 200ms ease, box-shadow 200ms ease',
 };
 
 export const glassyHoverProps = {
+  transition: 'transform 200ms ease, box-shadow 200ms ease',
   zIndex: 1,
   selectors: {
     ...mediaQueryStyle({
@@ -46,7 +49,7 @@ export const glassyHoverProps = {
         selectors: {
           '&:hover': {
             cursor: 'pointer',
-            transform: `translateY(${glassVars.glassyLinks.hoverFocus.translateY.css()})`,
+            transform: `scale(${glassVars.glassyLinks.hoverFocus.scale})`,
             ...boxShadow({
               x: m(0),
               y: m(24),
@@ -84,13 +87,18 @@ const glassLinkShineBase: ComplexStyleRule = {
 
 export const glassLinkShine = style(glassLinkShineBase);
 
-globalStyle(`${glassLink}:hover ${glassLinkShine}`, {
-  transform: 'skewX(45deg) translateX(-220%)',
-  opacity: 1,
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      transform: 'skewX(45deg) translateX(220%)',
-      opacity: 0,
+globalStyle(
+  `${glassLink}:hover ${glassLinkShine}, 
+  ${glassyHover}:hover ${glassLinkShine}
+  `,
+  {
+    transform: 'skewX(45deg) translateX(-220%)',
+    opacity: 1,
+    '@media': {
+      '(prefers-reduced-motion: reduce)': {
+        transform: 'skewX(45deg) translateX(220%)',
+        opacity: 0,
+      },
     },
   },
-});
+);
