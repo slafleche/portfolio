@@ -91,8 +91,12 @@ export default function Hero({
                     data-ready="true"
                     aria-label={copy.ctaLabel}
                   >
-                    <span className={s.ctaText}>{copy.ctaText}</span>
-                    <SendIcon className={s.ctaIcon} aria-hidden />
+                    <span className={s.ctaInner}>
+                      <SendIcon className={s.ctaIcon} aria-hidden />
+                      <span className={s.ctaText}>
+                        {copy.ctaText}
+                      </span>
+                    </span>
                   </ContactDialogTrigger>
                   <HeroWaypoint />
                 </>

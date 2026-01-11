@@ -1,6 +1,7 @@
-import { type IMeasurement, m } from 'css-calipers';
+import { type IMeasurement, m, mPercent } from 'css-calipers';
 
 import { color } from '../styles/helpers/colorWrap.helper';
+import { buildLinear } from '../styles/helpers/gradients.helper';
 export type ColorKeys = keyof typeof colors;
 
 export type {
@@ -145,9 +146,15 @@ export const themeColours = {
       middle: wine.mix(midPurple, 0.5),
       end: lightPurple,
     },
+    cta: buildLinear({
+      angle: m(45, 'deg'),
+      stops: [
+        { color: brand, at: mPercent(0) },
+        { color: secondary, at: mPercent(100) },
+      ],
+    }),
   },
 };
-
 
 // export const gradientFull = {
 // 	overlayA: gradients.b_spot_a,
@@ -290,15 +297,15 @@ export const borderVars = {
   radius: m(16),
 };
 
-export const archVars: ArchVars = {
-  top: m(55),
-  curveHeight: m(15),
-  ry: m(70),
-  bumpHeight: m(13),
-  bumpWidth: m(80),
-  bumpBaseWidth: 1,
-  bumpTipWidth: m(10),
-};
+// export const archVars: ArchVars = {
+//   top: m(55),
+//   curveHeight: m(15),
+//   ry: m(70),
+//   bumpHeight: m(13),
+//   bumpWidth: m(80),
+//   bumpBaseWidth: 1,
+//   bumpTipWidth: m(10),
+// };
 
 // background: currentColor;
 // border-radius: 50%;

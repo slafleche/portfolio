@@ -24,7 +24,7 @@ const {
   palette: {
     body: { background: bodyBg, foreground: bodyFg },
   },
-  layout: { arch, scrollPaddingOffset },
+  layout: { scrollPaddingOffset },
 } = documentSurface;
 
 const bodyFontStyles = fontStylesFromFontVariant({
@@ -71,7 +71,6 @@ globalStyle('html, body', {
   overscrollBehavior: 'none',
   scrollBehavior: 'auto',
   lineHeight: 1.8,
-  scrollPaddingTop: `calc(${arch.top.css()} + ${arch.curveHeight.css()} + ${scrollPaddingOffset.css()})`,
   ...reducedMotion(ReducedMotion.on, {
     scrollBehavior: 'auto',
   }),
@@ -141,6 +140,7 @@ globalStyle('button, input, optgroup, select, textarea', {
   lineHeight: 'inherit',
   margin: 0,
   padding: 0,
+  border: 'none',
 });
 
 globalStyle('button, input', {

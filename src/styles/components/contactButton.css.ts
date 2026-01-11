@@ -1,5 +1,5 @@
 import { keyframes, style } from '@vanilla-extract/css';
-import { m, mPercent } from 'css-calipers';
+import { m } from 'css-calipers';
 
 import {
   colors,
@@ -8,7 +8,6 @@ import {
 } from '../../tokens/global.tokens';
 import borders from '../helpers/borders.helper';
 import {
-  buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
 import { outlines } from '../helpers/outlines.helper';
@@ -24,7 +23,6 @@ import {
   exitTranslationDelayMs,
   focusOffsetPx,
   focusWidthPx,
-  gradAngleDiagDeg,
   gradientFadeMs,
   hoverBlurPx,
   hoverTransitionMs,
@@ -245,20 +243,11 @@ export const button = style({
   },
 });
 
-const buttonGradient = buildLinear({
-  angle: gradAngleDiagDeg,
-  stops: [
-    { color: themeColours.brand, at: mPercent(0) },
-    { color: themeColours.secondary, at: mPercent(100) },
-  ],
-});
-
-/* GRADIENT */
 export const gradient = style({
   position: 'absolute',
   inset: 0,
   borderRadius: buttonRadius.css(),
-  ...gradientAsBgImg(buttonGradient),
+  ...gradientAsBgImg(themeColours.gradients.cta),
   opacity: 0,
   transition: `opacity ${gradientFadeMs.css()} ease`,
   zIndex: 0,

@@ -7,7 +7,7 @@ import {
 } from 'css-calipers';
 import type { Property } from 'csstype';
 
-import { clamp } from '../../components/menu/menuUtils';
+import { clamp } from '../../lib/math';
 import {
   color,
   colorFallback,
@@ -394,10 +394,7 @@ const normalizeMaskColor = (value: string): string =>
       /rgba\(\s*0\s*,\s*0\s*,\s*0\s*,\s*1(?:\.0+)?\s*\)/g,
       '#000',
     )
-    .replace(
-      /rgb\(\s*0\s+0\s+0\s*\/\s*1(?:\.0+)?\s*\)/g,
-      '#000',
-    )
+    .replace(/rgb\(\s*0\s+0\s+0\s*\/\s*1(?:\.0+)?\s*\)/g, '#000')
     .replace(/rgb\(\s*0\s*,\s*0\s*,\s*0\s*\)/g, '#000')
     .replace(/rgb\(\s*0\s+0\s+0\s*\)/g, '#000');
 

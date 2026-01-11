@@ -1,4 +1,4 @@
-import { assertUnit,m } from 'css-calipers';
+import { assertUnit, m } from 'css-calipers';
 
 import { notRelease } from '@/lib/runtimeEnv';
 
@@ -33,7 +33,7 @@ export const kEnterY = 1 / kEnter;
 
 /* ---------- Core geometry/timings ---------- */
 
-// need to wire up breakpoints 
+// need to wire up breakpoints
 export const offsetPx = m(36);
 export const buttonSizePx = m(66);
 export const iconSizePx = m(36);
@@ -46,7 +46,6 @@ export const exitPushPx = m(22);
 
 export const railRotationDeg = m(45, 'deg');
 export const railCounterRotationDeg = railRotationDeg.negation();
-export const gradAngleDiagDeg = m(45, 'deg');
 
 /* Sequencing anchors */
 export const exitAnticPct = m(12, '%'); // when spin antic pose is reached
@@ -122,7 +121,6 @@ if (notRelease()) {
   // deg
   assertUnit(railRotationDeg, 'deg', 'railRotationDeg');
   assertUnit(railCounterRotationDeg, 'deg', 'railCounterRotationDeg');
-  assertUnit(gradAngleDiagDeg, 'deg', 'gradAngleDiagDeg');
   assertUnit(spinAnticDeg, 'deg', 'spinAnticDeg');
 
   // ms
