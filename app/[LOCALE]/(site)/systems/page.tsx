@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { getLocaleSvgs } from '@/assets/SVG/generated/headingsAsSvgs';
 import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
@@ -21,8 +23,15 @@ import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
 import * as layoutStyles from '@/styles/layout.css';
 
-import Content from '../../../../src/components/responsive/Content';
+import ContentWithTitle from '../../../../src/components/responsive/ContentWithTitle';
 import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
+import WordMarkInTitle from '../../../../src/components/WordmarkInTitle';
+import NPMWordmark from '../../../../src/components/wordmarks/NPMWordmark';
+import {
+  npmLinkInTitle,
+  npmLinkInTitleIcon,
+  npmLinkInTitleLink,
+} from '../../../../src/styles/typography.css';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -87,6 +96,10 @@ export default async function SystemsPage({
         href: `#${systemsShapeId}`,
       },
       {
+        title: 'CSS Calipers',
+        href: '#css-calipers',
+      },
+      {
         title: contactCopy.title,
         href: '#contact',
       },
@@ -136,6 +149,9 @@ export default async function SystemsPage({
               title={systemsPrinciplesTitle}
               markdown={systemsPrinciplesMarkdown}
               bgOffset={2}
+              rotateOffset={3}
+              scaleOffset={1}
+              translateOffset={4}
             />
             <hr />
             <ContentAsTiles
@@ -143,10 +159,23 @@ export default async function SystemsPage({
               title={systemsShapeTitle}
               markdown={systemsShapeMarkdown}
               bgOffset={5}
+              rotateOffset={1}
+              scaleOffset={4}
+              translateOffset={3}
             />
-            <Content>
+            <hr />
+            <ContentWithTitle id="css-calipers">
+              <WordMarkInTitle
+                WordMark={NPMWordmark}
+                ignoreDataUI={true}
+                textTemplate={translator('css_calipers')}
+                wordMarkClassName={npmLinkInTitleIcon}
+                linkClassName={npmLinkInTitleLink}
+                linkUrl={'https://www.npmjs.com/package/css-calipers'}
+                depth={2}
+              />
               <Markdown source={systemsShapeBlurbMarkdown} />
-            </Content>
+            </ContentWithTitle>
           </DeferredIsland>
         </main>
         <DeferredIsland when="idle">

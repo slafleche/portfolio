@@ -137,23 +137,23 @@ export default function ContentAsTiles<
       mDeg(357),
     ],
     scale: [
-      0.8,
-      1.2,
-      1,
+      2,
+      1.8,
+      -1.6,
+      1.7,
+      -1.8,
       1.6,
-      -1.1,
-      1.4,
-      1.3,
-      0.9,
+      -1.7,
+      2.1,
     ],
     translateOffset: [
       {
         x: m(9),
-        y: m(18),
+        y: m(-18),
       },
       {
         x: m(-12),
-        y: m(22),
+        y: m(-22),
       },
       {
         x: m(15),
@@ -188,9 +188,7 @@ export default function ContentAsTiles<
 
   const getScaleFromOffset = (i: number) => {
     const size = transformValues.scale.length;
-    return transformValues.scale[
-      (i + resolvedScaleOffset) % size
-    ] as unknown as IMeasurement;
+    return transformValues.scale[(i + resolvedScaleOffset) % size];
   };
 
   return (

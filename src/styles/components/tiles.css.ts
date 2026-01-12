@@ -93,9 +93,8 @@ export const bgDecoration = style({
   position: 'absolute',
   top: 0,
   right: 0,
-  opacity: 0.5,
+  opacity: 0.15,
   zIndex: 0,
-  transform: 'scale(0.5)',
 });
 
 // globalStyle(`.${bgDecoration}.${tileA}`, {

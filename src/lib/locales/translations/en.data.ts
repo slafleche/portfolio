@@ -104,6 +104,10 @@ const enBaseData = {
   'privacy-title': 'Privacy Policy',
   'privacy-href': 'privacy',
   ...markdownRefs('privacy-content'),
+
+
+  'css_calipers': 'CSS Calipers (now on [wordmark:NPM])',
+
 } as const;
 
 export const enData = mergeLocaleSections(

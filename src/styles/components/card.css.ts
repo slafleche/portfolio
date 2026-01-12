@@ -247,12 +247,12 @@ export const wordmarkTextNoLogo = style({
   selectors: {
     '&[data-position="before"]': {
       ...margins({
-        left: m(0.5, 'em'),
+        left: m(0.2, 'em'),
       }),
     },
     '&[data-position="after"]': {
       ...margins({
-        right: m(0.5, 'em'),
+        right: m(0.2, 'em'),
       }),
     },
   },

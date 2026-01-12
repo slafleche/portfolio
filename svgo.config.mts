@@ -29,11 +29,21 @@ export default {
     { name: 'removeMetadata' },
     { name: 'removeEditorsNSData' },
 
-    // Keep transform cleanup
+    // Apply transforms into path data so group translates are baked in.
+    {
+      name: 'applyTransforms',
+      params: { applyTransformsStroked: true },
+    },
     { name: 'convertTransform' },
 
-    // Let SVGO use shorter relative path commands where it helps (remove forceAbsolutePath)
-    { name: 'convertPathData' },
+    // Let SVGO use shorter relative path commands where it helps (remove forceAbsolutePath).
+    {
+      name: 'convertPathData',
+      params: {
+        applyTransforms: true,
+        applyTransformsStroked: true,
+      },
+    },
     { name: 'removeUselessDefs' },
     { name: 'removeHiddenElems' },
     {

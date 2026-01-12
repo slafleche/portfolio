@@ -45,6 +45,11 @@ globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {
   ...margins(textStyleVars.paragraph.margins),
   color: colorVars.bodyFg.css(),
 });
+globalStyle(`.${userContent} p[data-last="true"]`, {
+  ...margins({
+    bottom: m(0),
+  }),
+});
 
 globalStyle(`p`, {
   display: 'block',
@@ -103,7 +108,7 @@ const linkRules = textStyleVars.link;
 globalStyle(`.${userContent} a:not([data-ui="link"])`, {
   color: linkRules.default.color.css(),
   textDecoration: 'none',
-  textDecorationLine: "underline",
+  textDecorationLine: 'underline',
   cursor: 'pointer',
 });
 
@@ -168,3 +173,24 @@ export const headingDecoration = style({
     },
   },
 });
+
+export const npmLinkInTitleLink = style({
+  display: 'inline-block',
+});
+
+export const npmLinkInTitleIcon = style({
+  display: 'inline-block',
+  justifySelf: 'center',
+  width: 'auto',
+  height: '1em',
+  transform: 'translateY(0.24em)',
+  color: linkRules.default.color.css(),
+});
+
+globalStyle(
+  `.${npmLinkInTitleLink}:hover .${npmLinkInTitleIcon}, 
+  .${npmLinkInTitleLink}:focus .${npmLinkInTitleIcon}`,
+  {
+    color: linkRules.hover.color.css(),
+  },
+);
