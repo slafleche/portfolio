@@ -2,10 +2,7 @@ import { keyframes, style } from '@vanilla-extract/css';
 import { m, mEm, mPercent } from 'css-calipers';
 
 import { fontFamilies } from '../../tokens/fontFamilies.tokens';
-import {
-  glassVars,
-  glassyButtonCupped,
-} from '../../tokens/glassy.tokens';
+import { glassyButtonCupped } from '../../tokens/glassy.tokens';
 import { colorVars, themeColours } from '../../tokens/global.tokens';
 import borders from '../helpers/borders.helper';
 import {
@@ -18,9 +15,9 @@ import { relativeFontWeight } from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 const anticipationMs = 200;
-const iconStrikeMs = 300;
+const iconStrikeMs = 0;
 const textMoveMs = 180;
-const settleMs = 1000;
+const settleMs = 500;
 const totalMs = anticipationMs + iconStrikeMs + textMoveMs + settleMs;
 
 const iconBumpOffset = 10; // offset left on first phase
@@ -63,8 +60,8 @@ const textReactFrames = {
     { transform: textTransform(textStrikeOffshoot) },
   '100%': { transform: textTransform(0) },
 };
-const textReactA = keyframes(textReactFrames);
-const textReactB = keyframes(textReactFrames);
+// const textReactA = keyframes(textReactFrames);
+// const textReactB = keyframes(textReactFrames);
 
 export const root = style({
   overflow: 'hidden',
@@ -85,9 +82,9 @@ export const root = style({
   opacity: 0,
   pointerEvents: 'none',
   selectors: {
-    '&:hover, &:focus': {
-      // transform: 'scale(1.015)',
-    },
+    // '&:hover, &:focus': {
+    //   // transform: 'scale(1.015)',
+    // },
     '&[data-ready="true"]': {
       opacity: 1,
       pointerEvents: 'auto',
@@ -131,7 +128,7 @@ export const ctaText = style({
         selectors: {
           '&:hover': {
             cursor: 'pointer',
-            transform: `scale(${glassVars.glassyLinks.hoverFocus.scale})`,
+            // transform: `scale(${glassVars.glassyLinks.hoverFocus.scale})`,
             ...boxShadow({
               x: m(0),
               y: m(24),
@@ -142,21 +139,6 @@ export const ctaText = style({
         },
       },
     }),
-    [`${root}[data-cta-anim="forward"][data-cta-seq="0"] &`]: {
-      animation: `${textReactA} ${totalMs}ms ${ANIM_EASEOUT} 0s both`,
-    },
-    [`${root}[data-cta-anim="forward"][data-cta-seq="1"] &`]: {
-      animation: `${textReactB} ${totalMs}ms ${ANIM_EASEOUT} 0s both`,
-    },
-  },
-  '@media': {
-    '(prefers-reduced-motion: reduce)': {
-      selectors: {
-        [`${root}[data-cta-anim="forward"] &`]: {
-          animation: 'none',
-        },
-      },
-    },
   },
 });
 
