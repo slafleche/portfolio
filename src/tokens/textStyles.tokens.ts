@@ -2,6 +2,7 @@ import { m } from 'css-calipers';
 
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 
+import { color } from '../styles/helpers/colorWrap.helper';
 import type { SpacingIntentInternal } from '../styles/helpers/spacing.helper';
 import { colorVars, themeColours } from './global.tokens';
 import { layoutVars } from './layout.tokens';
@@ -100,13 +101,13 @@ export const textStyleVars = {
   },
   link: {
     default: {
-      color: colorVars.brand,
+      color: themeColours.electricBlue,
       textDecoration:
         'underline' as CSS_TYPES.Property.TextDecoration,
       underlineOffset: m(3),
     },
     hover: {
-      color: colorVars.brand.lighten(0.1),
+      color: color('#55fff0').darken(0.1),
       textDecorationThickness: m(0.75),
     },
     focusVisible: {

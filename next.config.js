@@ -22,6 +22,10 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_MEASUREMENT_DEBUG ??
       (notRelease() ? '1' : '0'),
   },
+  devIndicators: {
+    buildActivity: false,
+    appIsrStatus: false,
+  },
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),

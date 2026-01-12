@@ -7,6 +7,7 @@ type AngleValue = IMeasurement | null | undefined;
 type ScaleValue = number | null | undefined;
 
 export type TranslateIntent = {
+  xy?: LengthValue;
   x?: LengthValue;
   y?: LengthValue;
   z?: LengthValue;
@@ -20,6 +21,7 @@ export type RotateIntent = {
 };
 
 export type ScaleIntent = {
+  xy?: ScaleValue;
   value?: ScaleValue;
   x?: ScaleValue;
   y?: ScaleValue;
@@ -57,9 +59,16 @@ const appendTranslate = (
   intent?: TranslateIntent,
 ) => {
   if (!intent) return;
-  const x = toCssLength(intent.x);
-  const y = toCssLength(intent.y);
+  let x = toCssLength(intent.xy);
+  let y = toCssLength(intent.xy);
   const z = toCssLength(intent.z);
+
+  if (intent.y) {
+    y = toCssLength(intent.y);
+  }
+  if (intent.x) {
+    x = toCssLength(intent.x);
+  }
 
   if (z) {
     parts.push(`translate3d(${x ?? '0'}, ${y ?? '0'}, ${z})`);
@@ -98,9 +107,15 @@ const appendScale = (parts: string[], intent?: ScaleIntent) => {
   const { value, x, y, z } = intent;
   const base = toCssScale(value);
   if (base) parts.push(`scale(${base})`);
-  const sx = toCssScale(x);
+  let sx = toCssScale(intent.xy);
+  let sy = toCssScale(intent.xy);
+  if (x !== null && x !== undefined) {
+    sx = toCssScale(x);
+  }
+  if (y !== null && y !== undefined) {
+    sy = toCssScale(y);
+  }
   if (sx) parts.push(`scaleX(${sx})`);
-  const sy = toCssScale(y);
   if (sy) parts.push(`scaleY(${sy})`);
   const sz = toCssScale(z);
   if (sz) parts.push(`scaleZ(${sz})`);

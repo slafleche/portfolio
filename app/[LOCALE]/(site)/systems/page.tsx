@@ -135,12 +135,14 @@ export default async function SystemsPage({
               id={systemsPrinciplesId}
               title={systemsPrinciplesTitle}
               markdown={systemsPrinciplesMarkdown}
+              bgOffset={2}
             />
             <hr />
             <ContentAsTiles
               id={systemsShapeId}
               title={systemsShapeTitle}
               markdown={systemsShapeMarkdown}
+              bgOffset={5}
             />
             <Content>
               <Markdown source={systemsShapeBlurbMarkdown} />

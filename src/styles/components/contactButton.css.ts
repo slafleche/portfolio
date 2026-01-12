@@ -1,6 +1,7 @@
 import { keyframes, style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 
+import { glassVars } from '../../tokens/glassy.tokens';
 import {
   colors,
   colorVars,
@@ -15,6 +16,7 @@ import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { measureHypotenuse } from '../helpers/utils.helper';
+import { mediaQueryStyle } from '../responsive/mediaQueries';
 import {
   buttonRadius,
   buttonSizePx,
@@ -76,6 +78,24 @@ export const root = style({
   zIndex: 30,
   overflow: 'hidden',
   pointerEvents: 'none',
+  selectors: {
+    // ...mediaQueryStyle({
+    //   notCompact: {
+    //     selectors: {
+    //       '&:hover': {
+    //         cursor: 'pointer',
+    //         // transform: `scale(${glassVars.glassyLinks.hoverFocus.scale})`,
+    //         ...boxShadow({
+    //           x: m(0),
+    //           y: m(24),
+    //           blur: m(36),
+    //           alpha: 0.25,
+    //         }),
+    //       },
+    //     },
+    //   },
+    // }),
+  },
 });
 
 export const rail = style({
@@ -383,7 +403,7 @@ export const iconTrack = style({
   },
 });
 
-export const iconGlyph = style({
+export const icon = style({
   display: 'block',
   width: 'auto',
   height: 'auto',
@@ -393,6 +413,8 @@ export const iconGlyph = style({
   transformOrigin: `50% 50%`,
   transform: `translateZ(0)`,
   willChange: 'transform',
+  zIndex: 1,
+  color: colorVars.white.css(),
   selectors: {
     '&[data-phase="exiting"]': {
       animation: `${iconRotateExit} ${iconExitTotalMs.css()} 0s both`,

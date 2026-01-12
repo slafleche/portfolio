@@ -10,6 +10,7 @@ type TileProps = {
   children: ReactNode;
   className?: string;
   id?: string;
+  bgOverlay?: ReactNode;
 };
 
 export default function Tile({
@@ -17,14 +18,18 @@ export default function Tile({
   children,
   className,
   id,
+  bgOverlay,
   ...rest
 }: TileProps) {
   return (
-    <article id={id} className={clsx(s.tile, className)} {...rest}>
-      <Heading depth={3} className={s.title}>
-        {contentTitle}
-      </Heading>
-      {children}
+    <article id={id} className={clsx(s.root, className)} {...rest}>
+      <div className={s.content}>
+        <Heading depth={3} className={s.title}>
+          {contentTitle}
+        </Heading>
+        {children}
+      </div>
+      {bgOverlay}
     </article>
   );
 }

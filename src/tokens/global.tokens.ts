@@ -153,6 +153,36 @@ export const themeColours = {
         { color: secondary, at: mPercent(100) },
       ],
     } as LinearOpts,
+    cards: {
+      a: {
+        angle: m(45, 'deg'),
+        stops: [
+          { color: color('#573f97'), at: mPercent(0) },
+          { color: color('#9d4e9c'), at: mPercent(100) },
+        ],
+      } as LinearOpts,
+      b: {
+        angle: m(72, 'deg'),
+        stops: [
+          { color: color('#ed79a8'), at: mPercent(0) },
+          { color: color('#e6a87f'), at: mPercent(100) },
+        ],
+      } as LinearOpts,
+      c: {
+        angle: m(120, 'deg'),
+        stops: [
+          { color: color('#5b4199'), at: mPercent(0) },
+          { color: color('#34d399'), at: mPercent(100) },
+        ],
+      } as LinearOpts,
+      d: {
+        angle: m(33, 'deg'),
+        stops: [
+          { color: color('#88dbfc'), at: mPercent(0) },
+          { color: color('#573f97'), at: mPercent(100) },
+        ],
+      } as LinearOpts,
+    },
   },
 };
 

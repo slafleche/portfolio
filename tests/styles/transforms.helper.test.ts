@@ -37,6 +37,14 @@ describe('transforms.helper', () => {
     expect(value).toContain('scaleZ(4)');
   });
 
+  it('defaults scale x/y to xy and allows overrides', () => {
+    const value = transformValue({
+      scale: { xy: 1.1, x: 0.9 },
+    });
+
+    expect(value).toBe('scaleX(0.9) scaleY(1.1)');
+  });
+
   it('deduplicates custom strings and filters empty entries', () => {
     const value = transformValue({
       custom: [

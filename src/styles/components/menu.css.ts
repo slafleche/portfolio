@@ -41,6 +41,8 @@ export const nav = style({
 
 export const homeLink = style({
   position: 'absolute',
+  overflow: 'hidden',
+  cursor: 'pointer',
   top: logoVars.offsetY.css(),
   left: logoVars.offsetX.css(),
   width: logoVars.width.css(),

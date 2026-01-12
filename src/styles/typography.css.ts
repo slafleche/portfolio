@@ -103,7 +103,8 @@ const linkRules = textStyleVars.link;
 globalStyle(`.${userContent} a:not([data-ui="link"])`, {
   color: linkRules.default.color.css(),
   textDecoration: 'none',
-  // textUnderlineOffset: linkRules.default.underlineOffset.css(),
+  textDecorationLine: "underline",
+  cursor: 'pointer',
 });
 
 globalStyle(`.${userContent} a:not([data-ui="link"]):hover`, {

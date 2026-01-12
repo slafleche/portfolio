@@ -12,10 +12,7 @@ import borders from '../helpers/borders.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 
-const glassyTransition =
-  'transform 200ms ease, box-shadow 200ms ease';
-
-const glassLinkBase: ComplexStyleRule = {
+export const glassLink = style({
   position: 'relative',
   width: glassVars.glassyLinks.size.css(),
   height: glassVars.glassyLinks.size.css(),
@@ -31,18 +28,15 @@ const glassLinkBase: ComplexStyleRule = {
   }),
   ...backgrounds({ color: 'rgba(255, 255, 255, 0.05)' }),
   ...backdropFilters.style({ blur: m(3) }),
+  transition: 'transform 200ms ease, box-shadow 200ms ease',
   ...boxShadow({
     x: m(0),
     y: m(20),
     blur: m(30),
     alpha: 0.15,
   }),
-  overflow: 'hidden',
-};
-
-export const glassyHoverProps = {
-  transition: 'transform 200ms ease, box-shadow 200ms ease',
   zIndex: 1,
+  overflow: 'hidden',
   selectors: {
     ...mediaQueryStyle({
       notCompact: {
@@ -61,14 +55,7 @@ export const glassyHoverProps = {
       },
     }),
   },
-};
-
-export const glassLink = style({
-  ...glassLinkBase,
-  ...glassyHoverProps,
 });
-
-export const glassyHover = style(glassyHoverProps);
 
 const glassLinkShineBase: ComplexStyleRule = {
   display: 'block',
@@ -87,10 +74,13 @@ const glassLinkShineBase: ComplexStyleRule = {
 
 export const glassLinkShine = style(glassLinkShineBase);
 
+export const glassyButtonHover = style({});
+
 globalStyle(
-  `${glassLink}:hover ${glassLinkShine}, 
-  ${glassyHover}:hover ${glassLinkShine}
-  `,
+  `.${glassLink}:hover ${glassLinkShine}, 
+   .${glassLink}:focus ${glassLinkShine},
+   .${glassyButtonHover}:hover ${glassLinkShine}, 
+   .${glassyButtonHover}:focus ${glassLinkShine}`,
   {
     transform: 'skewX(45deg) translateX(-220%)',
     opacity: 1,

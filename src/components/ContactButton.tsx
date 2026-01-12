@@ -16,10 +16,10 @@ import {
   shuttleExitDurationMs,
 } from '@/styles/components/contactButton.vars';
 
-import { scoopedGradient } from '../styles/components/cta.css';
+import { scoopedGradient } from '../styles/components/ctaHero.css';
 import {
   glassLinkShine,
-  glassyHover,
+  glassyButtonHover,
 } from '../styles/components/glassyButtons.css';
 
 type Phase = 'hidden' | 'entering' | 'shown' | 'exiting';
@@ -320,11 +320,7 @@ export default function ContactButton({
           <div className={s.payload}>
             <ContactDialogTrigger
               ref={linkRef}
-              className={clsx(
-                s.button,
-                glassyHover,
-                className,
-              )}
+              className={clsx(s.button, glassyButtonHover, className)}
               aria-label={label}
               data-phase={phase}
               aria-disabled={exiting ? 'true' : undefined}
@@ -350,10 +346,7 @@ export default function ContactButton({
               <div className={s.iconWrap}>
                 <div className={s.iconShell}>
                   <div className={s.iconTrack} data-phase={phase}>
-                    <SendIcon
-                      className={s.iconGlyph}
-                      data-phase={phase}
-                    />
+                    <SendIcon className={s.icon} data-phase={phase} />
                   </div>
                 </div>
                 <div

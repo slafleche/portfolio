@@ -1,0 +1,12 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+
+case "$BRANCH" in
+  main|staging|release)
+    yarn verify
+    ;;
+  *)
+    ;;
+esac

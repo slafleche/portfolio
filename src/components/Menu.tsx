@@ -18,6 +18,10 @@ import {
 } from '@/lib/useActiveAnchors';
 import * as s from '@/styles/components/menu.css.ts';
 
+import {
+  glassLinkShine,
+  glassyButtonHover,
+} from '../styles/components/glassyButtons.css';
 import { surface } from '../styles/glassy.css';
 import AnchorMenu from './AnchorMenu';
 import ContactButton from './ContactButton';
@@ -177,10 +181,15 @@ export default function Menu({
                 href={root}
                 prefetch={false}
                 aria-label={homeLabel}
-                className={clsx(s.homeLink, surface)}
+                className={clsx(
+                  s.homeLink,
+                  surface,
+                  glassyButtonHover,
+                )}
                 data-ui="link"
                 onClick={handleHomeClick}
               >
+                <div className={glassLinkShine} aria-hidden="true" />
                 <Logo idBase="nav-logo" />
               </Link>
             </li>
