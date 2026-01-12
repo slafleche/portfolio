@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { marked } from 'marked';
 import type { ComponentType, CSSProperties, SVGProps } from 'react';
 
 import * as s from '@/styles/components/hero.css';
@@ -10,6 +9,7 @@ import { GlassPanel } from './GlassPanel';
 import { HeroCta } from './HeroCta';
 import HeroGooey from './HeroGooey';
 import HeroWaypoint from './HeroWaypoint';
+import { renderInlineMarkdown } from './Markdown';
 
 type HeroCopy = {
   title: string;
@@ -73,14 +73,12 @@ export default function Hero({
                     <p
                       data-ui="paragraph"
                       className={s.subtitleMarkdown}
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          typeof marked.parseInline(copy.subtitle) ===
-                          'string'
-                            ? marked.parseInline(copy.subtitle)
-                            : '',
-                      }}
-                    ></p>
+                    >
+                      {renderInlineMarkdown(copy.subtitle, {
+                        openLinksInNewTab: true,
+                        asUi: { links: true },
+                      })}
+                    </p>
                   </div>
                 ) : null}
 

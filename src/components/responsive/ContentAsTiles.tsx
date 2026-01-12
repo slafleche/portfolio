@@ -157,7 +157,7 @@ export default function ContentAsTiles<
       },
       {
         x: m(15),
-        y: m(-14),
+        y: m(-164),
       },
       {
         x: m(-8),
@@ -165,7 +165,7 @@ export default function ContentAsTiles<
       },
       {
         x: m(11),
-        y: m(16),
+        y: m(-80),
       },
       {
         x: m(-14),
@@ -235,13 +235,14 @@ export default function ContentAsTiles<
             return (
               <Tile
                 key={`${tile.title}-${index}`}
-                title={tile.title}                
+                title={tile.title}
                 className={clsx(tileStyles.tilePanel, {
                   [tileStyles.tileA]: tileA,
                   [tileStyles.tileB]: tileB,
                   [tileStyles.tileC]: tileC,
                   [tileStyles.tileD]: tileD,
-                  [tileStyles.span2]: isOddNumberOfTiles && isLastTile,
+                  [tileStyles.span2]:
+                    isOddNumberOfTiles && isLastTile,
                 })}
                 bgOverlay={
                   <SoftTriangleIcon

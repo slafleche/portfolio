@@ -6,7 +6,10 @@ import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 
 import { createDomId } from '@/lib/dom';
-import { isLocaleRichText } from '@/lib/stringUtils';
+import {
+  isLocaleRichText,
+  sanitizeLocaleRichText,
+} from '@/lib/stringUtils';
 import * as s from '@/styles/components/accordion.css';
 
 import PlusIcon from './icons/Plus';
@@ -88,11 +91,17 @@ export function Accordion({
                 <span className={s.triggerLabel}>
                   {typeof item.heading === 'string' &&
                   isLocaleRichText(item.heading) ? (
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: item.heading,
-                      }}
-                    />
+                    (() => {
+                      const safe = sanitizeLocaleRichText(item.heading);
+                      if (!safe) return item.heading;
+                      return (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: safe,
+                          }}
+                        />
+                      );
+                    })()
                   ) : (
                     item.heading
                   )}
@@ -106,11 +115,19 @@ export function Accordion({
                       <span className={s.triggerSubtitleText}>
                         {typeof item.subHeading === 'string' &&
                         isLocaleRichText(item.subHeading) ? (
-                          <span
-                            dangerouslySetInnerHTML={{
-                              __html: item.subHeading,
-                            }}
-                          />
+                          (() => {
+                            const safe = sanitizeLocaleRichText(
+                              item.subHeading,
+                            );
+                            if (!safe) return item.subHeading;
+                            return (
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: safe,
+                                }}
+                              />
+                            );
+                          })()
                         ) : (
                           item.subHeading
                         )}

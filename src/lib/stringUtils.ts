@@ -82,3 +82,16 @@ export const isLocaleRichText = (
 
 export const toLocaleRichText = (value: string): LocaleRichText =>
   value as LocaleRichText;
+
+const ABBR_HTML_REGEX =
+  /^<abbr\s+title="[^"]*">[^<]*<\/abbr>$/i;
+
+export const sanitizeLocaleRichText = (
+  value: string,
+): string | null => {
+  const trimmed = value.trim();
+  if (ABBR_HTML_REGEX.test(trimmed)) {
+    return trimmed;
+  }
+  return null;
+};

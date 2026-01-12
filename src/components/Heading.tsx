@@ -1,6 +1,9 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
-import { isLocaleRichText } from '@/lib/stringUtils';
+import {
+  isLocaleRichText,
+  sanitizeLocaleRichText,
+} from '@/lib/stringUtils';
 
 export interface IHeadingDepth {
   depth?: 2 | 3 | 4 | 5 | 6;
@@ -26,11 +29,17 @@ export default function Heading({
   return (
     <Tag id={id} className={className} data-ui={ignoreDataUI ? undefined : "heading"} {...rest}>
       {typeof children === 'string' && isLocaleRichText(children) ? (
-        <span
-          dangerouslySetInnerHTML={{
-            __html: children,
-          }}
-        />
+        (() => {
+          const safe = sanitizeLocaleRichText(children);
+          if (!safe) return children;
+          return (
+            <span
+              dangerouslySetInnerHTML={{
+                __html: safe,
+              }}
+            />
+          );
+        })()
       ) : (
         children
       )}
