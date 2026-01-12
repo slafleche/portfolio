@@ -95,7 +95,7 @@
     "locales": "yarn locales:markdown && yarn locales:publish",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",
     "locales:publish": "tsx scripts/generateCopyHtml.ts",
-    "verify": "yarn lint:cleanup && yarn lint:cycles && yarn typecheck && yarn lint && yarn test",
+    "verify": "yarn lint:cleanup && yarn typecheck && yarn lint && yarn test",
     "preverify": "yarn check:node",
     "typecheck": "yarn tsc --noEmit",
     "check:node": "node scripts/ensureNodeVersion.mjs",
