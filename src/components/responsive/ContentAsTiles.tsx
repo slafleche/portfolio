@@ -241,8 +241,7 @@ export default function ContentAsTiles<
                   [tileStyles.tileB]: tileB,
                   [tileStyles.tileC]: tileC,
                   [tileStyles.tileD]: tileD,
-                  [tileStyles.span2]:
-                    isOddNumberOfTiles && isLastTile,
+                  [tileStyles.span2]: shouldSpanColumns,
                 })}
                 bgOverlay={
                   <SoftTriangleIcon

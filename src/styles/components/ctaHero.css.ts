@@ -48,21 +48,6 @@ const iconBumpFrames = {
 const iconBumpA = keyframes(iconBumpFrames);
 const iconBumpB = keyframes(iconBumpFrames);
 
-const textReactFrames = {
-  '0%': { transform: textTransform(0) },
-  [pct(anticipationMs + iconStrikeMs)]: {
-    transform: textTransform(0),
-  },
-  [pct(anticipationMs + iconStrikeMs + textMoveMs)]: {
-    transform: textTransform(textStrikeOffset),
-  },
-  [pct(anticipationMs + iconStrikeMs + textMoveMs + settleMs * 0.3)]:
-    { transform: textTransform(textStrikeOffshoot) },
-  '100%': { transform: textTransform(0) },
-};
-// const textReactA = keyframes(textReactFrames);
-// const textReactB = keyframes(textReactFrames);
-
 export const root = style({
   overflow: 'hidden',
   position: 'relative',
