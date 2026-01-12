@@ -102,6 +102,38 @@ describe('Markdown component', () => {
     expect(span?.textContent).toBe('world');
   });
 
+  it('renders abbr tags and decodes HTML entities inside', () => {
+    const { container } = render(
+      <Markdown
+        source={
+          'Moving to <abbr title="Research and Development">R&amp;D</abbr>.'
+        }
+      />,
+    );
+    const abbr = container.querySelector('abbr');
+    expect(abbr?.getAttribute('title')).toBe(
+      'Research and Development',
+    );
+    expect(abbr?.textContent).toBe('R&D');
+  });
+
+  it('renders element shortcodes from the allowlist', () => {
+    const { container } = render(
+      <Markdown source="Hello [element:NPMWordmark] there." />,
+    );
+    const svg = container.querySelector(
+      'svg[aria-label="Node Package Manager (NPM)"]',
+    );
+    expect(svg).not.toBeNull();
+  });
+
+  it('does not render disallowed inline HTML tags', () => {
+    const { container } = render(
+      <Markdown source={'Hello <script>alert("no")</script>!'} />,
+    );
+    expect(container.querySelector('script')).toBeNull();
+  });
+
   it('preserves blank lines inside fenced code blocks', () => {
     const { container } = render(
       <Markdown source={'```\nLine 1\n\nLine 3\n```'} />,

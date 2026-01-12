@@ -6,7 +6,10 @@ import { headingDecoration } from '@/styles/typography.css';
 import Heading from '../Heading';
 import Content, { type ContentBaseProps } from './Content';
 
-export type ContentWithTitleBaseProps = ContentBaseProps & {
+export type ContentWithTitleBaseProps = Omit<
+  ContentBaseProps,
+  'title'
+> & {
   title?: ReactNode;
   ignoreDataUI?: boolean;
   skipSectionMargin?: boolean;

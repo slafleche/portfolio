@@ -139,7 +139,9 @@ export const bgDecoration = style({
 export const tileIconPlaceholder = style({
   width: '44px',
   height: '44px',
-  marginBottom: '18px',
+  ...margins({
+    bottom: m(18),
+  }),
   ...borders({
     width: m(1),
     color: colorVars.white.alpha(0.2),
@@ -174,6 +176,7 @@ export const title = style({
     top: mEm(-0.18),
   }),
   ...paddings({
+    top: 0,
     bottom: mEm(1.3),
   }),
 });

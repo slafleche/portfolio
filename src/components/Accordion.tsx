@@ -8,12 +8,12 @@ import { useMemo } from 'react';
 import { createDomId } from '@/lib/dom';
 import {
   isLocaleRichText,
-  sanitizeLocaleRichText,
 } from '@/lib/stringUtils';
 import * as s from '@/styles/components/accordion.css';
 
 import PlusIcon from './icons/Plus';
 import RightArrow from './icons/RightArrow';
+import { renderInlineMarkdown } from './Markdown';
 
 type AccordionItemData = {
   id?: string;
@@ -91,17 +91,10 @@ export function Accordion({
                 <span className={s.triggerLabel}>
                   {typeof item.heading === 'string' &&
                   isLocaleRichText(item.heading) ? (
-                    (() => {
-                      const safe = sanitizeLocaleRichText(item.heading);
-                      if (!safe) return item.heading;
-                      return (
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: safe,
-                          }}
-                        />
-                      );
-                    })()
+                    renderInlineMarkdown(item.heading, {
+                      openLinksInNewTab: true,
+                      asUi: { links: true },
+                    })
                   ) : (
                     item.heading
                   )}
@@ -115,19 +108,10 @@ export function Accordion({
                       <span className={s.triggerSubtitleText}>
                         {typeof item.subHeading === 'string' &&
                         isLocaleRichText(item.subHeading) ? (
-                          (() => {
-                            const safe = sanitizeLocaleRichText(
-                              item.subHeading,
-                            );
-                            if (!safe) return item.subHeading;
-                            return (
-                              <span
-                                dangerouslySetInnerHTML={{
-                                  __html: safe,
-                                }}
-                              />
-                            );
-                          })()
+                          renderInlineMarkdown(item.subHeading, {
+                            openLinksInNewTab: true,
+                            asUi: { links: true },
+                          })
                         ) : (
                           item.subHeading
                         )}

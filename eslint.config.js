@@ -9,6 +9,7 @@ import promisePlugin from 'eslint-plugin-promise';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import unusedImports from 'eslint-plugin-unused-imports';
 import tseslint from 'typescript-eslint';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -166,6 +167,7 @@ export default [
     plugins: {
       import: importPlugin,
       'simple-import-sort': simpleImportSort,
+      'unused-imports': unusedImports,
     },
     settings: {
       'import/resolver': {
@@ -187,8 +189,21 @@ export default [
           ignoreExternal: true,
         },
       ],
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
     },
   },
   {

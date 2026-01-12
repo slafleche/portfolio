@@ -22,14 +22,11 @@ const totalMs = anticipationMs + iconStrikeMs + textMoveMs + settleMs;
 
 const iconBumpOffset = 10; // offset left on first phase
 const iconStrikeOffshoot = -5; // offset left after second phase
-const textStrikeOffset = 10; // offset right on first phase
-const textStrikeOffshoot = -2; // offset left after second phase
 
 const pct = (value: number) =>
   `${((value / totalMs) * 100).toFixed(2)}%`;
 const iconTransform = (x: number) =>
   `translateX(${x}px) rotate(135deg)`;
-const textTransform = (x: number) => `translateX(${x}px)`;
 
 const ANIM_EASEOUT = 'ease-out';
 
@@ -74,11 +71,6 @@ export const root = style({
       opacity: 1,
       pointerEvents: 'auto',
     },
-    // ...mediaQueryStyle({
-    //   compact: {
-    //     transform: 'scale(0.8)',
-    //   },
-    // }),
   },
 });
 

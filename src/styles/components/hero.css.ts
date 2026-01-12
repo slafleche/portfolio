@@ -35,6 +35,13 @@ export const root = style({
   ],
   overflow: 'hidden',
   isolation: 'isolate',
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        minHeight: 0,
+      },
+    }),
+  },
 });
 
 export const image = style({
@@ -122,6 +129,15 @@ export const main = style({
   ...paddings({
     vertical: m(100),
   }),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...margins({
+          bottom: 0,
+        }),
+      },
+    }),
+  },
 });
 
 export const subtitle = style({

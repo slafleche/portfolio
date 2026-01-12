@@ -54,6 +54,11 @@ type ElementShortcodeToken = {
   name: string;
 };
 
+const isElementShortcodeToken = (
+  token: MarkedToken | ElementShortcodeToken,
+): token is ElementShortcodeToken =>
+  token.type === 'element-shortcode';
+
 type RenderOptions = {
   openLinksInNewTab: boolean;
   asUi: AsUiConfig;
@@ -113,17 +118,42 @@ const parseAbbrTitle = (raw: string): string | null => {
 const isAbbrClose = (raw: string) =>
   raw.trim().toLowerCase() === '</abbr>';
 
+const inlineHtmlTagAllowList = new Set(['span']);
+
+const parseInlineHtmlOpenTag = (raw: string): string | null => {
+  const match = raw.match(/^<([a-z0-9-]+)(\s[^>]*)?>$/i);
+  if (!match || raw.endsWith('/>')) return null;
+  const tagName = match[1]?.toLowerCase() ?? '';
+  return inlineHtmlTagAllowList.has(tagName) ? tagName : null;
+};
+
+const parseInlineHtmlCloseTag = (raw: string): string | null => {
+  const match = raw.match(/^<\/([a-z0-9-]+)>$/i);
+  if (!match) return null;
+  const tagName = match[1]?.toLowerCase() ?? '';
+  return inlineHtmlTagAllowList.has(tagName) ? tagName : null;
+};
+
+const decodeHtmlEntities = (value: string): string =>
+  value
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+
 const renderInlineTokens = (
   tokens: Array<MarkedToken | ElementShortcodeToken>,
   options: RenderOptions,
   keyPrefix: string,
+  decodeEntities = false,
 ): ReactNode[] => {
   const nodes: ReactNode[] = [];
 
   for (let i = 0; i < tokens.length; i += 1) {
     const token = tokens[i];
 
-    if (token.type === 'element-shortcode') {
+    if (isElementShortcodeToken(token)) {
       const Element =
         elementLookup[
           token.name as keyof typeof elementLookup
@@ -170,8 +200,47 @@ const renderInlineTokens = (
                 innerTokens,
                 options,
                 `${keyPrefix}-abbr-${i}`,
+                true,
               )}
             </abbr>,
+          );
+          i = closedIndex;
+          continue;
+        }
+      }
+
+      const openTag = parseInlineHtmlOpenTag(raw);
+      if (openTag) {
+        const innerTokens: Array<
+          MarkedToken | ElementShortcodeToken
+        > = [];
+        let closedIndex = -1;
+
+        for (let j = i + 1; j < tokens.length; j += 1) {
+          const next = tokens[j];
+          if (next.type === 'html') {
+            const nextRaw =
+              (next as { text?: string }).text ?? '';
+            if (parseInlineHtmlCloseTag(nextRaw) === openTag) {
+              closedIndex = j;
+              break;
+            }
+          }
+          innerTokens.push(next);
+        }
+
+        if (closedIndex !== -1) {
+          nodes.push(
+            createElement(
+              openTag,
+              { key: `${keyPrefix}-${openTag}-${i}` },
+              renderInlineTokens(
+                innerTokens,
+                options,
+                `${keyPrefix}-${openTag}-${i}`,
+                true,
+              ),
+            ),
           );
           i = closedIndex;
           continue;
@@ -194,11 +263,15 @@ const renderInlineTokens = (
               textToken.tokens,
               options,
               `${keyPrefix}-text-${i}`,
+              decodeEntities,
             ),
           );
           break;
         }
-        nodes.push(textToken.text ?? '');
+        const textValue = textToken.text ?? '';
+        nodes.push(
+          decodeEntities ? decodeHtmlEntities(textValue) : textValue,
+        );
         break;
       }
       case 'strong': {

@@ -7,7 +7,7 @@ import type {
 } from 'react';
 
 import SoftTriangleIcon from '@/components/icons/SoftTriangleIcon';
-import { Markdown } from '@/components/Markdown';
+import { Markdown, renderInlineMarkdown } from '@/components/Markdown';
 import Tile from '@/components/Tile';
 import TileGrid from '@/components/TileGrid';
 import * as tileStyles from '@/styles/components/tiles.css';
@@ -235,7 +235,10 @@ export default function ContentAsTiles<
             return (
               <Tile
                 key={`${tile.title}-${index}`}
-                title={tile.title}
+                title={renderInlineMarkdown(tile.title, {
+                  openLinksInNewTab: true,
+                  asUi: { links: true },
+                })}
                 className={clsx(tileStyles.tilePanel, {
                   [tileStyles.tileA]: tileA,
                   [tileStyles.tileB]: tileB,
