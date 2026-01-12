@@ -1,14 +1,20 @@
 ## Expertise
-Type-safe CSS primitives for building **your** design system
-Turn fragmented UI work into a stable, composable foundation. The focus is on
-early architectural decisions that keep teams shipping fast as the system
-scales.
+
+Type-safe CSS primitives for building **your** design system Turn fragmented UI
+work into a stable, composable foundation. The focus is on early architectural
+decisions that keep teams shipping fast as the system scales.
 
 ### Custom design systems
 
 Design and implement custom UI and design systems that can evolve without
 constant rewrites. The focus is on turning design intent into coherent,
 composable systems rather than accumulating one-off solutions.
+
+### Long-term evolution
+
+Optimize systems for long-term evolution. Emphasis is placed on replaceability,
+incremental change, and avoiding decisions that lock teams into structures that
+no longer fit the project.
 
 ### Designer–engineer collaboration
 
@@ -17,7 +23,7 @@ and constraints into primitives, components, helpers, and tokens that compose
 consistently across a product. This reduces friction between design and
 engineering and keeps systems aligned with product intent.
 
-### Theming and cross-application systems
+### Theming & shared systems
 
 Design and implement theming systems, including shared theming across multiple
 applications and stacks. This includes environments where legacy systems and
@@ -31,9 +37,3 @@ Work across heterogeneous environments, including PHP, Java, Node, and modern
 frontend stacks. This often involves navigating imperfect codebases, identifying
 the underlying system within ad-hoc implementations, and reshaping them
 incrementally without requiring full rewrites.
-
-### Long-term evolution
-
-Optimize systems for long-term evolution. Emphasis is placed on replaceability,
-incremental change, and avoiding decisions that lock teams into structures that
-no longer fit the project.

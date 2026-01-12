@@ -1,6 +1,6 @@
 ## Architecture
 
-The system has clear boundaries: typed inputs at the start, plain CSS at the end, and flexible composition in between. This shape keeps styling predictable, inspectable, and adaptable as requirements change.
+The system has clear boundaries: typed inputs at the start, plain [abbr:CSS] at the end, and flexible composition in between. This shape keeps styling predictable, inspectable, and adaptable as requirements change.
 
 
 ### Typed inputs at the boundary
@@ -12,14 +12,15 @@ inconsistent values harder to express accidentally.
 ### Clear start and clear end
 
 The system is defined by its boundaries. Structure and constraints exist at
-authoring time, while the final output is plain, spec-compliant CSS. CSS remains
+authoring time, while the final output is plain, spec-compliant [abbr:CSS]. [abbr:CSS] remains
 the source of truth, not an abstracted dialect.
 
-### Meaning applied through domain helpers
+### Semantic intent, real [abbr:CSS]
 
-Domain helpers apply semantic meaning to values without redefining the platform.
-They map intent to real CSS properties while keeping the underlying output
-legible and familiar.
+Domain abstractions attach meaning to values without changing the platform.
+They map intent to real [abbr:CSS] properties while keeping the output legible and
+familiar.
+
 
 ### Flexible composition in the middle
 

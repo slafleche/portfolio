@@ -16,12 +16,6 @@ Systems are built up through composition rather than rigid abstractions.
 Decisions are encoded once at the system level and reused consistently, reducing
 rework and accidental inconsistency as the system grows.
 
-### Clear boundaries and constraints
-
-Separation of concerns allows parts of the system to evolve independently.
-Constraints are applied deliberately to reduce accidental complexity and keep
-the system understandable over time.
-
 ### Respect the platform
 
 Platform specifications remain visible and authoritative. Output is kept
@@ -33,3 +27,9 @@ change harder.
 System design accounts for users, product vision, and the developers who will
 maintain it. Tools are chosen pragmatically based on project needs, not
 ideology.
+
+### Clear boundaries and constraints
+
+Separation of concerns allows parts of the system to evolve independently.
+Constraints are applied deliberately to reduce accidental complexity and keep
+the system understandable over time.

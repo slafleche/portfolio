@@ -27,6 +27,10 @@ export default function Tile({
         <Heading depth={3} className={s.title}>
           {contentTitle}
         </Heading>
+        <div
+          aria-hidden={true}
+          className={s.separator}
+        />
         {children}
       </div>
       {bgOverlay}

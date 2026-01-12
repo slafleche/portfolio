@@ -1,5 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
+import { m, mEm } from 'css-calipers';
 
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import {
@@ -14,6 +14,7 @@ import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
+import { textShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { fontStylesFromFontVariant } from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
@@ -27,6 +28,17 @@ export const grid = style({
     ...mediaQueryStyle({
       snug: {
         gridTemplateColumns: '1fr',
+      },
+    }),
+  },
+});
+
+export const span2 = style({
+  gridColumn: 'span 2',
+  selectors: {
+    ...mediaQueryStyle({
+      snug: {
+        gridColumn: 'span 1',
       },
     }),
   },
@@ -46,18 +58,21 @@ export const tileC = style({});
 
 export const tileD = style({});
 
+const paddingDefault = m(36);
+const paddingTight = anchorMenuVars.handle.sizeWithBorder;
+
 export const root = style({
   position: 'relative',
   height: '100%',
 
   ...borders.radii(borderVars),
-  ...paddings(m(36)),
+  ...paddings(paddingDefault),
   selectors: {
     ...mediaQueryStyle({
       snug: {
         ...paddings({
-          vertical: m(36),
-          horizontal: anchorMenuVars.handle.sizeWithBorder,
+          vertical: paddingDefault,
+          horizontal: paddingTight,
         }),
       },
     }),
@@ -67,6 +82,13 @@ export const root = style({
 export const content = style({
   position: 'relative',
   zIndex: 2,
+  fontSize: '18px',
+  ...textShadow({
+    x: m(1),
+    y: m(1),
+    blur: m(2),
+    color: colorVars.black,
+  }),
 });
 
 export const tilePanel = style({
@@ -129,18 +151,54 @@ export const tilePanelSurface = style({
   height: '100%',
 });
 
+const titleLineHeight = 1.2;
+
 export const title = style({
-  ...borders({
-    bottom: {
-      width: m(1),
-      color: colorVars.white.alpha(0.2),
-    },
-  }),
-  ...margins({
-    bottom: m(1, 'em'),
+  display: 'block',
+  ...textShadow({
+    x: m(1),
+    y: m(1),
+    blur: m(2),
+    color: colorVars.black,
   }),
   ...fontStylesFromFontVariant({
     variant: typographyFontVariants.h3,
     baseVariant: typographyFontVariants.heading,
+    extraConfig: {
+      styleOverrides: {
+        lineHeight: titleLineHeight,
+      },
+    },
   }),
+  ...margins({
+    top: mEm(-0.18),
+  }),
+  ...paddings({
+    bottom: mEm(1.3),
+  }),
+});
+
+export const separator = style({
+  width: `calc(100% + ${paddingDefault.double().css()})`,
+  ...margins({
+    left: paddingDefault.negation(),
+    bottom: paddingDefault,
+  }),
+  ...borders({
+    bottom: {
+      width: m(0.5),
+      color: colorVars.white.alpha(0.5),
+    },
+  }),
+  selectors: {
+    ...mediaQueryStyle({
+      snug: {
+        width: `calc(100% + ${paddingTight.double().css()})`,
+        ...margins({
+          left: paddingTight.negation(),
+          bottom: paddingTight,
+        }),
+      },
+    }),
+  },
 });

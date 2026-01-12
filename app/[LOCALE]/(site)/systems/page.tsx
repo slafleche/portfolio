@@ -28,7 +28,6 @@ import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
 import WordMarkInTitle from '../../../../src/components/WordmarkInTitle';
 import NPMWordmark from '../../../../src/components/wordmarks/NPMWordmark';
 import {
-  npmLinkInTitle,
   npmLinkInTitleIcon,
   npmLinkInTitleLink,
 } from '../../../../src/styles/typography.css';

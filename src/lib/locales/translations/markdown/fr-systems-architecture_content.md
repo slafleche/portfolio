@@ -1,8 +1,9 @@
 ## Architecture
 
-Le système a des frontières claires : entrées typées au début, CSS simple à la
-fin, et composition flexible entre les deux. Cette structure garde le styling
-prévisible, inspectable et adaptable à mesure que les exigences changent.
+Le système a des frontières claires : entrées typées au début, [abbr:CSS] simple
+à la fin, et composition flexible entre les deux. Cette structure garde le
+styling prévisible, inspectable et adaptable à mesure que les exigences
+changent.
 
 ### Entrées typées aux frontières
 
@@ -18,11 +19,11 @@ existent au moment de l’écriture, tandis que le résultat final est du [abbr:
 simple et conforme aux spécifications. Le [abbr:CSS] reste la source de vérité,
 pas un dialecte abstrait.
 
-### Signification appliquée via des helpers métier
+### Intention sémantique, CSS réel
 
-Les helpers métier appliquent une signification sémantique aux valeurs sans
-redéfinir la plateforme. Ils relient l’intention aux vraies propriétés
-[abbr:CSS], tout en gardant le rendu sous-jacent lisible et familier.
+Les abstractions de domaine donnent du sens aux valeurs sans changer la
+plateforme. Elles traduisent l’intention en propriétés CSS réelles tout en
+gardant le rendu lisible et familier.
 
 ### Composition flexible au milieu
 

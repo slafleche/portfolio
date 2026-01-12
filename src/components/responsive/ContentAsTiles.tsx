@@ -191,6 +191,8 @@ export default function ContentAsTiles<
     return transformValues.scale[(i + resolvedScaleOffset) % size];
   };
 
+  const isOddNumberOfTiles = tiles.length % 2 === 1;
+
   return (
     <ContentWithTitle
       tag={tag}
@@ -216,6 +218,9 @@ export default function ContentAsTiles<
             const tileB = (index + resolvedBgOffset) % 4 === 1;
             const tileC = (index + resolvedBgOffset) % 4 === 2;
             const tileD = (index + resolvedBgOffset) % 4 === 3;
+            const isLastTile = index === tiles.length - 1;
+            const shouldSpanColumns =
+              isOddNumberOfTiles && isLastTile;
 
             const translation = getTranslationFromOffset(index);
             const rotation = getRotationFromOffset(index);
@@ -230,12 +235,13 @@ export default function ContentAsTiles<
             return (
               <Tile
                 key={`${tile.contentTitle}-${index}`}
-                contentTitle={tile.contentTitle}
+                contentTitle={tile.contentTitle}                
                 className={clsx(tileStyles.tilePanel, {
                   [tileStyles.tileA]: tileA,
                   [tileStyles.tileB]: tileB,
                   [tileStyles.tileC]: tileC,
                   [tileStyles.tileD]: tileD,
+                  [tileStyles.span2]: isOddNumberOfTiles && isLastTile,
                 })}
                 bgOverlay={
                   <SoftTriangleIcon

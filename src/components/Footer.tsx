@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import type { ContactCopy } from '@/lib/locales/sections/contact.locale';
 import { sharedStrings } from '@/lib/sharedStrings';
@@ -67,7 +69,10 @@ export default function Footer({
             title={contact.emailLabel}
           >
             <div className={glassLinkShine} aria-hidden="true" />
-            <ContactIcon className={s.contactIcon} aria-hidden />
+            <ContactIcon
+              className={clsx(s.contactIcon, s.icon)}
+              aria-hidden
+            />
           </ContactDialogTrigger>
           <GlassyLink
             href={sharedStrings.linkedInUrl}
@@ -76,7 +81,9 @@ export default function Footer({
             target="_blank"
           >
             <div className={glassLinkShine} aria-hidden="true" />
-            <SocialLinkedInIcon className={s.linkedInIcon} />
+            <SocialLinkedInIcon
+              className={clsx(s.linkedInIcon, s.icon)}
+            />
           </GlassyLink>
           <GlassyLink
             href={sharedStrings.githubUrl}
@@ -85,7 +92,9 @@ export default function Footer({
             target="_blank"
           >
             <div className={glassLinkShine} aria-hidden="true" />
-            <SocialGitHubIcon className={s.gitHubIcon} />
+            <SocialGitHubIcon
+              className={clsx(s.gitHubIcon, s.icon)}
+            />
           </GlassyLink>
         </div>
       </Content>

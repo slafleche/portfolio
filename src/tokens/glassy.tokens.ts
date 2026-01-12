@@ -48,7 +48,7 @@ export const glassVars = {
     gap: m(40),
     size: m(100),
     hoverFocus: {
-      scale: 1.2,
+      scale: 1.1,
     },
   },
 } as const;

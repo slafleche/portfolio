@@ -18,6 +18,7 @@ import {
   componentMediaQueries,
   mediaQueryStyle,
 } from '../responsive/mediaQueries';
+import { glassLink } from './glassyButtons.css';
 
 export const root = style({
   position: 'relative',
@@ -107,3 +108,11 @@ const iconBase: ComplexStyleRule = {
 export const contactIcon = style(iconBase);
 export const linkedInIcon = style(iconBase);
 export const gitHubIcon = style(iconBase);
+
+export const icon = style({
+  transition: `transform 0.3s ease-out 0.1s`,
+});
+
+globalStyle(`.${glassLink}:hover .${icon}`, {
+  transform: `scale(1.2)`,
+});

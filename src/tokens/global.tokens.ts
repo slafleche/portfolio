@@ -90,6 +90,8 @@ const triangleC_color_b = electricBlue.alpha(triangleC_alpha);
 const triangleC_color_c = electricBlue.alpha(triangleC_alpha);
 const triangleC_color_d = electricBlue.alpha(triangleC_alpha);
 
+const cardGradientAlpha = 0.8;
+
 export const themeColours = {
   brand,
   secondary,
@@ -157,29 +159,53 @@ export const themeColours = {
       a: {
         angle: m(45, 'deg'),
         stops: [
-          { color: color('#573f97'), at: mPercent(0) },
-          { color: color('#9d4e9c'), at: mPercent(100) },
+          {
+            color: color('#573f97').alpha(cardGradientAlpha),
+            at: mPercent(0),
+          },
+          {
+            color: color('#9d4e9c').alpha(cardGradientAlpha),
+            at: mPercent(100),
+          },
         ],
       } as LinearOpts,
       b: {
         angle: m(72, 'deg'),
         stops: [
-          { color: color('#ed79a8'), at: mPercent(0) },
-          { color: color('#e6a87f'), at: mPercent(100) },
+          {
+            color: color('#ed79a8').alpha(cardGradientAlpha),
+            at: mPercent(0),
+          },
+          {
+            color: color('#e6a87f').alpha(cardGradientAlpha),
+            at: mPercent(100),
+          },
         ],
       } as LinearOpts,
       c: {
         angle: m(120, 'deg'),
         stops: [
-          { color: color('#5b4199'), at: mPercent(0) },
-          { color: color('#34d399'), at: mPercent(100) },
+          {
+            color: color('#5b4199').alpha(cardGradientAlpha),
+            at: mPercent(0),
+          },
+          {
+            color: color('#34d399').alpha(cardGradientAlpha),
+            at: mPercent(100),
+          },
         ],
       } as LinearOpts,
       d: {
         angle: m(33, 'deg'),
         stops: [
-          { color: color('#88dbfc'), at: mPercent(0) },
-          { color: color('#573f97'), at: mPercent(100) },
+          {
+            color: color('#88dbfc').alpha(cardGradientAlpha),
+            at: mPercent(0),
+          },
+          {
+            color: color('#573f97').alpha(cardGradientAlpha),
+            at: mPercent(100),
+          },
         ],
       } as LinearOpts,
     },

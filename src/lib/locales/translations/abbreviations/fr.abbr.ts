@@ -63,4 +63,8 @@ export const frAbbreviations = {
     label: 'ESLint',
     definition: "Outil d'analyse statique JavaScript",
   },
+  'abbr-npm': {
+    label: 'NPM',
+    definition: 'Node Package Manager',
+  },
 } as const;

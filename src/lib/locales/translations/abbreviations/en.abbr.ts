@@ -63,4 +63,8 @@ export const enAbbreviations = {
     label: 'ESLint',
     definition: 'JavaScript linting tool for ECMAScript code',
   },
+  'abbr-npm': {
+    label: 'NPM',
+    definition: 'Node Package Manager',
+  },
 } as const;

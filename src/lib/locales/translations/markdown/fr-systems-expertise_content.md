@@ -1,9 +1,9 @@
 ## Expertise
 
-Primitives CSS typées pour structurer votre système de design
-Transformer un travail UI fragmenté en base stable et composable. L’objectif
-est de poser des décisions d’architecture tôt pour garder les équipes efficaces
-à mesure que le système grandit.
+Primitives CSS typées pour structurer votre système de design Transformer un
+travail UI fragmenté en base stable et composable. L’objectif est de poser des
+décisions d’architecture tôt pour garder les équipes efficaces à mesure que le
+système grandit.
 
 ### Design systems sur mesure
 
@@ -11,6 +11,13 @@ Conception et mise en œuvre de systèmes d’interface et de design adaptés au
 contexte du produit. Le travail consiste à transformer l’intention de design en
 structures cohérentes et composables, plutôt qu’en solutions ponctuelles
 difficiles à faire évoluer.
+
+### Évolution dans le temps
+
+Conception de systèmes pensés pour durer. L’accent est mis sur la
+remplaçabilité, les changements incrémentaux et l’évitement de décisions qui
+rendent l’évolution du produit coûteuse ou rigide.
+
 
 ### Collaboration avec les designers
 
@@ -26,15 +33,9 @@ entre plusieurs applications ou produits. Cela comprend des contextes où des
 systèmes existants et des applications plus récentes doivent coexister sur une
 base commune.
 
-### Environnements hétérogènes et code existant
+### Environnements mixtes et code existant
 
 Travail dans des environnements variés (PHP, Java, Node, stacks front-end
 modernes). Une part importante du travail consiste à intervenir dans des
 codebases existantes, à identifier les structures sous-jacentes et à les faire
 évoluer progressivement sans réécriture complète.
-
-### Évolution dans le temps
-
-Conception de systèmes pensés pour durer. L’accent est mis sur la
-remplaçabilité, les changements incrémentaux et l’évitement de décisions qui
-rendent l’évolution du produit coûteuse ou rigide.
