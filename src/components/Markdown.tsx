@@ -8,6 +8,7 @@ import type {
 } from 'react';
 import { createElement, memo } from 'react';
 
+import GitHubWordmark from '@/components/wordmarks/GitHubWordmark';
 import NPMWordmark from '@/components/wordmarks/NPMWordmark';
 import { createElementShortcodeExtension } from '@/lib/markdown/elementShortcode';
 
@@ -62,6 +63,7 @@ const elementShortcodeExtension = createElementShortcodeExtension();
 marked.use({ extensions: [elementShortcodeExtension] });
 
 const elementLookup = {
+  GitHubWordmark,
   NPMWordmark,
 } as const;
 
@@ -586,12 +588,15 @@ function MarkdownBase({
   );
 
   const Tag = tag ?? 'div';
-  return createElement(Tag, {
-    id,
-    className: clsx(className, userContent),
-    ...rest,
-    children: content,
-  });
+  return createElement(
+    Tag,
+    {
+      id,
+      className: clsx(className, userContent),
+      ...rest,
+    },
+    content,
+  );
 }
 
 export const Markdown = memo(MarkdownBase);

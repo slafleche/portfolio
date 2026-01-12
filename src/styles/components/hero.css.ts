@@ -29,7 +29,7 @@ export const root = style({
   alignItems: 'center',
   position: 'relative',
   width: '100%',
-  height: [
+  minHeight: [
     '100vh',
     '100dvh',
   ],

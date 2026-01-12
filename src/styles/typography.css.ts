@@ -45,11 +45,6 @@ globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {
   ...margins(textStyleVars.paragraph.margins),
   color: colorVars.bodyFg.css(),
 });
-globalStyle(`.${userContent} p[data-last="true"]`, {
-  ...margins({
-    bottom: m(0),
-  }),
-});
 
 globalStyle(`p`, {
   display: 'block',
@@ -190,6 +185,27 @@ export const npmLinkInTitleIcon = style({
 globalStyle(
   `.${npmLinkInTitleLink}:hover .${npmLinkInTitleIcon}, 
   .${npmLinkInTitleLink}:focus .${npmLinkInTitleIcon}`,
+  {
+    color: linkRules.hover.color.css(),
+  },
+);
+
+export const githubLinkInTitleLink = style({
+  display: 'inline-block',
+});
+
+export const githubLinkInTitleIcon = style({
+  display: 'inline-block',
+  justifySelf: 'center',
+  height: '1em',
+  width: 'auto',
+  transform: 'translateY(0.05em)',
+  color: linkRules.default.color.css(),
+});
+
+globalStyle(
+  `.${githubLinkInTitleLink}:hover .${githubLinkInTitleIcon}, 
+  .${githubLinkInTitleLink}:focus .${githubLinkInTitleIcon}`,
   {
     color: linkRules.hover.color.css(),
   },

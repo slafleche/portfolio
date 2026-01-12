@@ -63,7 +63,7 @@ const loadLocaleMessages = async (
 
 const SYSTEMS_MARKDOWN_KEYS = new Set([
   'architecture-content',
-  'blurb-content',
+  'calipers-content',
   'expertise-content',
   'principles-content',
 ]);

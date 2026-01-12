@@ -286,6 +286,12 @@ for (let level = 1; level <= 6; level++) {
       includeFontMargins: true,
     }),
   });
+  globalStyle(
+    `h${level}:not([data-ui="heading"])[data-first="true"]`,
+    {
+      ...paddings({ top: 0 }),
+    },
+  );
 }
 
 globalStyle("*, *:after, *:before, input[type='search']", {

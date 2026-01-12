@@ -176,7 +176,7 @@ export default async function HomePage({
             >
               <Markdown source={approach.content} />
             </ContentWithTitle>
-            <hr />
+            
             {/* About */}
             <ContentWithTitle
               id={about.href}
@@ -185,7 +185,7 @@ export default async function HomePage({
             >
               <Markdown source={about.content} />
             </ContentWithTitle>
-            <hr />
+            
             {/* Case Study */}
             <CaseStudy
               id={caseStudies.href}
@@ -216,7 +216,7 @@ export default async function HomePage({
                 />
               </DeferredIsland>
             </CaseStudy>
-            <hr />
+            
             {/* Projects */}
             <ContentWithTitle
               id={projects.href}

@@ -1,6 +1,9 @@
 import { m, mEm, mPercent, mRem } from 'css-calipers';
 
-import { defineFontVariant, type FontVariantMap } from '../../styles/helpers/typography.helper';
+import {
+  defineFontVariant,
+  type FontVariantMap,
+} from '../../styles/helpers/typography.helper';
 import { fontFamilies } from '../fontFamilies.tokens';
 
 const SOURCE_PATH = 'src/tokens/fontVariants/typography.ts';
@@ -29,7 +32,8 @@ export const typographyFontVariants = {
       options: {
         textAlign: 'left',
         letterSpacing: mEm(0.04),
-        offsetBottom: mRem(0.1),
+        offsetBottom: mRem(0.8),
+        paddingTop: mRem(1.8),
         weightPercents: {
           default: mPercent(0),
         },

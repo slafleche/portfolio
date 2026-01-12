@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { type IMeasurement, m, mDeg } from 'css-calipers';
+import { m, mDeg } from 'css-calipers';
 import type {
   ComponentPropsWithoutRef,
   ElementType,

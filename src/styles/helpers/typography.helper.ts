@@ -42,10 +42,11 @@ export type FontCSS = Partial<
     | 'fontOpticalSizing'
     | 'marginTop'
     | 'marginBottom'
+    | 'paddingTop'
   >
 >;
 
-export type FontVariantDefinition<  
+export type FontVariantDefinition<
   Family extends
     | FontFamilyDef
     | FontFamilyForPercentWeights = FontFamilyDef,
@@ -194,6 +195,7 @@ const combineConfig = (
     letterSpacing: resolveOptionValue('letterSpacing'),
     offsetToFlushTop: resolveOptionValue('offsetToFlushTop'),
     offsetBottom: resolveOptionValue('offsetBottom'),
+    paddingTop: resolveOptionValue('paddingTop'),
     weightPercents: mergedWeightPercents,
   };
 
@@ -503,6 +505,9 @@ export function fontStyles(vars: FontStyles): FontCSS {
       ? vars.lineHeight.css()
       : vars.lineHeight;
   }
+  if (hasCssMethod(vars.paddingTop)) {
+    out.paddingTop = vars.paddingTop.css();
+  }
 
   // weight (either field may exist)
   const normalizedWeight = resolveFontWeight(vars);
@@ -590,6 +595,7 @@ export type ComposeFontStylesOptions = {
   textTransform?: CSS_TYPES.Property.TextTransform;
   letterSpacing?: IMeasurement;
   offsetToFlushTop?: IMeasurement;
+  paddingTop?: IMeasurement;
   offsetBottom?: IMeasurement;
   weightPercents?: FontWeightPercentOptions;
 };
@@ -706,6 +712,10 @@ export function composeFontStyles(
   }
   if (options?.letterSpacing != null) {
     merged.letterSpacing = options.letterSpacing;
+  }
+
+  if (options?.paddingTop != null) {
+    merged.paddingTop = options.paddingTop;
   }
 
   if (overrides) {

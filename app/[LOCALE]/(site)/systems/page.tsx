@@ -1,4 +1,3 @@
-import Link from 'next/link';
 
 import { getLocaleSvgs } from '@/assets/SVG/generated/headingsAsSvgs';
 import DeferredIsland from '@/components/DeferredIsland';
@@ -25,12 +24,8 @@ import * as layoutStyles from '@/styles/layout.css';
 
 import ContentWithTitle from '../../../../src/components/responsive/ContentWithTitle';
 import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
-import WordMarkInTitle from '../../../../src/components/WordmarkInTitle';
-import NPMWordmark from '../../../../src/components/wordmarks/NPMWordmark';
-import {
-  npmLinkInTitleIcon,
-  npmLinkInTitleLink,
-} from '../../../../src/styles/typography.css';
+
+
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -59,7 +54,7 @@ export default async function SystemsPage({
   const systemsShapeId = translator('systems-architecture-href');
   const systemsShapeTitle = translator('systems-architecture');
   const systemsShapeMarkdown = translator('architecture-content');
-  const systemsShapeBlurbMarkdown = translator('blurb-content');
+  const systemsShapeCSSCalipersMarkdown = translator('calipers-content');
   const localeSvgs = getLocaleSvgs(locale);
   const heroCopy = {
     ...heroCopyBase,
@@ -143,7 +138,7 @@ export default async function SystemsPage({
               title={systemsTitle}
               markdown={systemsIntroMarkdown}
             />
-            <hr />
+            
             {/* Principles */}
             <ContentAsTiles
               id={systemsPrinciplesId}
@@ -154,7 +149,7 @@ export default async function SystemsPage({
               scaleOffset={1}
               translateOffset={4}
             />
-            <hr />
+            
             {/* Architecture */}
             <ContentAsTiles
               id={systemsShapeId}
@@ -165,7 +160,7 @@ export default async function SystemsPage({
               scaleOffset={4}
               translateOffset={3}
             />
-            <hr />
+            
             {/* CSS Calipers */}
             <ContentWithTitle
               id="css-calipers"
@@ -175,7 +170,7 @@ export default async function SystemsPage({
                   .fullText
               }
             >
-              <Markdown source={systemsShapeBlurbMarkdown} />
+              <Markdown source={systemsShapeCSSCalipersMarkdown} />
             </ContentWithTitle>
           </DeferredIsland>
         </main>

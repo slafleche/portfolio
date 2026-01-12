@@ -1,7 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 
-import { glassVars } from '../../tokens/glassy.tokens';
 import {
   colors,
   colorVars,
@@ -16,7 +15,6 @@ import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { measureHypotenuse } from '../helpers/utils.helper';
-import { mediaQueryStyle } from '../responsive/mediaQueries';
 import {
   buttonRadius,
   buttonSizePx,

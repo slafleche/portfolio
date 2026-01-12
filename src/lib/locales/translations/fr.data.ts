@@ -81,7 +81,7 @@ const frBaseData = {
   'systems-architecture': 'Forme du système',
   'systems-architecture-href': 'systems-forme-du-systeme',
   ...markdownRefs('architecture-content'),
-  ...markdownRefs('blurb-content'),
+  ...markdownRefs('calipers-content'),
   'systems-back-home-label': "Retour à la page d'accueil",
   'systems-link-label': 'Naviguez vers la page Systèmes',
   'systems-mock-html-alt':

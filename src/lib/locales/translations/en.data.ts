@@ -81,7 +81,7 @@ const enBaseData = {
   'systems-architecture': 'Architecture',
   'systems-architecture-href': 'systems-architecture',
   ...markdownRefs('architecture-content'),
-  ...markdownRefs('blurb-content'),
+  ...markdownRefs('calipers-content'),
   'systems-back-home-label': 'Back to home',
   'systems-link-label': 'Open systems page',
   'systems-mock-html-alt':
