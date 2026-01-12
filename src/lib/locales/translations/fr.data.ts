@@ -107,8 +107,7 @@ const frBaseData = {
   'privacy-href': 'confidentialite',
   ...markdownRefs('privacy-content'),
 
-  css_calipers:
-    'CSS Calipers (maintenant disponible sur [wordmark:NPM])',
+  css_calipers: 'CSS Calipers',
 } as const;
 
 export const frData = mergeLocaleSections(

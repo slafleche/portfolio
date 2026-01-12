@@ -25,7 +25,7 @@ type RandomizeBg = {
 
 type BaseProps<T extends ElementType> = {
   tag?: T;
-  contentTitle?: ReactNode;
+  title?: ReactNode;
   headingDepth?: 2 | 3 | 4 | 5 | 6;
   className?: string;
   randomizedBg?: RandomizeBg;
@@ -40,7 +40,7 @@ type ContentAsTilesProps<T extends ElementType> = BaseProps<T> & {
 };
 
 type TileSlice = {
-  contentTitle: string;
+  title: string;
   body: string;
 };
 
@@ -61,7 +61,7 @@ function parseMarkdownIntoTiles(markdown: string): ParsedMarkdown {
     if (!currentTitle) return;
     const body = currentBodyLines.join('\n').trim();
     tiles.push({
-      contentTitle: currentTitle,
+      title: currentTitle,
       body,
     });
   };
@@ -96,7 +96,7 @@ export default function ContentAsTiles<
 >(props: ContentAsTilesProps<T>) {
   const {
     tag,
-    contentTitle,
+    title,
     headingDepth,
     className,
     markdown,
@@ -196,7 +196,7 @@ export default function ContentAsTiles<
   return (
     <ContentWithTitle
       tag={tag}
-      contentTitle={contentTitle}
+      title={title}
       ignoreDataUI={true}
       headingDepth={headingDepth}
       className={className}
@@ -234,8 +234,8 @@ export default function ContentAsTiles<
 
             return (
               <Tile
-                key={`${tile.contentTitle}-${index}`}
-                contentTitle={tile.contentTitle}                
+                key={`${tile.title}-${index}`}
+                title={tile.title}                
                 className={clsx(tileStyles.tilePanel, {
                   [tileStyles.tileA]: tileA,
                   [tileStyles.tileB]: tileB,

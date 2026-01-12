@@ -1,5 +1,3 @@
-## Expertise
-
 Type-safe CSS primitives for building **your** design system Turn fragmented UI
 work into a stable, composable foundation. The focus is on early architectural
 decisions that keep teams shipping fast as the system scales.

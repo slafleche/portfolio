@@ -1,5 +1,3 @@
-## Architecture
-
 Le système a des frontières claires : entrées typées au début, [abbr:CSS] simple
 à la fin, et composition flexible entre les deux. Cette structure garde le
 styling prévisible, inspectable et adaptable à mesure que les exigences

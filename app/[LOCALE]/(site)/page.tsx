@@ -168,22 +168,25 @@ export default async function HomePage({
             )}
           />
           <DeferredIsland when="idle">
+            {/* Approach */}
             <ContentWithTitle
               id={approach.href}
-              contentTitle={approach.title}
+              title={approach.title}
               ignoreDataUI={true}
             >
               <Markdown source={approach.content} />
             </ContentWithTitle>
             <hr />
+            {/* About */}
             <ContentWithTitle
               id={about.href}
-              contentTitle={about.title}
+              title={about.title}
               ignoreDataUI={true}
             >
               <Markdown source={about.content} />
             </ContentWithTitle>
             <hr />
+            {/* Case Study */}
             <CaseStudy
               id={caseStudies.href}
               intro={caseStudies.intro}
@@ -214,9 +217,10 @@ export default async function HomePage({
               </DeferredIsland>
             </CaseStudy>
             <hr />
+            {/* Projects */}
             <ContentWithTitle
               id={projects.href}
-              contentTitle={projects.title}
+              title={projects.title}
               ignoreDataUI={true}
               className={layoutStyles.sectionSpacing}
               queryDataAttributes={{

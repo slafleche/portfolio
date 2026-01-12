@@ -1,5 +1,3 @@
-## Architecture
-
 The system has clear boundaries: typed inputs at the start, plain [abbr:CSS] at the end, and flexible composition in between. This shape keeps styling predictable, inspectable, and adaptable as requirements change.
 
 

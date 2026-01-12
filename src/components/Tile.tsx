@@ -6,7 +6,7 @@ import * as s from '@/styles/components/tiles.css.ts';
 import Heading from './Heading';
 
 type TileProps = {
-  contentTitle: ReactNode;
+  title: ReactNode;
   children: ReactNode;
   className?: string;
   id?: string;
@@ -14,7 +14,7 @@ type TileProps = {
 };
 
 export default function Tile({
-  contentTitle,
+  title,
   children,
   className,
   id,
@@ -25,7 +25,7 @@ export default function Tile({
     <article id={id} className={clsx(s.root, className)} {...rest}>
       <div className={s.content}>
         <Heading depth={3} className={s.title}>
-          {contentTitle}
+          {title}
         </Heading>
         <div
           aria-hidden={true}

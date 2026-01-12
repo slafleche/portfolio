@@ -8,7 +8,7 @@ describe('ContentWithTitle', () => {
   it('renders the title and data-query attributes', () => {
     const { container } = render(
       <ContentWithTitle
-        contentTitle="Section title"
+        title="Section title"
         queryDataAttributes={{
           compact: 'no-padding',
         }}

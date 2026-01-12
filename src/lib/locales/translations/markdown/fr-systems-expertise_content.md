@@ -1,5 +1,3 @@
-## Expertise
-
 Primitives CSS typées pour structurer votre système de design Transformer un
 travail UI fragmenté en base stable et composable. L’objectif est de poser des
 décisions d’architecture tôt pour garder les équipes efficaces à mesure que le
@@ -17,7 +15,6 @@ difficiles à faire évoluer.
 Conception de systèmes pensés pour durer. L’accent est mis sur la
 remplaçabilité, les changements incrémentaux et l’évitement de décisions qui
 rendent l’évolution du produit coûteuse ou rigide.
-
 
 ### Collaboration avec les designers
 

@@ -1,5 +1,3 @@
-## Principles
-
 Start from a robust foundation, then build systems that adapt to change rather
 than resist it. Add complexity only when it solves real problems, and keep
 everything composable so parts can evolve independently.

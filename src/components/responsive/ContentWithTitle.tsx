@@ -7,7 +7,7 @@ import Heading from '../Heading';
 import Content, { type ContentBaseProps } from './Content';
 
 export type ContentWithTitleBaseProps = ContentBaseProps & {
-  contentTitle?: ReactNode;
+  title?: ReactNode;
   ignoreDataUI?: boolean;
   skipSectionMargin?: boolean;
   showDecoration?: boolean;
@@ -25,7 +25,7 @@ export default function ContentWithTitle<
   T extends ElementType = 'section',
 >(props: ContentWithTitleProps<T>) {
   const {
-    contentTitle,
+    title,
     ignoreDataUI = false,
     headingDepth = 2,
     children,
@@ -45,13 +45,13 @@ export default function ContentWithTitle<
       queryDataAttributes={queryDataAttributes}
       {...rest}
     >
-      {contentTitle ? (
+      {title ? (
         <Heading
           ignoreDataUI={ignoreDataUI}
           depth={headingDepth}
           className={clsx({ [headingDecoration]: showDecoration })}
         >
-          {contentTitle}
+          {title}
         </Heading>
       ) : null}
       {children}

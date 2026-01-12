@@ -137,12 +137,14 @@ export default async function SystemsPage({
             )}
           />
           <DeferredIsland when="idle">
+            {/* Exptertise */}
             <ContentAsTiles
               id={systemsIntroId}
               title={systemsTitle}
               markdown={systemsIntroMarkdown}
             />
             <hr />
+            {/* Principles */}
             <ContentAsTiles
               id={systemsPrinciplesId}
               title={systemsPrinciplesTitle}
@@ -153,6 +155,7 @@ export default async function SystemsPage({
               translateOffset={4}
             />
             <hr />
+            {/* Architecture */}
             <ContentAsTiles
               id={systemsShapeId}
               title={systemsShapeTitle}
@@ -163,16 +166,15 @@ export default async function SystemsPage({
               translateOffset={3}
             />
             <hr />
-            <ContentWithTitle id="css-calipers">
-              <WordMarkInTitle
-                WordMark={NPMWordmark}
-                ignoreDataUI={true}
-                textTemplate={translator('css_calipers')}
-                wordMarkClassName={npmLinkInTitleIcon}
-                linkClassName={npmLinkInTitleLink}
-                linkUrl={'https://www.npmjs.com/package/css-calipers'}
-                depth={2}
-              />
+            {/* CSS Calipers */}
+            <ContentWithTitle
+              id="css-calipers"
+              ignoreDataUI={true}
+              title={
+                parseWordmarkTemplate(translator('css_calipers'))
+                  .fullText
+              }
+            >
               <Markdown source={systemsShapeBlurbMarkdown} />
             </ContentWithTitle>
           </DeferredIsland>
