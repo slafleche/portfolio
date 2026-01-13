@@ -66,7 +66,10 @@ export const glassyButtonTokens = {
     color: colorVars.white,
   },
   borders: {
-    radius: m(12),
+    radius: [
+      m(20),
+      m(15),
+    ],
     width: m(0.75),
     color: colorVars.white.alpha(0.28),
   },

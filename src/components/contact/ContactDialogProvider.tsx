@@ -1,6 +1,7 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
+import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import {
   createContext,
@@ -509,7 +510,12 @@ export function ContactDialogProvider({
           <Dialog.Overlay className={privacyStyles.overlay} />
           <Dialog.Content className={privacyStyles.dialog}>
             <div className={privacyStyles.panel}>
-              <div className={privacyStyles.header}>
+              <div
+                className={clsx(
+                  privacyStyles.header,
+                  privacyStyles.glassyBack,
+                )}
+              >
                 <Dialog.Title
                   className={privacyStyles.title}
                   data-modal="title"
@@ -520,19 +526,27 @@ export function ContactDialogProvider({
                   <Dialog.Close asChild>
                     <CloseButton
                       label={formCopy.privacy.closeLabel}
-                      closeOverlayClassName={dialogStyles.scoopGradient}
+                      closeOverlayClassName={
+                        dialogStyles.scoopGradient
+                      }
                       className={dialogStyles.closeButton}
                     />
                   </Dialog.Close>
                 </div>
               </div>
+
               <Dialog.Description asChild>
-                <Content data-ui="privacy-content">
-                  <div className={privacyStyles.container}>
-                    <Markdown
-                      source={privacyCopy.content}
-                      className={privacyStyles.text}
-                    />
+                <Content
+                  data-ui="privacy-content"
+                  className={privacyStyles.content}
+                >
+                  <div className={privacyStyles.scrollArea}>
+                    <div className={privacyStyles.container}>
+                      <Markdown
+                        source={privacyCopy.content}
+                        className={privacyStyles.text}
+                      />
+                    </div>
                   </div>
                 </Content>
               </Dialog.Description>

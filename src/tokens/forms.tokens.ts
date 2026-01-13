@@ -110,7 +110,8 @@ export const formTokens = {
   button: {
     minHeight: m(48),
     paddings: {
-      horizontal: m(24),
+      vertical: m(6),
+      horizontal: m(8),
     },
     borders: {
       radius: m(28),

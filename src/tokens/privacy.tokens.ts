@@ -12,7 +12,7 @@ export const privacyTokens = {
     maxWidth: layoutVars.content.width,
     paddings: {
       horizontal: horizontalPadding,
-      top: m(36),
+      top: m(75),
       bottom: m(48),
     },
     sectionGap: m(24),

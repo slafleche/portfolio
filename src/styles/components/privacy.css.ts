@@ -1,13 +1,14 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 
 import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { formTokens } from '../../tokens/forms.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
-import { colorVars } from '../../tokens/global.tokens';
+import { colors, colorVars } from '../../tokens/global.tokens';
 import { layoutVars } from '../../tokens/layout.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { privacyTokens } from '../../tokens/privacy.tokens';
+import { makeGlassSurface } from '../helpers/glassy.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { fontStylesFromFontVariant } from '../helpers/typography.helper';
@@ -30,17 +31,6 @@ export const headerStack = style({
   gap: privacyTokens.header.gap.css(),
 });
 
-// const sheenSweep = keyframes({
-//   '0%': {
-//     transform: 'skewX(45deg) translateX(220%)',
-//   },
-//   '100%': {
-//     transform: 'skewX(45deg) translateX(-220%)',
-//   },
-// });
-
-// const sheenGradient = privacyTokens.backLink.sheen;
-
 export const backLink = style({
   position: 'absolute',
   top: privacyTokens.backLink.offset.css(),
@@ -48,15 +38,9 @@ export const backLink = style({
   width: privacyTokens.backLink.size.css(),
   height: privacyTokens.backLink.size.css(),
   zIndex: 1,
-  //   ...borders(privacyTokens.backLink.borders),
-  //   color: privacyTokens.backLink.text.color.css(),
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  //   fontSize: privacyTokens.backLink.iconSize.css(),
-  //   backdropFilter: `blur(${privacyTokens.backLink.backdropBlur.css()})`,
-  //   WebkitBackdropFilter: `blur(${privacyTokens.backLink.backdropBlur.css()})`,
-  //   transition: privacyTokens.backLink.transition,
   textDecoration: 'none',
   overflow: 'hidden',
 });
@@ -107,7 +91,7 @@ export const link = style({
 export const overlay = style({
   position: 'fixed',
   inset: 0,
-  backgroundColor: colorVars.black.alpha(0.85).css(),
+  // backgroundColor: colorVars.black.alpha(0.85).css(),
   zIndex: 1100,
 });
 
@@ -115,14 +99,13 @@ export const dialog = style({
   position: 'fixed',
   inset: 0,
   display: 'flex',
-  alignItems: 'flex-start',
+  alignItems: 'stretch',
   justifyContent: 'center',
   ...paddings({
     vertical: m(0),
     horizontal: m(6),
   }),
-  overflowY: 'auto',
-  scrollbarGutter: 'stable',
+  overflow: 'hidden',
   zIndex: 1101,
 });
 
@@ -131,25 +114,39 @@ export const panel = style({
   backgroundColor: colorVars.bodyBg.css(),
   color: colorVars.bodyFg.css(),
   width: '100%',
+  height: '100%',
+  maxHeight: '100%',
   maxWidth: privacyTokens.layout.maxWidth.css(),
-  display: 'grid',
-  gap: formTokens.layout.fieldGap.css(),
-  ...paddings({
-    top: privacyTokens.backLink.offset,
-  }),
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: 0,
 });
 
 export const header = style({
-  position: 'sticky',
-  top: privacyTokens.backLink.offset.css(),
+  position: 'fixed',
+  top: 0,
+  left: '50%',
+  transform: 'translateX(-50%)',
   zIndex: 2,
   width: '100%',
+  maxWidth: privacyTokens.layout.maxWidth.css(),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   minHeight: glassyButtonTokens.size.css(),
-  paddingLeft: privacyTokens.backLink.offset.css(),
-  paddingRight: privacyTokens.backLink.offset.css(),
+  ...paddings({
+    vertical: privacyTokens.backLink.offset,
+    horizontal: m(0),
+  }),
+});
+
+export const glassyBack = style({
+  ...makeGlassSurface({
+    saturate: mPercent(100),
+    contrast: mPercent(100),
+    brightness: mPercent(100),
+    backgroundColor: colors.transparent,
+  }),
 });
 
 export const title = style({
@@ -164,8 +161,16 @@ globalStyle(`.${title}[data-modal="title"]`, {
 });
 
 export const content = style({
+  position: 'relative',
+  flex: 1,
+  minHeight: 0,
+  overflow: 'hidden',
   ...paddings({
     horizontal: layoutVars.content.padding,
+    bottom: 0,
+  }),
+  ...margins({
+    bottom: 0,
   }),
   selectors: {
     ...mediaQueryStyle({
@@ -176,5 +181,11 @@ export const content = style({
       },
     }),
   },
+});
+
+export const scrollArea = style({
+  height: '100%',
+  overflowY: 'auto',
+  scrollbarGutter: 'stable',
 });
 export const text = style({});

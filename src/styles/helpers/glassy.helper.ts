@@ -76,8 +76,9 @@ export const createGlassBackground = (
     ],
   }).modern;
 
-  const backgroundColorValue =
-    glassVars.backgrounds.color.css() as CSS_TYPES.Property.BackgroundColor;
+  const backgroundColorValue = (
+    overwrites?.backgroundColor ?? glassVars.backgrounds.color
+  ).css() as CSS_TYPES.Property.BackgroundColor;
   const backgroundImageValue = [
     overlayGradient,
     glowGradient,
@@ -95,6 +96,8 @@ export const createGlassBackground = (
       saturate,
       contrast,
       brightness,
+      backgroundColor:
+        overwrites?.backgroundColor ?? glassVars.backgrounds.color,
     },
   };
 };

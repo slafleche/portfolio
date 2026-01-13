@@ -6,18 +6,25 @@ import { formTokens } from '@/tokens/forms.tokens';
 import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import {
+  glassyButtonCupped,
   // glassVars,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
 import { colorVars } from '../../tokens/global.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
+import { gradientAsBgImg } from '../helpers/gradients.helper';
+import { absolutePosition } from '../helpers/positioning.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
   fontStylesFromFontVariant,
   relativeFontWeight,
 } from '../helpers/typography.helper';
+import {
+  glassLinkShine,
+  glassyButtonHover,
+} from './glassyButtons.css';
 
 export const form = style({
   display: 'grid',
@@ -212,11 +219,10 @@ export const buttonRow = style({
 });
 
 export const submitButton = style({
+  position: 'relative',
+  overflow: 'hidden',
   minHeight: formTokens.button.minHeight.css(),
-  ...paddings({
-    vertical: m(0),
-    horizontal: formTokens.button.paddings.horizontal,
-  }),
+  ...paddings(formTokens.button.paddings.horizontal),
   border: 'none',
   ...borders(glassyButtonTokens.borders),
   ...backgrounds(glassyButtonTokens.backgrounds),
@@ -230,7 +236,6 @@ export const submitButton = style({
     '&:hover, &[data-debug="hover"]': {
       ...backgrounds(glassyButtonTokens.hover.backgrounds),
       ...boxShadow(glassyButtonTokens.hover.boxShadows),
-      transform: 'translateY(-1px)',
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
@@ -248,6 +253,28 @@ export const submitButton = style({
       transform: 'translateY(0)',
     },
   },
+});
+
+export const submitInner = style({
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 3,
+  ...paddings({
+    vertical: m(12),
+    horizontal: m(12),
+  }),
+  ...borders.radii([
+    m(30),
+    m(40),
+  ]),
+  ...gradientAsBgImg(glassyButtonCupped.gradient),
+});
+
+export const shineWrapper = style({
+  ...absolutePosition.fullSize(),
+  opacity: 0.2,
 });
 
 export const turnstileSection = style({
