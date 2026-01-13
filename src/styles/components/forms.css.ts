@@ -30,7 +30,7 @@ export const form = style({
   display: 'grid',
   gap: formTokens.layout.sectionGap.css(),
   ...paddings({
-    top: m(50),
+    top: m(70),
     bottom: layoutVars.content.gap,
     horizontal: formLayoutVars.innerPadding,
   }),
@@ -102,6 +102,7 @@ export const label = style({
   ...paddings({
     right: m(0.5, 'em'),
   }),
+  opacity: 0.8,
   ...textShadow({
     x: m(1),
     y: m(1),
@@ -124,7 +125,7 @@ export const input = style({
   ...fontStylesFromFontVariant({
     variant: formFontVariants.input,
   }),
-  ...relativeFontWeight(formFontVariants.input, mPercent(60)),
+  ...relativeFontWeight(formFontVariants.input, mPercent(40)),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -258,7 +259,6 @@ export const submitButton = style({
   color: glassyButtonTokens.text.color.css(),
   fontWeight: 600,
   ...boxShadow(glassyButtonTokens.boxShadows),
-  // ...backdropFilters.style({ blur: glassVars.blur }),
   transition:
     'transform 160ms ease, opacity 160ms ease, background 160ms ease, box-shadow 160ms ease',
   selectors: {

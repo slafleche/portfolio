@@ -47,6 +47,7 @@ export const content = style({
         selectors: {
           "&[data-query-compact='no-padding']": {
             ...paddings({
+              horizontal: 0,
               bottom: 0,
             }),
           },

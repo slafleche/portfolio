@@ -29,11 +29,9 @@ export const layoutVars = {
   compact: {
     maxWidth: m(800),
   },
-  // compressed: {
-  // 	contentWidth: m(800),
-  // 	contentPadding: m(16),
-  // 	halfContentPadding: compressedContentPadding.half(),
-  // },
+  compressed: {
+    maxWidth: m(600),
+  },
 } as const;
 
 export const gridLayoutVars = {
@@ -42,13 +40,18 @@ export const gridLayoutVars = {
   separatorMinimum,
 };
 
-const formInnerPadding = m(100)
-const formInnerCompactPadding = anchorMenuVars.handle.size;
+const formInnerPadding = m(100);
+const formInnerCompactPadding = anchorMenuVars.handle.size.half();
+
 export const formLayoutVars = {
-  maxWidth: layoutVars.compact.maxWidth.add(formInnerPadding.double()),
+  maxWidth: layoutVars.compact.maxWidth.add(
+    formInnerPadding.double(),
+  ),
   innerPadding: formInnerPadding,
   compact: {
-    maxWidth: layoutVars.compact.maxWidth.add(formInnerCompactPadding.double()),
+    maxWidth: layoutVars.compact.maxWidth.add(
+      formInnerCompactPadding.double(),
+    ),
     innerPadding: formInnerCompactPadding,
-  }
+  },
 };

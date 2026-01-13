@@ -44,7 +44,7 @@ export const formFontVariants = {
     config: {
       styleOverrides: {
         lineHeight: 1.5,
-        size: m(16),
+        size: m(18),
       },
       options: {
         weightPercents: {

@@ -50,6 +50,18 @@ export const intro = style({
   }),
 });
 
+export const introWrapper = style({
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...paddings({
+          horizontal: anchorMenuVars.handle.sizeWithBorder,
+        }),
+      },
+    }),
+  },
+});
+
 export const tileA = style({});
 
 export const tileB = style({});

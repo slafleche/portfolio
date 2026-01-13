@@ -10,6 +10,7 @@ import {
 import { FormHint } from '@/components/contact/primitives/FormHint';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
 import * as s from '@/styles/components/forms.css';
+import { useMedia } from '@/styles/responsive';
 
 import { useFormBlock } from '../formBlocks.context';
 import type {
@@ -167,6 +168,9 @@ export function TurnstileBlock({
     typeof window !== 'undefined' &&
     Boolean((window as ExtendedWindow).turnstile);
 
+  const { compressed } = useMedia();
+  const turnstileSize = compressed === true ? 'compact' : 'normal';
+
   const [
     status,
     setStatus,
@@ -240,11 +244,14 @@ export function TurnstileBlock({
           throw new Error('Turnstile unavailable');
         }
         if (container.childNodes.length > 0) {
-          return;
+          if (widgetIdRef.current) {
+            return;
+          }
+          container.replaceChildren();
         }
         const widgetId = turnstileApi.render(container, {
           sitekey: turnstileSiteKey,
-          size: 'normal',
+          size: turnstileSize,
           callback: (nextToken: string) => {
             if (cancelled) return;
             setToken(nextToken);
@@ -295,11 +302,13 @@ export function TurnstileBlock({
       if (turnstileApi && widgetIdRef.current) {
         turnstileApi.reset(widgetIdRef.current);
       }
+      widgetRef.current?.replaceChildren();
       widgetIdRef.current = null;
     };
   }, [
     reportCatastrophic,
     shouldRenderTurnstileWidget,
+    turnstileSize,
     turnstileSiteKey,
   ]);
 

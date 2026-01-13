@@ -107,10 +107,6 @@ export const dialog = style({
   display: 'flex',
   alignItems: 'stretch',
   justifyContent: 'center',
-  ...paddings({
-    vertical: m(0),
-    horizontal: m(6),
-  }),
   overflow: 'hidden',
   zIndex: 1101,
 });
@@ -143,7 +139,7 @@ export const header = style({
   alignItems: 'center',
   justifyContent: 'center',
   ...backdropFilters({
-    blur: m(10),
+    blur: m(5),
     saturate: mPercent(100),
     contrast: mPercent(100),
     brightness: mPercent(100),
@@ -200,7 +196,7 @@ globalStyle(`.${container}`, {
   ...globalMediaQueryStyle({
     compact: {
       ...paddings({
-        horizontal: anchorMenuVars.handle.sizeWithBorder,
+        horizontal: anchorMenuVars.handle.sizeWithBorder.half(),
       }),
     },
   }),

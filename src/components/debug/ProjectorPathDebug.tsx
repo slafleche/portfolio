@@ -476,7 +476,14 @@ const NumberField = ({
     onChange(rounded);
   };
 
-  const stopHold = () => {
+  const stopHold = (
+    event?: React.PointerEvent<HTMLButtonElement>,
+  ) => {
+    if (event?.currentTarget.hasPointerCapture(event.pointerId)) {
+      try {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      } catch {}
+    }
     if (holdTimeoutRef.current !== null) {
       window.clearTimeout(holdTimeoutRef.current);
       holdTimeoutRef.current = null;
@@ -492,7 +499,9 @@ const NumberField = ({
     direction: 1 | -1,
   ) => {
     event.preventDefault();
-    event.currentTarget.setPointerCapture(event.pointerId);
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {}
     nudge(direction);
     stopHold();
     holdTimeoutRef.current = window.setTimeout(() => {

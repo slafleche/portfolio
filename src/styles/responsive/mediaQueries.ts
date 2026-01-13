@@ -50,6 +50,10 @@ export const mediaQueryStyleConfig: IMediaQueries = {
   notCompact: {
     minWidth: layoutVars.compact.maxWidth.add(1),
   } as IMediaQueryProps,
+
+  compressed: {
+    maxWidth: layoutVars.compressed.maxWidth,
+  } as IMediaQueryProps,
 };
 
 const baseMediaQueryStyle = mediaQueryFactory({

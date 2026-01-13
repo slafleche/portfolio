@@ -69,7 +69,7 @@ export const panel = style({
   justifyContent: 'flex-start',
   alignItems: 'stretch',
   ...paddings({
-    top: headerStackHeight,
+    top: m(0),
   }),
   ...backgrounds({
     color: colorVars.bodyBg,
@@ -81,8 +81,9 @@ export const panel = style({
 
 export const panelContent = style({
   textAlign: 'center',
-  display: 'flex',
-  flexDirection: 'column',
+  display: 'grid',
+  gridTemplateRows: '1fr',
+  gridTemplateColumns: '1fr',
   alignItems: 'stretch',
   flex: 1,
   minHeight: 0,
@@ -124,7 +125,7 @@ export const glassSurface = style({
 });
 
 export const header = style({
-  position: 'fixed',
+  position: 'sticky',
   top: 0,
   left: 0,
   right: 0,
@@ -133,7 +134,7 @@ export const header = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  minHeight: headerStackHeight.css(),
+  height: headerStackHeight.css(),
   paddingLeft: closeOffset.css(),
   paddingRight: closeOffset.css(),
   ...textShadow({
@@ -143,12 +144,14 @@ export const header = style({
     color: colorVars.black,
   }),
   ...backdropFilters({
-    blur: m(5),
+    blur: m(2),
     saturate: mPercent(100),
     contrast: mPercent(100),
     brightness: mPercent(100),
     backgroundColor: colors.transparent,
   }),
+  gridRow: 1,
+  gridColumn: 1,
 });
 
 export const heading = style({
@@ -190,13 +193,18 @@ export const scrollArea = style({
   minHeight: 0,
   overflowY: 'auto',
   scrollbarGutter: 'stable',
-  // height: `calc(100% - ${headerStackHeight.css()})`,
   position: 'relative',
+  ...backgrounds({
+    color: colors.white.alpha(0.02),
+  }),
+  gridRow: 1,
+  gridColumn: 1,
+  zIndex: 1,
   ...backdropFilters({
     blur: m(3),
     saturate: mPercent(110),
-    // contrast: mPercent(110),
-    // brightness: mPercent(110),
+    contrast: mPercent(110),
+    brightness: mPercent(110),
     backgroundColor: colors.transparent,
   }),
 });

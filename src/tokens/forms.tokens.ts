@@ -30,8 +30,9 @@ export const formTokens = {
       color: colorVars.white.alpha(0.55),
     },
     paddings: {
-      vertical: m(6),
+      top: m(12),
       horizontal: m(0),
+      bottom: m(8),
     },
     borders: {
       top: {
