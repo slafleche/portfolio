@@ -3,17 +3,19 @@ import { m } from 'css-calipers';
 
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
-import { colorVars } from '../../tokens/global.tokens';
+import { colorVars, themeColours } from '../../tokens/global.tokens';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
 import {
-  absolutePosition,
-  fullSizeOfParent,
-} from '../helpers/positioning.helper';
+  buildLinear,
+  gradientAsBgImg,
+} from '../helpers/gradients.helper';
+import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins } from '../helpers/spacing.helper';
 import { fontStylesFromFontVariant } from '../helpers/typography.helper';
+import { roundRadius } from './contactButton.vars';
 
 const sheenSweep = keyframes({
   '0%': {
@@ -52,10 +54,6 @@ export const panel = style({
   flexDirection: 'column',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  // ...paddings({
-  //   vertical: m(14),
-  //   horizontal: m(10),
-  // }),
   ...backgrounds({
     color: colorVars.bodyBg,
   }),
@@ -64,10 +62,6 @@ export const panel = style({
 });
 
 export const panelContent = style({
-  width: 'min(64rem, 90vw)',
-  ...margins({
-    horizontal: 'auto',
-  }),
   textAlign: 'center',
   display: 'flex',
   flexDirection: 'column',
@@ -91,27 +85,25 @@ export const body = style({
     horizontal: 'auto',
   }),
   color: colorVars.white.alpha(0.9).css(),
-  maxWidth: '70ch',
+  // maxWidth: '70ch',
 });
 
-const closeOffset = m(8);
+const closeOffset = m(16);
 
 export const closeButtonWrap = style({
   position: 'sticky',
   top: closeOffset.css(),
-  width: '100%',
-  height: 0,
-  zIndex: 1,
+  alignSelf: 'start',
+  justifySelf: 'end',
+  marginRight: closeOffset.css(),
+  display: 'flex',
+  justifyContent: 'flex-end',
+  width: glassyButtonTokens.size.css(),
+  height: glassyButtonTokens.size.css(),
+  zIndex: 2,
 });
 
 export const closeButton = style({
-  ...absolutePosition.topRight(m(0), closeOffset),
-
-  ...margins({
-    vertical: m(4),
-  }),
-  padding: 0,
-  alignSelf: 'flex-end',
   width: glassyButtonTokens.size.css(),
   height: glassyButtonTokens.size.css(),
   ...borders(glassyButtonTokens.borders),
@@ -126,7 +118,7 @@ export const closeButton = style({
   transition:
     'transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease',
   overflow: 'hidden',
-  zIndex: 1,
+  zIndex: 2,
   selectors: {
     '&::after': {
       content: '',
@@ -141,12 +133,7 @@ export const closeButton = style({
     '&:hover': {
       ...backgrounds(glassyButtonTokens.hover.backgrounds),
       ...boxShadow(glassyButtonTokens.hover.boxShadows),
-      transform: 'translateY(-2px)',
-    },
-    '&:focus-visible': {
-      outline: 'none',
-      ...backgrounds(glassyButtonTokens.focusVisible.backgrounds),
-      transform: 'translateY(-2px)',
+      // transform: 'translateY(-2px)',
     },
     '&:active': {
       transform: 'translateY(0)',
@@ -181,6 +168,14 @@ export const closeButton = style({
       },
     },
   },
+});
+
+export const scoopGradient = style({
+  position: 'absolute',
+  inset: '2px',
+  ...borders.radii(roundRadius),
+  pointerEvents: 'none',
+  ...gradientAsBgImg(buildLinear(themeColours.gradients.buttonScoop)),
 });
 
 globalStyle(`.${panel} p`, {

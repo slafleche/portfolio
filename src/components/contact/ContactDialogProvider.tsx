@@ -22,6 +22,7 @@ import * as privacyStyles from '@/styles/components/privacy.css';
 
 import { GlassPanel } from '../GlassPanel';
 import ImageByName from '../ImageByName';
+import Content from '../responsive/Content';
 import { CloseButton } from './CloseButton';
 import {
   ContactDialogTitleContext,
@@ -407,11 +408,6 @@ export function ContactDialogProvider({
     ],
   );
 
-  const privacyUpdated =
-    typeof privacyCopy.updated === 'string'
-      ? privacyCopy.updated.trim()
-      : '';
-
   const contextValue = useMemo(
     () => ({
       isOpen,
@@ -462,13 +458,19 @@ export function ContactDialogProvider({
                   name={'night_forest'}
                   alt={formCopy.bgDescription}
                 />
-                <div className={dialogStyles.panelContent}>
+                <Content
+                  className={dialogStyles.panelContent}
+                  data-ui="contact-form"
+                >
                   <GlassPanel>
                     <div className={dialogStyles.closeButtonWrap}>
                       <Dialog.Close asChild>
                         <CloseButton
                           label={closeLabel}
                           className={dialogStyles.closeButton}
+                          closeOverlayClassName={
+                            dialogStyles.scoopGradient
+                          }
                         />
                       </Dialog.Close>
                     </div>
@@ -479,9 +481,7 @@ export function ContactDialogProvider({
                       {dialogTitle}
                     </Dialog.Title>
                     <Dialog.Description asChild>
-                      <p data-visible="sc-only">
-                        {dialogTitle}
-                      </p>
+                      <p data-visible="sc-only">{dialogTitle}</p>
                     </Dialog.Description>
                     <ContactDialogTitleContext.Provider
                       value={titleContextValue}
@@ -493,7 +493,7 @@ export function ContactDialogProvider({
                       />
                     </ContactDialogTitleContext.Provider>
                   </GlassPanel>
-                </div>
+                </Content>
               </div>
             </Dialog.Content>
           </Dialog.Overlay>
@@ -507,29 +507,31 @@ export function ContactDialogProvider({
           <Dialog.Overlay className={privacyStyles.overlay} />
           <Dialog.Content className={privacyStyles.dialog}>
             <div className={privacyStyles.panel}>
+              <div className={privacyStyles.closeButtonWrap}>
+                <Dialog.Close asChild>
+                  <CloseButton
+                    label={formCopy.privacy.closeLabel}
+                    closeOverlayClassName={dialogStyles.scoopGradient}
+                    className={dialogStyles.closeButton}
+                  />
+                </Dialog.Close>
+              </div>
               <Dialog.Title
                 className={privacyStyles.title}
                 data-modal="title"
               >
                 {privacyCopy.title}
               </Dialog.Title>
-              {privacyUpdated ? (
-                <p className={privacyStyles.updated}>
-                  {privacyUpdated}
-                </p>
-              ) : null}
               <Dialog.Description asChild>
-                <Markdown
-                  source={privacyCopy.content}
-                  className={privacyStyles.body}
-                />
+                <Content data-ui="privacy-content">
+                  <div className={privacyStyles.wrap}>
+                    <Markdown
+                      source={privacyCopy.content}
+                      className={privacyStyles.body}
+                    />
+                  </div>
+                </Content>
               </Dialog.Description>
-              <Dialog.Close asChild>
-                <CloseButton
-                  label={formCopy.privacy.closeLabel}
-                  className={dialogStyles.closeButton}
-                />
-              </Dialog.Close>
             </div>
           </Dialog.Content>
         </Dialog.Portal>

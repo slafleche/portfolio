@@ -148,8 +148,15 @@ export const themeColours = {
       middle: wine.mix(midPurple, 0.5),
       end: lightPurple,
     },
+    buttonScoop: {
+      angle: m(160, 'deg'),
+      stops: [
+        { color: color('#000000').alpha(0.3), at: mPercent(0) },
+        { color: color('#000000').alpha(0), at: mPercent(100) },
+      ],
+    } as LinearOpts,
     ctaConfig: {
-      angle: m(45, 'deg'),
+      angle: m(160, 'deg'),
       stops: [
         { color: brand, at: mPercent(0) },
         { color: secondary, at: mPercent(100) },

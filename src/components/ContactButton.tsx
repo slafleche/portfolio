@@ -350,7 +350,7 @@ export default function ContactButton({
                   </div>
                 </div>
                 <div
-                  className={clsx(scoopedGradient, s.scroopGradient)}
+                  className={clsx(scoopedGradient, s.scoopGradient)}
                   aria-hidden={true}
                 />
                 <div className={glassLinkShine} aria-hidden="true" />

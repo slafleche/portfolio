@@ -1,5 +1,5 @@
 import { keyframes, style } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 
 import {
   colors,
@@ -7,6 +7,7 @@ import {
   themeColours,
 } from '../../tokens/global.tokens';
 import borders from '../helpers/borders.helper';
+import { color } from '../helpers/colorWrap.helper';
 import {
   buildLinear,
   gradientAsBgImg,
@@ -16,7 +17,6 @@ import { absolutePosition } from '../helpers/positioning.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { measureHypotenuse } from '../helpers/utils.helper';
 import {
-  buttonRadius,
   buttonSizePx,
   containerSizePx,
   exitAnticPct,
@@ -42,6 +42,7 @@ import {
   kSquashY,
   railCounterRotationDeg,
   railRotationDeg,
+  roundRadius,
   shuttleDurationMs,
   shuttleExitDurationMs,
   spinAccelPct,
@@ -76,24 +77,6 @@ export const root = style({
   zIndex: 30,
   overflow: 'hidden',
   pointerEvents: 'none',
-  selectors: {
-    // ...mediaQueryStyle({
-    //   notCompact: {
-    //     selectors: {
-    //       '&:hover': {
-    //         cursor: 'pointer',
-    //         // transform: `scale(${glassVars.glassyLinks.hoverFocus.scale})`,
-    //         ...boxShadow({
-    //           x: m(0),
-    //           y: m(24),
-    //           blur: m(36),
-    //           alpha: 0.25,
-    //         }),
-    //       },
-    //     },
-    //   },
-    // }),
-  },
 });
 
 export const rail = style({
@@ -224,7 +207,7 @@ export const button = style({
   ...borders({
     color: colors.transparent,
     width: m(0),
-    radius: buttonRadius,
+    radius: roundRadius,
   }),
   selectors: {
     '&:hover, &:focus-visible': {
@@ -263,19 +246,18 @@ export const button = style({
   },
 });
 
-export const scroopGradient = style({
+export const scoopGradient = style({
   position: 'absolute',
   inset: '7px',
-  borderRadius: buttonRadius.css(),
-
-  zIndex: 2,
+  ...borders.radii(roundRadius),
+  zIndex: 1,
   pointerEvents: 'none',
 });
 
 export const gradient = style({
   position: 'absolute',
   inset: 0,
-  borderRadius: buttonRadius.css(),
+  ...borders.radii(roundRadius),
   ...gradientAsBgImg(buildLinear(themeColours.gradients.ctaConfig)),
   transition: `opacity ${gradientFadeMs.css()} ease`,
   zIndex: 0,

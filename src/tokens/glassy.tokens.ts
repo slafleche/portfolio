@@ -57,7 +57,7 @@ export type GlassSurfaceTokens = typeof glassVars;
 
 export const glassyButtonTokens = {
   size: m(44),
-  iconSize: m(18),
+  iconSize: m(12),
   blur: m(5),
   backgrounds: {
     color: colorVars.white.alpha(0.12),

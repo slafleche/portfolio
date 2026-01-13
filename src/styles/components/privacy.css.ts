@@ -4,10 +4,13 @@ import { m } from 'css-calipers';
 import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { formTokens } from '../../tokens/forms.tokens';
 import { colorVars } from '../../tokens/global.tokens';
+import { layoutVars } from '../../tokens/layout.tokens';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { privacyTokens } from '../../tokens/privacy.tokens';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { fontStylesFromFontVariant } from '../helpers/typography.helper';
+import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 export const container = style({
   position: 'relative',
@@ -57,6 +60,20 @@ export const backLink = style({
   overflow: 'hidden',
 });
 
+export const closeButtonWrap = style({
+  position: 'sticky',
+  top: privacyTokens.backLink.offset.css(),
+  alignSelf: 'start',
+  justifySelf: 'end',
+  marginRight: privacyTokens.backLink.offset.css(),
+  width: privacyTokens.backLink.size.css(),
+  height: privacyTokens.backLink.size.css(),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 2,
+});
+
 export const privacyFinePrint = style({
   fontSize: '0.9rem',
   color: formTokens.privacy.text.color.css(),
@@ -91,7 +108,6 @@ export const overlay = style({
   position: 'fixed',
   inset: 0,
   backgroundColor: colorVars.black.alpha(0.85).css(),
-  // ...backdropFilters.style({ blur: glassVars.blur.double() }),
   zIndex: 1100,
 });
 
@@ -99,55 +115,44 @@ export const dialog = style({
   position: 'fixed',
   inset: 0,
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   justifyContent: 'center',
   ...paddings({
     vertical: m(8),
     horizontal: m(6),
   }),
+  overflowY: 'auto',
+  scrollbarGutter: 'stable',
   zIndex: 1101,
 });
 
 export const panel = style({
   position: 'relative',
-  width: 'min(70ch, 90vw)',
-  maxHeight: '80vh',
-  ...paddings({
-    vertical: m(12),
-    horizontal: m(11),
-  }),
-  // ...borders(formTokens.field.borders),
   backgroundColor: colorVars.bodyBg.css(),
   color: colorVars.bodyFg.css(),
-  // ...boxShadow({
-  //   x: m(0),
-  //   y: m(3),
-  //   blur: m(12),
-  //   color: colorVars.black,
-  //   alpha: 0.35,
-  // }),
-  overflowY: 'auto',
+  width: '100%',
+  maxWidth: privacyTokens.layout.maxWidth.css(),
   display: 'grid',
   gap: formTokens.layout.fieldGap.css(),
 });
 
 export const title = style({
   margin: 0,
-  // fontSize: '1.6rem',
-  // fontWeight: 700,
-  // margin: 0,
   color: privacyTokens.title.color.css(),
 });
 
-export const updated = style({
-  margin: 0,
-  // color: colorVars.bodyFg.alpha(0.7).css(),
-  // fontSize: '0.9rem',
-  //   margin: 0,
-  // color: privacyTokens.updated.color.css(),
+export const content = style({
+  ...paddings({
+    horizontal: layoutVars.content.padding,
+  }),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...paddings({
+          horizontal: anchorMenuVars.handle.sizeWithBorder,
+        }),
+      },
+    }),
+  },
 });
-
-export const body = style({
-  // fontSize: '0.95rem',
-  // lineHeight: 1.6,
-});
+export const text = style({});

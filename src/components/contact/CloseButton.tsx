@@ -6,6 +6,7 @@ import CloseIcon from '@/components/icons/CloseIcon';
 type BaseProps = {
   label: string;
   iconClassName?: string;
+  closeOverlayClassName?: string;
 };
 
 type CloseButtonProps = BaseProps &
@@ -16,12 +17,22 @@ export const CloseButton = forwardRef<
   CloseButtonProps
 >(
   (
-    { label, className, iconClassName, type = 'button', ...rest },
+    {
+      label,
+      className,
+      iconClassName,
+      closeOverlayClassName,
+      type = 'button',
+      ...rest
+    },
     ref,
   ) => {
     return (
       <button ref={ref} type={type} className={className} {...rest}>
         <CloseIcon label={label} className={iconClassName} />
+        {closeOverlayClassName && (
+          <div className={closeOverlayClassName} />
+        )}
       </button>
     );
   },
