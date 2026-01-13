@@ -88,18 +88,6 @@ layers:
         - marginRight
         - marginBottom
         - marginLeft
-        - name: backdropFilter
-          message:
-            'Use backdropFilters.style() or
-            registerBackdropFallback().'
-          allow_in:
-            - 'src/styles/helpers/backdropFilter.helper.ts'
-        - name: WebkitBackdropFilter
-          message:
-            'Use backdropFilters.style() or
-            registerBackdropFallback().'
-          allow_in:
-            - 'src/styles/helpers/backdropFilter.helper.ts'
 
 workflow:
   talk_clarify_todo_go: true

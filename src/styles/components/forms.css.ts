@@ -7,35 +7,58 @@ import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import {
   glassyButtonCupped,
-  // glassVars,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
-import { colorVars } from '../../tokens/global.tokens';
+import { colors, colorVars } from '../../tokens/global.tokens';
+import {
+  formLayoutVars,
+  layoutVars,
+} from '../../tokens/layout.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
 import { gradientAsBgImg } from '../helpers/gradients.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
-import { boxShadow } from '../helpers/shadow.helper';
+import { boxShadow, textShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
   fontStylesFromFontVariant,
   relativeFontWeight,
 } from '../helpers/typography.helper';
-import {
-  glassLinkShine,
-  glassyButtonHover,
-} from './glassyButtons.css';
+import { globalComponentMediaQueryStyle } from '../responsive/mediaQueries';
 
 export const form = style({
   display: 'grid',
   gap: formTokens.layout.sectionGap.css(),
-  maxWidth: formTokens.layout.maxWidth.css(),
+  ...paddings({
+    top: m(50),
+    bottom: layoutVars.content.gap,
+    horizontal: formLayoutVars.innerPadding,
+  }),
+  ...backgrounds({
+    color: colors.white.alpha(0.02).css(),
+  }),
+  width: formLayoutVars.maxWidth.css(),
+  maxWidth: '100%',
   ...fontStylesFromFontVariant({
     variant: formFontVariants.base,
   }),
-  width: '100%',
   ...margins({
     horizontal: 'auto',
+  }),
+});
+
+globalStyle(`.${form}`, {
+  ...globalComponentMediaQueryStyle({
+    contact_noEdge: {
+      ...paddings({
+        horizontal: formLayoutVars.innerPadding,
+      }),
+    },
+    contact_compact: {
+      ...paddings({
+        horizontal: formLayoutVars.compact.innerPadding,
+      }),
+    },
   }),
 });
 
@@ -78,6 +101,12 @@ export const label = style({
   ...relativeFontWeight(formFontVariants.input, mPercent(80)),
   ...paddings({
     right: m(0.5, 'em'),
+  }),
+  ...textShadow({
+    x: m(1),
+    y: m(1),
+    blur: m(2),
+    color: colorVars.black,
   }),
 });
 
@@ -261,10 +290,7 @@ export const submitInner = style({
   alignItems: 'center',
   justifyContent: 'center',
   zIndex: 3,
-  ...paddings({
-    vertical: m(12),
-    horizontal: m(12),
-  }),
+  ...paddings(m(12)),
   ...borders.radii([
     m(30),
     m(40),
@@ -280,7 +306,6 @@ export const shineWrapper = style({
 export const turnstileSection = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: '8px',
   selectors: {
     '&[data-disabled="true"], &[data-debug="disabled"]': {
       opacity: 0.55,
@@ -291,12 +316,6 @@ export const turnstileSection = style({
 
 export const turnstileWidget = style({
   minHeight: '70px',
-  // borderRadius: 12,
-  // ...borders({
-  //   width: m(1),
-  //   color: 'rgba(245,240,255,0.12)',
-  // }),
-  // ...backgrounds({ color: 'rgba(8,6,16,0.6)' }),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

@@ -1,6 +1,7 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
+import { fontFamilies } from '../../tokens/fontFamilies.tokens';
 import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { formTokens } from '../../tokens/forms.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
@@ -8,11 +9,16 @@ import { colors, colorVars } from '../../tokens/global.tokens';
 import { layoutVars } from '../../tokens/layout.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { privacyTokens } from '../../tokens/privacy.tokens';
+import backdropFilters from '../helpers/backdropFilter.helper';
 import { makeGlassSurface } from '../helpers/glassy.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
-import { fontStylesFromFontVariant } from '../helpers/typography.helper';
-import { mediaQueryStyle } from '../responsive/mediaQueries';
+import {
+  fontStylesFromFontVariant,
+  relativeFontWeight,
+} from '../helpers/typography.helper';
+import * as l from '../layout.css';
+import { globalMediaQueryStyle } from '../responsive/mediaQueries';
 
 export const container = style({
   position: 'relative',
@@ -48,7 +54,7 @@ export const backLink = style({
 export const closeButtonWrap = style({
   position: 'absolute',
   top: '50%',
-  right: privacyTokens.backLink.offset.css(),
+  right: privacyTokens.backLink.offset.double().css(),
   transform: 'translateY(-50%)',
   width: glassyButtonTokens.size.css(),
   height: glassyButtonTokens.size.css(),
@@ -60,11 +66,11 @@ export const closeButtonWrap = style({
 
 export const privacyFinePrint = style({
   fontSize: '0.9rem',
+  textAlign: 'center',
   color: formTokens.privacy.text.color.css(),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.hints,
   }),
-  textAlign: 'left',
 });
 
 export const link = style({
@@ -116,10 +122,13 @@ export const panel = style({
   width: '100%',
   height: '100%',
   maxHeight: '100%',
-  maxWidth: privacyTokens.layout.maxWidth.css(),
   display: 'flex',
   flexDirection: 'column',
   minHeight: 0,
+});
+
+globalStyle(`.${panel}.${l.content}`, {
+  maxWidth: '100%',
 });
 
 export const header = style({
@@ -133,9 +142,16 @@ export const header = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  ...backdropFilters({
+    blur: m(10),
+    saturate: mPercent(100),
+    contrast: mPercent(100),
+    brightness: mPercent(100),
+    backgroundColor: colors.transparent,
+  }),
   minHeight: glassyButtonTokens.size.css(),
   ...paddings({
-    vertical: privacyTokens.backLink.offset,
+    vertical: privacyTokens.backLink.offset.multiply(2),
     horizontal: m(0),
   }),
 });
@@ -151,6 +167,9 @@ export const glassyBack = style({
 
 export const title = style({
   color: privacyTokens.title.color.css(),
+  ...paddings({
+    horizontal: m(80),
+  }),
 });
 
 globalStyle(`.${title}[data-modal="title"]`, {
@@ -158,6 +177,9 @@ globalStyle(`.${title}[data-modal="title"]`, {
   ...paddings({
     top: 0,
   }),
+  ...relativeFontWeight(fontFamilies.objectSans, mPercent(80)),
+  fontSize: '1.2em',
+  lineHeight: 1.2,
 });
 
 export const content = style({
@@ -166,21 +188,31 @@ export const content = style({
   minHeight: 0,
   overflow: 'hidden',
   ...paddings({
-    horizontal: layoutVars.content.padding,
+    horizontal: m(0),
     bottom: 0,
   }),
   ...margins({
     bottom: 0,
   }),
-  selectors: {
-    ...mediaQueryStyle({
-      compact: {
-        ...paddings({
-          horizontal: anchorMenuVars.handle.sizeWithBorder,
-        }),
-      },
-    }),
-  },
+});
+
+globalStyle(`.${container}`, {
+  ...globalMediaQueryStyle({
+    compact: {
+      ...paddings({
+        horizontal: anchorMenuVars.handle.sizeWithBorder,
+      }),
+    },
+  }),
+});
+
+globalStyle(`.${container} h3:not([data-ui="heading"])`, {
+  ...globalMediaQueryStyle({
+    compact: {
+      textAlign: 'left',
+      fontSize: '1em',
+    },
+  }),
 });
 
 export const scrollArea = style({
@@ -188,4 +220,8 @@ export const scrollArea = style({
   overflowY: 'auto',
   scrollbarGutter: 'stable',
 });
-export const text = style({});
+export const text = style({
+  width: '100%',
+  maxWidth: layoutVars.compact.maxWidth.css(),
+  margin: 'auto',
+});

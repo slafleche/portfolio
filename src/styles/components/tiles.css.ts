@@ -181,27 +181,27 @@ export const title = style({
   }),
 });
 
-export const separator = style({
-  width: `calc(100% + ${paddingDefault.double().css()})`,
-  ...margins({
-    left: paddingDefault.negation(),
-    bottom: paddingDefault,
-  }),
-  ...borders({
-    bottom: {
-      width: m(0.5),
-      color: colorVars.white.alpha(0.5),
-    },
-  }),
-  selectors: {
-    ...mediaQueryStyle({
-      snug: {
-        width: `calc(100% + ${paddingTight.double().css()})`,
-        ...margins({
-          left: paddingTight.negation(),
-          bottom: paddingTight,
-        }),
-      },
-    }),
-  },
-});
+// export const separator = style({
+//   width: `calc(100% + ${paddingDefault.double().css()})`,
+//   ...margins({
+//     left: paddingDefault.negation(),
+//     bottom: paddingDefault,
+//   }),
+//   ...borders({
+//     bottom: {
+//       width: m(0.5),
+//       color: colorVars.white.alpha(0.5),
+//     },
+//   }),
+//   selectors: {
+//     ...mediaQueryStyle({
+//       snug: {
+//         width: `calc(100% + ${paddingTight.double().css()})`,
+//         ...margins({
+//           left: paddingTight.negation(),
+//           bottom: paddingTight,
+//         }),
+//       },
+//     }),
+//   },
+// });

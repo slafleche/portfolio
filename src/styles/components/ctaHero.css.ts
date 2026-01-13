@@ -97,6 +97,8 @@ export const scoopedGradient = style({
 export const ctaText = style({
   display: 'inline-block',
   fontSize: '25px',
+  textWrap: 'nowrap',
+  whiteSpace: 'nowrap',
   color: colorVars.white.css(),
   willChange: 'transform',
   selectors: {

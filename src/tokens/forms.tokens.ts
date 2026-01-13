@@ -2,6 +2,8 @@ import { m } from 'css-calipers';
 
 import { colorVars, themeColours } from '@/tokens/global.tokens';
 
+import { layoutVars } from './layout.tokens';
+
 // import { relativeFontWeight } from '../styles/helpers/typography.helper';
 // import { fontFamilies } from './fontFamilies.tokens';
 
@@ -16,7 +18,7 @@ export const formTokens = {
     },
   },
   layout: {
-    maxWidth: m(640),
+    maxWidth: layoutVars.compact.maxWidth,
     fieldGap: m(12),
     sectionGap: m(16),
   },

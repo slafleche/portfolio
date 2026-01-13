@@ -397,10 +397,7 @@ function ContactFormInner({
         copy={copy.blocks.turnstile}
         turnstileSiteKey={turnstileSiteKey}
       />
-      <ContactPrivacy
-        copy={copy.privacy}
-        onOpenPrivacy={handleOpenPrivacy}
-      />
+
       <HoneypotBlock copy={copy.blocks.honeypot} />
       {isInvalid ? (
         <button
@@ -414,6 +411,10 @@ function ContactFormInner({
       <SubmitButton disabled={disableSubmit}>
         {copy.submitLabel}
       </SubmitButton>
+      <ContactPrivacy
+        copy={copy.privacy}
+        onOpenPrivacy={handleOpenPrivacy}
+      />
     </form>
   );
 }

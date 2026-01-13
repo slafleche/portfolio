@@ -18,10 +18,9 @@ import { stripContactFormScenarioFromLocation } from '@/dev/scenarios/contactFor
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { sharedStrings } from '@/lib/sharedStrings';
-import * as dialogStyles from '@/styles/components/contactDialog.css';
+import * as dialogStyles from '@/styles/components/contactForm.css';
 import * as privacyStyles from '@/styles/components/privacy.css';
 
-import { GlassPanel } from '../GlassPanel';
 import ImageByName from '../ImageByName';
 import Content from '../responsive/Content';
 import { CloseButton } from './CloseButton';
@@ -462,30 +461,31 @@ export function ContactDialogProvider({
                 <Content
                   className={dialogStyles.panelContent}
                   data-ui="contact-form"
+                  data-query="no-margin"
                 >
-                  <GlassPanel>
-                    <div className={dialogStyles.header}>
-                      <Dialog.Title
-                        className={dialogStyles.heading}
-                        data-modal="title"
-                      >
-                        {dialogTitle}
-                      </Dialog.Title>
-                      <div className={dialogStyles.closeButtonWrap}>
-                        <Dialog.Close asChild>
-                          <CloseButton
-                            label={closeLabel}
-                            className={dialogStyles.closeButton}
-                            closeOverlayClassName={
-                              dialogStyles.scoopGradient
-                            }
-                          />
-                        </Dialog.Close>
-                      </div>
+                  <div className={dialogStyles.header}>
+                    <Dialog.Title
+                      className={dialogStyles.heading}
+                      data-modal="title"
+                    >
+                      {dialogTitle}
+                    </Dialog.Title>
+                    <div className={dialogStyles.closeButtonWrap}>
+                      <Dialog.Close asChild>
+                        <CloseButton
+                          label={closeLabel}
+                          className={dialogStyles.closeButton}
+                          closeOverlayClassName={
+                            dialogStyles.scoopGradient
+                          }
+                        />
+                      </Dialog.Close>
                     </div>
-                    <Dialog.Description asChild>
-                      <p data-visible="sc-only">{dialogTitle}</p>
-                    </Dialog.Description>
+                  </div>
+                  <Dialog.Description asChild>
+                    <p data-visible="sc-only">{dialogTitle}</p>
+                  </Dialog.Description>
+                  <div className={dialogStyles.scrollArea}>
                     <ContactDialogTitleContext.Provider
                       value={titleContextValue}
                     >
@@ -495,7 +495,7 @@ export function ContactDialogProvider({
                         onOpenPrivacy={openPrivacy}
                       />
                     </ContactDialogTitleContext.Provider>
-                  </GlassPanel>
+                  </div>
                 </Content>
               </div>
             </Dialog.Content>

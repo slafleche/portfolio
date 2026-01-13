@@ -41,3 +41,14 @@ export const gridLayoutVars = {
   gap: m(24),
   separatorMinimum,
 };
+
+const formInnerPadding = m(100)
+const formInnerCompactPadding = anchorMenuVars.handle.size;
+export const formLayoutVars = {
+  maxWidth: layoutVars.compact.maxWidth.add(formInnerPadding.double()),
+  innerPadding: formInnerPadding,
+  compact: {
+    maxWidth: layoutVars.compact.maxWidth.add(formInnerCompactPadding.double()),
+    innerPadding: formInnerCompactPadding,
+  }
+};
