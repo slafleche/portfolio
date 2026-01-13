@@ -54,7 +54,7 @@ export const backLink = style({
 export const closeButtonWrap = style({
   position: 'absolute',
   top: '50%',
-  right: privacyTokens.backLink.offset.double().css(),
+  right: '16px',
   transform: 'translateY(-50%)',
   width: glassyButtonTokens.size.css(),
   height: glassyButtonTokens.size.css(),
