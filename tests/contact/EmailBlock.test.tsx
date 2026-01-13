@@ -132,7 +132,7 @@ describe('Contact form block tests: EmailBlock', () => {
     });
 
     it('moves focus to the input even when an inline error is shown', async () => {
-      const { container, getRegistration } =
+      const { container, getRegistration, markSubmitAttempted } =
         renderEmailBlockWithFormBlocks({
           id: 'test-email-block',
           order: 0,
@@ -146,6 +146,7 @@ describe('Contact form block tests: EmailBlock', () => {
 
       expect(emailInput).not.toBeNull();
 
+      markSubmitAttempted();
       await userEvent.type(emailInput, 'invalid-email');
       fireEvent.blur(emailInput);
 
@@ -161,16 +162,13 @@ describe('Contact form block tests: EmailBlock', () => {
 
   describe('validation and live updates', () => {
     it('shows invalid error only after blur for invalid email', async () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <EmailBlock
-            id="test-email-block"
-            order={0}
-            copy={emailCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderEmailBlockWithFormBlocks({
+          id: 'test-email-block',
+          order: 0,
+          copy: emailCopy,
+          disabled: false,
+        });
 
       const input = container.querySelector(
         'input[data-input="text"]',
@@ -186,6 +184,7 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
+      markSubmitAttempted();
       fireEvent.blur(input);
 
       expectErrorHintWiredToInput(container, input);
@@ -193,16 +192,13 @@ describe('Contact form block tests: EmailBlock', () => {
     });
 
     it('updates validation live after the first blur', async () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <EmailBlock
-            id="test-email-block"
-            order={0}
-            copy={emailCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderEmailBlockWithFormBlocks({
+          id: 'test-email-block',
+          order: 0,
+          copy: emailCopy,
+          disabled: false,
+        });
 
       const input = container.querySelector(
         'input[data-input="text"]',
@@ -213,6 +209,7 @@ describe('Contact form block tests: EmailBlock', () => {
       expect(getErrorHint(container)).toBeNull();
       expect(input).not.toHaveAttribute('aria-invalid');
 
+      markSubmitAttempted();
       await userEvent.type(input, 'invalid-email');
       fireEvent.blur(input);
 
@@ -259,19 +256,22 @@ describe('Contact form block tests: EmailBlock', () => {
         });
       });
 
-      const { container } = render(
-        <FormBlocksProvider>
-          <FormBlocksValidationObserver
-            onUpdate={handleUpdate}
-          />
-          <EmailBlock
-            id="test-email-block"
-            order={0}
-            copy={emailCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderEmailBlockWithFormBlocks(
+          {
+            id: 'test-email-block',
+            order: 0,
+            copy: emailCopy,
+            disabled: false,
+          },
+          {
+            beforeChildren: (
+              <FormBlocksValidationObserver
+                onUpdate={handleUpdate}
+              />
+            ),
+          },
+        );
 
       const input = container.querySelector(
         'input[data-input="text"]',
@@ -283,6 +283,7 @@ describe('Contact form block tests: EmailBlock', () => {
 
       // Enter an invalid email and blur: one invalid snapshot should
       // be recorded.
+      markSubmitAttempted();
       await userEvent.type(input, 'invalid-email');
       fireEvent.blur(input);
 
@@ -413,17 +414,17 @@ describe('Contact form block tests: EmailBlock', () => {
     });
 
     it('preserves existing error when toggling to readOnly', async () => {
-      const { container, rerender } = render(
-        <FormBlocksProvider>
-          <EmailBlock
-            id="test-email-block"
-            order={0}
-            copy={emailCopy}
-            disabled={false}
-            readOnly={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const {
+        container,
+        markSubmitAttempted,
+        rerenderBlock,
+      } = renderEmailBlockWithFormBlocks({
+        id: 'test-email-block',
+        order: 0,
+        copy: emailCopy,
+        disabled: false,
+        readOnly: false,
+      });
 
       let input = container.querySelector(
         'input[data-input="text"]',
@@ -431,23 +432,20 @@ describe('Contact form block tests: EmailBlock', () => {
 
       expect(input).not.toBeNull();
 
+      markSubmitAttempted();
       await userEvent.type(input, 'invalid-email');
       fireEvent.blur(input);
 
       expectErrorHintWiredToInput(container, input);
       expect(input).toHaveAttribute('aria-invalid', 'true');
 
-      rerender(
-        <FormBlocksProvider>
-          <EmailBlock
-            id="test-email-block"
-            order={0}
-            copy={emailCopy}
-            disabled={false}
-            readOnly
-          />
-        </FormBlocksProvider>,
-      );
+      rerenderBlock({
+        id: 'test-email-block',
+        order: 0,
+        copy: emailCopy,
+        disabled: false,
+        readOnly: true,
+      });
 
       input = container.querySelector(
         'input[data-input="text"]',

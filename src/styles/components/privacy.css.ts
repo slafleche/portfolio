@@ -1,8 +1,9 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 
 import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { formTokens } from '../../tokens/forms.tokens';
+import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import { colorVars } from '../../tokens/global.tokens';
 import { layoutVars } from '../../tokens/layout.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
@@ -66,8 +67,8 @@ export const closeButtonWrap = style({
   alignSelf: 'start',
   justifySelf: 'end',
   marginRight: privacyTokens.backLink.offset.css(),
-  width: privacyTokens.backLink.size.css(),
-  height: privacyTokens.backLink.size.css(),
+  width: glassyButtonTokens.size.css(),
+  height: glassyButtonTokens.size.css(),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -137,8 +138,17 @@ export const panel = style({
 });
 
 export const title = style({
-  margin: 0,
   color: privacyTokens.title.color.css(),
+});
+
+globalStyle(`.${title}[data-modal="title"]`, {
+  ...margins(m(0)),
+  ...paddings({
+    top: 0,
+    horizontal: glassyButtonTokens.iconSize
+      .add(privacyTokens.backLink.offset)
+      .multiply(2),
+  }),
 });
 
 export const content = style({

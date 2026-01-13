@@ -475,6 +475,7 @@ export function ContactDialogProvider({
                       </Dialog.Close>
                     </div>
                     <Dialog.Title
+                      
                       className={dialogStyles.heading}
                       data-modal="title"
                     >
@@ -524,10 +525,10 @@ export function ContactDialogProvider({
               </Dialog.Title>
               <Dialog.Description asChild>
                 <Content data-ui="privacy-content">
-                  <div className={privacyStyles.wrap}>
+                  <div className={privacyStyles.container}>
                     <Markdown
                       source={privacyCopy.content}
-                      className={privacyStyles.body}
+                      className={privacyStyles.text}
                     />
                   </div>
                 </Content>

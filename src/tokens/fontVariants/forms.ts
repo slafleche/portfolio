@@ -43,7 +43,7 @@ export const formFontVariants = {
     sourcePath: SOURCE_PATH,
     config: {
       styleOverrides: {
-        lineHeight: 1.1,
+        lineHeight: 1.5,
         size: m(16),
       },
       options: {

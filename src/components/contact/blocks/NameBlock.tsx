@@ -180,10 +180,15 @@ export function NameBlock({
     value,
   ]);
 
-  const { continuousValidation, recordValidationResult } =
+  const {
+    continuousValidation,
+    hasSubmitAttempted,
+    recordValidationResult,
+  } =
     useFormBlock(registration);
 
-  const liveValidation = hasBlurred || continuousValidation;
+  const liveValidation =
+    continuousValidation || (hasBlurred && hasSubmitAttempted);
 
   const nameError = getNameError(evaluation, copy);
   const localErrorText =

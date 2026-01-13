@@ -11,7 +11,6 @@ describe('borders.helper', () => {
   const blue = color('blue');
   const blueCss = blue.css();
   const green = color('green');
-  const greenCss = green.css();
   const purple = color('purple');
   const purpleCss = purple.css();
 

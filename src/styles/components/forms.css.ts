@@ -154,7 +154,7 @@ export const textarea = style({
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.focusVisible.borders, {
+        ...borders(formTokens.field.hover.borders, {
           skipDefaults: true,
         }),
         // ...boxShadow(formTokens.field.focusVisible.shadow),

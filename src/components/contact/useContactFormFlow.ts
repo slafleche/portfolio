@@ -41,6 +41,7 @@ export function useContactFormFlow(
   const {
     getRegistrationsSnapshot,
     enableContinuousValidation,
+    markSubmitAttempted,
     recordValidationResult,
     getValidationResultsSnapshot,
     validationResultsVersion,
@@ -160,6 +161,8 @@ export function useContactFormFlow(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
+      markSubmitAttempted();
+
       if (inFlightRef.current) {
         return;
       }
@@ -231,6 +234,7 @@ export function useContactFormFlow(
       collectPayload,
       enableContinuousValidation,
       logSubmitResult,
+      markSubmitAttempted,
       onSuccessStateChange,
       submitHelper,
       validateAll,

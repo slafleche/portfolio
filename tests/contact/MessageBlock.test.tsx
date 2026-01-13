@@ -139,7 +139,11 @@ describe('Contact form block tests: MessageBlock', () => {
     });
 
     it('moves focus to the textarea even when an inline error is shown', () => {
-      const { container, getRegistration } =
+      const {
+        container,
+        getRegistration,
+        markSubmitAttempted,
+      } =
         renderMessageBlockWithFormBlocks({
           id: 'test-message-block',
           order: 0,
@@ -153,6 +157,7 @@ describe('Contact form block tests: MessageBlock', () => {
 
       expect(textarea).not.toBeNull();
 
+      markSubmitAttempted();
       fireEvent.blur(textarea);
 
       const errorHint = container.querySelector(
@@ -198,16 +203,13 @@ describe('Contact form block tests: MessageBlock', () => {
     });
 
     it('shows required error only after blur for empty message', () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <MessageBlock
-            id="test-message-block"
-            order={0}
-            copy={messageCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderMessageBlockWithFormBlocks({
+          id: 'test-message-block',
+          order: 0,
+          copy: messageCopy,
+          disabled: false,
+        });
 
       const textarea = container.querySelector(
         'textarea',
@@ -222,6 +224,7 @@ describe('Contact form block tests: MessageBlock', () => {
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
 
+      markSubmitAttempted();
       fireEvent.blur(textarea);
 
       const requiredHint = container.querySelector(
@@ -232,16 +235,13 @@ describe('Contact form block tests: MessageBlock', () => {
     });
 
     it('shows too-short error after blur and clears once length is valid', async () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <MessageBlock
-            id="test-message-block"
-            order={0}
-            copy={messageCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderMessageBlockWithFormBlocks({
+          id: 'test-message-block',
+          order: 0,
+          copy: messageCopy,
+          disabled: false,
+        });
 
       const textarea = container.querySelector(
         'textarea',
@@ -261,6 +261,7 @@ describe('Contact form block tests: MessageBlock', () => {
       ).toBeNull();
       expect(textarea).not.toHaveAttribute('aria-invalid');
 
+      markSubmitAttempted();
       fireEvent.blur(textarea);
 
       const tooShortHint = container.querySelector(
@@ -282,16 +283,13 @@ describe('Contact form block tests: MessageBlock', () => {
     });
 
     it('shows too-long error when exceeding max length and clears once trimmed', () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <MessageBlock
-            id="test-message-block"
-            order={0}
-            copy={messageCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderMessageBlockWithFormBlocks({
+          id: 'test-message-block',
+          order: 0,
+          copy: messageCopy,
+          disabled: false,
+        });
 
       const textarea = container.querySelector(
         'textarea',
@@ -300,6 +298,7 @@ describe('Contact form block tests: MessageBlock', () => {
       expect(textarea).not.toBeNull();
 
       const tooLongValue = 'x'.repeat(MESSAGE_MAX_LENGTH + 1);
+      markSubmitAttempted();
       fireEvent.change(textarea, { target: { value: tooLongValue } });
       fireEvent.blur(textarea);
 
@@ -382,16 +381,13 @@ describe('Contact form block tests: MessageBlock', () => {
     });
 
     it('shows too-many-links error and max-links hint when URL limit is exceeded', () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <MessageBlock
-            id="test-message-block"
-            order={0}
-            copy={messageCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderMessageBlockWithFormBlocks({
+          id: 'test-message-block',
+          order: 0,
+          copy: messageCopy,
+          disabled: false,
+        });
 
       const textarea = container.querySelector(
         'textarea',
@@ -405,6 +401,7 @@ describe('Contact form block tests: MessageBlock', () => {
         (_, index) => `https://example${index}.com`,
       ).join(' ');
 
+      markSubmitAttempted();
       fireEvent.change(textarea, { target: { value: urls } });
       fireEvent.blur(textarea);
 
@@ -476,19 +473,22 @@ describe('Contact form block tests: MessageBlock', () => {
         });
       });
 
-      const { container } = render(
-        <FormBlocksProvider>
-          <FormBlocksValidationObserver
-            onUpdate={handleUpdate}
-          />
-          <MessageBlock
-            id="test-message-block"
-            order={0}
-            copy={messageCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderMessageBlockWithFormBlocks(
+          {
+            id: 'test-message-block',
+            order: 0,
+            copy: messageCopy,
+            disabled: false,
+          },
+          {
+            beforeChildren: (
+              <FormBlocksValidationObserver
+                onUpdate={handleUpdate}
+              />
+            ),
+          },
+        );
 
       const textarea = container.querySelector(
         'textarea',
@@ -497,6 +497,7 @@ describe('Contact form block tests: MessageBlock', () => {
       expect(textarea).not.toBeNull();
 
       // Empty + blur → required bucket.
+      markSubmitAttempted();
       fireEvent.blur(textarea);
 
       await waitFor(() => {
@@ -532,19 +533,22 @@ describe('Contact form block tests: MessageBlock', () => {
         });
       });
 
-      const { container } = render(
-        <FormBlocksProvider>
-          <FormBlocksValidationObserver
-            onUpdate={handleUpdate}
-          />
-          <MessageBlock
-            id="test-message-block"
-            order={0}
-            copy={messageCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderMessageBlockWithFormBlocks(
+          {
+            id: 'test-message-block',
+            order: 0,
+            copy: messageCopy,
+            disabled: false,
+          },
+          {
+            beforeChildren: (
+              <FormBlocksValidationObserver
+                onUpdate={handleUpdate}
+              />
+            ),
+          },
+        );
 
       const textarea = container.querySelector(
         'textarea',
@@ -559,6 +563,7 @@ describe('Contact form block tests: MessageBlock', () => {
       const tooShortValue = 'x'.repeat(
         Math.max(1, MESSAGE_MIN_LENGTH - 1),
       );
+      markSubmitAttempted();
       await userEvent.type(textarea, tooShortValue);
       fireEvent.blur(textarea);
 
@@ -654,17 +659,17 @@ describe('Contact form block tests: MessageBlock', () => {
     });
 
     it('preserves existing error when toggling to readOnly', async () => {
-      const { container, rerender } = render(
-        <FormBlocksProvider>
-          <MessageBlock
-            id="test-message-block"
-            order={0}
-            copy={messageCopy}
-            disabled={false}
-            readOnly={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const {
+        container,
+        markSubmitAttempted,
+        rerenderBlock,
+      } = renderMessageBlockWithFormBlocks({
+        id: 'test-message-block',
+        order: 0,
+        copy: messageCopy,
+        disabled: false,
+        readOnly: false,
+      });
 
       let textarea = container.querySelector(
         'textarea',
@@ -675,6 +680,7 @@ describe('Contact form block tests: MessageBlock', () => {
       const tooShortValue = 'x'.repeat(
         Math.max(1, MESSAGE_MIN_LENGTH - 1),
       );
+      markSubmitAttempted();
       await userEvent.type(textarea, tooShortValue);
       fireEvent.blur(textarea);
 
@@ -684,17 +690,13 @@ describe('Contact form block tests: MessageBlock', () => {
       expect(tooShortHintInitial).not.toBeNull();
       expect(textarea).toHaveAttribute('aria-invalid', 'true');
 
-      rerender(
-        <FormBlocksProvider>
-          <MessageBlock
-            id="test-message-block"
-            order={0}
-            copy={messageCopy}
-            disabled={false}
-            readOnly
-          />
-        </FormBlocksProvider>,
-      );
+      rerenderBlock({
+        id: 'test-message-block',
+        order: 0,
+        copy: messageCopy,
+        disabled: false,
+        readOnly: true,
+      });
 
       textarea = container.querySelector(
         'textarea',

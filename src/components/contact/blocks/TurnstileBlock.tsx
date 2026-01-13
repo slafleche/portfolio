@@ -304,13 +304,11 @@ export function TurnstileBlock({
         ? copy.summary.error
         : copy.summary.missing
     : null;
-  const helperText = !isComplete ? copy.requiredText : null;
   const disabledText = disabled ? copy.statuses.disabled : null;
   const showError = Boolean(
     summaryText && continuousValidation && !disabled,
   );
-  const hintText =
-    disabledText ?? (showError ? summaryText : helperText);
+  const hintText = disabledText ?? (showError ? summaryText : null);
   const hintId = `${id}-turnstile-hint`;
 
   return (
