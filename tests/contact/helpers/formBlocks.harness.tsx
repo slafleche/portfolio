@@ -20,7 +20,7 @@ type RenderBlockOptions = {
   beforeChildren?: ReactNode;
 };
 
-type RenderBlockResult = RenderResult & {
+type RenderBlockResult<Props extends object> = RenderResult & {
   getLatestRegistration: () => FormBlockRegistration | null;
   enableContinuousValidation: () => void;
   markSubmitAttempted: () => void;
@@ -64,7 +64,7 @@ export function renderBlockWithFormBlocks<Props extends object>(
   BlockComponent: ComponentType<Props>,
   props: Props,
   options?: RenderBlockOptions,
-): RenderBlockResult {
+): RenderBlockResult<Props> {
   let latestRegistration: FormBlockRegistration | null = null;
 
   const handleRegisterBlock = (

@@ -1,5 +1,5 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
@@ -7,9 +7,11 @@ import { colorVars, themeColours } from '../../tokens/global.tokens';
 import backdropFilters from '../helpers/backdropFilter.helper';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
+import { color } from '../helpers/colorWrap.helper';
 import {
   buildLinear,
   gradientAsBgImg,
+  maskByLinearGradient,
 } from '../helpers/gradients.helper';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { boxShadow } from '../helpers/shadow.helper';
@@ -28,6 +30,21 @@ const sheenSweep = keyframes({
 
 const sheenGradient =
   'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.65) 45%, rgba(255,255,255,0) 100%)';
+
+const maskPosition = mPercent(57.5);
+const mask = maskByLinearGradient({
+  angle: m(225, 'deg'),
+  stops: [
+    {
+      color: color('#000').alpha(0),
+      at: maskPosition,
+    },
+    {
+      color: color('#000').alpha(1),
+      at: maskPosition,
+    },
+  ],
+});
 
 export const overlay = style({
   position: 'fixed',
@@ -69,6 +86,21 @@ export const panelContent = style({
   gap: '6px',
 });
 
+const closeOffset = m(16);
+
+export const header = style({
+  position: 'sticky',
+  // top: m(),
+  zIndex: 2,
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: glassyButtonTokens.size.css(),
+  paddingLeft: closeOffset.css(),
+  paddingRight: closeOffset.css(),
+});
+
 export const heading = style({
   margin: 0,
   color: colorVars.white.css(),
@@ -88,16 +120,14 @@ export const body = style({
   // maxWidth: '70ch',
 });
 
-const closeOffset = m(16);
-
 export const closeButtonWrap = style({
-  position: 'sticky',
-  top: closeOffset.css(),
-  alignSelf: 'start',
-  justifySelf: 'end',
-  marginRight: closeOffset.css(),
+  position: 'absolute',
+  right: closeOffset.css(),
+  top: '50%',
+  transform: 'translateY(-50%)',
   display: 'flex',
-  justifyContent: 'flex-end',
+  alignItems: 'center',
+  justifyContent: 'center',
   width: glassyButtonTokens.size.css(),
   height: glassyButtonTokens.size.css(),
   zIndex: 2,

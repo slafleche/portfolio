@@ -463,24 +463,25 @@ export function ContactDialogProvider({
                   data-ui="contact-form"
                 >
                   <GlassPanel>
-                    <div className={dialogStyles.closeButtonWrap}>
-                      <Dialog.Close asChild>
-                        <CloseButton
-                          label={closeLabel}
-                          className={dialogStyles.closeButton}
-                          closeOverlayClassName={
-                            dialogStyles.scoopGradient
-                          }
-                        />
-                      </Dialog.Close>
+                    <div className={dialogStyles.header}>
+                      <Dialog.Title
+                        className={dialogStyles.heading}
+                        data-modal="title"
+                      >
+                        {dialogTitle}
+                      </Dialog.Title>
+                      <div className={dialogStyles.closeButtonWrap}>
+                        <Dialog.Close asChild>
+                          <CloseButton
+                            label={closeLabel}
+                            className={dialogStyles.closeButton}
+                            closeOverlayClassName={
+                              dialogStyles.scoopGradient
+                            }
+                          />
+                        </Dialog.Close>
+                      </div>
                     </div>
-                    <Dialog.Title
-                      
-                      className={dialogStyles.heading}
-                      data-modal="title"
-                    >
-                      {dialogTitle}
-                    </Dialog.Title>
                     <Dialog.Description asChild>
                       <p data-visible="sc-only">{dialogTitle}</p>
                     </Dialog.Description>
@@ -508,21 +509,23 @@ export function ContactDialogProvider({
           <Dialog.Overlay className={privacyStyles.overlay} />
           <Dialog.Content className={privacyStyles.dialog}>
             <div className={privacyStyles.panel}>
-              <div className={privacyStyles.closeButtonWrap}>
-                <Dialog.Close asChild>
-                  <CloseButton
-                    label={formCopy.privacy.closeLabel}
-                    closeOverlayClassName={dialogStyles.scoopGradient}
-                    className={dialogStyles.closeButton}
-                  />
-                </Dialog.Close>
+              <div className={privacyStyles.header}>
+                <Dialog.Title
+                  className={privacyStyles.title}
+                  data-modal="title"
+                >
+                  {privacyCopy.title}
+                </Dialog.Title>
+                <div className={privacyStyles.closeButtonWrap}>
+                  <Dialog.Close asChild>
+                    <CloseButton
+                      label={formCopy.privacy.closeLabel}
+                      closeOverlayClassName={dialogStyles.scoopGradient}
+                      className={dialogStyles.closeButton}
+                    />
+                  </Dialog.Close>
+                </div>
               </div>
-              <Dialog.Title
-                className={privacyStyles.title}
-                data-modal="title"
-              >
-                {privacyCopy.title}
-              </Dialog.Title>
               <Dialog.Description asChild>
                 <Content data-ui="privacy-content">
                   <div className={privacyStyles.container}>

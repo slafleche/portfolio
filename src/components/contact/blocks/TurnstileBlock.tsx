@@ -268,9 +268,16 @@ export function TurnstileBlock({
           },
         });
         widgetIdRef.current = widgetId;
-        setStatus((previous) =>
-          previous === 'verified' ? 'verified' : 'ready',
-        );
+        setStatus((previous) => {
+          if (
+            previous === 'verified' ||
+            previous === 'expired' ||
+            previous === 'error'
+          ) {
+            return previous;
+          }
+          return 'ready';
+        });
       } catch {
         if (!cancelled) {
           setStatus('error');

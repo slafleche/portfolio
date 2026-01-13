@@ -25,7 +25,7 @@ export const container = style({
   gap: privacyTokens.layout.sectionGap.css(),
 });
 
-export const header = style({
+export const headerStack = style({
   display: 'grid',
   gap: privacyTokens.header.gap.css(),
 });
@@ -62,11 +62,10 @@ export const backLink = style({
 });
 
 export const closeButtonWrap = style({
-  position: 'sticky',
-  top: privacyTokens.backLink.offset.css(),
-  alignSelf: 'start',
-  justifySelf: 'end',
-  marginRight: privacyTokens.backLink.offset.css(),
+  position: 'absolute',
+  top: '50%',
+  right: privacyTokens.backLink.offset.css(),
+  transform: 'translateY(-50%)',
   width: glassyButtonTokens.size.css(),
   height: glassyButtonTokens.size.css(),
   display: 'flex',
@@ -119,7 +118,7 @@ export const dialog = style({
   alignItems: 'flex-start',
   justifyContent: 'center',
   ...paddings({
-    vertical: m(8),
+    vertical: m(0),
     horizontal: m(6),
   }),
   overflowY: 'auto',
@@ -135,6 +134,22 @@ export const panel = style({
   maxWidth: privacyTokens.layout.maxWidth.css(),
   display: 'grid',
   gap: formTokens.layout.fieldGap.css(),
+  ...paddings({
+    top: privacyTokens.backLink.offset,
+  }),
+});
+
+export const header = style({
+  position: 'sticky',
+  top: privacyTokens.backLink.offset.css(),
+  zIndex: 2,
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: glassyButtonTokens.size.css(),
+  paddingLeft: privacyTokens.backLink.offset.css(),
+  paddingRight: privacyTokens.backLink.offset.css(),
 });
 
 export const title = style({
@@ -145,9 +160,6 @@ globalStyle(`.${title}[data-modal="title"]`, {
   ...margins(m(0)),
   ...paddings({
     top: 0,
-    horizontal: glassyButtonTokens.iconSize
-      .add(privacyTokens.backLink.offset)
-      .multiply(2),
   }),
 });
 
