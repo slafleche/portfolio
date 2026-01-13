@@ -71,7 +71,12 @@ describe('mediaQueries helpers', () => {
       },
     });
 
-    const mediaBlock = (styles as Record<string, unknown>)[
+    const selectorBlock = (styles as Record<string, unknown>)[
+      `&.${someOtherClass}`
+    ] as
+      | Record<string, Record<string, unknown>>
+      | undefined;
+    const mediaBlock = selectorBlock?.[
       '@media'
     ] as
       | Record<string, Record<string, unknown>>
@@ -82,15 +87,12 @@ describe('mediaQueries helpers', () => {
         )
       : undefined;
 
+    expect(selectorBlock).toBeTruthy();
     expect(mediaBlock).toBeTruthy();
     expect(mediaKey).toBeTruthy();
     expect(mediaBlock?.[mediaKey as string]).toEqual({
-      selectors: {
-        [`&.${someOtherClass}`]: {
-          paddingRight: '10px',
-          paddingLeft: '10px',
-        },
-      },
+      paddingRight: '10px',
+      paddingLeft: '10px',
     });
   });
 });

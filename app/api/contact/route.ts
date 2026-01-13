@@ -3,6 +3,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { type NextRequest,NextResponse } from 'next/server';
 
 import { DEFAULT_LOCALE } from '@/lib/locales/locale';
+import { notRelease } from '@/lib/runtimeEnv';
 import {
   buildContactFormCopy,
   type ContactFormCopy,
@@ -274,6 +275,16 @@ export async function POST(request: NextRequest) {
 
   const turnstile = await verifyTurnstileToken(draft.token, ip);
   if (!turnstile.ok) {
+    const shouldBypassTurnstile =
+      notRelease() &&
+      turnstile.errorCodes?.includes('invalid-input-secret');
+    if (shouldBypassTurnstile) {
+      console.warn('[contact][turnstile-bypass]', {
+        submissionId,
+        ipHash,
+        errorCodes: turnstile.errorCodes,
+      });
+    } else {
     const responseCode: FormServerResponseCode =
       turnstile.errorCodes?.includes('missing-secret')
         ? 'not_configured'
@@ -294,6 +305,7 @@ export async function POST(request: NextRequest) {
         errorCodes: turnstile.errorCodes,
       },
     });
+    }
   }
 
   try {

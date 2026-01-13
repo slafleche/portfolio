@@ -168,8 +168,8 @@ export function TurnstileBlock({
     typeof window !== 'undefined' &&
     Boolean((window as ExtendedWindow).turnstile);
 
-  const { compressed } = useMedia();
-  const turnstileSize = compressed === true ? 'compact' : 'normal';
+  const { compact } = useMedia();
+  const turnstileSize = compact === true ? 'compact' : 'normal';
 
   const [
     status,
