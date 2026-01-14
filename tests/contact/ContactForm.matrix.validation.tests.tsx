@@ -8,8 +8,8 @@ import type {
 } from '@/components/contact/types/form.types';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 
-import { enFormTranslator } from './helpers/enFormTranslator';
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
+import { enFormTranslator } from './helpers/enFormTranslator';
 import {
   makeMessageBase,
   makeValidationResult,

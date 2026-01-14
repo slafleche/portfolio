@@ -16,8 +16,8 @@ import {
 } from '@/lib/locales/translations/en.data';
 import { sharedStrings } from '@/lib/sharedStrings';
 
-import { enFormTranslator } from './helpers/enFormTranslator';
 import { installTestEnv } from '../helpers/testEnvVars';
+import { enFormTranslator } from './helpers/enFormTranslator';
 
 const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 

@@ -29,8 +29,8 @@ import {
 import { MESSAGE_MIN_LENGTH } from '@/modules/contactForm/validation.constants';
 
 import { installTestEnv } from '../helpers/testEnvVars';
-import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import { enFormTranslator } from './helpers/enFormTranslator';
+import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
 import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
