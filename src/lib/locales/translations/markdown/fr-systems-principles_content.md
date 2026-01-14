@@ -1,5 +1,5 @@
-Partir d'une base solide, puis construire des systèmes qui s'adaptent au
-changement plutôt que d'y résister. Ajouter de la complexité seulement quand
+Partir d’une base solide, puis construire des systèmes qui s’adaptent au
+changement plutôt que d’y résister. Ajouter de la complexité seulement quand
 elle résout de vrais problèmes, et garder tout composable pour que les parties
 puissent évoluer indépendamment.
 

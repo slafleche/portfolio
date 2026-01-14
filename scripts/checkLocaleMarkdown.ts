@@ -2,17 +2,17 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import {
-  applyLocaleEntitiesToDataFiles,
-  applyLocaleEntitiesToMarkdown,
-} from './localeEntities';
+import type { LocaleMessagesShape } from '../src/lib/locales/localeTypes';
+import type { Locale } from '../src/lib/locales/translations';
+import { resolveAbbrShortcodes } from '../src/lib/locales/translations/resolveAbbrShortcodes';
 import {
   buildFileContents,
   readMarkdownFiles,
 } from './generateLocaleMarkdown';
-import type { LocaleMessagesShape } from '../src/lib/locales/localeTypes';
-import type { Locale } from '../src/lib/locales/translations';
-import { resolveAbbrShortcodes } from '../src/lib/locales/translations/resolveAbbrShortcodes';
+import {
+  applyLocaleEntitiesToDataFiles,
+  applyLocaleEntitiesToMarkdown,
+} from './localeEntities';
 
 type MarkdownKey = string;
 

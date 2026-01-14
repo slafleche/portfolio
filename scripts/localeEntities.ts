@@ -5,7 +5,6 @@ import { fileURLToPath } from 'node:url';
 import * as ts from 'typescript';
 
 import type { Locale } from '../src/lib/locales/translations';
-import { MARKDOWN_MESSAGE_KEYS } from '../src/lib/locales/generated/markdown.gen';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -44,14 +43,16 @@ const dataTargets = [
     ],
   },
   {
-    filePath: '../src/lib/locales/translations/caseStudies/en.caseStudies.ts',
+    filePath:
+      '../src/lib/locales/translations/caseStudies/en.caseStudies.ts',
     locale: 'en',
     objectNames: [
       'enCaseStudies',
     ],
   },
   {
-    filePath: '../src/lib/locales/translations/caseStudies/fr.caseStudies.ts',
+    filePath:
+      '../src/lib/locales/translations/caseStudies/fr.caseStudies.ts',
     locale: 'fr',
     objectNames: [
       'frCaseStudies',
@@ -60,12 +61,14 @@ const dataTargets = [
 ] as const;
 const abbrTargets = [
   {
-    filePath: '../src/lib/locales/translations/abbreviations/en.abbr.ts',
+    filePath:
+      '../src/lib/locales/translations/abbreviations/en.abbr.ts',
     locale: 'en',
     objectName: 'enAbbreviations',
   },
   {
-    filePath: '../src/lib/locales/translations/abbreviations/fr.abbr.ts',
+    filePath:
+      '../src/lib/locales/translations/abbreviations/fr.abbr.ts',
     locale: 'fr',
     objectName: 'frAbbreviations',
   },
@@ -84,10 +87,21 @@ type EntityConfig = {
 
 const entityConfig: EntityConfig = {
   fr: [
+    {
+      target: [
+        "'",
+      ],
+      replacement: '’',
+    },
     // BEFORE — narrow no-break space required
     {
       target: [
         ' !',
+        '\u00a0!',
+        '\u202f!',
+        '\u2009!',
+        '\u2002!',
+        '\u2003!',
         '&nbsp;!',
         '&#160;!',
         '&#8239;!',
@@ -99,6 +113,11 @@ const entityConfig: EntityConfig = {
     {
       target: [
         ' ?',
+        '\u00a0?',
+        '\u202f?',
+        '\u2009?',
+        '\u2002?',
+        '\u2003?',
         '&nbsp;?',
         '&#160;?',
         '&#8239;?',
@@ -110,6 +129,11 @@ const entityConfig: EntityConfig = {
     {
       target: [
         ' ;',
+        '\u00a0;',
+        '\u202f;',
+        '\u2009;',
+        '\u2002;',
+        '\u2003;',
         '&nbsp;;',
         '&#160;;',
         '&#8239;;',
@@ -121,17 +145,26 @@ const entityConfig: EntityConfig = {
     {
       target: [
         ' :',
-        '&nbsp;:',
-        '&#160;:',
-        '&#8239;:',
-        '&thinsp;:',
-        '&#8201;:',
+        '\u00a0:', // non-breaking space
+        '\u202f:', // narrow no-break space
+        '\u2009:', // thin space
+        '\u2002:', // en space
+        '\u2003:', // em space
+        '&nbsp;:', // non-breaking space
+        '&#160;:', // non-breaking space
+        '&#8239;:', // narrow no-break space
+        '&thinsp;:', // thin space
+        '&#8201;:', // hair space
       ],
       replacement: '&#8239;:',
     },
   ],
   en: [],
   entities: [
+    '&#160;', // non-breaking space (U+00A0)
+    '&#8239;', // narrow no-break space (U+202F)
+    '&#8202;', // hair space (U+200A)
+    '&#8201;', // thin space (U+2009)
     '&nbsp;', // non-breaking space (U+00A0)
     '&ensp;', // en space (U+2002)
     '&emsp;', // em space (U+2003)
@@ -237,10 +270,7 @@ const decodeEntity = (entity: string) => {
 const decodeEntitiesInText = (input: string) =>
   input.replace(/&[#a-zA-Z0-9]+;/g, (match) => decodeEntity(match));
 
-const applyEntityRules = (
-  input: string,
-  rules: EntityRule[],
-) => {
+const applyEntityRules = (input: string, rules: EntityRule[]) => {
   let output = input;
   for (const rule of rules) {
     const replacement = decodeEntitiesInText(rule.replacement);
@@ -251,10 +281,7 @@ const applyEntityRules = (
   return output;
 };
 
-const applyGlobalEntities = (
-  input: string,
-  entities: string[],
-) => {
+const applyGlobalEntities = (input: string, entities: string[]) => {
   let output = input;
   for (const entity of entities) {
     const replacement = decodeEntitiesInText(entity);
@@ -264,10 +291,7 @@ const applyGlobalEntities = (
   return output;
 };
 
-const applyEntitiesForLocale = (
-  input: string,
-  locale: Locale,
-) => {
+const applyEntitiesForLocale = (input: string, locale: Locale) => {
   let output = input;
   if (locale === 'fr') {
     output = applyEntityRules(output, entityConfig.fr);
@@ -310,6 +334,24 @@ const applyReplacements = (
   return updated;
 };
 
+const unwrapObjectLiteral = (
+  initializer: ts.Expression,
+): ts.ObjectLiteralExpression | null => {
+  if (ts.isObjectLiteralExpression(initializer)) return initializer;
+  if (
+    ts.isAsExpression(initializer) ||
+    ts.isSatisfiesExpression(initializer)
+  ) {
+    const expr = initializer.expression;
+    return ts.isObjectLiteralExpression(expr) ? expr : null;
+  }
+  if (ts.isParenthesizedExpression(initializer)) {
+    const expr = initializer.expression;
+    return ts.isObjectLiteralExpression(expr) ? expr : null;
+  }
+  return null;
+};
+
 const collectObjectLiteralReplacements = (
   sourceText: string,
   sourceFile: ts.SourceFile,
@@ -327,10 +369,11 @@ const collectObjectLiteralReplacements = (
     if (
       ts.isVariableDeclaration(node) &&
       node.name.getText(sourceFile) === objectName &&
-      node.initializer &&
-      ts.isObjectLiteralExpression(node.initializer)
+      node.initializer
     ) {
-      for (const prop of node.initializer.properties) {
+      const objectLiteral = unwrapObjectLiteral(node.initializer);
+      if (!objectLiteral) return;
+      for (const prop of objectLiteral.properties) {
         if (!ts.isPropertyAssignment(prop)) continue;
         const initializer = prop.initializer;
         if (
@@ -387,17 +430,22 @@ const collectAbbreviationReplacements = (
     if (
       ts.isVariableDeclaration(node) &&
       node.name.getText(sourceFile) === objectName &&
-      node.initializer &&
-      ts.isObjectLiteralExpression(node.initializer)
+      node.initializer
     ) {
-      for (const prop of node.initializer.properties) {
+      const objectLiteral = unwrapObjectLiteral(node.initializer);
+      if (!objectLiteral) return;
+      for (const prop of objectLiteral.properties) {
         if (!ts.isPropertyAssignment(prop)) continue;
         if (!ts.isObjectLiteralExpression(prop.initializer)) continue;
 
         for (const entry of prop.initializer.properties) {
           if (!ts.isPropertyAssignment(entry)) continue;
           const name = entry.name.getText(sourceFile);
-          if (name !== 'definition' && name !== "'definition'" && name !== '"definition"') {
+          if (
+            name !== 'definition' &&
+            name !== "'definition'" &&
+            name !== '"definition"'
+          ) {
             continue;
           }
           const initializer = entry.initializer;
@@ -439,8 +487,24 @@ const collectAbbreviationReplacements = (
   return replacements;
 };
 
+const MARKDOWN_FILE_PATTERN =
+  /^(?<locale>[a-z]{2})-(?<section>[a-z0-9-]+)-(?<key>[a-z0-9_]+)\.md$/i;
+
+const readMarkdownKeySet = async () => {
+  const markdownDir = path.resolve(__dirname, markdownTarget);
+  const files = await listMarkdownFiles(markdownDir);
+  const keys = new Set<string>();
+  for (const filePath of files) {
+    const fileName = path.basename(filePath);
+    const match = fileName.match(MARKDOWN_FILE_PATTERN);
+    if (!match?.groups) continue;
+    keys.add(match.groups.key.replace(/_/g, '-'));
+  }
+  return keys;
+};
+
 export const applyLocaleEntitiesToDataFiles = async () => {
-  const markdownKeySet = new Set<string>(MARKDOWN_MESSAGE_KEYS);
+  const markdownKeySet = await readMarkdownKeySet();
   for (const target of dataTargets) {
     const filePath = path.resolve(__dirname, target.filePath);
     const sourceText = await fs.readFile(filePath, 'utf8');
@@ -507,7 +571,9 @@ const getLocaleFromFilename = (
   filename: string,
   localeSet: Set<Locale>,
 ): Locale | null => {
-  const [candidate] = filename.split('-');
+  const [
+    candidate,
+  ] = filename.split('-');
   if (!candidate) return null;
   if (localeSet.has(candidate as Locale)) {
     return candidate as Locale;
@@ -515,9 +581,7 @@ const getLocaleFromFilename = (
   return null;
 };
 
-const listMarkdownFiles = async (
-  dir: string,
-): Promise<string[]> => {
+const listMarkdownFiles = async (dir: string): Promise<string[]> => {
   const entries = await fs.readdir(dir, { withFileTypes: true });
   const results: string[] = [];
   for (const entry of entries) {
@@ -547,7 +611,7 @@ export const applyLocaleEntitiesToMarkdown = async () => {
       return { locale, filePath };
     })
     .filter((entry): entry is { locale: Locale; filePath: string } =>
-      Boolean(entry)
+      Boolean(entry),
     )
     .sort((a, b) => {
       const localeCompare = a.locale.localeCompare(b.locale);

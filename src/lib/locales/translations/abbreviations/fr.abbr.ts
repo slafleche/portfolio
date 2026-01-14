@@ -61,7 +61,7 @@ export const frAbbreviations = {
   },
   'abbr-eslint': {
     label: 'ESLint',
-    definition: "Outil d'analyse statique JavaScript",
+    definition: "Outil d’analyse statique JavaScript",
   },
   'abbr-npm': {
     label: 'NPM',
