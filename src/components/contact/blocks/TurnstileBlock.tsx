@@ -221,6 +221,13 @@ export function TurnstileBlock({
     reportCatastrophic,
   } =
     useFormBlock(registration);
+  const reportCatastrophicRef = useRef(reportCatastrophic);
+
+  useEffect(() => {
+    reportCatastrophicRef.current = reportCatastrophic;
+  }, [
+    reportCatastrophic,
+  ]);
 
   useEffect(() => {
     if (!continuousValidation) {
@@ -285,7 +292,7 @@ export function TurnstileBlock({
         const turnstileApi = extendedWindow.turnstile;
         const container = containerRef;
         if (!turnstileApi || !container) {
-          reportCatastrophic(
+          reportCatastrophicRef.current(
             'Turnstile unavailable: missing API or container.',
           );
           throw new Error('Turnstile unavailable');
@@ -318,7 +325,7 @@ export function TurnstileBlock({
                 : `Turnstile reported an error via error-callback (${String(
                     errorCode,
                   )}).`;
-            reportCatastrophic(reason);
+            reportCatastrophicRef.current(reason);
           },
         });
         widgetIdRef.current = widgetId;
@@ -335,7 +342,7 @@ export function TurnstileBlock({
       } catch {
         if (!cancelled) {
           setStatus('error');
-          reportCatastrophic(
+          reportCatastrophicRef.current(
             'Turnstile script failed to load or initialise.',
           );
         }
@@ -353,7 +360,6 @@ export function TurnstileBlock({
       widgetIdRef.current = null;
     };
   }, [
-    reportCatastrophic,
     shouldRenderTurnstileWidget,
     turnstileSize,
     turnstileSiteKey,

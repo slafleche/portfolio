@@ -1,6 +1,6 @@
 import { render, waitFor } from '@testing-library/react';
 import React from 'react';
-import { afterEach,beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { ContactDialogProvider } from '@/components/contact/ContactDialogProvider';
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
@@ -14,18 +14,12 @@ import {
   type EnData,
   enData,
 } from '@/lib/locales/translations/en.data';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { sharedStrings } from '@/lib/sharedStrings';
 
+import { enFormTranslator } from './helpers/enFormTranslator';
 import { installTestEnv } from '../helpers/testEnvVars';
 
-const buildFormCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[
-        key as keyof typeof enFormCopy
-      ]) as unknown as Translator,
-  );
+const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 
 const buildPrivacy = () =>
   buildPrivacyCopy(
@@ -35,6 +29,11 @@ const buildPrivacy = () =>
 
 const buildStatusMessages = (copy = buildFormCopy()) =>
   copy.statuses as Record<FormStatusKey, string>;
+
+const uiLabels = {
+  close: enData['close-label'],
+  openContact: enData['contact-label-hero'],
+};
 
 const buildScenarioUrl = (id: string) =>
   `/en?scenario=${encodeURIComponent(id)}${sharedStrings.contactFormHash}`;
@@ -47,9 +46,11 @@ const renderScenarioDialog = () => {
     <ContactDialogProvider
       formCopy={formCopy}
       privacyCopy={privacyCopy}
-      closeLabel="Close"
+      closeLabel={uiLabels.close}
     >
-      <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+      <ContactDialogTrigger>
+        {uiLabels.openContact}
+      </ContactDialogTrigger>
     </ContactDialogProvider>,
   );
 
@@ -211,20 +212,34 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const nameErrorText =
+    const nameErrorText = (
       formCopy.blocks.name.errors.required ??
-      formCopy.blocks.name.label;
-    const emailErrorText =
+      formCopy.blocks.name.label
+    ).replace(/\*\*/g, '');
+    const emailErrorText = (
       formCopy.blocks.email.errors?.invalid ??
-      formCopy.blocks.email.label;
+      formCopy.blocks.email.label
+    ).replace(/\*\*/g, '');
     const messageErrors = formCopy.blocks.message.errors;
+    const messageRequiredText = messageErrors.required.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooShortText = messageErrors.tooShort.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooManyLinksText = messageErrors.tooManyLinks.replace(
+      /\*\*/g,
+      '',
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).toContain(nameErrorText);
     expect(text).not.toContain(emailErrorText);
-    expect(text).not.toContain(messageErrors.required);
-    expect(text).not.toContain(messageErrors.tooShort);
-    expect(text).not.toContain(messageErrors.tooManyLinks);
+    expect(text).not.toContain(messageRequiredText);
+    expect(text).not.toContain(messageTooShortText);
+    expect(text).not.toContain(messageTooManyLinksText);
   });
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
@@ -248,20 +263,34 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const nameErrorText =
+    const nameErrorText = (
       formCopy.blocks.name.errors.required ??
-      formCopy.blocks.name.label;
-    const emailErrorText =
+      formCopy.blocks.name.label
+    ).replace(/\*\*/g, '');
+    const emailErrorText = (
       formCopy.blocks.email.errors?.invalid ??
-      formCopy.blocks.email.label;
+      formCopy.blocks.email.label
+    ).replace(/\*\*/g, '');
     const messageErrors = formCopy.blocks.message.errors;
+    const messageRequiredText = messageErrors.required.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooShortText = messageErrors.tooShort.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooManyLinksText = messageErrors.tooManyLinks.replace(
+      /\*\*/g,
+      '',
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).not.toContain(nameErrorText);
     expect(text).toContain(emailErrorText);
-    expect(text).not.toContain(messageErrors.required);
-    expect(text).not.toContain(messageErrors.tooShort);
-    expect(text).not.toContain(messageErrors.tooManyLinks);
+    expect(text).not.toContain(messageRequiredText);
+    expect(text).not.toContain(messageTooShortText);
+    expect(text).not.toContain(messageTooManyLinksText);
   });
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
@@ -285,20 +314,34 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const nameErrorText =
+    const nameErrorText = (
       formCopy.blocks.name.errors.required ??
-      formCopy.blocks.name.label;
-    const emailErrorText =
+      formCopy.blocks.name.label
+    ).replace(/\*\*/g, '');
+    const emailErrorText = (
       formCopy.blocks.email.errors?.invalid ??
-      formCopy.blocks.email.label;
+      formCopy.blocks.email.label
+    ).replace(/\*\*/g, '');
     const messageErrors = formCopy.blocks.message.errors;
+    const messageRequiredText = messageErrors.required.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooShortText = messageErrors.tooShort.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooManyLinksText = messageErrors.tooManyLinks.replace(
+      /\*\*/g,
+      '',
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).not.toContain(nameErrorText);
     expect(text).not.toContain(emailErrorText);
-    expect(text).toContain(messageErrors.required);
-    expect(text).not.toContain(messageErrors.tooShort);
-    expect(text).not.toContain(messageErrors.tooManyLinks);
+    expect(text).toContain(messageRequiredText);
+    expect(text).not.toContain(messageTooShortText);
+    expect(text).not.toContain(messageTooManyLinksText);
   });
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
@@ -322,20 +365,34 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const nameErrorText =
+    const nameErrorText = (
       formCopy.blocks.name.errors.required ??
-      formCopy.blocks.name.label;
-    const emailErrorText =
+      formCopy.blocks.name.label
+    ).replace(/\*\*/g, '');
+    const emailErrorText = (
       formCopy.blocks.email.errors?.invalid ??
-      formCopy.blocks.email.label;
+      formCopy.blocks.email.label
+    ).replace(/\*\*/g, '');
     const messageErrors = formCopy.blocks.message.errors;
+    const messageRequiredText = messageErrors.required.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooShortText = messageErrors.tooShort.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooManyLinksText = messageErrors.tooManyLinks.replace(
+      /\*\*/g,
+      '',
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).not.toContain(nameErrorText);
     expect(text).not.toContain(emailErrorText);
-    expect(text).not.toContain(messageErrors.required);
-    expect(text).toContain(messageErrors.tooShort);
-    expect(text).not.toContain(messageErrors.tooManyLinks);
+    expect(text).not.toContain(messageRequiredText);
+    expect(text).toContain(messageTooShortText);
+    expect(text).not.toContain(messageTooManyLinksText);
   });
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
@@ -359,20 +416,34 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const nameErrorText =
+    const nameErrorText = (
       formCopy.blocks.name.errors.required ??
-      formCopy.blocks.name.label;
-    const emailErrorText =
+      formCopy.blocks.name.label
+    ).replace(/\*\*/g, '');
+    const emailErrorText = (
       formCopy.blocks.email.errors?.invalid ??
-      formCopy.blocks.email.label;
+      formCopy.blocks.email.label
+    ).replace(/\*\*/g, '');
     const messageErrors = formCopy.blocks.message.errors;
+    const messageRequiredText = messageErrors.required.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooShortText = messageErrors.tooShort.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooManyLinksText = messageErrors.tooManyLinks.replace(
+      /\*\*/g,
+      '',
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).not.toContain(nameErrorText);
     expect(text).not.toContain(emailErrorText);
-    expect(text).not.toContain(messageErrors.required);
-    expect(text).not.toContain(messageErrors.tooShort);
-    expect(text).toContain(messageErrors.tooManyLinks);
+    expect(text).not.toContain(messageRequiredText);
+    expect(text).not.toContain(messageTooShortText);
+    expect(text).toContain(messageTooManyLinksText);
   });
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
@@ -396,18 +467,34 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const nameErrorText = formCopy.blocks.name.errors.tooLong;
-    const emailErrorText =
+    const nameErrorText = formCopy.blocks.name.errors.tooLong.replace(
+      /\*\*/g,
+      '',
+    );
+    const emailErrorText = (
       formCopy.blocks.email.errors?.invalid ??
-      formCopy.blocks.email.label;
+      formCopy.blocks.email.label
+    ).replace(/\*\*/g, '');
     const messageErrors = formCopy.blocks.message.errors;
+    const messageRequiredText = messageErrors.required.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooShortText = messageErrors.tooShort.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooManyLinksText = messageErrors.tooManyLinks.replace(
+      /\*\*/g,
+      '',
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).toContain(nameErrorText);
     expect(text).not.toContain(emailErrorText);
-    expect(text).not.toContain(messageErrors.required);
-    expect(text).not.toContain(messageErrors.tooShort);
-    expect(text).not.toContain(messageErrors.tooManyLinks);
+    expect(text).not.toContain(messageRequiredText);
+    expect(text).not.toContain(messageTooShortText);
+    expect(text).not.toContain(messageTooManyLinksText);
   });
 
   // NOTE: This test currently fails; it specifies future behaviour for field prefill + validation wiring.
@@ -431,21 +518,39 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const nameErrorText =
+    const nameErrorText = (
       formCopy.blocks.name.errors.required ??
-      formCopy.blocks.name.label;
-    const emailErrorText =
+      formCopy.blocks.name.label
+    ).replace(/\*\*/g, '');
+    const emailErrorText = (
       formCopy.blocks.email.errors?.invalid ??
-      formCopy.blocks.email.label;
+      formCopy.blocks.email.label
+    ).replace(/\*\*/g, '');
     const messageErrors = formCopy.blocks.message.errors;
+    const messageRequiredText = messageErrors.required.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooShortText = messageErrors.tooShort.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooLongText = messageErrors.tooLong.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooManyLinksText = messageErrors.tooManyLinks.replace(
+      /\*\*/g,
+      '',
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).not.toContain(nameErrorText);
     expect(text).not.toContain(emailErrorText);
-    expect(text).not.toContain(messageErrors.required);
-    expect(text).not.toContain(messageErrors.tooShort);
-    expect(text).toContain(messageErrors.tooLong);
-    expect(text).not.toContain(messageErrors.tooManyLinks);
+    expect(text).not.toContain(messageRequiredText);
+    expect(text).not.toContain(messageTooShortText);
+    expect(text).toContain(messageTooLongText);
+    expect(text).not.toContain(messageTooManyLinksText);
   });
 
   // NOTE: This scenario models a server-driven validation_error where
@@ -463,9 +568,11 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
       <ContactDialogProvider
         formCopy={formCopy}
         privacyCopy={privacyCopy}
-        closeLabel="Close"
+        closeLabel={uiLabels.close}
       >
-        <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+        <ContactDialogTrigger>
+          {uiLabels.openContact}
+        </ContactDialogTrigger>
       </ContactDialogProvider>,
     );
 
@@ -482,19 +589,27 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(errorPanel).toBeNull();
 
     const messageErrors = formCopy.blocks.message.errors;
-    const nameErrorText =
+    const nameErrorText = (
       formCopy.blocks.name.errors.required ??
-      formCopy.blocks.name.label;
-    const emailErrorText =
+      formCopy.blocks.name.label
+    ).replace(/\*\*/g, '');
+    const emailErrorText = (
       formCopy.blocks.email.errors?.invalid ??
-      formCopy.blocks.email.label;
-    const tokenMissingText =
-      formCopy.blocks.turnstile.summary.missing;
+      formCopy.blocks.email.label
+    ).replace(/\*\*/g, '');
+    const tokenMissingText = formCopy.blocks.turnstile.summary.missing.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooShortText = messageErrors.tooShort.replace(
+      /\*\*/g,
+      '',
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).toContain(nameErrorText);
     expect(text).toContain(emailErrorText);
-    expect(text).toContain(messageErrors.tooShort);
+    expect(text).toContain(messageTooShortText);
     expect(text).toContain(tokenMissingText);
 
     const turnstileStatus = document.querySelector(
@@ -528,9 +643,11 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
       <ContactDialogProvider
         formCopy={formCopy}
         privacyCopy={privacyCopy}
-        closeLabel="Close"
+        closeLabel={uiLabels.close}
       >
-        <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+        <ContactDialogTrigger>
+          {uiLabels.openContact}
+        </ContactDialogTrigger>
       </ContactDialogProvider>,
     );
 
@@ -547,22 +664,38 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(errorPanel).toBeNull();
 
     const messageErrors = formCopy.blocks.message.errors;
-    const nameErrorText =
+    const nameErrorText = (
       formCopy.blocks.name.errors.required ??
-      formCopy.blocks.name.label;
-    const emailErrorText =
+      formCopy.blocks.name.label
+    ).replace(/\*\*/g, '');
+    const emailErrorText = (
       formCopy.blocks.email.errors?.invalid ??
-      formCopy.blocks.email.label;
-    const tokenMissingText =
-      formCopy.blocks.turnstile.summary.missing;
+      formCopy.blocks.email.label
+    ).replace(/\*\*/g, '');
+    const tokenMissingText = formCopy.blocks.turnstile.summary.missing.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageRequiredText = messageErrors.required.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooShortText = messageErrors.tooShort.replace(
+      /\*\*/g,
+      '',
+    );
+    const messageTooManyLinksText = messageErrors.tooManyLinks.replace(
+      /\*\*/g,
+      '',
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).not.toContain(nameErrorText);
     expect(text).not.toContain(emailErrorText);
     expect(text).toContain(tokenMissingText);
-    expect(text).not.toContain(messageErrors.required);
-    expect(text).not.toContain(messageErrors.tooShort);
-    expect(text).not.toContain(messageErrors.tooManyLinks);
+    expect(text).not.toContain(messageRequiredText);
+    expect(text).not.toContain(messageTooShortText);
+    expect(text).not.toContain(messageTooManyLinksText);
 
     const turnstileStatus = document.querySelector(
       '[data-form-turnstile="status"]',

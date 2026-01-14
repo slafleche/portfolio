@@ -26,24 +26,17 @@ import {
   buildContactFormCopy,
   type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { MESSAGE_MIN_LENGTH } from '@/modules/contactForm/validation.constants';
 
 import { installTestEnv } from '../helpers/testEnvVars';
 import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
+import { enFormTranslator } from './helpers/enFormTranslator';
 import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
 } from './helpers/turnstileTestHarness';
 
-const buildCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[
-        key as keyof typeof enFormCopy
-      ]) as unknown as Translator,
-  );
+const buildCopy = () => buildContactFormCopy(enFormTranslator);
 
 const buildStatusMessages = (copy = buildCopy()) =>
   copy.blocks.messageCentre.statuses as Record<FormStatusKey, string>;
@@ -144,7 +137,7 @@ function LiveValidationInner({
         copy={copy.blocks.message}
         disabled={false}
       />
-      <button type="submit">Submit</button>
+      <button type="submit">{copy.submitLabel}</button>
     </form>
   );
 }
@@ -803,7 +796,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
     await userEvent.type(messageInput, tooShortValue);
 
     const submitButton = screen.getByRole('button', {
-      name: 'Submit',
+      name: copy.submitLabel,
     });
 
     // First submit with a too-short message: form is invalid and

@@ -7,20 +7,15 @@ import type {
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
+import { enFormTranslator } from './helpers/enFormTranslator';
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
 import {
   makeMessageBase,
   makeValidationResult,
 } from './helpers/messageFactories.helpers';
 
-const buildFormCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
-  );
+const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 
 const makeValidation = (
   id: string,
@@ -50,7 +45,8 @@ const makePayload = (
 
 describe('ContactForm validated blocks — static matrix', () => {
   it('treats all blocks valid as a clean success: no banner, no jump-to-first-issue', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -112,7 +108,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('surfaces a single-block validation error when only Name is invalid', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -178,7 +175,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('surfaces a single-block validation error when only Email is invalid', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -242,7 +240,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('surfaces a single-block validation error when only Message is invalid', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -303,7 +302,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('surfaces multiple block validation errors and prioritises the earliest block in order', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -380,7 +380,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('treats a verification failure (blocked) as a catastrophic non-field error with no jump-to-first-issue', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -426,7 +427,9 @@ describe('ContactForm validated blocks — static matrix', () => {
       expect(queryByTestId('jump-to-first-issue')).toBeNull();
     });
 
-    const submitButton = getByRole('button', { name: 'Submit' });
+    const submitButton = getByRole('button', {
+      name: formCopy.submitLabel,
+    });
     expect(submitButton).toBeDisabled();
   });
 });

@@ -25,6 +25,9 @@ import {
   useContactFormOutcome,
 } from '@/components/contact/useContactFormOutcome';
 import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
+
+import { enFormTranslator } from './enFormTranslator';
 
 export type ShellStubBlockConfig = {
   key: string;
@@ -85,6 +88,8 @@ export type ContactFormShellHarnessOptions = {
 
 type ContactFormShellHarnessProps = ContactFormShellHarnessOptions;
 
+const formCopy = buildContactFormCopy(enFormTranslator);
+
 function ContactFormShellHarnessInner({
   blocks,
   submitHelper,
@@ -143,10 +148,12 @@ function ContactFormShellHarnessInner({
               }
             }}
           >
-            Jump to first issue
+            {formCopy.blocks.messageCentre.statuses.validation_error_jump}
           </button>
         ) : null}
-        <SubmitButton disabled={disableSubmit}>Submit</SubmitButton>
+        <SubmitButton disabled={disableSubmit}>
+          {formCopy.submitLabel}
+        </SubmitButton>
       </form>
     </>
   );
@@ -167,7 +174,7 @@ export function renderContactFormShellHarness(
 
   const submit = () => {
     const button = renderResult.getByRole('button', {
-      name: 'Submit',
+      name: formCopy.submitLabel,
     });
     fireEvent.click(button);
   };

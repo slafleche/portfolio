@@ -113,7 +113,11 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   summary.
 - Must: When providing a code draft, finish with a note saying it is a draft.
 - Must: When a user message (non-code text) contains a `?`, reply using
-  text-only responses—no code blocks or other non-text output.
+  text-only responses—no code blocks or other non-text output, unless the user
+  is asking "what's wrong" or "why isn't" in which case respond with a code-only
+  draft.
+- Must: If the user says "fix:" then apply changes directly instead of providing
+  a draft.
 - Must: When AGENTS, user instructions, or existing code seem to conflict, call
   out the mismatch and ask which to follow before proceeding.
 - Must: When there are multiple reasonable paths that would change behaviour or

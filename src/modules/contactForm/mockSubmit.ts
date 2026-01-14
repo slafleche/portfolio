@@ -1,7 +1,7 @@
-import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
+import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
+import enMessages from '@/lib/locales/translations/en';
 
 export type FormServerResponseCode =
   | 'success'
@@ -29,8 +29,7 @@ export type ContactFormResponse = {
 
 const DEFAULT_STATUS_MESSAGES: Record<FormStatusKey, string> =
   buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
+    createSectionTranslator(enMessages, enMessages),
   ).blocks.messageCentre.statuses;
 
 const resolveMessage = (

@@ -17,11 +17,10 @@ import type {
   ContactFormSubmitStatus,
 } from '@/components/contact/types/form.types';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 
 import { installTestEnv } from '../helpers/testEnvVars';
+import { enFormTranslator } from './helpers/enFormTranslator';
 
 let restoreEnv: (() => void) | null = null;
 
@@ -89,10 +88,7 @@ describe('contactFormDebugLogger', () => {
   });
 
   it('buildInvalidFieldSummary summarises invalid fields', () => {
-    const formCopy = buildContactFormCopy(
-      ((key: string) =>
-        enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
-    );
+    const formCopy = buildContactFormCopy(enFormTranslator);
     const results: ContactFormBlockValidationResult[] = [
       {
         id: 'name',

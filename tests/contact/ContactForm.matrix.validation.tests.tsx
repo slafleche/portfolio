@@ -7,20 +7,15 @@ import type {
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
+import { enFormTranslator } from './helpers/enFormTranslator';
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
 import {
   makeMessageBase,
   makeValidationResult,
 } from './helpers/messageFactories.helpers';
 
-const buildFormCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
-  );
+const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 
 const makeValidation = (
   id: string,
@@ -50,7 +45,8 @@ const makePayload = (
 
 describe('ContactForm matrix — validation vs message centre and jump button', () => {
   it('shows validation banner and jump button when a block is invalid (client-side validation_error)', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -99,7 +95,7 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       expect(jumpButton).not.toBeNull();
 
       const submitButton = getByRole('button', {
-        name: 'Submit',
+        name: formCopy.submitLabel,
       });
       expect(submitButton).toBeDisabled();
     });
@@ -108,7 +104,8 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
   });
 
   it('shows validation banner and jump button when server-driven validation_error occurs with all blocks locally valid', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -162,14 +159,15 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       expect(jumpButton).not.toBeNull();
 
       const submitButton = getByRole('button', {
-        name: 'Submit',
+        name: formCopy.submitLabel,
       });
       expect(submitButton).toBeDisabled();
     });
   });
 
   it('shows a non-validation banner but no jump button when the form is valid and rate-limited', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -215,14 +213,15 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       expect(queryByTestId('jump-to-first-issue')).toBeNull();
 
       const submitButton = getByRole('button', {
-        name: 'Submit',
+        name: formCopy.submitLabel,
       });
       expect(submitButton).not.toBeDisabled();
     });
   });
 
   it('shows a not_configured summary and no jump button when not_configured is returned', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -268,7 +267,7 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       expect(queryByTestId('jump-to-first-issue')).toBeNull();
 
       const submitButton = getByRole('button', {
-        name: 'Submit',
+        name: formCopy.submitLabel,
       });
       expect(submitButton).toBeDisabled();
     });

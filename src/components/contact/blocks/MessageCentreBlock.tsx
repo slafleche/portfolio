@@ -76,19 +76,19 @@ export const MessageCentreBlock = forwardRef<
       {!isEmpty ? (
         <>
           {globalMessageContainer}
-
           <div
             className={s.statusWrapper}
             data-visible={inlineMessages.length ? 'true' : 'false'}
           >
             {inlineMessages.length > 1 ? (
-              <ul className={s.status}>
+              <ul data-mc="errors" className={s.status}>
                 {inlineMessages.map((line, index) => {
                   const code = inlineCodes[index];
                   return (
                     <li
                       key={`${index}-${line}`}
                       className={s.statusText}
+                      data-mc="error"
                       data-error={code ?? undefined}
                     >
                       {renderInlineMarkdown(
@@ -104,9 +104,11 @@ export const MessageCentreBlock = forwardRef<
               <div
                 ref={ref as Ref<HTMLDivElement>}
                 className={s.status}
+                data-mc="errors"
               >
                 <div
                   className={s.statusText}
+                  data-mc="error"
                   data-error={inlineCodes[0] ?? undefined}
                 >
                   {renderInlineMarkdown(

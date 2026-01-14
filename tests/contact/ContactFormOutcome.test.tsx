@@ -5,9 +5,8 @@ import {
   useContactFormOutcome,
 } from '@/components/contact/useContactFormOutcome';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
+import { enFormTranslator } from './helpers/enFormTranslator';
 import type { ContactFormFlowSnapshot } from './helpers/flowSnapshot.helpers';
 import { makeFlowSnapshot } from './helpers/flowSnapshot.helpers';
 import {
@@ -19,11 +18,7 @@ import {
   renderOutcomeHook,
 } from './helpers/outcome.harness';
 
-const buildFormCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
-  );
+const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 
 const BLOCK_ORDER = [
   'first',
@@ -228,12 +223,11 @@ describe('ContactFormOutcome', () => {
 
   it('maps non-success server statuses to global summaries and messageCentre fallback', () => {
     const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
-    const nonSuccessStatuses: ContactFormFlowSnapshot['submitStatus'][] =
-      [
-        'rate_limited',
-        'service_unavailable',
-        'generic_error',
-      ];
+    const nonSuccessStatuses = [
+      'rate_limited',
+      'service_unavailable',
+      'generic_error',
+    ] as const;
 
     nonSuccessStatuses.forEach((status) => {
       const snapshot = makeFlowSnapshot({

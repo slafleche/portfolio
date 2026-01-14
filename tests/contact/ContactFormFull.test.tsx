@@ -9,8 +9,6 @@ import ContactForm from '@/components/contact/ContactForm';
 import {
   buildContactFormCopy,
 } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import {
   deliverContactMessage,
   type DeliveryResult,
@@ -19,6 +17,7 @@ import { resetContactRateLimit } from '@/server/rateLimit/contactRateLimit';
 import { verifyTurnstileToken } from '@/server/turnstile/verifyTurnstileToken';
 
 import { POST as contactRoute } from '../../app/api/contact/route';
+import { enFormTranslator } from './helpers/enFormTranslator';
 import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
@@ -47,13 +46,7 @@ const buildDeliveryResult = (
   ...overrides,
 });
 
-const buildCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[
-        key as keyof typeof enFormCopy
-      ]) as unknown as Translator,
-  );
+const buildCopy = () => buildContactFormCopy(enFormTranslator);
 
 function renderWrappedContactForm(
   copy = buildCopy(),

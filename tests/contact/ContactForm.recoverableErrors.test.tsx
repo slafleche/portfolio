@@ -9,9 +9,8 @@ import {
   buildContactFormCopy,
   type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
+import { enFormTranslator } from './helpers/enFormTranslator';
 import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
@@ -30,11 +29,7 @@ import {
 // - The loading UI (`data-form="loading"`) appears only while a submit is
 //   in-flight and never persists once a response has completed.
 
-const buildCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
-  );
+const buildCopy = () => buildContactFormCopy(enFormTranslator);
 
 const buildStatusMessages = (copy = buildCopy()) =>
   copy.blocks.messageCentre.statuses as Record<FormStatusKey, string>;

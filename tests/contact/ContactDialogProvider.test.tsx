@@ -12,26 +12,27 @@ import {
   type EnData,
   enData,
 } from '@/lib/locales/translations/en.data';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { sharedStrings } from '@/lib/sharedStrings';
 
 import { installTestEnv } from '../helpers/testEnvVars';
+import { enFormTranslator } from './helpers/enFormTranslator';
 import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
 } from './helpers/turnstileTestHarness';
 
-const buildFormCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
-  );
+const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 
 const buildPrivacy = () =>
   buildPrivacyCopy(
     ((key: string) =>
       enData[key as keyof EnData] ?? key) as unknown as Translator,
   );
+
+const uiLabels = {
+  close: enData['close-label'],
+  openContact: enData['contact-label-hero'],
+};
 
 describe('ContactDialogProvider', () => {
   let restoreEnv: (() => void) | null = null;
@@ -73,10 +74,12 @@ describe('ContactDialogProvider', () => {
         <ContactDialogProvider
           formCopy={formCopy}
           privacyCopy={privacyCopy}
-          closeLabel="Close"
+          closeLabel={uiLabels.close}
           turnstileSiteKey={turnstileHarness.getSiteKey()}
         >
-          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+          <ContactDialogTrigger>
+            {uiLabels.openContact}
+          </ContactDialogTrigger>
         </ContactDialogProvider>,
       );
 
@@ -171,10 +174,12 @@ describe('ContactDialogProvider', () => {
         <ContactDialogProvider
           formCopy={formCopy}
           privacyCopy={privacyCopy}
-          closeLabel="Close"
+          closeLabel={uiLabels.close}
           turnstileSiteKey={turnstileHarness.getSiteKey()}
         >
-          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+          <ContactDialogTrigger>
+            {uiLabels.openContact}
+          </ContactDialogTrigger>
         </ContactDialogProvider>,
       );
 
@@ -255,10 +260,12 @@ describe('ContactDialogProvider', () => {
         <ContactDialogProvider
           formCopy={formCopy}
           privacyCopy={privacyCopy}
-          closeLabel="Close"
+          closeLabel={uiLabels.close}
           turnstileSiteKey={turnstileHarness.getSiteKey()}
         >
-          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+          <ContactDialogTrigger>
+            {uiLabels.openContact}
+          </ContactDialogTrigger>
         </ContactDialogProvider>,
       );
 
@@ -321,9 +328,11 @@ describe('ContactDialogProvider', () => {
       <ContactDialogProvider
         formCopy={formCopy}
         privacyCopy={privacyCopy}
-        closeLabel="Close"
+        closeLabel={uiLabels.close}
       >
-        <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+        <ContactDialogTrigger>
+          {uiLabels.openContact}
+        </ContactDialogTrigger>
       </ContactDialogProvider>,
     );
 
@@ -382,9 +391,11 @@ describe('ContactDialogProvider', () => {
         <ContactDialogProvider
           formCopy={formCopy}
           privacyCopy={privacyCopy}
-          closeLabel="Close"
+          closeLabel={uiLabels.close}
         >
-          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+          <ContactDialogTrigger>
+            {uiLabels.openContact}
+          </ContactDialogTrigger>
         </ContactDialogProvider>,
       );
 

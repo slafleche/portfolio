@@ -7,20 +7,15 @@ import type {
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
+import { enFormTranslator } from './helpers/enFormTranslator';
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
 import {
   makeMessageBase,
   makeValidationResult,
 } from './helpers/messageFactories.helpers';
 
-const buildFormCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
-  );
+const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 
 const makeValidation = (
   id: string,
@@ -50,7 +45,8 @@ const makePayload = (
 
 describe('Contact form shell harness', () => {
   it('runs the full happy path: valid blocks → submit helper → success summary in message centre', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'first',
@@ -98,7 +94,8 @@ describe('Contact form shell harness', () => {
   });
 
   it('surfaces validation errors from blocks and flow as inline and messageCentre summaries', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'first',
@@ -152,7 +149,9 @@ describe('Contact form shell harness', () => {
         statusMessages.validation_error,
       );
 
-      const submitButton = getByRole('button', { name: 'Submit' });
+      const submitButton = getByRole('button', {
+        name: formCopy.submitLabel,
+      });
       expect(submitButton).toBeDisabled();
 
       const jumpButton = queryByTestId('jump-to-first-issue');
@@ -172,7 +171,8 @@ describe('Contact form shell harness', () => {
   });
 
   it('surfaces non-success recoverable server statuses via the message centre when validation passes', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'first',
@@ -237,7 +237,8 @@ describe('Contact form shell harness', () => {
   });
 
   it('surfaces then clears recoverable server status summaries after a subsequent successful submit', async () => {
-    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'first',

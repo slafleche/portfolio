@@ -12,6 +12,7 @@ import {
 
 import { TurnstileBlock } from '@/components/contact/blocks/TurnstileBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
+import { renderInlineMarkdown } from '@/components/Markdown';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
@@ -47,6 +48,11 @@ const turnstileCopy: TurnstileBlockLocale = {
     expired: enFormCopy['form-turnstile-summary-expired'],
     error: enFormCopy['form-turnstile-summary-error'],
   },
+};
+
+const inlineMarkdownOptions = {
+  openLinksInNewTab: false,
+  asUi: {},
 };
 
 const DEFAULT_SITE_KEY = 'test-site-key';
@@ -251,17 +257,25 @@ describe('Contact form block tests: TurnstileBlock', () => {
         expect(api?.lastOptions).not.toBeNull();
       });
 
-      const previousOptions = api?.lastOptions ?? null;
-
       enableContinuousValidation();
-
-      await waitFor(() => {
-        expect(api?.lastOptions).not.toBe(previousOptions);
-      });
 
       await act(async () => {
         api?.lastOptions?.['expired-callback']?.();
       });
+
+      const expectedExpiredText = (() => {
+        const { container, unmount } = render(
+          <>
+            {renderInlineMarkdown(
+              turnstileCopy.summary.expired,
+              inlineMarkdownOptions,
+            )}
+          </>,
+        );
+        const text = container.textContent ?? '';
+        unmount();
+        return text;
+      })();
 
       await waitFor(() => {
         expect(wrapper).toHaveAttribute('data-state', 'expired');
@@ -273,7 +287,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
           '[data-form-hint]',
         ) as HTMLElement | null;
         expect(hint?.getAttribute('data-form-hint')).toBe('error');
-        expect(hint?.textContent).toBe(turnstileCopy.summary.expired);
+        expect(hint?.textContent).toBe(expectedExpiredText);
       });
 
       const tokenInput = wrapper.querySelector(
@@ -308,17 +322,25 @@ describe('Contact form block tests: TurnstileBlock', () => {
         expect(api?.lastOptions).not.toBeNull();
       });
 
-      const previousOptions = api?.lastOptions ?? null;
-
       enableContinuousValidation();
-
-      await waitFor(() => {
-        expect(api?.lastOptions).not.toBe(previousOptions);
-      });
 
       await act(async () => {
         api?.lastOptions?.['error-callback']?.();
       });
+
+      const expectedErrorText = (() => {
+        const { container, unmount } = render(
+          <>
+            {renderInlineMarkdown(
+              turnstileCopy.summary.error,
+              inlineMarkdownOptions,
+            )}
+          </>,
+        );
+        const text = container.textContent ?? '';
+        unmount();
+        return text;
+      })();
 
       await waitFor(() => {
         expect(wrapper).toHaveAttribute('data-state', 'error');
@@ -330,7 +352,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
           '[data-form-hint]',
         ) as HTMLElement | null;
         expect(hint?.getAttribute('data-form-hint')).toBe('error');
-        expect(hint?.textContent).toBe(turnstileCopy.summary.error);
+        expect(hint?.textContent).toBe(expectedErrorText);
       });
 
       const tokenInput = wrapper.querySelector(
@@ -386,6 +408,20 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       enableContinuousValidation();
 
+      const expectedErrorText = (() => {
+        const { container, unmount } = render(
+          <>
+            {renderInlineMarkdown(
+              turnstileCopy.summary.error,
+              inlineMarkdownOptions,
+            )}
+          </>,
+        );
+        const text = container.textContent ?? '';
+        unmount();
+        return text;
+      })();
+
       await waitFor(() => {
         const status = wrapper.querySelector(
           '[data-form-turnstile="status"]',
@@ -395,7 +431,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
           '[data-form-hint]',
         ) as HTMLElement | null;
         expect(hint?.getAttribute('data-form-hint')).toBe('error');
-        expect(hint?.textContent).toBe(turnstileCopy.summary.error);
+        expect(hint?.textContent).toBe(expectedErrorText);
       });
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -582,6 +618,20 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       enableContinuousValidation();
 
+      const expectedMissingText = (() => {
+        const { container, unmount } = render(
+          <>
+            {renderInlineMarkdown(
+              turnstileCopy.summary.missing,
+              inlineMarkdownOptions,
+            )}
+          </>,
+        );
+        const text = container.textContent ?? '';
+        unmount();
+        return text;
+      })();
+
       await waitFor(() => {
         const hintAfter = wrapper.querySelector(
           '[data-form-hint]',
@@ -591,9 +641,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
         expect(hintAfter!.getAttribute('data-form-hint')).toBe(
           'error',
         );
-        expect(hintAfter!.textContent).toBe(
-          turnstileCopy.summary.missing,
-        );
+        expect(hintAfter!.textContent).toBe(expectedMissingText);
         expect(
           checkMatchingId(
             hintAfter,
