@@ -90,7 +90,7 @@ const frBaseData = {
   contact: 'contact',
   'contact-href': 'contact',
 
-  'contact-content': 'Envie de collaborer ?',
+  'contact-content': 'Envie de collaborer&nbsp;?',
   'contact-email-label': 'Envoyez-moi un courriel !',
   'contact-label-floating':
     'Ouvrir le formulaire de contact (flottant)',

@@ -3,13 +3,13 @@ import { createHash, randomUUID } from 'node:crypto';
 import { type NextRequest,NextResponse } from 'next/server';
 
 import { DEFAULT_LOCALE } from '@/lib/locales/locale';
-import { notRelease } from '@/lib/runtimeEnv';
 import {
   buildContactFormCopy,
   type ContactFormCopy,
   type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
+import { notRelease } from '@/lib/runtimeEnv';
 import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 import {
   type RawContactFormInput,

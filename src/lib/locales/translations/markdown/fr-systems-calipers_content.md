@@ -9,7 +9,7 @@ production au lieu de les détecter à la compilation.
 
 ### Les mesures comme données structurées
 
-CSS-Calipers traite les mesures comme des données typées avec une structure claire : un nombre et
+CSS-Calipers traite les mesures comme des données typées avec une structure claire : un nombre et
 une unité qui restent ensemble jusqu'à ce que vous ayez explicitement besoin d'une chaîne CSS. Vous faites des calculs
 avec des helpers comme `add()`, `multiply()`, `subtract()`, et `clamp()`. Détectez les
 opérations incompatibles à la compilation, puis appelez `.css()` à la frontière. Idéalement
@@ -27,7 +27,7 @@ les valeurs de style "chaînées" deviennent des entrées réelles et validées.
 La bibliothèque reste ciblée et prescriptive sur ce qu'elle gère. Elle se concentre sur
 les valeurs numériques avec unités et laisse les mots-clés, les expressions `calc()`, et les
 variables CSS à votre couche de styling. Elle n'essaie pas d'être votre solution CSS complète.
-Elle coexiste avec les systèmes de styling existants en gérant une chose bien : rendre
+Elle coexiste avec les systèmes de styling existants en gérant une chose bien : rendre
 les calculs de mesure prévisibles et type-safe.
 
-Découvrez-le sur [element:NPMWordmark] ou [element:GitHubWordmark] !
+Découvrez-le sur [element:NPMWordmark] ou [element:GitHubWordmark] !

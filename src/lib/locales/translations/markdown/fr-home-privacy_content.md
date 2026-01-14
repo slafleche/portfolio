@@ -1,4 +1,4 @@
-Quand tu utilises ce formulaire de contact, je collecte :
+Quand tu utilises ce formulaire de contact, je collecte :
 
 - Ton nom
 - Ton adresse courriel
