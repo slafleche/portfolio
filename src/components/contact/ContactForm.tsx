@@ -435,7 +435,7 @@ function ContactFormInner({
         >
           <ToTopArrow className={s.toTopArrow} />
           <span className={s.jumpToFirstIssueText}>
-            {copy.blocks.messageCentre.statuses.validation_error}
+            {copy.blocks.messageCentre.statuses.validation_error_jump}
           </span>
         </button>
       ) : null}

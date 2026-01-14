@@ -12,7 +12,6 @@ import {
 import {
   colors,
   colorVars,
-  themeColours,
 } from '../../tokens/global.tokens';
 import {
   formLayoutVars,
@@ -467,3 +466,5 @@ export const jumpToFirstIssueText = style({
     color: colorVars.black,
   }),
 });
+
+

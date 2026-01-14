@@ -16,6 +16,7 @@ export const FORM_STATUS_KEYS = {
   success: 'form-status-success',
   generic: 'form-status-generic_error',
   validation_error: 'form-status-validation_error',
+  validation_error_jump: 'form-status-validation_jumpToError',
   rate_limited: 'form-status-rate_limited',
   service_unavailable: 'form-status-service_unavailable',
   not_configured: 'form-status-not_configured',

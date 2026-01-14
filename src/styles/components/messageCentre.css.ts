@@ -1,31 +1,59 @@
-import { type ComplexStyleRule,style } from '@vanilla-extract/css';
+import {
+  type ComplexStyleRule,
+  globalStyle,
+  style,
+} from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 
 import { formTokens } from '../../tokens/forms.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
-import { colorVars } from '../../tokens/global.tokens';
+import { colors, colorVars } from '../../tokens/global.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
-import { boxShadow } from '../helpers/shadow.helper';
-import { paddings } from '../helpers/spacing.helper';
+import { textShadow } from '../helpers/shadow.helper';
+import { margins, paddings } from '../helpers/spacing.helper';
 
 export const root = style({
   width: '100%',
   maxWidth: '100%',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: formTokens.layout.fieldGap.css(),
-  ...paddings(formTokens.field.paddings),
-  ...borders(formTokens.field.borders),
-  ...boxShadow({
-    x: m(0),
-    y: m(4),
-    blur: m(14),
-    color: colorVars.black,
-    alpha: 0.35,
+  flexDirection: 'column',
+  ...margins({
+    top: m(10),
   }),
-  pointerEvents: 'auto',
+  ...borders({
+    width: m(1),
+    color: colorVars.white.alpha(0.3),
+    radius: m(15),
+  }),
+  background: colors.white.alpha(0.05).css(),
+  ...textShadow({
+    x: m(1),
+    y: m(1),
+    blur: m(2),
+    color: colorVars.black,
+  }),
+});
+
+export const main = style({
+  display: 'block',
+  width: '100%',
+  ...paddings({
+    top: m(8),
+    bottom: m(8),
+  }),
+  ...borders({
+    bottom: {
+      width: m(1),
+      color: colorVars.white.alpha(0.1),
+    },
+  }),
+});
+
+export const statusWrapper = style({
+  textAlign: 'left',
+  width: '100%',
 });
 
 export const success = style([
@@ -84,29 +112,7 @@ export const viewport = style({
   outline: 'none',
 });
 
-export const statusWrapper = style({
-  minHeight: '6px',
-  transition: 'opacity 220ms ease, transform 220ms ease',
-  opacity: 1,
-  transform: 'translateY(0)',
-  pointerEvents: 'auto',
-  selectors: {
-    '&[data-visible="false"]': {
-      opacity: 0,
-      transform: 'translateY(-8px)',
-      pointerEvents: 'none',
-    },
-  },
-});
-
-const statusBase: ComplexStyleRule = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  // ...borders(formTokens.field.borders),
-  ...paddings(formTokens.field.paddings),
-  gap: formTokens.layout.fieldGap.css(),
-};
+const statusBase: ComplexStyleRule = {};
 
 export const status = style(statusBase);
 
@@ -134,10 +140,6 @@ export const statusGeneric = style([
   },
 ]);
 
-// export const statusText = style({
-//   flex: 1,
-// });
-
 export const loader = style({
   width: '100px',
   height: 'auto',
@@ -145,6 +147,12 @@ export const loader = style({
 
 export const statusText = style({
   flex: 1,
+});
+
+globalStyle(`.${statusText} + .${statusText}`, {
+  ...margins({
+    top: m(8),
+  }),
 });
 
 export const statusSuccessStandalone = style({

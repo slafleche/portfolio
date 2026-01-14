@@ -3,10 +3,16 @@ import { forwardRef, useMemo } from 'react';
 
 import * as s from '@/styles/components/messageCentre.css';
 
+import { renderInlineMarkdown } from '../../Markdown';
 import type { MessageCentreMessages } from '../messageCentre.types';
 
 type MessageCentreBlockProps = {
   messages: MessageCentreMessages;
+};
+
+const inlineMarkdownOptions = {
+  openLinksInNewTab: false,
+  asUi: {},
 };
 
 export const MessageCentreBlock = forwardRef<
@@ -50,30 +56,54 @@ export const MessageCentreBlock = forwardRef<
       aria-live="polite"
       aria-atomic="true"
       data-form="messages"
+      className={s.root}
     >
       {globalMessage ? (
-        <div className={s.root} role="status" aria-live="polite">
-          <span className={s.title}>{globalMessage}</span>
+        <div className={s.main} role="status" aria-live="polite">
+          <span className={s.title}>
+            {renderInlineMarkdown(
+              globalMessage,
+              inlineMarkdownOptions,
+              'message-centre-global',
+            )}
+          </span>
         </div>
       ) : null}
       <div
         className={s.statusWrapper}
         data-visible={inlineMessages.length ? 'true' : 'false'}
       >
-        {inlineMessages.length ? (
-          <div ref={ref as Ref<HTMLDivElement>} className={s.status}>
+        {inlineMessages.length > 1 ? (
+          <ul className={s.status}>
             {inlineMessages.map((line, index) => {
               const code = inlineCodes[index];
               return (
-                <span
+                <li
                   key={`${index}-${line}`}
                   className={s.statusText}
                   data-error={code ?? undefined}
                 >
-                  {line}
-                </span>
+                  {renderInlineMarkdown(
+                    line,
+                    inlineMarkdownOptions,
+                    `message-centre-inline-${index}`,
+                  )}
+                </li>
               );
             })}
+          </ul>
+        ) : inlineMessages.length === 1 ? (
+          <div ref={ref as Ref<HTMLDivElement>} className={s.status}>
+            <div
+              className={s.statusText}
+              data-error={inlineCodes[0] ?? undefined}
+            >
+              {renderInlineMarkdown(
+                inlineMessages[0],
+                inlineMarkdownOptions,
+                'message-centre-inline-single',
+              )}
+            </div>
           </div>
         ) : null}
       </div>

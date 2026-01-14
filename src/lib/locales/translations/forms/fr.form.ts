@@ -18,12 +18,12 @@ export const frFormCopy = {
   'form-honeypot-label': 'Laissez ce champ vide',
   'form-turnstile-label': 'Vérification humaine',
   'form-required-indicator': 'Champ requis',
-  'form-error-name-required': 'Veuillez entrer votre nom.',
+  'form-error-name-required': 'Veuillez entrer votre **nom**.',
   'form-error-name-too_long': 'Le nom est trop long.',
   'form-error-email-invalid':
-    'Veuillez entrer une adresse courriel valide.',
+    'Veuillez entrer une adresse **courriel** valide.',
   'form-error-message-required':
-    'Veuillez écrire un message avant de l’envoyer.',
+    'Veuillez écrire un **message** avant de l’envoyer.',
   'form-error-message-too_short':
     'Écrivez un message un peu plus long (au moins {min} caractères).',
   'form-error-message-too_long': 'Le message est trop long.',
@@ -35,8 +35,11 @@ export const frFormCopy = {
   'form-status-success': 'Message envoyé !',
   'form-status-generic_error':
     'Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer.',
-  'form-status-validation_error':
+  'form-status-validation_error': 'Quelques détails à corriger.',
+
+  'form-status-validation_jumpToError':
     'Presque fini ! Vérifiez les champs en erreur et réessayez.',
+
   'form-status-rate_limited':
     'Trop de tentatives. Veuillez réessayer bientôt.',
   'form-status-rate_limited-countdown':

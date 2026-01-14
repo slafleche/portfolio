@@ -1,5 +1,5 @@
 export const enFormCopy = {
-  'form-heading': "Get in touch",
+  'form-heading': 'Get in touch',
   'form-success-heading': 'Message sent',
   'form-error-heading': "We couldn't send your message",
   'form-success-body': "I'll get back to you as soon as possible.",
@@ -17,11 +17,11 @@ export const enFormCopy = {
   'form-privacy-close-label': 'Back to form',
   'form-honeypot-label': 'Leave this field blank',
   'form-turnstile-label': 'Human verification',
-  'form-error-name-required': 'Please enter your name.',
+  'form-error-name-required': 'Please enter your **name**.',
   'form-error-name-too_long': 'Name is too long.',
-  'form-error-email-invalid': 'Please enter a valid email address.',
+  'form-error-email-invalid': 'Please enter a valid **email**.',
   'form-error-message-required':
-    'Please write a message before sending.',
+    'Please write a **message** before sending.',
   'form-error-message-too_short':
     'Please write a longer message (at least {min} characters).',
   'form-error-message-too_long': 'Message is too long.',
@@ -32,8 +32,12 @@ export const enFormCopy = {
   'form-status-success': 'Message sent!',
   'form-status-generic_error':
     "We couldn't send your message right now. Please try again.",
-  'form-status-validation_error':
+
+  'form-status-validation_jumpToError':
     'Almost there! Check the fields with errors and try again.',
+
+  'form-status-validation_error': 'Just a few details to tidy up.',
+
   'form-status-rate_limited': 'Too many attempts. Please retry soon.',
   'form-status-rate_limited-countdown':
     'Too many attempts. Please retry in {seconds}s.',
