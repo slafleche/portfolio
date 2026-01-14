@@ -3,10 +3,16 @@ import { forwardRef, useMemo } from 'react';
 
 import * as s from '@/styles/components/messageCentre.css';
 
+import { renderInlineMarkdown } from '../../Markdown';
 import type { MessageCentreMessages } from '../messageCentre.types';
 
 type MessageCentreBlockProps = {
   messages: MessageCentreMessages;
+};
+
+const inlineMarkdownOptions = {
+  openLinksInNewTab: false,
+  asUi: {},
 };
 
 export const MessageCentreBlock = forwardRef<
@@ -44,39 +50,78 @@ export const MessageCentreBlock = forwardRef<
     messages.messageFallback,
   ]);
 
+  const isEmpty = !globalMessage && inlineMessages.length === 0;
+
+  const globalMessageContainer = (
+    <div className={s.main} role="status" aria-live="polite">
+      <span className={s.title}>
+        {renderInlineMarkdown(
+          globalMessage || '',
+          inlineMarkdownOptions,
+          'message-centre-global',
+        )}
+      </span>
+    </div>
+  );
+
   return (
     <div
       role="status"
       aria-live="polite"
       aria-atomic="true"
       data-form="messages"
+      data-empty={isEmpty ? 'true' : 'false'}
+      className={s.root}
     >
-      {globalMessage ? (
-        <div className={s.root} role="status" aria-live="polite">
-          <span className={s.title}>{globalMessage}</span>
-        </div>
-      ) : null}
-      <div
-        className={s.statusWrapper}
-        data-visible={inlineMessages.length ? 'true' : 'false'}
-      >
-        {inlineMessages.length ? (
-          <div ref={ref as Ref<HTMLDivElement>} className={s.status}>
-            {inlineMessages.map((line, index) => {
-              const code = inlineCodes[index];
-              return (
-                <span
-                  key={`${index}-${line}`}
+      {!isEmpty ? (
+        <>
+          {globalMessageContainer}
+          <div
+            className={s.statusWrapper}
+            data-visible={inlineMessages.length ? 'true' : 'false'}
+          >
+            {inlineMessages.length > 1 ? (
+              <ul data-mc="errors" className={s.status}>
+                {inlineMessages.map((line, index) => {
+                  const code = inlineCodes[index];
+                  return (
+                    <li
+                      key={`${index}-${line}`}
+                      className={s.statusText}
+                      data-mc="error"
+                      data-error={code ?? undefined}
+                    >
+                      {renderInlineMarkdown(
+                        line,
+                        inlineMarkdownOptions,
+                        `message-centre-inline-${index}`,
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : inlineMessages.length === 1 ? (
+              <div
+                ref={ref as Ref<HTMLDivElement>}
+                className={s.status}
+                data-mc="errors"
+              >
+                <div
                   className={s.statusText}
-                  data-error={code ?? undefined}
+                  data-mc="error"
+                  data-error={inlineCodes[0] ?? undefined}
                 >
-                  {line}
-                </span>
-              );
-            })}
+                  {renderInlineMarkdown(
+                    inlineMessages[0],
+                    inlineMarkdownOptions,
+                    'message-centre-inline-single',
+                  )}
+                </div>
+              </div>
+            ) : null}
           </div>
-        ) : null}
-      </div>
+        </>
+      ) : null}
     </div>
   );
 });

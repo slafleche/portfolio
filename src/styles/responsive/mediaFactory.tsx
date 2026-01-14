@@ -35,7 +35,12 @@ export function useMediaQuery(queryString: string) {
   ] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (
+      typeof window === 'undefined' ||
+      typeof window.matchMedia !== 'function'
+    ) {
+      return;
+    }
     const mql = window.matchMedia(queryString);
     const onChange = () => setMatches(mql.matches);
     const frameId = requestAnimationFrame(() => {
@@ -95,7 +100,12 @@ export function useMediaFromMap<T extends Record<string, string>>(
   );
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (
+      typeof window === 'undefined' ||
+      typeof window.matchMedia !== 'function'
+    ) {
+      return;
+    }
 
     const mqls = entries.map(
       ([

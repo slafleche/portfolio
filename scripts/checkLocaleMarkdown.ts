@@ -2,24 +2,28 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import {
-  MARKDOWN_MESSAGE_KEYS,
-  MARKDOWN_MESSAGES,
-} from '../src/lib/locales/generated/markdown.gen';
 import type { LocaleMessagesShape } from '../src/lib/locales/localeTypes';
 import type { Locale } from '../src/lib/locales/translations';
 import { resolveAbbrShortcodes } from '../src/lib/locales/translations/resolveAbbrShortcodes';
+import {
+  buildFileContents,
+  readMarkdownFiles,
+} from './generateLocaleMarkdown';
+import {
+  applyLocaleEntitiesToDataFiles,
+  applyLocaleEntitiesToMarkdown,
+} from './localeEntities';
 
-type MarkdownKey = (typeof MARKDOWN_MESSAGE_KEYS)[number];
+type MarkdownKey = string;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const markdownDir = path.resolve(
   __dirname,
   '../src/lib/locales/translations/markdown',
 );
-
-const { AVAILABLE_LOCALES, LOCALE_LOADERS } = await import(
-  '../src/lib/locales/translations'
+const outputPath = path.resolve(
+  __dirname,
+  '../src/lib/locales/generated/markdown.gen.ts',
 );
 
 type Issue = {
@@ -43,22 +47,6 @@ const recordIssue = (issue: Issue) => {
     issuesByLocale.set(issue.locale, [
       issue,
     ]);
-};
-
-const loadLocaleMessages = async (
-  locale: Locale,
-): Promise<LocaleMessagesShape | null> => {
-  try {
-    const mod = await LOCALE_LOADERS[locale]();
-    return mod.default as LocaleMessagesShape;
-  } catch (error) {
-    recordIssue({
-      locale,
-      key: '*',
-      reason: `failed to load messages (${getErrorMessage(error)})`,
-    });
-    return null;
-  }
 };
 
 const SYSTEMS_MARKDOWN_KEYS = new Set([
@@ -99,11 +87,12 @@ const readMarkdownFor = async (
 };
 
 const ensureGeneratedContentIsCurrent = (
-  key: MarkdownKey,
+  markdownMessages: Record<Locale, Record<string, string>>,
+  key: string,
   locale: Locale,
   expected: string,
 ) => {
-  const generated = MARKDOWN_MESSAGES[locale]?.[key];
+  const generated = markdownMessages[locale]?.[key];
   if (generated === undefined) {
     recordIssue({
       locale,
@@ -150,11 +139,49 @@ const transformMarkdownWithAbbr = (
   return resolved.__content;
 };
 
+const regenerateMarkdownGenerated = async () => {
+  const { messages, keys } = await readMarkdownFiles();
+  const fileContents = buildFileContents(messages, keys);
+
+  await fs.mkdir(path.dirname(outputPath), { recursive: true });
+  await fs.writeFile(outputPath, fileContents, 'utf8');
+};
+
 const main = async () => {
+  await applyLocaleEntitiesToDataFiles();
+  await applyLocaleEntitiesToMarkdown();
+  await regenerateMarkdownGenerated();
+
+  const { AVAILABLE_LOCALES, LOCALE_LOADERS } = await import(
+    '../src/lib/locales/translations'
+  );
+  const { MARKDOWN_MESSAGE_KEYS, MARKDOWN_MESSAGES } = await import(
+    '../src/lib/locales/generated/markdown.gen'
+  );
+
+  const loadLocaleMessages = async (
+    locale: Locale,
+  ): Promise<LocaleMessagesShape | null> => {
+    try {
+      const mod = await LOCALE_LOADERS[locale]();
+      return mod.default as LocaleMessagesShape;
+    } catch (error) {
+      recordIssue({
+        locale,
+        key: '*',
+        reason: `failed to load messages (${getErrorMessage(error)})`,
+      });
+      return null;
+    }
+  };
+
   const localeMessages: Array<{
     locale: Locale;
     messages: LocaleMessagesShape;
   }> = [];
+  const markdownMessageKeySet = new Set<string>(
+    MARKDOWN_MESSAGE_KEYS,
+  );
   const allKeys = new Set<string>(MARKDOWN_MESSAGE_KEYS);
 
   for (const locale of AVAILABLE_LOCALES) {
@@ -182,15 +209,13 @@ const main = async () => {
         continue;
       }
 
-      if (MARKDOWN_MESSAGE_KEYS.includes(key as MarkdownKey)) {
-        const expected = await readMarkdownFor(
-          key as MarkdownKey,
-          locale,
-        );
+      if (markdownMessageKeySet.has(key)) {
+        const expected = await readMarkdownFor(key, locale);
         if (expected == null) continue;
 
         ensureGeneratedContentIsCurrent(
-          key as MarkdownKey,
+          MARKDOWN_MESSAGES as Record<Locale, Record<string, string>>,
+          key,
           locale,
           expected,
         );

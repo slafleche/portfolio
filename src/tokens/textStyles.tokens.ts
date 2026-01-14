@@ -1,4 +1,4 @@
-import { m } from 'css-calipers';
+import { m, mEm } from 'css-calipers';
 
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 
@@ -55,7 +55,7 @@ export const textStyleVars = {
     },
     item: {
       margins: {
-        bottom: blockSpacing,
+        bottom: mEm(0.3),
       },
     },
   },

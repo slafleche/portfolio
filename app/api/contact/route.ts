@@ -9,6 +9,7 @@ import {
   type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
+import { notRelease } from '@/lib/runtimeEnv';
 import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 import {
   type RawContactFormInput,
@@ -274,6 +275,16 @@ export async function POST(request: NextRequest) {
 
   const turnstile = await verifyTurnstileToken(draft.token, ip);
   if (!turnstile.ok) {
+    const shouldBypassTurnstile =
+      notRelease() &&
+      turnstile.errorCodes?.includes('invalid-input-secret');
+    if (shouldBypassTurnstile) {
+      console.warn('[contact][turnstile-bypass]', {
+        submissionId,
+        ipHash,
+        errorCodes: turnstile.errorCodes,
+      });
+    } else {
     const responseCode: FormServerResponseCode =
       turnstile.errorCodes?.includes('missing-secret')
         ? 'not_configured'
@@ -294,6 +305,7 @@ export async function POST(request: NextRequest) {
         errorCodes: turnstile.errorCodes,
       },
     });
+    }
   }
 
   try {

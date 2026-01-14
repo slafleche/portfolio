@@ -1,9 +1,12 @@
 import type { StyleRule } from '@vanilla-extract/css';
+import { m } from 'css-calipers';
 import { describe, expect, it } from 'vitest';
 
+import { paddings } from '@/styles/helpers/spacing.helper';
 import {
   globalComponentMediaQueryStyle,
   globalMediaQueryStyle,
+  mediaQueryStyle,
 } from '@/styles/responsive/mediaQueries';
 
 const findQueryKey = (styles: StyleRule) => {
@@ -53,6 +56,43 @@ describe('mediaQueries helpers', () => {
     expect(mediaBlock?.[queryKey as string]).toEqual({
       width: '200px',
       height: '200px',
+    });
+  });
+
+  it('mediaQueryStyle nests selectors under the compact media query', () => {
+    const someOtherClass = 'someOtherClass';
+    const styles = mediaQueryStyle({
+      compact: {
+        selectors: {
+          [`&.${someOtherClass}`]: {
+            ...paddings({ horizontal: m(10) }),
+          },
+        },
+      },
+    });
+
+    const selectorBlock = (styles as Record<string, unknown>)[
+      `&.${someOtherClass}`
+    ] as
+      | Record<string, Record<string, unknown>>
+      | undefined;
+    const mediaBlock = selectorBlock?.[
+      '@media'
+    ] as
+      | Record<string, Record<string, unknown>>
+      | undefined;
+    const mediaKey = mediaBlock
+      ? Object.keys(mediaBlock).find((key) =>
+          key.includes('max-width'),
+        )
+      : undefined;
+
+    expect(selectorBlock).toBeTruthy();
+    expect(mediaBlock).toBeTruthy();
+    expect(mediaKey).toBeTruthy();
+    expect(mediaBlock?.[mediaKey as string]).toEqual({
+      paddingRight: '10px',
+      paddingLeft: '10px',
     });
   });
 });

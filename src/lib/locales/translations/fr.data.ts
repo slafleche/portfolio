@@ -15,7 +15,7 @@ const frBaseData = {
   'menu-left_label': 'À propos de moi',
   'menu-right_label': 'Mon travail',
   'menu-anchor_label': 'Aller à la section',
-  'menu-home_label': "Page d'accueil",
+  'menu-home_label': "Page d’accueil",
   'menu-nav_label': 'Navigation du site',
   localeChange: 'Choix de la langue',
   'close-label': 'Fermer',
@@ -39,11 +39,11 @@ const frBaseData = {
   'hero-subtitle':
     'Je me spécialise dans les interfaces React et les systèmes de design, en gardant design et code alignés.',
 
-  'console-curiosity-title': '🔎 Curieux ?',
+  'console-curiosity-title': '🔎 Curieux ?',
   'console-curiosity-test': '[test] 👀 Observateur détecté.',
   'console-curiosity-result': '[résultat] Accès accordé.',
   'console-curiosity-hint':
-    "[indice] Le code montre ce que j'ai construit; curiosity() montre comment je pense.",
+    "[indice] Le code montre ce que j’ai construit; curiosity() montre comment je pense.",
 
   approach: 'Approche',
   'approach-href': 'philosophie',
@@ -82,7 +82,7 @@ const frBaseData = {
   'systems-architecture-href': 'systems-forme-du-systeme',
   ...markdownRefs('architecture-content'),
   ...markdownRefs('calipers-content'),
-  'systems-back-home-label': "Retour à la page d'accueil",
+  'systems-back-home-label': "Retour à la page d’accueil",
   'systems-link-label': 'Naviguez vers la page Systèmes',
   'systems-mock-html-alt':
     'HTML décoratif de style devtools montrant la fin du code source de la page.',
@@ -90,16 +90,16 @@ const frBaseData = {
   contact: 'contact',
   'contact-href': 'contact',
 
-  'contact-content': 'Envie de collaborer ?',
-  'contact-email-label': 'Envoyez-moi un courriel !',
+  'contact-content': 'Envie de collaborer ?',
+  'contact-email-label': 'Envoyez-moi un courriel !',
   'contact-label-floating':
     'Ouvrir le formulaire de contact (flottant)',
   'contact-label-hero': 'Ouvrir le formulaire de contact',
-  'contact-cta': 'Prenons contact !',
+  'contact-cta': 'Prenons contact !',
 
-  'contact-bg-title': "Ciel étoilé avec silhouette de ligne d'arbres",
+  'contact-bg-title': "Ciel étoilé avec silhouette de ligne d’arbres",
   'contact-bg-description':
-    "Un ciel nocturne clair rempli d'étoiles et de la faible lueur de la Voie lactée, avec une silhouette noire d'une forêt dense au premier plan.",
+    "Un ciel nocturne clair rempli d’étoiles et de la faible lueur de la Voie lactée, avec une silhouette noire d’une forêt dense au premier plan.",
 
   ...markdownRefs('forms-form-success-body', 'forms-form-error-body'),
 

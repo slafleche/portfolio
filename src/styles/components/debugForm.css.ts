@@ -94,7 +94,7 @@ export const ctaRow = style({
 
 export const ctaButton = style({
   minHeight: formTokens.button.minHeight.css(),
-  ...paddings({ horizontal: formTokens.button.paddings.horizontal }),
+  ...paddings(formTokens.button.paddings ),
   ...borders(glassyButtonTokens.borders),
   ...backgrounds(glassyButtonTokens.backgrounds),
   color: glassyButtonTokens.text.color.css(),

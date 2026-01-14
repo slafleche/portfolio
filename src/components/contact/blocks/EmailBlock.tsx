@@ -176,10 +176,14 @@ export function EmailBlock({
     liveValidationRegistration,
   ]);
 
-  const { continuousValidation, recordValidationResult } =
-    useFormBlock(registration);
+  const {
+    continuousValidation,
+    hasSubmitAttempted,
+    recordValidationResult,
+  } = useFormBlock(registration);
 
-  const liveValidation = hasBlurred || continuousValidation;
+  const liveValidation =
+    continuousValidation || (hasBlurred && hasSubmitAttempted);
   const emailError = getEmailError(evaluation, copy);
   const localErrorText =
     liveValidation && emailError ? emailError.text : null;

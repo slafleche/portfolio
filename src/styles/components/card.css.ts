@@ -339,7 +339,6 @@ export const logoAsBg = style({
   height: '100%',
   pointerEvents: 'none',
   overflow: 'hidden',
-  // filter: 'blur(1px)',
 });
 
 export const logoAsBgSVG = style({

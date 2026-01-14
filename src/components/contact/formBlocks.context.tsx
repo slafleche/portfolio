@@ -38,6 +38,8 @@ type FormBlocksContextValue = {
   // invalid.
   continuousValidation: boolean;
   enableContinuousValidation: () => void;
+  hasSubmitAttempted: boolean;
+  markSubmitAttempted: () => void;
   getRegistrationsSnapshot: () => FormBlockRegistration[];
   recordValidationResult: (
     result: ContactFormBlockValidationResult,
@@ -60,6 +62,10 @@ export function FormBlocksProvider({
   const [
     continuousValidation,
     setContinuousValidation,
+  ] = useState<boolean>(false);
+  const [
+    hasSubmitAttempted,
+    setHasSubmitAttempted,
   ] = useState<boolean>(false);
   const blocksRef = useRef(new Map<string, FormBlockRegistration>());
   const validationResultsRef = useRef(
@@ -85,6 +91,8 @@ export function FormBlocksProvider({
       registerBlock,
       continuousValidation,
       enableContinuousValidation: () => setContinuousValidation(true),
+      hasSubmitAttempted,
+      markSubmitAttempted: () => setHasSubmitAttempted(true),
       getRegistrationsSnapshot: () =>
         Array.from(blocksRef.current.values()),
       recordValidationResult: (result) => {
@@ -110,6 +118,7 @@ export function FormBlocksProvider({
     }),
     [
       continuousValidation,
+      hasSubmitAttempted,
       registerBlock,
       validationResultsVersion,
       onCatastrophic,
@@ -135,6 +144,10 @@ export function TestFormBlocksProvider({
   const [
     continuousValidation,
     setContinuousValidation,
+  ] = useState<boolean>(false);
+  const [
+    hasSubmitAttempted,
+    setHasSubmitAttempted,
   ] = useState<boolean>(false);
   const blocksRef = useRef(new Map<string, FormBlockRegistration>());
   const validationResultsRef = useRef(
@@ -165,6 +178,8 @@ export function TestFormBlocksProvider({
       registerBlock,
       continuousValidation,
       enableContinuousValidation: () => setContinuousValidation(true),
+      hasSubmitAttempted,
+      markSubmitAttempted: () => setHasSubmitAttempted(true),
       getRegistrationsSnapshot: () =>
         Array.from(blocksRef.current.values()),
       recordValidationResult: (result) => {
@@ -183,6 +198,7 @@ export function TestFormBlocksProvider({
     }),
     [
       continuousValidation,
+      hasSubmitAttempted,
       registerBlock,
       validationResultsVersion,
     ],
@@ -227,6 +243,8 @@ export const useFormBlock = (registration: FormBlockRegistration) => {
   return {
     continuousValidation: context.continuousValidation,
     enableContinuousValidation: context.enableContinuousValidation,
+    hasSubmitAttempted: context.hasSubmitAttempted,
+    markSubmitAttempted: context.markSubmitAttempted,
     recordValidationResult: context.recordValidationResult,
     reportCatastrophic,
   };

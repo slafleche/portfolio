@@ -8,7 +8,10 @@ import {
   preprocessorVanillaExtract,
 } from 'css-calipers/mediaQueries';
 
-import { layoutVars } from '../../tokens/layout.tokens';
+import {
+  formLayoutVars,
+  layoutVars,
+} from '../../tokens/layout.tokens';
 import { cardLayout } from '../componentTokens/card.component.tokens';
 import { footerVars } from '../componentTokens/footer.component.tokens';
 import { curlVars } from '../componentTokens/pageCurl.component.tokens';
@@ -47,6 +50,10 @@ export const mediaQueryStyleConfig: IMediaQueries = {
   notCompact: {
     minWidth: layoutVars.compact.maxWidth.add(1),
   } as IMediaQueryProps,
+
+  compressed: {
+    maxWidth: layoutVars.compressed.maxWidth,
+  } as IMediaQueryProps,
 };
 
 const baseMediaQueryStyle = mediaQueryFactory({
@@ -66,19 +73,18 @@ export const mediaQueryStyle = (
 export const globalMediaQueryStyle = (
   styles: Parameters<typeof baseMediaQueryStyle>[0],
 ): StyleRule => {
-  const scopedStyles = baseMediaQueryStyle(styles) as unknown as Record<
-    string,
-    StyleRule
-  >;
+  const scopedStyles = baseMediaQueryStyle(
+    styles,
+  ) as unknown as Record<string, StyleRule>;
   return scopedStyles['&'] ?? {};
 };
 
 // Component specific media queries
 
 const footerOneCol = curlVars.open.height
-      .multiply(2)
-      .add(footerVars.glassyLinks.size.multiply(3))
-      .add(footerVars.glassyLinks.gap.multiply(4));
+  .multiply(2)
+  .add(footerVars.glassyLinks.size.multiply(3))
+  .add(footerVars.glassyLinks.gap.multiply(4));
 
 const componentSpecificQueriesConfig: IMediaQueries = {
   hero_compact: {},
@@ -90,7 +96,13 @@ const componentSpecificQueriesConfig: IMediaQueries = {
   },
   not_footer_oneColumn: {
     minWidth: footerOneCol.add(1),
-  }
+  },
+  contact_noEdge: {
+    maxWidth: formLayoutVars.maxWidth,
+  },
+  contact_compact: {
+    maxWidth: formLayoutVars.compact.maxWidth,
+  },
 };
 
 const baseComponentMediaQueries = mediaQueryFactory({
@@ -114,9 +126,8 @@ export const componentMediaQueries = (
 export const globalComponentMediaQueryStyle = (
   styles: Parameters<typeof baseComponentMediaQueries>[0],
 ): StyleRule => {
-  const scopedStyles = baseComponentMediaQueries(styles) as unknown as Record<
-    string,
-    StyleRule
-  >;
+  const scopedStyles = baseComponentMediaQueries(
+    styles,
+  ) as unknown as Record<string, StyleRule>;
   return scopedStyles['&'] ?? {};
 };

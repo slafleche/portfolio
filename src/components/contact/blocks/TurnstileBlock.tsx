@@ -10,6 +10,7 @@ import {
 import { FormHint } from '@/components/contact/primitives/FormHint';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
 import * as s from '@/styles/components/forms.css';
+import { useMedia } from '@/styles/responsive';
 
 import { useFormBlock } from '../formBlocks.context';
 import type {
@@ -167,6 +168,9 @@ export function TurnstileBlock({
     typeof window !== 'undefined' &&
     Boolean((window as ExtendedWindow).turnstile);
 
+  const { compact } = useMedia();
+  const turnstileSize = compact === true ? 'compact' : 'normal';
+
   const [
     status,
     setStatus,
@@ -178,6 +182,10 @@ export function TurnstileBlock({
 
   const widgetRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
+  const lastValidationStateRef = useRef<{
+    valid: boolean;
+    code: string | null;
+  } | null>(null);
 
   const shouldRenderTurnstileWidget =
     hasTurnstileConfig || hasInlineTurnstile;
@@ -207,8 +215,57 @@ export function TurnstileBlock({
     token,
   ]);
 
-  const { continuousValidation, reportCatastrophic } =
+  const {
+    continuousValidation,
+    recordValidationResult,
+    reportCatastrophic,
+  } =
     useFormBlock(registration);
+  const reportCatastrophicRef = useRef(reportCatastrophic);
+
+  useEffect(() => {
+    reportCatastrophicRef.current = reportCatastrophic;
+  }, [
+    reportCatastrophic,
+  ]);
+
+  useEffect(() => {
+    if (!continuousValidation) {
+      lastValidationStateRef.current = null;
+      return;
+    }
+
+    const result = buildTurnstileValidationResult(
+      id,
+      status,
+      copy,
+      token,
+    );
+
+    const nextState = {
+      valid: result.valid,
+      code: result.messages[0]?.code ?? null,
+    };
+
+    const previousState = lastValidationStateRef.current;
+    if (
+      previousState &&
+      previousState.valid === nextState.valid &&
+      previousState.code === nextState.code
+    ) {
+      return;
+    }
+
+    lastValidationStateRef.current = nextState;
+    recordValidationResult(result);
+  }, [
+    continuousValidation,
+    copy,
+    id,
+    recordValidationResult,
+    status,
+    token,
+  ]);
 
   useEffect(() => {
     if (!token) return;
@@ -222,6 +279,7 @@ export function TurnstileBlock({
   useEffect(() => {
     if (!shouldRenderTurnstileWidget || !turnstileSiteKey) return;
     let cancelled = false;
+    const containerRef = widgetRef.current;
     setStatus('loading');
     const mountWidget = async () => {
       if (widgetIdRef.current) {
@@ -232,19 +290,22 @@ export function TurnstileBlock({
         if (cancelled) return;
         const extendedWindow = window as ExtendedWindow;
         const turnstileApi = extendedWindow.turnstile;
-        const container = widgetRef.current;
+        const container = containerRef;
         if (!turnstileApi || !container) {
-          reportCatastrophic(
+          reportCatastrophicRef.current(
             'Turnstile unavailable: missing API or container.',
           );
           throw new Error('Turnstile unavailable');
         }
         if (container.childNodes.length > 0) {
-          return;
+          if (widgetIdRef.current) {
+            return;
+          }
+          container.replaceChildren();
         }
         const widgetId = turnstileApi.render(container, {
           sitekey: turnstileSiteKey,
-          size: 'normal',
+          size: turnstileSize,
           callback: (nextToken: string) => {
             if (cancelled) return;
             setToken(nextToken);
@@ -264,17 +325,24 @@ export function TurnstileBlock({
                 : `Turnstile reported an error via error-callback (${String(
                     errorCode,
                   )}).`;
-            reportCatastrophic(reason);
+            reportCatastrophicRef.current(reason);
           },
         });
         widgetIdRef.current = widgetId;
-        setStatus((previous) =>
-          previous === 'verified' ? 'verified' : 'ready',
-        );
+        setStatus((previous) => {
+          if (
+            previous === 'verified' ||
+            previous === 'expired' ||
+            previous === 'error'
+          ) {
+            return previous;
+          }
+          return 'ready';
+        });
       } catch {
         if (!cancelled) {
           setStatus('error');
-          reportCatastrophic(
+          reportCatastrophicRef.current(
             'Turnstile script failed to load or initialise.',
           );
         }
@@ -288,11 +356,12 @@ export function TurnstileBlock({
       if (turnstileApi && widgetIdRef.current) {
         turnstileApi.reset(widgetIdRef.current);
       }
+      containerRef?.replaceChildren();
       widgetIdRef.current = null;
     };
   }, [
-    reportCatastrophic,
     shouldRenderTurnstileWidget,
+    turnstileSize,
     turnstileSiteKey,
   ]);
 
@@ -304,13 +373,11 @@ export function TurnstileBlock({
         ? copy.summary.error
         : copy.summary.missing
     : null;
-  const helperText = !isComplete ? copy.requiredText : null;
   const disabledText = disabled ? copy.statuses.disabled : null;
   const showError = Boolean(
     summaryText && continuousValidation && !disabled,
   );
-  const hintText =
-    disabledText ?? (showError ? summaryText : helperText);
+  const hintText = disabledText ?? (showError ? summaryText : null);
   const hintId = `${id}-turnstile-hint`;
 
   return (

@@ -6,24 +6,16 @@ import type {
   ContactFormBlockValidationResult,
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
-import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
+import { enFormTranslator } from './helpers/enFormTranslator';
 import {
   makeMessageBase,
   makeValidationResult,
 } from './helpers/messageFactories.helpers';
 
-const STATUS_MESSAGES: Record<FormStatusKey, string> = {
-  sending: 'sending',
-  success: 'success',
-  generic: 'generic',
-  validation_error: 'validation_error',
-  rate_limited: 'rate_limited',
-  service_unavailable: 'service_unavailable',
-  not_configured: 'not_configured',
-  blocked: 'blocked',
-};
+const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 
 const makeValidation = (
   id: string,
@@ -53,6 +45,8 @@ const makePayload = (
 
 describe('ContactForm validated blocks — static matrix', () => {
   it('treats all blocks valid as a clean success: no banner, no jump-to-first-issue', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -85,7 +79,7 @@ describe('ContactForm validated blocks — static matrix', () => {
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
           'email',
@@ -114,6 +108,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('surfaces a single-block validation error when only Name is invalid', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -146,7 +142,7 @@ describe('ContactForm validated blocks — static matrix', () => {
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
           'email',
@@ -165,7 +161,7 @@ describe('ContactForm validated blocks — static matrix', () => {
         throw new Error('Expected inline status region to render.');
       }
       const text = inlineRegion.textContent ?? '';
-      expect(text).toContain('validation_error');
+      expect(text).toContain(statusMessages.validation_error);
       expect(text).toContain('name error');
 
       const jumpButton = queryByTestId('jump-to-first-issue');
@@ -179,6 +175,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('surfaces a single-block validation error when only Email is invalid', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -211,7 +209,7 @@ describe('ContactForm validated blocks — static matrix', () => {
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
           'email',
@@ -230,7 +228,7 @@ describe('ContactForm validated blocks — static matrix', () => {
         throw new Error('Expected inline status region to render.');
       }
       const text = inlineRegion.textContent ?? '';
-      expect(text).toContain('validation_error');
+      expect(text).toContain(statusMessages.validation_error);
       expect(text).toContain('email error');
 
       const jumpButton = queryByTestId('jump-to-first-issue');
@@ -242,6 +240,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('surfaces a single-block validation error when only Message is invalid', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -271,7 +271,7 @@ describe('ContactForm validated blocks — static matrix', () => {
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
           'email',
@@ -290,7 +290,7 @@ describe('ContactForm validated blocks — static matrix', () => {
         throw new Error('Expected inline status region to render.');
       }
       const text = inlineRegion.textContent ?? '';
-      expect(text).toContain('validation_error');
+      expect(text).toContain(statusMessages.validation_error);
       expect(text).toContain('message error');
 
       const jumpButton = queryByTestId('jump-to-first-issue');
@@ -302,6 +302,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('surfaces multiple block validation errors and prioritises the earliest block in order', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -336,7 +338,7 @@ describe('ContactForm validated blocks — static matrix', () => {
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
           'email',
@@ -356,7 +358,7 @@ describe('ContactForm validated blocks — static matrix', () => {
         throw new Error('Expected inline status region to render.');
       }
       const text = inlineRegion.textContent ?? '';
-      expect(text).toContain('validation_error');
+      expect(text).toContain(statusMessages.validation_error);
       expect(text).toContain('name error');
       expect(text).toContain('email error');
 
@@ -378,6 +380,8 @@ describe('ContactForm validated blocks — static matrix', () => {
   });
 
   it('treats a verification failure (blocked) as a catastrophic non-field error with no jump-to-first-issue', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -395,7 +399,7 @@ describe('ContactForm validated blocks — static matrix', () => {
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
         ],
@@ -411,19 +415,21 @@ describe('ContactForm validated blocks — static matrix', () => {
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
       const text = inlineRegion?.textContent ?? '';
-      expect(text).toContain('blocked');
+      expect(text).toContain(statusMessages.blocked);
 
       const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
       expect(messageCentreRegion?.textContent ?? '').toContain(
-        'blocked',
+        statusMessages.blocked,
       );
 
       expect(queryByTestId('jump-to-first-issue')).toBeNull();
     });
 
-    const submitButton = getByRole('button', { name: 'Submit' });
+    const submitButton = getByRole('button', {
+      name: formCopy.submitLabel,
+    });
     expect(submitButton).toBeDisabled();
   });
 });

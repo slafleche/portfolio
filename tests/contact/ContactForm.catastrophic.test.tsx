@@ -10,10 +10,9 @@ import {
   buildContactFormCopy,
   type FormStatusKey,
 } from '@/lib/locales/sections/form.locale';
-import type { Translator } from '@/lib/locales/sections/helpers.locale';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
+import { enFormTranslator } from './helpers/enFormTranslator';
 import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
@@ -29,27 +28,10 @@ import {
 // - Retry affordances (submit button, jump-to-first-issue) are not shown.
 // - The error copy matches the appropriate status message.
 
-const buildCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[
-        key as keyof typeof enFormCopy
-      ]) as unknown as Translator,
-  );
+const buildCopy = () => buildContactFormCopy(enFormTranslator);
 
 const buildStatusMessages = (copy = buildCopy()) =>
   copy.blocks.messageCentre.statuses as Record<FormStatusKey, string>;
-
-const STATUS_MESSAGES: Record<FormStatusKey, string> = {
-  sending: 'sending',
-  success: 'success',
-  generic: 'generic',
-  validation_error: 'validation_error',
-  rate_limited: 'rate_limited',
-  service_unavailable: 'service_unavailable',
-  not_configured: 'not_configured',
-  blocked: 'blocked',
-};
 
 function renderWrappedContactForm(
   copy = buildCopy(),
@@ -78,6 +60,8 @@ function renderWrappedContactForm(
 
 describe('ContactForm — catastrophic failures (error view)', () => {
   it('treats a no-blocks configuration as not_configured and surfaces a catastrophic-style summary', async () => {
+    const copy = buildCopy();
+    const statusMessages = buildStatusMessages(copy);
     const submitHelper: ContactFormFlowSubmitHelper = vi
       .fn()
       .mockResolvedValue('success');
@@ -86,7 +70,7 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       renderContactFormShellHarness({
         blocks: [],
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
       });
 
     submit();
@@ -100,17 +84,19 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         throw new Error('Expected inline status region to render.');
       }
       expect(inlineRegion.textContent ?? '').toContain(
-        'not_configured',
+        statusMessages.not_configured,
       );
 
       const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
       expect(messageCentreRegion?.textContent ?? '').toContain(
-        'not_configured',
+        statusMessages.not_configured,
       );
 
-      const submitButton = getByRole('button', { name: 'Submit' });
+      const submitButton = getByRole('button', {
+        name: copy.submitLabel,
+      });
       expect(submitButton).toBeDisabled();
 
       const jumpButton = queryByTestId('jump-to-first-issue');

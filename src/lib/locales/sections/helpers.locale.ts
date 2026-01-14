@@ -4,9 +4,7 @@ import {
   loadMessages,
   resolveLocale,
 } from '@/lib/locales/locale';
-import type { EnData } from '@/lib/locales/translations/en.data';
-
-export type MessageKey = keyof EnData;
+export type MessageKey = keyof Messages;
 
 export type Translator = ((key: MessageKey) => string) & {
   /**

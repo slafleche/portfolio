@@ -1,6 +1,7 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
+import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import {
   createContext,
@@ -17,11 +18,11 @@ import { stripContactFormScenarioFromLocation } from '@/dev/scenarios/contactFor
 import type { ContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { PrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { sharedStrings } from '@/lib/sharedStrings';
-import * as dialogStyles from '@/styles/components/contactDialog.css';
+import * as dialogStyles from '@/styles/components/contactForm.css';
 import * as privacyStyles from '@/styles/components/privacy.css';
 
-import { GlassPanel } from '../GlassPanel';
 import ImageByName from '../ImageByName';
+import Content from '../responsive/Content';
 import { CloseButton } from './CloseButton';
 import {
   ContactDialogTitleContext,
@@ -192,6 +193,7 @@ export function ContactDialogProvider({
   const previousIntentRef = useRef<ModalIntent>('none');
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const lastNonModalHashRef = useRef<string | null>(null);
+  const suppressNextContactCloseRef = useRef(false);
 
   const captureFocusAnchor = useCallback(() => {
     if (typeof document === 'undefined') return;
@@ -371,6 +373,7 @@ export function ContactDialogProvider({
   ]);
 
   const closePrivacy = useCallback(() => {
+    suppressNextContactCloseRef.current = true;
     applyIntent('contact', { history: 'replace' });
   }, [
     applyIntent,
@@ -396,6 +399,13 @@ export function ContactDialogProvider({
   const handleDialogOpenChange = useCallback(
     (nextOpen: boolean) => {
       if (!nextOpen) {
+        if (suppressNextContactCloseRef.current) {
+          suppressNextContactCloseRef.current = false;
+          return;
+        }
+        if (intentRef.current === 'contact-policy') {
+          return;
+        }
         closeContact();
       } else {
         openContact();
@@ -406,11 +416,6 @@ export function ContactDialogProvider({
       openContact,
     ],
   );
-
-  const privacyUpdated =
-    typeof privacyCopy.updated === 'string'
-      ? privacyCopy.updated.trim()
-      : '';
 
   const contextValue = useMemo(
     () => ({
@@ -462,27 +467,34 @@ export function ContactDialogProvider({
                   name={'night_forest'}
                   alt={formCopy.bgDescription}
                 />
-                <div className={dialogStyles.panelContent}>
-                  <GlassPanel>
-                    <div className={dialogStyles.closeButtonWrap}>
-                      <Dialog.Close asChild>
-                        <CloseButton
-                          label={closeLabel}
-                          className={dialogStyles.closeButton}
-                        />
-                      </Dialog.Close>
-                    </div>
+                <Content
+                  className={dialogStyles.panelContent}
+                  data-ui="contact-form"
+                  data-query="no-margin"
+                >
+                  <div data-ui="form-header" className={dialogStyles.header}>
                     <Dialog.Title
                       className={dialogStyles.heading}
                       data-modal="title"
                     >
                       {dialogTitle}
                     </Dialog.Title>
-                    <Dialog.Description asChild>
-                      <p data-visible="sc-only">
-                        {dialogTitle}
-                      </p>
-                    </Dialog.Description>
+                    <div className={dialogStyles.closeButtonWrap}>
+                      <Dialog.Close asChild>
+                        <CloseButton
+                          label={closeLabel}
+                          className={dialogStyles.closeButton}
+                          closeOverlayClassName={
+                            dialogStyles.scoopGradient
+                          }
+                        />
+                      </Dialog.Close>
+                    </div>
+                  </div>
+                  <Dialog.Description asChild>
+                    <p data-visible="sc-only">{dialogTitle}</p>
+                  </Dialog.Description>
+                  <div className={dialogStyles.scrollArea}>
                     <ContactDialogTitleContext.Provider
                       value={titleContextValue}
                     >
@@ -492,8 +504,8 @@ export function ContactDialogProvider({
                         onOpenPrivacy={openPrivacy}
                       />
                     </ContactDialogTitleContext.Provider>
-                  </GlassPanel>
-                </div>
+                  </div>
+                </Content>
               </div>
             </Dialog.Content>
           </Dialog.Overlay>
@@ -507,29 +519,46 @@ export function ContactDialogProvider({
           <Dialog.Overlay className={privacyStyles.overlay} />
           <Dialog.Content className={privacyStyles.dialog}>
             <div className={privacyStyles.panel}>
-              <Dialog.Title
-                className={privacyStyles.title}
-                data-modal="title"
+              <div
+                className={clsx(
+                  privacyStyles.header,
+                  privacyStyles.glassyBack,
+                )}
               >
-                {privacyCopy.title}
-              </Dialog.Title>
-              {privacyUpdated ? (
-                <p className={privacyStyles.updated}>
-                  {privacyUpdated}
-                </p>
-              ) : null}
+                <Dialog.Title
+                  className={privacyStyles.title}
+                  data-modal="title"
+                >
+                  {privacyCopy.title}
+                </Dialog.Title>
+                <div className={privacyStyles.closeButtonWrap}>
+                  <Dialog.Close asChild>
+                    <CloseButton
+                      label={formCopy.privacy.closeLabel}
+                      closeOverlayClassName={
+                        dialogStyles.scoopGradient
+                      }
+                      className={dialogStyles.closeButton}
+                    />
+                  </Dialog.Close>
+                </div>
+              </div>
+
               <Dialog.Description asChild>
-                <Markdown
-                  source={privacyCopy.content}
-                  className={privacyStyles.body}
-                />
+                <Content
+                  data-ui="privacy-content"
+                  className={privacyStyles.content}
+                >
+                  <div className={privacyStyles.scrollArea}>
+                    <div className={privacyStyles.container}>
+                      <Markdown
+                        source={privacyCopy.content}
+                        className={privacyStyles.text}
+                      />
+                    </div>
+                  </div>
+                </Content>
               </Dialog.Description>
-              <Dialog.Close asChild>
-                <CloseButton
-                  label={formCopy.privacy.closeLabel}
-                  className={dialogStyles.closeButton}
-                />
-              </Dialog.Close>
             </div>
           </Dialog.Content>
         </Dialog.Portal>

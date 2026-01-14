@@ -43,8 +43,8 @@ export const formFontVariants = {
     sourcePath: SOURCE_PATH,
     config: {
       styleOverrides: {
-        lineHeight: 1.1,
-        size: m(16),
+        lineHeight: 1.5,
+        size: m(18),
       },
       options: {
         weightPercents: {
@@ -62,7 +62,8 @@ export const formFontVariants = {
       },
       options: {
         weightPercents: {
-          default: mPercent(0),
+          default: mPercent(50),
+          strong: mPercent(90),
         },
       },
     },

@@ -2,12 +2,17 @@ import { m } from 'css-calipers';
 
 import { colorVars, themeColours } from '@/tokens/global.tokens';
 
+import { layoutVars } from './layout.tokens';
+
 // import { relativeFontWeight } from '../styles/helpers/typography.helper';
 // import { fontFamilies } from './fontFamilies.tokens';
 
 export const formTokens = {
   textarea: {
     minHeight: m(250),
+    compact: {
+      minHeight: m(150),
+    }
   },
   label: {
     text: {
@@ -16,7 +21,7 @@ export const formTokens = {
     },
   },
   layout: {
-    maxWidth: m(640),
+    maxWidth: layoutVars.compact.maxWidth,
     fieldGap: m(12),
     sectionGap: m(16),
   },
@@ -28,8 +33,9 @@ export const formTokens = {
       color: colorVars.white.alpha(0.55),
     },
     paddings: {
-      vertical: m(6),
+      top: m(12),
       horizontal: m(0),
+      bottom: m(8),
     },
     borders: {
       top: {
@@ -110,7 +116,8 @@ export const formTokens = {
   button: {
     minHeight: m(48),
     paddings: {
-      horizontal: m(24),
+      vertical: m(6),
+      horizontal: m(8),
     },
     borders: {
       radius: m(28),

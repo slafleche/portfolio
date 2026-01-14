@@ -22,14 +22,12 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       expect(liveRegion).toHaveAttribute('aria-live', 'polite');
       expect(liveRegion).toHaveAttribute('aria-atomic', 'true');
 
-      const statusWrapper = container.querySelector(
-        '[data-visible]',
+      const root = container.querySelector(
+        '[data-form="messages"]',
       ) as HTMLDivElement | null;
-      expect(statusWrapper).not.toBeNull();
-      if (!statusWrapper) return;
-      expect(statusWrapper.getAttribute('data-visible')).toBe(
-        'false',
-      );
+      expect(root).not.toBeNull();
+      if (!root) return;
+      expect(root.getAttribute('data-empty')).toBe('true');
 
       expect(liveRegion.textContent?.trim() ?? '').toBe('');
       expect(querymessageCentreRegion()).toBeNull();
@@ -80,14 +78,12 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       rerenderWithMessages(emptyMessages);
 
       const liveRegion = getInlineRegion();
-      const statusWrapper = container.querySelector(
-        '[data-visible]',
+      const root = container.querySelector(
+        '[data-form="messages"]',
       ) as HTMLDivElement | null;
-      expect(statusWrapper).not.toBeNull();
-      if (!statusWrapper) return;
-      expect(statusWrapper.getAttribute('data-visible')).toBe(
-        'false',
-      );
+      expect(root).not.toBeNull();
+      if (!root) return;
+      expect(root.getAttribute('data-empty')).toBe('true');
       expect(liveRegion.textContent?.trim() ?? '').toBe('');
       expect(querymessageCentreRegion()).toBeNull();
     });
@@ -104,19 +100,15 @@ describe('Contact form message centre: MessageCentreBlock', () => {
         messageFallback: undefined,
       };
 
-      const { container } = renderMessageCentre(messages);
+      const { container, getmessageCentreText } =
+        renderMessageCentre(messages);
 
-      const statusWrapper = container.querySelector(
-        '[data-visible]',
-      ) as HTMLDivElement | null;
-      expect(statusWrapper).not.toBeNull();
-      if (!statusWrapper) return;
+      const errorContainer = container.querySelector(
+        '[data-mc="errors"]',
+      ) as HTMLElement | null;
+      expect(errorContainer).toBeNull();
 
-      const spans = Array.from(
-        statusWrapper.querySelectorAll('span'),
-      );
-      const texts = spans.map((span) => span.textContent?.trim());
-      expect(texts).toEqual([]);
+      expect(getmessageCentreText()).toBe('First global');
     });
 
     it('renders block messages inline in order', () => {
@@ -131,16 +123,16 @@ describe('Contact form message centre: MessageCentreBlock', () => {
 
       const { container } = renderMessageCentre(messages);
 
-      const statusWrapper = container.querySelector(
-        '[data-visible="true"]',
-      ) as HTMLDivElement | null;
-      expect(statusWrapper).not.toBeNull();
-      if (!statusWrapper) return;
+      const errorContainer = container.querySelector(
+        '[data-mc="errors"]',
+      ) as HTMLElement | null;
+      expect(errorContainer).not.toBeNull();
+      if (!errorContainer) return;
 
-      const spans = Array.from(
-        statusWrapper.querySelectorAll('span'),
+      const errors = Array.from(
+        errorContainer.querySelectorAll('[data-mc="error"]'),
       );
-      const texts = spans.map((span) => span.textContent?.trim());
+      const texts = errors.map((error) => error.textContent?.trim());
       expect(texts).toEqual([
         'Name error',
         'Email error',
@@ -161,16 +153,16 @@ describe('Contact form message centre: MessageCentreBlock', () => {
 
       const { container } = renderMessageCentre(messages);
 
-      const statusWrapper = container.querySelector(
-        '[data-visible="true"]',
-      ) as HTMLDivElement | null;
-      expect(statusWrapper).not.toBeNull();
-      if (!statusWrapper) return;
+      const errorContainer = container.querySelector(
+        '[data-mc="errors"]',
+      ) as HTMLElement | null;
+      expect(errorContainer).not.toBeNull();
+      if (!errorContainer) return;
 
-      const spans = Array.from(
-        statusWrapper.querySelectorAll('span'),
+      const errors = Array.from(
+        errorContainer.querySelectorAll('[data-mc="error"]'),
       );
-      const texts = spans.map((span) => span.textContent?.trim());
+      const texts = errors.map((error) => error.textContent?.trim());
       expect(texts).toEqual([
         'Name error',
         'Email error',
@@ -222,7 +214,7 @@ describe('Contact form message centre: MessageCentreBlock', () => {
       expect(getmessageCentreText()).toBe('Only block error');
     });
 
-    it('does not render a messageCentre when there are multiple block messages and no fallback', () => {
+    it('renders an empty messageCentre when there are multiple block messages and no fallback', () => {
       const messages: MessageCentreMessages = {
         globals: [],
         blocks: [
@@ -232,10 +224,11 @@ describe('Contact form message centre: MessageCentreBlock', () => {
         messageFallback: undefined,
       };
 
-      const { querymessageCentreRegion } =
+      const { querymessageCentreRegion, getmessageCentreText } =
         renderMessageCentre(messages);
 
-      expect(querymessageCentreRegion()).toBeNull();
+      expect(querymessageCentreRegion()).not.toBeNull();
+      expect(getmessageCentreText()).toBe('');
     });
 
     it('uses messageFallback as messageCentre text when there are multiple block messages and no globals', () => {

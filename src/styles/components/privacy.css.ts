@@ -1,13 +1,24 @@
-import { style } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
+import { globalStyle, style } from '@vanilla-extract/css';
+import { m, mPercent } from 'css-calipers';
 
+import { fontFamilies } from '../../tokens/fontFamilies.tokens';
 import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { formTokens } from '../../tokens/forms.tokens';
-import { colorVars } from '../../tokens/global.tokens';
+import { glassyButtonTokens } from '../../tokens/glassy.tokens';
+import { colors, colorVars } from '../../tokens/global.tokens';
+import { layoutVars } from '../../tokens/layout.tokens';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { privacyTokens } from '../../tokens/privacy.tokens';
+import backdropFilters from '../helpers/backdropFilter.helper';
+import { makeGlassSurface } from '../helpers/glassy.helper';
 import { boxShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
-import { fontStylesFromFontVariant } from '../helpers/typography.helper';
+import {
+  fontStylesFromFontVariant,
+  relativeFontWeight,
+} from '../helpers/typography.helper';
+import * as l from '../layout.css';
+import { globalMediaQueryStyle } from '../responsive/mediaQueries';
 
 export const container = style({
   position: 'relative',
@@ -21,21 +32,10 @@ export const container = style({
   gap: privacyTokens.layout.sectionGap.css(),
 });
 
-export const header = style({
+export const headerStack = style({
   display: 'grid',
   gap: privacyTokens.header.gap.css(),
 });
-
-// const sheenSweep = keyframes({
-//   '0%': {
-//     transform: 'skewX(45deg) translateX(220%)',
-//   },
-//   '100%': {
-//     transform: 'skewX(45deg) translateX(-220%)',
-//   },
-// });
-
-// const sheenGradient = privacyTokens.backLink.sheen;
 
 export const backLink = style({
   position: 'absolute',
@@ -44,26 +44,33 @@ export const backLink = style({
   width: privacyTokens.backLink.size.css(),
   height: privacyTokens.backLink.size.css(),
   zIndex: 1,
-  //   ...borders(privacyTokens.backLink.borders),
-  //   color: privacyTokens.backLink.text.color.css(),
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  //   fontSize: privacyTokens.backLink.iconSize.css(),
-  //   backdropFilter: `blur(${privacyTokens.backLink.backdropBlur.css()})`,
-  //   WebkitBackdropFilter: `blur(${privacyTokens.backLink.backdropBlur.css()})`,
-  //   transition: privacyTokens.backLink.transition,
   textDecoration: 'none',
   overflow: 'hidden',
 });
 
+export const closeButtonWrap = style({
+  position: 'absolute',
+  top: '50%',
+  right: '16px',
+  transform: 'translateY(-50%)',
+  width: glassyButtonTokens.size.css(),
+  height: glassyButtonTokens.size.css(),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 2,
+});
+
 export const privacyFinePrint = style({
   fontSize: '0.9rem',
+  textAlign: 'center',
   color: formTokens.privacy.text.color.css(),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.hints,
   }),
-  textAlign: 'left',
 });
 
 export const link = style({
@@ -90,8 +97,7 @@ export const link = style({
 export const overlay = style({
   position: 'fixed',
   inset: 0,
-  backgroundColor: colorVars.black.alpha(0.85).css(),
-  // ...backdropFilters.style({ blur: glassVars.blur.double() }),
+  // backgroundColor: colorVars.black.alpha(0.85).css(),
   zIndex: 1100,
 });
 
@@ -99,55 +105,119 @@ export const dialog = style({
   position: 'fixed',
   inset: 0,
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'stretch',
   justifyContent: 'center',
-  ...paddings({
-    vertical: m(8),
-    horizontal: m(6),
-  }),
+  overflow: 'hidden',
   zIndex: 1101,
 });
 
 export const panel = style({
   position: 'relative',
-  width: 'min(70ch, 90vw)',
-  maxHeight: '80vh',
-  ...paddings({
-    vertical: m(12),
-    horizontal: m(11),
-  }),
-  // ...borders(formTokens.field.borders),
   backgroundColor: colorVars.bodyBg.css(),
   color: colorVars.bodyFg.css(),
-  // ...boxShadow({
-  //   x: m(0),
-  //   y: m(3),
-  //   blur: m(12),
-  //   color: colorVars.black,
-  //   alpha: 0.35,
-  // }),
-  overflowY: 'auto',
-  display: 'grid',
-  gap: formTokens.layout.fieldGap.css(),
+  width: '100%',
+  height: '100%',
+  maxHeight: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: 0,
+});
+
+globalStyle(`.${panel}.${l.content}`, {
+  maxWidth: '100%',
+});
+
+export const header = style({
+  position: 'fixed',
+  top: 0,
+  left: '50%',
+  transform: 'translateX(-50%)',
+  zIndex: 2,
+  width: '100%',
+  maxWidth: privacyTokens.layout.maxWidth.css(),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  ...backdropFilters({
+    blur: m(5),
+    saturate: mPercent(100),
+    contrast: mPercent(100),
+    brightness: mPercent(100),
+    backgroundColor: colors.transparent,
+  }),
+  minHeight: glassyButtonTokens.size.css(),
+  ...paddings({
+    vertical: privacyTokens.backLink.offset.multiply(2),
+    horizontal: m(0),
+  }),
+});
+
+export const glassyBack = style({
+  ...makeGlassSurface({
+    saturate: mPercent(100),
+    contrast: mPercent(100),
+    brightness: mPercent(100),
+    backgroundColor: colors.transparent,
+  }),
 });
 
 export const title = style({
-  margin: 0,
-  // fontSize: '1.6rem',
-  // fontWeight: 700,
-  // margin: 0,
   color: privacyTokens.title.color.css(),
+  ...paddings({
+    horizontal: m(80),
+  }),
 });
 
-export const updated = style({
-  margin: 0,
-  // color: colorVars.bodyFg.alpha(0.7).css(),
-  // fontSize: '0.9rem',
-  //   margin: 0,
-  // color: privacyTokens.updated.color.css(),
+globalStyle(`.${title}[data-modal="title"]`, {
+  ...margins(m(0)),
+  ...paddings({
+    top: 0,
+  }),
+  ...relativeFontWeight(fontFamilies.objectSans, mPercent(80)),
+  fontSize: '1.2em',
+  lineHeight: 1.2,
 });
 
-export const body = style({
-  // fontSize: '0.95rem',
-  // lineHeight: 1.6,
+export const content = style({
+  position: 'relative',
+  flex: 1,
+  minHeight: 0,
+  overflow: 'hidden',
+  ...paddings({
+    horizontal: m(0),
+    bottom: 0,
+  }),
+  ...margins({
+    bottom: 0,
+  }),
+});
+
+globalStyle(`.${container}`, {
+  ...globalMediaQueryStyle({
+    compact: {
+      ...paddings({
+        horizontal: anchorMenuVars.handle.sizeWithBorder.half(),
+      }),
+    },
+  }),
+});
+
+globalStyle(`.${container} h3:not([data-ui="heading"])`, {
+  ...globalMediaQueryStyle({
+    compact: {
+      textAlign: 'left',
+      fontSize: '1em',
+    },
+  }),
+});
+
+export const scrollArea = style({
+  height: '100%',
+  overflowY: 'auto',
+  scrollbarGutter: 'stable',
+});
+export const text = style({
+  width: '100%',
+  maxWidth: layoutVars.compact.maxWidth.css(),
+  margin: 'auto',
 });

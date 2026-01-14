@@ -12,6 +12,7 @@ import * as s from '@/styles/components/forms.css';
 
 import { useSafeId } from '../../lib/dom';
 import { notRelease } from '../../lib/runtimeEnv';
+import ToTopArrow from '../icons/ToTopArrow';
 import { EmailBlock } from './blocks/EmailBlock';
 import { HoneypotBlock } from './blocks/HoneypotBlock';
 import { MessageBlock } from './blocks/MessageBlock';
@@ -141,16 +142,7 @@ function ContactFormInner({
     },
   });
 
-  const shouldSuppressSoloBlockMessage =
-    outcome.messagesForUi.blocks.length === 1 &&
-    outcome.messagesForUi.blockCodes?.length === 1;
-  const messagesForUi = shouldSuppressSoloBlockMessage
-    ? {
-        ...outcome.messagesForUi,
-        blocks: [],
-        blockCodes: [],
-      }
-    : outcome.messagesForUi;
+  const messagesForUi = outcome.messagesForUi;
 
   const isCatastrophic = outcome.isCatastrophic;
   const isInvalid = flow.invalid;
@@ -187,6 +179,32 @@ function ContactFormInner({
         block: 'start',
         behavior: 'smooth',
       });
+
+      const header = document.querySelector<HTMLElement>(
+        '[data-ui="form-header"]',
+      );
+      const headerOffset =
+        header?.getBoundingClientRect().height ?? 0;
+      if (headerOffset > 0) {
+        let scrollParent = element.parentElement;
+        while (scrollParent) {
+          if (scrollParent.scrollHeight > scrollParent.clientHeight) {
+            break;
+          }
+          scrollParent = scrollParent.parentElement;
+        }
+        if (scrollParent) {
+          scrollParent.scrollBy({
+            top: -headerOffset,
+            behavior: 'smooth',
+          });
+        } else {
+          window.scrollBy({
+            top: -headerOffset,
+            behavior: 'smooth',
+          });
+        }
+      }
     }
 
     const registrations = getRegistrationsSnapshot();
@@ -397,23 +415,28 @@ function ContactFormInner({
         copy={copy.blocks.turnstile}
         turnstileSiteKey={turnstileSiteKey}
       />
-      <ContactPrivacy
-        copy={copy.privacy}
-        onOpenPrivacy={handleOpenPrivacy}
-      />
+
       <HoneypotBlock copy={copy.blocks.honeypot} />
       {isInvalid ? (
         <button
           type="button"
           data-testid="jump-to-first-issue"
           onClick={handleJumpToFirstIssue}
+          className={s.jumpToFirstIssue}
         >
-          {copy.blocks.messageCentre.statuses.validation_error}
+          <ToTopArrow className={s.toTopArrow} />
+          <span className={s.jumpToFirstIssueText}>
+            {copy.blocks.messageCentre.statuses.validation_error_jump}
+          </span>
         </button>
       ) : null}
       <SubmitButton disabled={disableSubmit}>
         {copy.submitLabel}
       </SubmitButton>
+      <ContactPrivacy
+        copy={copy.privacy}
+        onOpenPrivacy={handleOpenPrivacy}
+      />
     </form>
   );
 }

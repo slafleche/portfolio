@@ -47,6 +47,7 @@ export const content = style({
         selectors: {
           "&[data-query-compact='no-padding']": {
             ...paddings({
+              horizontal: 0,
               bottom: 0,
             }),
           },
@@ -85,7 +86,10 @@ export const panel = style({
 });
 
 export const page = style({
-  minHeight: '100vh',
+  minHeight: [
+    '100vh',
+    '100dvh',
+  ],
   display: 'flex',
   flexDirection: 'column',
   zIndex: 0,
@@ -127,7 +131,10 @@ export const svgOverlay = style({
   top: 0,
   left: 0,
   width: '100vw',
-  height: '100vh',
+  height: [
+    '100vh',
+    '100dvh',
+  ],
   pointerEvents: 'none',
   opacity: 0.02,
 });

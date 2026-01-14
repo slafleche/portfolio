@@ -12,26 +12,27 @@ import {
   type EnData,
   enData,
 } from '@/lib/locales/translations/en.data';
-import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import { sharedStrings } from '@/lib/sharedStrings';
 
 import { installTestEnv } from '../helpers/testEnvVars';
+import { enFormTranslator } from './helpers/enFormTranslator';
 import {
   enableTurnstileHarness,
   type TurnstileHarnessController,
 } from './helpers/turnstileTestHarness';
 
-const buildFormCopy = () =>
-  buildContactFormCopy(
-    ((key: string) =>
-      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
-  );
+const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 
 const buildPrivacy = () =>
   buildPrivacyCopy(
     ((key: string) =>
       enData[key as keyof EnData] ?? key) as unknown as Translator,
   );
+
+const uiLabels = {
+  close: enData['close-label'],
+  openContact: enData['contact-label-hero'],
+};
 
 describe('ContactDialogProvider', () => {
   let restoreEnv: (() => void) | null = null;
@@ -73,10 +74,12 @@ describe('ContactDialogProvider', () => {
         <ContactDialogProvider
           formCopy={formCopy}
           privacyCopy={privacyCopy}
-          closeLabel="Close"
+          closeLabel={uiLabels.close}
           turnstileSiteKey={turnstileHarness.getSiteKey()}
         >
-          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+          <ContactDialogTrigger>
+            {uiLabels.openContact}
+          </ContactDialogTrigger>
         </ContactDialogProvider>,
       );
 
@@ -171,10 +174,12 @@ describe('ContactDialogProvider', () => {
         <ContactDialogProvider
           formCopy={formCopy}
           privacyCopy={privacyCopy}
-          closeLabel="Close"
+          closeLabel={uiLabels.close}
           turnstileSiteKey={turnstileHarness.getSiteKey()}
         >
-          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+          <ContactDialogTrigger>
+            {uiLabels.openContact}
+          </ContactDialogTrigger>
         </ContactDialogProvider>,
       );
 
@@ -255,10 +260,12 @@ describe('ContactDialogProvider', () => {
         <ContactDialogProvider
           formCopy={formCopy}
           privacyCopy={privacyCopy}
-          closeLabel="Close"
+          closeLabel={uiLabels.close}
           turnstileSiteKey={turnstileHarness.getSiteKey()}
         >
-          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+          <ContactDialogTrigger>
+            {uiLabels.openContact}
+          </ContactDialogTrigger>
         </ContactDialogProvider>,
       );
 
@@ -311,6 +318,62 @@ describe('ContactDialogProvider', () => {
     }
   });
 
+  it('keeps the contact form open when closing the privacy dialog', async () => {
+    const formCopy = buildFormCopy();
+    const privacyCopy = buildPrivacy();
+
+    window.location.hash = '#contact-form';
+
+    render(
+      <ContactDialogProvider
+        formCopy={formCopy}
+        privacyCopy={privacyCopy}
+        closeLabel={uiLabels.close}
+      >
+        <ContactDialogTrigger>
+          {uiLabels.openContact}
+        </ContactDialogTrigger>
+      </ContactDialogProvider>,
+    );
+
+    await waitFor(() => {
+      const formPanel = document.querySelector('[data-form="form"]');
+      expect(formPanel).not.toBeNull();
+    });
+
+    const privacyLink = screen.getByRole('link', {
+      name: formCopy.privacy.linkLabel,
+    });
+    await userEvent.click(privacyLink);
+
+    await waitFor(() => {
+      const privacyTitle = screen.getByRole('heading', {
+        name: privacyCopy.title,
+      });
+      expect(privacyTitle).toBeInTheDocument();
+    });
+
+    const closePrivacyButton = screen.getByRole('button', {
+      name: formCopy.privacy.closeLabel,
+    });
+    await userEvent.click(closePrivacyButton);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('heading', {
+          name: privacyCopy.title,
+        }),
+      ).toBeNull();
+      const formPanel = document.querySelector('[data-form="form"]');
+      expect(formPanel).not.toBeNull();
+      const title = document.querySelector(
+        '[data-modal="title"]',
+      ) as HTMLElement | null;
+      expect(title).not.toBeNull();
+      expect(title?.textContent).toBe(formCopy.headings.form);
+    });
+  });
+
   it('applies the dev success scenario from the URL and uses the success heading', async () => {
     const formCopy = buildFormCopy();
     const privacyCopy = buildPrivacy();
@@ -328,9 +391,11 @@ describe('ContactDialogProvider', () => {
         <ContactDialogProvider
           formCopy={formCopy}
           privacyCopy={privacyCopy}
-          closeLabel="Close"
+          closeLabel={uiLabels.close}
         >
-          <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+          <ContactDialogTrigger>
+            {uiLabels.openContact}
+          </ContactDialogTrigger>
         </ContactDialogProvider>,
       );
 

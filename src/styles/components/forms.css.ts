@@ -1,4 +1,4 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
 import { formTokens } from '@/tokens/forms.tokens';
@@ -6,29 +6,69 @@ import { formTokens } from '@/tokens/forms.tokens';
 import { formFontVariants } from '../../tokens/fontVariants/forms';
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import {
-  // glassVars,
+  glassyButtonCupped,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
-import { colorVars } from '../../tokens/global.tokens';
+import { colors, colorVars } from '../../tokens/global.tokens';
+import {
+  formLayoutVars,
+  layoutVars,
+} from '../../tokens/layout.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
-import { boxShadow } from '../helpers/shadow.helper';
+import { gradientAsBgImg } from '../helpers/gradients.helper';
+import { absolutePosition } from '../helpers/positioning.helper';
+import { boxShadow, textShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
   fontStylesFromFontVariant,
   relativeFontWeight,
 } from '../helpers/typography.helper';
+import {
+  globalComponentMediaQueryStyle,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 
 export const form = style({
   display: 'grid',
   gap: formTokens.layout.sectionGap.css(),
-  maxWidth: formTokens.layout.maxWidth.css(),
+  ...paddings({
+    top: m(70),
+    bottom: layoutVars.content.gap,
+    horizontal: formLayoutVars.innerPadding,
+  }),
+  ...backgrounds({
+    color: colors.white.alpha(0.02).css(),
+  }),
+  width: formLayoutVars.maxWidth.css(),
+  maxWidth: '100%',
   ...fontStylesFromFontVariant({
     variant: formFontVariants.base,
   }),
-  width: '100%',
   ...margins({
     horizontal: 'auto',
+  }),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        minHeight: ['100vh', '100dvh'],
+      },
+    }),
+  },
+});
+
+globalStyle(`.${form}`, {
+  ...globalComponentMediaQueryStyle({
+    contact_noEdge: {
+      ...paddings({
+        horizontal: formLayoutVars.innerPadding,
+      }),
+    },
+    contact_compact: {
+      ...paddings({
+        horizontal: formLayoutVars.compact.innerPadding,
+      }),
+    },
   }),
 });
 
@@ -72,6 +112,13 @@ export const label = style({
   ...paddings({
     right: m(0.5, 'em'),
   }),
+  opacity: 0.8,
+  ...textShadow({
+    x: m(1),
+    y: m(1),
+    blur: m(2),
+    color: colorVars.black,
+  }),
 });
 
 export const required = style({
@@ -88,7 +135,7 @@ export const input = style({
   ...fontStylesFromFontVariant({
     variant: formFontVariants.input,
   }),
-  ...relativeFontWeight(formFontVariants.input, mPercent(60)),
+  ...relativeFontWeight(formFontVariants.input, mPercent(40)),
   color: formTokens.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
@@ -154,7 +201,7 @@ export const textarea = style({
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.focusVisible.borders, {
+        ...borders(formTokens.field.hover.borders, {
           skipDefaults: true,
         }),
         // ...boxShadow(formTokens.field.focusVisible.shadow),
@@ -165,10 +212,12 @@ export const textarea = style({
     },
     '&[data-error="true"]': {
       color: formTokens.field.error.text.color.css(),
-      // ...borders(formTokens.field.error.borders, {
-      //   skipDefaults: true,
-      // }),
     },
+    ...mediaQueryStyle({
+      compact: {
+        minHeight: formTokens.textarea.compact.minHeight.css(),
+      },
+    }),
   },
 });
 
@@ -212,25 +261,22 @@ export const buttonRow = style({
 });
 
 export const submitButton = style({
+  position: 'relative',
+  overflow: 'hidden',
   minHeight: formTokens.button.minHeight.css(),
-  ...paddings({
-    vertical: m(0),
-    horizontal: formTokens.button.paddings.horizontal,
-  }),
+  ...paddings(formTokens.button.paddings.horizontal),
   border: 'none',
   ...borders(glassyButtonTokens.borders),
   ...backgrounds(glassyButtonTokens.backgrounds),
   color: glassyButtonTokens.text.color.css(),
   fontWeight: 600,
   ...boxShadow(glassyButtonTokens.boxShadows),
-  // ...backdropFilters.style({ blur: glassVars.blur }),
   transition:
     'transform 160ms ease, opacity 160ms ease, background 160ms ease, box-shadow 160ms ease',
   selectors: {
     '&:hover, &[data-debug="hover"]': {
       ...backgrounds(glassyButtonTokens.hover.backgrounds),
       ...boxShadow(glassyButtonTokens.hover.boxShadows),
-      transform: 'translateY(-1px)',
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
@@ -250,10 +296,28 @@ export const submitButton = style({
   },
 });
 
+export const submitInner = style({
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 3,
+  ...paddings(m(12)),
+  ...borders.radii([
+    m(30),
+    m(40),
+  ]),
+  ...gradientAsBgImg(glassyButtonCupped.gradient),
+});
+
+export const shineWrapper = style({
+  ...absolutePosition.fullSize(),
+  opacity: 0.2,
+});
+
 export const turnstileSection = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: '8px',
   selectors: {
     '&[data-disabled="true"], &[data-debug="disabled"]': {
       opacity: 0.55,
@@ -264,12 +328,6 @@ export const turnstileSection = style({
 
 export const turnstileWidget = style({
   minHeight: '70px',
-  // borderRadius: 12,
-  // ...borders({
-  //   width: m(1),
-  //   color: 'rgba(245,240,255,0.12)',
-  // }),
-  // ...backgrounds({ color: 'rgba(8,6,16,0.6)' }),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -369,4 +427,51 @@ globalStyle(`${input}[data-error="true"]::placeholder`, {
 
 globalStyle(`${textarea}[data-error="true"]::placeholder`, {
   color: formTokens.field.error.text.color.css(),
+});
+
+export const jumpToFirstIssue = style({
+  border: 'none',
+  background: 'none',
+  padding: 0,
+  margin: 0,
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  ...paddings({
+    vertical: m(12),
+  }),
+});
+
+const toTopArrowFloat = keyframes({
+  '0%': {
+    transform: 'translateY(0)',
+  },
+  '50%': {
+    transform: 'translateY(-6px)',
+  },
+  '100%': {
+    transform: 'translateY(0)',
+  },
+});
+
+export const toTopArrow = style({
+  width: '40px',
+  height: 'auto',
+  ...margins({
+    bottom: m(10),
+  }),
+  color: colors.status.warning.css(),
+  animation: `${toTopArrowFloat} 1.8s ease-in-out infinite`,
+});
+
+export const jumpToFirstIssueText = style({
+  color: colors.status.warning.mix(colors.white, 0.9).css(),
+  ...textShadow({
+    x: m(1),
+    y: m(1),
+    blur: m(2),
+    color: colorVars.black,
+  }),
 });

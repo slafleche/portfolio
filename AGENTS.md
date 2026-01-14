@@ -107,12 +107,17 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   guessed explanation.
 - Must: When the user asks to explain or diagnose, do not modify code unless
   they explicitly ask for a fix; provide analysis only.
-- Must: Do not provide summaries unless the user explicitly asks for one.
+- Must: Do not provide summaries unless the user explicitly asks for one; default to code drafts instead.
+- Must: When the user asks for code, ask any clarifying questions first, then respond only with code drafts (no summary or explanation).
 - Must: When providing draft fixes, respond with code blocks instead of a text
   summary.
 - Must: When providing a code draft, finish with a note saying it is a draft.
 - Must: When a user message (non-code text) contains a `?`, reply using
-  text-only responses—no code blocks or other non-text output.
+  text-only responses—no code blocks or other non-text output, unless the user
+  is asking "what's wrong" or "why isn't" in which case respond with a code-only
+  draft.
+- Must: If the user says "fix:" then apply changes directly instead of providing
+  a draft.
 - Must: When AGENTS, user instructions, or existing code seem to conflict, call
   out the mismatch and ask which to follow before proceeding.
 - Must: When there are multiple reasonable paths that would change behaviour or

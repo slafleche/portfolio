@@ -223,10 +223,12 @@ export function MessageBlock({
 
   const {
     continuousValidation,
+    hasSubmitAttempted,
     recordValidationResult,
   } = useFormBlock(registration);
 
-  const liveValidation = hasBlurred || continuousValidation;
+  const liveValidation =
+    continuousValidation || (hasBlurred && hasSubmitAttempted);
 
   const messageError = getMessageError(evaluation, copy);
 

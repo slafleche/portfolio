@@ -145,7 +145,11 @@ describe('Contact form block tests: NameBlock', () => {
     });
 
     it('moves focus to the input even when an inline error is shown', () => {
-      const { container, getRegistration } =
+      const {
+        container,
+        getRegistration,
+        markSubmitAttempted,
+      } =
         renderNameBlockWithFormBlocks({
           id: 'test-name-block',
           order: 0,
@@ -159,6 +163,7 @@ describe('Contact form block tests: NameBlock', () => {
 
       expect(nameInput).not.toBeNull();
 
+      markSubmitAttempted();
       fireEvent.blur(nameInput);
 
       expectErrorHintWiredToInput(container, nameInput);
@@ -172,16 +177,13 @@ describe('Contact form block tests: NameBlock', () => {
 
   describe('validation and live updates', () => {
     it('shows required error only after blur for empty value', () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <NameBlock
-            id="test-name-block"
-            order={0}
-            copy={nameCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderNameBlockWithFormBlocks({
+          id: 'test-name-block',
+          order: 0,
+          copy: nameCopy,
+          disabled: false,
+        });
 
       const input = container.querySelector(
         'input[data-input="text"]',
@@ -194,6 +196,7 @@ describe('Contact form block tests: NameBlock', () => {
       expect(input).not.toHaveAttribute('aria-invalid');
 
       // Trigger blur with empty value
+      markSubmitAttempted();
       fireEvent.blur(input);
 
       // After blur, required error is shown and aria-invalid is set
@@ -202,16 +205,13 @@ describe('Contact form block tests: NameBlock', () => {
     });
 
     it('updates validation live after the first blur', async () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <NameBlock
-            id="test-name-block"
-            order={0}
-            copy={nameCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderNameBlockWithFormBlocks({
+          id: 'test-name-block',
+          order: 0,
+          copy: nameCopy,
+          disabled: false,
+        });
 
       const input = container.querySelector(
         'input[data-input="text"]',
@@ -224,6 +224,7 @@ describe('Contact form block tests: NameBlock', () => {
       expect(input).not.toHaveAttribute('aria-invalid');
 
       // First blur with empty value triggers required error
+      markSubmitAttempted();
       fireEvent.blur(input);
       expectErrorHintWiredToInput(container, input);
       expect(input).toHaveAttribute('aria-invalid', 'true');
@@ -236,16 +237,13 @@ describe('Contact form block tests: NameBlock', () => {
     });
 
     it('shows too-long and too-short errors for out-of-range values', () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <NameBlock
-            id="test-name-block"
-            order={0}
-            copy={nameCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderNameBlockWithFormBlocks({
+          id: 'test-name-block',
+          order: 0,
+          copy: nameCopy,
+          disabled: false,
+        });
 
       const input = container.querySelector(
         'input[data-input="text"]',
@@ -255,6 +253,7 @@ describe('Contact form block tests: NameBlock', () => {
 
       // Too long: value exceeds NAME_LIMIT.max
       const tooLongValue = 'x'.repeat(NAME_LIMIT.max + 1);
+      markSubmitAttempted();
       fireEvent.change(input, { target: { value: tooLongValue } });
       fireEvent.blur(input);
 
@@ -338,19 +337,22 @@ describe('Contact form block tests: NameBlock', () => {
         });
       });
 
-      const { container } = render(
-        <FormBlocksProvider>
-          <FormBlocksValidationObserver
-            onUpdate={handleUpdate}
-          />
-          <NameBlock
-            id="test-name-block"
-            order={0}
-            copy={nameCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderNameBlockWithFormBlocks(
+          {
+            id: 'test-name-block',
+            order: 0,
+            copy: nameCopy,
+            disabled: false,
+          },
+          {
+            beforeChildren: (
+              <FormBlocksValidationObserver
+                onUpdate={handleUpdate}
+              />
+            ),
+          },
+        );
 
       const input = container.querySelector(
         'input[data-input="text"]',
@@ -363,6 +365,7 @@ describe('Contact form block tests: NameBlock', () => {
 
       // First blur with empty value: enters live validation with a
       // required-style error.
+      markSubmitAttempted();
       fireEvent.blur(input);
 
       await waitFor(() => {
@@ -413,19 +416,22 @@ describe('Contact form block tests: NameBlock', () => {
         });
       });
 
-      const { container } = render(
-        <FormBlocksProvider>
-          <FormBlocksValidationObserver
-            onUpdate={handleUpdate}
-          />
-          <NameBlock
-            id="test-name-block"
-            order={0}
-            copy={nameCopy}
-            disabled={false}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, markSubmitAttempted } =
+        renderNameBlockWithFormBlocks(
+          {
+            id: 'test-name-block',
+            order: 0,
+            copy: nameCopy,
+            disabled: false,
+          },
+          {
+            beforeChildren: (
+              <FormBlocksValidationObserver
+                onUpdate={handleUpdate}
+              />
+            ),
+          },
+        );
 
       const input = container.querySelector(
         'input[data-input="text"]',
@@ -434,6 +440,7 @@ describe('Contact form block tests: NameBlock', () => {
       expect(input).not.toBeNull();
 
       // Empty + blur → required-style bucket.
+      markSubmitAttempted();
       fireEvent.blur(input);
 
       await waitFor(() => {

@@ -5,13 +5,16 @@ import { describe, expect,it } from 'vitest';
 
 import { HoneypotBlock } from '@/components/contact/blocks/HoneypotBlock';
 import type { HoneypotBlockLocale } from '@/lib/locales/form/form.honeypot';
+import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
 import { FocusSentinelWrapper } from './components/FocusSentinelWrapper';
+import { enFormTranslator } from './helpers/enFormTranslator';
 
 const copy: HoneypotBlockLocale = {
   label: enFormCopy['form-honeypot-label'],
 };
+const formCopy = buildContactFormCopy(enFormTranslator);
 
 describe('Contact form block tests: HoneypotBlock', () => {
   it('tabs from before sentinel to after sentinel, skipping honeypot', async () => {
@@ -79,7 +82,7 @@ describe('Contact form block tests: HoneypotBlock', () => {
     const { container, getByRole } = render(
       <form onSubmit={handleSubmit}>
         <HoneypotBlock copy={copy} />
-        <button type="submit">Submit</button>
+        <button type="submit">{formCopy.submitLabel}</button>
       </form>,
     );
 
@@ -92,7 +95,9 @@ describe('Contact form block tests: HoneypotBlock', () => {
 
     await userEvent.type(input, 'bot-signal');
 
-    const submitButton = getByRole('button', { name: 'Submit' });
+    const submitButton = getByRole('button', {
+      name: formCopy.submitLabel,
+    });
     await userEvent.click(submitButton);
 
     expect(submittedValue).toBe('bot-signal');

@@ -64,13 +64,16 @@ export const root = style({
   opacity: 0,
   pointerEvents: 'none',
   selectors: {
-    // '&:hover, &:focus': {
-    //   // transform: 'scale(1.015)',
-    // },
     '&[data-ready="true"]': {
       opacity: 1,
       pointerEvents: 'auto',
     },
+    ...mediaQueryStyle({
+      compressed: {
+        transform: 'scale(0.8)',
+        ...margins({ top: m(40) }),
+      },
+    }),
   },
 });
 
@@ -97,6 +100,8 @@ export const scoopedGradient = style({
 export const ctaText = style({
   display: 'inline-block',
   fontSize: '25px',
+  textWrap: 'nowrap',
+  whiteSpace: 'nowrap',
   color: colorVars.white.css(),
   willChange: 'transform',
   selectors: {

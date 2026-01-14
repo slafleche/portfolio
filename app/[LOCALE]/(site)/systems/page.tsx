@@ -137,6 +137,7 @@ export default async function SystemsPage({
               id={systemsIntroId}
               title={systemsTitle}
               markdown={systemsIntroMarkdown}
+              
             />
             
             {/* Principles */}

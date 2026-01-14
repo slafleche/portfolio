@@ -12,6 +12,7 @@ import {
 
 import { TurnstileBlock } from '@/components/contact/blocks/TurnstileBlock';
 import { FormBlocksProvider } from '@/components/contact/formBlocks.context';
+import { renderInlineMarkdown } from '@/components/Markdown';
 import type { TurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
 import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
@@ -47,6 +48,11 @@ const turnstileCopy: TurnstileBlockLocale = {
     expired: enFormCopy['form-turnstile-summary-expired'],
     error: enFormCopy['form-turnstile-summary-error'],
   },
+};
+
+const inlineMarkdownOptions = {
+  openLinksInNewTab: false,
+  asUi: {},
 };
 
 const DEFAULT_SITE_KEY = 'test-site-key';
@@ -158,7 +164,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
   });
 
   describe('inline status and transitions', () => {
-    it('starts in loading/ready and shows the missing summary before verification', async () => {
+    it('starts in loading/ready without status before validation', async () => {
       const { container } = render(
         <FormBlocksProvider>
           <TurnstileBlock
@@ -181,7 +187,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
         '[data-form-turnstile="status"]',
       ) as HTMLElement | null;
       await waitFor(() => {
-        expect(status).not.toBeNull();
+        expect(status).toBeNull();
       });
 
       expect(wrapper.getAttribute('data-state')).toMatch(
@@ -229,18 +235,15 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(tokenInput?.value).toBe('test-token');
     });
 
-    it('moves to expired state and shows expired summary when the expired callback is invoked', async () => {
-      const { container } = render(
-        <FormBlocksProvider>
-          <TurnstileBlock
-            id="test-turnstile-block"
-            order={0}
-            disabled={false}
-            copy={turnstileCopy}
-            turnstileSiteKey={DEFAULT_SITE_KEY}
-          />
-        </FormBlocksProvider>,
-      );
+    it('moves to expired state and shows expired summary after validation is enabled', async () => {
+      const { container, enableContinuousValidation } =
+        renderTurnstileBlockWithFormBlocks({
+          id: 'test-turnstile-block',
+          order: 0,
+          disabled: false,
+          copy: turnstileCopy,
+          turnstileSiteKey: DEFAULT_SITE_KEY,
+        });
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
@@ -254,15 +257,38 @@ describe('Contact form block tests: TurnstileBlock', () => {
         expect(api?.lastOptions).not.toBeNull();
       });
 
+      enableContinuousValidation();
+
       await act(async () => {
         api?.lastOptions?.['expired-callback']?.();
       });
 
-      expect(wrapper).toHaveAttribute('data-state', 'expired');
-      const status = wrapper.querySelector(
-        '[data-form-turnstile="status"]',
-      ) as HTMLElement | null;
-      expect(status).not.toBeNull();
+      const expectedExpiredText = (() => {
+        const { container, unmount } = render(
+          <>
+            {renderInlineMarkdown(
+              turnstileCopy.summary.expired,
+              inlineMarkdownOptions,
+            )}
+          </>,
+        );
+        const text = container.textContent ?? '';
+        unmount();
+        return text;
+      })();
+
+      await waitFor(() => {
+        expect(wrapper).toHaveAttribute('data-state', 'expired');
+        const status = wrapper.querySelector(
+          '[data-form-turnstile="status"]',
+        ) as HTMLElement | null;
+        expect(status).not.toBeNull();
+        const hint = status?.querySelector(
+          '[data-form-hint]',
+        ) as HTMLElement | null;
+        expect(hint?.getAttribute('data-form-hint')).toBe('error');
+        expect(hint?.textContent).toBe(expectedExpiredText);
+      });
 
       const tokenInput = wrapper.querySelector(
         'input[name="token"][type="hidden"]',
@@ -271,22 +297,19 @@ describe('Contact form block tests: TurnstileBlock', () => {
       expect(tokenInput!.value).toBe('');
     });
 
-    it('moves to error state, shows error summary, and logs a catastrophic reason when the error callback is invoked', async () => {
+    it('moves to error state, shows error summary after validation, and logs a catastrophic reason when the error callback is invoked', async () => {
       const consoleErrorSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 
-      const { container } = render(
-        <FormBlocksProvider>
-          <TurnstileBlock
-            id="test-turnstile-block"
-            order={0}
-            disabled={false}
-            copy={turnstileCopy}
-            turnstileSiteKey={DEFAULT_SITE_KEY}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, enableContinuousValidation } =
+        renderTurnstileBlockWithFormBlocks({
+          id: 'test-turnstile-block',
+          order: 0,
+          disabled: false,
+          copy: turnstileCopy,
+          turnstileSiteKey: DEFAULT_SITE_KEY,
+        });
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
@@ -299,15 +322,38 @@ describe('Contact form block tests: TurnstileBlock', () => {
         expect(api?.lastOptions).not.toBeNull();
       });
 
+      enableContinuousValidation();
+
       await act(async () => {
         api?.lastOptions?.['error-callback']?.();
       });
 
-      expect(wrapper).toHaveAttribute('data-state', 'error');
-      const status = wrapper.querySelector(
-        '[data-form-turnstile="status"]',
-      ) as HTMLElement | null;
-      expect(status).not.toBeNull();
+      const expectedErrorText = (() => {
+        const { container, unmount } = render(
+          <>
+            {renderInlineMarkdown(
+              turnstileCopy.summary.error,
+              inlineMarkdownOptions,
+            )}
+          </>,
+        );
+        const text = container.textContent ?? '';
+        unmount();
+        return text;
+      })();
+
+      await waitFor(() => {
+        expect(wrapper).toHaveAttribute('data-state', 'error');
+        const status = wrapper.querySelector(
+          '[data-form-turnstile="status"]',
+        ) as HTMLElement | null;
+        expect(status).not.toBeNull();
+        const hint = status?.querySelector(
+          '[data-form-hint]',
+        ) as HTMLElement | null;
+        expect(hint?.getAttribute('data-form-hint')).toBe('error');
+        expect(hint?.textContent).toBe(expectedErrorText);
+      });
 
       const tokenInput = wrapper.querySelector(
         'input[name="token"][type="hidden"]',
@@ -335,17 +381,14 @@ describe('Contact form block tests: TurnstileBlock', () => {
 
       window.turnstile = createMockTurnstile(true);
 
-      const { container } = render(
-        <FormBlocksProvider>
-          <TurnstileBlock
-            id="test-turnstile-block"
-            order={0}
-            disabled={false}
-            copy={turnstileCopy}
-            turnstileSiteKey={DEFAULT_SITE_KEY}
-          />
-        </FormBlocksProvider>,
-      );
+      const { container, enableContinuousValidation } =
+        renderTurnstileBlockWithFormBlocks({
+          id: 'test-turnstile-block',
+          order: 0,
+          disabled: false,
+          copy: turnstileCopy,
+          turnstileSiteKey: DEFAULT_SITE_KEY,
+        });
 
       const wrapper = container.querySelector(
         '#test-turnstile-block',
@@ -355,11 +398,40 @@ describe('Contact form block tests: TurnstileBlock', () => {
       if (!wrapper) return;
 
       await waitFor(() => {
+        expect(wrapper).toHaveAttribute('data-state', 'error');
+      });
+
+      const statusBefore = wrapper.querySelector(
+        '[data-form-turnstile="status"]',
+      ) as HTMLElement | null;
+      expect(statusBefore).toBeNull();
+
+      enableContinuousValidation();
+
+      const expectedErrorText = (() => {
+        const { container, unmount } = render(
+          <>
+            {renderInlineMarkdown(
+              turnstileCopy.summary.error,
+              inlineMarkdownOptions,
+            )}
+          </>,
+        );
+        const text = container.textContent ?? '';
+        unmount();
+        return text;
+      })();
+
+      await waitFor(() => {
         const status = wrapper.querySelector(
           '[data-form-turnstile="status"]',
         ) as HTMLElement | null;
         expect(status).not.toBeNull();
-        expect(wrapper).toHaveAttribute('data-state', 'error');
+        const hint = status?.querySelector(
+          '[data-form-hint]',
+        ) as HTMLElement | null;
+        expect(hint?.getAttribute('data-form-hint')).toBe('error');
+        expect(hint?.textContent).toBe(expectedErrorText);
       });
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -471,7 +543,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
   });
 
   describe('validation and live behaviour', () => {
-    it('renders required helper hint and ARIA wiring before validation', async () => {
+    it('does not render a helper hint before validation', async () => {
       const { container } = render(
         <FormBlocksProvider>
           <TurnstileBlock
@@ -499,31 +571,18 @@ describe('Contact form block tests: TurnstileBlock', () => {
         ) as HTMLElement | null;
 
         expect(widgetContainer).not.toBeNull();
-        expect(helperHint).not.toBeNull();
+        expect(helperHint).toBeNull();
 
-        if (!widgetContainer || !helperHint) {
+        if (!widgetContainer) {
           throw new Error(
-            'Expected Turnstile widget container and helper hint to exist',
+            'Expected Turnstile widget container to exist',
           );
         }
 
-        expect(helperHint.getAttribute('data-form-hint')).toBe(
-          'helper',
-        );
-        expect(helperHint.textContent).toBe(
-          turnstileCopy.requiredText,
-        );
-        expect(
-          checkMatchingId(
-            helperHint,
-            widgetContainer,
-            'describedby',
-          ),
-        ).toBe(true);
       });
     });
 
-    it('switches from helper hint to missing error when continuous validation is enabled', async () => {
+    it('shows missing error when continuous validation is enabled', async () => {
       const {
         container,
         enableContinuousValidation,
@@ -545,16 +604,33 @@ describe('Contact form block tests: TurnstileBlock', () => {
       const hintBefore = wrapper.querySelector(
         '[data-form-hint]',
       ) as HTMLElement | null;
-      expect(hintBefore).not.toBeNull();
+      expect(hintBefore).toBeNull();
 
-      expect(hintBefore!.getAttribute('data-form-hint')).toBe(
-        'helper',
-      );
-      expect(hintBefore!.textContent).toBe(
-        turnstileCopy.requiredText,
-      );
+      const widgetContainer = wrapper.querySelector(
+        '[data-rendered]',
+      ) as HTMLDivElement | null;
+      expect(widgetContainer).not.toBeNull();
+      if (!widgetContainer) {
+        throw new Error(
+          'Expected Turnstile widget container to exist',
+        );
+      }
 
       enableContinuousValidation();
+
+      const expectedMissingText = (() => {
+        const { container, unmount } = render(
+          <>
+            {renderInlineMarkdown(
+              turnstileCopy.summary.missing,
+              inlineMarkdownOptions,
+            )}
+          </>,
+        );
+        const text = container.textContent ?? '';
+        unmount();
+        return text;
+      })();
 
       await waitFor(() => {
         const hintAfter = wrapper.querySelector(
@@ -565,9 +641,14 @@ describe('Contact form block tests: TurnstileBlock', () => {
         expect(hintAfter!.getAttribute('data-form-hint')).toBe(
           'error',
         );
-        expect(hintAfter!.textContent).toBe(
-          turnstileCopy.summary.missing,
-        );
+        expect(hintAfter!.textContent).toBe(expectedMissingText);
+        expect(
+          checkMatchingId(
+            hintAfter,
+            widgetContainer,
+            'describedby',
+          ),
+        ).toBe(true);
       });
 
       const registration = getRegistration();

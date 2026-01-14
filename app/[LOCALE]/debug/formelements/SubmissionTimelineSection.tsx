@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { backgrounds } from '@/styles/helpers/background.helper';
 import { boxShadow } from '@/styles/helpers/shadow.helper';
-import { margins,paddings } from '@/styles/helpers/spacing.helper';
+import { margins, paddings } from '@/styles/helpers/spacing.helper';
 import { formTokens } from '@/tokens/forms.tokens';
 import { glassyButtonTokens } from '@/tokens/glassy.tokens';
 
@@ -361,7 +361,6 @@ export default function SubmissionTimelineSection({
                 ...borders({
                   width: m(1),
                   color: 'rgba(245,240,255,0.25)',
-
                 }),
                 ...paddings({
                   vertical: m(10),
@@ -435,7 +434,6 @@ export default function SubmissionTimelineSection({
             data-debug={activeScenario?.ctaState}
             style={{
               minHeight: glassyButtonTokens.size.css(),
-              borderRadius: glassyButtonTokens.borders.radius.css(),
               ...borders(glassyButtonTokens.borders),
               ...(backgrounds({
                 color:

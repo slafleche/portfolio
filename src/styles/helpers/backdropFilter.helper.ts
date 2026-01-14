@@ -2,6 +2,7 @@ import type { IMeasurement, PercentMeasurement } from 'css-calipers';
 
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 
+import type { ColorWrapper } from './colorWrap.helper';
 import { createSupportsFallback } from './supportsFallback.helper';
 
 /**
@@ -22,6 +23,7 @@ export type BackdropFilterIntent = {
   saturate?: PercentInput;
   contrast?: PercentInput;
   brightness?: BrightnessInput;
+  backgroundColor?: ColorWrapper;
 };
 
 const blurPart = (value: BlurInput): string | undefined =>
@@ -64,6 +66,19 @@ const buildBackdropFilterParts = (
   );
 };
 
+const resolveBackdropBackgroundColor = (
+  intents: Array<BackdropFilterIntent | null | undefined>,
+): CSS_TYPES.Property.BackgroundColor | undefined => {
+  let backgroundColor: CSS_TYPES.Property.BackgroundColor | undefined;
+  intents.forEach((intent) => {
+    if (!intent) return;
+    if (intent.backgroundColor !== undefined) {
+      backgroundColor = intent.backgroundColor.css();
+    }
+  });
+  return backgroundColor;
+};
+
 export const backdropFilterValue = (
   ...intents: Array<BackdropFilterIntent | null | undefined>
 ): CSS_TYPES.Property.BackdropFilter | undefined => {
@@ -76,18 +91,27 @@ export const backdropFilterStyle = (
   ...intents: Array<BackdropFilterIntent | null | undefined>
 ) => {
   const value = backdropFilterValue(...intents);
-  return value
-    ? {
-        backdropFilter: value,
-        WebkitBackdropFilter: value,
-      }
-    : {};
+  const backgroundColor = resolveBackdropBackgroundColor(intents);
+  const styles: {
+    backdropFilter?: CSS_TYPES.Property.BackdropFilter;
+    WebkitBackdropFilter?: CSS_TYPES.Property.BackdropFilter;
+    backgroundColor?: CSS_TYPES.Property.BackgroundColor;
+  } = {};
+  if (value) {
+    styles.backdropFilter = value;
+    styles.WebkitBackdropFilter = value;
+  }
+  if (backgroundColor !== undefined) {
+    styles.backgroundColor = backgroundColor;
+  }
+  return styles;
 };
 
 type BackdropFilterComposer = {
   (...intents: Array<BackdropFilterIntent | null | undefined>): {
     backdropFilter?: CSS_TYPES.Property.BackdropFilter;
     WebkitBackdropFilter?: CSS_TYPES.Property.BackdropFilter;
+    backgroundColor?: CSS_TYPES.Property.BackgroundColor;
   };
   value: typeof backdropFilterValue;
   style: typeof backdropFilterStyle;

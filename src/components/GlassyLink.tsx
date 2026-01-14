@@ -3,9 +3,9 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
 type GlassyLinkProps = {
   href: string;
-  /** Human-readable label announced to assistive tech. */
   label: string;
   className?: string;
+  overlayClassName?: string;
   title?: string;
   target?: ComponentPropsWithoutRef<'a'>['target'];
   rel?: ComponentPropsWithoutRef<'a'>['rel'];
@@ -16,6 +16,7 @@ export default function GlassyLink({
   href,
   label,
   className,
+  overlayClassName,
   title,
   target,
   rel,
@@ -33,6 +34,7 @@ export default function GlassyLink({
       target={target}
       rel={safeRel}
     >
+      {overlayClassName && <div className={overlayClassName}/>}
       {children}
     </Link>
   );

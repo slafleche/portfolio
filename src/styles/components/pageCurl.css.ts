@@ -53,7 +53,7 @@ export const link = style({
   textDecoration: 'none',
   overflow: 'visible',
   cursor: 'pointer',
-  zIndex: 1,
+  zIndex: 3,
   selectors: {
     '&:focus-visible': outlines(),
   },

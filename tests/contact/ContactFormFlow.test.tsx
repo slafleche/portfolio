@@ -18,8 +18,10 @@ import type {
 } from '@/components/contact/types/form.types';
 import type { ContactFormFlowState } from '@/components/contact/useContactFormFlow';
 import { useContactFormFlow } from '@/components/contact/useContactFormFlow';
+import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import type { FormServerResponseCode } from '@/modules/contactForm/mockSubmit';
 
+import { enFormTranslator } from './helpers/enFormTranslator';
 type StubBlockConfig = {
   key: string;
   validationResult: ContactFormBlockValidationResult;
@@ -31,6 +33,8 @@ type StubBlockConfig = {
 type StubBlockProps = {
   config: StubBlockConfig;
 };
+
+const formCopy = buildContactFormCopy(enFormTranslator);
 
 function StubBlock({ config }: StubBlockProps) {
   const contract = useMemo(() => {
@@ -118,7 +122,7 @@ function FlowHarnessInner({
         <StubBlock key={config.key} config={config} />
       ))}
       <form aria-label="flow form" onSubmit={flow.handleSubmit}>
-        <button type="submit">Submit</button>
+        <button type="submit">{formCopy.submitLabel}</button>
       </form>
     </>
   );
@@ -201,7 +205,7 @@ describe('ContactFormFlow', () => {
     );
 
     const submitButton = screen.getByRole('button', {
-      name: 'Submit',
+      name: formCopy.submitLabel,
     });
 
     fireEvent.click(submitButton);
@@ -284,7 +288,7 @@ describe('ContactFormFlow', () => {
     );
 
     const submitButton = screen.getByRole('button', {
-      name: 'Submit',
+      name: formCopy.submitLabel,
     });
 
     fireEvent.click(submitButton);
@@ -369,7 +373,7 @@ describe('ContactFormFlow', () => {
     );
 
     const submitButton = screen.getByRole('button', {
-      name: 'Submit',
+      name: formCopy.submitLabel,
     });
 
     fireEvent.click(submitButton);
@@ -412,7 +416,7 @@ describe('ContactFormFlow', () => {
     );
 
     const submitButton = screen.getByRole('button', {
-      name: 'Submit',
+      name: formCopy.submitLabel,
     });
 
     fireEvent.click(submitButton);
@@ -452,7 +456,7 @@ describe('ContactFormFlow', () => {
     );
 
     const submitButton = screen.getByRole('button', {
-      name: 'Submit',
+      name: formCopy.submitLabel,
     });
 
     fireEvent.click(submitButton);
@@ -501,7 +505,7 @@ describe('ContactFormFlow', () => {
     );
 
     const submitButton = screen.getByRole('button', {
-      name: 'Submit',
+      name: formCopy.submitLabel,
     });
 
     fireEvent.click(submitButton);
@@ -570,7 +574,7 @@ describe('ContactFormFlow', () => {
       );
 
       const submitButton = getByRole('button', {
-        name: 'Submit',
+        name: formCopy.submitLabel,
       });
 
       fireEvent.click(submitButton);
@@ -625,7 +629,7 @@ describe('ContactFormFlow', () => {
     );
 
     const submitButton = screen.getByRole('button', {
-      name: 'Submit',
+      name: formCopy.submitLabel,
     });
 
     // First submit: invalid → validation_error, continuous validation enabled.

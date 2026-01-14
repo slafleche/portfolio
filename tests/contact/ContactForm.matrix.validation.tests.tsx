@@ -6,24 +6,16 @@ import type {
   ContactFormBlockValidationResult,
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
-import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
+import { enFormTranslator } from './helpers/enFormTranslator';
 import {
   makeMessageBase,
   makeValidationResult,
 } from './helpers/messageFactories.helpers';
 
-const STATUS_MESSAGES: Record<FormStatusKey, string> = {
-  sending: 'sending',
-  success: 'success',
-  generic: 'generic',
-  validation_error: 'validation_error',
-  rate_limited: 'rate_limited',
-  service_unavailable: 'service_unavailable',
-  not_configured: 'not_configured',
-  blocked: 'blocked',
-};
+const buildFormCopy = () => buildContactFormCopy(enFormTranslator);
 
 const makeValidation = (
   id: string,
@@ -53,6 +45,8 @@ const makePayload = (
 
 describe('ContactForm matrix — validation vs message centre and jump button', () => {
   it('shows validation banner and jump button when a block is invalid (client-side validation_error)', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -76,7 +70,7 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
           'email',
@@ -94,14 +88,14 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
         throw new Error('Expected inline status region to render.');
       }
       const text = inlineRegion.textContent ?? '';
-      expect(text).toContain('validation_error');
+      expect(text).toContain(statusMessages.validation_error);
       expect(text).toContain('name error');
 
       const jumpButton = queryByTestId('jump-to-first-issue');
       expect(jumpButton).not.toBeNull();
 
       const submitButton = getByRole('button', {
-        name: 'Submit',
+        name: formCopy.submitLabel,
       });
       expect(submitButton).toBeDisabled();
     });
@@ -110,6 +104,8 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
   });
 
   it('shows validation banner and jump button when server-driven validation_error occurs with all blocks locally valid', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -133,7 +129,7 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
           'email',
@@ -150,26 +146,28 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
       const text = inlineRegion?.textContent ?? '';
-      expect(text).toContain('validation_error');
+      expect(text).toContain(statusMessages.validation_error);
 
       const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
       expect(messageCentreRegion?.textContent ?? '').toContain(
-        'validation_error',
+        statusMessages.validation_error,
       );
 
       const jumpButton = queryByTestId('jump-to-first-issue');
       expect(jumpButton).not.toBeNull();
 
       const submitButton = getByRole('button', {
-        name: 'Submit',
+        name: formCopy.submitLabel,
       });
       expect(submitButton).toBeDisabled();
     });
   });
 
   it('shows a non-validation banner but no jump button when the form is valid and rate-limited', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -187,7 +185,7 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
         ],
@@ -203,25 +201,27 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
       const text = inlineRegion?.textContent ?? '';
-      expect(text).toContain('rate_limited');
+      expect(text).toContain(statusMessages.rate_limited);
 
       const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
       expect(messageCentreRegion?.textContent ?? '').toContain(
-        'rate_limited',
+        statusMessages.rate_limited,
       );
 
       expect(queryByTestId('jump-to-first-issue')).toBeNull();
 
       const submitButton = getByRole('button', {
-        name: 'Submit',
+        name: formCopy.submitLabel,
       });
       expect(submitButton).not.toBeDisabled();
     });
   });
 
   it('shows a not_configured summary and no jump button when not_configured is returned', async () => {
+    const formCopy = buildFormCopy();
+    const statusMessages = formCopy.blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'name',
@@ -239,7 +239,7 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'name',
         ],
@@ -255,19 +255,19 @@ describe('ContactForm matrix — validation vs message centre and jump button', 
       ) as HTMLElement | null;
       expect(inlineRegion).not.toBeNull();
       const text = inlineRegion?.textContent ?? '';
-      expect(text).toContain('not_configured');
+      expect(text).toContain(statusMessages.not_configured);
 
       const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
       expect(messageCentreRegion?.textContent ?? '').toContain(
-        'not_configured',
+        statusMessages.not_configured,
       );
 
       expect(queryByTestId('jump-to-first-issue')).toBeNull();
 
       const submitButton = getByRole('button', {
-        name: 'Submit',
+        name: formCopy.submitLabel,
       });
       expect(submitButton).toBeDisabled();
     });

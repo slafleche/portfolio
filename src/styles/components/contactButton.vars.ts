@@ -1,4 +1,4 @@
-import { assertUnit, m } from 'css-calipers';
+import { assertUnit, m, mPercent } from 'css-calipers';
 
 import { notRelease } from '@/lib/runtimeEnv';
 
@@ -72,7 +72,7 @@ export const iconLagOutDistancePx = m(3);
 export const iconLagOutDurationMs = shuttleExitDurationMs;
 
 /* ---------- Visual polish ---------- */
-export const buttonRadius = m(50, '%');
+export const roundRadius = mPercent(50);
 export const hoverTransitionMs = m(220, 'ms');
 export const gradientFadeMs = m(200, 'ms');
 
@@ -137,7 +137,6 @@ if (notRelease()) {
   assertUnit(iconScaleExitMs, 'ms', 'iconScaleExitMs');
 
   // %
-  assertUnit(buttonRadius, '%', 'radiusCirclePct');
   assertUnit(exitAnticPct, '%', 'exitAnticPct');
   assertUnit(exitHoldPct, '%', 'exitHoldPct');
   assertUnit(spinAnticHoldPct, '%', 'spinAnticHoldPct');
