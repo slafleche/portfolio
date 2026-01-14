@@ -30,6 +30,8 @@ const DEFAULT_STATUS_MESSAGES: Record<FormStatusKey, string> = {
   generic:
     "We couldn't send your message right now. Please try again.",
   validation_error: 'Please check the fields and try again.',
+  validation_error_jump:
+    'Almost there! Check the fields with errors and try again.',
   rate_limited: 'Too many attempts. Please wait a minute.',
   service_unavailable:
     'Service is unavailable. Please try again shortly.',

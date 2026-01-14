@@ -22,6 +22,7 @@ const STATUS_MESSAGES: Record<FormStatusKey, string> = {
   success: 'success',
   generic: 'generic',
   validation_error: 'validation_error',
+  validation_error_jump: 'validation_error_jump',
   rate_limited: 'rate_limited',
   service_unavailable: 'service_unavailable',
   not_configured: 'not_configured',
