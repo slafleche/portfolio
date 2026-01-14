@@ -35,15 +35,24 @@ export const root = style({
     blur: m(2),
     color: colorVars.black,
   }),
+
+  selectors: {
+    '&[data-empty="true"]': {
+      opacity: 0,
+      height: 0,
+      overflow: 'hidden',
+      pointerEvents: 'none',
+      ...margins(m(0)),
+      ...paddings(m(0)),
+      border: 'none',
+    },
+  },
 });
 
 export const main = style({
   display: 'block',
   width: '100%',
-  ...paddings({
-    top: m(8),
-    bottom: m(8),
-  }),
+  ...paddings(m(8)),
   ...borders({
     bottom: {
       width: m(1),

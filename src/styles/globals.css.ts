@@ -48,7 +48,10 @@ const bgGradient = buildLinear({
 });
 
 globalStyle('body', {
-  minHeight: '100vh',
+  minHeight: [
+    '100vh',
+    '100dvh',
+  ],
   margin: 0,
   padding: 0,
   backgroundColor: bodyBg.css(),
@@ -91,12 +94,10 @@ globalStyle('html[data-smooth-scroll="true"] body', {
 
 globalStyle('main', {
   display: 'block',
-  minHeight: '100vh',
-  '@supports': {
-    '(min-height: 100svh)': {
-      minHeight: '100svh',
-    },
-  },
+  minHeight: [
+    '100vh',
+    '100dvh',
+  ],
 });
 
 globalStyle('abbr[title]', {

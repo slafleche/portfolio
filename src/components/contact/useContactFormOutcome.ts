@@ -106,17 +106,51 @@ export function buildContactFormOutcome(
     result.messages.forEach((message) => {
       allMessages.push({ blockId: result.id, message });
     });
+  });
 
-    const blockMessage = result.messages.find((message) =>
-      [
-        'error',
-        'warning',
-      ].includes(message.type),
+  const orderedBlockMessages = latestValidationResults
+    .map((result, resultIndex) => {
+      const blockMessage = result.messages.find((message) =>
+        [
+          'error',
+          'warning',
+        ].includes(message.type),
+      );
+      if (!blockMessage) {
+        return null;
+      }
+      const orderIndex = blockOrder?.indexOf(result.id) ?? -1;
+      const orderRank =
+        orderIndex === -1
+          ? (blockOrder?.length ?? 0) + resultIndex
+          : orderIndex;
+
+      return {
+        text: blockMessage.text,
+        code: blockMessage.code,
+        orderRank,
+        resultIndex,
+      };
+    })
+    .filter(
+      (
+        entry,
+      ): entry is {
+        text: string;
+        code: string;
+        orderRank: number;
+        resultIndex: number;
+      } => Boolean(entry),
+    )
+    .sort((a, b) =>
+      a.orderRank === b.orderRank
+        ? a.resultIndex - b.resultIndex
+        : a.orderRank - b.orderRank,
     );
-    if (blockMessage) {
-      messagesForUi.blocks.push(blockMessage.text);
-      messagesForUi.blockCodes?.push(blockMessage.code);
-    }
+
+  orderedBlockMessages.forEach((entry) => {
+    messagesForUi.blocks.push(entry.text);
+    messagesForUi.blockCodes?.push(entry.code);
   });
 
   let priorityMessage: ContactFormOutcomePriorityMessage | null =

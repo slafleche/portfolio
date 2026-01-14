@@ -134,8 +134,7 @@ const CHANNEL_PALETTE: Record<ChannelId, ChannelPalette> = {
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
-const degToRad = (value: number) =>
-  (value * Math.PI) / 180;
+const degToRad = (value: number) => (value * Math.PI) / 180;
 
 const easingMap: Record<EasingKey, (t: number) => number> = {
   linear: (t) => t,
@@ -151,9 +150,7 @@ const isEasingKey = (value: unknown): value is EasingKey =>
   value === 'easeOutCubic' ||
   value === 'easeInOutCubic';
 
-const resolveDefaults = (
-  input?: ProjectorPathDefaults | null,
-) => {
+const resolveDefaults = (input?: ProjectorPathDefaults | null) => {
   const overridesById = new Map<ChannelId, ChannelDefaultsInput>();
   input?.channels?.forEach((channel) => {
     if (!channel) return;
@@ -337,7 +334,8 @@ const detailsBodyStyle = {
 } as const;
 
 const mainLayoutStyle = {
-  height: '100vh',
+  minHeight: '100vh',
+  height: '100dvh',
   display: 'grid',
   gridTemplateColumns: 'minmax(320px, 380px) minmax(0, 1fr)',
   gap: 12,
@@ -355,7 +353,8 @@ const leftPanelStyle = {
 const rightPanelStyle = {
   position: 'sticky' as const,
   top: 0,
-  height: '100vh',
+  minHeight: '100vh',
+  height: '100dvh',
   overflow: 'hidden',
 } as const;
 
@@ -455,7 +454,9 @@ const NumberField = ({
 
   useEffect(() => {
     valueRef.current = value;
-  }, [value]);
+  }, [
+    value,
+  ]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const next = Number(event.target.value);
@@ -470,9 +471,7 @@ const NumberField = ({
       : step;
     const clamped = clampValue(next, min, max);
     const rounded =
-      precision > 0
-        ? Number(clamped.toFixed(precision))
-        : clamped;
+      precision > 0 ? Number(clamped.toFixed(precision)) : clamped;
     onChange(rounded);
   };
 
@@ -615,29 +614,48 @@ export default function ProjectorPathDebug({
   const masterToggleRef = useRef<HTMLInputElement | null>(null);
   const initialConfig = useMemo(
     () => resolveDefaults(initialDefaults),
-    [initialDefaults],
+    [
+      initialDefaults,
+    ],
   );
-  const [channels, setChannels] = useState<ChannelConfig[]>(() =>
+  const [
+    channels,
+    setChannels,
+  ] = useState<ChannelConfig[]>(() =>
     initialConfig.channels.map((channel) => ({
       ...channel,
       start: { ...channel.start },
     })),
   );
   const centerOffset = DEFAULT_CENTER_OFFSET;
-  const [timeMs, setTimeMs] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<
-    'idle' | 'saving' | 'saved' | 'error'
-  >('idle');
+  const [
+    timeMs,
+    setTimeMs,
+  ] = useState(0);
+  const [
+    isPlaying,
+    setIsPlaying,
+  ] = useState(false);
+  const [
+    saveStatus,
+    setSaveStatus,
+  ] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   const maxDuration = Math.max(durationMs, 1);
   const progress = clamp(timeMs / maxDuration, 0, 1);
   const showReset = isPlaying || timeMs > 0;
-  const allTitlesVisible = channels.every((channel) => channel.showTitle);
-  const anyTitlesVisible = channels.some((channel) => channel.showTitle);
+  const allTitlesVisible = channels.every(
+    (channel) => channel.showTitle,
+  );
+  const anyTitlesVisible = channels.some(
+    (channel) => channel.showTitle,
+  );
 
   const updateChannel = useCallback(
-    (id: ChannelId, updater: (channel: ChannelConfig) => ChannelConfig) => {
+    (
+      id: ChannelId,
+      updater: (channel: ChannelConfig) => ChannelConfig,
+    ) => {
       setChannels((prev) =>
         prev.map((channel) =>
           channel.id === id ? updater(channel) : channel,
@@ -647,10 +665,15 @@ export default function ProjectorPathDebug({
     [],
   );
 
-  const handleScrub = useCallback((nextValue: number) => {
-    setIsPlaying(false);
-    setTimeMs(clamp(nextValue, 0, maxDuration));
-  }, [maxDuration]);
+  const handleScrub = useCallback(
+    (nextValue: number) => {
+      setIsPlaying(false);
+      setTimeMs(clamp(nextValue, 0, maxDuration));
+    },
+    [
+      maxDuration,
+    ],
+  );
 
   const handleSave = useCallback(async () => {
     setSaveStatus('saving');
@@ -683,22 +706,30 @@ export default function ProjectorPathDebug({
     } catch {
       setSaveStatus('error');
     }
-  }, [channels]);
+  }, [
+    channels,
+  ]);
 
   useEffect(() => {
     if (masterToggleRef.current) {
       masterToggleRef.current.indeterminate =
         anyTitlesVisible && !allTitlesVisible;
     }
-  }, [anyTitlesVisible, allTitlesVisible]);
+  }, [
+    anyTitlesVisible,
+    allTitlesVisible,
+  ]);
 
   useEffect(() => {
-    if (saveStatus !== 'saved' && saveStatus !== 'error') return undefined;
+    if (saveStatus !== 'saved' && saveStatus !== 'error')
+      return undefined;
     const timer = window.setTimeout(() => {
       setSaveStatus('idle');
     }, 2000);
     return () => window.clearTimeout(timer);
-  }, [saveStatus]);
+  }, [
+    saveStatus,
+  ]);
 
   useEffect(() => {
     if (!isPlaying) return undefined;
@@ -718,7 +749,10 @@ export default function ProjectorPathDebug({
 
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, [isPlaying, maxDuration]);
+  }, [
+    isPlaying,
+    maxDuration,
+  ]);
 
   const drawFrame = useCallback(() => {
     const canvas = canvasRef.current;
@@ -766,7 +800,11 @@ export default function ProjectorPathDebug({
       if (!channel.showTitle) return;
       const palette = CHANNEL_PALETTE[channel.id];
       const easedProgress = easingMap[channel.easing](progress);
-      const point = sampleSwirlPosition(channel, easedProgress, center);
+      const point = sampleSwirlPosition(
+        channel,
+        easedProgress,
+        center,
+      );
 
       ctx.fillStyle = palette.text;
       TITLE_LINES.forEach((line, index) => {
@@ -786,22 +824,22 @@ export default function ProjectorPathDebug({
 
   useEffect(() => {
     drawFrame();
-  }, [drawFrame]);
+  }, [
+    drawFrame,
+  ]);
 
   useEffect(() => {
     const handleResize = () => drawFrame();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [drawFrame]);
+  }, [
+    drawFrame,
+  ]);
 
   const channelControls = useMemo(
     () =>
       channels.map((channel) => (
-        <details
-          open
-          key={channel.id}
-          style={detailsStyle}
-        >
+        <details open key={channel.id} style={detailsStyle}>
           <summary style={summaryStyle}>
             <span style={summaryToggleStyle}>
               <input
@@ -928,14 +966,20 @@ export default function ProjectorPathDebug({
                   { label: 'Linear', value: 'linear' },
                   { label: 'Smoothstep', value: 'smoothstep' },
                   { label: 'Ease-out cubic', value: 'easeOutCubic' },
-                  { label: 'Ease-in-out cubic', value: 'easeInOutCubic' },
+                  {
+                    label: 'Ease-in-out cubic',
+                    value: 'easeInOutCubic',
+                  },
                 ]}
               />
             </div>
           </div>
         </details>
       )),
-    [channels, updateChannel],
+    [
+      channels,
+      updateChannel,
+    ],
   );
 
   return (
@@ -949,10 +993,13 @@ export default function ProjectorPathDebug({
     >
       <div style={leftPanelStyle}>
         <header>
-          <h1 style={{ margin: 0, fontSize: 32 }}>Projector Path Debug</h1>
+          <h1 style={{ margin: 0, fontSize: 32 }}>
+            Projector Path Debug
+          </h1>
           <p style={{ ...helperTextStyle, margin: 0 }}>
-            Debug-only canvas preview for three RGB swirl paths converging at
-            center. Adjust values and scrub time to inspect the motion.
+            Debug-only canvas preview for three RGB swirl paths
+            converging at center. Adjust values and scrub time to
+            inspect the motion.
           </p>
         </header>
         <div style={sectionStyle}>
@@ -993,10 +1040,14 @@ export default function ProjectorPathDebug({
               }}
               disabled={saveStatus === 'saving'}
             >
-              {saveStatus === 'saving' ? 'Saving...' : 'Save defaults'}
+              {saveStatus === 'saving'
+                ? 'Saving...'
+                : 'Save defaults'}
             </button>
             {saveStatus === 'saved' ? (
-              <div style={saveStatusStyle}>Saved to defaults file.</div>
+              <div style={saveStatusStyle}>
+                Saved to defaults file.
+              </div>
             ) : null}
             {saveStatus === 'error' ? (
               <div style={saveStatusStyle}>
@@ -1022,7 +1073,8 @@ export default function ProjectorPathDebug({
                 />
               </label>
               <div style={readoutStyle}>
-                Time: {Math.round(timeMs)}ms ({Math.round(progress * 100)}%)
+                Time: {Math.round(timeMs)}ms (
+                {Math.round(progress * 100)}%)
               </div>
             </div>
           </div>

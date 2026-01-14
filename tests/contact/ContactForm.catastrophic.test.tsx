@@ -40,18 +40,6 @@ const buildCopy = () =>
 const buildStatusMessages = (copy = buildCopy()) =>
   copy.blocks.messageCentre.statuses as Record<FormStatusKey, string>;
 
-const STATUS_MESSAGES: Record<FormStatusKey, string> = {
-  sending: 'sending',
-  success: 'success',
-  generic: 'generic',
-  validation_error: 'validation_error',
-  validation_error_jump: 'validation_error_jump',
-  rate_limited: 'rate_limited',
-  service_unavailable: 'service_unavailable',
-  not_configured: 'not_configured',
-  blocked: 'blocked',
-};
-
 function renderWrappedContactForm(
   copy = buildCopy(),
   actionUrl = '/api/contact',
@@ -79,6 +67,7 @@ function renderWrappedContactForm(
 
 describe('ContactForm — catastrophic failures (error view)', () => {
   it('treats a no-blocks configuration as not_configured and surfaces a catastrophic-style summary', async () => {
+    const statusMessages = buildStatusMessages();
     const submitHelper: ContactFormFlowSubmitHelper = vi
       .fn()
       .mockResolvedValue('success');
@@ -87,7 +76,7 @@ describe('ContactForm — catastrophic failures (error view)', () => {
       renderContactFormShellHarness({
         blocks: [],
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
       });
 
     submit();
@@ -101,14 +90,14 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         throw new Error('Expected inline status region to render.');
       }
       expect(inlineRegion.textContent ?? '').toContain(
-        'not_configured',
+        statusMessages.not_configured,
       );
 
       const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
       expect(messageCentreRegion?.textContent ?? '').toContain(
-        'not_configured',
+        statusMessages.not_configured,
       );
 
       const submitButton = getByRole('button', { name: 'Submit' });

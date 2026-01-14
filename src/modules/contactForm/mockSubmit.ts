@@ -1,3 +1,6 @@
+import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
+import type { Translator } from '@/lib/locales/sections/helpers.locale';
+import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
 
 export type FormServerResponseCode =
@@ -24,21 +27,11 @@ export type ContactFormResponse = {
   retryAfterSeconds?: number;
 };
 
-const DEFAULT_STATUS_MESSAGES: Record<FormStatusKey, string> = {
-  sending: 'Sending your message…',
-  success: 'Message sent — thank you!',
-  generic:
-    "We couldn't send your message right now. Please try again.",
-  validation_error: 'Please check the fields and try again.',
-  validation_error_jump:
-    'Almost there! Check the fields with errors and try again.',
-  rate_limited: 'Too many attempts. Please wait a minute.',
-  service_unavailable:
-    'Service is unavailable. Please try again shortly.',
-  not_configured:
-    'Email service not configured yet. Try again later.',
-  blocked: "We couldn't send your message right now.",
-};
+const DEFAULT_STATUS_MESSAGES: Record<FormStatusKey, string> =
+  buildContactFormCopy(
+    ((key: string) =>
+      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
+  ).blocks.messageCentre.statuses;
 
 const resolveMessage = (
   key: FormStatusKey,

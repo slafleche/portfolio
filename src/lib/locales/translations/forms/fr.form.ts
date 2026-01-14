@@ -50,7 +50,8 @@ export const frFormCopy = {
     'Le service d’envoi n’est pas encore configuré. Réessayez plus tard.',
   'form-status-blocked':
     'Nous ne pouvons pas envoyer votre message pour le moment.',
-  'form-turnstile-loading': 'Chargement de la vérification humaine…',
+  'form-turnstile-loading':
+    'Chargement de la **vérification humaine**.',
   'form-turnstile-ready':
     'Complétez la vérification ci-dessus pour activer l’envoi.',
   'form-turnstile-verified':

@@ -83,7 +83,10 @@ export const glassySurfaceOverwrite = style({
   selectors: {
     ...mediaQueryStyle({
       compact: {
-        height: '100vh',
+        height: [
+          '100vh',
+          '100dvh',
+        ],
       },
     }),
   },

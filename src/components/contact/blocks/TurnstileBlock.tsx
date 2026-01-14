@@ -272,6 +272,7 @@ export function TurnstileBlock({
   useEffect(() => {
     if (!shouldRenderTurnstileWidget || !turnstileSiteKey) return;
     let cancelled = false;
+    const containerRef = widgetRef.current;
     setStatus('loading');
     const mountWidget = async () => {
       if (widgetIdRef.current) {
@@ -282,7 +283,7 @@ export function TurnstileBlock({
         if (cancelled) return;
         const extendedWindow = window as ExtendedWindow;
         const turnstileApi = extendedWindow.turnstile;
-        const container = widgetRef.current;
+        const container = containerRef;
         if (!turnstileApi || !container) {
           reportCatastrophic(
             'Turnstile unavailable: missing API or container.',
@@ -348,7 +349,7 @@ export function TurnstileBlock({
       if (turnstileApi && widgetIdRef.current) {
         turnstileApi.reset(widgetIdRef.current);
       }
-      widgetRef.current?.replaceChildren();
+      containerRef?.replaceChildren();
       widgetIdRef.current = null;
     };
   }, [

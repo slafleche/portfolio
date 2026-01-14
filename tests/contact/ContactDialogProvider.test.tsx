@@ -311,6 +311,60 @@ describe('ContactDialogProvider', () => {
     }
   });
 
+  it('keeps the contact form open when closing the privacy dialog', async () => {
+    const formCopy = buildFormCopy();
+    const privacyCopy = buildPrivacy();
+
+    window.location.hash = '#contact-form';
+
+    render(
+      <ContactDialogProvider
+        formCopy={formCopy}
+        privacyCopy={privacyCopy}
+        closeLabel="Close"
+      >
+        <ContactDialogTrigger>Open contact</ContactDialogTrigger>
+      </ContactDialogProvider>,
+    );
+
+    await waitFor(() => {
+      const formPanel = document.querySelector('[data-form="form"]');
+      expect(formPanel).not.toBeNull();
+    });
+
+    const privacyLink = screen.getByRole('link', {
+      name: formCopy.privacy.linkLabel,
+    });
+    await userEvent.click(privacyLink);
+
+    await waitFor(() => {
+      const privacyTitle = screen.getByRole('heading', {
+        name: privacyCopy.title,
+      });
+      expect(privacyTitle).toBeInTheDocument();
+    });
+
+    const closePrivacyButton = screen.getByRole('button', {
+      name: formCopy.privacy.closeLabel,
+    });
+    await userEvent.click(closePrivacyButton);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('heading', {
+          name: privacyCopy.title,
+        }),
+      ).toBeNull();
+      const formPanel = document.querySelector('[data-form="form"]');
+      expect(formPanel).not.toBeNull();
+      const title = document.querySelector(
+        '[data-modal="title"]',
+      ) as HTMLElement | null;
+      expect(title).not.toBeNull();
+      expect(title?.textContent).toBe(formCopy.headings.form);
+    });
+  });
+
   it('applies the dev success scenario from the URL and uses the success heading', async () => {
     const formCopy = buildFormCopy();
     const privacyCopy = buildPrivacy();

@@ -50,63 +50,76 @@ export const MessageCentreBlock = forwardRef<
     messages.messageFallback,
   ]);
 
+  const isEmpty = !globalMessage && inlineMessages.length === 0;
+
+  const globalMessageContainer = (
+    <div className={s.main} role="status" aria-live="polite">
+      <span className={s.title}>
+        {renderInlineMarkdown(
+          globalMessage || '',
+          inlineMarkdownOptions,
+          'message-centre-global',
+        )}
+      </span>
+    </div>
+  );
+
   return (
     <div
       role="status"
       aria-live="polite"
       aria-atomic="true"
       data-form="messages"
+      data-empty={isEmpty ? 'true' : 'false'}
       className={s.root}
     >
-      {globalMessage ? (
-        <div className={s.main} role="status" aria-live="polite">
-          <span className={s.title}>
-            {renderInlineMarkdown(
-              globalMessage,
-              inlineMarkdownOptions,
-              'message-centre-global',
-            )}
-          </span>
-        </div>
-      ) : null}
-      <div
-        className={s.statusWrapper}
-        data-visible={inlineMessages.length ? 'true' : 'false'}
-      >
-        {inlineMessages.length > 1 ? (
-          <ul className={s.status}>
-            {inlineMessages.map((line, index) => {
-              const code = inlineCodes[index];
-              return (
-                <li
-                  key={`${index}-${line}`}
+      {!isEmpty ? (
+        <>
+          {globalMessageContainer}
+
+          <div
+            className={s.statusWrapper}
+            data-visible={inlineMessages.length ? 'true' : 'false'}
+          >
+            {inlineMessages.length > 1 ? (
+              <ul className={s.status}>
+                {inlineMessages.map((line, index) => {
+                  const code = inlineCodes[index];
+                  return (
+                    <li
+                      key={`${index}-${line}`}
+                      className={s.statusText}
+                      data-error={code ?? undefined}
+                    >
+                      {renderInlineMarkdown(
+                        line,
+                        inlineMarkdownOptions,
+                        `message-centre-inline-${index}`,
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : inlineMessages.length === 1 ? (
+              <div
+                ref={ref as Ref<HTMLDivElement>}
+                className={s.status}
+              >
+                <div
                   className={s.statusText}
-                  data-error={code ?? undefined}
+                  data-error={inlineCodes[0] ?? undefined}
                 >
                   {renderInlineMarkdown(
-                    line,
+                    inlineMessages[0],
                     inlineMarkdownOptions,
-                    `message-centre-inline-${index}`,
+                    'message-centre-inline-single',
                   )}
-                </li>
-              );
-            })}
-          </ul>
-        ) : inlineMessages.length === 1 ? (
-          <div ref={ref as Ref<HTMLDivElement>} className={s.status}>
-            <div
-              className={s.statusText}
-              data-error={inlineCodes[0] ?? undefined}
-            >
-              {renderInlineMarkdown(
-                inlineMessages[0],
-                inlineMarkdownOptions,
-                'message-centre-inline-single',
-              )}
-            </div>
+                </div>
+              </div>
+            ) : null}
           </div>
-        ) : null}
-      </div>
+        </>
+      ) : null}
     </div>
   );
 });

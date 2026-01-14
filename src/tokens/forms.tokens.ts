@@ -10,6 +10,9 @@ import { layoutVars } from './layout.tokens';
 export const formTokens = {
   textarea: {
     minHeight: m(250),
+    compact: {
+      minHeight: m(150),
+    }
   },
   label: {
     text: {

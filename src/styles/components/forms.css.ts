@@ -9,10 +9,7 @@ import {
   glassyButtonCupped,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
-import {
-  colors,
-  colorVars,
-} from '../../tokens/global.tokens';
+import { colors, colorVars } from '../../tokens/global.tokens';
 import {
   formLayoutVars,
   layoutVars,
@@ -27,7 +24,10 @@ import {
   fontStylesFromFontVariant,
   relativeFontWeight,
 } from '../helpers/typography.helper';
-import { globalComponentMediaQueryStyle } from '../responsive/mediaQueries';
+import {
+  globalComponentMediaQueryStyle,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 
 export const form = style({
   display: 'grid',
@@ -48,6 +48,13 @@ export const form = style({
   ...margins({
     horizontal: 'auto',
   }),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        minHeight: ['100vh', '100dvh'],
+      },
+    }),
+  },
 });
 
 globalStyle(`.${form}`, {
@@ -205,10 +212,12 @@ export const textarea = style({
     },
     '&[data-error="true"]': {
       color: formTokens.field.error.text.color.css(),
-      // ...borders(formTokens.field.error.borders, {
-      //   skipDefaults: true,
-      // }),
     },
+    ...mediaQueryStyle({
+      compact: {
+        minHeight: formTokens.textarea.compact.minHeight.css(),
+      },
+    }),
   },
 });
 
@@ -466,5 +475,3 @@ export const jumpToFirstIssueText = style({
     color: colorVars.black,
   }),
 });
-
-

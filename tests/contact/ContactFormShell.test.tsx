@@ -6,7 +6,9 @@ import type {
   ContactFormBlockValidationResult,
   ContactFormFlowSubmitHelper,
 } from '@/components/contact/types/form.types';
-import type { FormStatusKey } from '@/lib/locales/sections/form.locale';
+import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
+import type { Translator } from '@/lib/locales/sections/helpers.locale';
+import { enFormCopy } from '@/lib/locales/translations/forms/en.form';
 
 import { renderContactFormShellHarness } from './helpers/contactFormShell.harness';
 import {
@@ -14,17 +16,11 @@ import {
   makeValidationResult,
 } from './helpers/messageFactories.helpers';
 
-const STATUS_MESSAGES: Record<FormStatusKey, string> = {
-  sending: 'sending',
-  success: 'success',
-  generic: 'generic',
-  validation_error: 'validation_error',
-  validation_error_jump: 'validation_error_jump',
-  rate_limited: 'rate_limited',
-  service_unavailable: 'service_unavailable',
-  not_configured: 'not_configured',
-  blocked: 'blocked',
-};
+const buildFormCopy = () =>
+  buildContactFormCopy(
+    ((key: string) =>
+      enFormCopy[key as keyof typeof enFormCopy]) as unknown as Translator,
+  );
 
 const makeValidation = (
   id: string,
@@ -54,6 +50,7 @@ const makePayload = (
 
 describe('Contact form shell harness', () => {
   it('runs the full happy path: valid blocks → submit helper → success summary in message centre', async () => {
+    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'first',
@@ -76,7 +73,7 @@ describe('Contact form shell harness', () => {
     const { submit, container } = renderContactFormShellHarness({
       blocks,
       submitHelper,
-      statusMessages: STATUS_MESSAGES,
+      statusMessages,
       blockOrder: [
         'first',
         'second',
@@ -101,6 +98,7 @@ describe('Contact form shell harness', () => {
   });
 
   it('surfaces validation errors from blocks and flow as inline and messageCentre summaries', async () => {
+    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'first',
@@ -120,7 +118,7 @@ describe('Contact form shell harness', () => {
       renderContactFormShellHarness({
         blocks,
         submitHelper,
-        statusMessages: STATUS_MESSAGES,
+        statusMessages,
         blockOrder: [
           'first',
         ],
@@ -144,14 +142,14 @@ describe('Contact form shell harness', () => {
       }
 
       const inlineText = inlineRegion.textContent ?? '';
-      expect(inlineText).toContain('validation_error');
+      expect(inlineText).toContain(statusMessages.validation_error);
       expect(inlineText).toContain('first error');
 
       const messageCentreRegion = container.querySelector(
         '[role="status"]:not([aria-atomic])',
       );
       expect(messageCentreRegion?.textContent ?? '').toContain(
-        'validation_error',
+        statusMessages.validation_error,
       );
 
       const submitButton = getByRole('button', { name: 'Submit' });
@@ -174,6 +172,7 @@ describe('Contact form shell harness', () => {
   });
 
   it('surfaces non-success recoverable server statuses via the message centre when validation passes', async () => {
+    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'first',
@@ -190,9 +189,9 @@ describe('Contact form shell harness', () => {
     ];
 
     const expectedSummaries = [
-      'rate_limited',
-      'service_unavailable',
-      'generic',
+      statusMessages.rate_limited,
+      statusMessages.service_unavailable,
+      statusMessages.generic,
     ];
 
     for (
@@ -207,7 +206,7 @@ describe('Contact form shell harness', () => {
         renderContactFormShellHarness({
           blocks,
           submitHelper,
-          statusMessages: STATUS_MESSAGES,
+          statusMessages,
           blockOrder: [
             'first',
           ],
@@ -238,6 +237,7 @@ describe('Contact form shell harness', () => {
   });
 
   it('surfaces then clears recoverable server status summaries after a subsequent successful submit', async () => {
+    const statusMessages = buildFormCopy().blocks.messageCentre.statuses;
     const blocks = [
       {
         key: 'first',
@@ -256,15 +256,15 @@ describe('Contact form shell harness', () => {
     }> = [
       {
         status: 'rate_limited',
-        expectedSummary: 'rate_limited',
+        expectedSummary: statusMessages.rate_limited,
       },
       {
         status: 'service_unavailable',
-        expectedSummary: 'service_unavailable',
+        expectedSummary: statusMessages.service_unavailable,
       },
       {
         status: 'generic_error',
-        expectedSummary: 'generic',
+        expectedSummary: statusMessages.generic,
       },
     ];
 
@@ -280,7 +280,7 @@ describe('Contact form shell harness', () => {
         renderContactFormShellHarness({
           blocks,
           submitHelper,
-          statusMessages: STATUS_MESSAGES,
+          statusMessages,
           blockOrder: [
             'first',
           ],

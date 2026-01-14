@@ -142,16 +142,7 @@ function ContactFormInner({
     },
   });
 
-  const shouldSuppressSoloBlockMessage =
-    outcome.messagesForUi.blocks.length === 1 &&
-    outcome.messagesForUi.blockCodes?.length === 1;
-  const messagesForUi = shouldSuppressSoloBlockMessage
-    ? {
-        ...outcome.messagesForUi,
-        blocks: [],
-        blockCodes: [],
-      }
-    : outcome.messagesForUi;
+  const messagesForUi = outcome.messagesForUi;
 
   const isCatastrophic = outcome.isCatastrophic;
   const isInvalid = flow.invalid;

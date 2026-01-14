@@ -193,6 +193,7 @@ export function ContactDialogProvider({
   const previousIntentRef = useRef<ModalIntent>('none');
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const lastNonModalHashRef = useRef<string | null>(null);
+  const suppressNextContactCloseRef = useRef(false);
 
   const captureFocusAnchor = useCallback(() => {
     if (typeof document === 'undefined') return;
@@ -372,6 +373,7 @@ export function ContactDialogProvider({
   ]);
 
   const closePrivacy = useCallback(() => {
+    suppressNextContactCloseRef.current = true;
     applyIntent('contact', { history: 'replace' });
   }, [
     applyIntent,
@@ -397,6 +399,13 @@ export function ContactDialogProvider({
   const handleDialogOpenChange = useCallback(
     (nextOpen: boolean) => {
       if (!nextOpen) {
+        if (suppressNextContactCloseRef.current) {
+          suppressNextContactCloseRef.current = false;
+          return;
+        }
+        if (intentRef.current === 'contact-policy') {
+          return;
+        }
         closeContact();
       } else {
         openContact();
