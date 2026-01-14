@@ -1,4 +1,4 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
 import { formTokens } from '@/tokens/forms.tokens';
@@ -9,7 +9,11 @@ import {
   glassyButtonCupped,
   glassyButtonTokens,
 } from '../../tokens/glassy.tokens';
-import { colors, colorVars } from '../../tokens/global.tokens';
+import {
+  colors,
+  colorVars,
+  themeColours,
+} from '../../tokens/global.tokens';
 import {
   formLayoutVars,
   layoutVars,
@@ -415,4 +419,51 @@ globalStyle(`${input}[data-error="true"]::placeholder`, {
 
 globalStyle(`${textarea}[data-error="true"]::placeholder`, {
   color: formTokens.field.error.text.color.css(),
+});
+
+export const jumpToFirstIssue = style({
+  border: 'none',
+  background: 'none',
+  padding: 0,
+  margin: 0,
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  ...paddings({
+    vertical: m(12),
+  }),
+});
+
+const toTopArrowFloat = keyframes({
+  '0%': {
+    transform: 'translateY(0)',
+  },
+  '50%': {
+    transform: 'translateY(-6px)',
+  },
+  '100%': {
+    transform: 'translateY(0)',
+  },
+});
+
+export const toTopArrow = style({
+  width: '40px',
+  height: 'auto',
+  ...margins({
+    bottom: m(10),
+  }),
+  color: colors.status.warning.css(),
+  animation: `${toTopArrowFloat} 1.8s ease-in-out infinite`,
+});
+
+export const jumpToFirstIssueText = style({
+  color: colors.status.warning.mix(colors.white, 0.9).css(),
+  ...textShadow({
+    x: m(1),
+    y: m(1),
+    blur: m(2),
+    color: colorVars.black,
+  }),
 });

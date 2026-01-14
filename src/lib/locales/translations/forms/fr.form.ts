@@ -1,7 +1,7 @@
 export const frFormCopy = {
   'form-heading': 'Prenons contact',
   'form-success-heading': 'Message envoyé',
-  'form-error-heading': "Nous n’avons pas pu envoyer votre message",
+  'form-error-heading': 'Nous n’avons pas pu envoyer votre message',
   'form-success-body': 'Je vous répondrai dès que possible.',
   'form-name-label': 'Nom',
   'form-email-label': 'Courriel',
@@ -23,33 +23,33 @@ export const frFormCopy = {
   'form-error-email-invalid':
     'Veuillez entrer une adresse courriel valide.',
   'form-error-message-required':
-    "Veuillez écrire un message avant de l’envoyer.",
+    'Veuillez écrire un message avant de l’envoyer.',
   'form-error-message-too_short':
     'Écrivez un message un peu plus long (au moins {min} caractères).',
   'form-error-message-too_long': 'Le message est trop long.',
   'form-error-message-too_many_links':
     'Veuillez retirer quelques liens (maximum {limit} liens).',
   'form-error-token-missing':
-    "Veuillez confirmer que vous n’êtes pas un robot.",
+    'Veuillez confirmer que vous n’êtes pas un robot.',
   'form-status-sending': 'Envoi du message…',
   'form-status-success': 'Message envoyé !',
   'form-status-generic_error':
     'Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer.',
   'form-status-validation_error':
-    'Veuillez vérifier les champs et réessayer.',
+    'Presque fini ! Vérifiez les champs en erreur et réessayez.',
   'form-status-rate_limited':
     'Trop de tentatives. Veuillez réessayer bientôt.',
   'form-status-rate_limited-countdown':
     'Trop de tentatives. Réessayez dans {seconds}s.',
   'form-status-service_unavailable':
-    "Le service d’envoi est temporairement indisponible. Réessayez bientôt.",
+    'Le service d’envoi est temporairement indisponible. Réessayez bientôt.',
   'form-status-not_configured':
-    "Le service d’envoi n’est pas encore configuré. Réessayez plus tard.",
+    'Le service d’envoi n’est pas encore configuré. Réessayez plus tard.',
   'form-status-blocked':
     'Nous ne pouvons pas envoyer votre message pour le moment.',
   'form-turnstile-loading': 'Chargement de la vérification humaine…',
   'form-turnstile-ready':
-    "Complétez la vérification ci-dessus pour activer l’envoi.",
+    'Complétez la vérification ci-dessus pour activer l’envoi.',
   'form-turnstile-verified':
     'Vérification réussie ! Vous pouvez envoyer votre message.',
   'form-turnstile-expired':
@@ -72,5 +72,5 @@ export const frFormCopy = {
   'form-category_error-invalid_input':
     'Veuillez corriger le(s) champ(s) indiqué(s).',
   'form-category_error-submission_error':
-    "Malheureusement, nous n’avons pas pu envoyer votre message pour la raison suivante :",
+    'Malheureusement, nous n’avons pas pu envoyer votre message pour la raison suivante :',
 } as const;

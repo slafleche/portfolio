@@ -463,7 +463,7 @@ export function ContactDialogProvider({
                   data-ui="contact-form"
                   data-query="no-margin"
                 >
-                  <div className={dialogStyles.header}>
+                  <div data-ui="form-header" className={dialogStyles.header}>
                     <Dialog.Title
                       className={dialogStyles.heading}
                       data-modal="title"

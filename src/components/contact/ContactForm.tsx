@@ -12,6 +12,7 @@ import * as s from '@/styles/components/forms.css';
 
 import { useSafeId } from '../../lib/dom';
 import { notRelease } from '../../lib/runtimeEnv';
+import ToTopArrow from '../icons/ToTopArrow';
 import { EmailBlock } from './blocks/EmailBlock';
 import { HoneypotBlock } from './blocks/HoneypotBlock';
 import { MessageBlock } from './blocks/MessageBlock';
@@ -187,6 +188,32 @@ function ContactFormInner({
         block: 'start',
         behavior: 'smooth',
       });
+
+      const header = document.querySelector<HTMLElement>(
+        '[data-ui="form-header"]',
+      );
+      const headerOffset =
+        header?.getBoundingClientRect().height ?? 0;
+      if (headerOffset > 0) {
+        let scrollParent = element.parentElement;
+        while (scrollParent) {
+          if (scrollParent.scrollHeight > scrollParent.clientHeight) {
+            break;
+          }
+          scrollParent = scrollParent.parentElement;
+        }
+        if (scrollParent) {
+          scrollParent.scrollBy({
+            top: -headerOffset,
+            behavior: 'smooth',
+          });
+        } else {
+          window.scrollBy({
+            top: -headerOffset,
+            behavior: 'smooth',
+          });
+        }
+      }
     }
 
     const registrations = getRegistrationsSnapshot();
@@ -404,8 +431,12 @@ function ContactFormInner({
           type="button"
           data-testid="jump-to-first-issue"
           onClick={handleJumpToFirstIssue}
+          className={s.jumpToFirstIssue}
         >
-          {copy.blocks.messageCentre.statuses.validation_error}
+          <ToTopArrow className={s.toTopArrow} />
+          <span className={s.jumpToFirstIssueText}>
+            {copy.blocks.messageCentre.statuses.validation_error}
+          </span>
         </button>
       ) : null}
       <SubmitButton disabled={disableSubmit}>

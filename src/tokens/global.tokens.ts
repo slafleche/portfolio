@@ -297,6 +297,13 @@ export const colors = {
   black: color('#000000'),
   white: color('#ffffff'),
   transparent: color('#ffffff').alpha(0),
+
+  // Status colors
+  status: {
+    success: color('#15803d'),
+    warning: color('#fbbf24'),
+    error: color('#dc2626'),
+  },
 } as const;
 
 export const colorVars = {

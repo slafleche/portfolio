@@ -191,6 +191,7 @@ export const scrollArea = style({
   flex: 1,
   minHeight: 0,
   overflowY: 'auto',
+  scrollBehavior: 'smooth',
   scrollbarGutter: 'stable',
   position: 'relative',
   ...backgrounds({

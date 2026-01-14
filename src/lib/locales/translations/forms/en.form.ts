@@ -33,7 +33,7 @@ export const enFormCopy = {
   'form-status-generic_error':
     "We couldn't send your message right now. Please try again.",
   'form-status-validation_error':
-    'Please check the fields and try again.',
+    'Almost there! Check the fields with errors and try again.',
   'form-status-rate_limited': 'Too many attempts. Please retry soon.',
   'form-status-rate_limited-countdown':
     'Too many attempts. Please retry in {seconds}s.',
