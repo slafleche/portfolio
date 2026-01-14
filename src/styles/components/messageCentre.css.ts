@@ -21,6 +21,7 @@ export const root = style({
   flexDirection: 'column',
   ...margins({
     top: m(10),
+    bottom: m(20),
   }),
   ...borders({
     width: m(1),

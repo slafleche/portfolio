@@ -182,6 +182,10 @@ export function TurnstileBlock({
 
   const widgetRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
+  const lastValidationStateRef = useRef<{
+    valid: boolean;
+    code: string | null;
+  } | null>(null);
 
   const shouldRenderTurnstileWidget =
     hasTurnstileConfig || hasInlineTurnstile;
@@ -211,8 +215,50 @@ export function TurnstileBlock({
     token,
   ]);
 
-  const { continuousValidation, reportCatastrophic } =
+  const {
+    continuousValidation,
+    recordValidationResult,
+    reportCatastrophic,
+  } =
     useFormBlock(registration);
+
+  useEffect(() => {
+    if (!continuousValidation) {
+      lastValidationStateRef.current = null;
+      return;
+    }
+
+    const result = buildTurnstileValidationResult(
+      id,
+      status,
+      copy,
+      token,
+    );
+
+    const nextState = {
+      valid: result.valid,
+      code: result.messages[0]?.code ?? null,
+    };
+
+    const previousState = lastValidationStateRef.current;
+    if (
+      previousState &&
+      previousState.valid === nextState.valid &&
+      previousState.code === nextState.code
+    ) {
+      return;
+    }
+
+    lastValidationStateRef.current = nextState;
+    recordValidationResult(result);
+  }, [
+    continuousValidation,
+    copy,
+    id,
+    recordValidationResult,
+    status,
+    token,
+  ]);
 
   useEffect(() => {
     if (!token) return;
