@@ -163,7 +163,6 @@ export const heading = style({
   fontSize: '50px',
   ...paddings({
     vertical: m(0),
-    horizontal: m(80),
   }),
 });
 
