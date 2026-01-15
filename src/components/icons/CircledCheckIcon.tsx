@@ -18,7 +18,10 @@ export default function CircledCheckIcon({
       {...props}
     >
       <path d="M22 11.5a9.5 9.5 0 1 1-9.5-9.5 9.5 9.5 0 0 1 9.5 9.5Z" />
-      <path d="m8.5 12 2.5 2.5 4.5-4.5" />
+      <path
+        transform="translate(0.45 0)"
+        d="m8.5 12 2.5 2.5 4.5-4.5"
+      />
     </svg>
   );
 }

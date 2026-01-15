@@ -1,6 +1,10 @@
-import { m } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 
-import { colorVars, themeColours } from '@/tokens/global.tokens';
+import {
+  colors,
+  colorVars,
+  themeColours,
+} from '@/tokens/global.tokens';
 
 import { glassyButtonTokens } from './glassy.tokens';
 import { layoutVars } from './layout.tokens';
@@ -152,7 +156,35 @@ export const formVars = {
   successPanel: {
     icon: {
       color: colorVars.successAccent.alpha(0.9),
-      background: colorVars.successAccent.alpha(0.12),
+      background: colors.white.alpha(0.05),
+      border: {
+        width: m(1),
+        color: colors.white.alpha(0.1),
+        radius: [
+          mPercent(50),
+          mPercent(40),
+        ],
+      },
+    },
+    body: {
+      color: colorVars.white.alpha(0.82),
+    },
+  },
+  errorPanel: {
+    icon: {
+      color: colorVars.errorAccent,
+      detail: {
+        color: colorVars.errorAccent.mix(colors.status.error, 0.8),
+      },
+      background: colors.white.alpha(0.05),
+      border: {
+        width: m(1),
+        color: colors.white.alpha(0.1),
+        radius: [
+          mPercent(50),
+          mPercent(40),
+        ],
+      },
     },
     body: {
       color: colorVars.white.alpha(0.82),

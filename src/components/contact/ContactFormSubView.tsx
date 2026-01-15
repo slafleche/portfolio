@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from 'react';
 import {
   statusFullPage,
   statusHeading,
+  statusIcon,
   statusIconWrap,
   statusMain,
 } from '../../styles/components/contactForm.css';
@@ -51,12 +52,6 @@ export default function ContactFormSubView({
       data-form={type}
     >
       <div className={clsx(statusMain, classNames.main)}>
-        <div
-          className={clsx(statusIconWrap, classNames.iconWrap)}
-          aria-hidden="true"
-        >
-          <Icon className={clsx(statusIconWrap, classNames.icon)} />
-        </div>
         <h1
           ref={headingRef}
           className={clsx(statusHeading, classNames.heading)}
@@ -70,8 +65,17 @@ export default function ContactFormSubView({
           <Markdown
             className={classNames.copy}
             source={description}
+            asUi={{
+              paragraphs: true,
+            }}
           />
         )}
+        <div
+          className={clsx(statusIconWrap, classNames.iconWrap)}
+          aria-hidden="true"
+        >
+          <Icon className={clsx(statusIcon, classNames.icon)} />
+        </div>
       </div>
     </div>
   );

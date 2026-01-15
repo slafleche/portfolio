@@ -1,11 +1,12 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
+import { m } from 'css-calipers';
 
 import { formVars } from '../../tokens/forms.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
+import { paddings } from '../helpers/spacing.helper';
 
 export const root = style({});
-
 
 export const main = style({});
 
@@ -13,7 +14,18 @@ export const body = style({});
 
 export const heading = style({});
 
-export const iconWrap = style({});
+export const iconWrap = style({
+  width: '100px',
+  height: '100px',
+  ...backgrounds({
+    color: formVars.errorPanel.icon.background,
+  }),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  ...paddings(m(20)),
+  ...borders(formVars.errorPanel.icon.border),
+});
 
 export const statusError = style([
   {
@@ -22,11 +34,14 @@ export const statusError = style([
   },
 ]);
 
-
 export const copy = style({});
 
 export const icon = style({
-  width: '36px',
-  height: '36px',
-  // color: formVars.status.icon.color.css(),
+  width: '60px',
+  height: '60px',
+  color: formVars.errorPanel.icon.color.css(),
+});
+
+globalStyle(`${icon} path[data-error="true"]`, {
+  stroke: formVars.errorPanel.icon.detail.color.css(),
 });

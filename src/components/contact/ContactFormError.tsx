@@ -1,6 +1,6 @@
 import * as styles from '@/styles/components/contactForm.error.css';
 
-import CircledPauseIcon from '../icons/CircledPauseIcon';
+import CircledPauseIcon from '../icons/CircledErrorIcon';
 import ContactFormSubView from './ContactFormSubView';
 
 type ContactFormErrorProps = {

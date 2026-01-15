@@ -1,8 +1,10 @@
 import { style } from '@vanilla-extract/css';
+import { m } from 'css-calipers';
 
 import { formVars } from '../../tokens/forms.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
+import { paddings } from '../helpers/spacing.helper';
 
 export const root = style({
   // display: 'flex',
@@ -26,21 +28,23 @@ export const heading = style({
 });
 
 export const iconWrap = style({
-  width: '64px',
-  height: '64px',
+  width: '100px',
+  height: '100px',
   ...backgrounds({
     color: formVars.successPanel.icon.background,
   }),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  ...paddings(m(20)),
+  ...borders(formVars.successPanel.icon.border),
 });
 
 export const copy = style({});
 
 export const icon = style({
-  width: '36px',
-  height: '36px',
+  width: '60px',
+  height: '60px',
   color: formVars.successPanel.icon.color.css(),
 });
 

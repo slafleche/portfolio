@@ -1,5 +1,5 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import { m, mPercent } from 'css-calipers';
+import { m, mEm, mPercent } from 'css-calipers';
 
 import { fontFamilies } from '../../tokens/fontFamilies.tokens';
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
@@ -297,8 +297,10 @@ export const scoopGradient = style({
 });
 
 globalStyle(`.${panel} p`, {
+  lineHeight: 1.2,
   ...margins({
-    vertical: m(3),
+    top: m(0),
+    bottom: mEm(0.5),
   }),
 });
 
@@ -326,11 +328,36 @@ export const statusFullPage = style({
   ],
   ...paddings({
     vertical: formVars.header.height,
+    horizontal: m(16),
   }),
+});
+
+export const statusHeading = style({
+  selectors: {
+    '&:not([data-ui="heading"])': {
+      fontSize: 'clamp(1rem, 6vw, 50px)',
+      lineHeight: 1.2,
+      ...paddings({
+        top: m(0),
+      }),
+      ...margins({
+        top: m(0),
+        bottom: mEm(0.5),
+      }),
+    },
+  },
 });
 
 export const statusMain = style({});
 
-export const statusHeading = style({});
+export const statusIconWrap = style({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  ...margins({
+    horizontal: 'auto',
+    top: mEm(1.5),
+  }),
+});
 
-export const statusIconWrap = style({});
+export const statusIcon = style({});
