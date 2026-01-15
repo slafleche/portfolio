@@ -11,7 +11,7 @@ import type {
 import * as s from '@/styles/components/forms.css';
 
 import { useSafeId } from '../../lib/dom';
-import { notRelease } from '../../lib/runtimeEnv';
+import { isDev, notRelease } from '../../lib/runtimeEnv';
 import ToTopArrow from '../icons/ToTopArrow';
 import { EmailBlock } from './blocks/EmailBlock';
 import { HoneypotBlock } from './blocks/HoneypotBlock';
@@ -34,6 +34,7 @@ import type {
   ContactFormBlockBaseProps,
   ContactFormBlockInitialValues,
   ContactFormBlockPayload,
+  ContactFormDebugMode,
   ContactFormFlowSubmitHelper,
   ContactFormProps,
 } from './types/form.types';
@@ -41,6 +42,67 @@ import { useContactFormFlow } from './useContactFormFlow';
 import { useContactFormOutcome } from './useContactFormOutcome';
 
 const DEFAULT_ACTION_URL = '/api/contact';
+
+type ContactFormAltView =
+  | {
+      kind: 'loading';
+      title: string;
+    }
+  | {
+      kind: 'success';
+      title: string;
+      description: string;
+    }
+  | {
+      kind: 'failure';
+      title: string;
+      description: string;
+    };
+
+const resolveAltView = ({
+  copy,
+  devScenarioId,
+  catastrophicReason,
+  view,
+}: {
+  copy: ContactFormProps['copy'];
+  devScenarioId: string | null;
+  catastrophicReason: string | null;
+  view: 'form' | 'success';
+}): ContactFormAltView | null => {
+  if (devScenarioId === 'loading') {
+    return {
+      kind: 'loading',
+      title: copy.blocks.messageCentre.statuses.sending,
+    };
+  }
+
+  if (devScenarioId === 'success') {
+    return {
+      kind: 'success',
+      title: copy.headings.success,
+      description: copy.successBody,
+    };
+  }
+
+  if (devScenarioId?.startsWith('failure') || catastrophicReason) {
+    return {
+      kind: 'failure',
+      title: copy.headings.error,
+      description: copy.errorBody,
+    };
+  }
+
+  if (view === 'success') {
+    return {
+      kind: 'success',
+      title: copy.headings.success,
+      description: copy.successBody,
+    };
+  }
+
+  return null;
+};
 
 const buildContactFormPayload = (
   payloads: ContactFormBlockPayload<unknown>[],
@@ -86,6 +148,7 @@ type ContactFormInnerProps = {
   initialBlocks?: ContactFormBlockInitialValues | null;
   turnstileSiteKey: string | null;
   onOpenPrivacy?: () => void;
+  debugMode?: ContactFormDebugMode;
 };
 
 function ContactFormInner({
@@ -98,7 +161,13 @@ function ContactFormInner({
   initialBlocks,
   turnstileSiteKey,
   onOpenPrivacy,
+  debugMode,
 }: ContactFormInnerProps) {
+  const isDebug = isDev();
+  const logInputs = isDebug && Boolean(debugMode?.logInputs);
+  const logValidation = isDebug && Boolean(debugMode?.logValidation);
+  const logMessages = isDebug && Boolean(debugMode?.logMessages);
+
   const [
     initialBlocksSnapshot,
   ] = useState<ContactFormBlockInitialValues | null | undefined>(
@@ -388,7 +457,7 @@ function ContactFormInner({
     >
       {showLoading ? (
         <ContactFormLoading
-          message={copy.blocks.messageCentre.statuses.sending}
+          title={copy.blocks.messageCentre.statuses.sending}
         />
       ) : null}
       <fieldset
@@ -403,27 +472,42 @@ function ContactFormInner({
           disabled={disableFields}
           copy={copy.blocks.name}
           initialConfig={initialBlocksSnapshot?.name}
+          logInputs={logInputs}
+          logValidation={logValidation}
+          logMessages={logMessages}
         />
         <EmailBlock
           {...formMembers[1]}
           disabled={disableFields}
           copy={copy.blocks.email}
           initialConfig={initialBlocksSnapshot?.email}
+          logInputs={logInputs}
+          logValidation={logValidation}
+          logMessages={logMessages}
         />
         <MessageBlock
           {...formMembers[2]}
           disabled={disableFields}
           copy={copy.blocks.message}
           initialConfig={initialBlocksSnapshot?.message}
+          logInputs={logInputs}
+          logValidation={logValidation}
+          logMessages={logMessages}
         />
         <TurnstileBlock
           {...formMembers[3]}
           disabled={disableFields}
           copy={copy.blocks.turnstile}
           turnstileSiteKey={turnstileSiteKey}
+          logInputs={logInputs}
+          logValidation={logValidation}
+          logMessages={logMessages}
         />
 
-        <HoneypotBlock copy={copy.blocks.honeypot} />
+        <HoneypotBlock
+          copy={copy.blocks.honeypot}
+          logInputs={logInputs}
+        />
         {isInvalid ? (
           <button
             type="button"
@@ -433,7 +517,10 @@ function ContactFormInner({
           >
             <ToTopArrow className={s.toTopArrow} />
             <span className={s.jumpToFirstIssueText}>
-              {copy.blocks.messageCentre.statuses.validation_error_jump}
+              {
+                copy.blocks.messageCentre.statuses
+                  .validation_error_jump
+              }
             </span>
           </button>
         ) : null}
@@ -455,6 +542,7 @@ export default function ContactForm({
   onSuccessStateChange,
   initialBlocks,
   turnstileSiteKey = null,
+  debugMode,
   onOpenPrivacy,
 }: ContactFormProps) {
   const idPrefix = useSafeId('contact-form-');
@@ -666,32 +754,29 @@ export default function ContactForm({
     view,
   ]);
 
+  const altView = resolveAltView({
+    copy,
+    devScenarioId,
+    catastrophicReason,
+    view,
+  });
+
   return (
     <FormBlocksProvider onCatastrophic={handleCatastrophic}>
-      {isDevLoadingScenario ? (
-        <ContactFormLoading
-          message={copy.blocks.messageCentre.statuses.sending}
-        />
-      ) : isDevSuccessScenario ? (
-        <ContactFormSuccess
-          title={copy.headings.success}
-          description={copy.successBody}
-        />
-      ) : isDevFailureScenario ? (
-        <ContactFormError
-          title={copy.headings.error}
-          description={copy.errorBody}
-        />
-      ) : catastrophicReason ? (
-        <ContactFormError
-          title={copy.headings.error}
-          description={copy.errorBody}
-        />
-      ) : view === 'success' ? (
-        <ContactFormSuccess
-          title={copy.headings.success}
-          description={copy.successBody}
-        />
+      {altView ? (
+        altView.kind === 'loading' ? (
+          <ContactFormLoading title={altView.title} />
+        ) : altView.kind === 'success' ? (
+          <ContactFormSuccess
+            title={altView.title}
+            description={altView.description}
+          />
+        ) : (
+          <ContactFormError
+            title={altView.title}
+            description={altView.description}
+          />
+        )
       ) : (
         <ContactFormInner
           actionUrl={actionUrl}
@@ -702,6 +787,7 @@ export default function ContactForm({
           onCatastrophic={handleCatastrophic}
           initialBlocks={initialBlocks ?? scenarioInitialBlocks}
           turnstileSiteKey={turnstileSiteKey}
+          debugMode={debugMode}
           onOpenPrivacy={onOpenPrivacy}
         />
       )}

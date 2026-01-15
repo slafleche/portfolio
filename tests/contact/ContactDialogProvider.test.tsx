@@ -84,11 +84,13 @@ describe('ContactDialogProvider', () => {
       );
 
       await waitFor(() => {
-        const title = document.querySelector(
-          '[data-modal="title"]',
-        ) as HTMLElement | null;
-        expect(title).not.toBeNull();
-        expect(title?.textContent).toBe(formCopy.headings.form);
+        const panel = document.querySelector(
+          '[data-ui="contact-form"]',
+        );
+        expect(panel).not.toBeNull();
+        expect(panel?.textContent ?? '').toContain(
+          formCopy.headings.form,
+        );
       });
 
       const nameInput = await screen.findByLabelText(
@@ -134,8 +136,8 @@ describe('ContactDialogProvider', () => {
         expect(successPanel).not.toBeNull();
         const liveForm = document.querySelector('[data-form="form"]');
         expect(liveForm).toBeNull();
-        const title = document.querySelector(
-          '[data-modal="title"]',
+        const title = successPanel?.querySelector(
+          '[data-form="state-title"]',
         ) as HTMLElement | null;
         expect(title).not.toBeNull();
         expect(title?.textContent).toBe(formCopy.headings.success);
@@ -220,8 +222,8 @@ describe('ContactDialogProvider', () => {
         expect(errorPanel).not.toBeNull();
         const liveForm = document.querySelector('[data-form="form"]');
         expect(liveForm).toBeNull();
-        const title = document.querySelector(
-          '[data-modal="title"]',
+        const title = errorPanel?.querySelector(
+          '[data-form="state-title"]',
         ) as HTMLElement | null;
         expect(title).not.toBeNull();
         expect(title?.textContent).toBe(formCopy.headings.error);
@@ -306,11 +308,13 @@ describe('ContactDialogProvider', () => {
           '[data-form="error"]',
         );
         expect(errorPanel).toBeNull();
-        const title = document.querySelector(
-          '[data-modal="title"]',
-        ) as HTMLElement | null;
-        expect(title).not.toBeNull();
-        expect(title?.textContent).toBe(formCopy.headings.form);
+        const panel = document.querySelector(
+          '[data-ui="contact-form"]',
+        );
+        expect(panel).not.toBeNull();
+        expect(panel?.textContent ?? '').toContain(
+          formCopy.headings.form,
+        );
       });
     } finally {
       global.fetch = originalFetch;
@@ -366,11 +370,13 @@ describe('ContactDialogProvider', () => {
       ).toBeNull();
       const formPanel = document.querySelector('[data-form="form"]');
       expect(formPanel).not.toBeNull();
-      const title = document.querySelector(
-        '[data-modal="title"]',
-      ) as HTMLElement | null;
-      expect(title).not.toBeNull();
-      expect(title?.textContent).toBe(formCopy.headings.form);
+      const panel = document.querySelector(
+        '[data-ui="contact-form"]',
+      );
+      expect(panel).not.toBeNull();
+      expect(panel?.textContent ?? '').toContain(
+        formCopy.headings.form,
+      );
     });
   });
 
@@ -406,8 +412,8 @@ describe('ContactDialogProvider', () => {
         expect(successPanel).not.toBeNull();
         const formPanel = document.querySelector('[data-form="form"]');
         expect(formPanel).toBeNull();
-        const title = document.querySelector(
-          '[data-modal="title"]',
+        const title = successPanel?.querySelector(
+          '[data-form="state-title"]',
         ) as HTMLElement | null;
         expect(title).not.toBeNull();
         expect(title?.textContent).toBe(formCopy.headings.success);

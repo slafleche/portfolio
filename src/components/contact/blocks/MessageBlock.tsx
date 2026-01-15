@@ -25,11 +25,13 @@ import type {
   ContactFormBlockValidationResult,
 } from '../types/form.types';
 
-
 export type MessageBlockProps = ContactFormBlockBaseProps & {
   id: string;
   order: number;
   copy: MessageBlockLocale;
+  logInputs: boolean;
+  logValidation: boolean;
+  logMessages: boolean;
   helperText?: string | null;
   errorText?: string | null;
   readOnly?: boolean;
@@ -131,6 +133,9 @@ export function MessageBlock({
   id,
   order,
   copy,
+  logInputs,
+  logValidation,
+  logMessages,
   helperText,
   errorText,
   readOnly,
@@ -151,6 +156,7 @@ export function MessageBlock({
     valid: boolean;
     errorCode: MessageErrorCode | null;
   } | null>(null);
+  const hasLoggedInitRef = useRef(false);
   const generatedId = useId();
   const blockId = id ?? generatedId;
   const textareaId = `${blockId}-input`;
@@ -185,41 +191,38 @@ export function MessageBlock({
   );
   const liveValidationRegistration = hasBlurred;
 
-  const registration = useMemo(
-    () => {
-      const baseContract = buildMessageContract(
-        id,
-        value,
-        evaluation,
-        copy,
-      );
-      const contract: ContactFormBlockContract<string> = {
-        ...baseContract,
-        focus: () => {
-          textareaRef.current?.focus();
-        },
-      };
-      return {
-        key: 'message',
-        focus: contract.focus,
-        getValue: () => value,
-        validate: () => contract.validate().valid,
-        getValidationSummary: () => {
-          const error = getMessageError(evaluation, copy);
-          return error ? error.text : null;
-        },
-        liveValidation: liveValidationRegistration,
-        getContract: () => contract,
-      };
-    },
-    [
-      copy,
-      evaluation,
+  const registration = useMemo(() => {
+    const baseContract = buildMessageContract(
       id,
-      liveValidationRegistration,
       value,
-    ],
-  );
+      evaluation,
+      copy,
+    );
+    const contract: ContactFormBlockContract<string> = {
+      ...baseContract,
+      focus: () => {
+        textareaRef.current?.focus();
+      },
+    };
+    return {
+      key: 'message',
+      focus: contract.focus,
+      getValue: () => value,
+      validate: () => contract.validate().valid,
+      getValidationSummary: () => {
+        const error = getMessageError(evaluation, copy);
+        return error ? error.text : null;
+      },
+      liveValidation: liveValidationRegistration,
+      getContract: () => contract,
+    };
+  }, [
+    copy,
+    evaluation,
+    id,
+    liveValidationRegistration,
+    value,
+  ]);
 
   const {
     continuousValidation,
@@ -259,6 +262,34 @@ export function MessageBlock({
     liveValidation && messageError ? messageError.text : null;
 
   useEffect(() => {
+    if (!logInputs || hasLoggedInitRef.current) return;
+    const result = buildMessageValidationResult(id, evaluation, copy);
+    const payload: {
+      value?: string;
+      valid?: boolean;
+      messages?: ContactFormBlockValidationResult['messages'];
+    } = {
+      value,
+    };
+    if (logValidation) {
+      payload.valid = result.valid;
+    }
+    if (logMessages) {
+      payload.messages = result.messages;
+    }
+    console.info('[contact][debug][message][init]', payload);
+    hasLoggedInitRef.current = true;
+  }, [
+    copy,
+    evaluation,
+    id,
+    logInputs,
+    logMessages,
+    logValidation,
+    value,
+  ]);
+
+  useEffect(() => {
     if (!liveValidation) {
       lastValidationStateRef.current = null;
       return;
@@ -280,19 +311,36 @@ export function MessageBlock({
 
     lastValidationStateRef.current = nextState;
 
-    const result = buildMessageValidationResult(
-      id,
-      evaluation,
-      copy,
-    );
+    const result = buildMessageValidationResult(id, evaluation, copy);
+    if (logValidation || logMessages) {
+      const payload: {
+        value?: string;
+        valid?: boolean;
+        messages?: ContactFormBlockValidationResult['messages'];
+      } = {};
+      if (logInputs) {
+        payload.value = value;
+      }
+      if (logValidation) {
+        payload.valid = result.valid;
+      }
+      if (logMessages) {
+        payload.messages = result.messages;
+      }
+      console.info('[contact][debug][message][validation]', payload);
+    }
     recordValidationResult(result);
   }, [
     copy,
     evaluation,
     id,
+    logInputs,
+    logMessages,
+    logValidation,
     liveValidation,
     messageError,
     recordValidationResult,
+    value,
   ]);
 
   const effectiveErrorText = errorText ?? localErrorText;
@@ -312,7 +360,13 @@ export function MessageBlock({
         onChange={(event) => {
           autoResizeHandlers.onInit(event.currentTarget);
           autoResizeHandlers.onSync();
-          setValue(event.currentTarget.value);
+          const nextValue = event.currentTarget.value;
+          setValue(nextValue);
+          if (logInputs) {
+            console.info('[contact][debug][message][change]', {
+              value: nextValue,
+            });
+          }
         }}
         onBlur={() => {
           if (!hasBlurred) {
@@ -333,10 +387,7 @@ export function MessageBlock({
         {effectiveErrorText || helperText || characterHint}
       </FormHint>
       {showLinksHint && linksHint ? (
-        <FormHint
-          tone="helper"
-          id={linksHintId}
-        >
+        <FormHint tone="helper" id={linksHintId}>
           {linksHint}
         </FormHint>
       ) : null}

@@ -1,22 +1,21 @@
-import * as s from '@/styles/components/messageCentre.css';
+import * as style from '@/styles/components/contactForm.loading.css';
 
+import ContactFormSubView from './ContactFormSubView';
 import PulseLoader from './PulseLoader';
 
 type ContactFormLoadingProps = {
-  message: string;
+  title: string;
 };
 
 export default function ContactFormLoading({
-  message,
+  title,
 }: ContactFormLoadingProps) {
   return (
-    <div
-    className={s.pageLoading}
-    role="status" aria-live="polite" data-form="loading">
-      <div className={s.status}>
-        <PulseLoader className={s.loader} />
-        <span className={s.statusText}>{message}</span>
-      </div>
-    </div>
+    <ContactFormSubView
+      title={title}
+      type="loading"
+      Icon={PulseLoader}
+      classNames={style}
+    />
   );
 }

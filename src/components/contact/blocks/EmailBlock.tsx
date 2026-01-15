@@ -20,6 +20,9 @@ import { TextInputBlock } from './TextInputBlock';
 
 export type EmailBlockProps = ContactFormBlockBaseProps & {
   copy: EmailBlockLocale;
+  logInputs: boolean;
+  logValidation: boolean;
+  logMessages: boolean;
   readOnly?: boolean;
   disabled?: boolean;
   maxLength?: number;
@@ -113,6 +116,9 @@ export function EmailBlock({
   disabled,
   maxLength,
   copy,
+  logInputs,
+  logValidation,
+  logMessages,
   initialConfig,
 }: EmailBlockProps) {
   const [
@@ -128,6 +134,7 @@ export function EmailBlock({
     valid: boolean;
     errorCode: EmailErrorCode | null;
   } | null>(null);
+  const hasLoggedInitRef = useRef(false);
   const evaluation = useMemo(
     () => evaluateEmailField(value),
     [
@@ -138,7 +145,13 @@ export function EmailBlock({
   const handleChange: ChangeEventHandler<HTMLInputElement> = (
     event,
   ) => {
-    setValue(event.target.value);
+    const nextValue = event.target.value;
+    setValue(nextValue);
+    if (logInputs) {
+      console.info('[contact][debug][email][change]', {
+        value: nextValue,
+      });
+    }
   };
 
   const liveValidationRegistration = hasBlurred;
@@ -189,6 +202,34 @@ export function EmailBlock({
     liveValidation && emailError ? emailError.text : null;
 
   useEffect(() => {
+    if (!logInputs || hasLoggedInitRef.current) return;
+    const result = buildEmailValidationResult(id, evaluation, copy);
+    const payload: {
+      value?: string;
+      valid?: boolean;
+      messages?: ContactFormBlockValidationResult['messages'];
+    } = {
+      value,
+    };
+    if (logValidation) {
+      payload.valid = result.valid;
+    }
+    if (logMessages) {
+      payload.messages = result.messages;
+    }
+    console.info('[contact][debug][email][init]', payload);
+    hasLoggedInitRef.current = true;
+  }, [
+    copy,
+    evaluation,
+    id,
+    logInputs,
+    logMessages,
+    logValidation,
+    value,
+  ]);
+
+  useEffect(() => {
     if (!liveValidation) {
       lastValidationStateRef.current = null;
       return;
@@ -210,14 +251,35 @@ export function EmailBlock({
 
     lastValidationStateRef.current = nextState;
     const result = buildEmailValidationResult(id, evaluation, copy);
+    if (logValidation || logMessages) {
+      const payload: {
+        value?: string;
+        valid?: boolean;
+        messages?: ContactFormBlockValidationResult['messages'];
+      } = {};
+      if (logInputs) {
+        payload.value = value;
+      }
+      if (logValidation) {
+        payload.valid = result.valid;
+      }
+      if (logMessages) {
+        payload.messages = result.messages;
+      }
+      console.info('[contact][debug][email][validation]', payload);
+    }
     recordValidationResult(result);
   }, [
     copy,
     emailError,
     evaluation,
     id,
+    logInputs,
+    logMessages,
+    logValidation,
     liveValidation,
     recordValidationResult,
+    value,
   ]);
 
   return (

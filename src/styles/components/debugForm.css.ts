@@ -3,17 +3,17 @@ import { m } from 'css-calipers';
 
 import { backgrounds } from '@/styles/helpers/background.helper';
 import { boxShadow } from '@/styles/helpers/shadow.helper';
-import { margins,paddings } from '@/styles/helpers/spacing.helper';
-import { formTokens } from '@/tokens/forms.tokens';
+import { margins, paddings } from '@/styles/helpers/spacing.helper';
+import { formVars } from '@/tokens/forms.tokens';
 import { glassyButtonTokens } from '@/tokens/glassy.tokens';
 
 import borders from '../helpers/borders.helper';
 
-const doubledFieldGap = formTokens.layout.fieldGap.multiply(2);
-const halfFieldGap = formTokens.layout.fieldGap.divide(2);
+const doubledFieldGap = formVars.layout.fieldGap.multiply(2);
+const halfFieldGap = formVars.layout.fieldGap.divide(2);
 
 export const stack = style({
-  maxWidth: formTokens.layout.maxWidth.css(),
+  maxWidth: formVars.layout.maxWidth.css(),
   ...margins({
     vertical: m(0),
     horizontal: 'auto',
@@ -24,26 +24,26 @@ export const stack = style({
 });
 
 export const block = style({
-  ...borders(formTokens.field.borders),
+  ...borders(formVars.field.borders),
   ...paddings(doubledFieldGap),
-  ...backgrounds(formTokens.field.backgrounds),
+  ...backgrounds(formVars.field.backgrounds),
   ...boxShadow({
     x: m(0),
     y: m(40),
     blur: m(140),
-    color: formTokens.field.backgrounds.color,
+    color: formVars.field.backgrounds.color,
     alpha: 0.35,
   }),
   display: 'flex',
   flexDirection: 'column',
-  gap: formTokens.layout.fieldGap.css(),
+  gap: formVars.layout.fieldGap.css(),
 });
 
 export const eyebrow = style({
   textTransform: 'uppercase',
   letterSpacing: 2,
   fontSize: 12,
-  color: formTokens.label.text.color.css(),
+  color: formVars.label.text.color.css(),
   margin: 0,
 });
 
@@ -54,7 +54,7 @@ export const title = style({
     bottom: m(4),
   }),
   fontSize: 20,
-  color: formTokens.field.text.color.css(),
+  color: formVars.field.text.color.css(),
 });
 
 export const list = style({
@@ -63,7 +63,7 @@ export const list = style({
   padding: 0,
   display: 'flex',
   flexDirection: 'column',
-  gap: formTokens.layout.fieldGap.css(),
+  gap: formVars.layout.fieldGap.css(),
 });
 
 export const helperText = style({
@@ -73,28 +73,28 @@ export const helperText = style({
     bottom: m(0),
   }),
   fontSize: 14,
-  color: formTokens.counter.text.color.css(),
+  color: formVars.counter.text.color.css(),
   lineHeight: 1.5,
 });
 
 export const ctaList = style({
   display: 'flex',
   flexDirection: 'column',
-  gap: formTokens.layout.fieldGap.css(),
+  gap: formVars.layout.fieldGap.css(),
 });
 
 export const ctaRow = style({
-  ...borders(formTokens.field.borders),
-  ...paddings(formTokens.layout.fieldGap),
-  ...backgrounds(formTokens.field.backgrounds),
+  ...borders(formVars.field.borders),
+  ...paddings(formVars.layout.fieldGap),
+  ...backgrounds(formVars.field.backgrounds),
   display: 'flex',
   flexDirection: 'column',
   gap: '8px',
 });
 
 export const ctaButton = style({
-  minHeight: formTokens.button.minHeight.css(),
-  ...paddings(formTokens.button.paddings ),
+  minHeight: formVars.button.minHeight.css(),
+  ...paddings(formVars.button.paddings),
   ...borders(glassyButtonTokens.borders),
   ...backgrounds(glassyButtonTokens.backgrounds),
   color: glassyButtonTokens.text.color.css(),
@@ -131,5 +131,5 @@ export const accentListItem = style({
       color: 'currentColor',
     },
   }),
-  paddingLeft: formTokens.layout.fieldGap.css(),
+  paddingLeft: formVars.layout.fieldGap.css(),
 });

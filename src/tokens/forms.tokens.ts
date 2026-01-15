@@ -2,17 +2,24 @@ import { m } from 'css-calipers';
 
 import { colorVars, themeColours } from '@/tokens/global.tokens';
 
+import { glassyButtonTokens } from './glassy.tokens';
 import { layoutVars } from './layout.tokens';
 
-// import { relativeFontWeight } from '../styles/helpers/typography.helper';
-// import { fontFamilies } from './fontFamilies.tokens';
+const closeOffset = m(16);
+const contactFormHeaderHeight = glassyButtonTokens.size.add(
+  closeOffset.double(),
+);
 
-export const formTokens = {
+export const formVars = {
+  header: {
+    height: contactFormHeaderHeight,
+    closeOffset: closeOffset,
+  },
   textarea: {
     minHeight: m(250),
     compact: {
       minHeight: m(150),
-    }
+    },
   },
   label: {
     text: {
@@ -89,6 +96,9 @@ export const formTokens = {
   },
   status: {
     success: {
+      icon: {
+        color: colorVars.brand,
+      },
       backgrounds: {
         color: colorVars.brand.alpha(0.16),
       },
@@ -97,6 +107,9 @@ export const formTokens = {
       },
     },
     error: {
+      icon: {
+        color: colorVars.gradientA_secondary_middle,
+      },
       backgrounds: {
         color: colorVars.gradientA_secondary_middle.alpha(0.18),
       },
@@ -104,12 +117,15 @@ export const formTokens = {
         color: colorVars.gradientA_secondary_end.alpha(0.55),
       },
     },
-    generic: {
+    loading: {
+      icon: {
+        // color: colors.white,
+      },
       backgrounds: {
-        // color: colorVars.shadow.alpha(0.3),
+        // color: colorVars.gradientA_secondary_middle.alpha(0.18),
       },
       borders: {
-        color: colorVars.gradientA_secondary_end.alpha(0.35),
+        // color: colorVars.gradientA_secondary_end.alpha(0.55),
       },
     },
   },
@@ -144,4 +160,4 @@ export const formTokens = {
   },
 } as const;
 
-export type FormTokens = typeof formTokens;
+export type FormTokens = typeof formVars;

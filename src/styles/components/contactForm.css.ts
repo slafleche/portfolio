@@ -3,6 +3,7 @@ import { m, mPercent } from 'css-calipers';
 
 import { fontFamilies } from '../../tokens/fontFamilies.tokens';
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
+import { formVars } from '../../tokens/forms.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import {
   colors,
@@ -16,7 +17,10 @@ import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
-import { fullSizeOfParent } from '../helpers/positioning.helper';
+import {
+  absolutePosition,
+  fullSizeOfParent,
+} from '../helpers/positioning.helper';
 import { boxShadow, textShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
@@ -25,11 +29,6 @@ import {
 } from '../helpers/typography.helper';
 import * as l from '../layout.css';
 import { roundRadius } from './contactButton.vars';
-
-const closeOffset = m(16);
-const headerStackHeight = glassyButtonTokens.size.add(
-  closeOffset.double(),
-);
 
 const sheenSweep = keyframes({
   '0%': {
@@ -134,9 +133,9 @@ export const header = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: headerStackHeight.css(),
-  paddingLeft: closeOffset.css(),
-  paddingRight: closeOffset.css(),
+  height: formVars.header.height.css(),
+  paddingLeft: formVars.header.closeOffset.css(),
+  paddingRight: formVars.header.closeOffset.css(),
   ...textShadow({
     x: m(1),
     y: m(1),
@@ -211,7 +210,7 @@ export const scrollArea = style({
 
 export const closeButtonWrap = style({
   position: 'absolute',
-  right: closeOffset.css(),
+  right: formVars.header.closeOffset.css(),
   top: '50%',
   transform: 'translateY(-50%)',
   display: 'flex',
@@ -312,3 +311,26 @@ export const bgImage = style({
   objectFit: 'cover',
   mixBlendMode: 'screen',
 });
+
+// Status page
+
+export const statusFullPage = style({
+  ...absolutePosition.fullSize(),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: [
+    '100vh',
+    '100dvh',
+  ],
+  ...paddings({
+    vertical: formVars.header.height,
+  }),
+});
+
+export const statusMain = style({});
+
+export const statusHeading = style({});
+
+export const statusIconWrap = style({});

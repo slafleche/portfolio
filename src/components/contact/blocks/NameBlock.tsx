@@ -18,6 +18,9 @@ import { TextInputBlock } from './TextInputBlock';
 
 export type NameBlockProps = ContactFormBlockBaseProps & {
   copy: NameBlockLocale;
+  logInputs: boolean;
+  logValidation: boolean;
+  logMessages: boolean;
   maxLength?: number;
   minLength?: number;
   onFocusBefore?: () => void;
@@ -116,6 +119,9 @@ export function NameBlock({
   maxLength,
   minLength,
   copy,
+  logInputs,
+  logValidation,
+  logMessages,
   initialConfig,
 }: NameBlockProps) {
   const [
@@ -131,6 +137,7 @@ export function NameBlock({
     valid: boolean;
     errorCode: NameErrorCode | null;
   } | null>(null);
+  const hasLoggedInitRef = useRef(false);
 
   const evaluation = useMemo(
     () => evaluateNameField(value),
@@ -142,7 +149,13 @@ export function NameBlock({
   const handleChange: ChangeEventHandler<HTMLInputElement> = (
     event,
   ) => {
-    setValue(event.target.value);
+    const nextValue = event.target.value;
+    setValue(nextValue);
+    if (logInputs) {
+      console.info('[contact][debug][name][change]', {
+        value: nextValue,
+      });
+    }
   };
 
   const liveValidationRegistration = hasBlurred;
@@ -195,6 +208,34 @@ export function NameBlock({
     liveValidation && nameError ? nameError.text : null;
 
   useEffect(() => {
+    if (!logInputs || hasLoggedInitRef.current) return;
+    const result = buildNameValidationResult(id, evaluation, copy);
+    const payload: {
+      value?: string;
+      valid?: boolean;
+      messages?: ContactFormBlockValidationResult['messages'];
+    } = {
+      value,
+    };
+    if (logValidation) {
+      payload.valid = result.valid;
+    }
+    if (logMessages) {
+      payload.messages = result.messages;
+    }
+    console.info('[contact][debug][name][init]', payload);
+    hasLoggedInitRef.current = true;
+  }, [
+    copy,
+    evaluation,
+    id,
+    logInputs,
+    logMessages,
+    logValidation,
+    value,
+  ]);
+
+  useEffect(() => {
     if (!liveValidation) {
       lastValidationStateRef.current = null;
       return;
@@ -216,14 +257,35 @@ export function NameBlock({
 
     lastValidationStateRef.current = nextState;
     const result = buildNameValidationResult(id, evaluation, copy);
+    if (logValidation || logMessages) {
+      const payload: {
+        value?: string;
+        valid?: boolean;
+        messages?: ContactFormBlockValidationResult['messages'];
+      } = {};
+      if (logInputs) {
+        payload.value = value;
+      }
+      if (logValidation) {
+        payload.valid = result.valid;
+      }
+      if (logMessages) {
+        payload.messages = result.messages;
+      }
+      console.info('[contact][debug][name][validation]', payload);
+    }
     recordValidationResult(result);
   }, [
     copy,
     evaluation,
     id,
+    logInputs,
+    logMessages,
+    logValidation,
     liveValidation,
     nameError,
     recordValidationResult,
+    value,
   ]);
 
   return (

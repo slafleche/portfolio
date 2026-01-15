@@ -229,7 +229,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         expect(inlineRegion).toBeNull();
 
         const messageCentreRegion = container.querySelector(
-          '[role="status"]:not([aria-atomic])',
+          '[data-form="messages"]',
         );
         expect(messageCentreRegion).toBeNull();
       });

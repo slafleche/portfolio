@@ -1,11 +1,7 @@
-import {
-  type ComplexStyleRule,
-  globalStyle,
-  style,
-} from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 
-import { formTokens } from '../../tokens/forms.tokens';
+import { formVars } from '../../tokens/forms.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import { colors, colorVars } from '../../tokens/global.tokens';
 import { backgrounds } from '../helpers/background.helper';
@@ -28,7 +24,9 @@ export const root = style({
     color: colorVars.white.alpha(0.3),
     radius: m(15),
   }),
-  background: colors.white.alpha(0.05).css(),
+  ...backgrounds({
+    color: colors.white.alpha(0.05),
+  }),
   ...textShadow({
     x: m(1),
     y: m(1),
@@ -66,27 +64,6 @@ export const statusWrapper = style({
   width: '100%',
 });
 
-export const success = style([
-  {
-    ...backgrounds(formTokens.status.success.backgrounds),
-    ...borders(formTokens.status.success.borders),
-  },
-]);
-
-export const error = style([
-  {
-    ...backgrounds(formTokens.status.error.backgrounds),
-    ...borders(formTokens.status.error.borders),
-  },
-]);
-
-export const info = style([
-  {
-    ...backgrounds(formTokens.status.generic.backgrounds),
-    ...borders(formTokens.status.generic.borders),
-  },
-]);
-
 export const title = style({
   flex: 1,
   margin: 0,
@@ -116,50 +93,10 @@ export const viewport = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-end',
-  gap: formTokens.layout.fieldGap.css(),
+  gap: formVars.layout.fieldGap.css(),
   zIndex: 1300,
   pointerEvents: 'none',
   outline: 'none',
-});
-
-const statusBase: ComplexStyleRule = {};
-
-export const status = style(statusBase);
-
-export const pageLoading = style({
-  minHeight: [
-    '100vh',
-    '100dvh',
-  ],
-});
-
-export const statusSuccess = style([
-  statusBase,
-  {
-    ...backgrounds(formTokens.status.success.backgrounds),
-    ...borders(formTokens.status.success.borders),
-  },
-]);
-
-export const statusError = style([
-  statusBase,
-  {
-    ...backgrounds(formTokens.status.error.backgrounds),
-    ...borders(formTokens.status.error.borders),
-  },
-]);
-
-export const statusGeneric = style([
-  statusBase,
-  {
-    ...backgrounds(formTokens.status.generic.backgrounds),
-    ...borders(formTokens.status.generic.borders),
-  },
-]);
-
-export const loader = style({
-  width: '100px',
-  height: 'auto',
 });
 
 export const statusText = style({
@@ -174,6 +111,8 @@ export const statusText = style({
     },
   },
 });
+
+export const status = style({});
 
 globalStyle(`.${statusText} + .${statusText}`, {
   ...margins({

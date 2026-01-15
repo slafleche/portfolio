@@ -25,6 +25,9 @@ export type TurnstileBlockProps = Omit<
   'required'
 > & {
   copy: TurnstileBlockLocale;
+  logInputs: boolean;
+  logValidation: boolean;
+  logMessages: boolean;
   turnstileSiteKey: string | null;
 };
 
@@ -160,6 +163,9 @@ export function TurnstileBlock({
   order,
   disabled,
   copy,
+  logInputs,
+  logValidation,
+  logMessages,
   turnstileSiteKey,
 }: TurnstileBlockProps) {
   const hasTurnstileConfig = Boolean(turnstileSiteKey);
@@ -186,6 +192,7 @@ export function TurnstileBlock({
     valid: boolean;
     code: string | null;
   } | null>(null);
+  const hasLoggedInitRef = useRef(false);
 
   const shouldRenderTurnstileWidget =
     hasTurnstileConfig || hasInlineTurnstile;
@@ -230,6 +237,53 @@ export function TurnstileBlock({
   ]);
 
   useEffect(() => {
+    if (!logInputs || hasLoggedInitRef.current) return;
+    const result = buildTurnstileValidationResult(
+      id,
+      status,
+      copy,
+      token,
+    );
+    const payload: {
+      status?: TurnstileState;
+      hasToken?: boolean;
+      valid?: boolean;
+      messages?: ContactFormBlockValidationResult['messages'];
+    } = {
+      status,
+      hasToken: token.trim().length > 0,
+    };
+    if (logValidation) {
+      payload.valid = result.valid;
+    }
+    if (logMessages) {
+      payload.messages = result.messages;
+    }
+    console.info('[contact][debug][turnstile][init]', payload);
+    hasLoggedInitRef.current = true;
+  }, [
+    copy,
+    id,
+    logInputs,
+    logMessages,
+    logValidation,
+    status,
+    token,
+  ]);
+
+  useEffect(() => {
+    if (!logInputs) return;
+    console.info('[contact][debug][turnstile][change]', {
+      status,
+      hasToken: token.trim().length > 0,
+    });
+  }, [
+    logInputs,
+    status,
+    token,
+  ]);
+
+  useEffect(() => {
     if (!continuousValidation) {
       lastValidationStateRef.current = null;
       return;
@@ -257,11 +311,31 @@ export function TurnstileBlock({
     }
 
     lastValidationStateRef.current = nextState;
+    if (logValidation || logMessages) {
+      const payload: {
+        status?: TurnstileState;
+        hasToken?: boolean;
+        valid?: boolean;
+        messages?: ContactFormBlockValidationResult['messages'];
+      } = {
+        status,
+        hasToken: token.trim().length > 0,
+      };
+      if (logValidation) {
+        payload.valid = result.valid;
+      }
+      if (logMessages) {
+        payload.messages = result.messages;
+      }
+      console.info('[contact][debug][turnstile][validation]', payload);
+    }
     recordValidationResult(result);
   }, [
     continuousValidation,
     copy,
     id,
+    logMessages,
+    logValidation,
     recordValidationResult,
     status,
     token,

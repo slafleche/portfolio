@@ -437,6 +437,7 @@ export function ContactDialogProvider({
   );
 
   const effectiveTitleKey = resolveTitleKey(titleKey);
+  const showHeaderTitle = effectiveTitleKey === 'form';
   const dialogTitle = resolveDialogTitle(formCopy, effectiveTitleKey);
 
   const titleContextValue = useMemo(
@@ -473,12 +474,14 @@ export function ContactDialogProvider({
                   data-query="no-margin"
                 >
                   <div data-ui="form-header" className={dialogStyles.header}>
-                    <Dialog.Title
-                      className={dialogStyles.heading}
-                      data-modal="title"
-                    >
-                      {dialogTitle}
-                    </Dialog.Title>
+                    {showHeaderTitle ? (
+                      <Dialog.Title
+                        className={dialogStyles.heading}
+                        data-modal="title"
+                      >
+                        {dialogTitle}
+                      </Dialog.Title>
+                    ) : null}
                     <div className={dialogStyles.closeButtonWrap}>
                       <Dialog.Close asChild>
                         <CloseButton
@@ -491,9 +494,11 @@ export function ContactDialogProvider({
                       </Dialog.Close>
                     </div>
                   </div>
-                  <Dialog.Description asChild>
-                    <p data-visible="sc-only">{dialogTitle}</p>
-                  </Dialog.Description>
+                  {showHeaderTitle ? (
+                    <Dialog.Description asChild>
+                      <p data-visible="sc-only">{dialogTitle}</p>
+                    </Dialog.Description>
+                  ) : null}
                   <div className={dialogStyles.scrollArea}>
                     <ContactDialogTitleContext.Provider
                       value={titleContextValue}

@@ -34,54 +34,46 @@ export type ContactFormBlockContract<Value> = {
 
 export type ContactFormBlockInitialConfig<Value> = {
   /**
-   * Initial data for a block, mirroring the value stored in its payload.
-   * For simple fields this is typically a string; for richer blocks it can
-   * be an object containing multiple related values.
+   * Initial data for a block, mirroring the value stored in its
+   * payload. For simple fields this is typically a string; for richer
+   * blocks it can be an object containing multiple related values.
    */
   initialData?: Value;
   /**
-   * When true, the block should run its validation logic on mount using
-   * the initial data, so any relevant errors are visible without user
-   * interaction.
+   * When true, the block should run its validation logic on mount
+   * using the initial data, so any relevant errors are visible
+   * without user interaction.
    */
   validateOnMount?: boolean;
 };
 
 export type ContactFormBlockInitialValues = {
-  /**
-   * Initial configuration for the Name block.
-   */
+  /** Initial configuration for the Name block. */
   name?: ContactFormBlockInitialConfig<string>;
-  /**
-   * Initial configuration for the Email block.
-   */
+  /** Initial configuration for the Email block. */
   email?: ContactFormBlockInitialConfig<string>;
-  /**
-   * Initial configuration for the Message block.
-   */
+  /** Initial configuration for the Message block. */
   message?: ContactFormBlockInitialConfig<string>;
   /**
    * Initial configuration for the Turnstile block.
    *
-   * For now this mirrors the token payload shape; it can be
-   * widened later if the block stores richer data.
+   * For now this mirrors the token payload shape; it can be widened
+   * later if the block stores richer data.
    */
   turnstile?: ContactFormBlockInitialConfig<string>;
-  /**
-   * Initial configuration for the honeypot field.
-   */
+  /** Initial configuration for the honeypot field. */
   honeypot?: ContactFormBlockInitialConfig<string>;
   /**
-   * Optional initial flow-level state for the form itself.
-   * These values are intended only for first-render seeding
-   * (for example, styling scenarios) and must not be treated
-   * as live overrides once the internal state has changed.
+   * Optional initial flow-level state for the form itself. These
+   * values are intended only for first-render seeding (for example,
+   * styling scenarios) and must not be treated as live overrides once
+   * the internal state has changed.
    */
   form?: {
     server?: {
       /**
-       * Initial server-style submit status to surface in the
-       * message centre (success, validation_error, rate_limited,
+       * Initial server-style submit status to surface in the message
+       * centre (success, validation_error, rate_limited,
        * service_unavailable, not_configured, blocked, etc.).
        */
       submitStatus?: FormServerResponseCode;
@@ -96,6 +88,12 @@ export type ContactFormBlockInitialValues = {
 
 export type ContactFormDebugFieldState = {
   disabled: boolean;
+};
+
+export type ContactFormDebugMode = {
+  logInputs?: boolean;
+  logValidation?: boolean;
+  logMessages?: boolean;
 };
 
 export type ContactFormProps = {
@@ -115,6 +113,7 @@ export type ContactFormProps = {
    * rather than reading env vars directly in components.
    */
   turnstileSiteKey?: string | null;
+  debugMode?: ContactFormDebugMode;
   onOpenPrivacy?: () => void;
 };
 

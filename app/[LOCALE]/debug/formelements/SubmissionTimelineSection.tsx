@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { backgrounds } from '@/styles/helpers/background.helper';
 import { boxShadow } from '@/styles/helpers/shadow.helper';
 import { margins, paddings } from '@/styles/helpers/spacing.helper';
-import { formTokens } from '@/tokens/forms.tokens';
+import { formVars } from '@/tokens/forms.tokens';
 import { glassyButtonTokens } from '@/tokens/glassy.tokens';
 
 import borders from '../../../../src/styles/helpers/borders.helper';
@@ -64,14 +64,14 @@ export type TimelineTelemetryDescriptor = {
 };
 
 const stackStyle: CSSProperties = {
-  maxWidth: formTokens.layout.maxWidth.css(),
+  maxWidth: formVars.layout.maxWidth.css(),
   ...margins({
     vertical: m(0),
     horizontal: 'auto',
   }),
   display: 'flex',
   flexDirection: 'column',
-  gap: formTokens.layout.fieldGap.multiply(2).css(),
+  gap: formVars.layout.fieldGap.multiply(2).css(),
 };
 
 const blockStyle: CSSProperties = {
@@ -88,14 +88,14 @@ const blockStyle: CSSProperties = {
   }),
   display: 'flex',
   flexDirection: 'column',
-  gap: formTokens.layout.fieldGap.css(),
+  gap: formVars.layout.fieldGap.css(),
 };
 
 const eyebrowStyle: CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: 2,
   fontSize: 12,
-  color: formTokens.label.text.color.css(),
+  color: formVars.label.text.color.css(),
   margin: 0,
 };
 
@@ -106,7 +106,7 @@ const titleStyle: CSSProperties = {
     bottom: m(4),
   }),
   fontSize: 20,
-  color: formTokens.field.text.color.css(),
+  color: formVars.field.text.color.css(),
 };
 
 const listStyle: CSSProperties = {
@@ -115,7 +115,7 @@ const listStyle: CSSProperties = {
   padding: 0,
   display: 'flex',
   flexDirection: 'column',
-  gap: formTokens.layout.fieldGap.css(),
+  gap: formVars.layout.fieldGap.css(),
 };
 
 const helperTextStyle: CSSProperties = {
@@ -125,7 +125,7 @@ const helperTextStyle: CSSProperties = {
     bottom: m(0),
   }),
   fontSize: 14,
-  color: formTokens.counter.text.color.css(),
+  color: formVars.counter.text.color.css(),
   lineHeight: 1.5,
 };
 
@@ -135,7 +135,7 @@ const accentListItemStyle: CSSProperties = {
   gap: 8,
   borderLeftWidth: 4,
   borderLeftStyle: 'solid',
-  paddingLeft: formTokens.layout.fieldGap.css(),
+  paddingLeft: formVars.layout.fieldGap.css(),
 };
 
 const codeStyle: CSSProperties = {
@@ -293,7 +293,7 @@ export default function SubmissionTimelineSection({
                     fontSize: 12,
                     textTransform: 'uppercase',
                     letterSpacing: 1,
-                    color: formTokens.label.text.color.css(),
+                    color: formVars.label.text.color.css(),
                   }}
                 >
                   Step {index + 1}

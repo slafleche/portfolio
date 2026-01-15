@@ -30,7 +30,7 @@ export const renderMessageCentre = (
 
   const querymessageCentreRegion = () => {
     const messageCentreRegion = renderResult.container.querySelector(
-      '[role="status"]:not([aria-atomic])',
+      '[data-mc="centre"]',
     );
     return messageCentreRegion as HTMLElement | null;
   };

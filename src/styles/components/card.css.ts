@@ -12,7 +12,6 @@ import { absolutePosition } from '../helpers/positioning.helper';
 import { globalDropShadowFilter } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import wordMarkMeta from '../helpers/wordmark.helper';
-import type { CompactOnly } from '../responsive';
 import {
   componentMediaQueries,
   globalComponentMediaQueryStyle,
