@@ -398,14 +398,6 @@ function ContactFormInner({
     isSubmittingForUi,
   ]);
 
-  if (showLoading) {
-    return (
-      <ContactFormLoading
-        title={copy.blocks.messageCentre.statuses.sending}
-      />
-    );
-  }
-
   return (
     <form
       ref={formRef}
@@ -463,9 +455,16 @@ function ContactFormInner({
         void flow.handleSubmit(event);
       }}
     >
+      {showLoading ? (
+        <ContactFormLoading
+          title={copy.blocks.messageCentre.statuses.sending}
+        />
+      ) : null}
       <fieldset
         className={s.fieldset}
         disabled={disableFields}
+        hidden={showLoading}
+        aria-hidden={showLoading || undefined}
       >
         <MessageCentreBlock messages={messagesForUi} />
         <NameBlock
