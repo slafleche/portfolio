@@ -100,7 +100,10 @@ function requireBasicAuth(request: NextRequest): NextResponse | null {
   if (
     pathname === '/favicon.ico' ||
     pathname === '/favicon.png' ||
-    pathname === '/apple-touch-icon.png'
+    pathname === '/apple-touch-icon.png' ||
+    pathname === '/manifest.webmanifest' ||
+    pathname.endsWith('.webmanifest') ||
+    pathname.startsWith('/favicons/')
   ) {
     return null;
   }
@@ -141,6 +144,10 @@ function requireBasicAuth(request: NextRequest): NextResponse | null {
 }
 
 export function proxy(request: NextRequest) {
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, { status: 204 });
+  }
+
   const authResponse = requireBasicAuth(request);
   if (authResponse) {
     return authResponse;
