@@ -2,7 +2,11 @@ import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { notRelease } from './envPrimitives.mjs';
+import {
+  getNodeEnv,
+  getPublicMeasurementDebug,
+  notRelease,
+} from './envPrimitives.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,11 +19,19 @@ const vanillaDebugTest = /\.css\.(ts|tsx|js|jsx|mjs|mts|cts)$/;
 
 const withVanillaExtract = createVanillaExtractPlugin();
 
+const getPublicVercelEnv = () => {
+  const env = getNodeEnv();
+  if (env === 'release') return 'production';
+  if (env === 'staging') return 'preview';
+  return 'development';
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
+    NEXT_PUBLIC_VERCEL_ENV: getPublicVercelEnv(),
     NEXT_PUBLIC_MEASUREMENT_DEBUG:
-      process.env.NEXT_PUBLIC_MEASUREMENT_DEBUG ??
+      getPublicMeasurementDebug() ??
       (notRelease() ? '1' : '0'),
   },
   devIndicators: {

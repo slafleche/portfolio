@@ -219,41 +219,6 @@ export const themeColours = {
   },
 };
 
-// export const gradientFull = {
-// 	overlayA: gradients.b_spot_a,
-// 	overlayB: gradients.b_spot_b,
-// 	linear: [
-// 		gradients.b_linear_a,
-// 		gradients.b_linear_b,
-// 		gradients.b_linear_c,
-// 	] as [ColorWrapper, ColorWrapper, ColorWrapper],
-// };
-
-// export const gradientA = {
-// 	overlayA: gradients.gradients,
-// 	overlayB: gradients.base_b,
-// 	linear: as[(ColorWrapper, ColorWrapper)],
-// };
-
-// export const gradientB = {
-// 	overlayA: gradients.b_spot_a,
-// 	overlayB: gradients.b_spot_b,
-// 	linear: [
-// 		gradients.b_linear_a,
-// 		gradients.b_linear_b,
-// 		gradients.b_linear_c,
-// 	] as [ColorWrapper, ColorWrapper, ColorWrapper],
-// };
-
-// var gradientBlues = {
-
-//   #5A2D92 0%,   /* deep violet */
-//   #5A8CC7 45%,  /* blue */
-//   #5ECCE5 75%,  /* cyan */
-//   #63E3F0 90%,  /* aqua highlight */
-//   #7C73A0 100%  /* muted violet tail */
-// }
-
 // Meant to easily overwrite the defaults with theming
 // Note the goal isn't for the new theme to use exactly the same calculations
 // for the shadows or anything else, the goal is to write a custom .ts file
@@ -271,6 +236,7 @@ export const colors = {
   brand: color('#5b4199'),
   contrast: color('#88dbfc'),
   successAccent: color('#34d399'),
+  errorAccent: color('#e1c018'),
   // Nav
   // navBg: color('#252136'),
   navFg: baseColours.fg,
@@ -311,6 +277,7 @@ export const colorVars = {
   brand: colors.brand,
   contrast: colors.contrast,
   successAccent: colors.successAccent,
+  errorAccent: colors.errorAccent,
   // Nav
   navFg: colors.navFg,
   navBg: colors.shadow,

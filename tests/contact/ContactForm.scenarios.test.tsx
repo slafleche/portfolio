@@ -87,11 +87,13 @@ describe('ContactForm dev scenarios — URL-driven visual states', () => {
     expect(loadingPanel).toBeNull();
     expect(errorPanel).toBeNull();
 
-    const title = document.querySelector(
-      '[data-modal="title"]',
-    ) as HTMLElement | null;
-    expect(title).not.toBeNull();
-    expect(title?.textContent).toBe(formCopy.headings.form);
+    const panel = document.querySelector(
+      '[data-ui="contact-form"]',
+    );
+    expect(panel).not.toBeNull();
+    expect(panel?.textContent ?? '').toContain(
+      formCopy.headings.form,
+    );
 
     const text = document.body.textContent ?? '';
     expect(text).toContain(statusMessages.generic);

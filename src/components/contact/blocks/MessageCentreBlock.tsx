@@ -53,7 +53,12 @@ export const MessageCentreBlock = forwardRef<
   const isEmpty = !globalMessage && inlineMessages.length === 0;
 
   const globalMessageContainer = (
-    <div className={s.main} role="status" aria-live="polite">
+    <div
+      className={s.main}
+      role="status"
+      aria-live="polite"
+      data-mc="centre"
+    >
       <span className={s.title}>
         {renderInlineMarkdown(
           globalMessage || '',

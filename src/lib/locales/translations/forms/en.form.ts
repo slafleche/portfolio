@@ -28,7 +28,7 @@ export const enFormCopy = {
   'form-error-message-too_many_links':
     'Please remove extra links (maximum {limit} links).',
   'form-error-token-missing': "Please confirm you're not a bot.",
-  'form-status-sending': 'Sending your message…',
+  'form-status-sending': 'Sending message…',
   'form-status-success': 'Message sent!',
   'form-status-generic_error':
     "We couldn't send your message right now. Please try again.",

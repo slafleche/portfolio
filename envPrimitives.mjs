@@ -5,9 +5,20 @@
 // safe for both Node and browser bundles, so it only relies on the global
 // process.env and avoids node-specific imports.
 
-function getNodeEnv() {
+export function getNodeEnv() {
   if (typeof process === 'undefined' || !process.env) {
     return 'development';
+  }
+
+  const publicVercelEnv = process.env.NEXT_PUBLIC_VERCEL_ENV;
+  if (publicVercelEnv) {
+    if (publicVercelEnv === 'production') {
+      return 'release';
+    } else if (publicVercelEnv === 'preview') {
+      return 'staging';
+    } else if (publicVercelEnv === 'development') {
+      return 'development';
+    }
   }
 
   if (process.env.VERCEL && process.env.VERCEL.toString() === '1') {
@@ -43,4 +54,11 @@ export function isDev() {
 
 export function notDev() {
   return !isDev();
+}
+
+export function getPublicMeasurementDebug() {
+  if (typeof process === 'undefined' || !process.env) {
+    return undefined;
+  }
+  return process.env.NEXT_PUBLIC_MEASUREMENT_DEBUG ?? undefined;
 }

@@ -11,6 +11,8 @@ const enBaseData = {
   title: "Front-End Developer | Stéphane's Developer Portfolio",
   description:
     'Front‑end developer Stéphane builds UI systems, reusable components, and accessible interfaces that keep design and engineering aligned over time',
+  'not_found-title': '404 This page can not be found',
+  'not_found-back': 'Back to home',
 
   'menu-skip_nav': 'Skip to content',
   'menu-left_label': 'About Me',

@@ -1,10 +1,9 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
-import { formTokens } from '@/tokens/forms.tokens';
+import { formVars } from '@/tokens/forms.tokens';
 
 import { formFontVariants } from '../../tokens/fontVariants/forms';
-import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import {
   glassyButtonCupped,
   glassyButtonTokens,
@@ -31,7 +30,7 @@ import {
 
 export const form = style({
   display: 'grid',
-  gap: formTokens.layout.sectionGap.css(),
+  gap: formVars.layout.sectionGap.css(),
   ...paddings({
     top: m(70),
     bottom: layoutVars.content.gap,
@@ -51,7 +50,10 @@ export const form = style({
   selectors: {
     ...mediaQueryStyle({
       compact: {
-        minHeight: ['100vh', '100dvh'],
+        minHeight: [
+          '100vh',
+          '100dvh',
+        ],
       },
     }),
   },
@@ -77,7 +79,7 @@ export const fieldset = style({
   ...margins(m(0)),
   ...paddings(m(0)),
   display: 'grid',
-  gap: formTokens.layout.fieldGap.css(),
+  gap: formVars.layout.fieldGap.css(),
 });
 
 export const legend = style({
@@ -129,20 +131,20 @@ export const required = style({
 
 export const input = style({
   width: '100%',
-  ...paddings(formTokens.field.paddings),
-  ...borders(formTokens.field.borders),
-  ...backgrounds(formTokens.field.backgrounds),
+  ...paddings(formVars.field.paddings),
+  ...borders(formVars.field.borders),
+  ...backgrounds(formVars.field.backgrounds),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.input,
   }),
   ...relativeFontWeight(formFontVariants.input, mPercent(40)),
-  color: formTokens.field.text.color.css(),
+  color: formVars.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
   boxSizing: 'border-box',
   selectors: {
     '&::placeholder': {
-      color: formTokens.field.placeholder.color.css(),
+      color: formVars.field.placeholder.color.css(),
       opacity: 1,
     },
     '&:hover, &[data-debug="hover"]': {
@@ -152,7 +154,7 @@ export const input = style({
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.hover.borders, {
+        ...borders(formVars.field.hover.borders, {
           skipDefaults: true,
         }),
         //   ...borders(formTokens.field.focusVisible.borders, {
@@ -165,7 +167,7 @@ export const input = style({
       cursor: 'not-allowed',
     },
     '&[data-error="true"]': {
-      ...borders(formTokens.field.error.borders, {
+      ...borders(formVars.field.error.borders, {
         skipDefaults: true,
       }),
     },
@@ -174,24 +176,24 @@ export const input = style({
 
 export const textarea = style({
   width: '100%',
-  ...paddings(formTokens.field.paddings),
-  ...borders(formTokens.field.borders),
-  ...backgrounds(formTokens.field.backgrounds),
+  ...paddings(formVars.field.paddings),
+  ...borders(formVars.field.borders),
+  ...backgrounds(formVars.field.backgrounds),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.input,
   }),
-  color: formTokens.field.text.color.css(),
+  color: formVars.field.text.color.css(),
   transition: 'border-color 160ms ease, box-shadow 160ms ease',
   outline: 'none',
   font: 'inherit',
   boxSizing: 'border-box',
-  minHeight: formTokens.textarea.minHeight.css(),
+  minHeight: formVars.textarea.minHeight.css(),
   resize: 'none',
   overflowY: 'hidden',
 
   selectors: {
     '&::placeholder': {
-      color: formTokens.field.placeholder.color.css(),
+      color: formVars.field.placeholder.color.css(),
       opacity: 1,
     },
     '&:hover, &[data-debug="hover"]': {
@@ -201,7 +203,7 @@ export const textarea = style({
     },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
-        ...borders(formTokens.field.hover.borders, {
+        ...borders(formVars.field.hover.borders, {
           skipDefaults: true,
         }),
         // ...boxShadow(formTokens.field.focusVisible.shadow),
@@ -211,18 +213,18 @@ export const textarea = style({
       cursor: 'not-allowed',
     },
     '&[data-error="true"]': {
-      color: formTokens.field.error.text.color.css(),
+      color: formVars.field.error.text.color.css(),
     },
     ...mediaQueryStyle({
       compact: {
-        minHeight: formTokens.textarea.compact.minHeight.css(),
+        minHeight: formVars.textarea.compact.minHeight.css(),
       },
     }),
   },
 });
 
 export const errorText = style({
-  color: formTokens.field.error.text.color.css(),
+  color: formVars.field.error.text.color.css(),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.hints,
   }),
@@ -230,7 +232,7 @@ export const errorText = style({
 });
 
 export const counter = style({
-  color: formTokens.counter.text.color.css(),
+  color: formVars.counter.text.color.css(),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.hints,
   }),
@@ -238,7 +240,7 @@ export const counter = style({
 });
 
 export const helperText = style({
-  color: formTokens.counter.text.color.css(),
+  color: formVars.counter.text.color.css(),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.hints,
   }),
@@ -252,7 +254,7 @@ export const helperRow = style({
   justifyContent: 'space-between',
   alignItems: 'center',
   flexWrap: 'wrap',
-  gap: formTokens.layout.fieldGap.css(),
+  gap: formVars.layout.fieldGap.css(),
 });
 
 export const buttonRow = style({
@@ -263,8 +265,9 @@ export const buttonRow = style({
 export const submitButton = style({
   position: 'relative',
   overflow: 'hidden',
-  minHeight: formTokens.button.minHeight.css(),
-  ...paddings(formTokens.button.paddings.horizontal),
+  width: '100%',
+  minHeight: formVars.button.minHeight.css(),
+  ...paddings(formVars.button.paddings.horizontal),
   border: 'none',
   ...borders(glassyButtonTokens.borders),
   ...backgrounds(glassyButtonTokens.backgrounds),
@@ -360,73 +363,14 @@ export const turnstileReset = style({
   cursor: 'pointer',
 });
 
-export const successPanel = style({
-  display: 'grid',
-  gap: formTokens.layout.fieldGap.css(),
-  justifyItems: 'center',
-  textAlign: 'center',
-  ...paddings({
-    vertical: m(24),
-    horizontal: m(12),
-  }),
-  // borderRadius: formTokens.field.borders.radius.css(),
-  ...backgrounds(formTokens.status.success.backgrounds),
-  ...borders(formTokens.status.success.borders),
-});
 
-export const successIconWrapper = style({
-  width: '64px',
-  height: '64px',
-  // ...borders.radii(m(32)),
-  ...backgrounds({
-    color: formTokens.successPanel.icon.background,
-  }),
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-export const successIcon = style({
-  width: '36px',
-  height: '36px',
-  color: formTokens.successPanel.icon.color.css(),
-});
-
-export const failIcon = style({
-  width: '36px',
-  height: '36px',
-  color: formTokens.successPanel.icon.color.css(),
-});
-
-export const successCopy = style({
-  display: 'grid',
-  gap: '8px',
-  maxWidth: '32ch',
-});
-
-export const successHeading = style({
-  ...fontStylesFromFontVariant({
-    variant: typographyFontVariants.h2,
-    baseVariant: typographyFontVariants.heading,
-  }),
-  fontSize: '1.35rem',
-  fontWeight: 700,
-  color: colorVars.white.alpha(0.95).css(),
-});
-
-export const successBody = style({
-  margin: 0,
-  fontSize: '1rem',
-  lineHeight: 1.5,
-  color: formTokens.successPanel.body.color.css(),
-});
 
 globalStyle(`${input}[data-error="true"]::placeholder`, {
-  color: formTokens.field.error.text.color.css(),
+  color: formVars.field.error.text.color.css(),
 });
 
 globalStyle(`${textarea}[data-error="true"]::placeholder`, {
-  color: formTokens.field.error.text.color.css(),
+  color: formVars.field.error.text.color.css(),
 });
 
 export const jumpToFirstIssue = style({

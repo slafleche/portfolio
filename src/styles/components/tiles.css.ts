@@ -131,22 +131,6 @@ export const bgDecoration = style({
   zIndex: 0,
 });
 
-// globalStyle(`.${bgDecoration}.${tileA}`, {
-//   transform: 'rotate(33deg) scale(1.2) translate(0%, -20%)',
-//   // ...gradientAsBgImg(buildLinear(themeColours.gradients.cards.a)),
-// });
-// globalStyle(`.${bgDecoration}.${tileB}`, {
-//   transform: 'rotate(33deg) scale(1.4) translate(0%, -30%)',
-//   // ...egradientAsBgImg(buildLinear(themeColours.gradients.cards.b)),
-// });
-// globalStyle(`.${bgDecoration}.${tileC}`, {
-//   transform: 'rotate(33deg) scale(1.1)translate(0%, -12%)',
-//   // ...gradientAsBgImg(buildLinear(themeColours.gradients.cards.c)),
-// });
-// globalStyle(`.${bgDecoration}.${tileD}`, {
-//   transform: 'rotate(33deg) scale(1.5) translate(0%, -23%)',
-//   // ...gradientAsBgImg(buildLinear(themeColours.gradients.cards.d)),
-// });
 
 export const tileIconPlaceholder = style({
   width: '44px',

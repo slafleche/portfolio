@@ -47,6 +47,11 @@ export const mediaQueryStyleConfig: IMediaQueries = {
     maxWidth: layoutVars.compact.maxWidth,
   } as IMediaQueryProps,
 
+  compactOnly: {
+    minWidth: layoutVars.compressed.maxWidth.add(1),
+    maxWidth: layoutVars.snug.maxWidth,
+  } as IMediaQueryProps,
+
   notCompact: {
     minWidth: layoutVars.compact.maxWidth.add(1),
   } as IMediaQueryProps,
@@ -87,9 +92,8 @@ const footerOneCol = curlVars.open.height
   .add(footerVars.glassyLinks.gap.multiply(4));
 
 const componentSpecificQueriesConfig: IMediaQueries = {
-  hero_compact: {},
   card_oneColumn: {
-    maxWidth: cardLayout.oneColumn.maxWidth,
+    maxWidth: cardLayout.oneColumn.maxWidth.add(200),
   },
   footer_oneColumn: {
     maxWidth: footerOneCol,

@@ -10,12 +10,14 @@ const frBaseData = {
   redirecting: 'Redirection...',
   title: 'Développeur Front-End | Portfolio par Stéphane',
   description: '',
+  'not_found-title': '404 Page non trouvée',
+  'not_found-back': 'Retour à la page d’accueil',
 
   'menu-skip_nav': 'Aller au contenu',
   'menu-left_label': 'À propos de moi',
   'menu-right_label': 'Mon travail',
   'menu-anchor_label': 'Aller à la section',
-  'menu-home_label': "Page d’accueil",
+  'menu-home_label': 'Page d’accueil',
   'menu-nav_label': 'Navigation du site',
   localeChange: 'Choix de la langue',
   'close-label': 'Fermer',
@@ -43,7 +45,7 @@ const frBaseData = {
   'console-curiosity-test': '[test] 👀 Observateur détecté.',
   'console-curiosity-result': '[résultat] Accès accordé.',
   'console-curiosity-hint':
-    "[indice] Le code montre ce que j’ai construit; curiosity() montre comment je pense.",
+    '[indice] Le code montre ce que j’ai construit; curiosity() montre comment je pense.',
 
   approach: 'Approche',
   'approach-href': 'philosophie',
@@ -82,12 +84,12 @@ const frBaseData = {
   'systems-architecture-href': 'systems-forme-du-systeme',
   ...markdownRefs('architecture-content'),
   ...markdownRefs('calipers-content'),
-  'systems-back-home-label': "Retour à la page d’accueil",
+  'systems-back-home-label': 'Retour à la page d’accueil',
   'systems-link-label': 'Naviguez vers la page Systèmes',
   'systems-mock-html-alt':
     'HTML décoratif de style devtools montrant la fin du code source de la page.',
 
-  contact: 'contact',
+  contact: 'Contact',
   'contact-href': 'contact',
 
   'contact-content': 'Envie de collaborer ?',
@@ -97,9 +99,9 @@ const frBaseData = {
   'contact-label-hero': 'Ouvrir le formulaire de contact',
   'contact-cta': 'Prenons contact !',
 
-  'contact-bg-title': "Ciel étoilé avec silhouette de ligne d’arbres",
+  'contact-bg-title': 'Ciel étoilé avec silhouette de ligne d’arbres',
   'contact-bg-description':
-    "Un ciel nocturne clair rempli d’étoiles et de la faible lueur de la Voie lactée, avec une silhouette noire d’une forêt dense au premier plan.",
+    'Un ciel nocturne clair rempli d’étoiles et de la faible lueur de la Voie lactée, avec une silhouette noire d’une forêt dense au premier plan.',
 
   ...markdownRefs('forms-form-success-body', 'forms-form-error-body'),
 

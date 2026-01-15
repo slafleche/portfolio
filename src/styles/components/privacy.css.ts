@@ -3,7 +3,7 @@ import { m, mPercent } from 'css-calipers';
 
 import { fontFamilies } from '../../tokens/fontFamilies.tokens';
 import { formFontVariants } from '../../tokens/fontVariants/forms';
-import { formTokens } from '../../tokens/forms.tokens';
+import { formVars } from '../../tokens/forms.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import { colors, colorVars } from '../../tokens/global.tokens';
 import { layoutVars } from '../../tokens/layout.tokens';
@@ -67,7 +67,7 @@ export const closeButtonWrap = style({
 export const privacyFinePrint = style({
   fontSize: '0.9rem',
   textAlign: 'center',
-  color: formTokens.privacy.text.color.css(),
+  color: formVars.privacy.text.color.css(),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.hints,
   }),
@@ -78,7 +78,7 @@ export const link = style({
   border: 'none',
   padding: 0,
   font: 'inherit',
-  color: formTokens.privacy.text.color.css(),
+  color: formVars.privacy.text.color.css(),
   textDecoration: 'underline',
   textDecorationThickness: 'from-font',
   textUnderlineOffset: 4,
@@ -89,7 +89,7 @@ export const link = style({
     },
     '&:focus, &:focus-visible': {
       outline: 'none',
-      ...boxShadow(formTokens.field.focusVisible.shadow),
+      ...boxShadow(formVars.field.focusVisible.shadow),
     },
   },
 });

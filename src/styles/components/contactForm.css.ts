@@ -1,8 +1,9 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import { m, mPercent } from 'css-calipers';
+import { m, mEm, mPercent } from 'css-calipers';
 
 import { fontFamilies } from '../../tokens/fontFamilies.tokens';
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
+import { formVars } from '../../tokens/forms.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import {
   colors,
@@ -16,7 +17,10 @@ import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
-import { fullSizeOfParent } from '../helpers/positioning.helper';
+import {
+  absolutePosition,
+  fullSizeOfParent,
+} from '../helpers/positioning.helper';
 import { boxShadow, textShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
@@ -25,11 +29,6 @@ import {
 } from '../helpers/typography.helper';
 import * as l from '../layout.css';
 import { roundRadius } from './contactButton.vars';
-
-const closeOffset = m(16);
-const headerStackHeight = glassyButtonTokens.size.add(
-  closeOffset.double(),
-);
 
 const sheenSweep = keyframes({
   '0%': {
@@ -134,9 +133,9 @@ export const header = style({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  height: headerStackHeight.css(),
-  paddingLeft: closeOffset.css(),
-  paddingRight: closeOffset.css(),
+  height: formVars.header.height.css(),
+  paddingLeft: formVars.header.closeOffset.css(),
+  paddingRight: formVars.header.closeOffset.css(),
   ...textShadow({
     x: m(1),
     y: m(1),
@@ -211,7 +210,7 @@ export const scrollArea = style({
 
 export const closeButtonWrap = style({
   position: 'absolute',
-  right: closeOffset.css(),
+  right: formVars.header.closeOffset.css(),
   top: '50%',
   transform: 'translateY(-50%)',
   display: 'flex',
@@ -298,8 +297,10 @@ export const scoopGradient = style({
 });
 
 globalStyle(`.${panel} p`, {
+  lineHeight: 1.2,
   ...margins({
-    vertical: m(3),
+    top: m(0),
+    bottom: mEm(0.5),
   }),
 });
 
@@ -312,3 +313,51 @@ export const bgImage = style({
   objectFit: 'cover',
   mixBlendMode: 'screen',
 });
+
+// Status page
+
+export const statusFullPage = style({
+  ...absolutePosition.fullSize(),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: [
+    '100vh',
+    '100dvh',
+  ],
+  ...paddings({
+    vertical: formVars.header.height,
+    horizontal: m(16),
+  }),
+});
+
+export const statusHeading = style({
+  selectors: {
+    '&:not([data-ui="heading"])': {
+      fontSize: 'clamp(1rem, 6vw, 50px)',
+      lineHeight: 1.2,
+      ...paddings({
+        top: m(0),
+      }),
+      ...margins({
+        top: m(0),
+        bottom: mEm(0.5),
+      }),
+    },
+  },
+});
+
+export const statusMain = style({});
+
+export const statusIconWrap = style({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  ...margins({
+    horizontal: 'auto',
+    top: mEm(1.5),
+  }),
+});
+
+export const statusIcon = style({});

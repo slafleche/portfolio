@@ -2,8 +2,7 @@ import { type IMeasurement, type IRatio, m } from 'css-calipers';
 
 import { wordMarkVars } from '../../tokens/wordmarks.tokens';
 
-// const spacingNorthMultiplier = 0.8;
-const spacingNorth = m(10);
+const spacingNorth = m(15);
 
 const getViewBox = (ratio: IRatio) => {
   return `0 0 ${ratio.numerator()} ${ratio.denominator()}`;
@@ -42,16 +41,6 @@ const kgHeight = getHeightFromWidthAndRatio(
 );
 
 const wordMarkMeta = {
-  banq: {
-    ratio: wordMarkVars.banq.ratio,
-    width: wordMarkVars.banq.size,
-    height: banqHeight,
-    viewBox: getViewBox(wordMarkVars.banq.ratio),
-    spacing: {
-      north: spacingNorth,
-      south: banqHeight.add(spacingNorth.double()),
-    },
-  },
   cc: {
     ratio: wordMarkVars.cc.ratio,
     width: wordMarkVars.cc.size,
@@ -72,6 +61,17 @@ const wordMarkMeta = {
       south: eaHeight.add(spacingNorth.double()),
     },
   },
+  banq: {
+    ratio: wordMarkVars.banq.ratio,
+    width: wordMarkVars.banq.size,
+    height: banqHeight,
+    viewBox: getViewBox(wordMarkVars.banq.ratio),
+    spacing: {
+      north: spacingNorth,
+      south: banqHeight.add(spacingNorth.double()),
+    },
+  },
+
   hs: {
     ratio: wordMarkVars.hs.ratio,
     width: wordMarkVars.hs.size,
