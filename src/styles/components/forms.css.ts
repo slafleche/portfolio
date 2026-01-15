@@ -51,7 +51,10 @@ export const form = style({
   selectors: {
     ...mediaQueryStyle({
       compact: {
-        minHeight: ['100vh', '100dvh'],
+        minHeight: [
+          '100vh',
+          '100dvh',
+        ],
       },
     }),
   },
@@ -263,6 +266,7 @@ export const buttonRow = style({
 export const submitButton = style({
   position: 'relative',
   overflow: 'hidden',
+  width: '100%',
   minHeight: formTokens.button.minHeight.css(),
   ...paddings(formTokens.button.paddings.horizontal),
   border: 'none',

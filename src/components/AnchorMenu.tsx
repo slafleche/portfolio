@@ -153,11 +153,52 @@ export default function AnchorMenu({
                 onClick={(event) => {
                   if (anchorId) {
                     event.preventDefault();
-                    const node = document.getElementById(anchorId);
-                    if (node) {
-                      const top =
-                        window.scrollY + node.getBoundingClientRect().top;
+                    const scrollToAnchor = () => {
+                      const node = document.getElementById(anchorId);
+                      if (!node) return false;
+                      const rect = node.getBoundingClientRect();
+                      const top = window.scrollY + rect.top;
                       window.scrollTo({ top, behavior: 'auto' });
+                      return true;
+                    };
+                    if (!scrollToAnchor()) {
+                      const maxWaitMs = 5000;
+                      const start = performance.now();
+                      let rafId: number | null = null;
+                      let observer: MutationObserver | null = null;
+
+                      const cleanup = () => {
+                        if (rafId !== null) {
+                          window.cancelAnimationFrame(rafId);
+                        }
+                        observer?.disconnect();
+                      };
+
+                      const tick = () => {
+                        if (scrollToAnchor()) {
+                          cleanup();
+                          return;
+                        }
+                        if (performance.now() - start < maxWaitMs) {
+                          rafId = window.requestAnimationFrame(tick);
+                        } else {
+                          cleanup();
+                        }
+                      };
+
+                      if (typeof MutationObserver !== 'undefined') {
+                        observer = new MutationObserver(() => {
+                          if (scrollToAnchor()) {
+                            cleanup();
+                          }
+                        });
+                        observer.observe(document.body, {
+                          childList: true,
+                          subtree: true,
+                        });
+                      }
+
+                      rafId = window.requestAnimationFrame(tick);
                     }
                   }
                   if (anchorId) {

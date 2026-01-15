@@ -89,7 +89,7 @@ const frBaseData = {
   'systems-mock-html-alt':
     'HTML décoratif de style devtools montrant la fin du code source de la page.',
 
-  contact: 'contact',
+  contact: 'Contact',
   'contact-href': 'contact',
 
   'contact-content': 'Envie de collaborer ?',

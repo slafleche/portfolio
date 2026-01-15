@@ -159,6 +159,7 @@ function ContactFormInner({
   const disableFields = isSubmittingForUi || isCatastrophic;
   const disableSubmit =
     isSubmittingForUi || isInvalid || isCatastrophic;
+  const showLoading = isSubmittingForUi && !isCatastrophic;
 
   const { setTitleKey } = useContactDialogTitle();
 
@@ -385,58 +386,65 @@ function ContactFormInner({
         void flow.handleSubmit(event);
       }}
     >
-      {isSubmittingForUi && !isCatastrophic ? (
+      {showLoading ? (
         <ContactFormLoading
           message={copy.blocks.messageCentre.statuses.sending}
         />
       ) : null}
-      <MessageCentreBlock messages={messagesForUi} />
-      <NameBlock
-        {...formMembers[0]}
-        disabled={disableFields}
-        copy={copy.blocks.name}
-        initialConfig={initialBlocksSnapshot?.name}
-      />
-      <EmailBlock
-        {...formMembers[1]}
-        disabled={disableFields}
-        copy={copy.blocks.email}
-        initialConfig={initialBlocksSnapshot?.email}
-      />
-      <MessageBlock
-        {...formMembers[2]}
-        disabled={disableFields}
-        copy={copy.blocks.message}
-        initialConfig={initialBlocksSnapshot?.message}
-      />
-      <TurnstileBlock
-        {...formMembers[3]}
-        disabled={disableFields}
-        copy={copy.blocks.turnstile}
-        turnstileSiteKey={turnstileSiteKey}
-      />
+      <fieldset
+        className={s.fieldset}
+        disabled={showLoading}
+        hidden={showLoading}
+        aria-hidden={showLoading || undefined}
+      >
+        <MessageCentreBlock messages={messagesForUi} />
+        <NameBlock
+          {...formMembers[0]}
+          disabled={disableFields}
+          copy={copy.blocks.name}
+          initialConfig={initialBlocksSnapshot?.name}
+        />
+        <EmailBlock
+          {...formMembers[1]}
+          disabled={disableFields}
+          copy={copy.blocks.email}
+          initialConfig={initialBlocksSnapshot?.email}
+        />
+        <MessageBlock
+          {...formMembers[2]}
+          disabled={disableFields}
+          copy={copy.blocks.message}
+          initialConfig={initialBlocksSnapshot?.message}
+        />
+        <TurnstileBlock
+          {...formMembers[3]}
+          disabled={disableFields}
+          copy={copy.blocks.turnstile}
+          turnstileSiteKey={turnstileSiteKey}
+        />
 
-      <HoneypotBlock copy={copy.blocks.honeypot} />
-      {isInvalid ? (
-        <button
-          type="button"
-          data-testid="jump-to-first-issue"
-          onClick={handleJumpToFirstIssue}
-          className={s.jumpToFirstIssue}
-        >
-          <ToTopArrow className={s.toTopArrow} />
-          <span className={s.jumpToFirstIssueText}>
-            {copy.blocks.messageCentre.statuses.validation_error_jump}
-          </span>
-        </button>
-      ) : null}
-      <SubmitButton disabled={disableSubmit}>
-        {copy.submitLabel}
-      </SubmitButton>
-      <ContactPrivacy
-        copy={copy.privacy}
-        onOpenPrivacy={handleOpenPrivacy}
-      />
+        <HoneypotBlock copy={copy.blocks.honeypot} />
+        {isInvalid ? (
+          <button
+            type="button"
+            data-testid="jump-to-first-issue"
+            onClick={handleJumpToFirstIssue}
+            className={s.jumpToFirstIssue}
+          >
+            <ToTopArrow className={s.toTopArrow} />
+            <span className={s.jumpToFirstIssueText}>
+              {copy.blocks.messageCentre.statuses.validation_error_jump}
+            </span>
+          </button>
+        ) : null}
+        <SubmitButton disabled={disableSubmit}>
+          {copy.submitLabel}
+        </SubmitButton>
+        <ContactPrivacy
+          copy={copy.privacy}
+          onOpenPrivacy={handleOpenPrivacy}
+        />
+      </fieldset>
     </form>
   );
 }

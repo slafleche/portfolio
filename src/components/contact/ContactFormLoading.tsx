@@ -11,15 +11,10 @@ export default function ContactFormLoading({
 }: ContactFormLoadingProps) {
   return (
     <div
-      className={s.statusWrapper}
-      role="status"
-      aria-live="polite"
-      data-form="loading"
-    >
+    className={s.pageLoading}
+    role="status" aria-live="polite" data-form="loading">
       <div className={s.status}>
-        <PulseLoader 
-          className={s.loader}
-        />        
+        <PulseLoader className={s.loader} />
         <span className={s.statusText}>{message}</span>
       </div>
     </div>

@@ -114,7 +114,7 @@ export const wordMarkVars = {
     },
     size: m(150),
     ratio: r(615.08, 192.94),
-    logoAsBg: color('rgba(77, 4, 17, 0.11)'),
+    logoAsBg: color('#4D0411').alpha(0.08),
   },
   ea: {
     gradients: {
@@ -123,7 +123,7 @@ export const wordMarkVars = {
     },
     size: m(150),
     ratio: r(998.014, 998.025),
-    logoAsBg: color('#0083B7').darken(0.5).alpha(0.1),
+    logoAsBg: color('#0083B7').darken(0.5).alpha(0.08),
   },
   banq: {
     gradients: {
@@ -132,7 +132,7 @@ export const wordMarkVars = {
     },
     size: m(150),
     ratio: r(47.02762, 47.02762),
-    logoAsBg: color('#0e0d0f').lighten(0.5).alpha(0.04),
+    logoAsBg: color('#0e0d0f').lighten(0.5).alpha(0.2),
   },
   hs: {
     gradients: {
@@ -141,7 +141,7 @@ export const wordMarkVars = {
     },
     size: m(150),
     ratio: r(88.71465, 88.8469),
-    logoAsBg: color('#E03035').darken(0.9).alpha(0.05),
+    logoAsBg: color('#E03035').darken(0.9).alpha(0.03),
   },
   kg: {
     gradients: {

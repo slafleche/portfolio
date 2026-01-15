@@ -193,28 +193,26 @@ export default async function HomePage({
               title={caseStudies.title}
               wordMarkClassName={cg.wordmarkTextNoLogo}
             >
-              <DeferredIsland when="visible">
-                <Accordion
-                  items={caseStudies.list.map((
-                    study: CaseStudyListItem,
-                    index: number,
-                  ) => ({
-                    heading: study.title,
-                    subHeading: study.subTitle,
-                    content: (
-                      <Markdown
-                        source={study.content}
-                        asUi={{
-                          headings: true,
-                          paragraphs: true,
-                        }}
-                      />
-                    ),
-                    id: `${baseId}-${index}`,
-                    defaultOpen: index === 0,
-                  }))}
-                />
-              </DeferredIsland>
+              <Accordion
+                items={caseStudies.list.map((
+                  study: CaseStudyListItem,
+                  index: number,
+                ) => ({
+                  heading: study.title,
+                  subHeading: study.subTitle,
+                  content: (
+                    <Markdown
+                      source={study.content}
+                      asUi={{
+                        headings: true,
+                        paragraphs: true,
+                      }}
+                    />
+                  ),
+                  id: `${baseId}-${index}`,
+                  defaultOpen: index === 0,
+                }))}
+              />
             </CaseStudy>
             
             {/* Projects */}

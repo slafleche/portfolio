@@ -12,11 +12,14 @@ import { absolutePosition } from '../helpers/positioning.helper';
 import { globalDropShadowFilter } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import wordMarkMeta from '../helpers/wordmark.helper';
+import type { CompactOnly } from '../responsive';
 import {
   componentMediaQueries,
   globalComponentMediaQueryStyle,
+  globalMediaQueryStyle,
   mediaQueryStyle,
 } from '../responsive/mediaQueries';
+import { userContent } from '../typography.css';
 
 export const root = style({
   position: 'relative',
@@ -152,11 +155,18 @@ export const text = style({
       compact: {
         height: 'auto',
         ...paddings({
-          top: m(20),
+          top: m(15),
         }),
       },
     }),
   },
+});
+
+// .typography_userContent__1svpx3n0 p:not([data-ui="paragraph"])
+globalStyle(`.${text} .${userContent} p[data-last="true"]`, {
+  ...margins({
+    bottom: m(0),
+  }),
 });
 
 export const gradient = style({
@@ -274,6 +284,11 @@ export const wordMark_cc = style({
 });
 
 globalStyle(`.${cardCC} .${spacer}`, {
+  ...globalMediaQueryStyle({
+    compactOnly: {
+      ...margins({ bottom: m(10) }),
+    },
+  }),
   ...globalComponentMediaQueryStyle({
     card_oneColumn: {
       height: wordMarkMeta.cc.spacing.south.css(),
@@ -358,12 +373,26 @@ export const logoAsBg_cc = style({
   width: '110%',
   color: wordMarkVars.cc.logoAsBg.css(),
   transform: 'translate(0, -60%) rotate(4deg)',
+  selectors: {
+    ...mediaQueryStyle({
+      compressed: {
+        transform: 'scale(2) translate(-10%, 30%) rotate(-16deg)',
+      },
+    }),
+  },
 });
 
 export const logoAsBg_ea = style({
   width: '100%',
   transform: 'translate(0%, -50%) rotate(4deg)',
   color: wordMarkVars.ea.logoAsBg.css(),
+  selectors: {
+    ...mediaQueryStyle({
+      compressed: {
+        transform: 'scale(1.5) translate(-20%, -20%) rotate(4deg)',
+      },
+    }),
+  },
 });
 
 export const logoAsBg_banq = style({
@@ -376,8 +405,15 @@ export const logoAsBg_banq = style({
 export const logoAsBg_hs = style({
   width: '100%',
   transformOrigin: '50% 50%',
-  transform: 'translate(4%, -60%) rotate(6deg) scale(1.3)',
+  transform: 'translate(4%, -60%) rotate(8deg) scale(1.3)',
   color: wordMarkVars.hs.logoAsBg.css(),
+  selectors: {
+    ...mediaQueryStyle({
+      compressed: {
+        transform: 'translate(-6%, -60%) rotate(8deg) scale(2)',
+      },
+    }),
+  },
 });
 
 export const logoAsBg_kg = style({
@@ -385,4 +421,11 @@ export const logoAsBg_kg = style({
   transformOrigin: '50% 50%',
   transform: 'translate(5%, -64%) rotate(-3deg) scale(1.1)',
   color: wordMarkVars.kg.logoAsBg.css(),
+  selectors: {
+    ...mediaQueryStyle({
+      compressed: {
+        transform: 'translate(70%, -74%) rotate(-3deg) scale(2.7)',
+      },
+    }),
+  },
 });

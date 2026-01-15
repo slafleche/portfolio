@@ -126,6 +126,13 @@ const statusBase: ComplexStyleRule = {};
 
 export const status = style(statusBase);
 
+export const pageLoading = style({
+  minHeight: [
+    '100vh',
+    '100dvh',
+  ],
+});
+
 export const statusSuccess = style([
   statusBase,
   {
@@ -157,6 +164,15 @@ export const loader = style({
 
 export const statusText = style({
   flex: 1,
+  selectors: {
+    '&:not(li)': {
+      textAlign: 'center',
+      ...paddings({
+        vertical: m(8),
+        horizontal: m(12),
+      }),
+    },
+  },
 });
 
 globalStyle(`.${statusText} + .${statusText}`, {
