@@ -460,78 +460,78 @@ function ContactFormInner({
           title={copy.blocks.messageCentre.statuses.sending}
         />
       ) : null}
-      <fieldset
-        className={s.fieldset}
-        disabled={disableFields}
-        hidden={showLoading}
-        aria-hidden={showLoading || undefined}
-      >
-        <MessageCentreBlock messages={messagesForUi} />
-        <NameBlock
-          {...formMembers[0]}
+      {showLoading ? null : (
+        <fieldset
+          className={s.fieldset}
           disabled={disableFields}
-          copy={copy.blocks.name}
-          initialConfig={initialBlocksSnapshot?.name}
-          logInputs={logInputs}
-          logValidation={logValidation}
-          logMessages={logMessages}
-        />
-        <EmailBlock
-          {...formMembers[1]}
-          disabled={disableFields}
-          copy={copy.blocks.email}
-          initialConfig={initialBlocksSnapshot?.email}
-          logInputs={logInputs}
-          logValidation={logValidation}
-          logMessages={logMessages}
-        />
-        <MessageBlock
-          {...formMembers[2]}
-          disabled={disableFields}
-          copy={copy.blocks.message}
-          initialConfig={initialBlocksSnapshot?.message}
-          logInputs={logInputs}
-          logValidation={logValidation}
-          logMessages={logMessages}
-        />
-        <TurnstileBlock
-          {...formMembers[3]}
-          disabled={disableFields}
-          copy={copy.blocks.turnstile}
-          turnstileSiteKey={turnstileSiteKey}
-          logInputs={logInputs}
-          logValidation={logValidation}
-          logMessages={logMessages}
-        />
+        >
+          <MessageCentreBlock messages={messagesForUi} />
+          <NameBlock
+            {...formMembers[0]}
+            disabled={disableFields}
+            copy={copy.blocks.name}
+            initialConfig={initialBlocksSnapshot?.name}
+            logInputs={logInputs}
+            logValidation={logValidation}
+            logMessages={logMessages}
+          />
+          <EmailBlock
+            {...formMembers[1]}
+            disabled={disableFields}
+            copy={copy.blocks.email}
+            initialConfig={initialBlocksSnapshot?.email}
+            logInputs={logInputs}
+            logValidation={logValidation}
+            logMessages={logMessages}
+          />
+          <MessageBlock
+            {...formMembers[2]}
+            disabled={disableFields}
+            copy={copy.blocks.message}
+            initialConfig={initialBlocksSnapshot?.message}
+            logInputs={logInputs}
+            logValidation={logValidation}
+            logMessages={logMessages}
+          />
+          <TurnstileBlock
+            {...formMembers[3]}
+            disabled={disableFields}
+            copy={copy.blocks.turnstile}
+            turnstileSiteKey={turnstileSiteKey}
+            logInputs={logInputs}
+            logValidation={logValidation}
+            logMessages={logMessages}
+          />
 
-        <HoneypotBlock
-          copy={copy.blocks.honeypot}
-          logInputs={logInputs}
-        />
-        {isInvalid ? (
-          <button
-            type="button"
-            data-testid="jump-to-first-issue"
-            onClick={handleJumpToFirstIssue}
-            className={s.jumpToFirstIssue}
-          >
-            <ToTopArrow className={s.toTopArrow} />
-            <span className={s.jumpToFirstIssueText}>
-              {
-                copy.blocks.messageCentre.statuses
-                  .validation_error_jump
-              }
-            </span>
-          </button>
-        ) : null}
-        <SubmitButton disabled={disableSubmit}>
-          {copy.submitLabel}
-        </SubmitButton>
-        <ContactPrivacy
-          copy={copy.privacy}
-          onOpenPrivacy={handleOpenPrivacy}
-        />
-      </fieldset>
+          <HoneypotBlock
+            copy={copy.blocks.honeypot}
+            logInputs={logInputs}
+          />
+          {isInvalid ? (
+            <button
+              type="button"
+              data-testid="jump-to-first-issue"
+              onClick={handleJumpToFirstIssue}
+              className={s.jumpToFirstIssue}
+            >
+              <ToTopArrow className={s.toTopArrow} />
+              <span className={s.jumpToFirstIssueText}>
+                {
+                  copy.blocks.messageCentre.statuses
+                    .validation_error_jump
+                }
+              </span>
+            </button>
+          ) : null}
+          <SubmitButton disabled={disableSubmit}>
+            {copy.submitLabel}
+          </SubmitButton>
+          <ContactPrivacy
+            copy={copy.privacy}
+            onOpenPrivacy={handleOpenPrivacy}
+          />
+        </fieldset>
+      )}
     </form>
   );
 }
