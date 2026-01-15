@@ -84,7 +84,7 @@
     "node": "20.19.6"
   },
   "scripts": {
-    "ci": "yarn locales && yarn verify && yarn build",
+    "ci": "yarn locales && yarn generate:favicons && yarn verify && yarn build",
     "prepare": "husky",
     "generate": "tsx scripts/runGenerateAllPipeline.mts",
     "generate:staging": "tsx scripts/runGenerateAllPipeline.mts --target=_staging",
@@ -96,7 +96,7 @@
     "locales:lint": "tsx scripts/checkLocaleMarkdown.ts",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",
     "locales:publish": "tsx scripts/generateCopyHtml.ts",
-    "verify": "yarn lint:cleanup && yarn typecheck && yarn lint && yarn test",
+    "verify": "yarn lint:cleanup && yarn typecheck && node -e \"console.log('→ Starting lint checks...')\" && yarn lint && yarn test",
     "preverify": "yarn check:node",
     "typecheck": "yarn tsc --noEmit",
     "check:node": "node scripts/ensureNodeVersion.mjs",

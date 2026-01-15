@@ -36,9 +36,9 @@ export const form = style({
     bottom: layoutVars.content.gap,
     horizontal: formLayoutVars.innerPadding,
   }),
-  ...backgrounds({
-    color: colors.white.alpha(0.02).css(),
-  }),
+  // ...backgrounds({
+  //   color: colors.white.alpha(0.02).css(),
+  // }),
   width: formLayoutVars.maxWidth.css(),
   maxWidth: '100%',
   ...fontStylesFromFontVariant({

@@ -523,7 +523,8 @@ async function main() {
       filesToFormat.push(generatedTileSvgPath);
     }
 
-    if (filesToFormat.length) {
+    const shouldFormatSvg = !process.env.CI;
+    if (filesToFormat.length && shouldFormatSvg) {
       const formatResult = spawnSync(
         'yarn',
         [
@@ -539,6 +540,8 @@ async function main() {
           'Favicons: prettier format failed while normalizing extracted SVG layers.',
         );
       }
+    } else if (filesToFormat.length) {
+      console.log('ℹ️  Favicons: skipping SVG formatting in CI.');
     }
   }
 
