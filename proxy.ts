@@ -96,6 +96,15 @@ function requireBasicAuth(request: NextRequest): NextResponse | null {
     return null;
   }
 
+  const { pathname } = request.nextUrl;
+  if (
+    pathname === '/favicon.ico' ||
+    pathname === '/favicon.png' ||
+    pathname === '/apple-touch-icon.png'
+  ) {
+    return null;
+  }
+
   const { user: expectedUser, password: expectedPassword } =
     runtimeEnv.getPrivateLaunchEnvConfig();
 
