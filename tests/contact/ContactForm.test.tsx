@@ -206,7 +206,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
         }
 
         const successHeading = successPanel.querySelector(
-          'h1',
+          '[data-form="state-title"]',
         ) as HTMLElement | null;
         expect(successHeading).not.toBeNull();
         if (!successHeading) {

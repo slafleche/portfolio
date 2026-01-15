@@ -52,7 +52,7 @@ export default function ContactFormSubView({
       data-form={type}
     >
       <div className={clsx(statusMain, classNames.main)}>
-        <h1
+        <h2
           ref={headingRef}
           className={clsx(statusHeading, classNames.heading)}
           data-form="state-title"
@@ -60,7 +60,7 @@ export default function ContactFormSubView({
           tabIndex={-1}
         >
           {title}
-        </h1>
+        </h2>
         {description && (
           <Markdown
             className={classNames.copy}

@@ -159,19 +159,22 @@ describe('ContactForm — full stack happy path', () => {
       await waitFor(() => {
         expect(fetchMock).toHaveBeenCalledTimes(1);
 
+        const successPanel = container.querySelector(
+          '[data-form="success"]',
+        ) as HTMLElement | null;
+        expect(successPanel).not.toBeNull();
+        if (!successPanel) {
+          throw new Error('Expected success panel to render.');
+        }
+
         const inlineRegion = container.querySelector(
           '[role="status"][aria-atomic="true"]',
         ) as HTMLElement | null;
-        expect(inlineRegion).not.toBeNull();
-        if (!inlineRegion) {
-          throw new Error('Expected inline status region to render.');
-        }
-
-        expect(inlineRegion.textContent ?? '').toBe('');
+        expect(inlineRegion).toBeNull();
 
         const messageCentreRegion = container.querySelector(
-          '[role="status"]:not([aria-atomic]):not([data-form="loading"])',
-        ) as HTMLElement | null;
+          '[data-form="messages"]',
+        );
         expect(messageCentreRegion).toBeNull();
 
         // No "jump to first issue" control should be present once the

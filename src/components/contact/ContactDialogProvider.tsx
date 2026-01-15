@@ -478,6 +478,7 @@ export function ContactDialogProvider({
                       <Dialog.Title
                         className={dialogStyles.heading}
                         data-modal="title"
+                        data-form="state-title"
                       >
                         {dialogTitle}
                       </Dialog.Title>

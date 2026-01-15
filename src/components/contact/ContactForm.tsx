@@ -1,6 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { resolveContactFormScenarioIdFromLocation } from '@/dev/scenarios/contactForm.adapter';
 import { contactFormScenarioMap } from '@/dev/scenarios/contactForm.scenarios';
@@ -68,7 +74,7 @@ const resolveAltView = ({
   copy: ContactFormProps['copy'];
   devScenarioId: string | null;
   catastrophicReason: string | null;
-  view: 'form' | 'success';
+  view: 'form' | 'success' | 'loading';
 }): ContactFormAltView | null => {
   if (devScenarioId === 'loading') {
     return {
@@ -90,6 +96,13 @@ const resolveAltView = ({
       kind: 'failure',
       title: copy.headings.error,
       description: copy.errorBody,
+    };
+  }
+
+  if (view === 'loading') {
+    return {
+      kind: 'loading',
+      title: copy.blocks.messageCentre.statuses.sending,
     };
   }
 
@@ -144,9 +157,11 @@ type ContactFormInnerProps = {
   formMembers: ContactFormBlockBaseProps[];
   submitHelper: ContactFormFlowSubmitHelper;
   onSuccessStateChange?: (visible: boolean) => void;
+  onLoadingStateChange?: (visible: boolean) => void;
   onCatastrophic?: (source: string, reason: string) => void;
   initialBlocks?: ContactFormBlockInitialValues | null;
   turnstileSiteKey: string | null;
+  isHidden?: boolean;
   onOpenPrivacy?: () => void;
   debugMode?: ContactFormDebugMode;
 };
@@ -157,9 +172,11 @@ function ContactFormInner({
   formMembers,
   submitHelper,
   onSuccessStateChange,
+  onLoadingStateChange,
   onCatastrophic,
   initialBlocks,
   turnstileSiteKey,
+  isHidden = false,
   onOpenPrivacy,
   debugMode,
 }: ContactFormInnerProps) {
@@ -229,11 +246,13 @@ function ContactFormInner({
   const disableSubmit =
     isSubmittingForUi || isInvalid || isCatastrophic;
   const showLoading = isSubmittingForUi && !isCatastrophic;
+  const isFormHidden = isHidden || showLoading;
 
   const { setTitleKey } = useContactDialogTitle();
 
   const formRef = useRef<HTMLFormElement | null>(null);
   const lastFocusedElementRef = useRef<HTMLElement | null>(null);
+  const lastFocusedElementIdRef = useRef<string | null>(null);
   const wasSubmittingRef = useRef(isSubmittingForUi);
 
   const scrollToPriorityTarget = useCallback(() => {
@@ -331,16 +350,20 @@ function ContactFormInner({
     recordValidationResult,
   ]);
 
-  useEffect(() => {
-    if (isCatastrophic) return;
-    if (isSubmittingForUi) {
-      setTitleKey('loading');
-    } else {
-      setTitleKey('form');
+  useLayoutEffect(() => {
+    if (onLoadingStateChange) {
+      onLoadingStateChange(showLoading);
     }
   }, [
+    onLoadingStateChange,
+    showLoading,
+  ]);
+
+  useEffect(() => {
+    if (isCatastrophic) return;
+    setTitleKey('form');
+  }, [
     isCatastrophic,
-    isSubmittingForUi,
     setTitleKey,
   ]);
 
@@ -387,8 +410,22 @@ function ContactFormInner({
       flow.submitStatus !== 'success'
     ) {
       const target = lastFocusedElementRef.current;
-      if (target && typeof target.focus === 'function') {
+      if (
+        target &&
+        typeof target.focus === 'function' &&
+        target.isConnected
+      ) {
         target.focus();
+      } else if (lastFocusedElementIdRef.current) {
+        const fallbackTarget = document.getElementById(
+          lastFocusedElementIdRef.current,
+        );
+        if (
+          fallbackTarget &&
+          typeof fallbackTarget.focus === 'function'
+        ) {
+          fallbackTarget.focus();
+        }
       }
     }
     wasSubmittingRef.current = isSubmittingForUi;
@@ -404,7 +441,10 @@ function ContactFormInner({
       className={s.form}
       action={actionUrl}
       noValidate
+      hidden={isFormHidden}
       data-form="form"
+      aria-hidden={isFormHidden || undefined}
+      data-visible={isFormHidden ? 'hidden' : undefined}
       onFocusCapture={(event) => {
         const target = event.target as HTMLElement | null;
         if (!target) return;
@@ -418,6 +458,7 @@ function ContactFormInner({
           tagName === 'select';
         if (!isFormControl) return;
         lastFocusedElementRef.current = target;
+        lastFocusedElementIdRef.current = target.id || null;
       }}
       onSubmit={(event) => {
         if (useInitialServerState) {
@@ -455,83 +496,78 @@ function ContactFormInner({
         void flow.handleSubmit(event);
       }}
     >
-      {showLoading ? (
-        <ContactFormLoading
-          title={copy.blocks.messageCentre.statuses.sending}
-        />
-      ) : null}
-      {showLoading ? null : (
-        <fieldset
-          className={s.fieldset}
+      <fieldset
+        className={s.fieldset}
+        disabled={disableFields}
+        hidden={isFormHidden}
+        aria-hidden={isFormHidden || undefined}
+      >
+        <MessageCentreBlock messages={messagesForUi} />
+        <NameBlock
+          {...formMembers[0]}
           disabled={disableFields}
-        >
-          <MessageCentreBlock messages={messagesForUi} />
-          <NameBlock
-            {...formMembers[0]}
-            disabled={disableFields}
-            copy={copy.blocks.name}
-            initialConfig={initialBlocksSnapshot?.name}
-            logInputs={logInputs}
-            logValidation={logValidation}
-            logMessages={logMessages}
-          />
-          <EmailBlock
-            {...formMembers[1]}
-            disabled={disableFields}
-            copy={copy.blocks.email}
-            initialConfig={initialBlocksSnapshot?.email}
-            logInputs={logInputs}
-            logValidation={logValidation}
-            logMessages={logMessages}
-          />
-          <MessageBlock
-            {...formMembers[2]}
-            disabled={disableFields}
-            copy={copy.blocks.message}
-            initialConfig={initialBlocksSnapshot?.message}
-            logInputs={logInputs}
-            logValidation={logValidation}
-            logMessages={logMessages}
-          />
-          <TurnstileBlock
-            {...formMembers[3]}
-            disabled={disableFields}
-            copy={copy.blocks.turnstile}
-            turnstileSiteKey={turnstileSiteKey}
-            logInputs={logInputs}
-            logValidation={logValidation}
-            logMessages={logMessages}
-          />
+          copy={copy.blocks.name}
+          initialConfig={initialBlocksSnapshot?.name}
+          logInputs={logInputs}
+          logValidation={logValidation}
+          logMessages={logMessages}
+        />
+        <EmailBlock
+          {...formMembers[1]}
+          disabled={disableFields}
+          copy={copy.blocks.email}
+          initialConfig={initialBlocksSnapshot?.email}
+          logInputs={logInputs}
+          logValidation={logValidation}
+          logMessages={logMessages}
+        />
+        <MessageBlock
+          {...formMembers[2]}
+          disabled={disableFields}
+          copy={copy.blocks.message}
+          initialConfig={initialBlocksSnapshot?.message}
+          logInputs={logInputs}
+          logValidation={logValidation}
+          logMessages={logMessages}
+        />
+        <TurnstileBlock
+          {...formMembers[3]}
+          disabled={disableFields}
+          copy={copy.blocks.turnstile}
+          turnstileSiteKey={turnstileSiteKey}
+          logInputs={logInputs}
+          logValidation={logValidation}
+          logMessages={logMessages}
+        />
 
-          <HoneypotBlock
-            copy={copy.blocks.honeypot}
-            logInputs={logInputs}
-          />
-          {isInvalid ? (
-            <button
-              type="button"
-              data-testid="jump-to-first-issue"
-              onClick={handleJumpToFirstIssue}
-              className={s.jumpToFirstIssue}
-            >
-              <ToTopArrow className={s.toTopArrow} />
-              <span className={s.jumpToFirstIssueText}>
-                {
-                  copy.blocks.messageCentre.statuses
-                    .validation_error_jump
-                }
-              </span>
-            </button>
-          ) : null}
-          <SubmitButton disabled={disableSubmit}>
-            {copy.submitLabel}
-          </SubmitButton>
-          <ContactPrivacy
-            copy={copy.privacy}
-            onOpenPrivacy={handleOpenPrivacy}
-          />
-        </fieldset>
-      )}
+        <HoneypotBlock
+          copy={copy.blocks.honeypot}
+          logInputs={logInputs}
+        />
+        {isInvalid ? (
+          <button
+            type="button"
+            data-testid="jump-to-first-issue"
+            onClick={handleJumpToFirstIssue}
+            className={s.jumpToFirstIssue}
+          >
+            <ToTopArrow className={s.toTopArrow} />
+            <span className={s.jumpToFirstIssueText}>
+              {
+                copy.blocks.messageCentre.statuses
+                  .validation_error_jump
+              }
+            </span>
+          </button>
+        ) : null}
+        <SubmitButton disabled={disableSubmit}>
+          {copy.submitLabel}
+        </SubmitButton>
+        <ContactPrivacy
+          copy={copy.privacy}
+          onOpenPrivacy={handleOpenPrivacy}
+        />
+      </fieldset>
     </form>
   );
 }
@@ -554,7 +590,7 @@ export default function ContactForm({
     resolveContactFormScenarioIdFromLocation(),
   );
 
-  type ContactFormView = 'form' | 'success';
+  type ContactFormView = 'form' | 'success' | 'loading';
 
   const [
     formMembers,
@@ -606,6 +642,13 @@ export default function ContactForm({
       onSuccessStateChange,
     ],
   );
+
+  const handleLoadingStateChange = useCallback((visible: boolean) => {
+    setView((current) => {
+      if (current === 'success') return current;
+      return visible ? 'loading' : 'form';
+    });
+  }, []);
 
   const submitHelper = useCallback<ContactFormFlowSubmitHelper>(
     async (blockPayloads) => {
@@ -742,9 +785,11 @@ export default function ContactForm({
       setTitleKey('success');
       return;
     }
-    // When none of the specific view states apply, the inner form
-    // layer is responsible for keeping the title aligned with the
-    // idle vs loading states.
+    if (view === 'loading') {
+      setTitleKey('loading');
+      return;
+    }
+    setTitleKey('form');
   }, [
     catastrophicReason,
     isDevFailureScenario,
@@ -761,12 +806,12 @@ export default function ContactForm({
     view,
   });
 
+  const isLoadingView = altView?.kind === 'loading';
+
   return (
     <FormBlocksProvider onCatastrophic={handleCatastrophic}>
-      {altView ? (
-        altView.kind === 'loading' ? (
-          <ContactFormLoading title={altView.title} />
-        ) : altView.kind === 'success' ? (
+      {altView && !isLoadingView ? (
+        altView.kind === 'success' ? (
           <ContactFormSuccess
             title={altView.title}
             description={altView.description}
@@ -778,18 +823,25 @@ export default function ContactForm({
           />
         )
       ) : (
-        <ContactFormInner
-          actionUrl={actionUrl}
-          copy={copy}
-          formMembers={formMembers}
-          submitHelper={submitHelper}
-          onSuccessStateChange={handleSuccessStateChange}
-          onCatastrophic={handleCatastrophic}
-          initialBlocks={initialBlocks ?? scenarioInitialBlocks}
-          turnstileSiteKey={turnstileSiteKey}
-          debugMode={debugMode}
-          onOpenPrivacy={onOpenPrivacy}
-        />
+        <>
+          <ContactFormInner
+            actionUrl={actionUrl}
+            copy={copy}
+            formMembers={formMembers}
+            submitHelper={submitHelper}
+            onSuccessStateChange={handleSuccessStateChange}
+            onLoadingStateChange={handleLoadingStateChange}
+            onCatastrophic={handleCatastrophic}
+            initialBlocks={initialBlocks ?? scenarioInitialBlocks}
+            turnstileSiteKey={turnstileSiteKey}
+            debugMode={debugMode}
+            onOpenPrivacy={onOpenPrivacy}
+            isHidden={isLoadingView}
+          />
+          {isLoadingView ? (
+            <ContactFormLoading title={altView.title} />
+          ) : null}
+        </>
       )}
     </FormBlocksProvider>
   );

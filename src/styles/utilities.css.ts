@@ -8,6 +8,8 @@ import { margins,paddings } from './helpers/spacing.helper';
 
 globalStyle('*[data-visible="hidden"]', {
   visibility: 'hidden !important' as CSS_TYPES.Property.Visibility,
+  height: '0 !important' as CSS_TYPES.Property.Height,
+  overflow: 'hidden !important' as CSS_TYPES.Property.Overflow,
 });
 
 globalStyle('*[data-visible="sc-only"]', {

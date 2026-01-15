@@ -22,7 +22,7 @@ import {
 // later from the same form view.
 //
 // The intent is to verify that:
-// - The form view (`data-form="form"`) remains visible.
+// - The form view (`data-form="form"`) is visible outside of loading.
 // - Appropriate status / banner messages are shown.
 // - The submit helper is called (or not) according to the error type.
 // - Retryability (e.g., after fixing fields or waiting) behaves as expected.
@@ -581,6 +581,13 @@ describe('ContactForm — recoverable error flows (form view)', () => {
           '[data-form="loading"]',
         );
         expect(loading).not.toBeNull();
+        const form = container.querySelector(
+          '[data-form="form"]',
+        );
+        expect(form).not.toBeNull();
+        expect(form?.hasAttribute('hidden') ?? false).toBe(
+          true,
+        );
       });
 
       resolveFetch({

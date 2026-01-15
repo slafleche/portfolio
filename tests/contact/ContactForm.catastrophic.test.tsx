@@ -173,7 +173,7 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         ) as HTMLElement | null;
         expect(errorPanel).not.toBeNull();
         const errorHeading = errorPanel?.querySelector(
-          'h1',
+          '[data-form="state-title"]',
         ) as HTMLElement | null;
         expect(errorHeading).not.toBeNull();
         if (!errorHeading) {
@@ -280,7 +280,7 @@ describe('ContactForm — catastrophic failures (error view)', () => {
         ) as HTMLElement | null;
         expect(errorPanel).not.toBeNull();
         const errorHeading = errorPanel?.querySelector(
-          'h1',
+          '[data-form="state-title"]',
         ) as HTMLElement | null;
         expect(errorHeading).not.toBeNull();
         if (!errorHeading) {
