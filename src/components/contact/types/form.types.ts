@@ -17,7 +17,7 @@ export type ContactFormBlockValidationResult = {
 export type ContactFormBlockBaseProps = {
   id: ContactFormBlockId;
   order: number;
-  disabled: boolean;
+  disabled?: boolean;
   required?: boolean;
 };
 

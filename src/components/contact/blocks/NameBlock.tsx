@@ -18,9 +18,9 @@ import { TextInputBlock } from './TextInputBlock';
 
 export type NameBlockProps = ContactFormBlockBaseProps & {
   copy: NameBlockLocale;
-  logInputs: boolean;
-  logValidation: boolean;
-  logMessages: boolean;
+  logInputs?: boolean;
+  logValidation?: boolean;
+  logMessages?: boolean;
   maxLength?: number;
   minLength?: number;
   onFocusBefore?: () => void;
@@ -115,13 +115,13 @@ export function NameBlock({
   id,
   order,
   required = true,
-  disabled,
+  disabled = false,
   maxLength,
   minLength,
   copy,
-  logInputs,
-  logValidation,
-  logMessages,
+  logInputs = false,
+  logValidation = false,
+  logMessages = false,
   initialConfig,
 }: NameBlockProps) {
   const [
@@ -197,8 +197,7 @@ export function NameBlock({
     continuousValidation,
     hasSubmitAttempted,
     recordValidationResult,
-  } =
-    useFormBlock(registration);
+  } = useFormBlock(registration);
 
   const liveValidation =
     continuousValidation || (hasBlurred && hasSubmitAttempted);

@@ -1,8 +1,4 @@
-import {
-  fireEvent,
-  render,
-  waitFor,
-} from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -53,7 +49,6 @@ describe('Contact form block tests: MessageBlock', () => {
             id="test-message-block"
             order={0}
             copy={messageCopy}
-            disabled={false}
           />
         </FormBlocksProvider>,
       );
@@ -105,7 +100,6 @@ describe('Contact form block tests: MessageBlock', () => {
             id: 'test-message-block',
             order: 0,
             copy: messageCopy,
-            disabled: false,
           },
           { wrapWithFocusSentinels: true },
         );
@@ -139,16 +133,11 @@ describe('Contact form block tests: MessageBlock', () => {
     });
 
     it('moves focus to the textarea even when an inline error is shown', () => {
-      const {
-        container,
-        getRegistration,
-        markSubmitAttempted,
-      } =
+      const { container, getRegistration, markSubmitAttempted } =
         renderMessageBlockWithFormBlocks({
           id: 'test-message-block',
           order: 0,
           copy: messageCopy,
-          disabled: false,
         });
 
       const textarea = container.querySelector(
@@ -180,7 +169,6 @@ describe('Contact form block tests: MessageBlock', () => {
             id="test-message-block"
             order={0}
             copy={messageCopy}
-            disabled={false}
           />
         </FormBlocksProvider>,
       );
@@ -208,7 +196,6 @@ describe('Contact form block tests: MessageBlock', () => {
           id: 'test-message-block',
           order: 0,
           copy: messageCopy,
-          disabled: false,
         });
 
       const textarea = container.querySelector(
@@ -240,7 +227,6 @@ describe('Contact form block tests: MessageBlock', () => {
           id: 'test-message-block',
           order: 0,
           copy: messageCopy,
-          disabled: false,
         });
 
       const textarea = container.querySelector(
@@ -288,7 +274,6 @@ describe('Contact form block tests: MessageBlock', () => {
           id: 'test-message-block',
           order: 0,
           copy: messageCopy,
-          disabled: false,
         });
 
       const textarea = container.querySelector(
@@ -326,7 +311,6 @@ describe('Contact form block tests: MessageBlock', () => {
             id="test-message-block"
             order={0}
             copy={messageCopy}
-            disabled={false}
           />
         </FormBlocksProvider>,
       );
@@ -350,7 +334,6 @@ describe('Contact form block tests: MessageBlock', () => {
             id="test-message-block"
             order={0}
             copy={messageCopy}
-            disabled={false}
           />
         </FormBlocksProvider>,
       );
@@ -386,7 +369,6 @@ describe('Contact form block tests: MessageBlock', () => {
           id: 'test-message-block',
           order: 0,
           copy: messageCopy,
-          disabled: false,
         });
 
       const textarea = container.querySelector(
@@ -422,7 +404,6 @@ describe('Contact form block tests: MessageBlock', () => {
           id: 'test-message-block',
           order: 0,
           copy: messageCopy,
-          disabled: false,
         });
 
       const textarea = container.querySelector(
@@ -479,13 +460,10 @@ describe('Contact form block tests: MessageBlock', () => {
             id: 'test-message-block',
             order: 0,
             copy: messageCopy,
-            disabled: false,
           },
           {
             beforeChildren: (
-              <FormBlocksValidationObserver
-                onUpdate={handleUpdate}
-              />
+              <FormBlocksValidationObserver onUpdate={handleUpdate} />
             ),
           },
         );
@@ -539,13 +517,10 @@ describe('Contact form block tests: MessageBlock', () => {
             id: 'test-message-block',
             order: 0,
             copy: messageCopy,
-            disabled: false,
           },
           {
             beforeChildren: (
-              <FormBlocksValidationObserver
-                onUpdate={handleUpdate}
-              />
+              <FormBlocksValidationObserver onUpdate={handleUpdate} />
             ),
           },
         );
@@ -588,7 +563,8 @@ describe('Contact form block tests: MessageBlock', () => {
               typeof result === 'object' &&
               result !== null &&
               'id' in result &&
-              (result as { id: string }).id === 'test-message-block' &&
+              (result as { id: string }).id ===
+                'test-message-block' &&
               'valid' in result &&
               (result as { valid: boolean }).valid === true,
           ),
@@ -633,7 +609,6 @@ describe('Contact form block tests: MessageBlock', () => {
             id="test-message-block"
             order={0}
             copy={messageCopy}
-            disabled={false}
             readOnly
           />
         </FormBlocksProvider>,
@@ -659,17 +634,13 @@ describe('Contact form block tests: MessageBlock', () => {
     });
 
     it('preserves existing error when toggling to readOnly', async () => {
-      const {
-        container,
-        markSubmitAttempted,
-        rerenderBlock,
-      } = renderMessageBlockWithFormBlocks({
-        id: 'test-message-block',
-        order: 0,
-        copy: messageCopy,
-        disabled: false,
-        readOnly: false,
-      });
+      const { container, markSubmitAttempted, rerenderBlock } =
+        renderMessageBlockWithFormBlocks({
+          id: 'test-message-block',
+          order: 0,
+          copy: messageCopy,
+          readOnly: false,
+        });
 
       let textarea = container.querySelector(
         'textarea',
@@ -694,7 +665,6 @@ describe('Contact form block tests: MessageBlock', () => {
         id: 'test-message-block',
         order: 0,
         copy: messageCopy,
-        disabled: false,
         readOnly: true,
       });
 
@@ -723,7 +693,6 @@ describe('Contact form block contract: MessageBlock', () => {
       id: 'test-message-block',
       order: 0,
       copy: messageCopy,
-      disabled: false,
     });
 
     const registration = getRegistration();
@@ -746,7 +715,6 @@ describe('Contact form block contract: MessageBlock', () => {
         id: 'test-message-block',
         order: 0,
         copy: messageCopy,
-        disabled: false,
       });
 
     const textarea = container.querySelector(
@@ -767,7 +735,6 @@ describe('Contact form block contract: MessageBlock', () => {
         id: 'test-message-block',
         order: 0,
         copy: messageCopy,
-        disabled: false,
       });
 
     const textarea = container.querySelector(
@@ -792,7 +759,6 @@ describe('Contact form block contract: MessageBlock', () => {
         id: 'test-message-block',
         order: 0,
         copy: messageCopy,
-        disabled: false,
       });
 
     const textarea = container.querySelector(
@@ -815,7 +781,6 @@ describe('Contact form block contract: MessageBlock', () => {
       id: 'test-message-block',
       order: 0,
       copy: messageCopy,
-      disabled: false,
     });
 
     const result = validateMessage();
@@ -836,7 +801,6 @@ describe('Contact form block contract: MessageBlock', () => {
         id: 'test-message-block',
         order: 0,
         copy: messageCopy,
-        disabled: false,
       });
 
     const textarea = container.querySelector(
@@ -868,7 +832,6 @@ describe('Contact form block contract: MessageBlock', () => {
         id: 'test-message-block',
         order: 0,
         copy: messageCopy,
-        disabled: false,
       });
 
     const textarea = container.querySelector(
@@ -898,7 +861,6 @@ describe('Contact form block contract: MessageBlock', () => {
         id: 'test-message-block',
         order: 0,
         copy: messageCopy,
-        disabled: false,
       });
 
     const textarea = container.querySelector(
@@ -933,7 +895,6 @@ describe('Contact form block contract: MessageBlock', () => {
         id: 'test-message-block',
         order: 0,
         copy: messageCopy,
-        disabled: false,
       });
 
     const textarea = container.querySelector(

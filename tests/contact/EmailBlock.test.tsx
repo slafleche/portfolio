@@ -98,7 +98,6 @@ describe('Contact form block tests: EmailBlock', () => {
             id: 'test-email-block',
             order: 0,
             copy: emailCopy,
-            disabled: false,
           },
           { wrapWithFocusSentinels: true },
         );
@@ -137,7 +136,6 @@ describe('Contact form block tests: EmailBlock', () => {
           id: 'test-email-block',
           order: 0,
           copy: emailCopy,
-          disabled: false,
         });
 
       const emailInput = container.querySelector(
@@ -167,7 +165,6 @@ describe('Contact form block tests: EmailBlock', () => {
           id: 'test-email-block',
           order: 0,
           copy: emailCopy,
-          disabled: false,
         });
 
       const input = container.querySelector(
@@ -197,7 +194,6 @@ describe('Contact form block tests: EmailBlock', () => {
           id: 'test-email-block',
           order: 0,
           copy: emailCopy,
-          disabled: false,
         });
 
       const input = container.querySelector(
@@ -230,7 +226,6 @@ describe('Contact form block tests: EmailBlock', () => {
             id="test-email-block"
             order={0}
             copy={emailCopy}
-            disabled={false}
           />
         </FormBlocksProvider>,
       );
@@ -262,7 +257,6 @@ describe('Contact form block tests: EmailBlock', () => {
             id: 'test-email-block',
             order: 0,
             copy: emailCopy,
-            disabled: false,
           },
           {
             beforeChildren: (
@@ -329,7 +323,6 @@ describe('Contact form block tests: EmailBlock', () => {
           id: 'test-email-block',
           order: 0,
           copy: emailCopy,
-          disabled: false,
         });
 
       const input = container.querySelector(
@@ -392,7 +385,6 @@ describe('Contact form block tests: EmailBlock', () => {
             id="test-email-block"
             order={0}
             copy={emailCopy}
-            disabled={false}
             readOnly
           />
         </FormBlocksProvider>,
@@ -422,7 +414,6 @@ describe('Contact form block tests: EmailBlock', () => {
         id: 'test-email-block',
         order: 0,
         copy: emailCopy,
-        disabled: false,
         readOnly: false,
       });
 
@@ -443,7 +434,6 @@ describe('Contact form block tests: EmailBlock', () => {
         id: 'test-email-block',
         order: 0,
         copy: emailCopy,
-        disabled: false,
         readOnly: true,
       });
 
@@ -470,7 +460,6 @@ describe('Contact form block contract: EmailBlock', () => {
       id: 'test-email-block',
       order: 0,
       copy: emailCopy,
-      disabled: false,
     });
 
     const registration = getRegistration();
@@ -493,7 +482,6 @@ describe('Contact form block contract: EmailBlock', () => {
         id: 'test-email-block',
         order: 0,
         copy: emailCopy,
-        disabled: false,
       });
 
     const input = container.querySelector(
@@ -514,7 +502,6 @@ describe('Contact form block contract: EmailBlock', () => {
         id: 'test-email-block',
         order: 0,
         copy: emailCopy,
-        disabled: false,
       });
 
     const input = container.querySelector(
@@ -544,7 +531,6 @@ describe('Contact form block contract: EmailBlock', () => {
         id: 'test-email-block',
         order: 0,
         copy: emailCopy,
-        disabled: false,
       });
 
     const input = container.querySelector(
@@ -567,7 +553,6 @@ describe('Contact form block contract: EmailBlock', () => {
       id: 'test-email-block',
       order: 0,
       copy: emailCopy,
-      disabled: false,
     });
 
     const result = validateEmail();
@@ -588,7 +573,6 @@ describe('Contact form block contract: EmailBlock', () => {
         id: 'test-email-block',
         order: 0,
         copy: emailCopy,
-        disabled: false,
       });
 
     const input = container.querySelector(
@@ -617,7 +601,6 @@ describe('Contact form block contract: EmailBlock', () => {
         id: 'test-email-block',
         order: 0,
         copy: emailCopy,
-        disabled: false,
       });
 
     const input = container.querySelector(

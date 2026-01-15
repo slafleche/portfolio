@@ -25,9 +25,10 @@ export type TurnstileBlockProps = Omit<
   'required'
 > & {
   copy: TurnstileBlockLocale;
-  logInputs: boolean;
-  logValidation: boolean;
-  logMessages: boolean;
+  logInputs?: boolean;
+  logValidation?: boolean;
+  logMessages?: boolean;
+  disabled?: boolean;
   turnstileSiteKey: string | null;
 };
 
@@ -161,11 +162,11 @@ const buildTurnstileContract = (
 export function TurnstileBlock({
   id,
   order,
-  disabled,
+  disabled = false,
   copy,
-  logInputs,
-  logValidation,
-  logMessages,
+  logInputs = false,
+  logValidation = false,
+  logMessages = false,
   turnstileSiteKey,
 }: TurnstileBlockProps) {
   const hasTurnstileConfig = Boolean(turnstileSiteKey);
@@ -226,8 +227,7 @@ export function TurnstileBlock({
     continuousValidation,
     recordValidationResult,
     reportCatastrophic,
-  } =
-    useFormBlock(registration);
+  } = useFormBlock(registration);
   const reportCatastrophicRef = useRef(reportCatastrophic);
 
   useEffect(() => {
@@ -327,7 +327,10 @@ export function TurnstileBlock({
       if (logMessages) {
         payload.messages = result.messages;
       }
-      console.info('[contact][debug][turnstile][validation]', payload);
+      console.info(
+        '[contact][debug][turnstile][validation]',
+        payload,
+      );
     }
     recordValidationResult(result);
   }, [

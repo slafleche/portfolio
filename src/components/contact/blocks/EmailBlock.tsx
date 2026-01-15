@@ -20,9 +20,9 @@ import { TextInputBlock } from './TextInputBlock';
 
 export type EmailBlockProps = ContactFormBlockBaseProps & {
   copy: EmailBlockLocale;
-  logInputs: boolean;
-  logValidation: boolean;
-  logMessages: boolean;
+  logInputs?: boolean;
+  logValidation?: boolean;
+  logMessages?: boolean;
   readOnly?: boolean;
   disabled?: boolean;
   maxLength?: number;
@@ -116,9 +116,9 @@ export function EmailBlock({
   disabled,
   maxLength,
   copy,
-  logInputs,
-  logValidation,
-  logMessages,
+  logInputs = false,
+  logValidation = false,
+  logMessages = false,
   initialConfig,
 }: EmailBlockProps) {
   const [

@@ -123,19 +123,16 @@ function LiveValidationInner({
         id="live-name"
         order={1}
         copy={copy.blocks.name}
-        disabled={false}
       />
       <EmailBlock
         id="live-email"
         order={2}
         copy={copy.blocks.email}
-        disabled={false}
       />
       <MessageBlock
         id="live-message"
         order={3}
         copy={copy.blocks.message}
-        disabled={false}
       />
       <button type="submit">{copy.submitLabel}</button>
     </form>

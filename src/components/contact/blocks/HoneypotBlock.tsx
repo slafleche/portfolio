@@ -4,13 +4,13 @@ import type { HoneypotBlockLocale } from '@/lib/locales/form/form.honeypot';
 
 export type HoneypotBlockProps = {
   copy: HoneypotBlockLocale;
-  logInputs: boolean;
+  logInputs?: boolean;
   name?: string;
 };
 
 export function HoneypotBlock({
   copy,
-  logInputs,
+  logInputs = false,
   name = 'hp',
 }: HoneypotBlockProps) {
   const inputId = useId();

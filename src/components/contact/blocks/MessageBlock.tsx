@@ -29,9 +29,9 @@ export type MessageBlockProps = ContactFormBlockBaseProps & {
   id: string;
   order: number;
   copy: MessageBlockLocale;
-  logInputs: boolean;
-  logValidation: boolean;
-  logMessages: boolean;
+  logInputs?: boolean;
+  logValidation?: boolean;
+  logMessages?: boolean;
   helperText?: string | null;
   errorText?: string | null;
   readOnly?: boolean;
@@ -133,13 +133,13 @@ export function MessageBlock({
   id,
   order,
   copy,
-  logInputs,
-  logValidation,
-  logMessages,
+  logInputs = false,
+  logValidation = false,
+  logMessages = false,
   helperText,
   errorText,
   readOnly,
-  disabled,
+  disabled = false,
   initialConfig,
 }: MessageBlockProps) {
   const [

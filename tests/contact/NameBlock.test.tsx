@@ -105,7 +105,6 @@ describe('Contact form block tests: NameBlock', () => {
             id: 'test-name-block',
             order: 0,
             copy: nameCopy,
-            disabled: false,
           },
           { wrapWithFocusSentinels: true },
         );
@@ -154,7 +153,6 @@ describe('Contact form block tests: NameBlock', () => {
           id: 'test-name-block',
           order: 0,
           copy: nameCopy,
-          disabled: false,
         });
 
       const nameInput = container.querySelector(
@@ -182,7 +180,6 @@ describe('Contact form block tests: NameBlock', () => {
           id: 'test-name-block',
           order: 0,
           copy: nameCopy,
-          disabled: false,
         });
 
       const input = container.querySelector(
@@ -210,7 +207,6 @@ describe('Contact form block tests: NameBlock', () => {
           id: 'test-name-block',
           order: 0,
           copy: nameCopy,
-          disabled: false,
         });
 
       const input = container.querySelector(
@@ -242,7 +238,6 @@ describe('Contact form block tests: NameBlock', () => {
           id: 'test-name-block',
           order: 0,
           copy: nameCopy,
-          disabled: false,
         });
 
       const input = container.querySelector(
@@ -277,7 +272,6 @@ describe('Contact form block tests: NameBlock', () => {
             id="test-name-block"
             order={0}
             copy={nameCopy}
-            disabled={false}
           />
         </FormBlocksProvider>,
       );
@@ -302,7 +296,6 @@ describe('Contact form block tests: NameBlock', () => {
           id: 'test-name-block',
           order: 0,
           copy: nameCopy,
-          disabled: false,
         });
 
       const input = container.querySelector(
@@ -343,7 +336,6 @@ describe('Contact form block tests: NameBlock', () => {
             id: 'test-name-block',
             order: 0,
             copy: nameCopy,
-            disabled: false,
           },
           {
             beforeChildren: (
@@ -422,7 +414,6 @@ describe('Contact form block tests: NameBlock', () => {
             id: 'test-name-block',
             order: 0,
             copy: nameCopy,
-            disabled: false,
           },
           {
             beforeChildren: (
@@ -486,7 +477,6 @@ describe('Contact form block contract: NameBlock', () => {
       id: 'test-name-block',
       order: 0,
       copy: nameCopy,
-      disabled: false,
     });
 
     const registration = getRegistration();
@@ -509,7 +499,6 @@ describe('Contact form block contract: NameBlock', () => {
         id: 'test-name-block',
         order: 0,
         copy: nameCopy,
-        disabled: false,
       });
 
     const input = container.querySelector(
@@ -530,7 +519,6 @@ describe('Contact form block contract: NameBlock', () => {
         id: 'test-name-block',
         order: 0,
         copy: nameCopy,
-        disabled: false,
       });
 
     const input = container.querySelector(
@@ -554,7 +542,6 @@ describe('Contact form block contract: NameBlock', () => {
         id: 'test-name-block',
         order: 0,
         copy: nameCopy,
-        disabled: false,
       });
 
     const input = container.querySelector(
@@ -577,7 +564,6 @@ describe('Contact form block contract: NameBlock', () => {
       id: 'test-name-block',
       order: 0,
       copy: nameCopy,
-      disabled: false,
     });
 
     const result = validateName();
@@ -598,7 +584,6 @@ describe('Contact form block contract: NameBlock', () => {
         id: 'test-name-block',
         order: 0,
         copy: nameCopy,
-        disabled: false,
       },
     );
 
@@ -629,7 +614,6 @@ describe('Contact form block contract: NameBlock', () => {
         id: 'test-name-block',
         order: 0,
         copy: nameCopy,
-        disabled: false,
         maxLength: NAME_LIMIT.max,
       },
     );
@@ -661,7 +645,6 @@ describe('Contact form block contract: NameBlock', () => {
         id: 'test-name-block',
         order: 0,
         copy: nameCopy,
-        disabled: false,
         minLength: NAME_LIMIT.min,
       },
     );

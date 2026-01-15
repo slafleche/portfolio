@@ -48,7 +48,9 @@ export const backLink = style({
   justifyContent: 'center',
   textDecoration: 'none',
   color: colors.white.css(),
-  marginTop: '20px',
+  ...margins({
+    top: m(20),
+  }),
   fontSize: 'clamp(1em, 4vw, 1em)',
   selectors: {
     ...mediaQueryStyle({

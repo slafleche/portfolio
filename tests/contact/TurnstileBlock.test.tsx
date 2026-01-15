@@ -97,7 +97,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
           <TurnstileBlock
             id="test-turnstile-block"
             order={1}
-            disabled={false}
             copy={turnstileCopy}
             turnstileSiteKey={DEFAULT_SITE_KEY}
           />
@@ -138,7 +137,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
           <TurnstileBlock
             id="test-turnstile-block"
             order={0}
-            disabled={false}
             copy={turnstileCopy}
             turnstileSiteKey={null}
           />
@@ -170,7 +168,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
           <TurnstileBlock
             id="test-turnstile-block"
             order={0}
-            disabled={false}
             copy={turnstileCopy}
             turnstileSiteKey={DEFAULT_SITE_KEY}
           />
@@ -201,7 +198,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
           <TurnstileBlock
             id="test-turnstile-block"
             order={0}
-            disabled={false}
             copy={turnstileCopy}
             turnstileSiteKey={DEFAULT_SITE_KEY}
           />
@@ -240,7 +236,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
         renderTurnstileBlockWithFormBlocks({
           id: 'test-turnstile-block',
           order: 0,
-          disabled: false,
           copy: turnstileCopy,
           turnstileSiteKey: DEFAULT_SITE_KEY,
         });
@@ -306,7 +301,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
         renderTurnstileBlockWithFormBlocks({
           id: 'test-turnstile-block',
           order: 0,
-          disabled: false,
           copy: turnstileCopy,
           turnstileSiteKey: DEFAULT_SITE_KEY,
         });
@@ -366,8 +360,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
         '[contact][catastrophic]',
         {
           source: 'turnstile',
-          reason:
-            'Turnstile reported an error via error-callback.',
+          reason: 'Turnstile reported an error via error-callback.',
         },
       );
 
@@ -385,7 +378,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
         renderTurnstileBlockWithFormBlocks({
           id: 'test-turnstile-block',
           order: 0,
-          disabled: false,
           copy: turnstileCopy,
           turnstileSiteKey: DEFAULT_SITE_KEY,
         });
@@ -438,8 +430,7 @@ describe('Contact form block tests: TurnstileBlock', () => {
         '[contact][catastrophic]',
         {
           source: 'turnstile',
-          reason:
-            'Turnstile script failed to load or initialise.',
+          reason: 'Turnstile script failed to load or initialise.',
         },
       );
 
@@ -549,7 +540,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
           <TurnstileBlock
             id="test-turnstile-block"
             order={0}
-            disabled={false}
             copy={turnstileCopy}
             turnstileSiteKey={DEFAULT_SITE_KEY}
           />
@@ -578,7 +568,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
             'Expected Turnstile widget container to exist',
           );
         }
-
       });
     });
 
@@ -590,7 +579,6 @@ describe('Contact form block tests: TurnstileBlock', () => {
       } = renderTurnstileBlockWithFormBlocks({
         id: 'test-turnstile-block',
         order: 0,
-        disabled: false,
         copy: turnstileCopy,
         turnstileSiteKey: DEFAULT_SITE_KEY,
       });
@@ -643,18 +631,14 @@ describe('Contact form block tests: TurnstileBlock', () => {
         );
         expect(hintAfter!.textContent).toBe(expectedMissingText);
         expect(
-          checkMatchingId(
-            hintAfter,
-            widgetContainer,
-            'describedby',
-          ),
+          checkMatchingId(hintAfter, widgetContainer, 'describedby'),
         ).toBe(true);
       });
 
       const registration = getRegistration();
-      expect(
-        registration?.getValidationSummary?.(),
-      ).toBe(turnstileCopy.summary.missing);
+      expect(registration?.getValidationSummary?.()).toBe(
+        turnstileCopy.summary.missing,
+      );
     });
   });
 });
@@ -675,7 +659,6 @@ describe('Contact form block contract: TurnstileBlock', () => {
     const { getRegistration } = renderTurnstileBlockWithFormBlocks({
       id: 'test-turnstile-block',
       order: 0,
-      disabled: false,
       copy: turnstileCopy,
       turnstileSiteKey: DEFAULT_SITE_KEY,
     });
@@ -701,7 +684,6 @@ describe('Contact form block contract: TurnstileBlock', () => {
     const { getRegistration } = renderTurnstileBlockWithFormBlocks({
       id: 'test-turnstile-block',
       order: 0,
-      disabled: false,
       copy: turnstileCopy,
       turnstileSiteKey: DEFAULT_SITE_KEY,
     });
@@ -720,14 +702,12 @@ describe('Contact form block contract: TurnstileBlock', () => {
 
     registration = getRegistration();
     expect(registration?.getValue?.()).toBe('verified-token');
-
   });
 
   it('validate returns true for verified and false for missing/expired/error', async () => {
     const { getRegistration } = renderTurnstileBlockWithFormBlocks({
       id: 'test-turnstile-block',
       order: 0,
-      disabled: false,
       copy: turnstileCopy,
       turnstileSiteKey: DEFAULT_SITE_KEY,
     });
@@ -758,14 +738,12 @@ describe('Contact form block contract: TurnstileBlock', () => {
     });
     registration = getRegistration();
     expect(registration?.validate?.()).toBe(false);
-
   });
 
   it('getValidationSummary matches the status summary for non-completed states', async () => {
     const { getRegistration } = renderTurnstileBlockWithFormBlocks({
       id: 'test-turnstile-block',
       order: 0,
-      disabled: false,
       copy: turnstileCopy,
       turnstileSiteKey: DEFAULT_SITE_KEY,
     });
@@ -806,7 +784,6 @@ describe('Contact form block contract: TurnstileBlock', () => {
       renderTurnstileBlockWithFormBlocks({
         id: blockId,
         order: 0,
-        disabled: false,
         copy: turnstileCopy,
         turnstileSiteKey: DEFAULT_SITE_KEY,
       });
