@@ -98,6 +98,10 @@ globalStyle('pre code', {
   padding: 0,
 });
 
+globalStyle('a', {
+  cursor: 'pointer',
+});
+
 const linkRules = textStyleVars.link;
 
 globalStyle(`.${userContent} a:not([data-ui="link"])`, {

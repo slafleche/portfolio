@@ -13,6 +13,7 @@ import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
+import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
   componentMediaQueries,
@@ -31,7 +32,7 @@ export const root = style({
   color: '#ffffff',
   width: '100%',
   textAlign: 'center',
-  overflow: 'hidden',
+  overflow: 'visible',
   minHeight: curlVars.height.css(),
   ...paddings({
     vertical: layoutVars.content.gap.multiply(1.5).round(),
@@ -56,6 +57,14 @@ export const heading = style({
   margin: 0,
 });
 
+export const anchorSentinel = style({
+  ...absolutePosition.bottomLeft(m(0), m(0)),
+  width: '1px',
+  height: '1px',
+  pointerEvents: 'none',
+  visibility: 'hidden',
+});
+
 export const content = style({
   position: 'relative',
   zIndex: 1,
@@ -71,8 +80,6 @@ export const content = style({
 
 export const links = style({
   position: 'relative',
-  zIndex: 1,
-  pointerEvents: 'none',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -92,8 +99,8 @@ export const links = style({
   },
 });
 
-globalStyle(`${links} > *`, {
-  pointerEvents: 'auto',
+export const link = style({
+  zIndex: 1,
 });
 
 const iconBase: ComplexStyleRule = {

@@ -35,7 +35,7 @@ export const glassLink = style({
     blur: m(30),
     alpha: 0.15,
   }),
-  zIndex: 1,
+  zIndex: 4,
   overflow: 'hidden',
   selectors: {
     ...mediaQueryStyle({

@@ -18,6 +18,7 @@ export type UseActiveAnchorsOptions = {
   rootMargin?: string;
   threshold?: number | number[];
   manualHoldMs?: number;
+  debug?: boolean;
   layoutTick?: number;
   hashSync?: {
     enabled?: boolean;
@@ -31,6 +32,7 @@ const DEFAULT_ROOT_MARGIN = '-30% 0px -55% 0px';
 const DEFAULT_THRESHOLD = 0;
 const DEFAULT_MANUAL_HOLD_MS = 800;
 const DEFAULT_HASH_DEBOUNCE_MS = 120;
+const SWITCH_HYSTERESIS_PX = 8;
 
 const RESERVED_HASHES = [
   sharedStrings.contactFormHash,
@@ -57,8 +59,10 @@ const pickActiveId = (
 
   const viewportHeight = getViewportSize().height ?? 0;
   const scrolledToTop = (window.scrollY || 0) <= 0;
-  let bestVisibleId: string | null = null;
-  let bestVisibleTop = Number.POSITIVE_INFINITY;
+  let bestVisibleBelowId: string | null = null;
+  let bestVisibleBelowTop = Number.POSITIVE_INFINITY;
+  let bestVisibleAboveId: string | null = null;
+  let bestVisibleAboveTop = Number.NEGATIVE_INFINITY;
   let bestAboveId: string | null = null;
   let bestAboveTop = Number.NEGATIVE_INFINITY;
   let bestBelowId: string | null = null;
@@ -71,9 +75,14 @@ const pickActiveId = (
     const isVisible = bottom > 0 && top < viewportHeight;
 
     if (isVisible) {
-      if (top < bestVisibleTop) {
-        bestVisibleTop = top;
-        bestVisibleId = anchor.id;
+      if (top >= 0) {
+        if (top < bestVisibleBelowTop) {
+          bestVisibleBelowTop = top;
+          bestVisibleBelowId = anchor.id;
+        }
+      } else if (top > bestVisibleAboveTop) {
+        bestVisibleAboveTop = top;
+        bestVisibleAboveId = anchor.id;
       }
       continue;
     }
@@ -87,7 +96,8 @@ const pickActiveId = (
     }
   }
 
-  if (bestVisibleId) return bestVisibleId;
+  if (bestVisibleBelowId) return bestVisibleBelowId;
+  if (bestVisibleAboveId) return bestVisibleAboveId;
   if (scrolledToTop) return null;
   if (bestAboveId) return bestAboveId;
   if (bestBelowId) return bestBelowId;
@@ -102,6 +112,7 @@ export function useActiveAnchors(
     rootMargin = DEFAULT_ROOT_MARGIN,
     threshold = DEFAULT_THRESHOLD,
     manualHoldMs = DEFAULT_MANUAL_HOLD_MS,
+    debug = false,
     layoutTick,
     hashSync,
   } = options ?? {};
@@ -180,6 +191,16 @@ export function useActiveAnchors(
     const now = performance.now();
     const manualActive = manualActiveRef.current;
     const candidateId = pickActiveId(orderedAnchors, rectMapRef.current);
+    const viewportHeight = getViewportSize().height ?? 0;
+    const getVisibleRank = (rect?: DOMRectReadOnly | null) => {
+      if (!rect) return null;
+      const { top, bottom } = rect;
+      if (!(bottom > 0 && top < viewportHeight)) return null;
+      if (top >= 0) {
+        return { bucket: 0, distance: top };
+      }
+      return { bucket: 1, distance: Math.abs(top) };
+    };
 
     if (
       manualActive &&
@@ -196,6 +217,23 @@ export function useActiveAnchors(
     manualActiveRef.current = null;
 
     if (candidateId !== activeId) {
+      if (candidateId && activeId) {
+        const candidateRank = getVisibleRank(
+          rectMapRef.current.get(candidateId),
+        );
+        const activeRank = getVisibleRank(
+          rectMapRef.current.get(activeId),
+        );
+        if (candidateRank && activeRank) {
+          if (candidateRank.bucket === activeRank.bucket) {
+            if (candidateRank.distance + SWITCH_HYSTERESIS_PX >= activeRank.distance) {
+              return;
+            }
+          } else if (candidateRank.bucket > activeRank.bucket) {
+            return;
+          }
+        }
+      }
       setActiveId(candidateId);
     }
   }, [
@@ -252,17 +290,71 @@ export function useActiveAnchors(
       initialHashAppliedRef.current = true;
     }
 
-    const nodes: Array<HTMLElement | null> = orderedAnchors.map((anchor) =>
-      document.getElementById(anchor.id),
-    );
+    const nodes: Array<HTMLElement> = [];
+    const nodeIdToAnchorId = new Map<string, string>();
+    const seenNodeIds = new Set<string>();
+    const anchorIds = orderedAnchors.map((anchor) => anchor.id);
+
+    orderedAnchors.forEach((anchor) => {
+      const sentinelId = `${anchor.id}-sentinel`;
+      const sentinelNode = document.getElementById(sentinelId);
+      if (sentinelNode && !seenNodeIds.has(sentinelNode.id)) {
+        nodes.push(sentinelNode);
+        nodeIdToAnchorId.set(sentinelNode.id, anchor.id);
+        seenNodeIds.add(sentinelNode.id);
+        return;
+      }
+      const primaryNode = document.getElementById(anchor.id);
+      if (primaryNode && !seenNodeIds.has(primaryNode.id)) {
+        nodes.push(primaryNode);
+        nodeIdToAnchorId.set(primaryNode.id, anchor.id);
+        seenNodeIds.add(primaryNode.id);
+      }
+    });
+
+    const logDebug = (eventLabel: string) => {
+      if (!debug) return;
+      const viewportHeight = getViewportSize().height ?? 0;
+      const scrollY = window.scrollY || 0;
+      const docHeight =
+        document.documentElement?.scrollHeight ?? 0;
+      const remaining = docHeight - (scrollY + viewportHeight);
+      const rects = anchorIds.reduce<Record<string, DOMRectReadOnly | null>>(
+        (acc, anchorId) => {
+          acc[anchorId] = rectMapRef.current.get(anchorId) ?? null;
+          return acc;
+        },
+        {},
+      );
+      const sentinels = anchorIds.reduce<Record<string, boolean>>(
+        (acc, anchorId) => {
+          acc[anchorId] =
+            !!document.getElementById(`${anchorId}-sentinel`);
+          return acc;
+        },
+        {},
+      );
+      console.log('[anchor-debug]', eventLabel, {
+        scrollY,
+        viewportHeight,
+        docHeight,
+        remaining,
+        rects,
+        sentinels,
+        activeId,
+      });
+    };
 
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const targetId = entry.target.id;
           if (!targetId) return;
-          rectMapRef.current.set(targetId, entry.boundingClientRect);
+          const anchorId = nodeIdToAnchorId.get(targetId);
+          if (!anchorId) return;
+          rectMapRef.current.set(anchorId, entry.boundingClientRect);
         });
+        logDebug('io');
         resolveActiveFromRects();
       },
       {
@@ -274,7 +366,6 @@ export function useActiveAnchors(
 
     ioRef.current = io;
     nodes.forEach((node) => {
-      if (!node) return;
       io.observe(node);
     });
 
@@ -284,9 +375,11 @@ export function useActiveAnchors(
       }
       rafRef.current = window.requestAnimationFrame(() => {
         nodes.forEach((node) => {
-          if (!node) return;
-          rectMapRef.current.set(node.id, node.getBoundingClientRect());
+          const anchorId = nodeIdToAnchorId.get(node.id);
+          if (!anchorId) return;
+          rectMapRef.current.set(anchorId, node.getBoundingClientRect());
         });
+        logDebug('scroll');
         resolveActiveFromRects();
       });
     };
@@ -296,6 +389,7 @@ export function useActiveAnchors(
     window.addEventListener('resize', updateFromScroll);
 
     updateFromScroll();
+    logDebug('init');
 
     return () => {
       io.disconnect();
@@ -311,6 +405,7 @@ export function useActiveAnchors(
   }, [
     hashSync,
     manualHoldMs,
+    debug,
     orderedAnchors,
     resolveActiveFromRects,
     rootMargin,

@@ -158,13 +158,19 @@ globalStyle(
   },
 );
 
-globalStyle('button:not(:disabled)', {
-  cursor: 'pointer',
-});
+globalStyle(
+  'button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled)',
+  {
+    cursor: 'pointer',
+  },
+);
 
-globalStyle('button:disabled', {
-  cursor: 'not-allowed',
-});
+globalStyle(
+  'button:disabled, [type="button"]:disabled, [type="reset"]:disabled, [type="submit"]:disabled',
+  {
+    cursor: 'not-allowed',
+  },
+);
 
 globalStyle(
   'button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-moz-focus-inner, [type="submit"]::-moz-focus-inner',

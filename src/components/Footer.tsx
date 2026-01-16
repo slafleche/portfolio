@@ -36,6 +36,7 @@ export default function Footer({
   hideSystemsLink,
 }: FooterProps) {
   const footerId = id ?? contact.href;
+  const sentinelId = `${footerId}-sentinel`;
   const headingId = `${footerId}-title`;
   return (
     <footer
@@ -43,13 +44,12 @@ export default function Footer({
       id={footerId}
       aria-labelledby={headingId}
     >
-      {systemsLink && !hideSystemsLink ? (
-        <PageCurl
-          label={systemsLink.label}
-          href={systemsLink.href}
-          mockHtmlAlt={contact.mockHtmlAlt}
-        />
-      ) : null}
+      <div
+        id={sentinelId}
+        className={s.anchorSentinel}
+        aria-hidden="true"
+      />
+
       <Content ignoreBottomMargin={true}>
         <Heading
           data-visible="sc-only"
@@ -64,7 +64,7 @@ export default function Footer({
         <div className={s.links}>
           {/* Modal trigger */}
           <ContactDialogTrigger
-            className={glassLink}
+            className={clsx(glassLink, s.link)}
             aria-label={contact.emailLabel}
             title={contact.emailLabel}
           >
@@ -77,7 +77,7 @@ export default function Footer({
           <GlassyLink
             href={sharedStrings.linkedInUrl}
             label="LinkedIn"
-            className={glassLink}
+            className={clsx(glassLink, s.link)}
             target="_blank"
           >
             <div className={glassLinkShine} aria-hidden="true" />
@@ -88,7 +88,7 @@ export default function Footer({
           <GlassyLink
             href={sharedStrings.githubUrl}
             label="GitHub"
-            className={glassLink}
+            className={clsx(glassLink, s.link)}
             target="_blank"
           >
             <div className={glassLinkShine} aria-hidden="true" />
@@ -98,6 +98,13 @@ export default function Footer({
           </GlassyLink>
         </div>
       </Content>
+      {systemsLink && !hideSystemsLink ? (
+        <PageCurl
+          label={systemsLink.label}
+          href={systemsLink.href}
+          mockHtmlAlt={contact.mockHtmlAlt}
+        />
+      ) : null}
     </footer>
   );
 }

@@ -1,7 +1,11 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
-import { colorVars, themeColours } from '../../tokens/global.tokens';
+import {
+  colors,
+  colorVars,
+  themeColours,
+} from '../../tokens/global.tokens';
 import { curlVars } from '../componentTokens/pageCurl.component.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
@@ -47,15 +51,18 @@ export const root = style({
 export const link = style({
   display: 'block',
   ...absolutePosition.bottomLeft(),
-  width: curlVars.open.width.css(),
-  height: curlVars.open.height.css(),
+  width: '100%',
+  height: '100%',
   color: 'inherit',
   textDecoration: 'none',
   overflow: 'visible',
-  cursor: 'pointer',
   zIndex: 3,
   selectors: {
-    '&:focus-visible': outlines(),
+    ...mediaQueryStyle({
+      compact: {
+        cursor: 'default',
+      },
+    }),
   },
 });
 
@@ -87,6 +94,7 @@ export const cornerBox = style({
   height: curlVars.closed.height.css(),
   overflow: 'visible',
   transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
+  cursor: 'pointer',
 });
 
 export const pageTip = style({
@@ -123,7 +131,6 @@ export const pageTipBorder = style({
   transform: `translate(${pageEdgeThickness.css()}, -${pageEdgeThickness.css()})`,
   width: '70%',
   height: '70%',
-  pointerEvents: 'none',
   ...borders({
     top: {
       color: pageEdgeColor,
@@ -163,6 +170,7 @@ export const cornerContents = style({
   width: '125%',
   height: '125%',
   overflow: 'hidden',
+  cursor: 'pointer',
   ...mask,
   transition: 'all 260ms cubic-bezier(0.18, 0.6, 0.22, 1)',
 });
@@ -271,3 +279,9 @@ globalStyle(
     }),
   },
 );
+
+globalStyle(`.${link}:focus-visible .${cornerBox}`, {
+  ...outlines({
+    offset: m(8),
+  }),
+});
