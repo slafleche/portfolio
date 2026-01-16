@@ -1,4 +1,4 @@
-# Portfolio site for slafleche
+# Stéphane LaFlèche’s Portfolio
 
 ## Stack
 
