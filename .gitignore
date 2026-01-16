@@ -152,3 +152,8 @@ ai/epics/*
 *.ttf
 *.ttc
 *.eot
+
+# -----------------------
+# Cors worker
+# -----------------------
+.cloudflare/.wrangler/*

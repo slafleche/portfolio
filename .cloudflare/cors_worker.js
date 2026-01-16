@@ -2,12 +2,20 @@
 export default {
   async fetch(request) {
     const origin = request.headers.get('Origin');
+
     const allow = new Set([
       'https://staging.lafleche.dev',
       'https://lafleche.dev',
       'http://localhost:3000',
     ]);
 
+    const url = new URL(request.url);
+
+    // CHANGE THIS if your backend is different
+    url.protocol = 'https:';
+    url.hostname = 'lafleche.dev';
+
+    // Preflight
     if (request.method === 'OPTIONS') {
       if (origin && allow.has(origin)) {
         return new Response(null, {
@@ -26,7 +34,7 @@ export default {
       return new Response(null, { status: 204 });
     }
 
-    const res = await fetch(request);
+    const res = await fetch(new Request(url.toString(), request));
     const headers = new Headers(res.headers);
 
     if (origin && allow.has(origin)) {
