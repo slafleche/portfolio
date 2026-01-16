@@ -8,7 +8,6 @@ import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
 import { Column, Grid } from '@/components/Grid';
 import Hero from '@/components/Hero';
-import HeroGooeyLazy from '@/components/HeroGooeyLazy.client';
 import { Markdown } from '@/components/Markdown';
 import Menu from '@/components/Menu';
 import ContentWithTitle from '@/components/responsive/ContentWithTitle';
@@ -43,6 +42,7 @@ import * as cg from '@/styles/components/card.css';
 import * as layoutStyles from '@/styles/layout.css';
 
 import { Accordion } from '../../../src/components/Accordion';
+import HeroHomeBg from '../../../src/components/HeroHomeBg';
 
 interface PageParams {
   LOCALE: string;
@@ -161,11 +161,7 @@ export default async function HomePage({
             copy={heroCopy}
             headingAnimated={false}
             TitleSvg={localeSvgs.home.heroHeading}
-            Gooey={() => (
-              <DeferredIsland when="visible">
-                <HeroGooeyLazy />
-              </DeferredIsland>
-            )}
+            Bg={HeroHomeBg}
           />
           <DeferredIsland when="idle">
             {/* Approach */}

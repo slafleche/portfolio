@@ -6,7 +6,6 @@ import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
-import { useSupportsWebkitTouchCallout } from '@/lib/accessibility/useSupportsWebkitTouchCallout';
 import { createDomId } from '@/lib/dom';
 import { isLocaleRichText } from '@/lib/stringUtils';
 import * as s from '@/styles/components/accordion.css';

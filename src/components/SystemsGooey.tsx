@@ -1,6 +1,5 @@
 'use client';
 
-import Goo from '@lafleche/gooey-react';
 import clsx from 'clsx';
 import { type CSSProperties, useId } from 'react';
 
@@ -18,35 +17,16 @@ type Props = {
 };
 
 export default function SystemsGooey({
-  enabled = false,
-  intensity = 'strong',
-  composite = true,
-  filterId,
   className,
   style,
 }: Props) {
   const baseId = useId();
-  const gooeyId = filterId ?? `${baseId}-systems-gooey-filter`;
   const gradientAId = `${baseId}-systems-gooey-gradient-a`;
   const gradientBId = `${baseId}-systems-gooey-gradient-b`;
   const gradientCId = `${baseId}-systems-gooey-gradient-c`;
 
-  const Wrapper = enabled ? Goo : 'div';
-  const wrapperProps = enabled
-    ? {
-        className: clsx(s.root, className),
-        intensity,
-        composite,
-        id: gooeyId,
-        style,
-      }
-    : {
-        className: clsx(s.root, className),
-        style,
-      };
-
   return (
-    <Wrapper {...wrapperProps}>
+    <div className={clsx(s.root, className)} style={style}>
       <svg
         className={s.blobField}
         viewBox="0 5 100 100"
@@ -169,6 +149,6 @@ export default function SystemsGooey({
           />
         </g>
       </svg>
-    </Wrapper>
+    </div>
   );
 }

@@ -1,4 +1,3 @@
-
 import { getLocaleSvgs } from '@/assets/SVG/generated/headingsAsSvgs';
 import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
@@ -7,7 +6,6 @@ import { Markdown } from '@/components/Markdown';
 import Menu from '@/components/Menu';
 import ContentAsTiles from '@/components/responsive/ContentAsTiles';
 import SiteProviders from '@/components/site/SiteProviders.client';
-import SystemsGooeyLazy from '@/components/SystemsGooeyLazy.client';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { resolveLocale } from '@/lib/locales/locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
@@ -22,10 +20,10 @@ import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
 import * as layoutStyles from '@/styles/layout.css';
 
+import HeroSystemsBg from '../../../../src/components/HeroSystemsBg';
 import ContentWithTitle from '../../../../src/components/responsive/ContentWithTitle';
 import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
-
-
+import SystemsGooey from '../../../../src/components/SystemsGooey';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -54,7 +52,9 @@ export default async function SystemsPage({
   const systemsShapeId = translator('systems-architecture-href');
   const systemsShapeTitle = translator('systems-architecture');
   const systemsShapeMarkdown = translator('architecture-content');
-  const systemsShapeCSSCalipersMarkdown = translator('calipers-content');
+  const systemsShapeCSSCalipersMarkdown = translator(
+    'calipers-content',
+  );
   const localeSvgs = getLocaleSvgs(locale);
   const heroCopy = {
     ...heroCopyBase,
@@ -125,11 +125,7 @@ export default async function SystemsPage({
             copy={heroCopy}
             headingAnimated={false}
             TitleSvg={localeSvgs.systems.heroHeading}
-            Gooey={() => (
-              <DeferredIsland when="visible">
-                <SystemsGooeyLazy />
-              </DeferredIsland>
-            )}
+            Bg={SystemsGooey}
           />
           <DeferredIsland when="idle">
             {/* Exptertise */}
@@ -137,9 +133,8 @@ export default async function SystemsPage({
               id={systemsIntroId}
               title={systemsTitle}
               markdown={systemsIntroMarkdown}
-              
             />
-            
+
             {/* Principles */}
             <ContentAsTiles
               id={systemsPrinciplesId}
@@ -150,7 +145,7 @@ export default async function SystemsPage({
               scaleOffset={1}
               translateOffset={4}
             />
-            
+
             {/* Architecture */}
             <ContentAsTiles
               id={systemsShapeId}
@@ -161,7 +156,7 @@ export default async function SystemsPage({
               scaleOffset={4}
               translateOffset={3}
             />
-            
+
             {/* CSS Calipers */}
             <ContentWithTitle
               id="css-calipers"

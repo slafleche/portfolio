@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { ComponentType, CSSProperties, SVGProps } from 'react';
+import type { ComponentType, SVGProps } from 'react';
 
 import * as s from '@/styles/components/hero.css';
 import * as layoutStyles from '@/styles/layout.css';
@@ -7,7 +7,6 @@ import * as layoutStyles from '@/styles/layout.css';
 import splitText from '../styles/helpers/textSplit';
 import { GlassPanel } from './GlassPanel';
 import { HeroCta } from './HeroCta';
-import HeroGooey from './HeroGooey';
 import HeroWaypoint from './HeroWaypoint';
 import { renderInlineMarkdown } from './Markdown';
 
@@ -25,7 +24,7 @@ type Props = {
   overlayClassName?: string;
   headingAnimated?: boolean;
   TitleSvg?: ComponentType<SVGProps<SVGSVGElement>>;
-  Gooey?: ComponentType<{ style?: CSSProperties }> | null;
+  Bg?: ComponentType<{ className?: string }> | null;
 };
 
 export default function Hero({
@@ -33,8 +32,8 @@ export default function Hero({
   className,
   copy,
   overlayClassName,
-  Gooey = HeroGooey,
   TitleSvg,
+  Bg,
 }: Props) {
   const titleCopy = splitText(copy.title);
 
@@ -46,8 +45,11 @@ export default function Hero({
         data-heading-animated="false"
       >
         <div className={clsx(s.overlays)} aria-hidden>
-          <div className={overlayClassName ?? s.fullGradient} />
-          {Gooey && <Gooey />}
+          {Bg ? (
+            <Bg className={s.fullGradient} />
+          ) : (
+            <div className={overlayClassName ?? s.fullGradient} />
+          )}
         </div>
 
         <div className={s.content}>
