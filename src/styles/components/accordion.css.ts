@@ -52,7 +52,6 @@ const slideUp = keyframes({
     opacity: 0,
   },
 });
-
 export const root = style({
   ...margins({
     bottom: m(64),
@@ -258,20 +257,20 @@ globalStyle(`.${button}:focus-visible .${icon}`, {
 
 export const content = style({
   overflow: 'hidden',
+  transform: 'translateZ(0)',
+  backfaceVisibility: 'hidden',
+  willChange: 'height, opacity',
   color: accordionItemTokens.content.color,
   ...backgrounds({
     color: accordionItemTokens.content.backgroundColor,
   }),
   ...paddings(accordionItemTokens.content.paddings),
-  // ...relativeFontWeight(typographyFontVariants.body, mPercent(30)),
   selectors: {
-    '&[data-state="open"]': {
+    '&[data-animated-slide="true"][data-state="open"]': {
       animation: `${slideDown} ${slideTokens.open.timing.css()} ${slideTokens.open.easing} forwards`,
     },
-    '&[data-state="closed"]': {
+    '&[data-animated-slide="true"][data-state="closed"]': {
       animation: `${slideUp} ${slideTokens.closed.timing.css()} ${slideTokens.closed.easing} forwards`,
     },
   },
 });
-
-export const contentInner = style({});

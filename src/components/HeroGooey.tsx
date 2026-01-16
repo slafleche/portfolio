@@ -1,9 +1,9 @@
 'use client';
 
-import Goo from '@lafleche/gooey-react';
 import clsx from 'clsx';
 import { type CSSProperties, useId } from 'react';
 
+import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import * as s from '@/styles/components/heroGooey.css';
 
 import { themeColours } from '../tokens/global.tokens';
@@ -17,25 +17,16 @@ type Props = {
 };
 
 export default function HeroGooey({
-  intensity = 'strong',
-  composite,
-  filterId,
   className,
   style,
 }: Props) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const baseId = useId();
-  const gooeyId = filterId ?? `${baseId}-hero-gooey-filter`;
   const gradientAId = `${baseId}-hero-gooey-gradient-a`;
   const gradientBId = `${baseId}-hero-gooey-gradient-b`;
 
   return (
-    <Goo
-      className={clsx(s.blobWrap, className)}
-      intensity={intensity}
-      composite={composite}
-      id={gooeyId}
-      style={style}
-    >
+    <div className={clsx(s.blobWrap, className)} style={style}>
       <svg
         className={s.blobField}
         viewBox="0 0 100 100"
@@ -43,6 +34,7 @@ export default function HeroGooey({
         aria-hidden
         focusable="false"
       >
+       
         <defs>
           <linearGradient
             id={gradientAId}
@@ -93,7 +85,17 @@ export default function HeroGooey({
         <g className={s.blobGroup}>
           {/* Fat Triangle */}
           <g className={clsx(s.blobSpin, s.ellpitical_a_nimation)}>
-            <g className={clsx(s.blobSpin, s.spin_a_animation)}>
+            <g className={s.blobSpin}>
+              {prefersReducedMotion ? null : (
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 50 50"
+                  to="360 50 50"
+                  dur="27s"
+                  repeatCount="indefinite"
+                />
+              )}
               <path
                 className={s.blobShape}
                 d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
@@ -106,7 +108,17 @@ export default function HeroGooey({
             </g>
           </g>
           {/* Nubby Triangle */}
-          <g className={clsx(s.blobSpin, s.spin_b_animation)}>
+          <g className={s.blobSpin}>
+            {prefersReducedMotion ? null : (
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                from="360 50 50"
+                to="0 50 50"
+                dur="37s"
+                repeatCount="indefinite"
+              />
+            )}
             <g className={clsx(s.blobSpin, s.ellpitical_b_animation)}>
               <path
                 className={s.blobShape}
@@ -120,6 +132,6 @@ export default function HeroGooey({
           </g>
         </g>
       </svg>
-    </Goo>
+    </div>
   );
 }

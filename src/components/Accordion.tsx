@@ -5,10 +5,9 @@ import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 
+import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { createDomId } from '@/lib/dom';
-import {
-  isLocaleRichText,
-} from '@/lib/stringUtils';
+import { isLocaleRichText } from '@/lib/stringUtils';
 import * as s from '@/styles/components/accordion.css';
 
 import PlusIcon from './icons/Plus';
@@ -35,6 +34,7 @@ export function Accordion({
   className,
 }: AccordionProps) {
   const baseId = useMemo(() => createDomId('accordion'), []);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const resolvedItems = useMemo(
     () =>
@@ -90,14 +90,12 @@ export function Accordion({
               <span className={s.triggerText}>
                 <span className={s.triggerLabel}>
                   {typeof item.heading === 'string' &&
-                  isLocaleRichText(item.heading) ? (
-                    renderInlineMarkdown(item.heading, {
-                      openLinksInNewTab: true,
-                      asUi: { links: true },
-                    })
-                  ) : (
-                    item.heading
-                  )}
+                  isLocaleRichText(item.heading)
+                    ? renderInlineMarkdown(item.heading, {
+                        openLinksInNewTab: true,
+                        asUi: { links: true },
+                      })
+                    : item.heading}
                 </span>
                 {item.subHeading ? (
                   <>
@@ -107,14 +105,12 @@ export function Accordion({
                       </span>
                       <span className={s.triggerSubtitleText}>
                         {typeof item.subHeading === 'string' &&
-                        isLocaleRichText(item.subHeading) ? (
-                          renderInlineMarkdown(item.subHeading, {
-                            openLinksInNewTab: true,
-                            asUi: { links: true },
-                          })
-                        ) : (
-                          item.subHeading
-                        )}
+                        isLocaleRichText(item.subHeading)
+                          ? renderInlineMarkdown(item.subHeading, {
+                              openLinksInNewTab: true,
+                              asUi: { links: true },
+                            })
+                          : item.subHeading}
                       </span>
                     </span>
                   </>
@@ -126,8 +122,13 @@ export function Accordion({
               </span>
             </AccordionPrimitive.Trigger>
           </AccordionPrimitive.Header>
-          <AccordionPrimitive.Content className={s.content}>
-            <div className={s.contentInner}>{item.content}</div>
+          <AccordionPrimitive.Content
+            data-animated-slide={
+              !prefersReducedMotion ? 'true' : 'false'
+            }
+            className={s.content}
+          >
+            {item.content}
           </AccordionPrimitive.Content>
         </AccordionPrimitive.Item>
       ))}
