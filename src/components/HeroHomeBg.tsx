@@ -82,6 +82,14 @@ const getLoopValue = (elapsedMs: number, durationSeconds: number) => {
 
 export default function HeroHomeBg({ className }: Props) {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const reducedTranslations = {
+    rounded: 'translate3d(0, 0, 0)',
+    nubby: 'translate3d(0, 0, 0)',
+  };
+  const reducedSpins = {
+    rounded: 'rotate(0deg)',
+    nubby: 'rotate(0deg)',
+  };
   const [
     hasInitialRotation,
     setHasInitialRotation,
@@ -107,6 +115,10 @@ export default function HeroHomeBg({ className }: Props) {
     rounded: 'rotate(0deg)',
     nubby: 'rotate(0deg)',
   });
+  const activeTranslations = prefersReducedMotion
+    ? reducedTranslations
+    : translations;
+  const activeSpins = prefersReducedMotion ? reducedSpins : spins;
   const translateRangesRef = useRef({
     rounded: {
       translateX: roundedTranslationRange.maxXPercent,
@@ -139,15 +151,11 @@ export default function HeroHomeBg({ className }: Props) {
     };
 
     updateRotation();
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+    window.addEventListener('focus', updateRotation);
+    document.addEventListener('visibilitychange', updateRotation);
     if (prefersReducedMotion) {
-      setTranslations({
-        rounded: 'translate3d(0, 0, 0)',
-        nubby: 'translate3d(0, 0, 0)',
-      });
-      setSpins({
-        rounded: 'rotate(0deg)',
-        nubby: 'rotate(0deg)',
-      });
       return () => {
         if (frameId !== null) {
           window.cancelAnimationFrame(frameId);
@@ -161,10 +169,6 @@ export default function HeroHomeBg({ className }: Props) {
         );
       };
     }
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', handleResize);
-    window.addEventListener('focus', updateRotation);
-    document.addEventListener('visibilitychange', updateRotation);
     const motionStart = performance.now();
     const tickMotion = (now: number) => {
       const elapsedMs = now - motionStart;
@@ -239,11 +243,11 @@ export default function HeroHomeBg({ className }: Props) {
         >
           <div
             className={s.transformOrigin}
-            style={{ transform: translations.rounded }}
+            style={{ transform: activeTranslations.rounded }}
           >
             <div
               className={s.transformOrigin}
-              style={{ transform: spins.rounded }}
+              style={{ transform: activeSpins.rounded }}
             >
               <RoundedTriangle className={s.transformOrigin} />
             </div>
@@ -257,11 +261,11 @@ export default function HeroHomeBg({ className }: Props) {
         >
           <div
             className={s.transformOrigin}
-            style={{ transform: translations.nubby }}
+            style={{ transform: activeTranslations.nubby }}
           >
             <div
               className={s.transformOrigin}
-              style={{ transform: spins.nubby }}
+              style={{ transform: activeSpins.nubby }}
             >
               <NubbyTriangle className={s.transformOrigin} />
             </div>
