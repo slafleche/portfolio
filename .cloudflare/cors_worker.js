@@ -1,4 +1,4 @@
-/* eslint-env worker */
+/* global Response */
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin');

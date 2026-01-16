@@ -20,7 +20,6 @@ import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
 import * as layoutStyles from '@/styles/layout.css';
 
-import HeroSystemsBg from '../../../../src/components/HeroSystemsBg';
 import ContentWithTitle from '../../../../src/components/responsive/ContentWithTitle';
 import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
 import SystemsGooey from '../../../../src/components/SystemsGooey';

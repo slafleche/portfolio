@@ -7,9 +7,9 @@ import * as s from '@/styles/components/heroBg.css';
 import * as nt from '@/styles/components/nubbyTriangle.css';
 import * as rt from '@/styles/components/roundedTriangle.css';
 
+import { usePrefersReducedMotion } from '../lib/accessibility/usePrefersReducedMotion';
 import NubbyTriangle from './icons/NubbyTriangle';
 import RoundedTriangle from './icons/RoundedTriangle';
-import { usePrefersReducedMotion } from '../lib/accessibility/usePrefersReducedMotion';
 
 type Props = {
   className?: string;
