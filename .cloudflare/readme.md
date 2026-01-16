@@ -1,12 +1,14 @@
 # Cloudflare CORS Worker
 
-This Worker is a CORS shim / proxy in front of a target origin. It handles preflight (OPTIONS) requests and injects CORS headers for an explicit allow-list of origins.
+This Worker is a CORS shim / proxy in front of a target origin. It handles
+preflight (OPTIONS) requests and injects CORS headers for an explicit allow-list
+of origins.
 
 No build step. No Pages. Single-file Worker.
 
 ## Files
 
-- cors_worker.js — Worker logic  
+- cors_worker.js — Worker logic
 - wrangler.toml — Deployment configuration
 
 ## Prerequisites
@@ -16,9 +18,12 @@ No build step. No Pages. Single-file Worker.
 - Wrangler installed and logged in
 
 Install and authenticate:
-- npm i -g wrangler
-- wrangler login
-- wrangler whoami
+
+```bash
+npm i -g wrangler
+wrangler login
+wrangler whoami
+```
 
 ## Updating Allowed Origins
 
@@ -40,20 +45,11 @@ All incoming requests are forwarded to this origin.
 ## Deploying Updates
 
 From the Worker directory, run:
-- wrangler deploy
 
-There is no build step.
+```bash
+wrangler deploy
+```
 
-## Local Development (optional)
-
-- wrangler dev
-
-## What NOT to Commit
-
-Do not commit:
-- .wrangler/
-- .dev.vars
-- .env
 
 OAuth credentials are stored locally and are not committed to the repository.
 

@@ -1,3 +1,7 @@
 name = "cors-worker"
 main = "cors_worker.js"
 compatibility_date = "2026-01-16"
+
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "portfolio-assets"

@@ -1,21 +1,13 @@
 /* eslint-env worker */
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const origin = request.headers.get('Origin');
-
     const allow = new Set([
       'https://staging.lafleche.dev',
       'https://lafleche.dev',
       'http://localhost:3000',
     ]);
 
-    const url = new URL(request.url);
-
-    // CHANGE THIS if your backend is different
-    url.protocol = 'https:';
-    url.hostname = 'lafleche.dev';
-
-    // Preflight
     if (request.method === 'OPTIONS') {
       if (origin && allow.has(origin)) {
         return new Response(null, {
@@ -34,17 +26,30 @@ export default {
       return new Response(null, { status: 204 });
     }
 
-    const res = await fetch(new Request(url.toString(), request));
-    const headers = new Headers(res.headers);
+    const url = new URL(request.url);
+    const key = url.pathname.replace(/^\/+/, '');
+    const object = await env.ASSETS.get(key);
+
+    if (!object) {
+      return new Response('Not found', { status: 404 });
+    }
+
+    const headers = new Headers(object.httpMetadata ?? {});
+    if (object.size) {
+      headers.set('Content-Length', object.size.toString());
+    }
+    if (object.etag) {
+      headers.set('ETag', object.etag);
+    }
+    headers.set('Cache-Control', 'public, max-age=31536000, immutable');
 
     if (origin && allow.has(origin)) {
       headers.set('Access-Control-Allow-Origin', origin);
       headers.set('Vary', 'Origin');
     }
 
-    return new Response(res.body, {
-      status: res.status,
-      statusText: res.statusText,
+    return new Response(object.body, {
+      status: 200,
       headers,
     });
   },

@@ -67,6 +67,7 @@ export default [
       'dist/**',
       'build/**',
       'tmp/**',
+      '.cloudflare/**',
       'public/**',
       'src/data/generated/**/*.gen.ts',
       'src/lib/locales/generated/**/*.gen.ts',
