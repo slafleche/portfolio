@@ -2,6 +2,7 @@
 import '@/styles/globals.css';
 
 import { headers } from 'next/headers';
+import Script from 'next/script';
 import type { ReactNode } from 'react';
 
 import SmoothScrollIdle from '@/components/SmoothScrollIdle';
@@ -144,6 +145,16 @@ export default async function RootLayout({
       <body>
         {children}
         <SmoothScrollIdle />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-VF8QHEKQS8"
+          strategy="afterInteractive"
+        />
+        <Script id="ga-gtag" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-VF8QHEKQS8');`}
+        </Script>
       </body>
     </html>
   );
