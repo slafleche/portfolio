@@ -14,7 +14,7 @@ type Props = {
 
 export default function SkipToContent({
   className,
-  href = '#body',
+  href = '#main',
   label,
   icon,
 }: Props) {

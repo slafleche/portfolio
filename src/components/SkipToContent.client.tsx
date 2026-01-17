@@ -19,7 +19,7 @@ type Props = {
 
 export default function SkipToContentClient({
   className,
-  href = '#body',
+  href = '#content',
   label,
   icon,
 }: Props) {

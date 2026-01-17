@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-import { SkipNavContent } from '@/components/SkipNavContent';
 import { resolveLocale } from '@/lib/locales/locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildMetaCopy } from '@/lib/locales/sections/meta.locale';
@@ -14,7 +13,7 @@ interface SiteLayoutProps {
 export default function SiteLayout({
   children,
 }: SiteLayoutProps) {
-  return <SkipNavContent id="body">{children}</SkipNavContent>;
+  return <>{children}</>;
 }
 
 export async function generateMetadata({

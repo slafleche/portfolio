@@ -271,7 +271,7 @@ globalStyle(`.${item}[data-state="open"] .${iconSvg}`, {
 
 globalStyle(`.${button}:focus-visible .${icon}`, {
   ...outlines({
-    color: themeColours.secondary,
+    color: 'Highlight',
     width: m(2),
   }),
 });

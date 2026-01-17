@@ -278,7 +278,11 @@ export const submitButton = style({
   overflow: 'hidden',
   width: '100%',
   border: 'none',
-  height: '56px',
+  ...paddings({
+    vertical: formVars.button.paddings.vertical.double(),
+    horizontal: formVars.button.paddings.horizontal.double(),
+  }),
+  minHeight: formVars.button.minHeight.css(),
   ...borders(glassyButtonTokens.borders),
   ...backgrounds(glassyButtonTokens.backgrounds),
   color: glassyButtonTokens.text.color.css(),

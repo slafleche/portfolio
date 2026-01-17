@@ -52,9 +52,6 @@ globalStyle(`p`, {
   ...paddings(0),
 });
 
-globalStyle('ul, ol', {
-  paddingInlineStart: '0',
-});
 
 globalStyle('blockquote', {
   color: textStyleVars.blockquote.color.css(),

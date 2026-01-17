@@ -152,9 +152,11 @@ export default async function HomePage({
       <Menu {...menuProps} />
       <div className={layoutStyles.page}>
         <main
+          id="main"
           className={layoutStyles.main}
           data-query-all="no-margin"
           data-query-compact="no-padding"
+          tabIndex={-1}
         >
           <Hero
             id="hero"
@@ -172,7 +174,7 @@ export default async function HomePage({
             >
               <Markdown source={approach.content} />
             </ContentWithTitle>
-            
+
             {/* About */}
             <ContentWithTitle
               id={about.href}
@@ -181,7 +183,7 @@ export default async function HomePage({
             >
               <Markdown source={about.content} />
             </ContentWithTitle>
-            
+
             {/* Case Study */}
             <CaseStudy
               id={caseStudies.href}
@@ -190,27 +192,26 @@ export default async function HomePage({
               wordMarkClassName={cg.wordmarkTextNoLogo}
             >
               <Accordion
-                items={caseStudies.list.map((
-                  study: CaseStudyListItem,
-                  index: number,
-                ) => ({
-                  heading: study.title,
-                  subHeading: study.subTitle,
-                  content: (
-                    <Markdown
-                      source={study.content}
-                      asUi={{
-                        headings: true,
-                        paragraphs: true,
-                      }}
-                    />
-                  ),
-                  id: `${baseId}-${index}`,
-                  defaultOpen: index === 0,
-                }))}
+                items={caseStudies.list.map(
+                  (study: CaseStudyListItem, index: number) => ({
+                    heading: study.title,
+                    subHeading: study.subTitle,
+                    content: (
+                      <Markdown
+                        source={study.content}
+                        asUi={{
+                          headings: true,
+                          paragraphs: true,
+                        }}
+                      />
+                    ),
+                    id: `${baseId}-${index}`,
+                    defaultOpen: index === 0,
+                  }),
+                )}
               />
             </CaseStudy>
-            
+
             {/* Projects */}
             <ContentWithTitle
               id={projects.href}

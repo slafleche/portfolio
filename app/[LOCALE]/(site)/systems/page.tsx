@@ -118,7 +118,7 @@ export default async function SystemsPage({
 
       <div className={layoutStyles.page}>
         <SystemsBgOverlay className={layoutStyles.svgOverlay} />
-        <main className={layoutStyles.main}>
+        <main id="main" className={layoutStyles.main} tabIndex={-1}>
           <Hero
             id="systems-hero"
             copy={heroCopy}

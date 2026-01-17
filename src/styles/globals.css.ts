@@ -165,6 +165,14 @@ globalStyle(
 );
 
 globalStyle(
+  'button:focus-visible, [type="button"]:focus-visible, [type="reset"]:focus-visible, [type="submit"]:focus-visible',
+  {
+    outline: '2px solid Highlight',
+    outlineOffset: '2px',
+  },
+);
+
+globalStyle(
   'button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled)',
   {
     cursor: 'pointer',
@@ -279,9 +287,9 @@ globalStyle(
 globalStyle(
   'ul:not([data-ui="list-unordered"]), ol:not([data-ui="list-ordered"])',
   {
-    ...margins({
-      left: m(40),
-    }),
+    paddingInlineStart: 0,
+    marginBlockStart: 0,
+    marginBlockEnd: 0,
   },
 );
 

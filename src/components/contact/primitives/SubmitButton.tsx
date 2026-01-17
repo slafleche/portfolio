@@ -21,10 +21,11 @@ export const SubmitButton = forwardRef<
     type={type}
     className={clsx(s.submitButton, glassyButtonHover, className)}
   >
-    <div className={s.submitInner}>{children}</div>
+    <div className={s.submitInner} aria-hidden={true}/>
     <div className={s.shineWrapper} aria-hidden="true">
       <div className={glassLinkShine} />
     </div>
+    {children}
   </button>
 ));
 SubmitButton.displayName = 'SubmitButton';

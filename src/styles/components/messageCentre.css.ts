@@ -116,6 +116,8 @@ export const status = style({});
 
 globalStyle(`ul.${status}`, {
   ...paddings({
+    left: mEm(2),
+    vertical: mEm(1),
     right: mEm(1),
   }),
 });

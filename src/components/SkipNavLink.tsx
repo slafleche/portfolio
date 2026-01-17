@@ -7,17 +7,20 @@ import { useCallback } from 'react';
 import * as skipNavStyles from '@/styles/components/skipNav.css';
 
 type SkipNavLinkProps = ComponentPropsWithoutRef<'a'> & {
-  contentId: string;
+  contentId?: string;
 };
 
 export function SkipNavLink({
-  contentId,
+  contentId = 'main',
   className,
   onClick,
   children,
   ...rest
 }: SkipNavLinkProps) {
-  const href = `#${contentId}`;
+  const normalizedContentId = contentId.startsWith('#')
+    ? contentId.slice(1)
+    : contentId;
+  const href = `#${normalizedContentId}`;
 
   const handleClick = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
@@ -27,7 +30,6 @@ export function SkipNavLink({
       }
 
       if (typeof window === 'undefined') return;
-      if (!href.startsWith('#')) return;
       const targetId = href.slice(1);
       const target = document.getElementById(targetId);
       if (!target) return;
@@ -36,12 +38,19 @@ export function SkipNavLink({
         document.documentElement,
       ).scrollPaddingTop;
       const paddingValue = Number.parseFloat(scrollPaddingTop);
-      const padding = Number.isFinite(paddingValue) ? paddingValue : 0;
+      const padding = Number.isFinite(paddingValue)
+        ? paddingValue
+        : 0;
       const top = target.getBoundingClientRect().top + window.scrollY;
+      const nextTop = Math.max(0, top - padding);
+      const before = window.scrollY;
       window.scrollTo({
-        top: Math.max(0, top - padding),
+        top: nextTop,
         behavior: 'smooth',
       });
+      if (window.scrollY === before) {
+        window.scrollTo(0, nextTop);
+      }
       if (typeof target.focus === 'function') {
         const previousTabIndex = target.getAttribute('tabindex');
         if (previousTabIndex == null) {

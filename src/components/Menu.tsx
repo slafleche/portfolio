@@ -165,7 +165,7 @@ export default function Menu({
 
   return (
     <header className={s.root}>
-      <SkipNavLink contentId="body">{skipNavLabel}</SkipNavLink>
+      <SkipNavLink>{skipNavLabel}</SkipNavLink>
       <div
         ref={frameRef}
         className={s.viewportFrame}
