@@ -49,6 +49,54 @@ import { useContactFormOutcome } from './useContactFormOutcome';
 
 const DEFAULT_ACTION_URL = '/api/contact';
 const SCROLL_TARGET_OFFSET = 20;
+const SCROLL_ANIMATION_MS = 320;
+
+type ScrollTarget = HTMLElement | Window;
+
+const easeOutCubic = (value: number) =>
+  1 - Math.pow(1 - value, 3);
+
+const isWindow = (target: ScrollTarget): target is Window =>
+  typeof window !== 'undefined' && target === window;
+
+const getScrollTop = (target: ScrollTarget) =>
+  isWindow(target)
+    ? window.scrollY || window.pageYOffset || 0
+    : target.scrollTop;
+
+const setScrollTop = (target: ScrollTarget, top: number) => {
+  const safeTop = Math.max(0, top);
+  if (isWindow(target)) {
+    window.scrollTo({ top: safeTop, behavior: 'auto' });
+    return;
+  }
+  if (typeof target.scrollTo === 'function') {
+    target.scrollTo({ top: safeTop, behavior: 'auto' });
+    return;
+  }
+  target.scrollTop = safeTop;
+};
+
+const animateScrollTo = (target: ScrollTarget, top: number) => {
+  if (typeof window === 'undefined') return;
+  const start = getScrollTop(target);
+  if (start === top) return;
+  const startTime = window.performance?.now?.() ?? Date.now();
+  const tick = (now: number) => {
+    const progress = Math.min(
+      1,
+      (now - startTime) / SCROLL_ANIMATION_MS,
+    );
+    const next = Math.round(
+      start + (top - start) * easeOutCubic(progress),
+    );
+    setScrollTop(target, next);
+    if (progress < 1) {
+      window.requestAnimationFrame(tick);
+    }
+  };
+  window.requestAnimationFrame(tick);
+};
 
 type ContactFormAltView =
   | {
@@ -264,56 +312,54 @@ function ContactFormInner({
     if (!scrollTarget) return;
 
     const element = document.getElementById(scrollTarget);
-    if (element && typeof element.scrollIntoView === 'function') {
+    if (element) {
       const header = document.querySelector<HTMLElement>(
         '[data-ui="form-header"]',
       );
       const headerOffset =
         header?.getBoundingClientRect().height ?? 0;
-
-      if (headerOffset > 0) {
-        let scrollParent = element.closest<HTMLElement>(
-          '[data-ui="form-scroll-area"]',
-        );
-        if (!scrollParent) {
-          scrollParent = element.parentElement;
-          while (scrollParent) {
-            if (
-              scrollParent.scrollHeight > scrollParent.clientHeight
-            ) {
-              break;
-            }
-            scrollParent = scrollParent.parentElement;
+      let scrollParent = element.closest<HTMLElement>(
+        '[data-ui="form-scroll-area"]',
+      );
+      if (!scrollParent) {
+        scrollParent = element.parentElement;
+        while (scrollParent) {
+          if (
+            scrollParent.scrollHeight > scrollParent.clientHeight
+          ) {
+            break;
           }
+          scrollParent = scrollParent.parentElement;
         }
-        if (scrollParent) {
-          const targetTop =
-            element.getBoundingClientRect().top -
-            scrollParent.getBoundingClientRect().top +
-            scrollParent.scrollTop;
-          scrollParent.scrollTo({
-            top: Math.max(
-              0,
-              targetTop - headerOffset - SCROLL_TARGET_OFFSET,
-            ),
-            behavior: 'smooth',
-          });
+      }
+      if (scrollParent) {
+        const targetTop =
+          element.getBoundingClientRect().top -
+          scrollParent.getBoundingClientRect().top +
+          scrollParent.scrollTop;
+        const desiredTop = Math.max(
+          0,
+          targetTop - headerOffset - SCROLL_TARGET_OFFSET,
+        );
+        const currentTop = getScrollTop(scrollParent);
+        if (desiredTop < currentTop) {
+          animateScrollTo(scrollParent, desiredTop);
         } else {
-          const targetTop =
-            element.getBoundingClientRect().top + window.scrollY;
-          window.scrollTo({
-            top: Math.max(
-              0,
-              targetTop - headerOffset - SCROLL_TARGET_OFFSET,
-            ),
-            behavior: 'smooth',
-          });
+          setScrollTop(scrollParent, desiredTop);
         }
       } else {
-        element.scrollIntoView({
-          block: 'start',
-          behavior: 'smooth',
-        });
+        const targetTop =
+          element.getBoundingClientRect().top + window.scrollY;
+        const desiredTop = Math.max(
+          0,
+          targetTop - headerOffset - SCROLL_TARGET_OFFSET,
+        );
+        const currentTop = getScrollTop(window);
+        if (desiredTop < currentTop) {
+          animateScrollTo(window, desiredTop);
+        } else {
+          setScrollTop(window, desiredTop);
+        }
       }
     }
 

@@ -225,6 +225,8 @@ export const textarea = style({
 });
 
 export const errorText = style({
+  display: 'block',
+  width: '100%',
   color: formVars.field.error.text.color.css(),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.hints,
@@ -233,6 +235,7 @@ export const errorText = style({
     top: mEm(0.2),
   }),
   fontSize: '0.85rem',
+  textAlign: 'center',
 });
 
 export const counter = style({
@@ -244,10 +247,13 @@ export const counter = style({
 });
 
 export const helperText = style({
+  display: 'block',
+  width: '100%',
   color: formVars.counter.text.color.css(),
   ...fontStylesFromFontVariant({
     variant: formFontVariants.hints,
   }),
+  textAlign: 'center',
   fontSize: '0.85rem',
 });
 

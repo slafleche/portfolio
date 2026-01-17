@@ -754,7 +754,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       await waitFor(() => {
         expect(scrollToSpy).toHaveBeenCalledWith({
           top: 140,
-          behavior: 'smooth',
+          behavior: 'auto',
         });
       });
     } finally {
@@ -884,7 +884,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       await waitFor(() => {
         expect(scrollToSpy).toHaveBeenCalledWith({
           top: 140,
-          behavior: 'smooth',
+          behavior: 'auto',
         });
       });
 
@@ -907,7 +907,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       await waitFor(() => {
         expect(scrollToSpy).toHaveBeenLastCalledWith({
           top: 230,
-          behavior: 'smooth',
+          behavior: 'auto',
         });
       });
       expect(windowScrollSpy).not.toHaveBeenCalled();
