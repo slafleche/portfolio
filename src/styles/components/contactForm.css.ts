@@ -299,8 +299,7 @@ export const scoopGradient = style({
 globalStyle(`.${panel} p`, {
   lineHeight: 1.2,
   ...margins({
-    top: m(0),
-    bottom: mEm(0.5),
+    top: mEm(0.3),
   }),
 });
 

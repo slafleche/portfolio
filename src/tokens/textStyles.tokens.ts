@@ -51,6 +51,7 @@ export const textStyleVars = {
       },
       paddings: {
         left: listIndent,
+        right: mEm(1),
       },
     },
     item: {

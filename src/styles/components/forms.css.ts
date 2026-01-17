@@ -1,13 +1,10 @@
 import { globalStyle, keyframes, style } from '@vanilla-extract/css';
-import { m, mPercent } from 'css-calipers';
+import { m, mEm, mPercent } from 'css-calipers';
 
 import { formVars } from '@/tokens/forms.tokens';
 
 import { formFontVariants } from '../../tokens/fontVariants/forms';
-import {
-  glassyButtonCupped,
-  glassyButtonTokens,
-} from '../../tokens/glassy.tokens';
+import { glassyButtonTokens } from '../../tokens/glassy.tokens';
 import { colors, colorVars } from '../../tokens/global.tokens';
 import {
   formLayoutVars,
@@ -15,7 +12,11 @@ import {
 } from '../../tokens/layout.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
-import { gradientAsBgImg } from '../helpers/gradients.helper';
+import { color } from '../helpers/colorWrap.helper';
+import {
+  buildLinear,
+  gradientAsBgImg,
+} from '../helpers/gradients.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { boxShadow, textShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
@@ -228,6 +229,9 @@ export const errorText = style({
   ...fontStylesFromFontVariant({
     variant: formFontVariants.hints,
   }),
+  ...paddings({
+    top: mEm(0.2),
+  }),
   fontSize: '0.85rem',
 });
 
@@ -263,12 +267,12 @@ export const buttonRow = style({
 });
 
 export const submitButton = style({
+  display: 'block',
   position: 'relative',
   overflow: 'hidden',
   width: '100%',
-  minHeight: formVars.button.minHeight.css(),
-  ...paddings(formVars.button.paddings.horizontal),
   border: 'none',
+  minHeight: '46px',
   ...borders(glassyButtonTokens.borders),
   ...backgrounds(glassyButtonTokens.backgrounds),
   color: glassyButtonTokens.text.color.css(),
@@ -299,18 +303,42 @@ export const submitButton = style({
   },
 });
 
+const cuppedStyle = {
+  gradient: buildLinear({
+    angle: m(0, 'deg'),
+    stops: [
+      {
+        at: mPercent(0),
+        color: color('#e7e7e7').alpha(0.03),
+      },
+      {
+        at: mPercent(100),
+        color: color('#f7f8f7').darken(0.9).alpha(0.2),
+      },
+    ],
+  }),
+};
+
+// ...paddings(formVars.button.paddings),
+//       vertical: m(8),
+//       horizontal: m(9),
+
 export const submitInner = style({
-  position: 'relative',
+  ...absolutePosition.topLeft(
+    formVars.button.paddings.vertical,
+    formVars.button.paddings.horizontal,
+  ),
+  width: `calc(100% - ${formVars.button.paddings.horizontal.double().css()})`,
+  height: `calc(100% - ${formVars.button.paddings.vertical.double().css()})`,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   zIndex: 3,
-  ...paddings(m(12)),
   ...borders.radii([
     m(30),
     m(40),
   ]),
-  ...gradientAsBgImg(glassyButtonCupped.gradient),
+  ...gradientAsBgImg(cuppedStyle.gradient),
 });
 
 export const shineWrapper = style({
@@ -362,8 +390,6 @@ export const turnstileReset = style({
   textDecoration: 'underline',
   cursor: 'pointer',
 });
-
-
 
 globalStyle(`${input}[data-error="true"]::placeholder`, {
   color: formVars.field.error.text.color.css(),

@@ -1,4 +1,4 @@
-import { hasCssMethod,isMeasurement } from 'css-calipers';
+import { hasCssMethod, isMeasurement } from 'css-calipers';
 
 import { notRelease } from '@/lib/runtimeEnv';
 import type {
@@ -73,6 +73,15 @@ type BorderOptions = {
   skipDefaults?: boolean;
 };
 
+type BorderRadiusOptions = {
+  output?: boolean | {
+    ne?: boolean;
+    nw?: boolean;
+    se?: boolean;
+    sw?: boolean;
+  };
+};
+
 /* --------------------------
    Utilities
 -------------------------- */
@@ -109,6 +118,16 @@ const asRadius = (
     return entries.map((entry) => entry.css()).join(' ');
   }
   if (isMeasurement(v)) return v.css();
+  return undefined;
+};
+
+const normalizeZeroRadius = (
+  value: string | number | undefined,
+): string | undefined => {
+  if (value === 0) return '0';
+  if (value === '0px') return '0';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number') return `${value}`;
   return undefined;
 };
 
@@ -271,13 +290,12 @@ const zoneKeys: CompassRegion[] = [
   'west',
 ];
 
-const regionAliasLookup: Record<CompassRegion, CompassRegionAlias> =
-  {
-    north: 'n',
-    south: 's',
-    east: 'e',
-    west: 'w',
-  };
+const regionAliasLookup: Record<CompassRegion, CompassRegionAlias> = {
+  north: 'n',
+  south: 's',
+  east: 'e',
+  west: 'w',
+};
 
 type ResolvedRadius = {
   tl: string;
@@ -383,9 +401,12 @@ const resolveRadiusCompass = (
   const fbr = br ?? '0';
   const fbl = bl ?? '0';
 
-  const allZero = [ftl, ftr, fbr, fbl].every(
-    (value) => value === '0' || value === '0px',
-  );
+  const allZero = [
+    ftl,
+    ftr,
+    fbr,
+    fbl,
+  ].every((value) => value === '0' || value === '0px');
   if (allZero) return undefined;
 
   return {
@@ -537,18 +558,14 @@ const resolve = (
   ] = widths;
   const widthsDefined = widths.every((w) => w !== undefined);
   if (widthsDefined) {
-    css.borderTopWidth =
-      tw as CSS_TYPES.Property.BorderTopWidth;
-    css.borderRightWidth =
-      rw as CSS_TYPES.Property.BorderRightWidth;
+    css.borderTopWidth = tw as CSS_TYPES.Property.BorderTopWidth;
+    css.borderRightWidth = rw as CSS_TYPES.Property.BorderRightWidth;
     css.borderBottomWidth =
       bw as CSS_TYPES.Property.BorderBottomWidth;
-    css.borderLeftWidth =
-      lw as CSS_TYPES.Property.BorderLeftWidth;
+    css.borderLeftWidth = lw as CSS_TYPES.Property.BorderLeftWidth;
   } else {
     if (tw !== undefined) {
-      css.borderTopWidth =
-        tw as CSS_TYPES.Property.BorderTopWidth;
+      css.borderTopWidth = tw as CSS_TYPES.Property.BorderTopWidth;
     }
     if (rw !== undefined) {
       css.borderRightWidth =
@@ -559,14 +576,12 @@ const resolve = (
         bw as CSS_TYPES.Property.BorderBottomWidth;
     }
     if (lw !== undefined) {
-      css.borderLeftWidth =
-        lw as CSS_TYPES.Property.BorderLeftWidth;
+      css.borderLeftWidth = lw as CSS_TYPES.Property.BorderLeftWidth;
     }
   }
 
   if (t.style !== undefined) {
-    css.borderTopStyle =
-      t.style as CSS_TYPES.Property.BorderTopStyle;
+    css.borderTopStyle = t.style as CSS_TYPES.Property.BorderTopStyle;
   }
   if (r.style !== undefined) {
     css.borderRightStyle =
@@ -610,7 +625,10 @@ const resolve = (
   return css;
 };
 
-const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
+const resolveRadiusOnly = (
+  input?: BorderInput,
+  options?: BorderRadiusOptions,
+): FinalBorderCSS => {
   const isMeasurementList = (
     value: unknown,
   ): value is ReadonlyArray<BorderMeasurementInput> =>
@@ -639,7 +657,10 @@ const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
     if (!value || typeof value !== 'object') return false;
     if (Array.isArray(value) || isMeasurement(value)) return false;
     return Object.entries(value).some(
-      ([key, entry]) =>
+      ([
+        key,
+        entry,
+      ]) =>
         radiusShorthandKeys.has(key) &&
         (isMeasurement(entry) || isMeasurementList(entry)),
     );
@@ -656,6 +677,11 @@ const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
   if (!hasRadiusIntent(intent) || hasEdgeIntent(intent)) return {};
 
   const radius = intent.radius;
+  const output = options?.output;
+  const outputAll = output === true;
+  const outputFlags =
+    output && typeof output === 'object' ? output : undefined;
+  const shouldForceOutput = outputAll || !!outputFlags;
 
   // Fast-path radius-only shorthand where the intent is "all corners get the
   // same radius" and no edge intent is present. This avoids relying on edge
@@ -670,14 +696,42 @@ const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
       const allVal = asRadius(
         (radius as Record<'all', BorderRadiusInput>).all,
       );
-      if (!allVal || allVal === '0' || allVal === '0px') {
-        return {};
+      const normalizedAll = normalizeZeroRadius(allVal);
+      if (!normalizedAll || normalizedAll === '0') {
+        if (!shouldForceOutput) {
+          return {};
+        }
+        const forcedValue = normalizedAll ?? '0';
+        if (outputAll) {
+          return {
+            borderTopLeftRadius: forcedValue,
+            borderTopRightRadius: forcedValue,
+            borderBottomRightRadius: forcedValue,
+            borderBottomLeftRadius: forcedValue,
+          };
+        }
+        if (outputFlags) {
+          const forced: FinalBorderCSS = {};
+          if (outputFlags.nw) {
+            forced.borderTopLeftRadius = forcedValue;
+          }
+          if (outputFlags.ne) {
+            forced.borderTopRightRadius = forcedValue;
+          }
+          if (outputFlags.se) {
+            forced.borderBottomRightRadius = forcedValue;
+          }
+          if (outputFlags.sw) {
+            forced.borderBottomLeftRadius = forcedValue;
+          }
+          return forced;
+        }
       }
       return {
-        borderTopLeftRadius: allVal,
-        borderTopRightRadius: allVal,
-        borderBottomRightRadius: allVal,
-        borderBottomLeftRadius: allVal,
+        borderTopLeftRadius: normalizedAll,
+        borderTopRightRadius: normalizedAll,
+        borderBottomRightRadius: normalizedAll,
+        borderBottomLeftRadius: normalizedAll,
       };
     }
   }
@@ -685,14 +739,68 @@ const resolveRadiusOnly = (input?: BorderInput): FinalBorderCSS => {
   const edges = resolveIntentToEdges(intent);
   const radiusCorners = resolveRadiusCompass(intent.radius, edges);
 
-  if (!radiusCorners) return {};
+  if (!radiusCorners) {
+    if (!shouldForceOutput) return {};
+    const forced: FinalBorderCSS = {};
+    if (outputAll) {
+      return {
+        borderTopLeftRadius: '0',
+        borderTopRightRadius: '0',
+        borderBottomRightRadius: '0',
+        borderBottomLeftRadius: '0',
+      };
+    }
+    if (outputFlags) {
+      if (outputFlags.nw) forced.borderTopLeftRadius = '0';
+      if (outputFlags.ne) forced.borderTopRightRadius = '0';
+      if (outputFlags.se) forced.borderBottomRightRadius = '0';
+      if (outputFlags.sw) forced.borderBottomLeftRadius = '0';
+    }
+    return forced;
+  }
 
-  return {
+  const base: FinalBorderCSS = {
     borderTopLeftRadius: radiusCorners.tl,
     borderTopRightRadius: radiusCorners.tr,
     borderBottomRightRadius: radiusCorners.br,
     borderBottomLeftRadius: radiusCorners.bl,
   };
+
+  if (outputAll) {
+    return {
+      borderTopLeftRadius:
+        normalizeZeroRadius(base.borderTopLeftRadius) ?? '0',
+      borderTopRightRadius:
+        normalizeZeroRadius(base.borderTopRightRadius) ?? '0',
+      borderBottomRightRadius:
+        normalizeZeroRadius(base.borderBottomRightRadius) ?? '0',
+      borderBottomLeftRadius:
+        normalizeZeroRadius(base.borderBottomLeftRadius) ?? '0',
+    };
+  }
+
+  if (outputFlags) {
+    const forced = { ...base };
+    if (outputFlags.nw) {
+      forced.borderTopLeftRadius =
+        normalizeZeroRadius(forced.borderTopLeftRadius) ?? '0';
+    }
+    if (outputFlags.ne) {
+      forced.borderTopRightRadius =
+        normalizeZeroRadius(forced.borderTopRightRadius) ?? '0';
+    }
+    if (outputFlags.se) {
+      forced.borderBottomRightRadius =
+        normalizeZeroRadius(forced.borderBottomRightRadius) ?? '0';
+    }
+    if (outputFlags.sw) {
+      forced.borderBottomLeftRadius =
+        normalizeZeroRadius(forced.borderBottomLeftRadius) ?? '0';
+    }
+    return forced;
+  }
+
+  return base;
 };
 
 /* --------------------------
@@ -706,19 +814,34 @@ export const borders = Object.assign(
     none(): FinalBorderCSS {
       return { border: 'none' };
     },
-    top(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+    top(
+      overrides?: BorderLike,
+      options?: BorderOptions,
+    ): FinalBorderCSS {
       return resolve({ top: overrides ?? true }, options);
     },
-    right(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+    right(
+      overrides?: BorderLike,
+      options?: BorderOptions,
+    ): FinalBorderCSS {
       return resolve({ right: overrides ?? true }, options);
     },
-    bottom(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+    bottom(
+      overrides?: BorderLike,
+      options?: BorderOptions,
+    ): FinalBorderCSS {
       return resolve({ bottom: overrides ?? true }, options);
     },
-    left(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+    left(
+      overrides?: BorderLike,
+      options?: BorderOptions,
+    ): FinalBorderCSS {
       return resolve({ left: overrides ?? true }, options);
     },
-    vertical(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+    vertical(
+      overrides?: BorderLike,
+      options?: BorderOptions,
+    ): FinalBorderCSS {
       return resolve({ vertical: overrides ?? true }, options);
     },
     horizontal(
@@ -727,14 +850,20 @@ export const borders = Object.assign(
     ): FinalBorderCSS {
       return resolve({ horizontal: overrides ?? true }, options);
     },
-    all(overrides?: BorderLike, options?: BorderOptions): FinalBorderCSS {
+    all(
+      overrides?: BorderLike,
+      options?: BorderOptions,
+    ): FinalBorderCSS {
       return resolve({ all: overrides ?? true }, options);
     },
     defaults(options?: BorderOptions): FinalBorderCSS {
       return resolve({ all: true }, options);
     },
-    radii(intent?: BorderInput): FinalBorderCSS {
-      return resolveRadiusOnly(intent);
+    radii(
+      intent?: BorderInput,
+      options?: BorderRadiusOptions,
+    ): FinalBorderCSS {
+      return resolveRadiusOnly(intent, options);
     },
     unset(): FinalBorderCSS {
       return { border: 'none' };

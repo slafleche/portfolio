@@ -136,8 +136,8 @@ export const formVars = {
   button: {
     minHeight: m(48),
     paddings: {
-      vertical: m(6),
-      horizontal: m(8),
+      vertical: m(8),
+      horizontal: m(9),
     },
     borders: {
       radius: m(28),

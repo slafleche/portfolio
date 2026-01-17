@@ -29,3 +29,7 @@ globalStyle('*[data-interaction="none"]', {
   pointerEvents:
     'none !important' as CSS_TYPES.Property.PointerEvents,
 });
+
+globalStyle('*[data-white-space="no-wrap"]', {
+  whiteSpace: 'nowrap !important' as CSS_TYPES.Property.WhiteSpace,
+});

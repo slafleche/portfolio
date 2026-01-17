@@ -1,5 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
+import { m, mEm } from 'css-calipers';
 
 import { formVars } from '../../tokens/forms.tokens';
 import { glassyButtonTokens } from '../../tokens/glassy.tokens';
@@ -113,6 +113,12 @@ export const statusText = style({
 });
 
 export const status = style({});
+
+globalStyle(`ul.${status}`, {
+  ...paddings({
+    right: mEm(1),
+  }),
+});
 
 globalStyle(`.${statusText} + .${statusText}`, {
   ...margins({

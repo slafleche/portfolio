@@ -102,6 +102,48 @@ describe('Markdown component', () => {
     expect(span?.textContent).toBe('world');
   });
 
+  it('preserves data attributes on allowed inline HTML tags', () => {
+    const { container } = render(
+      <Markdown
+        source={
+          'Hello <span data-foo="bar" data-flag>world</span>!'
+        }
+      />,
+    );
+    const span = container.querySelector('span');
+    expect(span?.getAttribute('data-foo')).toBe('bar');
+    expect(span?.getAttribute('data-flag')).toBe('true');
+  });
+
+  it('renders element shortcodes inside inline spans', () => {
+    const { container } = render(
+      <Markdown
+        source={
+          'Hello <span data-wrap="no">[element:NPMWordmark]!</span>'
+        }
+      />,
+    );
+    const span = container.querySelector('span');
+    const svg = span?.querySelector(
+      'svg[aria-label="Node Package Manager (NPM)"]',
+    );
+    expect(svg).not.toBeNull();
+  });
+
+  it('drops non-data attributes on allowed inline HTML tags', () => {
+    const { container } = render(
+      <Markdown
+        source={
+          'Hello <span class="x" style="color:red" data-ok="y">world</span>!'
+        }
+      />,
+    );
+    const span = container.querySelector('span');
+    expect(span?.getAttribute('class')).toBeNull();
+    expect(span?.getAttribute('style')).toBeNull();
+    expect(span?.getAttribute('data-ok')).toBe('y');
+  });
+
   it('renders abbr tags and decodes HTML entities inside', () => {
     const { container } = render(
       <Markdown

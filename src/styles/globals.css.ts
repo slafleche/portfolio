@@ -137,10 +137,15 @@ globalStyle('svg', {
 globalStyle('button, input, optgroup, select, textarea', {
   fontFamily: 'inherit',
   fontSize: '100%',
-  lineHeight: 'inherit',
+  lineHeight: 1.3,
   margin: 0,
   padding: 0,
+  ...borders.radii(m(0), {
+    output: true,
+  }),
   border: 'none',
+  WebkitAppearance: 'none',
+  appearance: 'none',
 });
 
 globalStyle('button, input', {
@@ -154,7 +159,8 @@ globalStyle('button, select', {
 globalStyle(
   'button, [type="button"], [type="reset"], [type="submit"]',
   {
-    WebkitAppearance: 'button',
+    WebkitAppearance: 'none',
+    appearance: 'none',
   },
 );
 
@@ -210,6 +216,7 @@ globalStyle('progress', {
 
 globalStyle('textarea', {
   overflow: 'auto',
+  ...borders.radii(m(0)),
 });
 
 globalStyle('[type="checkbox"], [type="radio"]', {
@@ -225,17 +232,14 @@ globalStyle(
 );
 
 globalStyle('[type="search"]', {
-  WebkitAppearance: 'textfield',
+  WebkitAppearance: 'none',
+  appearance: 'none',
   outlineOffset: '-2px',
 });
 
 globalStyle('[type="search"]::-webkit-search-decoration', {
   WebkitAppearance: 'none',
-});
-
-globalStyle('::-webkit-file-upload-button', {
-  WebkitAppearance: 'button',
-  font: 'inherit',
+  appearance: 'none',
 });
 
 globalStyle('details', {
@@ -269,6 +273,15 @@ globalStyle(
   {
     margin: 0,
     padding: 0,
+  },
+);
+
+globalStyle(
+  'ul:not([data-ui="list-unordered"]), ol:not([data-ui="list-ordered"])',
+  {
+    ...margins({
+      left: m(40),
+    }),
   },
 );
 

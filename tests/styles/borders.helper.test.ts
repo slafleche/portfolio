@@ -371,4 +371,83 @@ describe('borders.helper', () => {
       borderBottomLeftRadius: '40px',
     });
   });
+
+  it('forces all corners when output true even for zero radius', () => {
+    const styles = borders.radii(m(0), { output: true });
+
+    expect(styles).toEqual({
+      borderTopLeftRadius: '0',
+      borderTopRightRadius: '0',
+      borderBottomRightRadius: '0',
+      borderBottomLeftRadius: '0',
+    });
+  });
+
+  it('keeps current behavior when output false', () => {
+    const styles = borders.radii(m(0), { output: false });
+
+    expect(styles).toEqual({});
+  });
+
+  it('forces only selected corners when output flags are provided', () => {
+    const styles = borders.radii(
+      {
+        north: m(4),
+        south: m(0),
+      },
+      {
+        output: {
+          nw: false,
+          ne: false,
+          se: false,
+          sw: true,
+        },
+      },
+    );
+
+    expect(styles.borderTopLeftRadius).toBeUndefined();
+    expect(styles.borderTopRightRadius).toBeUndefined();
+    expect(styles.borderBottomRightRadius).toBeUndefined();
+    expect(styles.borderBottomLeftRadius).toBe('0');
+  });
+
+  it('accepts partial output flags without specifying every corner', () => {
+    const styles = borders.radii(
+      {
+        north: m(4),
+        south: m(0),
+      },
+      {
+        output: {
+          sw: true,
+        },
+      },
+    );
+
+    expect(styles.borderTopLeftRadius).toBeUndefined();
+    expect(styles.borderTopRightRadius).toBeUndefined();
+    expect(styles.borderBottomRightRadius).toBeUndefined();
+    expect(styles.borderBottomLeftRadius).toBe('0');
+  });
+
+  it('does not change current output when all output flags are false', () => {
+    const base = borders.radii({
+      nw: m(8),
+    });
+    const styles = borders.radii(
+      {
+        nw: m(8),
+      },
+      {
+        output: {
+          nw: false,
+          ne: false,
+          se: false,
+          sw: false,
+        },
+      },
+    );
+
+    expect(styles).toEqual(base);
+  });
 });

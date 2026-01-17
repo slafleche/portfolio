@@ -30,4 +30,5 @@ variables to your styling layer. It doesn't try to be your entire CSS solution.
 It coexists with existing styling systems by handling one thing well: making
 measurement math predictable and type-safe.
 
-Check it out on [element:NPMWordmark] or [element:GitHubWordmark]!
+Check it out on [element:NPMWordmark] or
+<span data-white-space="no-wrap">[element:GitHubWordmark]!</span>

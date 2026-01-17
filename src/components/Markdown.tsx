@@ -120,11 +120,33 @@ const isAbbrClose = (raw: string) =>
 
 const inlineHtmlTagAllowList = new Set(['span']);
 
-const parseInlineHtmlOpenTag = (raw: string): string | null => {
+const parseDataAttributes = (raw: string): Record<string, string> => {
+  const attrs: Record<string, string> = {};
+  const attrMatch = raw.match(/^<([a-z0-9-]+)(\s[^>]*)?>$/i);
+  if (!attrMatch?.[2]) return attrs;
+  const attrChunk = attrMatch[2];
+  const dataAttrRegex =
+    /\s(data-[a-z0-9-]+)(?:=(?:"([^"]*)"|'([^']*)'))?/gi;
+  let match: RegExpExecArray | null;
+  while ((match = dataAttrRegex.exec(attrChunk))) {
+    const key = match[1];
+    const value = match[2] ?? match[3] ?? 'true';
+    attrs[key] = value;
+  }
+  return attrs;
+};
+
+const parseInlineHtmlOpenTag = (
+  raw: string,
+): { tagName: string; dataAttrs: Record<string, string> } | null => {
   const match = raw.match(/^<([a-z0-9-]+)(\s[^>]*)?>$/i);
   if (!match || raw.endsWith('/>')) return null;
   const tagName = match[1]?.toLowerCase() ?? '';
-  return inlineHtmlTagAllowList.has(tagName) ? tagName : null;
+  if (!inlineHtmlTagAllowList.has(tagName)) return null;
+  return {
+    tagName,
+    dataAttrs: parseDataAttributes(raw),
+  };
 };
 
 const parseInlineHtmlCloseTag = (raw: string): string | null => {
@@ -221,7 +243,7 @@ const renderInlineTokens = (
           if (next.type === 'html') {
             const nextRaw =
               (next as { text?: string }).text ?? '';
-            if (parseInlineHtmlCloseTag(nextRaw) === openTag) {
+            if (parseInlineHtmlCloseTag(nextRaw) === openTag.tagName) {
               closedIndex = j;
               break;
             }
@@ -230,16 +252,44 @@ const renderInlineTokens = (
         }
 
         if (closedIndex !== -1) {
+          const canReparseInline = innerTokens.every(
+            (innerToken) =>
+              innerToken.type === 'text' ||
+              innerToken.type === 'space',
+          );
+          const inlineSource = canReparseInline
+            ? innerTokens
+                .map((innerToken) => {
+                  if (innerToken.type === 'space') return ' ';
+                  return (
+                    (innerToken as { text?: string }).text ?? ''
+                  );
+                })
+                .join('')
+            : '';
+          const shouldReparseInline =
+            inlineSource !== '' &&
+            inlineSource.includes('[element:');
+
           nodes.push(
             createElement(
-              openTag,
-              { key: `${keyPrefix}-${openTag}-${i}` },
-              renderInlineTokens(
-                innerTokens,
-                options,
-                `${keyPrefix}-${openTag}-${i}`,
-                true,
-              ),
+              openTag.tagName,
+              {
+                key: `${keyPrefix}-${openTag.tagName}-${i}`,
+                ...openTag.dataAttrs,
+              },
+              shouldReparseInline
+                ? renderInlineMarkdown(
+                    inlineSource,
+                    options,
+                    `${keyPrefix}-${openTag.tagName}-${i}`,
+                  )
+                : renderInlineTokens(
+                    innerTokens,
+                    options,
+                    `${keyPrefix}-${openTag.tagName}-${i}`,
+                    true,
+                  ),
             ),
           );
           i = closedIndex;
