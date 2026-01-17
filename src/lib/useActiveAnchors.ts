@@ -118,6 +118,7 @@ export function useActiveAnchors(
   } = options ?? {};
 
   const [activeId, setActiveId] = useState<string | null>(null);
+  const activeIdRef = useRef<string | null>(activeId);
   const anchorMap = useMemo(
     () =>
       anchors.reduce<Record<string, AnchorTarget>>((map, anchor) => {
@@ -167,6 +168,12 @@ export function useActiveAnchors(
   }, [
     effectiveActiveId,
     anchorMap,
+  ]);
+
+  useEffect(() => {
+    activeIdRef.current = activeId;
+  }, [
+    activeId,
   ]);
 
   const setManualActive = useCallback(
@@ -341,7 +348,7 @@ export function useActiveAnchors(
         remaining,
         rects,
         sentinels,
-        activeId,
+        activeId: activeIdRef.current,
       });
     };
 

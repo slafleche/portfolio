@@ -18,6 +18,7 @@ import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { fontStylesFromFontVariant } from '../helpers/typography.helper';
+import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 const slideTokens = accordionItemTokens.animation.slide;
 
@@ -138,6 +139,11 @@ export const button = style({
     "&[data-state='open']:before": {
       opacity: 1,
     },
+    ...mediaQueryStyle({
+      compact: {
+        fontSize: '15px',
+      },
+    }),
   },
 });
 
@@ -167,7 +173,6 @@ export const triggerSubtitle = style({
   flexDirection: 'row',
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
-
   color: colorVars.white.alpha(0.72).css(),
 });
 
@@ -175,6 +180,15 @@ export const triggerSubtitleText = style({
   ...margins({
     horizontal: accordionItemTokens.button.spacing,
   }),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...margins({
+          horizontal: m(0),
+        }),
+      },
+    }),
+  },
 });
 
 export const rightArrow = style({
@@ -190,6 +204,13 @@ export const iconContainer = style({
   minWidth: '1em',
   height: '1em',
   alignSelf: 'center',
+  selectors: {
+    ...mediaQueryStyle({
+      compressed: {
+        display: 'none',
+      },
+    }),
+  },
 });
 
 export const icon = style({
