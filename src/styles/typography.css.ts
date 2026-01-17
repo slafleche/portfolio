@@ -1,5 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { m, mEm } from 'css-calipers';
+import { m } from 'css-calipers';
 
 import { typographyFontVariants } from '../tokens/fontVariants/typography';
 import { colorVars } from '../tokens/global.tokens';

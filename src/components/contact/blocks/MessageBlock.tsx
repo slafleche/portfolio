@@ -201,7 +201,13 @@ export function MessageBlock({
     const contract: ContactFormBlockContract<string> = {
       ...baseContract,
       focus: () => {
-        textareaRef.current?.focus();
+        const node = textareaRef.current;
+        if (!node) return;
+        try {
+          node.focus({ preventScroll: true });
+        } catch {
+          node.focus();
+        }
       },
     };
     return {

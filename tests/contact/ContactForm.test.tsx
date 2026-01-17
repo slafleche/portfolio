@@ -28,6 +28,7 @@ import {
 } from '@/lib/locales/sections/form.locale';
 import { MESSAGE_MIN_LENGTH } from '@/modules/contactForm/validation.constants';
 
+import { ScrollHarness } from '../helpers/scrollHarness';
 import { installTestEnv } from '../helpers/testEnvVars';
 import { enFormTranslator } from './helpers/enFormTranslator';
 import { FormBlocksValidationObserver } from './helpers/formBlocksValidationObserver';
@@ -656,6 +657,260 @@ describe('ContactForm — integration with flow and outcome layers', () => {
       });
 
       expect(fetchMock).not.toHaveBeenCalled();
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('offsets jump-to-first-issue scrolling by the modal header height', async () => {
+    const copy = buildCopy();
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn();
+
+    global.fetch = fetchMock;
+
+    const dialogValue = {
+      open: () => {},
+      close: () => {},
+      isOpen: false,
+      openPrivacy: () => {},
+      closePrivacy: () => {},
+      isPrivacyOpen: false,
+    };
+
+    const { container, getByTestId } = render(
+      <ScrollHarness height={300} beforeHeight={600}>
+        <div data-ui="form-header" />
+        <ContactDialogContext.Provider value={dialogValue}>
+          <ContactForm copy={copy} actionUrl="/api/contact" />
+        </ContactDialogContext.Provider>
+      </ScrollHarness>,
+    );
+
+    const scrollContainer = getByTestId('scroll-harness-container');
+    scrollContainer.setAttribute('data-ui', 'form-scroll-area');
+
+    Object.defineProperty(scrollContainer, 'clientHeight', {
+      value: 300,
+      configurable: true,
+    });
+    Object.defineProperty(scrollContainer, 'scrollHeight', {
+      value: 900,
+      configurable: true,
+    });
+
+    scrollContainer.scrollTop = 40;
+    const scrollToSpy = vi.fn();
+    scrollContainer.scrollTo = scrollToSpy;
+
+    const header = container.querySelector(
+      '[data-ui="form-header"]',
+    ) as HTMLElement | null;
+    const target = container.querySelector(
+      '[data-order="1"]',
+    ) as HTMLElement | null;
+
+    if (!header || !target) {
+      throw new Error('Expected header and target field to render.');
+    }
+
+    const makeRect = (top: number, height: number) => ({
+      top,
+      left: 0,
+      right: 0,
+      bottom: top + height,
+      width: 0,
+      height,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
+    });
+
+    header.getBoundingClientRect = vi.fn(() =>
+      makeRect(0, 80),
+    );
+    scrollContainer.getBoundingClientRect = vi.fn(() =>
+      makeRect(100, 300),
+    );
+    target.getBoundingClientRect = vi.fn(() =>
+      makeRect(300, 40),
+    );
+    target.scrollIntoView = vi.fn();
+
+    try {
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      const jumpButton = await screen.findByTestId(
+        'jump-to-first-issue',
+      );
+
+      await userEvent.click(jumpButton);
+
+      await waitFor(() => {
+        expect(scrollToSpy).toHaveBeenCalledWith({
+          top: 140,
+          behavior: 'smooth',
+        });
+      });
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('recalculates jump-to-first-issue offsets after a resize', async () => {
+    const copy = buildCopy();
+
+    const originalFetch = global.fetch;
+    const fetchMock = vi.fn();
+
+    global.fetch = fetchMock;
+
+    const dialogValue = {
+      open: () => {},
+      close: () => {},
+      isOpen: false,
+      openPrivacy: () => {},
+      closePrivacy: () => {},
+      isPrivacyOpen: false,
+    };
+
+    const { container, getByTestId } = render(
+      <ScrollHarness height={300} beforeHeight={600}>
+        <div data-ui="form-header" />
+        <ContactDialogContext.Provider value={dialogValue}>
+          <ContactForm copy={copy} actionUrl="/api/contact" />
+        </ContactDialogContext.Provider>
+      </ScrollHarness>,
+    );
+
+    const scrollContainer = getByTestId('scroll-harness-container');
+    scrollContainer.setAttribute('data-ui', 'form-scroll-area');
+
+    Object.defineProperty(scrollContainer, 'clientHeight', {
+      value: 300,
+      configurable: true,
+    });
+    Object.defineProperty(scrollContainer, 'scrollHeight', {
+      value: 900,
+      configurable: true,
+    });
+
+    const scrollToSpy = vi.fn();
+    scrollContainer.scrollTo = scrollToSpy;
+    const windowScrollSpy = vi.fn();
+    window.scrollTo = windowScrollSpy;
+
+    const header = container.querySelector(
+      '[data-ui="form-header"]',
+    ) as HTMLElement | null;
+    const target = container.querySelector(
+      '[data-order="1"]',
+    ) as HTMLElement | null;
+
+    if (!header || !target) {
+      throw new Error('Expected header and target field to render.');
+    }
+
+    const makeRect = (top: number, height: number) => ({
+      top,
+      left: 0,
+      right: 0,
+      bottom: top + height,
+      width: 0,
+      height,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
+    });
+
+    const setMeasurements = ({
+      headerTop,
+      headerHeight,
+      containerTop,
+      containerHeight,
+      targetTop,
+      targetHeight,
+      scrollTop,
+    }: {
+      headerTop: number;
+      headerHeight: number;
+      containerTop: number;
+      containerHeight: number;
+      targetTop: number;
+      targetHeight: number;
+      scrollTop: number;
+    }) => {
+      header.getBoundingClientRect = vi.fn(() =>
+        makeRect(headerTop, headerHeight),
+      );
+      scrollContainer.getBoundingClientRect = vi.fn(() =>
+        makeRect(containerTop, containerHeight),
+      );
+      target.getBoundingClientRect = vi.fn(() =>
+        makeRect(targetTop, targetHeight),
+      );
+      target.scrollIntoView = vi.fn();
+      scrollContainer.scrollTop = scrollTop;
+    };
+
+    setMeasurements({
+      headerTop: 0,
+      headerHeight: 80,
+      containerTop: 100,
+      containerHeight: 300,
+      targetTop: 300,
+      targetHeight: 40,
+      scrollTop: 40,
+    });
+
+    try {
+      const submitButton = screen.getByRole('button', {
+        name: copy.submitLabel,
+      });
+
+      await userEvent.click(submitButton);
+
+      const jumpButton = await screen.findByTestId(
+        'jump-to-first-issue',
+      );
+
+      await userEvent.click(jumpButton);
+
+      await waitFor(() => {
+        expect(scrollToSpy).toHaveBeenCalledWith({
+          top: 160,
+          behavior: 'smooth',
+        });
+      });
+
+      setMeasurements({
+        headerTop: 0,
+        headerHeight: 60,
+        containerTop: 150,
+        containerHeight: 300,
+        targetTop: 370,
+        targetHeight: 40,
+        scrollTop: 90,
+      });
+      Object.defineProperty(scrollContainer, 'scrollHeight', {
+        value: 300,
+        configurable: true,
+      });
+
+      await userEvent.click(jumpButton);
+
+      await waitFor(() => {
+        expect(scrollToSpy).toHaveBeenLastCalledWith({
+          top: 230,
+          behavior: 'smooth',
+        });
+      });
+      expect(windowScrollSpy).not.toHaveBeenCalled();
     } finally {
       global.fetch = originalFetch;
     }

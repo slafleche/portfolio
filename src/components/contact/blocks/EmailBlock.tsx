@@ -166,7 +166,13 @@ export function EmailBlock({
     const contract: ContactFormBlockContract<string> = {
       ...baseContract,
       focus: () => {
-        inputRef.current?.focus();
+        const node = inputRef.current;
+        if (!node) return;
+        try {
+          node.focus({ preventScroll: true });
+        } catch {
+          node.focus();
+        }
       },
     };
     return {

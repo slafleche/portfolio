@@ -48,6 +48,7 @@ import { useContactFormFlow } from './useContactFormFlow';
 import { useContactFormOutcome } from './useContactFormOutcome';
 
 const DEFAULT_ACTION_URL = '/api/contact';
+const SCROLL_TARGET_OFFSET = 20;
 
 type ContactFormAltView =
   | {
@@ -264,35 +265,55 @@ function ContactFormInner({
 
     const element = document.getElementById(scrollTarget);
     if (element && typeof element.scrollIntoView === 'function') {
-      element.scrollIntoView({
-        block: 'start',
-        behavior: 'smooth',
-      });
-
       const header = document.querySelector<HTMLElement>(
         '[data-ui="form-header"]',
       );
       const headerOffset =
         header?.getBoundingClientRect().height ?? 0;
+
       if (headerOffset > 0) {
-        let scrollParent = element.parentElement;
-        while (scrollParent) {
-          if (scrollParent.scrollHeight > scrollParent.clientHeight) {
-            break;
+        let scrollParent = element.closest<HTMLElement>(
+          '[data-ui="form-scroll-area"]',
+        );
+        if (!scrollParent) {
+          scrollParent = element.parentElement;
+          while (scrollParent) {
+            if (
+              scrollParent.scrollHeight > scrollParent.clientHeight
+            ) {
+              break;
+            }
+            scrollParent = scrollParent.parentElement;
           }
-          scrollParent = scrollParent.parentElement;
         }
         if (scrollParent) {
-          scrollParent.scrollBy({
-            top: -headerOffset,
+          const targetTop =
+            element.getBoundingClientRect().top -
+            scrollParent.getBoundingClientRect().top +
+            scrollParent.scrollTop;
+          scrollParent.scrollTo({
+            top: Math.max(
+              0,
+              targetTop - headerOffset - SCROLL_TARGET_OFFSET,
+            ),
             behavior: 'smooth',
           });
         } else {
-          window.scrollBy({
-            top: -headerOffset,
+          const targetTop =
+            element.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: Math.max(
+              0,
+              targetTop - headerOffset - SCROLL_TARGET_OFFSET,
+            ),
             behavior: 'smooth',
           });
         }
+      } else {
+        element.scrollIntoView({
+          block: 'start',
+          behavior: 'smooth',
+        });
       }
     }
 

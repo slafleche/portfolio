@@ -272,7 +272,7 @@ export const submitButton = style({
   overflow: 'hidden',
   width: '100%',
   border: 'none',
-  minHeight: '46px',
+  height: '56px',
   ...borders(glassyButtonTokens.borders),
   ...backgrounds(glassyButtonTokens.backgrounds),
   color: glassyButtonTokens.text.color.css(),

@@ -500,7 +500,10 @@ export function ContactDialogProvider({
                       <p data-visible="sc-only">{dialogTitle}</p>
                     </Dialog.Description>
                   ) : null}
-                  <div className={dialogStyles.scrollArea}>
+                  <div
+                    className={dialogStyles.scrollArea}
+                    data-ui="form-scroll-area"
+                  >
                     <ContactDialogTitleContext.Provider
                       value={titleContextValue}
                     >
