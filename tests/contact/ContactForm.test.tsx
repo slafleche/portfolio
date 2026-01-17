@@ -883,7 +883,7 @@ describe('ContactForm — integration with flow and outcome layers', () => {
 
       await waitFor(() => {
         expect(scrollToSpy).toHaveBeenCalledWith({
-          top: 160,
+          top: 140,
           behavior: 'smooth',
         });
       });
