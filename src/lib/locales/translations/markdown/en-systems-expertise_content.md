@@ -1,6 +1,4 @@
-Type-safe CSS primitives for building **your** design system Turn fragmented UI
-work into a stable, composable foundation. The focus is on early architectural
-decisions that keep teams shipping fast as the system scales.
+Type-safe CSS primitives for custom design systems. Turn fragmented UI work into a stable, composable foundation. The focus is on early architectural decisions that keep change safe and predictable, so late-stage updates don’t feel risky as the system scales.
 
 ### Custom design systems
 

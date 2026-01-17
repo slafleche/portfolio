@@ -18,6 +18,7 @@ import { textShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import { fontStylesFromFontVariant } from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
+import { userContent } from '../typography.css';
 
 export const grid = style({
   display: 'grid',
@@ -28,6 +29,10 @@ export const grid = style({
     ...mediaQueryStyle({
       snug: {
         gridTemplateColumns: '1fr',
+        gap: '0px',
+        ...margins({
+          top: m(60),
+        }),
       },
     }),
   },
@@ -103,6 +108,11 @@ export const content = style({
   }),
 });
 
+globalStyle(`.${content} .${userContent} p[data-last="true"]`, {
+  ...paddings({ bottom: 0 }),
+  ...margins({ bottom: 0 }),
+});
+
 export const tilePanel = style({
   position: 'relative',
   display: 'block',
@@ -130,7 +140,6 @@ export const bgDecoration = style({
   opacity: 0.15,
   zIndex: 0,
 });
-
 
 export const tileIconPlaceholder = style({
   width: '44px',
@@ -195,7 +204,7 @@ export const separator = style({
         width: `calc(100% + ${paddingTight.double().css()})`,
         ...margins({
           left: paddingTight.negation(),
-          bottom: paddingTight,
+          bottom: m(30),
         }),
       },
     }),
