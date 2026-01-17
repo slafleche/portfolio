@@ -21,8 +21,12 @@ import { type Locale } from '@/lib/locales/translations';
 import {
   isIndexingAllowed,
   isRelease,
+  isStaging,
   notRelease,
 } from '../src/lib/runtimeEnv';
+
+const GA_RELEASE_ID = 'G-VF8QHEKQS8';
+const GA_STAGING_ID = 'G-JLTPT80N2J';
 
 if (notRelease()) {
   const envKey = '__DEBUG_ROUTES_LOGGED__';
@@ -62,6 +66,7 @@ export default async function RootLayout({
   const faviconMeta =
     FAVICON_META_BUNDLES_BY_LOCALE[locale] ??
     FAVICON_META_BUNDLES_BY_LOCALE[fallbackLocale];
+  const gaMeasurementId = isStaging() ? GA_STAGING_ID : GA_RELEASE_ID;
   const indexingAllowed = isIndexingAllowed();
   const fontFacesHref = isRelease()
     ? '/styles/fontFaces.css'
@@ -146,14 +151,14 @@ export default async function RootLayout({
         {children}
         <SmoothScrollIdle />
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-VF8QHEKQS8"
+          src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
           strategy="afterInteractive"
         />
         <Script id="ga-gtag" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', 'G-VF8QHEKQS8');`}
+gtag('config', '${gaMeasurementId}');`}
         </Script>
       </body>
     </html>
