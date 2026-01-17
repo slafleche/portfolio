@@ -206,7 +206,7 @@ export const iconContainer = style({
   alignSelf: 'center',
   selectors: {
     ...mediaQueryStyle({
-      compressed: {
+      compact: {
         display: 'none',
       },
     }),
