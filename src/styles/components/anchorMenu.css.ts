@@ -12,6 +12,8 @@ import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
+import { important } from '../helpers/important.helper';
+import { outlines } from '../helpers/outlines.helper';
 import { textShadow } from '../helpers/shadow.helper';
 import { paddings } from '../helpers/spacing.helper';
 import { relativeFontWeight } from '../helpers/typography.helper';
@@ -41,7 +43,6 @@ export const root = style({
 
 export const list = style({
   position: 'relative',
-  // left: anchorMenuVars.dot.paddings.css(),
   display: 'flex',
   flexDirection: 'column',
   gap: anchorMenuVars.innerGap.css(),
@@ -65,7 +66,9 @@ export const link = style({
   height: '100%',
   color: 'inherit',
   textDecoration: 'none',
-  outline: 'none',
+  ...important({
+    outline: 'none',
+  }),
   pointerEvents: 'auto',
   cursor: 'pointer',
 });
@@ -216,3 +219,7 @@ globalStyle(
     ...makeGlassSurface(),
   },
 );
+
+globalStyle(`.${link}:focus-visible .${handle}`, {
+  ...outlines(),
+});

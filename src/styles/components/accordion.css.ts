@@ -270,10 +270,7 @@ globalStyle(`.${item}[data-state="open"] .${iconSvg}`, {
 });
 
 globalStyle(`.${button}:focus-visible .${icon}`, {
-  ...outlines({
-    color: 'Highlight',
-    width: m(2),
-  }),
+  ...outlines(),
 });
 
 export const content = style({

@@ -348,11 +348,9 @@ const resolveDegrees = (value: DegMeasurement) => {
 };
 
 export function wrap(input: ColorInput): ColorWrapper {
-  // ---- special symbolic case ----
-  if (input === 'currentColor') {
-    // dummy immutable wrapper
+  const createSymbolicColor = (label: string): ColorWrapper => {
     const err = (fn: string) => {
-      const msg = `Cannot modify symbolic color 'currentColor' via ${fn}().`;
+      const msg = `Cannot modify symbolic color '${label}' via ${fn}().`;
       if (notRelease()) throw new Error(msg);
       console.warn(msg);
       return symbolic;
@@ -360,7 +358,7 @@ export function wrap(input: ColorInput): ColorWrapper {
 
     const symbolic: ColorWrapper = {
       unsafeColor: chroma('black'),
-      css: () => 'currentColor',
+      css: () => label,
       alpha: ((value?: number) => {
         if (value === undefined) return 1;
         return err('alpha');
@@ -382,6 +380,18 @@ export function wrap(input: ColorInput): ColorWrapper {
       solid: () => symbolic,
     };
     return symbolic;
+  };
+
+  // ---- special symbolic case ----
+  if (input === 'currentColor') {
+    return createSymbolicColor('currentColor');
+  }
+
+  if (
+    typeof input === 'string' &&
+    input.trim().toLowerCase() === 'highlight'
+  ) {
+    return createSymbolicColor('Highlight');
   }
 
   // ---- regular flow ----

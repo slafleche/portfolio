@@ -3,7 +3,10 @@ import type { IMeasurement } from 'css-calipers';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 
 import { outlinesTokens } from '../../tokens/outlines.tokens';
-import { isColorWrapper, type ColorWrapper } from './colorWrap.helper';
+import {
+  type ColorWrapper,
+  isColorWrapper,
+} from './colorWrap.helper';
 
 export type OutlinesValues = {
   color?: ColorWrapper | CSS_TYPES.Property.OutlineColor;
@@ -25,14 +28,18 @@ const resolveOutlineColor = (
   value: ColorWrapper | CSS_TYPES.Property.OutlineColor,
 ) => (isColorWrapper(value) ? value.css() : value);
 
-export const outlines = ({
-  color: outlineColor = defaultColor,
-  width = defaultWidth,
-  offset = defaultOffset,
-  style = defaultStyle,
-}: OutlinesValues = {}) => ({
-  outline: `${width.css()} ${style} ${resolveOutlineColor(
-    outlineColor,
-  )}`,
-  outlineOffset: offset.css(),
-});
+export const outlines = (props: OutlinesValues = {}) => {
+  const {
+    color = defaultColor,
+    width = defaultWidth,
+    offset = defaultOffset,
+    style = defaultStyle,
+  } = props;
+
+  return {
+    outline: `${width.css()} ${style} ${resolveOutlineColor(
+      color,
+    )}`,
+    outlineOffset: offset.css(),
+  };
+};

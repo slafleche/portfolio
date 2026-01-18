@@ -1,10 +1,7 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { m, mPercent } from 'css-calipers';
 
-import {
-  colorVars,
-  themeColours,
-} from '../../tokens/global.tokens';
+import { colorVars, themeColours } from '../../tokens/global.tokens';
 import { curlVars } from '../componentTokens/pageCurl.component.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import { borders } from '../helpers/borders.helper';
@@ -14,6 +11,7 @@ import {
   gradientAsBgImg,
   maskByLinearGradient,
 } from '../helpers/gradients.helper';
+import { important } from '../helpers/important.helper';
 import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import {
@@ -62,6 +60,11 @@ export const link = style({
         cursor: 'default',
       },
     }),
+    '&:focus-visible': {
+      ...important({
+        outline: 'none',
+      }),
+    },
   },
 });
 
@@ -281,6 +284,6 @@ globalStyle(
 
 globalStyle(`.${link}:focus-visible .${cornerBox}`, {
   ...outlines({
-    offset: m(8),
+    // offset: m(-8),
   }),
 });

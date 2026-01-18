@@ -216,10 +216,7 @@ export const button = style({
     },
     '&:focus-visible': {
       color: colorVars.white.css(),
-      ...outlines({
-        width: focusWidthPx,
-        offset: focusOffsetPx,
-      }),
+      ...outlines(),
     },
     '&[data-phase="entering"]': {
       animation: `${buttonScaleEnter} ${iconScaleEnterMs.css()} ${SETTLE} 0s both`,

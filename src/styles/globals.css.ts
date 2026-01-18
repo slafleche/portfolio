@@ -17,6 +17,7 @@ import {
   buildLinear,
   gradientAsBgImg,
 } from './helpers/gradients.helper';
+import { outlines } from './helpers/outlines.helper';
 import { margins, paddings } from './helpers/spacing.helper';
 import { fontStylesFromFontVariant } from './helpers/typography.helper';
 
@@ -167,8 +168,7 @@ globalStyle(
 globalStyle(
   'button:focus-visible, [type="button"]:focus-visible, [type="reset"]:focus-visible, [type="submit"]:focus-visible',
   {
-    outline: '2px solid Highlight',
-    outlineOffset: '2px',
+    ...outlines(),
   },
 );
 
@@ -197,7 +197,7 @@ globalStyle(
 globalStyle(
   'button:-moz-focusring, [type="button"]:-moz-focusring, [type="reset"]:-moz-focusring, [type="submit"]:-moz-focusring',
   {
-    outline: '1px dotted ButtonText',
+    ...outlines(),
   },
 );
 
@@ -230,19 +230,6 @@ globalStyle('textarea', {
 globalStyle('[type="checkbox"], [type="radio"]', {
   boxSizing: 'border-box',
   padding: 0,
-});
-
-globalStyle(
-  '[type="number"]::-webkit-inner-spin-button, [type="number"]::-webkit-outer-spin-button',
-  {
-    height: 'auto',
-  },
-);
-
-globalStyle('[type="search"]', {
-  WebkitAppearance: 'none',
-  appearance: 'none',
-  outlineOffset: '-2px',
 });
 
 globalStyle('[type="search"]::-webkit-search-decoration', {
@@ -346,6 +333,10 @@ globalStyle('li[data-ui="list-item"]', {
 globalStyle('a[data-ui="link"]', {
   color: 'inherit',
   textDecoration: 'none',
+});
+
+globalStyle('a[data-ui="link"]:focus-visible', {
+  ...outlines(),
 });
 
 globalStyle('hr', {

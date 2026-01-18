@@ -52,7 +52,6 @@ globalStyle(`p`, {
   ...paddings(0),
 });
 
-
 globalStyle('blockquote', {
   color: textStyleVars.blockquote.color.css(),
   ...margins(textStyleVars.blockquote.margins),
@@ -103,6 +102,10 @@ globalStyle('a', {
   cursor: 'pointer',
 });
 
+globalStyle('a:-webkit-any-link:focus-visible, a:focus-visible', {
+  ...outlines(),
+});
+
 const linkRules = textStyleVars.link;
 
 globalStyle(`.${userContent} a:not([data-ui="link"])`, {
@@ -120,11 +123,7 @@ globalStyle(`.${userContent} a:not([data-ui="link"]):hover`, {
 });
 
 globalStyle(`.${userContent} a:not([data-ui="link"]):focus-visible`, {
-  ...outlines({
-    color: linkRules.focusVisible.outlines.color,
-    width: linkRules.focusVisible.outlines.width,
-    offset: linkRules.focusVisible.outlines.offset,
-  }),
+  ...outlines(),
 });
 
 globalStyle(`.${userContent} a:not([data-ui="link"]):active`, {

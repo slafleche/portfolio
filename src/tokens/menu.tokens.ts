@@ -27,8 +27,8 @@ export const logoVars = {
 
 export const localeSwitcherVars = {
   fontSize: m(14),
-  offsetY: m(8),
-  offsetX: m(12),
+  offsetY: logoVars.offsetY.add(logoVars.width.half()),
+  offsetX: logoVars.offsetX,
   width: m(32),
   height: m(32),
   color: colorVars.white.alpha(0.8),

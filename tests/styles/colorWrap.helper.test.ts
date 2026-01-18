@@ -172,4 +172,10 @@ describe('colorWrap.helper', () => {
 
     expect(blended.css()).toBe('rgb(18 52 86 / 0)');
   });
+
+  it('supports symbolic Highlight color', () => {
+    const highlight = color('Highlight');
+    expect(highlight.css()).toBe('Highlight');
+    expect(highlight.alpha()).toBe(1);
+  });
 });

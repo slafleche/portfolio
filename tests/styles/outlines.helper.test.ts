@@ -7,8 +7,8 @@ import { outlines } from '@/styles/helpers/outlines.helper';
 describe('outlines.helper', () => {
   it('uses token defaults when no overrides provided', () => {
     expect(outlines()).toEqual({
-      outline: '2px solid currentColor',
-      outlineOffset: '2px',
+      outline: '4px solid Highlight',
+      outlineOffset: '4px',
     });
   });
 

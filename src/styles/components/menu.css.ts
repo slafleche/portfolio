@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css';
-import { mPercent } from 'css-calipers';
+import { m, mPercent } from 'css-calipers';
 
 import { menuFontVariants } from '../../tokens/fontVariants/menu';
 import { themeColours } from '../../tokens/global.tokens';
@@ -8,6 +8,7 @@ import {
   logoVars,
 } from '../../tokens/menu.tokens';
 import borders from '../helpers/borders.helper';
+import { paddings } from '../helpers/spacing.helper';
 import {
   fontStylesFromFontVariant,
   relativeFontWeight,
@@ -91,6 +92,8 @@ export const localeItem = style({
 });
 
 export const localeLink = style({
+  position: 'relative',
+  transform: 'translate(-50%, -50%)',
   fontSize: localeSwitcherVars.fontSize.css(),
   ...fontStylesFromFontVariant({
     variant: menuFontVariants.menu,
@@ -98,6 +101,11 @@ export const localeLink = style({
   ...relativeFontWeight(menuFontVariants.menu, mPercent(50)),
   pointerEvents: 'auto',
   lineHeight: 1,
+  ...borders.radii(m(20)),
+  ...paddings({
+    vertical: m(6),
+    horizontal: m(8),
+  }),
   textShadow: `0 0 2px ${localeSwitcherVars.shadow.css()}`,
   opacity: 0.8,
   transition: 'opacity 0.2s ease-out',
