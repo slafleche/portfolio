@@ -283,7 +283,5 @@ globalStyle(
 );
 
 globalStyle(`.${link}:focus-visible .${cornerBox}`, {
-  ...outlines({
-    // offset: m(-8),
-  }),
+  ...outlines(),
 });
