@@ -21,8 +21,6 @@ import {
   exitAnticPct,
   exitHoldPct,
   exitTranslationDelayMs,
-  focusOffsetPx,
-  focusWidthPx,
   gradientFadeMs,
   hoverBlurPx,
   hoverTransitionMs,

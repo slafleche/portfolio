@@ -3,12 +3,13 @@ import { m, mPercent } from 'css-calipers';
 
 import { menuFontVariants } from '../../tokens/fontVariants/menu';
 import { themeColours } from '../../tokens/global.tokens';
+import { layoutVars } from '../../tokens/layout.tokens';
 import {
+  anchorMenuVars,
   localeSwitcherVars,
   logoVars,
 } from '../../tokens/menu.tokens';
 import borders from '../helpers/borders.helper';
-import { paddings } from '../helpers/spacing.helper';
 import {
   fontStylesFromFontVariant,
   relativeFontWeight,
@@ -82,18 +83,34 @@ export const logoItem = style({});
 export const localeItem = style({
   position: 'absolute',
   display: 'flex',
+  transform: 'translateY(-50%)',
   alignItems: 'center',
   justifyContent: 'center',
-  width: localeSwitcherVars.width.css(),
+  textAlign: 'center',
+  width: layoutVars.content.padding.css(),
   height: localeSwitcherVars.height.css(),
   top: localeSwitcherVars.offsetY.css(),
   right: localeSwitcherVars.offsetX.css(),
   color: localeSwitcherVars.color.css(),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        transform: 'translateY(0)',
+        width: anchorMenuVars.handle.sizeWithBorder.css(),
+        top: localeSwitcherVars.compact.offsetY.css(),
+        right: localeSwitcherVars.compact.offsetX.css(),
+      },
+    }),
+  },
 });
 
 export const localeLink = style({
   position: 'relative',
-  transform: 'translate(-50%, -50%)',
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   fontSize: localeSwitcherVars.fontSize.css(),
   ...fontStylesFromFontVariant({
     variant: menuFontVariants.menu,
@@ -102,10 +119,6 @@ export const localeLink = style({
   pointerEvents: 'auto',
   lineHeight: 1,
   ...borders.radii(m(20)),
-  ...paddings({
-    vertical: m(6),
-    horizontal: m(8),
-  }),
   textShadow: `0 0 2px ${localeSwitcherVars.shadow.css()}`,
   opacity: 0.8,
   transition: 'opacity 0.2s ease-out',

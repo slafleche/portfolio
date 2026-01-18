@@ -7,6 +7,7 @@ const logoWidth = m(48);
 const offsetY = m(12);
 const offsetX = m(12);
 const fullWidth = logoWidth.add(offsetX).add(offsetY);
+const compactOffset = m(16);
 
 export const logoVars = {
   width: logoWidth,
@@ -20,19 +21,22 @@ export const logoVars = {
   },
   compact: {
     width: m(50),
-    offsetX: m(16),
-    offsetY: m(16),
+    offsetX: compactOffset,
+    offsetY: compactOffset,
   },
 };
 
 export const localeSwitcherVars = {
   fontSize: m(14),
   offsetY: logoVars.offsetY.add(logoVars.width.half()),
-  offsetX: logoVars.offsetX,
-  width: m(32),
+  offsetX: m(0),
   height: m(32),
   color: colorVars.white.alpha(0.8),
   shadow: colorVars.shadow,
+  compact: {
+    offsetY: m(5),
+    offsetX: m(0),
+  },
 };
 
 const anchorOuterGap = m(12);
