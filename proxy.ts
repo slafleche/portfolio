@@ -98,6 +98,10 @@ function requireBasicAuth(request: NextRequest): NextResponse | null {
 
   const { pathname } = request.nextUrl;
   if (
+    pathname === '/vercel-favicon/1.0' ||
+    pathname === '/vitals' ||
+    pathname === '/_vercel' ||
+    pathname.startsWith('/_vercel/') ||
     pathname === '/favicon.ico' ||
     pathname === '/favicon.png' ||
     pathname === '/apple-touch-icon.png' ||
