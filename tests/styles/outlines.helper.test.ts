@@ -8,7 +8,7 @@ describe('outlines.helper', () => {
   it('uses token defaults when no overrides provided', () => {
     expect(outlines()).toEqual({
       outline: '4px solid Highlight',
-      outlineOffset: '4px',
+      outlineOffset: '2px',
     });
   });
 
