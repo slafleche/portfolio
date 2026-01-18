@@ -4,6 +4,12 @@ import { NextResponse } from 'next/server';
 import { isDev, isRelease, isStaging } from '@/config/envPrimitives';
 import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
 import {
+  FAVICON_APPLE_TOUCH_ICON,
+  FAVICON_DEFAULT_WEB_MANIFEST,
+  FAVICON_ICO,
+  FAVICON_PNG_VARIANTS,
+} from '@/data/generated/favicons/manifest.favicons.gen';
+import {
   DEFAULT_LOCALE,
   pickLocaleFromAcceptLanguage,
 } from '@/lib/locales/locale';
@@ -159,6 +165,33 @@ export function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
   const manifestTarget = runtimeEnv.getManifestTarget();
+  const faviconPng =
+    FAVICON_PNG_VARIANTS.find((entry) => entry.size === 32) ??
+    FAVICON_PNG_VARIANTS[0];
+
+  if (pathname === '/favicon.ico') {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = FAVICON_ICO.src;
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
+  if (pathname === '/favicon.png' && faviconPng) {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = faviconPng.src;
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
+  if (pathname === '/apple-touch-icon.png') {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = FAVICON_APPLE_TOUCH_ICON.src;
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
+  if (pathname === '/manifest.webmanifest') {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = FAVICON_DEFAULT_WEB_MANIFEST.src;
+    return NextResponse.rewrite(rewriteUrl);
+  }
 
   if (pathname === '/cdn/manifest/images.json') {
     const rewriteUrl = request.nextUrl.clone();
