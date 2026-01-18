@@ -1,15 +1,17 @@
+import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { isIndexingAllowed, isRelease } from '@/lib/runtimeEnv';
 
 const TEXT_CONTENT_TYPE = 'text/plain; charset=utf-8';
 
-function buildRobotsBody(): string {
+function buildRobotsBody(origin: string): string {
   // Allow indexing only in release environments where indexing is allowed.
   if (isRelease() && isIndexingAllowed()) {
     return [
       'User-agent: *',
       'Allow: /',
+      `Sitemap: ${origin}/sitemap.xml`,
     ].join('\n');
   }
 
@@ -19,8 +21,9 @@ function buildRobotsBody(): string {
   ].join('\n');
 }
 
-export function GET() {
-  const body = buildRobotsBody();
+export function GET(request: NextRequest) {
+  const origin = new URL(request.url).origin;
+  const body = buildRobotsBody(origin);
 
   return new NextResponse(body, {
     status: 200,

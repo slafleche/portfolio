@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+
 import { getLocaleSvgs } from '@/assets/SVG/generated/headingsAsSvgs';
 import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
@@ -14,7 +16,9 @@ import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
+import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
+import { isRelease, isStaging } from '@/lib/runtimeEnv';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
@@ -25,6 +29,54 @@ import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
 import SystemsGooey from '../../../../src/components/SystemsGooey';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
+
+const getSiteOrigin = (): string | null => {
+  const raw = process.env.SITE_URL?.trim();
+  if (raw) {
+    try {
+      return new URL(raw).origin;
+    } catch {
+      return null;
+    }
+  }
+  if (isRelease()) {
+    return 'https://lafleche.dev';
+  }
+  if (isStaging()) {
+    return 'https://staging.lafleche.dev';
+  }
+  return null;
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: SystemsPageParams;
+}): Promise<Metadata> {
+  const { LOCALE } = await params;
+  const locale = resolveLocale(LOCALE);
+  const origin = getSiteOrigin();
+  if (!origin) return {};
+
+  const languages: Record<string, string> = Object.fromEntries(
+    AVAILABLE_LOCALES.filter((code) => code !== locale).map(
+      (code) => {
+        const slug =
+          canonicalToLocalizedSlugs[code]?.systems ?? 'systems';
+        return [code, `${origin}/${code}/${slug}`];
+      },
+    ),
+  );
+  const canonicalSlug =
+    canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
+
+  return {
+    alternates: {
+      canonical: `${origin}/${locale}/${canonicalSlug}`,
+      languages,
+    },
+  };
+}
 
 export default async function SystemsPage({
   params,

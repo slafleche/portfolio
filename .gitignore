@@ -43,6 +43,7 @@ scripts/bash/
 # -----------------------
 public/images/*
 public/favicons/*
+public/sitemap.xml
 src/lib/locales/generated/
 
 

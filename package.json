@@ -83,7 +83,7 @@
     "node": "20.19.6"
   },
   "scripts": {
-    "ci": "yarn locales && yarn generate:favicons && yarn verify && yarn build",
+    "ci": "yarn locales && yarn generate:favicons && yarn generate:sitemap && yarn verify && yarn build",
     "prepare": "husky",
     "generate": "tsx scripts/runGenerateAllPipeline.mts",
     "generate:staging": "tsx scripts/runGenerateAllPipeline.mts --target=_staging",
@@ -91,6 +91,7 @@
     "generate:release": "tsx scripts/runGenerateAllPipeline.mts --target=release",
     "generate:release:skipConfirmation": "tsx scripts/runGenerateAllPipeline.mts --target=release --yes",
     "generate:favicons": "tsx scripts/generateFavicons.ts",
+    "generate:sitemap": "tsx scripts/generateSitemap.mts",
     "locales": "yarn lint:locales && yarn locales:markdown && yarn locales:publish",
     "locales:lint": "tsx scripts/checkLocaleMarkdown.ts",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",

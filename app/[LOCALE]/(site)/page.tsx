@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import type { Metadata } from 'next';
 
 import { getLocaleSvgs } from '@/assets/SVG/generated/headingsAsSvgs';
 import Card from '@/components/Card';
@@ -35,6 +36,7 @@ import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
+import { isRelease, isStaging } from '@/lib/runtimeEnv';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
@@ -46,6 +48,48 @@ import HeroHomeBg from '../../../src/components/HeroHomeBg';
 
 interface PageParams {
   LOCALE: string;
+}
+
+const getSiteOrigin = (): string | null => {
+  const raw = process.env.SITE_URL?.trim();
+  if (raw) {
+    try {
+      return new URL(raw).origin;
+    } catch {
+      return null;
+    }
+  }
+  if (isRelease()) {
+    return 'https://lafleche.dev';
+  }
+  if (isStaging()) {
+    return 'https://staging.lafleche.dev';
+  }
+  return null;
+};
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<PageParams>;
+}): Promise<Metadata> {
+  const { LOCALE } = await params;
+  const locale = resolveLocale(LOCALE);
+  const origin = getSiteOrigin();
+  if (!origin) return {};
+
+  const languages: Record<string, string> = Object.fromEntries(
+    AVAILABLE_LOCALES.filter((code) => code !== locale).map(
+      (code) => [code, `${origin}/${code}`],
+    ),
+  );
+
+  return {
+    alternates: {
+      canonical: `${origin}/${locale}`,
+      languages,
+    },
+  };
 }
 
 export default async function HomePage({

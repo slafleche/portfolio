@@ -34,7 +34,7 @@ const enBaseData = {
 
   'favicon-meta-description':
     "Metadata describing the favicon and manifest assets for Stéphane's portfolio.",
-  'favicon-meta-keywords': 'favicon, icon, manifest, Stéphane',
+  'favicon-meta-keywords': 'portfolio, web developer, frontend developer, frontend engineer, design systems, TypeScript, CSS architecture, type-safe CSS, CSS-in-JS, UI engineering, UI architecture, UI components, component systems, accessibility, performance, responsive design, UX',
   'favicon-meta-author': 'Stéphane',
 
   'hero-title': 'Stéphane LaFlèche [split] Front-end Developer',

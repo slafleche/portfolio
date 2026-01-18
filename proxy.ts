@@ -2,13 +2,13 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { isDev, isRelease, isStaging } from '@/config/envPrimitives';
-import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
 import {
   FAVICON_APPLE_TOUCH_ICON,
   FAVICON_DEFAULT_WEB_MANIFEST,
   FAVICON_ICO,
   FAVICON_PNG_VARIANTS,
 } from '@/data/generated/favicons/manifest.favicons.gen';
+import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
 import {
   DEFAULT_LOCALE,
   pickLocaleFromAcceptLanguage,
@@ -190,6 +190,12 @@ export function proxy(request: NextRequest) {
   if (pathname === '/manifest.webmanifest') {
     const rewriteUrl = request.nextUrl.clone();
     rewriteUrl.pathname = FAVICON_DEFAULT_WEB_MANIFEST.src;
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
+  if (pathname === '/sitemap.xml') {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = '/sitemap.xml';
     return NextResponse.rewrite(rewriteUrl);
   }
 

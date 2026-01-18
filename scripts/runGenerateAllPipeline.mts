@@ -92,6 +92,7 @@ if (wantsHelp) {
       'Runs:',
       '  yarn locales',
       '  yarn generate:favicons',
+      '  yarn generate:sitemap',
       '  yarn --cwd cdn generate:fonts (when --fonts or no media flags)',
       '  yarn --cwd cdn generate:img (when --images or no media flags)',
       '  yarn --cwd cdn generate:videos (when --videos or no media flags)',
@@ -111,6 +112,7 @@ if (wantsHelp) {
 
 runRoot('locales');
 runRoot('generate:favicons');
+runRoot('generate:sitemap');
 
 if (target === 'both') {
   runCdnPipeline('_staging', kinds, cdnArgs);
