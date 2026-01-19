@@ -302,7 +302,6 @@ export function NameBlock({
         label={copy.label}
         value={value}
         onChange={handleChange}
-        outlineClassName={nameBlockOutline}
         onBlur={() => {
           if (!hasBlurred) {
             setHasBlurred(true);

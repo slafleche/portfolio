@@ -26,7 +26,6 @@ type BaseProps = Omit<ContactFormBlockBaseProps, 'order'> & {
   type?: string;
   autoComplete?: string;
   className?: string;
-  outlineClassName?: string;
 };
 
 type TextInputBlockProps =
@@ -56,7 +55,6 @@ export const TextInputBlock = forwardRef<
       autoComplete,
       className,
       requiredText,
-      outlineClassName,
     },
     ref,
   ) => {

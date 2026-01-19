@@ -297,7 +297,6 @@ export function EmailBlock({
         label={copy.label}
         value={value}
         onChange={handleChange}
-        outlineClassName={emailBlockOutline}
         onBlur={() => {
           if (!hasBlurred) {
             setHasBlurred(true);
