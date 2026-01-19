@@ -117,7 +117,6 @@ if (wantsHelp) {
       '  yarn locales',
       '  yarn generate:favicons',
       '  yarn build:hero-svg',
-      '  yarn build:share-images',
       '  yarn generate:sitemap',
       '  yarn --cwd cdn generate:fonts (when --fonts or no media flags)',
       '  yarn --cwd cdn generate:img (when --images or no media flags)',
@@ -145,7 +144,6 @@ if (wantsHelp) {
 runRoot('locales');
 runRoot('generate:favicons');
 runRoot('build:hero-svg');
-runRoot('build:share-images');
 runRoot('generate:sitemap');
 
 if (!skipCdn) {

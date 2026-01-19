@@ -200,5 +200,107 @@
       "width": 7952,
       "height": 5304
     }
+  },
+  "share-images-en-share-image-1200x1200.gen": {
+    "name": "share-images-en-share-image-1200x1200.gen",
+    "hash": "9c6b6c58",
+    "basePath": "img-share-images-en-share-image-1200x1200.gen-9c6b6c58",
+    "dirName": "img-share-images-en-share-image-1200x1200.gen-9c6b6c58",
+    "width": 1200,
+    "height": 1201,
+    "aspect": 0.9991673605328892,
+    "blurDataURL": "",
+    "shareImage": true,
+    "variants": {},
+    "original": {
+      "url": "https://cdn.lafleche.dev/_staging/images/v1/img-share-images-en-share-image-1200x1200.gen-9c6b6c58/orig.png",
+      "width": 1200,
+      "height": 1201
+    }
+  },
+  "share-images-en-share-image-1200x630.gen": {
+    "name": "share-images-en-share-image-1200x630.gen",
+    "hash": "1a6f9776",
+    "basePath": "img-share-images-en-share-image-1200x630.gen-1a6f9776",
+    "dirName": "img-share-images-en-share-image-1200x630.gen-1a6f9776",
+    "width": 1200,
+    "height": 631,
+    "aspect": 1.901743264659271,
+    "blurDataURL": "",
+    "shareImage": true,
+    "variants": {},
+    "original": {
+      "url": "https://cdn.lafleche.dev/_staging/images/v1/img-share-images-en-share-image-1200x630.gen-1a6f9776/orig.png",
+      "width": 1200,
+      "height": 631
+    }
+  },
+  "share-images-en-share-image-1200x675.gen": {
+    "name": "share-images-en-share-image-1200x675.gen",
+    "hash": "d509da29",
+    "basePath": "img-share-images-en-share-image-1200x675.gen-d509da29",
+    "dirName": "img-share-images-en-share-image-1200x675.gen-d509da29",
+    "width": 1200,
+    "height": 676,
+    "aspect": 1.7751479289940828,
+    "blurDataURL": "",
+    "shareImage": true,
+    "variants": {},
+    "original": {
+      "url": "https://cdn.lafleche.dev/_staging/images/v1/img-share-images-en-share-image-1200x675.gen-d509da29/orig.png",
+      "width": 1200,
+      "height": 676
+    }
+  },
+  "share-images-fr-share-image-1200x1200.gen": {
+    "name": "share-images-fr-share-image-1200x1200.gen",
+    "hash": "008edec8",
+    "basePath": "img-share-images-fr-share-image-1200x1200.gen-008edec8",
+    "dirName": "img-share-images-fr-share-image-1200x1200.gen-008edec8",
+    "width": 1200,
+    "height": 1201,
+    "aspect": 0.9991673605328892,
+    "blurDataURL": "",
+    "shareImage": true,
+    "variants": {},
+    "original": {
+      "url": "https://cdn.lafleche.dev/_staging/images/v1/img-share-images-fr-share-image-1200x1200.gen-008edec8/orig.png",
+      "width": 1200,
+      "height": 1201
+    }
+  },
+  "share-images-fr-share-image-1200x630.gen": {
+    "name": "share-images-fr-share-image-1200x630.gen",
+    "hash": "f6464b55",
+    "basePath": "img-share-images-fr-share-image-1200x630.gen-f6464b55",
+    "dirName": "img-share-images-fr-share-image-1200x630.gen-f6464b55",
+    "width": 1200,
+    "height": 631,
+    "aspect": 1.901743264659271,
+    "blurDataURL": "",
+    "shareImage": true,
+    "variants": {},
+    "original": {
+      "url": "https://cdn.lafleche.dev/_staging/images/v1/img-share-images-fr-share-image-1200x630.gen-f6464b55/orig.png",
+      "width": 1200,
+      "height": 631
+    }
+  },
+  "share-images-fr-share-image-1200x675.gen": {
+    "name": "share-images-fr-share-image-1200x675.gen",
+    "hash": "d86699e8",
+    "basePath": "img-share-images-fr-share-image-1200x675.gen-d86699e8",
+    "dirName": "img-share-images-fr-share-image-1200x675.gen-d86699e8",
+    "width": 1200,
+    "height": 676,
+    "aspect": 1.7751479289940828,
+    "blurDataURL": "",
+    "shareImage": true,
+    "variants": {},
+    "original": {
+      "url": "https://cdn.lafleche.dev/_staging/images/v1/img-share-images-fr-share-image-1200x675.gen-d86699e8/orig.png",
+      "width": 1200,
+      "height": 676
+    }
   }
 }

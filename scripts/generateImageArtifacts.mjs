@@ -41,9 +41,11 @@ function parseArgs(argv) {
   for (const arg of argv) {
     if (arg.startsWith('--target=')) {
       const t = arg.split('=')[1]?.trim();
-      if (t === '_staging' || t === 'release') opts.target = t;
+      if (t === '_staging' || t === 'release' || t === 'both')
+        opts.target = t;
       else if (t === 's') opts.target = '_staging';
       else if (t === 'r') opts.target = 'release';
+      else if (t === 'b') opts.target = 'both';
     }
   }
   return opts;
@@ -54,7 +56,7 @@ async function main() {
   if (opts.help) {
     console.log(
       [
-        'Usage: yarn generate:img:artifacts [--target=_staging|release]',
+        'Usage: yarn generate:img:artifacts [--target=_staging|release|both]',
         '',
         'Copies the CDN-rewritten image manifest into src/data/generated so the app',
         'uses CDN URLs. Requires that cdn:sync --images has already run.',
@@ -67,25 +69,29 @@ async function main() {
     return;
   }
 
-  const { source: sourceManifest, output: outputManifest } = resolvePaths(
-    opts.target,
-  );
+  const targets =
+    opts.target === 'both' ? ['_staging', 'release'] : [opts.target];
 
-  if (!(await fileExists(sourceManifest))) {
-    throw new Error(
-      `Missing ${sourceManifest}. Run "yarn --cwd cdn cdn:sync --images --target=${opts.target}" first.`,
+  for (const target of targets) {
+    const { source: sourceManifest, output: outputManifest } =
+      resolvePaths(target);
+
+    if (!(await fileExists(sourceManifest))) {
+      throw new Error(
+        `Missing ${sourceManifest}. Run "yarn --cwd cdn cdn:sync --images --target=${target}" first.`,
+      );
+    }
+
+    const raw = await fs.readFile(sourceManifest, 'utf8');
+    const parsed = JSON.parse(raw);
+    await fs.mkdir(path.dirname(outputManifest), { recursive: true });
+    await fs.writeFile(
+      outputManifest,
+      `${JSON.stringify(parsed, null, 2)}\n`,
+      'utf8',
     );
+    console.log(`✓ Wrote image manifest → ${outputManifest}`);
   }
-
-  const raw = await fs.readFile(sourceManifest, 'utf8');
-  const parsed = JSON.parse(raw);
-  await fs.mkdir(path.dirname(outputManifest), { recursive: true });
-  await fs.writeFile(
-    outputManifest,
-    `${JSON.stringify(parsed, null, 2)}\n`,
-    'utf8',
-  );
-  console.log(`✓ Wrote image manifest → ${outputManifest}`);
 }
 
 main().catch((error) => {

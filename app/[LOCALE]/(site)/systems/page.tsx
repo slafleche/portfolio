@@ -9,6 +9,7 @@ import Menu from '@/components/Menu';
 import ContentAsTiles from '@/components/responsive/ContentAsTiles';
 import SiteProviders from '@/components/site/SiteProviders.client';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
+import { getSocialImageByName } from '@/lib/images';
 import { resolveLocale } from '@/lib/locales/locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
@@ -56,7 +57,14 @@ export async function generateMetadata({
   const canonicalSlug =
     canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
   const canonicalUrl = `${origin}/${locale}/${canonicalSlug}`;
-  const shareImageUrl = `${origin}/share/${locale}-share-image-1200x630.gen.png`;
+  const openGraphImageUrl = getSocialImageByName(
+    locale,
+    '1200x630',
+  );
+  const twitterImageUrl = getSocialImageByName(
+    locale,
+    '1200x675',
+  );
 
   return {
     title: systemsMeta.title,
@@ -75,20 +83,22 @@ export async function generateMetadata({
       alternateLocale: AVAILABLE_LOCALES.filter(
         (code) => code !== locale,
       ),
-      images: [
-        {
-          url: shareImageUrl,
-          width: 1200,
-          height: 630,
-          alt: systemsMeta.title,
-        },
-      ],
+      images: openGraphImageUrl
+        ? [
+            {
+              url: openGraphImageUrl,
+              width: 1200,
+              height: 630,
+              alt: systemsMeta.title,
+            },
+          ]
+        : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: systemsMeta.title,
       description: systemsMeta.description,
-      images: [shareImageUrl],
+      images: twitterImageUrl ? [twitterImageUrl] : undefined,
     },
   };
 }

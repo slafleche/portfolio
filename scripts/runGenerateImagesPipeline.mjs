@@ -23,6 +23,35 @@ const run = (script, extraArgs = []) => {
 
 const hasYesFlag = args.includes('--yes') || args.includes('-y');
 
+const parseTargetFromArgs = (argv) => {
+  const match = argv.find((arg) => arg.startsWith('--target='));
+  if (!match) return null;
+  const value = match.split('=')[1]?.trim();
+  if (value === '_staging' || value === 'release' || value === 'both')
+    return value;
+  if (value === 's') return '_staging';
+  if (value === 'r') return 'release';
+  if (value === 'b') return 'both';
+  return null;
+};
+
+const promptTarget = async () => {
+  if (!process.stdin.isTTY || !process.stdout.isTTY) return 'both';
+  console.log(
+    'Select target for images: [_staging (s)/release (r)/both (b)] (default: both)',
+  );
+  const rl = readline.createInterface({ input, output });
+  const answer = await rl.question('> ');
+  await rl.close();
+  const normalized = answer.trim().toLowerCase();
+  if (normalized === '' || normalized === 'b' || normalized === 'both')
+    return 'both';
+  if (normalized === 's' || normalized === '_staging')
+    return '_staging';
+  if (normalized === 'r' || normalized === 'release') return 'release';
+  return 'both';
+};
+
 const confirmSync = async () => {
   if (hasYesFlag) return true;
   if (!process.stdin.isTTY || !process.stdout.isTTY) return true;
@@ -58,12 +87,30 @@ if (args.includes('--help') || args.includes('-h')) {
   process.exit(0);
 }
 
-run('generate:img:files', args);
+const targetArg = parseTargetFromArgs(args) ?? (await promptTarget());
+const targetArgs = args.some((arg) => arg.startsWith('--target='))
+  ? args
+  : [
+      ...args,
+      `--target=${targetArg}`,
+    ];
+
+run('generate:img:share-images', targetArgs);
+run('generate:img:files', targetArgs);
 const runSync = await confirmSync();
 if (runSync) {
   const overwrite = await confirmOverwrite();
   const overwriteAll = overwrite ? await confirmOverwriteAll() : false;
-  const syncArgs = overwriteAll ? ['--images', '--yes', ...args] : ['--images', ...args];
+  const syncArgs = overwriteAll
+    ? [
+        '--images',
+        '--yes',
+        ...targetArgs,
+      ]
+    : [
+        '--images',
+        ...targetArgs,
+      ];
   run('cdn:sync', syncArgs);
-  run('generate:img:artifacts', args);
+  run('generate:img:artifacts', targetArgs);
 }

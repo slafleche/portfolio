@@ -130,7 +130,6 @@
     "dev": "DEBUG_VE=1 node scripts/devWithDebug.mjs --webpack",
     "start": "next start",
     "mock:markup-img": "tsx scripts/mockMarkupToImg.mts",
-    "build:hero-svg": "tsx scripts/buildHeroHeadingSvg.mts",
-    "build:share-images": "tsx scripts/buildShareImages.mts"
+    "build:hero-svg": "tsx scripts/buildHeroHeadingSvg.mts"
   }
 }

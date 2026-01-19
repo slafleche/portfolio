@@ -28,6 +28,7 @@
     "generate:googleFonts": "tsx ../scripts/generateFontUrls.mts",
     
     "generate:img": "node ../scripts/runGenerateImagesPipeline.mjs",
+    "generate:img:share-images": "tsx ../scripts/buildShareImages.mts",
     "generate:img:files": "node ../scripts/generateImages.mts",
     "generate:img:artifacts": "node ../scripts/generateImageArtifacts.mjs",
     

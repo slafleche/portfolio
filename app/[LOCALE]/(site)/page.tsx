@@ -23,6 +23,7 @@ import {
 } from '@/components/wordmarks/wordmarks.tsx';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { createDomId } from '@/lib/dom';
+import { getSocialImageByName } from '@/lib/images';
 import { resolveLocale } from '@/lib/locales/locale';
 import type { CaseStudyListItem } from '@/lib/locales/sections/caseStudies.locale';
 import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale';
@@ -71,7 +72,14 @@ export async function generateMetadata({
   );
   languages['x-default'] = `${origin}/en`;
   const canonicalUrl = `${origin}/${locale}`;
-  const shareImageUrl = `${origin}/share/${locale}-share-image-1200x630.gen.png`;
+  const openGraphImageUrl = getSocialImageByName(
+    locale,
+    '1200x630',
+  );
+  const twitterImageUrl = getSocialImageByName(
+    locale,
+    '1200x675',
+  );
 
   return {
     alternates: {
@@ -87,22 +95,22 @@ export async function generateMetadata({
       alternateLocale: AVAILABLE_LOCALES.filter(
         (code) => code !== locale,
       ),
-      images: [
-        {
-          url: shareImageUrl,
-          width: 1200,
-          height: 630,
-          alt: meta.title,
-        },
-      ],
+      images: openGraphImageUrl
+        ? [
+            {
+              url: openGraphImageUrl,
+              width: 1200,
+              height: 630,
+              alt: meta.title,
+            },
+          ]
+        : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: meta.title,
       description: meta.description,
-      images: [
-        shareImageUrl,
-      ],
+      images: twitterImageUrl ? [twitterImageUrl] : undefined,
     },
   };
 }

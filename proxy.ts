@@ -113,8 +113,7 @@ function requireBasicAuth(request: NextRequest): NextResponse | null {
     pathname === '/apple-touch-icon.png' ||
     pathname === '/manifest.webmanifest' ||
     pathname.endsWith('.webmanifest') ||
-    pathname.startsWith('/favicons/') ||
-    pathname.startsWith('/share/')
+    pathname.startsWith('/favicons/')
   ) {
     return null;
   }

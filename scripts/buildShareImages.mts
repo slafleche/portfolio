@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { chromium } from 'playwright';
 
@@ -9,7 +10,17 @@ const SHARE_IMAGE_SIZES = [
   { width: 1200, height: 1200 },
 ] as const;
 
-const OUTPUT_DIR = path.resolve('public', 'share');
+const __filename = fileURLToPath(import.meta.url);
+const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
+
+const OUTPUT_DIR = path.join(
+  REPO_ROOT,
+  'cdn',
+  'media',
+  'images',
+  'localImageSrc',
+  'share-images',
+);
 const TARGET_URL =
   process.env.SHARE_IMAGE_URL ??
   'http://localhost:3000/en/debug/shareImage';
@@ -22,6 +33,7 @@ const expectedSizes = new Set(
 );
 
 const main = async () => {
+  await fs.rm(OUTPUT_DIR, { recursive: true, force: true });
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
 
   const browser = await chromium.launch();

@@ -19,6 +19,7 @@ type ImageManifestEntry = {
   height: number;
   aspect: number;
   blurDataURL: string;
+  shareImage: boolean;
   variants: Record<string, ImageVariant[]>;
   original?: {
     url: string;
@@ -68,6 +69,7 @@ const IMAGE_SOURCES_CONFIG = path.join(
   'images',
   'imageSources.json',
 );
+const SHARE_IMAGES_DIR = path.join(IMAGE_SOURCES_DIR, 'share-images');
 const IGNORE_DIRS = new Set<string>();
 
 const IMAGE_CACHE_PREFIX = 'img';
@@ -387,6 +389,9 @@ async function processImage(
   hashes: HashesMap,
   existingManifest: ImageManifest,
 ): Promise<void> {
+  const isShareImage = filePath.startsWith(
+    `${SHARE_IMAGES_DIR}${path.sep}`,
+  );
   const ext = path.extname(filePath).toLowerCase();
   if (!VALID_EXT.has(ext)) return;
 
@@ -413,7 +418,12 @@ async function processImage(
   const outDir = path.join(outRoot, dirSlug);
 
   const existingHash = hashes[name];
-  if (existingHash && existingHash === hash && existingManifest[name]) {
+  if (
+    !isShareImage &&
+    existingHash &&
+    existingHash === hash &&
+    existingManifest[name]
+  ) {
     manifest[name] = existingManifest[name];
     console.log(
       `   • Skipping "${name}" — hash unchanged (${hash}).`,
@@ -425,17 +435,19 @@ async function processImage(
   await fs.mkdir(outDir, { recursive: true });
 
   console.log(
-    `   • Generating variants for "${name}" (${srcW}x${srcH}) → ${dirSlug}`,
+    `   • ${isShareImage ? 'Preserving' : 'Generating variants for'} "${name}" (${srcW}x${srcH}) → ${dirSlug}`,
   );
 
-  const lqipW = Math.min(24, srcW);
-  const lqip = await img
-    .clone()
-    .resize({ width: lqipW })
-    .blur()
-    .jpeg({ quality: 40 })
-    .toBuffer();
-  const blurDataURL = `data:image/jpeg;base64,${lqip.toString('base64')}`;
+  const blurDataURL = isShareImage
+    ? ''
+    : `data:image/jpeg;base64,${(
+        await img
+          .clone()
+          .resize({ width: Math.min(24, srcW) })
+          .blur()
+          .jpeg({ quality: 40 })
+          .toBuffer()
+      ).toString('base64')}`;
 
   const baseUrl = `${dirSlug}`;
 
@@ -448,19 +460,22 @@ async function processImage(
     height: srcH,
     aspect: srcW / srcH,
     blurDataURL,
+    shareImage: isShareImage,
     variants: {},
   };
-  const targetWidths = WIDTHS.filter((w) => w <= srcW);
+  if (!isShareImage) {
+    const targetWidths = WIDTHS.filter((w) => w <= srcW);
 
-  for (const { ext: outExt, to } of FORMATS) {
-    const list: ImageVariant[] = [];
-    for (const w of targetWidths) {
-      const fileName = `${w}.${outExt}`;
-      const outPath = path.join(outDir, fileName);
-      await to(img.clone().resize({ width: w })).toFile(outPath);
-      list.push({ w, url: `${baseUrl}/${fileName}` });
+    for (const { ext: outExt, to } of FORMATS) {
+      const list: ImageVariant[] = [];
+      for (const w of targetWidths) {
+        const fileName = `${w}.${outExt}`;
+        const outPath = path.join(outDir, fileName);
+        await to(img.clone().resize({ width: w })).toFile(outPath);
+        list.push({ w, url: `${baseUrl}/${fileName}` });
+      }
+      item.variants[outExt] = list;
     }
-    item.variants[outExt] = list;
   }
 
   const origFile = `orig${ext || '.jpg'}`;
@@ -474,7 +489,11 @@ async function processImage(
   manifest[name] = item;
   hashes[name] = hash;
   console.log(
-    `   • Completed "${name}" (${targetWidths.length} responsive widths, plus original).`,
+    `   • Completed "${name}"${
+      isShareImage
+        ? ' (original only).'
+        : ` (${WIDTHS.filter((w) => w <= srcW).length} responsive widths, plus original).`
+    }`,
   );
 }
 
