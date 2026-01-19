@@ -388,7 +388,6 @@ export function MessageBlock({
         readOnly={readOnly}
         disabled={disabled}
       />
-      <OutlineForInput className={messageBlockOutline} />
       <FormHint
         tone={effectiveErrorText ? 'error' : 'helper'}
         id={characterHintId}

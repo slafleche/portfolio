@@ -7,8 +7,8 @@ import { FormLabel } from '@/components/contact/primitives/FormLabel';
 import { TextInput } from '@/components/contact/primitives/TextInput';
 import * as s from '@/styles/components/forms.css';
 
-import type { ContactFormBlockBaseProps } from '../types/form.types';
 import { OutlineForInput } from '../primitives/OutlineForInput';
+import type { ContactFormBlockBaseProps } from '../types/form.types';
 
 type BaseProps = Omit<ContactFormBlockBaseProps, 'order'> & {
   id: string;
@@ -87,7 +87,6 @@ export const TextInputBlock = forwardRef<
           aria-describedby={hasHint ? hintId : undefined}
           aria-invalid={errorText ? 'true' : undefined}
         />
-        <OutlineForInput className={outlineClassName} />
         <FormHint
           tone={errorText ? 'error' : 'helper'}
           id={hasHint ? hintId : undefined}

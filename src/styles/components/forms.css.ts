@@ -468,19 +468,3 @@ export const outline = style({
   ...absolutePosition.fullSize(),
   display: 'none',
 });
-
-// globalStyle(
-//   `.${input}:focus-visible + .${outlinePosition} .${outline}`,
-//   {
-//     display: 'block',
-//     ...outlines(),
-//   },
-// );
-
-// globalStyle(
-//   `.${textarea}:focus-visible + .${outlinePosition} .${outline}`,
-//   {
-//     display: 'block',
-//     ...outlines(),
-//   },
-// );
