@@ -143,7 +143,6 @@ if (wantsHelp) {
 
 runRoot('locales');
 runRoot('generate:favicons');
-runRoot('build:hero-svg');
 runRoot('generate:sitemap');
 
 if (!skipCdn) {
