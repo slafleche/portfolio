@@ -15,8 +15,6 @@ import {
 } from '@/data/generated/favicons/manifest.favicons.gen';
 import { GOOGLE_FONT_URLS } from '@/data/generated/fonts/googleFonts.gen';
 import { resolveLocale } from '@/lib/locales/locale';
-import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
-import { buildMetaTagBundle } from '@/lib/locales/sections/meta.locale';
 import { type Locale } from '@/lib/locales/translations';
 
 import {
@@ -55,7 +53,6 @@ export default async function RootLayout({
   const headerList = await headers();
   const requestedLocale = headerList.get('x-locale') ?? undefined;
   const locale = resolveLocale(requestedLocale);
-  const translator = await loadTranslator(locale);
   const fallbackLocale =
     FAVICON_DEFAULT_WEB_MANIFEST.locale as Locale;
   const fontUrls = GOOGLE_FONT_URLS;
@@ -65,7 +62,6 @@ export default async function RootLayout({
   const manifestMeta =
     FAVICON_MANIFEST_META_BY_LOCALE[locale] ??
     FAVICON_MANIFEST_META_BY_LOCALE[fallbackLocale];
-  const metaTags = buildMetaTagBundle(translator);
   const gaMeasurementId = isStaging() ? GA_STAGING_ID : GA_RELEASE_ID;
   const indexingAllowed = isIndexingAllowed();
   const fontFacesHref = isRelease()
@@ -117,15 +113,12 @@ export default async function RootLayout({
           name="apple-mobile-web-app-title"
           content={manifestMeta.shortName}
         />
-        <meta name="description" content={metaTags.description} />
         <meta
           name="robots"
           content={
             indexingAllowed ? 'index,follow' : 'noindex,nofollow'
           }
         />
-        <meta name="keywords" content={metaTags.keywords} />
-        <meta name="author" content={metaTags.author} />
         <meta
           name="theme-color"
           content={FAVICON_META_TAGS.themeColorLight}

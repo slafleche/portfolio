@@ -15,7 +15,7 @@ const frBaseData = {
     'Développeur front-end, Stéphane conçoit des systèmes UI, des composants réutilisables et des interfaces accessibles qui alignent design et engineering dans la durée.',
   'meta-keywords':
     'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
-  'meta-author': 'Stéphane',
+  'meta-author': 'Stéphane LaFlèche',
   'not_found-title': '404 Page non trouvée',
   'not_found-back': 'Retour à la page d’accueil',
 

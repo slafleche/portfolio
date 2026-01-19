@@ -3,7 +3,10 @@ import type { ReactNode } from 'react';
 
 import { resolveLocale } from '@/lib/locales/locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
-import { buildMetaCopy } from '@/lib/locales/sections/meta.locale';
+import {
+  buildMetaCopy,
+  buildMetaTagBundle,
+} from '@/lib/locales/sections/meta.locale';
 
 interface SiteLayoutProps {
   children: ReactNode;
@@ -25,8 +28,15 @@ export async function generateMetadata({
   const locale = resolveLocale(LOCALE);
   const translator = await loadTranslator(locale);
   const meta = buildMetaCopy(translator);
+  const metaTags = buildMetaTagBundle(translator);
   return {
     title: meta.title,
     description: meta.description,
+    keywords: metaTags.keywords,
+    authors: [
+      {
+        name: metaTags.author,
+      },
+    ],
   };
 }
