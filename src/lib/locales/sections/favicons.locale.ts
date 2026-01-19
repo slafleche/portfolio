@@ -6,7 +6,6 @@ type MessageKey = keyof Messages;
 
 export const FAVICONS_META_KEYS = {
   description: 'favicon-meta-description',
-  keywords: 'favicon-meta-keywords',
   author: 'favicon-meta-author',
 } as const satisfies Record<string, MessageKey>;
 

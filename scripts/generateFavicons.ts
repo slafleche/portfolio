@@ -11,11 +11,6 @@ import {
   loadMessages,
 } from '../src/lib/locales/locale';
 import {
-  buildFaviconMetaBundle,
-  type FaviconMetaBundle,
-} from '../src/lib/locales/sections/favicons.locale';
-import { createSectionTranslator } from '../src/lib/locales/sections/helpers.locale';
-import {
   AVAILABLE_LOCALES,
   type Locale,
   type Messages,
@@ -254,7 +249,6 @@ type ManifestLocaleEntry = {
 
 type LocaleManifestLoadResult = {
   manifestEntries: Readonly<Record<Locale, ManifestLocaleEntry>>;
-  faviconMetaBundles: Readonly<Record<Locale, FaviconMetaBundle>>;
 };
 
 const exists = async (p: string): Promise<boolean> =>
@@ -300,8 +294,6 @@ const ensureStringArray = (
 async function loadManifestLocaleEntries(): Promise<LocaleManifestLoadResult> {
   const manifestEntries: Record<Locale, ManifestLocaleEntry> =
     {} as Record<Locale, ManifestLocaleEntry>;
-  const faviconMetaBundles: Record<Locale, FaviconMetaBundle> =
-    {} as Record<Locale, FaviconMetaBundle>;
   const defaultMessages = await loadMessages(DEFAULT_LOCALE);
 
   for (const locale of AVAILABLE_LOCALES) {
@@ -339,14 +331,9 @@ async function loadManifestLocaleEntries(): Promise<LocaleManifestLoadResult> {
       categories,
     };
 
-    const translator = createSectionTranslator(
-      messages,
-      defaultMessages,
-    );
-    faviconMetaBundles[locale] = buildFaviconMetaBundle(translator);
   }
 
-  return { manifestEntries, faviconMetaBundles };
+  return { manifestEntries };
 }
 
 async function resetDir(dir: string) {
@@ -801,7 +788,6 @@ async function main() {
 
   const {
     manifestEntries: manifestLocaleEntries,
-    faviconMetaBundles,
   } = await loadManifestLocaleEntries();
   const webManifestResults: Record<Locale, HashedWriteResult> =
     {} as Record<Locale, HashedWriteResult>;
@@ -942,13 +928,6 @@ async function main() {
         categories: manifestLocaleEntries[locale].categories,
         lang: locale,
       },
-    ]),
-  );
-
-  const faviconMetaByLocale = Object.fromEntries(
-    AVAILABLE_LOCALES.map((locale) => [
-      locale,
-      faviconMetaBundles[locale],
     ]),
   );
 
@@ -1114,12 +1093,6 @@ export const FAVICON_DEV_TILE_FOREGROUND_SVG_PATH = ${JSON.stringify(
 
 export const FAVICON_MANIFEST_META_BY_LOCALE = ${JSON.stringify(
     manifestMetaByLocale,
-    null,
-    2,
-  )} as const;
-
-export const FAVICON_META_BUNDLES_BY_LOCALE = ${JSON.stringify(
-    faviconMetaByLocale,
     null,
     2,
   )} as const;

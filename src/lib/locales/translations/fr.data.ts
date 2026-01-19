@@ -9,7 +9,13 @@ const frBaseData = {
   'abbreviated-label': 'FR',
   redirecting: 'Redirection...',
   title: 'Développeur Front-End | Portfolio par Stéphane',
-  description: '',
+  description:
+    'Développeur front-end, Stéphane conçoit des systèmes UI, des composants réutilisables et des interfaces accessibles qui alignent design et engineering dans la durée.',
+  'meta-description':
+    'Développeur front-end, Stéphane conçoit des systèmes UI, des composants réutilisables et des interfaces accessibles qui alignent design et engineering dans la durée.',
+  'meta-keywords':
+    'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
+  'meta-author': 'Stéphane',
   'not_found-title': '404 Page non trouvée',
   'not_found-back': 'Retour à la page d’accueil',
 
@@ -23,19 +29,20 @@ const frBaseData = {
   'close-label': 'Fermer',
   'scroll-cue': 'Défiler vers le contenu',
 
-  'manifest-name': 'Portfolio | Stéphane',
+  'manifest-name': "Portfolio de Stéphane LaFlèche",
   'manifest-short-name': 'Stéphane',
   'manifest-description':
-    'Application web progressive du portfolio personnel.',
+    'Développeur front-end spécialisé en design systems, interfaces accessibles et TypeScript.',
   'manifest-categories': [
     'portfolio',
-    'personnel',
+    'développeur',
+    'design',
   ],
 
   'favicon-meta-description':
     'Métadonnées décrivant les favicons et manifestes du portfolio par Stéphane',
   'favicon-meta-keywords': 'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
-  'favicon-meta-author': 'Stéphane',
+  'favicon-meta-author': 'Stéphane LaFlèche',
 
   'hero-title': 'Stéphane LaFlèche [split] développeur front-end',
   'hero-subtitle':

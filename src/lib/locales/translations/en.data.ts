@@ -11,6 +11,11 @@ const enBaseData = {
   title: "Front-End Developer | Stéphane's Developer Portfolio",
   description:
     'Front‑end developer Stéphane builds UI systems, reusable components, and accessible interfaces that keep design and engineering aligned over time',
+  'meta-description':
+    'Front‑end developer Stéphane builds UI systems, reusable components, and accessible interfaces that keep design and engineering aligned over time.',
+  'meta-keywords':
+    'portfolio, web developer, frontend developer, frontend engineer, design systems, TypeScript, CSS architecture, type-safe CSS, CSS-in-JS, UI engineering, UI architecture, UI components, component systems, accessibility, performance, responsive design, UX',
+  'meta-author': 'Stéphane LaFlèche',
   'not_found-title': '404 This page can not be found',
   'not_found-back': 'Back to home',
 
@@ -24,18 +29,21 @@ const enBaseData = {
   'close-label': 'Close',
   'scroll-cue': 'Scroll to content',
 
-  'manifest-name': "Stéphane's Developer Portfolio",
-  'manifest-short-name': "Stéphane's Developer Portfolio",
-  'manifest-description': 'Personal portfolio progressive web app.',
+  'manifest-name': "Stéphane LaFlèche's Portfolio",
+  'manifest-short-name': 'Stéphane',
+  'manifest-description':
+    'Front-end developer building design systems and accessible interfaces with TypeScript.',
   'manifest-categories': [
     'portfolio',
-    'personal',
+    'developer',
+    'design',
   ],
 
   'favicon-meta-description':
     "Metadata describing the favicon and manifest assets for Stéphane's portfolio.",
-  'favicon-meta-keywords': 'portfolio, web developer, frontend developer, frontend engineer, design systems, TypeScript, CSS architecture, type-safe CSS, CSS-in-JS, UI engineering, UI architecture, UI components, component systems, accessibility, performance, responsive design, UX',
-  'favicon-meta-author': 'Stéphane',
+  'favicon-meta-keywords':
+    'portfolio, web developer, frontend developer, frontend engineer, design systems, TypeScript, CSS architecture, type-safe CSS, CSS-in-JS, UI engineering, UI architecture, UI components, component systems, accessibility, performance, responsive design, UX',
+  'favicon-meta-author': 'Stéphane LaFlèche',
 
   'hero-title': 'Stéphane LaFlèche [split] Front-end Developer',
   'hero-subtitle':
