@@ -17,6 +17,7 @@ import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
+import { important } from '../helpers/important.helper';
 import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { boxShadow, textShadow } from '../helpers/shadow.helper';
@@ -465,18 +466,21 @@ globalStyle(`.${outlinePosition}.${messageBlockOutline}`, {
 
 export const outline = style({
   ...absolutePosition.fullSize(),
+  display: 'none',
 });
 
-globalStyle(
-  `.${input}:focus-visible + .${outlinePosition} .${outline}`,
-  {
-    ...outlines(),
-  },
-);
+// globalStyle(
+//   `.${input}:focus-visible + .${outlinePosition} .${outline}`,
+//   {
+//     display: 'block',
+//     ...outlines(),
+//   },
+// );
 
-globalStyle(
-  `.${textarea}:focus-visible + .${outlinePosition} .${outline}`,
-  {
-    ...outlines(),
-  },
-);
+// globalStyle(
+//   `.${textarea}:focus-visible + .${outlinePosition} .${outline}`,
+//   {
+//     display: 'block',
+//     ...outlines(),
+//   },
+// );
