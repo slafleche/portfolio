@@ -17,7 +17,6 @@ import {
 import * as s from '@/styles/components/forms.css';
 
 import { useFormBlock } from '../formBlocks.context';
-import { OutlineForInput } from '../primitives/OutlineForInput';
 import type {
   ContactFormBlockBaseProps,
   ContactFormBlockContract,
@@ -25,7 +24,6 @@ import type {
   ContactFormBlockPayload,
   ContactFormBlockValidationResult,
 } from '../types/form.types';
-import { messageBlockOutline } from '@/styles/components/forms.css';
 
 export type MessageBlockProps = ContactFormBlockBaseProps & {
   id: string;

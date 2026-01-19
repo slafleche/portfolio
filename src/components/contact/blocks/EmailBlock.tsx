@@ -8,7 +8,6 @@ import {
 } from '@/modules/contactForm/validation';
 import { EMAIL_MAX_LENGTH } from '@/modules/contactForm/validation.constants';
 
-import { emailBlockOutline } from '../../../styles/components/forms.css';
 import { useFormBlock } from '../formBlocks.context';
 import type {
   ContactFormBlockBaseProps,

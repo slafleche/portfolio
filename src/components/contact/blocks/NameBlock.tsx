@@ -6,7 +6,6 @@ import type { NameValidationReason } from '@/modules/contactForm/validation';
 import { evaluateNameField } from '@/modules/contactForm/validation';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
 
-import { nameBlockOutline } from '../../../styles/components/forms.css';
 import { useFormBlock } from '../formBlocks.context';
 import type {
   ContactFormBlockBaseProps,
