@@ -6,6 +6,7 @@ import type { NameValidationReason } from '@/modules/contactForm/validation';
 import { evaluateNameField } from '@/modules/contactForm/validation';
 import { NAME_LIMIT } from '@/modules/contactForm/validation.constants';
 
+import { nameBlockOutline } from '../../../styles/components/forms.css';
 import { useFormBlock } from '../formBlocks.context';
 import type {
   ContactFormBlockBaseProps,
@@ -301,6 +302,7 @@ export function NameBlock({
         label={copy.label}
         value={value}
         onChange={handleChange}
+        outlineClassName={nameBlockOutline}
         onBlur={() => {
           if (!hasBlurred) {
             setHasBlurred(true);

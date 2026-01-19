@@ -17,6 +17,7 @@ import {
   buildLinear,
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
+import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { boxShadow, textShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
@@ -96,18 +97,13 @@ export const legend = style({
 });
 
 export const fieldGroup = style({
-  // display: 'grid',
-  // gap: formTokens.layout.fieldGap.css(),
+  position: 'relative',
 });
 
 export const labelRow = style({
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'center',
-
-  // color: formTokens.label.text.color.css(),
-  // fontSize: fontFormTokens.label.text.size.css(),
-  // fontWeight: 600,
 });
 
 export const label = style({
@@ -148,20 +144,11 @@ export const input = style({
       color: formVars.field.placeholder.color.css(),
       opacity: 1,
     },
-    '&:hover, &[data-debug="hover"]': {
-      // ...borders(formTokens.field.hover.borders, {
-      //   skipDefaults: true,
-      // }),
-    },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
         ...borders(formVars.field.hover.borders, {
           skipDefaults: true,
         }),
-        //   ...borders(formTokens.field.focusVisible.borders, {
-        //   skipDefaults: true,
-        // }),
-        //   ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
       opacity: 0.85,
@@ -197,17 +184,11 @@ export const textarea = style({
       color: formVars.field.placeholder.color.css(),
       opacity: 1,
     },
-    '&:hover, &[data-debug="hover"]': {
-      // ...borders(formTokens.field.hover.borders, {
-      //   skipDefaults: true,
-      // }),
-    },
     '&:focus, &:focus-visible, &[data-debug="focus"], &[data-debug="focus-visible"]':
       {
         ...borders(formVars.field.hover.borders, {
           skipDefaults: true,
         }),
-        // ...boxShadow(formTokens.field.focusVisible.shadow),
       },
     '&[data-disabled="true"], &[data-debug="disabled"]': {
       opacity: 0.85,
@@ -301,6 +282,11 @@ export const submitButton = style({
         ...backgrounds(glassyButtonTokens.focusVisible.backgrounds),
         ...boxShadow(glassyButtonTokens.focusVisible.boxShadows),
       },
+    '&:focus-visible': {
+      ...outlines({
+        offset: m(7),
+      }),
+    },
     '&:disabled, &[data-debug="disabled"]': {
       opacity: 0.85,
       cursor: 'not-allowed',
@@ -455,3 +441,42 @@ export const jumpToFirstIssueText = style({
     color: colorVars.black,
   }),
 });
+
+export const nameBlockOutline = style({});
+export const emailBlockOutline = style({});
+export const messageBlockOutline = style({});
+
+const outlineOffsetX = m(10);
+const outlineOffsetTop = m(8);
+const outlineOffsetBottom = m(0);
+
+export const outlinePosition = style({
+  ...absolutePosition.fullSize(),
+  transform: `translate(-${outlineOffsetX.css()}, -${outlineOffsetTop.css()})`,
+  width: `calc(100% + ${outlineOffsetX.double().css()})`,
+  height: `calc(100% + ${outlineOffsetBottom.double().css()})`,
+  zIndex: 0,
+  pointerEvents: 'none',
+});
+
+globalStyle(`.${outlinePosition}.${messageBlockOutline}`, {
+  height: `calc(100% + ${outlineOffsetBottom.double().add(12).css()})`,
+});
+
+export const outline = style({
+  ...absolutePosition.fullSize(),
+});
+
+globalStyle(
+  `.${input}:focus-visible + .${outlinePosition} .${outline}`,
+  {
+    ...outlines(),
+  },
+);
+
+globalStyle(
+  `.${textarea}:focus-visible + .${outlinePosition} .${outline}`,
+  {
+    ...outlines(),
+  },
+);

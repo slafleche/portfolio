@@ -8,6 +8,7 @@ import {
 } from '@/modules/contactForm/validation';
 import { EMAIL_MAX_LENGTH } from '@/modules/contactForm/validation.constants';
 
+import { emailBlockOutline } from '../../../styles/components/forms.css';
 import { useFormBlock } from '../formBlocks.context';
 import type {
   ContactFormBlockBaseProps,
@@ -296,6 +297,7 @@ export function EmailBlock({
         label={copy.label}
         value={value}
         onChange={handleChange}
+        outlineClassName={emailBlockOutline}
         onBlur={() => {
           if (!hasBlurred) {
             setHasBlurred(true);

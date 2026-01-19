@@ -8,6 +8,7 @@ import { TextInput } from '@/components/contact/primitives/TextInput';
 import * as s from '@/styles/components/forms.css';
 
 import type { ContactFormBlockBaseProps } from '../types/form.types';
+import { OutlineForInput } from '../primitives/OutlineForInput';
 
 type BaseProps = Omit<ContactFormBlockBaseProps, 'order'> & {
   id: string;
@@ -25,6 +26,7 @@ type BaseProps = Omit<ContactFormBlockBaseProps, 'order'> & {
   type?: string;
   autoComplete?: string;
   className?: string;
+  outlineClassName?: string;
 };
 
 type TextInputBlockProps =
@@ -54,6 +56,7 @@ export const TextInputBlock = forwardRef<
       autoComplete,
       className,
       requiredText,
+      outlineClassName,
     },
     ref,
   ) => {
@@ -84,6 +87,7 @@ export const TextInputBlock = forwardRef<
           aria-describedby={hasHint ? hintId : undefined}
           aria-invalid={errorText ? 'true' : undefined}
         />
+        <OutlineForInput className={outlineClassName} />
         <FormHint
           tone={errorText ? 'error' : 'helper'}
           id={hasHint ? hintId : undefined}
