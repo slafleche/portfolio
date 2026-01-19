@@ -16,6 +16,24 @@ export {
   notStaging,
 };
 
+export function getSiteOrigin(): string | null {
+  const raw = process.env.SITE_URL?.trim();
+  if (raw) {
+    try {
+      return new URL(raw).origin;
+    } catch {
+      return null;
+    }
+  }
+  if (isRelease()) {
+    return 'https://lafleche.dev';
+  }
+  if (isStaging()) {
+    return 'https://staging.lafleche.dev';
+  }
+  return null;
+}
+
 function parsePrivateLaunchFlag(
   value: string | undefined | null,
 ): boolean {

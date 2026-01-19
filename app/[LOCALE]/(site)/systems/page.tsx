@@ -15,10 +15,11 @@ import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+import { buildSystemsMetaTagBundle } from '@/lib/locales/sections/meta.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import { isRelease, isStaging } from '@/lib/runtimeEnv';
+import { getSiteOrigin } from '@/lib/runtimeEnv';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
@@ -30,24 +31,6 @@ import SystemsGooey from '../../../../src/components/SystemsGooey';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
-const getSiteOrigin = (): string | null => {
-  const raw = process.env.SITE_URL?.trim();
-  if (raw) {
-    try {
-      return new URL(raw).origin;
-    } catch {
-      return null;
-    }
-  }
-  if (isRelease()) {
-    return 'https://lafleche.dev';
-  }
-  if (isStaging()) {
-    return 'https://staging.lafleche.dev';
-  }
-  return null;
-};
-
 export async function generateMetadata({
   params,
 }: {
@@ -55,25 +38,57 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { LOCALE } = await params;
   const locale = resolveLocale(LOCALE);
+  const translator = await loadTranslator(locale);
   const origin = getSiteOrigin();
   if (!origin) return {};
+  const systemsMeta = buildSystemsMetaTagBundle(translator);
 
   const languages: Record<string, string> = Object.fromEntries(
-    AVAILABLE_LOCALES.filter((code) => code !== locale).map(
-      (code) => {
-        const slug =
-          canonicalToLocalizedSlugs[code]?.systems ?? 'systems';
-        return [code, `${origin}/${code}/${slug}`];
-      },
-    ),
+    AVAILABLE_LOCALES.map((code) => {
+      const slug =
+        canonicalToLocalizedSlugs[code]?.systems ?? 'systems';
+      return [code, `${origin}/${code}/${slug}`];
+    }),
   );
+  const defaultSlug =
+    canonicalToLocalizedSlugs.en?.systems ?? 'systems';
+  languages['x-default'] = `${origin}/en/${defaultSlug}`;
   const canonicalSlug =
     canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
+  const canonicalUrl = `${origin}/${locale}/${canonicalSlug}`;
+  const shareImageUrl = `${origin}/share/${locale}-share-image-1200x630.gen.png`;
 
   return {
+    title: systemsMeta.title,
+    description: systemsMeta.description,
+    keywords: systemsMeta.keywords,
     alternates: {
-      canonical: `${origin}/${locale}/${canonicalSlug}`,
+      canonical: canonicalUrl,
       languages,
+    },
+    openGraph: {
+      title: systemsMeta.title,
+      description: systemsMeta.description,
+      url: canonicalUrl,
+      type: 'website',
+      locale,
+      alternateLocale: AVAILABLE_LOCALES.filter(
+        (code) => code !== locale,
+      ),
+      images: [
+        {
+          url: shareImageUrl,
+          width: 1200,
+          height: 630,
+          alt: systemsMeta.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: systemsMeta.title,
+      description: systemsMeta.description,
+      images: [shareImageUrl],
     },
   };
 }

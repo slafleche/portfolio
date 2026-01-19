@@ -32,11 +32,12 @@ import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
 import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
+import { buildMetaCopy } from '@/lib/locales/sections/meta.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import { buildProjectsCopy } from '@/lib/locales/sections/projects.locale';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
-import { isRelease, isStaging } from '@/lib/runtimeEnv';
+import { getSiteOrigin } from '@/lib/runtimeEnv';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
@@ -50,24 +51,6 @@ interface PageParams {
   LOCALE: string;
 }
 
-const getSiteOrigin = (): string | null => {
-  const raw = process.env.SITE_URL?.trim();
-  if (raw) {
-    try {
-      return new URL(raw).origin;
-    } catch {
-      return null;
-    }
-  }
-  if (isRelease()) {
-    return 'https://lafleche.dev';
-  }
-  if (isStaging()) {
-    return 'https://staging.lafleche.dev';
-  }
-  return null;
-};
-
 export async function generateMetadata({
   params,
 }: {
@@ -75,19 +58,51 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { LOCALE } = await params;
   const locale = resolveLocale(LOCALE);
+  const translator = await loadTranslator(locale);
+  const meta = buildMetaCopy(translator);
   const origin = getSiteOrigin();
   if (!origin) return {};
 
   const languages: Record<string, string> = Object.fromEntries(
-    AVAILABLE_LOCALES.filter((code) => code !== locale).map(
-      (code) => [code, `${origin}/${code}`],
-    ),
+    AVAILABLE_LOCALES.map((code) => [
+      code,
+      `${origin}/${code}`,
+    ]),
   );
+  languages['x-default'] = `${origin}/en`;
+  const canonicalUrl = `${origin}/${locale}`;
+  const shareImageUrl = `${origin}/share/${locale}-share-image-1200x630.gen.png`;
 
   return {
     alternates: {
-      canonical: `${origin}/${locale}`,
+      canonical: canonicalUrl,
       languages,
+    },
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url: canonicalUrl,
+      type: 'website',
+      locale,
+      alternateLocale: AVAILABLE_LOCALES.filter(
+        (code) => code !== locale,
+      ),
+      images: [
+        {
+          url: shareImageUrl,
+          width: 1200,
+          height: 630,
+          alt: meta.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: meta.title,
+      description: meta.description,
+      images: [
+        shareImageUrl,
+      ],
     },
   };
 }

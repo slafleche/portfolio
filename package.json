@@ -83,7 +83,7 @@
     "node": "20.19.6"
   },
   "scripts": {
-    "ci": "yarn locales && yarn generate:favicons && yarn generate:sitemap && yarn verify && yarn build",
+    "ci": "yarn generate --skip-cdn && yarn verify && yarn build",
     "prepare": "husky",
     "generate": "tsx scripts/runGenerateAllPipeline.mts",
     "generate:staging": "tsx scripts/runGenerateAllPipeline.mts --target=_staging",
@@ -130,6 +130,7 @@
     "dev": "DEBUG_VE=1 node scripts/devWithDebug.mjs --webpack",
     "start": "next start",
     "mock:markup-img": "tsx scripts/mockMarkupToImg.mts",
-    "build:hero-svg": "tsx scripts/buildHeroHeadingSvg.mts"
+    "build:hero-svg": "tsx scripts/buildHeroHeadingSvg.mts",
+    "build:share-images": "tsx scripts/buildShareImages.mts"
   }
 }

@@ -19,6 +19,12 @@ export const META_TAG_KEYS = {
   author: 'meta-author',
 } as const satisfies Record<string, MessageKey>;
 
+export const SYSTEMS_META_TAG_KEYS = {
+  title: 'systems-meta-title',
+  description: 'systems-meta-description',
+  keywords: 'systems-meta-keywords',
+} as const satisfies Record<string, MessageKey>;
+
 export const buildMetaCopy = (t: Translator) => ({
   label: t(META_KEYS.label),
   abbreviatedLabel: t(META_KEYS.abbreviatedLabel),
@@ -42,6 +48,12 @@ export const buildMetaTagBundle = (t: Translator) => ({
   description: t(META_TAG_KEYS.description),
   keywords: t(META_TAG_KEYS.keywords),
   author: resolveMetaAuthor(t),
+});
+
+export const buildSystemsMetaTagBundle = (t: Translator) => ({
+  title: t(SYSTEMS_META_TAG_KEYS.title),
+  description: t(SYSTEMS_META_TAG_KEYS.description),
+  keywords: t(SYSTEMS_META_TAG_KEYS.keywords),
 });
 
 export type MetaTagBundle = ReturnType<typeof buildMetaTagBundle>;

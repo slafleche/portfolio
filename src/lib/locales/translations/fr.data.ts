@@ -16,6 +16,12 @@ const frBaseData = {
   'meta-keywords':
     'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
   'meta-author': 'Stéphane LaFlèche',
+  'systems-meta-title':
+    'Systèmes de design & architecture UI | Stéphane LaFlèche',
+  'systems-meta-description':
+    'Un survol de la pratique des systèmes de design de Stéphane : contexte d’abord, détails sur GitHub.',
+  'systems-meta-keywords':
+    'systèmes de design, architecture UI, CSS typé, primitives CSS, interfaces évolutives, accessibilité, ingénierie front-end, portfolio',
   'not_found-title': '404 Page non trouvée',
   'not_found-back': 'Retour à la page d’accueil',
 

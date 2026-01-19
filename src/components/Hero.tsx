@@ -25,6 +25,9 @@ type Props = {
   headingAnimated?: boolean;
   TitleSvg?: ComponentType<SVGProps<SVGSVGElement>>;
   Bg?: ComponentType<{ className?: string }> | null;
+  hideCta?: boolean;
+  hideWaypoint?: boolean;
+  hideSubtitle?: boolean;
 };
 
 export default function Hero({
@@ -34,6 +37,9 @@ export default function Hero({
   overlayClassName,
   TitleSvg,
   Bg,
+  hideCta = false,
+  hideWaypoint = false,
+  hideSubtitle = false,
 }: Props) {
   const titleCopy = splitText(copy.title);
 
@@ -70,7 +76,7 @@ export default function Hero({
                     <TitleSvg className={s.titleAsSvg} aria-hidden />
                   )}
                 </div>
-                {copy.subtitle ? (
+                {!hideSubtitle && copy.subtitle ? (
                   <div className={s.subtitle} data-ready="true">
                     <p
                       data-ui="paragraph"
@@ -84,15 +90,15 @@ export default function Hero({
                   </div>
                 ) : null}
 
-                <>
+                {hideCta ? null : (
                   <HeroCta
                     copy={{
                       ctaLabel: copy.ctaLabel,
                       ctaText: copy.ctaText,
                     }}
                   />
-                  <HeroWaypoint />
-                </>
+                )}
+                {hideWaypoint ? null : <HeroWaypoint />}
               </GlassPanel>
             </div>
           </div>
