@@ -129,17 +129,16 @@ export const main = style({
   alignItems: 'center',
   justifyContent: 'center',
   height: '100%',
+  ...margins({
+    bottom: 0,
+  }),
   ...paddings({
     vertical: m(100),
   }),
   selectors: {
-    ...mediaQueryStyle({
-      compact: {
-        ...margins({
-          bottom: 0,
-        }),
-      },
-    }),
+    '&&': {
+      bottom: 0,
+    },
   },
 });
 
