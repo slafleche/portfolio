@@ -1,8 +1,7 @@
-import type { Messages } from '@/data/locales';
-
-import type { Translator } from './helpers.locale';
-
-type MessageKey = keyof Messages;
+import type {
+  MessageKey,
+  Translator,
+} from './helpers.locale';
 
 export const FAVICONS_META_KEYS = {
   description: 'favicon-meta-description',
@@ -21,7 +20,6 @@ const resolveAuthor = (t: Translator) => {
 
 export const buildFaviconMetaBundle = (t: Translator) => ({
   description: t(FAVICONS_META_KEYS.description),
-  keywords: t(FAVICONS_META_KEYS.keywords),
   author: resolveAuthor(t),
 });
 
