@@ -17,7 +17,10 @@ import {
 import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
-import { fontStylesFromFontVariant } from '../helpers/typography.helper';
+import {
+  fontStylesFromFontVariant,
+  relativeFontWeight,
+} from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 const slideTokens = accordionItemTokens.animation.slide;
@@ -291,4 +294,8 @@ export const content = style({
       animation: `${slideUp} ${slideTokens.closed.timing.css()} ${slideTokens.closed.easing} forwards`,
     },
   },
+});
+
+globalStyle(`.${content} h4`, {
+  ...relativeFontWeight(typographyFontVariants.h3, mPercent(60)),
 });

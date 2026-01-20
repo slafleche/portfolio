@@ -184,6 +184,61 @@ describe('Markdown component', () => {
     expect(codeBlock?.textContent).toContain('Line 1\n\nLine 3');
   });
 
+  it('renders [br] as a single line break', () => {
+    const { container } = render(<Markdown source={'A[br]B'} />);
+    expect(container.querySelectorAll('br')).toHaveLength(1);
+  });
+
+  it('renders [br|3] as three line breaks', () => {
+    const { container } = render(
+      <Markdown source={'A[br|3]B'} />,
+    );
+    expect(container.querySelectorAll('br')).toHaveLength(3);
+  });
+
+  it('throws on invalid [br] shortcode values', () => {
+    expect(() => render(<Markdown source="[br|0]" />)).toThrow(
+      /Invalid \[br\] shortcode value/,
+    );
+    expect(() => render(<Markdown source="[br|-1]" />)).toThrow(
+      /Invalid \[br\] shortcode value/,
+    );
+    expect(() => render(<Markdown source="[br|1.5]" />)).toThrow(
+      /Invalid \[br\] shortcode value/,
+    );
+    expect(() => render(<Markdown source="[br|]" />)).toThrow(
+      /Invalid \[br\] shortcode value/,
+    );
+    expect(() => render(<Markdown source="[br|   ]" />)).toThrow(
+      /Invalid \[br\] shortcode value/,
+    );
+  });
+
+  it('renders [br] shortcodes inside inline spans', () => {
+    const { container } = render(
+      <Markdown source={'Hello <span>A[br|2]B</span>!'} />,
+    );
+    expect(container.querySelectorAll('br')).toHaveLength(2);
+  });
+
+  it('trims whitespace inside [br| N ]', () => {
+    const { container } = render(
+      <Markdown source={'A[br|  2  ]B'} />,
+    );
+    expect(container.querySelectorAll('br')).toHaveLength(2);
+  });
+
+  it('accepts uppercase [BR] shortcodes', () => {
+    const { container } = render(<Markdown source={'A[BR|2]B'} />);
+    expect(container.querySelectorAll('br')).toHaveLength(2);
+  });
+
+  it('throws on invalid [br] shortcodes inside inline spans', () => {
+    expect(() =>
+      render(<Markdown source={'<span>[br|0]</span>'} />),
+    ).toThrow(/Invalid \[br\] shortcode value/);
+  });
+
   it('marks a single paragraph as first and last', () => {
     const { container } = render(<Markdown source="Solo" />);
     const paragraph = container.querySelector('p');

@@ -10,6 +10,7 @@ import { createElement, memo } from 'react';
 
 import GitHubWordmark from '@/components/wordmarks/GitHubWordmark';
 import NPMWordmark from '@/components/wordmarks/NPMWordmark';
+import { createBrShortcodeExtension } from '@/lib/markdown/brShortcode';
 import { createElementShortcodeExtension } from '@/lib/markdown/elementShortcode';
 
 import { userContent } from '../styles/typography.css';
@@ -54,10 +55,19 @@ type ElementShortcodeToken = {
   name: string;
 };
 
+type BrShortcodeToken = {
+  type: 'br-shortcode';
+  count: number;
+};
+
 const isElementShortcodeToken = (
-  token: MarkedToken | ElementShortcodeToken,
+  token: MarkedToken | ElementShortcodeToken | BrShortcodeToken,
 ): token is ElementShortcodeToken =>
   token.type === 'element-shortcode';
+
+const isBrShortcodeToken = (
+  token: MarkedToken | ElementShortcodeToken | BrShortcodeToken,
+): token is BrShortcodeToken => token.type === 'br-shortcode';
 
 type RenderOptions = {
   openLinksInNewTab: boolean;
@@ -65,7 +75,8 @@ type RenderOptions = {
 };
 
 const elementShortcodeExtension = createElementShortcodeExtension();
-marked.use({ extensions: [elementShortcodeExtension] });
+const brShortcodeExtension = createBrShortcodeExtension();
+marked.use({ extensions: [elementShortcodeExtension, brShortcodeExtension] });
 
 const elementLookup = {
   GitHubWordmark,
@@ -165,7 +176,9 @@ const decodeHtmlEntities = (value: string): string =>
     .replace(/&#39;/g, "'");
 
 const renderInlineTokens = (
-  tokens: Array<MarkedToken | ElementShortcodeToken>,
+  tokens: Array<
+    MarkedToken | ElementShortcodeToken | BrShortcodeToken
+  >,
   options: RenderOptions,
   keyPrefix: string,
   decodeEntities = false,
@@ -190,12 +203,21 @@ const renderInlineTokens = (
       continue;
     }
 
+    if (isBrShortcodeToken(token)) {
+      for (let j = 0; j < token.count; j += 1) {
+        nodes.push(
+          <br key={`${keyPrefix}-br-shortcode-${i}-${j}`} />,
+        );
+      }
+      continue;
+    }
+
     if (token.type === 'html') {
       const raw = (token as { text?: string }).text ?? '';
       const abbrTitle = parseAbbrTitle(raw);
       if (abbrTitle) {
         const innerTokens: Array<
-          MarkedToken | ElementShortcodeToken
+          MarkedToken | ElementShortcodeToken | BrShortcodeToken
         > = [];
         let closedIndex = -1;
 
@@ -234,7 +256,7 @@ const renderInlineTokens = (
       const openTag = parseInlineHtmlOpenTag(raw);
       if (openTag) {
         const innerTokens: Array<
-          MarkedToken | ElementShortcodeToken
+          MarkedToken | ElementShortcodeToken | BrShortcodeToken
         > = [];
         let closedIndex = -1;
 
@@ -269,7 +291,8 @@ const renderInlineTokens = (
             : '';
           const shouldReparseInline =
             inlineSource !== '' &&
-            inlineSource.includes('[element:');
+            (inlineSource.includes('[element:') ||
+              inlineSource.toLowerCase().includes('[br'));
 
           nodes.push(
             createElement(

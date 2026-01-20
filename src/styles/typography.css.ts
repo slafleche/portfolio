@@ -115,11 +115,17 @@ globalStyle(`.${userContent} a:not([data-ui="link"])`, {
   cursor: 'pointer',
 });
 
-globalStyle(`.${userContent} a:not([data-ui="link"]):hover`, {
+globalStyle(
+  `.${userContent}.${userContent} a:not([data-ui="link"]):hover`,
+  {
+    textDecoration: 'underline',
+    color: linkRules.hover.color.css(),
+  },
+);
+
+globalStyle(`.${userContent} a:not([data-ui="link"]):visited`, {
+  color: linkRules.visited.color.css(),
   textDecoration: 'underline',
-  textDecorationThickness:
-    linkRules.hover.textDecorationThickness.css(),
-  color: linkRules.hover.color.css(),
 });
 
 globalStyle(`.${userContent} a:not([data-ui="link"]):focus-visible`, {
@@ -128,11 +134,6 @@ globalStyle(`.${userContent} a:not([data-ui="link"]):focus-visible`, {
 
 globalStyle(`.${userContent} a:not([data-ui="link"]):active`, {
   color: linkRules.active.color.css(),
-  textDecoration: 'underline',
-});
-
-globalStyle(`.${userContent} a:not([data-ui="link"]):visited`, {
-  color: linkRules.visited.color.css(),
   textDecoration: 'underline',
 });
 

@@ -4,7 +4,7 @@ import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 
 import { color } from '../styles/helpers/colorWrap.helper';
 import type { SpacingIntentInternal } from '../styles/helpers/spacing.helper';
-import { colorVars, themeColours } from './global.tokens';
+import { colors, colorVars, themeColours } from './global.tokens';
 import { layoutVars } from './layout.tokens';
 
 const blockSpacing = m(20);
@@ -106,10 +106,10 @@ export const textStyleVars = {
       textDecoration:
         'underline' as CSS_TYPES.Property.TextDecoration,
       underlineOffset: m(3),
+      textDecorationThickness: m(0.75),
     },
     hover: {
       color: color('#55fff0').darken(0.1),
-      textDecorationThickness: m(0.75),
     },
     focusVisible: {
       outlines: {
@@ -120,10 +120,10 @@ export const textStyleVars = {
       },
     },
     active: {
-      color: colorVars.brand.darken(0.1),
+      color: colors.brand,
     },
     visited: {
-      color: colorVars.brand.mix(colorVars.contrast, 0.25),
+      color: themeColours.electricBlue.darken(0.1).desaturate(0.2),
     },
   },
   em: {

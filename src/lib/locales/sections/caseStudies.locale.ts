@@ -26,14 +26,14 @@ const CASE_STUDY_DEFINITIONS = [
     markdownKey: 'case-study-03-content',
   },
   {
-    titleKey: 'case-study-04-title',
-    subTitleKey: 'case-study-04-subtitle',
-    markdownKey: 'case-study-04-content',
-  },
-  {
     titleKey: 'case-study-05-title',
     subTitleKey: 'case-study-05-subtitle',
     markdownKey: 'case-study-05-content',
+  },
+  {
+    titleKey: 'case-study-04-title',
+    subTitleKey: 'case-study-04-subtitle',
+    markdownKey: 'case-study-04-content',
   },
   {
     titleKey: 'case-study-06-title',

@@ -69,7 +69,7 @@ export const typographyFontVariants = {
     label: 'heading-h3',
     config: {
       styleOverrides: {
-        size: m(23),
+        size: m(26),
       },
     },
   }),
