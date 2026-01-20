@@ -14,11 +14,11 @@ export const enCaseStudies = {
   'case-study-03-subtitle':
     'Contributing to core product and architecture',
   ...markdownRefs('case-study-03-content'),
-  'case-study-04-title': 'Adapting legacy code',
-  'case-study-04-subtitle': 'Connecting Forums to modern theming',
+  'case-study-04-title': 'Designing token architecture',
+  'case-study-04-subtitle': 'Unifying themes across products',
   ...markdownRefs('case-study-04-content'),
-  'case-study-05-title': 'Designing token architecture',
-  'case-study-05-subtitle': 'Unifying themes across products',
+  'case-study-05-title': 'Adapting legacy code',
+  'case-study-05-subtitle': 'Connecting Forums to modern theming',
   ...markdownRefs('case-study-05-content'),
   'case-study-06-title': 'Lessons learned',
   'case-study-06-subtitle':
