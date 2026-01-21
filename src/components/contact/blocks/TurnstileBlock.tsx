@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import {
   type MouseEventHandler,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -19,6 +20,10 @@ import type {
   ContactFormBlockPayload,
   ContactFormBlockValidationResult,
 } from '../types/form.types';
+import {
+  TurnstileWidgetHost,
+  type TurnstileWidgetSize,
+} from './TurnstileWidgetHost';
 
 export type TurnstileBlockProps = Omit<
   ContactFormBlockBaseProps,
@@ -43,58 +48,7 @@ const COMPLETED_STATUSES: TurnstileState[] = [
   'verified',
 ];
 
-const TURNSTILE_SCRIPT_SRC =
-  'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-
 type ExtendedWindow = Window & { turnstile?: Window['turnstile'] };
-
-let turnstileScriptPromise: Promise<void> | null = null;
-
-const loadTurnstileScript = () => {
-  if (typeof window === 'undefined') {
-    return Promise.reject(
-      new Error('Turnstile requires a browser environment.'),
-    );
-  }
-  const extendedWindow = window as ExtendedWindow;
-  if (extendedWindow.turnstile) {
-    return Promise.resolve();
-  }
-  if (turnstileScriptPromise) {
-    return turnstileScriptPromise;
-  }
-  turnstileScriptPromise = new Promise<void>((resolve, reject) => {
-    const existing = document.querySelector<HTMLScriptElement>(
-      'script[data-turnstile]',
-    );
-    if (existing) {
-      existing.addEventListener('load', () => resolve(), {
-        once: true,
-      });
-      existing.addEventListener(
-        'error',
-        () => {
-          turnstileScriptPromise = null;
-          reject(new Error('Turnstile script failed to load.'));
-        },
-        { once: true },
-      );
-      return;
-    }
-    const script = document.createElement('script');
-    script.src = TURNSTILE_SCRIPT_SRC;
-    script.async = true;
-    script.defer = true;
-    script.dataset.turnstile = 'true';
-    script.onload = () => resolve();
-    script.onerror = () => {
-      turnstileScriptPromise = null;
-      reject(new Error('Turnstile script failed to load.'));
-    };
-    document.head.appendChild(script);
-  });
-  return turnstileScriptPromise;
-};
 
 const buildTurnstileValidationResult = (
   id: string,
@@ -176,7 +130,8 @@ export function TurnstileBlock({
     Boolean((window as ExtendedWindow).turnstile);
 
   const { compact } = useMedia();
-  const turnstileSize = compact === true ? 'compact' : 'normal';
+  const turnstileSize: TurnstileWidgetSize =
+    compact === true ? 'compact' : 'normal';
 
   const [
     status,
@@ -187,8 +142,6 @@ export function TurnstileBlock({
     setToken,
   ] = useState<string>('');
 
-  const widgetRef = useRef<HTMLDivElement | null>(null);
-  const widgetIdRef = useRef<string | null>(null);
   const lastValidationStateRef = useRef<{
     valid: boolean;
     code: string | null;
@@ -344,103 +297,47 @@ export function TurnstileBlock({
     token,
   ]);
 
-  useEffect(() => {
-    if (!token) return;
-    if (status === 'verified') return;
-    setStatus('verified');
-  }, [
-    status,
-    token,
-  ]);
-
-  useEffect(() => {
-    if (!shouldRenderTurnstileWidget || !turnstileSiteKey) return;
-    let cancelled = false;
-    const containerRef = widgetRef.current;
+  const handleLoading = useCallback(() => {
     setStatus('loading');
-    const mountWidget = async () => {
-      if (widgetIdRef.current) {
-        return;
+  }, []);
+
+  const handleReady = useCallback(() => {
+    setStatus((previous) => {
+      if (
+        previous === 'verified' ||
+        previous === 'expired' ||
+        previous === 'error'
+      ) {
+        return previous;
       }
-      try {
-        await loadTurnstileScript();
-        if (cancelled) return;
-        const extendedWindow = window as ExtendedWindow;
-        const turnstileApi = extendedWindow.turnstile;
-        const container = containerRef;
-        if (!turnstileApi || !container) {
-          reportCatastrophicRef.current(
-            'Turnstile unavailable: missing API or container.',
-          );
-          throw new Error('Turnstile unavailable');
-        }
-        if (container.childNodes.length > 0) {
-          if (widgetIdRef.current) {
-            return;
-          }
-          container.replaceChildren();
-        }
-        const widgetId = turnstileApi.render(container, {
-          sitekey: turnstileSiteKey,
-          size: turnstileSize,
-          callback: (nextToken: string) => {
-            if (cancelled) return;
-            setToken(nextToken);
-            setStatus('verified');
-          },
-          'expired-callback': () => {
-            if (cancelled) return;
-            setToken('');
-            setStatus('expired');
-          },
-          'error-callback': (errorCode?: string | number) => {
-            if (cancelled) return;
-            setStatus('error');
-            const reason =
-              typeof errorCode === 'undefined' || errorCode === null
-                ? 'Turnstile reported an error via error-callback.'
-                : `Turnstile reported an error via error-callback (${String(
-                    errorCode,
-                  )}).`;
-            reportCatastrophicRef.current(reason);
-          },
-        });
-        widgetIdRef.current = widgetId;
-        setStatus((previous) => {
-          if (
-            previous === 'verified' ||
-            previous === 'expired' ||
-            previous === 'error'
-          ) {
-            return previous;
-          }
-          return 'ready';
-        });
-      } catch {
-        if (!cancelled) {
-          setStatus('error');
-          reportCatastrophicRef.current(
-            'Turnstile script failed to load or initialise.',
-          );
-        }
-      }
-    };
-    void mountWidget();
-    return () => {
-      cancelled = true;
-      const extendedWindow = window as ExtendedWindow;
-      const turnstileApi = extendedWindow.turnstile;
-      if (turnstileApi && widgetIdRef.current) {
-        turnstileApi.reset(widgetIdRef.current);
-      }
-      containerRef?.replaceChildren();
-      widgetIdRef.current = null;
-    };
-  }, [
-    shouldRenderTurnstileWidget,
-    turnstileSize,
-    turnstileSiteKey,
-  ]);
+      return 'ready';
+    });
+  }, []);
+
+  const handleToken = useCallback((nextToken: string) => {
+    setToken(nextToken);
+    setStatus('verified');
+  }, []);
+
+  const handleExpired = useCallback(() => {
+    setToken('');
+    setStatus('expired');
+  }, []);
+
+  const handleError = useCallback((errorCode?: string | number) => {
+    setStatus('error');
+    const reason =
+      errorCode === 'load_failed'
+        ? 'Turnstile script failed to load or initialise.'
+        : errorCode === 'unavailable'
+          ? 'Turnstile unavailable: missing API or container.'
+          : typeof errorCode === 'undefined' || errorCode === null
+            ? 'Turnstile reported an error via error-callback.'
+            : `Turnstile reported an error via error-callback (${String(
+                errorCode,
+              )}).`;
+    reportCatastrophicRef.current(reason);
+  }, []);
 
   const isComplete = COMPLETED_STATUSES.includes(status);
   const summaryText = !isComplete
@@ -475,11 +372,22 @@ export function TurnstileBlock({
       }
     >
       <div
-        ref={widgetRef}
         className={s.turnstileWidget}
         aria-describedby={hintText ? hintId : undefined}
         data-rendered="true"
-      />
+      >
+        {shouldRenderTurnstileWidget && turnstileSiteKey ? (
+          <TurnstileWidgetHost
+            siteKey={turnstileSiteKey}
+            size={turnstileSize}
+            onLoading={handleLoading}
+            onReady={handleReady}
+            onToken={handleToken}
+            onExpired={handleExpired}
+            onError={handleError}
+          />
+        ) : null}
+      </div>
       <input type="hidden" name="token" value={token} />
       {hintText ? (
         <div
