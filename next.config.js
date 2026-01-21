@@ -38,6 +38,22 @@ const nextConfig = {
     buildActivity: false,
     appIsrStatus: false,
   },
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'header',
+            key: 'host',
+            value: 'www.lafleche.dev',
+          },
+        ],
+        destination: 'https://lafleche.dev/:path*',
+        permanent: true,
+      },
+    ];
+  },
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),

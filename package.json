@@ -85,6 +85,7 @@
   "scripts": {
     "ci": "yarn generate --skip-cdn && yarn verify && yarn build",
     "prepare": "husky",
+    "prebuild": "node scripts/pruneVercelDebugRoutes.mjs",
     "generate": "tsx scripts/runGenerateAllPipeline.mts",
     "generate:staging": "tsx scripts/runGenerateAllPipeline.mts --target=_staging",
     "generate:staging:skipConfirmation": "tsx scripts/runGenerateAllPipeline.mts --target=_staging --yes",

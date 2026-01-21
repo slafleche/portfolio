@@ -72,6 +72,8 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 
 - Must: Ask for confirmation before invasive refactors, API changes, or
   cross-cutting style rewrites.
+- Must: If you need to or plan to edit things out of scope of the request, ask
+  first and explain your reasoning.
 - Must: Get explicit confirmation before deleting any file or effectively wiping
   its contents (for example, replacing a real doc with a stub), especially
   `.md`, config, or rules files.
