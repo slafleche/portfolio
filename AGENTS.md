@@ -8,6 +8,15 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Applies to the entire repository unless a more specific `AGENTS.md` exists in
   a subdirectory.
 
+## Repo landmarks (`repo-landmarks`)
+
+- Include infrastructure folders in “normal scope” when debugging prod-only
+  issues (headers/CSP/CORS/caching/CI differences), not just `app/` + `src/`.
+- `.cloudflare/` — Cloudflare Worker for CORS + R2 asset serving (`cors_worker.js`,
+  `wrangler.toml`, documented in `.cloudflare/readme.md`).
+- `.github/workflows/` — CI automation (notably `.github/workflows/ci.yml` runs
+  `yarn locales`, `yarn lint:cycles`, and `yarn ci` depending on branch rules).
+
 ## Git and staging (`git-staging`)
 
 - Must: Do **not** run `git add`, `git commit`, `git reset`, or other
