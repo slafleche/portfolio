@@ -2,8 +2,9 @@ import { rm } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const isVercel = process.env.VERCEL === '1';
-if (!isVercel) {
+import { getNodeEnv } from '../envPrimitives.mjs';
+
+if (getNodeEnv() === 'development') {
   process.exit(0);
 }
 
