@@ -1,8 +1,6 @@
-I started out in animation and 3D modeling, where the work had to satisfy both
-creative intent and technical constraints. That background pushed me toward
-thinking in terms of structure rather than surface details.
+Interface systems should let you change direction without rebuilding everything,
+not just move fast at the start.
 
-As I moved into front-end development, I focused more and more on the underlying
-infrastructure: theming, tokens, and component APIs. I’ve worked on systems
-shared across multiple products, with an emphasis on keeping them
-understandable, maintainable, and adaptable over time.
+I work on front-end infrastructure: component APIs, theming systems, and tokens,
+to keep design and code aligned over time. The goal is to reduce ad hoc tweaks
+and make consistency easier to maintain as the product evolves.

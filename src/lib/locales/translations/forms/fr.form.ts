@@ -1,8 +1,8 @@
 export const frFormCopy = {
   'form-heading': 'Prenons contact',
   'form-success-heading': 'Message envoyé',
-  'form-error-heading': 'Nous n’avons pas pu envoyer votre message',
-  'form-success-body': 'Je vous répondrai dès que possible.',
+  'form-error-heading': 'Je n’ai pas pu envoyer ton message',
+  'form-success-body': 'Je te répondrai dès que possible.',
   'form-name-label': 'Nom',
   'form-email-label': 'Courriel',
   'form-message-label': 'Message',
@@ -12,44 +12,43 @@ export const frFormCopy = {
   'form-message-url_usage': 'Liens utilisés : {used} sur {limit}',
   'form-message-max_links': 'Nombre maximum de liens atteint.',
   'form-privacy-text':
-    'Nous utilisons ces informations uniquement pour vous répondre.',
+    'J’utilise ces informations uniquement pour te répondre.',
   'form-privacy-link-label': 'Politique de confidentialité',
   'form-privacy-close-label': 'Retour au formulaire',
-  'form-honeypot-label': 'Laissez ce champ vide',
+  'form-honeypot-label': 'Laisse ce champ vide',
   'form-turnstile-label': 'Vérification humaine',
   'form-required-indicator': 'Champ requis',
-  'form-error-name-required': 'Veuillez entrer votre **nom**.',
+  'form-error-name-required': 'Entre ton **nom**.',
   'form-error-name-too_long': 'Le nom est trop long.',
   'form-error-email-invalid':
-    'Veuillez entrer une adresse **courriel** valide.',
+    'Entre une adresse **courriel** valide.',
   'form-error-message-required':
-    'Veuillez écrire un **message** avant de l’envoyer.',
+    'Écris un **message** avant de l’envoyer.',
   'form-error-message-too_short':
     'Écrivez un message un peu plus long (au moins {min} caractères).',
   'form-error-message-too_long': 'Le message est trop long.',
   'form-error-message-too_many_links':
-    'Veuillez retirer quelques liens (maximum {limit} liens).',
+    'Retire quelques liens (maximum {limit} liens).',
   'form-error-token-missing':
-    'Veuillez confirmer que vous n’êtes pas un robot.',
+    'Confirme que tu n’es pas un robot.',
   'form-status-sending': 'Envoi du message…',
   'form-status-success': 'Message envoyé !',
   'form-status-generic_error':
-    'Nous ne pouvons pas envoyer votre message pour le moment. Veuillez réessayer.',
+    'Je ne peux pas envoyer ton message pour le moment. Réessaie bientôt.',
   'form-status-validation_error': 'Quelques détails à corriger.',
 
   'form-status-validation_jumpToError':
-    'Presque fini ! Vérifiez les champs en erreur et réessayez.',
+    'Presque fini ! Vérifie les champs en erreur et réessaie.',
 
   'form-status-rate_limited':
-    'Trop de tentatives. Veuillez réessayer bientôt.',
+    'Trop de tentatives. Réessaie bientôt.',
   'form-status-rate_limited-countdown':
-    'Trop de tentatives. Réessayez dans {seconds}s.',
+    'Trop de tentatives. Réessaie dans {seconds}s.',
   'form-status-service_unavailable':
     'Le service d’envoi est temporairement indisponible. Réessayez bientôt.',
   'form-status-not_configured':
     'Le service d’envoi n’est pas encore configuré. Réessayez plus tard.',
-  'form-status-blocked':
-    'Nous ne pouvons pas envoyer votre message pour le moment.',
+  'form-status-blocked': 'Je ne peux pas envoyer ton message pour le moment.',
   'form-turnstile-loading':
     'Chargement de la **vérification humaine**.',
   'form-turnstile-ready':
@@ -57,24 +56,24 @@ export const frFormCopy = {
   'form-turnstile-verified':
     'Vérification réussie ! Vous pouvez envoyer votre message.',
   'form-turnstile-expired':
-    'La vérification a expiré. Veuillez réessayer.',
+    'La vérification a expiré. Réessaier bientôt.',
   'form-turnstile-error':
-    'La vérification est indisponible. Veuillez réessayer.',
+    'La vérification est indisponible. Réessaier bientôt.',
   'form-turnstile-disabled':
     'La vérification humaine est désactivée dans cet environnement.',
   'form-turnstile-button-pending': 'Confirmez que vous êtes humain',
   'form-turnstile-button-error': 'Vérification indisponible',
   'form-turnstile-preview': 'Aperçu de vérification humaine (debug).',
   'form-turnstile-summary-missing':
-    'Veuillez compléter la vérification humaine.',
+    'Complète la vérification humaine.',
   'form-turnstile-summary-expired':
-    'La vérification a expiré. Veuillez réessayer.',
+    'La vérification a expiré. Réessaier bientôt.',
   'form-turnstile-summary-error':
-    'La vérification est indisponible. Veuillez réessayer.',
+    'La vérification est indisponible. Réessaier bientôt.',
   'form-category_error-required_input':
-    'Veuillez remplir le(s) champ(s) obligatoire(s).',
+    'Remplis le(s) champ(s) obligatoire(s).',
   'form-category_error-invalid_input':
-    'Veuillez corriger le(s) champ(s) indiqué(s).',
+    'Corrige le(s) champ(s) indiqué(s).',
   'form-category_error-submission_error':
-    'Malheureusement, nous n’avons pas pu envoyer votre message pour la raison suivante :',
+    'Malheureusement, je n’ai pas pu envoyer ton message pour la raison suivante :',
 } as const;
