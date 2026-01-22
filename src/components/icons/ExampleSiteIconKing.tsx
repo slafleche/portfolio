@@ -1,12 +1,10 @@
 import clsx from 'clsx';
 import type { SVGProps } from 'react';
 
-import { wordMark_kg } from '../../styles/components/card.css';
+import * as s from '../../styles/components/exampleSites.css';
 import wordMarkMeta from '../../styles/helpers/wordmark.helper';
 
-const LABEL = 'King Games';
-
-export default function KGWordmark({
+export default function ExampleSiteIconKing({
   className,
   ...props
 }: SVGProps<SVGSVGElement>) {
@@ -15,14 +13,12 @@ export default function KGWordmark({
       xmlns="http://www.w3.org/2000/svg"
       viewBox={wordMarkMeta.kg.viewBox}
       shapeRendering="geometricPrecision"
-      fill="currentColor"
-      className={clsx(className, wordMark_kg)}
+      // fill="currentColor"
+      className={clsx(s.kg, className)}
       role="img"
-      aria-label={LABEL}
+      aria-label={'King Games'}
       {...props}
     >
-      <title>{LABEL}</title>
-
       <path d={wordMarkMeta.kg.path} />
     </svg>
   );

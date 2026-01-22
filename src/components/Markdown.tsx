@@ -8,10 +8,12 @@ import type {
 } from 'react';
 import { createElement, memo } from 'react';
 
+import ExampleSites from '@/components/ExampleSites';
 import GitHubWordmark from '@/components/wordmarks/GitHubWordmark';
 import NPMWordmark from '@/components/wordmarks/NPMWordmark';
 import { createBrShortcodeExtension } from '@/lib/markdown/brShortcode';
 import { createElementShortcodeExtension } from '@/lib/markdown/elementShortcode';
+import { createExampleSitesShortcodeExtension } from '@/lib/markdown/exampleSitesShortcode';
 
 import { userContent } from '../styles/typography.css';
 
@@ -60,13 +62,26 @@ type BrShortcodeToken = {
   count: number;
 };
 
+type ExampleSitesShortcodeToken = {
+  type: 'example-sites-shortcode';
+  locale: string;
+};
+
 const isElementShortcodeToken = (
-  token: MarkedToken | ElementShortcodeToken | BrShortcodeToken,
+  token:
+    | MarkedToken
+    | ElementShortcodeToken
+    | BrShortcodeToken
+    | ExampleSitesShortcodeToken,
 ): token is ElementShortcodeToken =>
   token.type === 'element-shortcode';
 
 const isBrShortcodeToken = (
-  token: MarkedToken | ElementShortcodeToken | BrShortcodeToken,
+  token:
+    | MarkedToken
+    | ElementShortcodeToken
+    | BrShortcodeToken
+    | ExampleSitesShortcodeToken,
 ): token is BrShortcodeToken => token.type === 'br-shortcode';
 
 type RenderOptions = {
@@ -86,10 +101,13 @@ const defaultAsUi: Required<AsUiConfig> = {
 
 const elementShortcodeExtension = createElementShortcodeExtension();
 const brShortcodeExtension = createBrShortcodeExtension();
+const exampleSitesShortcodeExtension =
+  createExampleSitesShortcodeExtension();
 marked.use({
   extensions: [
     elementShortcodeExtension,
     brShortcodeExtension,
+    exampleSitesShortcodeExtension,
   ],
 });
 
@@ -511,6 +529,16 @@ const renderTokens = (
     const key = `${keyPrefix}-${index}`;
 
     switch (token.type) {
+      case 'example-sites-shortcode': {
+        const t = token as ExampleSitesShortcodeToken;
+        nodes.push(
+          <ExampleSites
+            key={key}
+            siteData={t.locale as 'en' | 'fr'}
+          />,
+        );
+        break;
+      }
       case 'heading': {
         const depth = (token as { depth?: number }).depth ?? 1;
         const dataUi = asUi.headings ? 'heading' : undefined;
