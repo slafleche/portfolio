@@ -19,7 +19,8 @@ export const frCaseStudies = {
   'case-study-04-subtitle': 'Unifier les thèmes entre les produits',
   ...markdownRefs('case-study-04-content'),
   'case-study-05-title': 'Adapter le code legacy',
-  'case-study-05-subtitle': 'Connecter les forums au théming moderne',
+  'case-study-05-subtitle':
+    'Connecter les forums à la thématisation moderne',
   ...markdownRefs('case-study-05-content'),
   'case-study-06-title': 'Leçons retenues',
   'case-study-06-subtitle':
