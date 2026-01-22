@@ -29,10 +29,12 @@ export const grid = style({
     ...mediaQueryStyle({
       snug: {
         gridTemplateColumns: '1fr',
-        gap: '0px',
         ...margins({
           top: m(60),
         }),
+      },
+      compact: {
+        gap: '0px',
       },
     }),
   },
@@ -162,6 +164,7 @@ const titleLineHeight = 1.2;
 
 export const title = style({
   display: 'block',
+
   ...textShadow({
     x: m(1),
     y: m(1),
@@ -182,8 +185,9 @@ export const title = style({
   }),
   ...paddings({
     top: 0,
-    bottom: mEm(1.3),
+    bottom: mEm(1.1),
   }),
+  textAlign: 'left',
 });
 
 export const separator = style({
