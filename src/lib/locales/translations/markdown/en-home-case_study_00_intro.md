@@ -1,16 +1,16 @@
-At Vanilla Forums, I progressed from themer to **Senior Front-End [abbr:R&D] Developer**,
-contributing to token-based infrastructure that decoupled design from
-implementation and let teams refactor products without breaking client themes.
+At Vanilla Forums, I was a **Senior Front-End [abbr:R&D] Developer**. I
+contributed to a theming system built on design tokens. The system decoupled
+design from implementation. It let teams ship updates and refactor safely
+without breaking client themes across roughly **1,300+** active Vanilla
+deployments.
 
-### Key outcomes:
+I played a key role in defining styling and component patterns for the new
+**Knowledge Base** (_React_). That work shaped the shared theming model. The
+token layer kept themes compatible with the **Forum** (_PHP_). Clients kept a
+unified brand theme across both products.
 
-- Clients could theme both products simultaneously
-- Developers shipped features without breaking 1,000+ active Vanilla Forum
-  deployments
-- System scaled across multiple product lines while staying maintainable
+### Examples of theming system in the wild
 
-### Technical approach:
-
-- Designed component contracts that decoupled UI from implementation
-- Created global defaults with granular component overrides
-- Enabled teams to refactor products safely without theme breakage
+- [King Games](https://community.king.com/en/)
+- [Oracle](https://community.oracle.com/hub/)
+- [Acer](https://community.acer.com)

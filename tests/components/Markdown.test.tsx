@@ -115,6 +115,21 @@ describe('Markdown component', () => {
     expect(span?.getAttribute('data-flag')).toBe('true');
   });
 
+  it('supports data attributes on headings via bracket prefix', () => {
+    const { container } = render(
+      <Markdown
+        source={
+          '### [data-align="center" data-foo="bar" data-flag] A heading'
+        }
+      />,
+    );
+    const heading = container.querySelector('h3');
+    expect(heading?.getAttribute('data-align')).toBe('center');
+    expect(heading?.getAttribute('data-foo')).toBe('bar');
+    expect(heading?.getAttribute('data-flag')).toBe('true');
+    expect(heading?.textContent).toBe('A heading');
+  });
+
   it('renders element shortcodes inside inline spans', () => {
     const { container } = render(
       <Markdown

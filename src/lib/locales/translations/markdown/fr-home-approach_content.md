@@ -1,7 +1,13 @@
 Les systèmes d’interface doivent permettre de changer de direction sans tout
-refaire, pas seulement d’avancer vite au début.
+reconstruire.
 
-Je travaille sur l’infrastructure front-end : APIs de composants, systèmes de
-thèmes et tokens, afin de maintenir l’alignement entre le design et le code dans
-le temps. L’objectif est de réduire les ajustements ad hoc et de rendre la
-cohérence plus simple à maintenir à mesure que le produit évolue.
+Je me concentre sur l’infrastructure front-end : des API de composants, un
+système de thèmes et des design tokens. L’objectif est de garder les maquettes
+et le code alignés, et de limiter la dette technique qui s’accumule quand on
+privilégie la vitesse au départ plutôt que l’adéquation au produit.
+
+Je commence par des contraintes légères pour établir une base claire. Quand le
+travail montre qu’il faut plus de structure, je l’ajoute progressivement. Je
+construis des primitives modulaires, avec des défauts accessibles et adaptés au
+responsive. À mesure que la complexité augmente, l’interface reste fidèle aux
+intentions de conception.

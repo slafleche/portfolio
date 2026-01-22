@@ -22,50 +22,12 @@ interface GridContextValue {
 const GridContext = createContext<GridContextValue | null>(null);
 
 export type GridProps = {
-  // columns?: number;
-  // mediaQueryColumns?: Record<string, number>;
   className?: string;
   children?: ReactNode;
 };
 
-export function Grid({
-  // columns = 1,
-  // mediaQueryColumns,
-  className,
-  children,
-}: GridProps) {
-  // const matches = useMedia() as Record<
-  //   string,
-  //   boolean | undefined
-  // >;
-  // const matchedColumns: number[] = [];
-  // if (mediaQueryColumns) {
-  //   for (const [key, value] of Object.entries(mediaQueryColumns)) {
-  //     if (matches[key] === true && Number.isFinite(value)) {
-  //       matchedColumns.push(value);
-  //     }
-  //   }
-  // }
-
-  // const requestedColumns = matchedColumns.length
-  //   ? Math.min(...matchedColumns)
-  //   : columns;
-  // const safeColumns = Math.max(1, requestedColumns);
-
-  return (
-    // <GridContext.Provider value={{ columnCount: safeColumns }}>
-      <div
-        className={clsx(s.root, className)}
-        // style={
-        //   {
-        //     gridTemplateColumns: `repeat(${safeColumns}, minmax(0, 1fr))`,
-        //   } as CSSProperties
-        // }
-      >
-        {children}
-      </div>
-    // </GridContext.Provider>
-  );
+export function Grid({ className, children }: GridProps) {
+  return <div className={clsx(s.root, className)}>{children}</div>;
 }
 
 export type ColumnProps = {
@@ -83,13 +45,13 @@ export function Column({
 }: ColumnProps) {
   const context = useContext(GridContext);
   const maxColumns = context?.columnCount ?? 1;
-  const matches = useMedia() as Record<
-    string,
-    boolean | undefined
-  >;
+  const matches = useMedia() as Record<string, boolean | undefined>;
   let overrideSpan: number | undefined;
   if (mediaQuerySpan) {
-    for (const [key, value] of Object.entries(mediaQuerySpan)) {
+    for (const [
+      key,
+      value,
+    ] of Object.entries(mediaQuerySpan)) {
       if (matches[key] === true && Number.isFinite(value)) {
         overrideSpan =
           overrideSpan === undefined || value < overrideSpan

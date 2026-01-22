@@ -35,7 +35,7 @@ const frBaseData = {
   'close-label': 'Fermer',
   'scroll-cue': 'Défiler vers le contenu',
 
-  'manifest-name': "Portfolio de Stéphane LaFlèche",
+  'manifest-name': 'Portfolio de Stéphane LaFlèche',
   'manifest-short-name': 'Stéphane',
   'manifest-description':
     'Développeur front-end spécialisé en design systems, interfaces accessibles et TypeScript.',
@@ -47,12 +47,13 @@ const frBaseData = {
 
   'favicon-meta-description':
     'Métadonnées décrivant les favicons et manifestes du portfolio par Stéphane',
-  'favicon-meta-keywords': 'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
+  'favicon-meta-keywords':
+    'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
   'favicon-meta-author': 'Stéphane LaFlèche',
 
   'hero-title': 'Stéphane LaFlèche [split] développeur front-end',
   'hero-subtitle':
-    'Je me spécialise dans les interfaces React et les systèmes de design, en gardant design et code alignés.',
+    'Je construis des systèmes de design et des bibliothèques de composants qui passent à l’échelle. [split] Pour que les interfaces restent cohérentes, maintenables et alignées sur le design dans le temps.',
 
   'console-curiosity-title': '🔎 Curieux ?',
   'console-curiosity-test': '[test] 👀 Observateur détecté.',

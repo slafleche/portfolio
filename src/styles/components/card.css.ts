@@ -3,13 +3,17 @@ import { m } from 'css-calipers';
 
 import { glassVars } from '../../tokens/glassy.tokens';
 import { colorVars } from '../../tokens/global.tokens';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { wordMarkVars } from '../../tokens/wordmarks.tokens';
 import { cardLayout } from '../componentTokens/card.component.tokens';
 import borders from '../helpers/borders.helper';
 import { makeCardGradient } from '../helpers/cardGradient.helper';
 import { makeGlassSurface } from '../helpers/glassy.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
-import { globalDropShadowFilter } from '../helpers/shadow.helper';
+import {
+  globalDropShadowFilter,
+  textShadow,
+} from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import wordMarkMeta from '../helpers/wordmark.helper';
 import {
@@ -143,17 +147,25 @@ export const glassSurface = style(
 );
 
 export const title = style({});
+
 export const text = style({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   height: '100%',
+  ...textShadow({
+    x: m(1),
+    y: m(1),
+    blur: m(0),
+    color: colorVars.black,
+  }),
   ...paddings(m(40)),
   selectors: {
     ...mediaQueryStyle({
-      compact: {
+      snug: {
         height: 'auto',
         ...paddings({
+          horizontal: anchorMenuVars.handle.sizeWithBorder,
           top: m(15),
         }),
       },

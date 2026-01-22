@@ -56,11 +56,7 @@ const slideUp = keyframes({
     opacity: 0,
   },
 });
-export const root = style({
-  ...margins({
-    bottom: m(64),
-  }),
-});
+export const root = style({});
 export const intro = style({});
 
 globalStyle(`.${intro} p`, {
@@ -160,7 +156,15 @@ export const triggerText = style({
   flexWrap: 'wrap',
   fontSize: '1.5em',
   lineHeight: 1.1,
-  maxWidth: `calc(100% - ${accordionItemTokens.button.size.css()})`,
+  maxWidth: `calc(100% - ${accordionItemTokens.button.size.add(12).css()})`,
+
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        rowGap: '0.1em',
+      },
+    }),
+  },
 });
 
 export const triggerLabel = style({
@@ -169,6 +173,14 @@ export const triggerLabel = style({
   ...paddings({
     right: accordionItemTokens.button.spacing,
   }),
+
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        width: '100%',
+      },
+    }),
+  },
 });
 
 export const triggerSubtitle = style({

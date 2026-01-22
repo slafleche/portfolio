@@ -44,14 +44,7 @@ export default function CaseStudy({
           data-padding="no-top"
         />
         {hasIntro ? (
-          <Markdown
-            className={s.intro}
-            source={intro}
-            asUi={{
-              headings: false,
-              paragraphs: true,
-            }}
-          />
+          <Markdown className={s.intro} source={intro} />
         ) : null}
       </Content>
 

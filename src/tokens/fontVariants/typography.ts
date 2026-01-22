@@ -68,8 +68,11 @@ export const typographyFontVariants = {
   h3: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h3',
     config: {
+      options: {
+        textAlign: 'center',
+      },
       styleOverrides: {
-        size: m(18),
+        size: m(26),
       },
     },
   }),
@@ -77,7 +80,7 @@ export const typographyFontVariants = {
     label: 'heading-h4',
     config: {
       styleOverrides: {
-        size: m(16),
+        size: m(22),
       },
     },
   }),

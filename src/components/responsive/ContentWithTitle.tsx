@@ -3,7 +3,6 @@ import type { ElementType, ReactNode } from 'react';
 
 import { headingDecoration } from '@/styles/typography.css';
 
-import { dataAttributesHelper } from '../../lib/dataAttributesHelper';
 import Heading from '../Heading';
 import Content, { type ContentBaseProps } from './Content';
 

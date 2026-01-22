@@ -61,7 +61,7 @@ export const accordionItemTokens = {
     paddings: {
       top: m(25),
       left: anchorMenuVars.handle.sizeWithBorder,
-      right: m(12),
+      right: m(16),
       bottom: m(20),
     },
   },

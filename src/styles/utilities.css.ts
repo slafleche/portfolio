@@ -4,7 +4,7 @@ import { m } from 'css-calipers';
 import type { CSS_TYPES } from '@/styles/helpers/types.helper';
 
 import { important } from './helpers/important.helper';
-import { margins,paddings } from './helpers/spacing.helper';
+import { margins, paddings } from './helpers/spacing.helper';
 
 globalStyle('*[data-visible="hidden"]', {
   visibility: 'hidden !important' as CSS_TYPES.Property.Visibility,

@@ -74,9 +74,24 @@ type RenderOptions = {
   asUi: AsUiConfig;
 };
 
+const defaultAsUi: Required<AsUiConfig> = {
+  headings: false,
+  paragraphs: false,
+  links: false,
+  listUnordered: false,
+  listOrdered: false,
+  blockquotes: false,
+  codeBlocks: false,
+};
+
 const elementShortcodeExtension = createElementShortcodeExtension();
 const brShortcodeExtension = createBrShortcodeExtension();
-marked.use({ extensions: [elementShortcodeExtension, brShortcodeExtension] });
+marked.use({
+  extensions: [
+    elementShortcodeExtension,
+    brShortcodeExtension,
+  ],
+});
 
 const elementLookup = {
   GitHubWordmark,
@@ -129,22 +144,46 @@ const parseAbbrTitle = (raw: string): string | null => {
 const isAbbrClose = (raw: string) =>
   raw.trim().toLowerCase() === '</abbr>';
 
-const inlineHtmlTagAllowList = new Set(['span']);
+const inlineHtmlTagAllowList = new Set([
+  'span',
+]);
+
+const parseDataAttributesChunk = (
+  chunk: string,
+): Record<string, string> => {
+  const attrs: Record<string, string> = {};
+  const dataAttrRegex =
+    /(data-[a-z0-9-]+)(?:=(?:"([^"]*)"|'([^']*)'))?/gi;
+  let match: RegExpExecArray | null;
+  while ((match = dataAttrRegex.exec(chunk))) {
+    const key = match[1];
+    const value = match[2] ?? match[3] ?? 'true';
+    attrs[key] = value;
+  }
+  return attrs;
+};
 
 const parseDataAttributes = (raw: string): Record<string, string> => {
   const attrs: Record<string, string> = {};
   const attrMatch = raw.match(/^<([a-z0-9-]+)(\s[^>]*)?>$/i);
   if (!attrMatch?.[2]) return attrs;
   const attrChunk = attrMatch[2];
-  const dataAttrRegex =
-    /\s(data-[a-z0-9-]+)(?:=(?:"([^"]*)"|'([^']*)'))?/gi;
-  let match: RegExpExecArray | null;
-  while ((match = dataAttrRegex.exec(attrChunk))) {
-    const key = match[1];
-    const value = match[2] ?? match[3] ?? 'true';
-    attrs[key] = value;
-  }
-  return attrs;
+  return parseDataAttributesChunk(attrChunk);
+};
+
+const parseHeadingDataAttributesPrefix = (
+  text: string,
+): { dataAttrs: Record<string, string>; text: string } | null => {
+  const match = text.match(/^\[([^\]]+)\]\s+(.*)$/);
+  if (!match) return null;
+  const [, attrChunk, remainingText] = match;
+  const dataAttrs = parseDataAttributesChunk(attrChunk);
+  if (Object.keys(dataAttrs).length === 0) return null;
+  if (remainingText.trim() === '') return null;
+  return {
+    dataAttrs,
+    text: remainingText,
+  };
 };
 
 const parseInlineHtmlOpenTag = (
@@ -184,22 +223,19 @@ const renderInlineTokens = (
   decodeEntities = false,
 ): ReactNode[] => {
   const nodes: ReactNode[] = [];
+  const asUi = { ...defaultAsUi, ...options.asUi };
 
   for (let i = 0; i < tokens.length; i += 1) {
     const token = tokens[i];
 
     if (isElementShortcodeToken(token)) {
       const Element =
-        elementLookup[
-          token.name as keyof typeof elementLookup
-        ];
+        elementLookup[token.name as keyof typeof elementLookup];
       if (!Element) {
         nodes.push('');
         continue;
       }
-      nodes.push(
-        <Element key={`${keyPrefix}-element-${i}`} />,
-      );
+      nodes.push(<Element key={`${keyPrefix}-element-${i}`} />);
       continue;
     }
 
@@ -224,8 +260,7 @@ const renderInlineTokens = (
         for (let j = i + 1; j < tokens.length; j += 1) {
           const next = tokens[j];
           if (next.type === 'html') {
-            const nextRaw =
-              (next as { text?: string }).text ?? '';
+            const nextRaw = (next as { text?: string }).text ?? '';
             if (isAbbrClose(nextRaw)) {
               closedIndex = j;
               break;
@@ -236,10 +271,7 @@ const renderInlineTokens = (
 
         if (closedIndex !== -1) {
           nodes.push(
-            <abbr
-              key={`${keyPrefix}-abbr-${i}`}
-              title={abbrTitle}
-            >
+            <abbr key={`${keyPrefix}-abbr-${i}`} title={abbrTitle}>
               {renderInlineTokens(
                 innerTokens,
                 options,
@@ -263,9 +295,10 @@ const renderInlineTokens = (
         for (let j = i + 1; j < tokens.length; j += 1) {
           const next = tokens[j];
           if (next.type === 'html') {
-            const nextRaw =
-              (next as { text?: string }).text ?? '';
-            if (parseInlineHtmlCloseTag(nextRaw) === openTag.tagName) {
+            const nextRaw = (next as { text?: string }).text ?? '';
+            if (
+              parseInlineHtmlCloseTag(nextRaw) === openTag.tagName
+            ) {
               closedIndex = j;
               break;
             }
@@ -283,9 +316,7 @@ const renderInlineTokens = (
             ? innerTokens
                 .map((innerToken) => {
                   if (innerToken.type === 'space') return ' ';
-                  return (
-                    (innerToken as { text?: string }).text ?? ''
-                  );
+                  return (innerToken as { text?: string }).text ?? '';
                 })
                 .join('')
             : '';
@@ -392,7 +423,7 @@ const renderInlineTokens = (
           title?: string | null;
           tokens?: Array<MarkedToken | ElementShortcodeToken>;
         };
-        const dataUi = options.asUi.links ? 'link' : undefined;
+        const dataUi = asUi.links ? 'link' : undefined;
         const safeHref = sanitizeHref(linkToken.href);
         if (!safeHref) {
           nodes.push(
@@ -406,9 +437,7 @@ const renderInlineTokens = (
         }
         const linkProps: Record<string, string> = {
           href: safeHref,
-          ...(linkToken.title
-            ? { title: linkToken.title }
-            : {}),
+          ...(linkToken.title ? { title: linkToken.title } : {}),
           ...(dataUi ? { 'data-ui': dataUi } : {}),
         };
         if (options.openLinksInNewTab) {
@@ -455,9 +484,7 @@ const renderInlineTokens = (
             key={`${keyPrefix}-img-${i}`}
             src={imageToken.href ?? ''}
             alt={imageToken.text ?? ''}
-            {...(imageToken.title
-              ? { title: imageToken.title }
-              : {})}
+            {...(imageToken.title ? { title: imageToken.title } : {})}
           />,
         );
         break;
@@ -478,6 +505,7 @@ const renderTokens = (
 ): ReactNode[] => {
   markFirstLastTokens(tokens);
   const nodes: ReactNode[] = [];
+  const asUi = { ...defaultAsUi, ...options.asUi };
 
   tokens.forEach((token, index) => {
     const key = `${keyPrefix}-${index}`;
@@ -485,27 +513,36 @@ const renderTokens = (
     switch (token.type) {
       case 'heading': {
         const depth = (token as { depth?: number }).depth ?? 1;
-        const dataUi = options.asUi.headings
-          ? 'heading'
-          : undefined;
-        const attrs = getDataAttrs(token, dataUi);
+        const dataUi = asUi.headings ? 'heading' : undefined;
+        const baseAttrs = getDataAttrs(token, dataUi);
+        const parsedPrefix = parseHeadingDataAttributesPrefix(
+          (token as { text?: string }).text ?? '',
+        );
+        const headingChildren = parsedPrefix
+          ? renderInlineMarkdown(
+              parsedPrefix.text,
+              options,
+              `${key}-heading`,
+            )
+          : renderInlineTokens(
+              (token as { tokens?: MarkedToken[] }).tokens ?? [],
+              options,
+              `${key}-heading`,
+            );
+        const attrs = parsedPrefix
+          ? { ...parsedPrefix.dataAttrs, ...baseAttrs }
+          : baseAttrs;
         nodes.push(
           createElement(
             `h${depth}` as keyof JSX.IntrinsicElements,
             { key, ...attrs },
-            renderInlineTokens(
-              (token as { tokens?: MarkedToken[] }).tokens ?? [],
-              options,
-              `${key}-heading`,
-            ),
+            headingChildren,
           ),
         );
         break;
       }
       case 'paragraph': {
-        const dataUi = options.asUi.paragraphs
-          ? 'paragraph'
-          : undefined;
+        const dataUi = asUi.paragraphs ? 'paragraph' : undefined;
         nodes.push(
           <p key={key} {...getDataAttrs(token, dataUi)}>
             {renderInlineTokens(
@@ -518,9 +555,7 @@ const renderTokens = (
         break;
       }
       case 'text': {
-        const dataUi = options.asUi.paragraphs
-          ? 'paragraph'
-          : undefined;
+        const dataUi = asUi.paragraphs ? 'paragraph' : undefined;
         nodes.push(
           <p key={key} {...getDataAttrs(token, dataUi)}>
             {renderInlineTokens(
@@ -540,10 +575,10 @@ const renderTokens = (
           }>;
         };
         const dataUi = listToken.ordered
-          ? options.asUi.listOrdered
+          ? asUi.listOrdered
             ? 'list-ordered'
             : undefined
-          : options.asUi.listUnordered
+          : asUi.listUnordered
             ? 'list-unordered'
             : undefined;
         const Tag = listToken.ordered ? 'ol' : 'ul';
@@ -563,14 +598,9 @@ const renderTokens = (
         break;
       }
       case 'blockquote': {
-        const dataUi = options.asUi.blockquotes
-          ? 'blockquote'
-          : undefined;
+        const dataUi = asUi.blockquotes ? 'blockquote' : undefined;
         nodes.push(
-          <blockquote
-            key={key}
-            {...getDataAttrs(token, dataUi)}
-          >
+          <blockquote key={key} {...getDataAttrs(token, dataUi)}>
             {renderTokens(
               (token as { tokens?: MarkedToken[] }).tokens ?? [],
               options,
@@ -581,9 +611,7 @@ const renderTokens = (
         break;
       }
       case 'code': {
-        const dataUi = options.asUi.codeBlocks
-          ? 'code-block'
-          : undefined;
+        const dataUi = asUi.codeBlocks ? 'code-block' : undefined;
         const text = (token as { text?: string }).text ?? '';
         nodes.push(
           <pre key={key} {...getDataAttrs(token, dataUi)}>
@@ -634,9 +662,7 @@ const renderTokens = (
         break;
       }
       case 'hr':
-        nodes.push(
-          <hr key={key} {...getDataAttrs(token)} />,
-        );
+        nodes.push(<hr key={key} {...getDataAttrs(token)} />);
         break;
       case 'space':
         break;

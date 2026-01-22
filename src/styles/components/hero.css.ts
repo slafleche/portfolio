@@ -1,6 +1,7 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 import { m, mEm } from 'css-calipers';
 
+import { colorVars } from '../../tokens/global.tokens';
 import { layoutVars } from '../../tokens/layout.tokens';
 import {
   heroGradient,
@@ -13,6 +14,7 @@ import {
   gradientAsBgImg,
 } from '../helpers/gradients.helper';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
+import { textShadow } from '../helpers/shadow.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
   globalMediaQueryStyle,
@@ -150,6 +152,12 @@ export const subtitle = style({
   textAlign: 'center',
   fontSize: '22px',
   lineHeight: 1.3,
+  ...textShadow({
+    x: m(1),
+    y: m(1),
+    blur: m(0),
+    color: colorVars.black,
+  }),
   ...margins({
     top: mEm(1),
   }),
@@ -172,8 +180,6 @@ globalStyle(`.${subtitle} br`, {
     },
   }),
 });
-
-
 
 export const titleAsSvg = style({
   display: 'block',

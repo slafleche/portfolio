@@ -46,7 +46,9 @@ import * as cg from '@/styles/components/card.css';
 import * as layoutStyles from '@/styles/layout.css';
 
 import { Accordion } from '../../../src/components/Accordion';
+import Heading from '../../../src/components/Heading';
 import HeroHomeBg from '../../../src/components/HeroHomeBg';
+import Content from '../../../src/components/responsive/Content';
 
 interface PageParams {
   LOCALE: string;
@@ -243,17 +245,9 @@ export default async function HomePage({
                   (study: CaseStudyListItem, index: number) => ({
                     heading: study.title,
                     subHeading: study.subTitle,
-                    content: (
-                      <Markdown
-                        source={study.content}
-                        asUi={{
-                          headings: true,
-                          paragraphs: true,
-                        }}
-                      />
-                    ),
+                    content: <Markdown source={study.content} />,
                     id: `${baseId}-${index}`,
-                    defaultOpen: index === 4,
+                    defaultOpen: index === 0,
                   }),
                 )}
               />
@@ -263,7 +257,6 @@ export default async function HomePage({
             <ContentWithTitle
               id={approach.href}
               title={approach.title}
-              titleOutside={true}
             >
               <Markdown source={approach.content} />
             </ContentWithTitle>
@@ -278,16 +271,20 @@ export default async function HomePage({
             </ContentWithTitle> */}
 
             {/* Projects */}
-            <ContentWithTitle
-              id={projects.href}
-              title={projects.title}
-              titleOutside={true}
-              className={layoutStyles.sectionSpacing}
-              data-padding="no-bottom"
-              queryDataAttributes={{
-                compact: 'no-padding-no-margin',
-              }}
-            >
+            <section className={layoutStyles.sectionSpacing}>
+              <Content
+                tag="div"
+                ignoreBottomMargin={true}
+              >
+                <Heading
+                  id={projects.href}
+                  data-margin="no-top"
+                  ignoreDataUI={true}
+                >
+                  {projects.title}
+                </Heading>
+              </Content>
+
               <Grid>
                 <Column span={2}>
                   <Card
@@ -420,7 +417,7 @@ export default async function HomePage({
                   </Card>
                 </Column>
               </Grid>
-            </ContentWithTitle>
+            </section>
           </DeferredIsland>
         </main>
         <DeferredIsland when="idle">

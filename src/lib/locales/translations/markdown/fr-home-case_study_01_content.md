@@ -1,5 +1,5 @@
-J’ai débuté comme **thématiseur**, en construisant des thèmes clients dans le
-cadre posé par Vanilla. J’ai vite compris où le système pliait et où il
-résistait. J’ai équilibré la liberté créative des clients et les contraintes du
-système, en trouvant des solutions qui respectaient à la fois les objectifs
-visuels et les limites structurelles.
+Chez Vanilla Forums, je suis passé de thématiseur à **développeur front-end
+senior** au sein de l’équipe [abbr:R&D]. J’ai participé à la mise en place d’une
+infrastructure à base de tokens, séparant clairement le design de
+l’implémentation. Permettant aux équipes de refondre les produits sans
+compromettre les thèmes de nos clients.

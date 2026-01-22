@@ -15,12 +15,14 @@ import { globalMediaQueryStyle } from './responsive/mediaQueries';
 
 export const userContent = style({});
 
-// Generte styles for each heading level
+// Generate styles for each heading level
 for (let level = 1; level <= 6; level++) {
   const variant =
     typographyFontVariants[
       `h${level}` as keyof typeof typographyFontVariants
     ];
+  const smallerFontSize = variant.config?.styleOverrides?.size;
+
   globalStyle(`h${level}:not([data-ui="heading"])`, {
     display: 'block',
     color: colorVars.bodyFg.css(),
@@ -29,12 +31,16 @@ for (let level = 1; level <= 6; level++) {
       baseVariant: typographyFontVariants.heading,
       includeFontMargins: true,
     }),
-
     ...globalMediaQueryStyle({
       compact: {
-        textAlign: 'center',
+        fontSize:
+          smallerFontSize?.multiply(0.8).round().css() ?? undefined,
       },
     }),
+  });
+
+  globalStyle(`h${level}[data-align="center"]`, {
+    textAlign: 'center',
   });
 
   globalStyle(`h${level}[data-padding="no-top"]`, {
@@ -51,6 +57,15 @@ globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {
   ...margins(textStyleVars.paragraph.margins),
   color: colorVars.bodyFg.css(),
 });
+
+globalStyle(
+  `.${userContent} p:not([data-ui="paragraph"])[data-last="true"]`,
+  {
+    ...margins({
+      bottom: 0,
+    }),
+  },
+);
 
 globalStyle(`p`, {
   display: 'block',
