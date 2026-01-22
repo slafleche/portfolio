@@ -42,6 +42,9 @@ export default function Hero({
   hideSubtitle = false,
 }: Props) {
   const titleCopy = splitText(copy.title);
+  const subtitleCopy = copy.subtitle
+    ? splitText(copy.subtitle)
+    : null;
 
   return (
     <>
@@ -82,10 +85,36 @@ export default function Hero({
                       data-ui="paragraph"
                       className={s.subtitleMarkdown}
                     >
-                      {renderInlineMarkdown(copy.subtitle, {
-                        openLinksInNewTab: true,
-                        asUi: { links: true },
-                      })}
+                      {subtitleCopy?.secondLine ? (
+                        <span data-split="true">
+                          <span data-first="true">
+                            {renderInlineMarkdown(
+                              subtitleCopy.lastLine ?? '',
+                              {
+                                openLinksInNewTab: true,
+                                asUi: { links: true },
+                              },
+                              'hero-subtitle-line-1',
+                            )}{' '}
+                          </span>
+                          <br />
+                          <span data-last="true">
+                            {renderInlineMarkdown(
+                              subtitleCopy.secondLine,
+                              {
+                                openLinksInNewTab: true,
+                                asUi: { links: true },
+                              },
+                              'hero-subtitle-line-2',
+                            )}
+                          </span>
+                        </span>
+                      ) : (
+                        renderInlineMarkdown(copy.subtitle, {
+                          openLinksInNewTab: true,
+                          asUi: { links: true },
+                        })
+                      )}
                     </p>
                   </div>
                 ) : null}

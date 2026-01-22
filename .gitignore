@@ -109,6 +109,7 @@ tmp/*
 # Epics (local by default)
 # -----------------------
 ai/epics/*
+ai/textDirectives.md
 !ai/epics/README.md
 !ai/epics/AGENTS.md
 !ai/epics/blockedUpgrades/

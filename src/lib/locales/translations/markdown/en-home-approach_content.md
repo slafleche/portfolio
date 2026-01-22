@@ -1,6 +1,12 @@
-Interface systems should let you change direction without rebuilding everything,
-not just move fast at the start.
+Interface systems should let you change direction without rebuilding everything.
 
-I work on front-end infrastructure: component APIs, theming systems, and tokens,
-to keep design and code aligned over time. The goal is to reduce ad hoc tweaks
-and make consistency easier to maintain as the product evolves.
+I focus on front-end infrastructure: component APIs, theming systems, and design
+tokens that keep mockups and code aligned—reducing long-term technical debt from
+frameworks optimized for early velocity rather than project fit.
+
+### My process:
+
+- Start with lightweight constraints for a clear baseline
+- Add structure only when the work proves it's needed
+- Build composable primitives with accessible, responsive defaults
+- Let complexity grow without the UI drifting from design intent

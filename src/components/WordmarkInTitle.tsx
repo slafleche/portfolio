@@ -64,7 +64,7 @@ export default function WordMarkInTitle(props: WordMarkInTitleProps) {
     <Heading
       title={fullText}
       className={className}
-      ignoreDataUI={false}
+      ignoreDataUI={props.ignoreDataUI}
       depth={depth}
       {...rest}
     >

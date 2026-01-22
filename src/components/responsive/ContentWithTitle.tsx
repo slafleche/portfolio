@@ -3,6 +3,7 @@ import type { ElementType, ReactNode } from 'react';
 
 import { headingDecoration } from '@/styles/typography.css';
 
+import { dataAttributesHelper } from '../../lib/dataAttributesHelper';
 import Heading from '../Heading';
 import Content, { type ContentBaseProps } from './Content';
 
@@ -15,6 +16,7 @@ export type ContentWithTitleBaseProps = Omit<
   skipSectionMargin?: boolean;
   showDecoration?: boolean;
   headingDepth?: 2 | 3 | 4 | 5 | 6;
+  titleOutside?: boolean;
 };
 
 type ContentWithTitleProps<T extends ElementType = 'section'> = Omit<
@@ -29,7 +31,7 @@ export default function ContentWithTitle<
 >(props: ContentWithTitleProps<T>) {
   const {
     title,
-    ignoreDataUI = false,
+    ignoreDataUI = true,
     headingDepth = 2,
     children,
     tag,
@@ -37,27 +39,47 @@ export default function ContentWithTitle<
     skipSectionMargin,
     queryDataAttributes,
     showDecoration,
+    titleOutside = false,
+    id,
     ...rest
   } = props;
 
   return (
-    <Content
-      tag={tag}
-      className={className}
-      data-margin={skipSectionMargin ? 'skip' : undefined}
-      queryDataAttributes={queryDataAttributes}
-      {...rest}
-    >
-      {title ? (
+    <>
+      {title && titleOutside ? (
         <Heading
+          id={id}
           ignoreDataUI={ignoreDataUI}
           depth={headingDepth}
+          data-margin="no-top"
           className={clsx({ [headingDecoration]: showDecoration })}
         >
           {title}
         </Heading>
       ) : null}
-      {children}
-    </Content>
+      <Content
+        id={!titleOutside ? id : undefined}
+        aria-labelledby={
+          titleOutside && typeof id === 'string' ? id : undefined
+        }
+        tag={tag}
+        className={className}
+        data-margin={skipSectionMargin ? 'skip' : undefined}
+        queryDataAttributes={queryDataAttributes}
+        {...rest}
+      >
+        {title && !titleOutside ? (
+          <Heading
+            ignoreDataUI={ignoreDataUI}
+            depth={headingDepth}
+            className={clsx({ [headingDecoration]: showDecoration })}
+            data-margin="no-top"
+          >
+            {title}
+          </Heading>
+        ) : null}
+        {children}
+      </Content>
+    </>
   );
 }

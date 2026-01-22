@@ -72,14 +72,8 @@ export async function generateMetadata({
   );
   languages['x-default'] = `${origin}/en`;
   const canonicalUrl = `${origin}/${locale}`;
-  const openGraphImageUrl = getSocialImageByName(
-    locale,
-    '1200x630',
-  );
-  const twitterImageUrl = getSocialImageByName(
-    locale,
-    '1200x675',
-  );
+  const openGraphImageUrl = getSocialImageByName(locale, '1200x630');
+  const twitterImageUrl = getSocialImageByName(locale, '1200x675');
 
   return {
     alternates: {
@@ -110,7 +104,11 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: meta.title,
       description: meta.description,
-      images: twitterImageUrl ? [twitterImageUrl] : undefined,
+      images: twitterImageUrl
+        ? [
+            twitterImageUrl,
+          ]
+        : undefined,
     },
   };
 }
@@ -177,17 +175,17 @@ export default async function HomePage({
     anchorNavLabel: menuCopy.anchorLabel,
     anchorLinks: [
       {
-        title: parseWordmarkTemplate(approach.title).fullText,
-        href: `#${approach.href}`,
-      },
-      {
-        title: parseWordmarkTemplate(about.title).fullText,
-        href: `#${about.href}`,
-      },
-      {
         title: parseWordmarkTemplate(caseStudies.title).fullText,
         href: `#${caseStudies.href}`,
       },
+      {
+        title: parseWordmarkTemplate(approach.title).fullText,
+        href: `#${approach.href}`,
+      },
+      // {
+      //   title: parseWordmarkTemplate(about.title).fullText,
+      //   href: `#${about.href}`,
+      // },
       {
         title: parseWordmarkTemplate(projects.title).fullText,
         href: `#${projects.href}`,
@@ -233,24 +231,6 @@ export default async function HomePage({
             Bg={HeroHomeBg}
           />
           <DeferredIsland when="idle">
-            {/* Approach */}
-            <ContentWithTitle
-              id={approach.href}
-              title={approach.title}
-              ignoreDataUI={true}
-            >
-              <Markdown source={approach.content} />
-            </ContentWithTitle>
-
-            {/* About */}
-            <ContentWithTitle
-              id={about.href}
-              title={about.title}
-              ignoreDataUI={true}
-            >
-              <Markdown source={about.content} />
-            </ContentWithTitle>
-
             {/* Case Study */}
             <CaseStudy
               id={caseStudies.href}
@@ -273,20 +253,38 @@ export default async function HomePage({
                       />
                     ),
                     id: `${baseId}-${index}`,
-                    defaultOpen: index === 0,
+                    defaultOpen: index === 4,
                   }),
                 )}
               />
             </CaseStudy>
 
+            {/* Approach */}
+            <ContentWithTitle
+              id={approach.href}
+              title={approach.title}
+              titleOutside={true}
+            >
+              <Markdown source={approach.content} />
+            </ContentWithTitle>
+
+            {/* About */}
+            {/* <ContentWithTitle
+              id={about.href}
+              title={about.title}
+              titleOutside={true}
+            >
+              <Markdown source={about.content} />
+            </ContentWithTitle> */}
+
             {/* Projects */}
             <ContentWithTitle
               id={projects.href}
               title={projects.title}
-              ignoreDataUI={true}
+              titleOutside={true}
               className={layoutStyles.sectionSpacing}
+              data-padding="no-bottom"
               queryDataAttributes={{
-                all: 'no-margin',
                 compact: 'no-padding-no-margin',
               }}
             >

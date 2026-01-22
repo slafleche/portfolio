@@ -36,6 +36,12 @@ for (let level = 1; level <= 6; level++) {
       },
     }),
   });
+
+  globalStyle(`h${level}[data-padding="no-top"]`, {
+    ...paddings({
+      top: 0,
+    }),
+  });
 }
 
 globalStyle(`.${userContent} p:not([data-ui="paragraph"])`, {

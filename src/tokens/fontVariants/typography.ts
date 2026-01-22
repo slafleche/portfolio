@@ -69,16 +69,15 @@ export const typographyFontVariants = {
     label: 'heading-h3',
     config: {
       styleOverrides: {
-        size: m(26),
+        size: m(18),
       },
     },
   }),
   h4: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h4',
-
     config: {
       styleOverrides: {
-        size: m(20),
+        size: m(16),
       },
     },
   }),
@@ -87,7 +86,7 @@ export const typographyFontVariants = {
 
     config: {
       styleOverrides: {
-        size: m(18),
+        size: m(16),
       },
     },
   }),
@@ -96,7 +95,7 @@ export const typographyFontVariants = {
 
     config: {
       styleOverrides: {
-        size: m(17),
+        size: m(16),
       },
     },
   }),

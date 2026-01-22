@@ -14,7 +14,10 @@ import {
 } from '../helpers/gradients.helper';
 import { fullSizeOfParent } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
-import { mediaQueryStyle } from '../responsive/mediaQueries';
+import {
+  globalMediaQueryStyle,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 
 /* ============================================================================
    ROOT + MEDIA + OVERLAYS
@@ -161,6 +164,16 @@ export const subtitle = style({
     }),
   },
 });
+
+globalStyle(`.${subtitle} br`, {
+  ...globalMediaQueryStyle({
+    snug: {
+      display: 'none',
+    },
+  }),
+});
+
+
 
 export const titleAsSvg = style({
   display: 'block',

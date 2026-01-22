@@ -35,18 +35,20 @@ export default function CaseStudy({
     >
       <Content tag={'div'}>
         <WordMarkInTitle
+          className={layoutStyles.title}
           WordMark={VNWordmark}
           ignoreDataUI={true}
           textTemplate={title}
           textClassName={wordMarkClassName}
           depth={2}
+          data-padding="no-top"
         />
         {hasIntro ? (
           <Markdown
             className={s.intro}
             source={intro}
             asUi={{
-              headings: true,
+              headings: false,
               paragraphs: true,
             }}
           />

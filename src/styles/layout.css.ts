@@ -77,7 +77,11 @@ export const sectionSpacing = style({
   marginTop: layoutVars.content.gap.css(),
 });
 
-export const title = style({});
+export const title = style({
+  ...paddings({
+    top: 0,
+  }),
+});
 
 export const panel = style({
   display: 'flex',

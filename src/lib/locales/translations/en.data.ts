@@ -53,7 +53,7 @@ const enBaseData = {
 
   'hero-title': 'Stéphane LaFlèche [split] Front-end Developer',
   'hero-subtitle':
-    'I specialize in React UI & design systems, keeping design and code aligned',
+    'I build design systems and component libraries that scale. [split] Keeping UIs consistent, maintainable, and aligned with design over time.',
 
   'console-curiosity-title': '🔎 Curious?',
   'console-curiosity-test': '[test] 👀 Observer detected.',
