@@ -9,8 +9,6 @@ I played a key role in defining styling and component patterns for the new
 token layer kept themes compatible with the **Forum** (_PHP_). Clients kept a
 unified brand theme across both products.
 
-### Examples of theming system in the wild
+### A few examples in the wild:
 
-- [King Games](https://community.king.com/en/)
-- [Oracle](https://community.oracle.com/hub/)
-- [Acer](https://community.acer.com)
+[ExampleSites|en]

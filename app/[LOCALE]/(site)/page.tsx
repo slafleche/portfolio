@@ -136,17 +136,11 @@ export default async function HomePage({
   };
   const [
     approach,
-    about,
   ] = translateMarkdownSections(translator, [
     {
       titleKey: 'approach',
       markdownKey: 'approach-content',
       hrefKey: 'approach-href',
-    },
-    {
-      titleKey: 'about',
-      markdownKey: 'about-content',
-      hrefKey: 'about-href',
     },
   ]);
   const caseStudies = buildCaseStudiesCopy(translator);
@@ -184,10 +178,6 @@ export default async function HomePage({
         title: parseWordmarkTemplate(approach.title).fullText,
         href: `#${approach.href}`,
       },
-      // {
-      //   title: parseWordmarkTemplate(about.title).fullText,
-      //   href: `#${about.href}`,
-      // },
       {
         title: parseWordmarkTemplate(projects.title).fullText,
         href: `#${projects.href}`,
@@ -272,10 +262,7 @@ export default async function HomePage({
 
             {/* Projects */}
             <section className={layoutStyles.sectionSpacing}>
-              <Content
-                tag="div"
-                ignoreBottomMargin={true}
-              >
+              <Content tag="div" ignoreBottomMargin={true}>
                 <Heading
                   id={projects.href}
                   data-margin="no-top"

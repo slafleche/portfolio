@@ -20,7 +20,6 @@ export default {
     },
     { name: 'cleanupAttrs' },
     { name: 'collapseGroups' },
-    { name: 'convertUseToGroup' },
     { name: 'mergePaths' },
     { name: 'convertShapeToPath' },
     { name: 'removeEmptyContainers' },
@@ -29,11 +28,6 @@ export default {
     { name: 'removeMetadata' },
     { name: 'removeEditorsNSData' },
 
-    // Apply transforms into path data so group translates are baked in.
-    {
-      name: 'applyTransforms',
-      params: { applyTransformsStroked: true },
-    },
     { name: 'convertTransform' },
 
     // Let SVGO use shorter relative path commands where it helps (remove forceAbsolutePath).

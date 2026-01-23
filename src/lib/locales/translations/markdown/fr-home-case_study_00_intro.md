@@ -10,8 +10,6 @@ façonné le modèle de thématisation partagé. La couche de tokens maintenait 
 compatibilité avec le **Forum** (_PHP_). Les clients pouvaient conserver une
 identité de marque unifiée sur les deux produits.
 
-### Exemples du système de thématisation en production
+### Quelques exemples en production :
 
-- [King Games](https://community.king.com/fr/)
-- [Oracle (en anglais seulement)](https://community.oracle.com/hub/)
-- [Acer](https://community.acer.com/fr)
+[ExampleSites|fr]

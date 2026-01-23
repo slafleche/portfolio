@@ -8,7 +8,7 @@ anglais seulement) :
 [Customize your Default Title Bar](https://success.vanillaforums.com/kb/articles/397-customize-your-default-title-bar)
 
 Ce nouveau système de thématisation fonctionne avec **à la fois** l’ancien
-produit Forums (_PHP_) et la nouvelle Knowledge Base (_React_). On peut le voir
+produit Forums (_PHP_) et le produit Knowledge Base (_React_). On peut le voir
 dans l’exemple suivant, où les deux produits cohabitent et partagent un thème
 unifié.
 
