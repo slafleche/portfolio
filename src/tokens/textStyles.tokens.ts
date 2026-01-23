@@ -9,7 +9,7 @@ import { layoutVars } from './layout.tokens';
 
 const blockSpacing = m(20);
 const listIndent = m(24);
-const codeBackground = colorVars.bodyFg.alpha(0.08);
+const codeBackground = colors.black.alpha(0.6);
 const codeBorder = colorVars.bodyFg.alpha(0.12);
 
 const codeFontStack =

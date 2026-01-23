@@ -8,12 +8,15 @@ import type {
 } from 'react';
 import { createElement, memo } from 'react';
 
+import CodeBlock from '@/components/CodeBlock';
 import ExampleSites from '@/components/ExampleSites';
+import MockCodeBlock from '@/components/MockCodeBlock';
 import GitHubWordmark from '@/components/wordmarks/GitHubWordmark';
 import NPMWordmark from '@/components/wordmarks/NPMWordmark';
 import { createBrShortcodeExtension } from '@/lib/markdown/brShortcode';
 import { createElementShortcodeExtension } from '@/lib/markdown/elementShortcode';
 import { createExampleSitesShortcodeExtension } from '@/lib/markdown/exampleSitesShortcode';
+import { createMockCodeShortcodeExtension } from '@/lib/markdown/mockCodeShortcode';
 
 import { userContent } from '../styles/typography.css';
 
@@ -67,12 +70,19 @@ type ExampleSitesShortcodeToken = {
   locale: string;
 };
 
+type MockCodeShortcodeToken = {
+  type: 'mock-code-shortcode';
+  lang: string;
+  text: string;
+};
+
 const isElementShortcodeToken = (
   token:
     | MarkedToken
     | ElementShortcodeToken
     | BrShortcodeToken
-    | ExampleSitesShortcodeToken,
+    | ExampleSitesShortcodeToken
+    | MockCodeShortcodeToken,
 ): token is ElementShortcodeToken =>
   token.type === 'element-shortcode';
 
@@ -81,7 +91,8 @@ const isBrShortcodeToken = (
     | MarkedToken
     | ElementShortcodeToken
     | BrShortcodeToken
-    | ExampleSitesShortcodeToken,
+    | ExampleSitesShortcodeToken
+    | MockCodeShortcodeToken,
 ): token is BrShortcodeToken => token.type === 'br-shortcode';
 
 type RenderOptions = {
@@ -103,11 +114,14 @@ const elementShortcodeExtension = createElementShortcodeExtension();
 const brShortcodeExtension = createBrShortcodeExtension();
 const exampleSitesShortcodeExtension =
   createExampleSitesShortcodeExtension();
+const mockCodeShortcodeExtension =
+  createMockCodeShortcodeExtension();
 marked.use({
   extensions: [
     elementShortcodeExtension,
     brShortcodeExtension,
     exampleSitesShortcodeExtension,
+    mockCodeShortcodeExtension,
   ],
 });
 
@@ -528,6 +542,29 @@ const renderTokens = (
   tokens.forEach((token, index) => {
     const key = `${keyPrefix}-${index}`;
 
+    const renderMockCodeLine = (
+      rawLine: string,
+      lineKeyPrefix: string,
+    ): ReactNode[] => {
+      if (rawLine === '') return [];
+      const tokens = marked.lexer(rawLine);
+      const first = tokens[0] as
+        | { type?: string; tokens?: MarkedToken[]; text?: string }
+        | undefined;
+      if (
+        first &&
+        (first.type === 'paragraph' || first.type === 'text')
+      ) {
+        return renderInlineTokens(
+          first.tokens ?? [],
+          options,
+          lineKeyPrefix,
+        );
+      }
+      if (first?.text) return [first.text];
+      return [rawLine];
+    };
+
     switch (token.type) {
       case 'example-sites-shortcode': {
         const t = token as ExampleSitesShortcodeToken;
@@ -536,6 +573,25 @@ const renderTokens = (
             key={key}
             siteData={t.locale as 'en' | 'fr'}
           />,
+        );
+        break;
+      }
+      case 'mock-code-shortcode': {
+        const t = token as MockCodeShortcodeToken;
+        const lines = t.text.split(/\r?\n/);
+        nodes.push(
+          <MockCodeBlock
+            key={key}
+            language={t.lang}
+            {...getDataAttrs(token, asUi.codeBlocks ? 'code-block' : undefined)}
+          >
+            {lines.map((line, lineIndex) => (
+              <div key={`${key}-line-${lineIndex}`}>
+                {renderMockCodeLine(line, `${key}-line-${lineIndex}`)}
+                {'\n'}
+              </div>
+            ))}
+          </MockCodeBlock>,
         );
         break;
       }
@@ -640,11 +696,18 @@ const renderTokens = (
       }
       case 'code': {
         const dataUi = asUi.codeBlocks ? 'code-block' : undefined;
-        const text = (token as { text?: string }).text ?? '';
+        const codeToken = token as {
+          text?: string;
+          lang?: string;
+        };
+        const text = codeToken.text ?? '';
         nodes.push(
-          <pre key={key} {...getDataAttrs(token, dataUi)}>
-            <code>{text}</code>
-          </pre>,
+          <CodeBlock
+            key={key}
+            code={text}
+            language={codeToken.lang}
+            {...getDataAttrs(token, dataUi)}
+          />,
         );
         break;
       }
