@@ -1,2 +1,1 @@
-Built reusable helpers and snippets to eliminate duplicated styles and
-inconsistent spacing. I started building the structure the project needed to stay consistent.
+Built reusable helpers and snippets to reduce duplicated styles and improve consistency. This made day‑to‑day theming faster and cleaner, with a predictable set of styling tools to apply across clients. I also helped move our themes toward a more config‑driven approach—surfacing more options through dashboard pages and relying less on hard‑coded styling. Client customization was easier to maintain and iterate on.
