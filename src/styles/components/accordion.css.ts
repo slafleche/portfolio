@@ -19,7 +19,6 @@ import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
 import {
   fontStylesFromFontVariant,
-  relativeFontWeight,
 } from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 
@@ -300,7 +299,7 @@ export const content = style({
   ...paddings(accordionItemTokens.content.paddings),
   selectors: {
     '&[data-animated-slide="true"][data-state="open"]': {
-      animation: `${slideDown} ${slideTokens.open.timing.css()} ${slideTokens.open.easing} forwards`,
+      animation: `${slideDown} ${slideTokens.open.timing.css()} ${slideTokens.open.easing}`,
     },
     '&[data-animated-slide="true"][data-state="closed"]': {
       animation: `${slideUp} ${slideTokens.closed.timing.css()} ${slideTokens.closed.easing} forwards`,
@@ -308,6 +307,6 @@ export const content = style({
   },
 });
 
-globalStyle(`.${content} h4`, {
-  ...relativeFontWeight(typographyFontVariants.h3, mPercent(60)),
+globalStyle(`.${root} .${content} h3`, {
+  textAlign: 'left',
 });
