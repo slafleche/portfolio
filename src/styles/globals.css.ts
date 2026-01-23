@@ -253,16 +253,6 @@ globalStyle('[hidden]', {
   display: 'none',
 });
 
-globalStyle('pre', {
-  fontFamily: 'monospace, monospace',
-  fontSize: '1em',
-});
-
-globalStyle('code, kbd, samp', {
-  fontFamily: 'monospace, monospace',
-  fontSize: '1em',
-});
-
 globalStyle(
   'ul[data-ui="list-unordered"], ol[data-ui="list-ordered"]',
   {

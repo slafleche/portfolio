@@ -15,8 +15,13 @@ export default function MockCodeBlock({
 }: MockCodeBlockProps) {
   return (
     <div className={clsx(s.root, s.code, s.mock)}>
-      <pre {...preProps} className={className}>
-        <code>{children}</code>
+      <pre
+        {...preProps}
+        data-code="block"
+        data-ui="mock-code-block"
+        className={className}
+      >
+        <code data-code="block">{children}</code>
       </pre>
     </div>
   );

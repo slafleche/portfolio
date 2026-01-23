@@ -16,14 +16,17 @@ type Props = {
   style?: CSSProperties;
 };
 
-export default function SystemsGooey({
-  className,
-  style,
-}: Props) {
+export default function SystemsGooey({ className, style }: Props) {
   const baseId = useId();
   const gradientAId = `${baseId}-systems-gooey-gradient-a`;
   const gradientBId = `${baseId}-systems-gooey-gradient-b`;
   const gradientCId = `${baseId}-systems-gooey-gradient-c`;
+  const centerX = 50;
+  // Measured from `getBBox()` on the base path in SVG user units.
+  const pathCenterY = 48.22;
+  // viewBox="0 5 100 100" => centerY is 55, so nudge down to match.
+  const viewBoxCenterY = 55;
+  const nudgeY = viewBoxCenterY - pathCenterY;
 
   return (
     <div className={clsx(s.root, className)} style={style}>
@@ -115,38 +118,47 @@ export default function SystemsGooey({
         </defs>
         <g className={s.blobGroup}>
           {/* Triangle A*/}
-          <path
-            data-triangle="a"
-            className={s.blobShape}
-            d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
-            fill="none"
-            stroke={`url(#${gradientAId})`}
-            strokeWidth="2"
-            strokeLinejoin="round"
-            transform="rotate(180) translate(0 -6) scale(1.3 0.9)"
-          />
+          <g
+            transform={`translate(0 ${nudgeY}) translate(${centerX} ${pathCenterY}) rotate(180) scale(1.2 0.8) translate(-${centerX} -${pathCenterY})`}
+          >
+            <path
+              data-triangle="a"
+              className={s.blobShape}
+              d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
+              fill="none"
+              stroke={`url(#${gradientAId})`}
+              strokeWidth="3"
+              strokeLinejoin="round"
+            />
+          </g>
           {/* Triangle B */}
-          <path
-            data-triangle="b"
-            className={s.blobShape}
-            d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
-            fill="none"
-            stroke={`url(#${gradientBId})`}
-            strokeWidth="2"
-            strokeLinejoin="round"
-            transform="rotate(180) scale(1 0.7) translate(0 -6.9)"
-          />
+          <g
+            transform={`translate(0 ${nudgeY}) translate(${centerX} ${pathCenterY}) rotate(180) scale(0.8 0.6) translate(-${centerX} -${pathCenterY})`}
+          >
+            <path
+              data-triangle="b"
+              className={s.blobShape}
+              d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
+              fill="none"
+              stroke={`url(#${gradientBId})`}
+              strokeWidth="3"
+              strokeLinejoin="round"
+            />
+          </g>
           {/* Triangle C */}
-          <path
-            data-triangle="c"
-            className={s.blobShape}
-            d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
-            fill="none"
-            strokeLinejoin="round"
-            strokeWidth={5}
-            stroke={`url(#${gradientCId})`}
-            transform="rotate(180) scale(0.6 0.4) translate(0 -5)"
-          />
+          <g
+            transform={`translate(0 ${nudgeY}) translate(${centerX} ${pathCenterY}) rotate(180) scale(0.4 0.35) translate(-${centerX} -${pathCenterY})`}
+          >
+            <path
+              data-triangle="c"
+              className={s.blobShape}
+              d="M46.2 9.22 A7.6 7.6 0 0 1 53.8 9.22 C71.94 20.36 90.656 52.78 91.232 74.06 A7.6 7.6 0 0 1 87.432 80.64 C68.716 90.78 31.284 90.78 12.568 80.64 A7.6 7.6 0 0 1 8.768 74.06 C9.344 52.78 28.06 20.36 46.2 9.22 Z"
+              fill="none"
+              strokeLinejoin="round"
+              strokeWidth={5}
+              stroke={`url(#${gradientCId})`}
+            />
+          </g>
         </g>
       </svg>
     </div>

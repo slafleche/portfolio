@@ -4,9 +4,7 @@ import { m } from 'css-calipers';
 import { typographyFontVariants } from '../tokens/fontVariants/typography';
 import { colorVars } from '../tokens/global.tokens';
 import { textStyleVars } from '../tokens/textStyles.tokens';
-import { backgrounds } from './helpers/background.helper';
 import borders from './helpers/borders.helper';
-import { color } from './helpers/colorWrap.helper';
 import { outlines } from './helpers/outlines.helper';
 import { absolutePosition } from './helpers/positioning.helper';
 import { margins, paddings } from './helpers/spacing.helper';
@@ -92,31 +90,6 @@ globalStyle(`.${userContent} ol:not([data-ui="list-ordered"])`, {
 
 globalStyle(`.${userContent} li:not([data-ui="list-item"])`, {
   ...margins(textStyleVars.list.item.margins),
-});
-
-globalStyle(`code`, {
-  fontFamily: textStyleVars.code.inline.fontFamily,
-  ...borders(textStyleVars.code.inline.borders),
-  ...paddings(textStyleVars.code.inline.paddings),
-  ...backgrounds(textStyleVars.code.inline.backgrounds),
-});
-
-const codeBlock = textStyleVars.code.block;
-globalStyle('pre', {
-  overflowX: 'auto',
-  whiteSpace: 'pre-wrap',
-  wordBreak: 'break-word',
-  fontFamily: codeBlock.fontFamily,
-  ...margins(codeBlock.margins),
-  ...paddings(codeBlock.paddings),
-  ...borders(codeBlock.borders),
-  ...backgrounds(codeBlock.backgrounds),
-});
-
-globalStyle('pre code', {
-  fontFamily: codeBlock.fontFamily,
-  backgroundColor: color('transparent').css(),
-  padding: 0,
 });
 
 globalStyle('a', {

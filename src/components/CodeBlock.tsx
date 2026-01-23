@@ -64,9 +64,12 @@ export default function CodeBlock({
           return (
             <pre
               {...preProps}
+              data-code="block"
+              data-ui="code-block"
+              data-language={language ?? ''}  
               className={clsx(className, prismClassName)}
             >
-              <code>
+              <code data-code="block" data-ui="code-block">
                 {rawLines.map((_, lineIndex: number) => {
                   const line: Token[] = lines[lineIndex] ?? [];
                   const isLastLine =

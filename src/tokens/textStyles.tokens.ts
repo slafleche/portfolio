@@ -9,7 +9,7 @@ import { layoutVars } from './layout.tokens';
 
 const blockSpacing = m(20);
 const listIndent = m(24);
-const codeBackground = colors.black.alpha(0.6);
+const codeBackground = colors.black.alpha(0.5);
 const codeBorder = colorVars.bodyFg.alpha(0.12);
 
 const codeFontStack =
@@ -63,25 +63,24 @@ export const textStyleVars = {
   code: {
     inline: {
       fontFamily: codeFontStack,
+      fontSize: mEm(0.75),
       backgrounds: {
         color: codeBackground,
       },
       borders: {
-        all: {
-          width: m(1),
-          color: codeBorder,
-        },
-        radius: {
-          all: m(4),
-        },
+        width: m(1),
+        color: codeBorder,
+        radius: m(4),
       },
       paddings: {
-        vertical: m(2),
-        horizontal: m(4),
+        vertical: mEm(0.125),
+        horizontal: mEm(0.25),
       },
     },
     block: {
       fontFamily: codeFontStack,
+      fontSize: mEm(0.85),
+      lineHeight: mEm(1.5),
       backgrounds: {
         color: codeBackground,
       },
@@ -92,8 +91,8 @@ export const textStyleVars = {
         bottom: {
           width: m(1),
           color: codeBorder,
-          radius: m(6),
         },
+        radius: m(6),
       },
       margins: {
         bottom: blockSpacing,

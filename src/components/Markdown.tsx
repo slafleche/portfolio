@@ -443,7 +443,7 @@ const renderInlineTokens = (
       case 'codespan': {
         const codeToken = token as { text?: string };
         nodes.push(
-          <code key={`${keyPrefix}-code-${i}`}>
+          <code key={`${keyPrefix}-code-${i}`} data-code="inline">
             {codeToken.text ?? ''}
           </code>,
         );
@@ -542,29 +542,6 @@ const renderTokens = (
   tokens.forEach((token, index) => {
     const key = `${keyPrefix}-${index}`;
 
-    const renderMockCodeLine = (
-      rawLine: string,
-      lineKeyPrefix: string,
-    ): ReactNode[] => {
-      if (rawLine === '') return [];
-      const tokens = marked.lexer(rawLine);
-      const first = tokens[0] as
-        | { type?: string; tokens?: MarkedToken[]; text?: string }
-        | undefined;
-      if (
-        first &&
-        (first.type === 'paragraph' || first.type === 'text')
-      ) {
-        return renderInlineTokens(
-          first.tokens ?? [],
-          options,
-          lineKeyPrefix,
-        );
-      }
-      if (first?.text) return [first.text];
-      return [rawLine];
-    };
-
     switch (token.type) {
       case 'example-sites-shortcode': {
         const t = token as ExampleSitesShortcodeToken;
@@ -578,19 +555,31 @@ const renderTokens = (
       }
       case 'mock-code-shortcode': {
         const t = token as MockCodeShortcodeToken;
-        const lines = t.text.split(/\r?\n/);
+        const innerNormalized = normalizeSource(t.text);
+        const innerTokens =
+          innerNormalized === ''
+            ? []
+            : (marked.lexer(innerNormalized) as MarkedToken[]);
+        const innerOptions: RenderOptions = {
+          ...options,
+          asUi: {
+            headings: true,
+            paragraphs: true,
+            links: true,
+            listUnordered: true,
+            listOrdered: true,
+            blockquotes: true,
+            codeBlocks: true,
+          },
+        };
+
         nodes.push(
           <MockCodeBlock
             key={key}
             language={t.lang}
-            {...getDataAttrs(token, asUi.codeBlocks ? 'code-block' : undefined)}
+            {...getDataAttrs(token)}
           >
-            {lines.map((line, lineIndex) => (
-              <div key={`${key}-line-${lineIndex}`}>
-                {renderMockCodeLine(line, `${key}-line-${lineIndex}`)}
-                {'\n'}
-              </div>
-            ))}
+            {renderTokens(innerTokens, innerOptions, `${key}-mock`)}
           </MockCodeBlock>,
         );
         break;
