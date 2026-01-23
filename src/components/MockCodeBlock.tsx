@@ -14,11 +14,10 @@ export default function MockCodeBlock({
   ...preProps
 }: MockCodeBlockProps) {
   return (
-    <div className={clsx(s.root, s.mock)}>
+    <div className={clsx(s.root, s.code, s.mock)}>
       <pre {...preProps} className={className}>
         <code>{children}</code>
       </pre>
     </div>
   );
 }
-

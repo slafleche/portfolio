@@ -199,6 +199,45 @@ describe('Markdown component', () => {
     expect(codeBlock?.textContent).toContain('Line 1\n\nLine 3');
   });
 
+  it('adds the prism language class for fenced code blocks with a language', () => {
+    const { container } = render(
+      <Markdown source={'```ts\nconst value = 1;\n```'} />,
+    );
+    const pre = container.querySelector('pre');
+    expect(pre?.className).toContain('language-typescript');
+  });
+
+  it('defaults fenced code blocks to language-text when no language is provided', () => {
+    const { container } = render(
+      <Markdown source={'```\nconst value = 1;\n```'} />,
+    );
+    const pre = container.querySelector('pre');
+    expect(pre?.className).toContain('language-text');
+  });
+
+  it('renders MockCode blocks and allows inline markup inside', () => {
+    const { container } = render(
+      <Markdown
+        source={[
+          '[MockCode|ts]',
+          '// plain <abbr title="Cascading Style Sheets">CSS</abbr> at the end',
+          '[/MockCode]',
+        ].join('\n')}
+      />,
+    );
+
+    const pre = container.querySelector('pre');
+    expect(pre).not.toBeNull();
+
+    const abbr = container.querySelector(
+      'pre abbr[title="Cascading Style Sheets"]',
+    );
+    expect(abbr?.textContent).toBe('CSS');
+
+    const code = container.querySelector('pre code');
+    expect(code?.textContent).toContain('plain CSS at the end');
+  });
+
   it('renders [br] as a single line break', () => {
     const { container } = render(<Markdown source={'A[br]B'} />);
     expect(container.querySelectorAll('br')).toHaveLength(1);

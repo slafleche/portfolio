@@ -2,11 +2,11 @@ import { clsx } from 'clsx';
 import {
   Highlight,
   type Language,
-  type Token,
   themes,
+  type Token,
 } from 'prism-react-renderer';
-import { Fragment } from 'react';
 import type { ComponentPropsWithoutRef } from 'react';
+import { Fragment } from 'react';
 
 import * as s from '@/styles/components/code.css';
 
@@ -46,7 +46,7 @@ export default function CodeBlock({
   ...preProps
 }: CodeBlockProps) {
   return (
-    <div className={s.root}>
+    <div className={clsx(s.root, s.code)}>
       <Highlight
         code={code}
         language={toPrismLanguage(language)}
@@ -62,36 +62,40 @@ export default function CodeBlock({
           const lines = tokens.slice(0, rawLines.length);
 
           return (
-          <pre
-            {...preProps}
-            className={clsx(className, prismClassName)}
-          >
-            <code>
-              {rawLines.map((_, lineIndex: number) => {
-                const line: Token[] = lines[lineIndex] ?? [];
-                const isLastLine = lineIndex === rawLines.length - 1;
-                const lineContent = line
-                  .map((token) => token.content)
-                  .join('');
-                const lineHasTrailingNewline = lineContent.endsWith('\n');
+            <pre
+              {...preProps}
+              className={clsx(className, prismClassName)}
+            >
+              <code>
+                {rawLines.map((_, lineIndex: number) => {
+                  const line: Token[] = lines[lineIndex] ?? [];
+                  const isLastLine =
+                    lineIndex === rawLines.length - 1;
+                  const lineContent = line
+                    .map((token) => token.content)
+                    .join('');
+                  const lineHasTrailingNewline =
+                    lineContent.endsWith('\n');
 
-                return (
-                  <Fragment key={lineIndex}>
-                    <div {...getLineProps({ line })}>
-                      {line.map((token, tokenIndex) => (
-                        <span
-                          key={tokenIndex}
-                          {...getTokenProps({ token })}
-                        />
-                      ))}
-                    </div>
-                  {!isLastLine && !lineHasTrailingNewline ? '\n' : null}
-                  </Fragment>
-                );
-              })}
-            </code>
-          </pre>
-        );
+                  return (
+                    <Fragment key={lineIndex}>
+                      <div {...getLineProps({ line })}>
+                        {line.map((token, tokenIndex) => (
+                          <span
+                            key={tokenIndex}
+                            {...getTokenProps({ token })}
+                          />
+                        ))}
+                      </div>
+                      {!isLastLine && !lineHasTrailingNewline
+                        ? '\n'
+                        : null}
+                    </Fragment>
+                  );
+                })}
+              </code>
+            </pre>
+          );
         }}
       </Highlight>
     </div>
