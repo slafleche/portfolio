@@ -2,18 +2,19 @@ import clsx from 'clsx';
 import type { SVGProps } from 'react';
 
 import * as s from '../../styles/components/exampleSites.css';
+import { exampleSitesVars } from '../../tokens/exampleSites.tokens';
 
-export default function ExampleSiteIconKing({
+export default function ExampleSiteIconOracle({
   className,
   ...props
 }: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0.02 0 231 30"
+      viewBox={`0.02 0 ${exampleSitesVars.oracle.ratio.numerator()} ${exampleSitesVars.oracle.ratio.denominator()}`}
       shapeRendering="geometricPrecision"
       preserveAspectRatio="xMinYMid"
-      className={clsx(s.oracle, className)}
+      className={clsx(s.icon, s.oracle, className)}
       role="img"
       aria-label={'Oracle'}
       aria-hidden

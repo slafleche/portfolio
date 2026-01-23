@@ -178,10 +178,6 @@ export default async function HomePage({
         title: parseWordmarkTemplate(approach.title).fullText,
         href: `#${approach.href}`,
       },
-      // {
-      //   title: parseWordmarkTemplate(about.title).fullText,
-      //   href: `#${about.href}`,
-      // },
       {
         title: parseWordmarkTemplate(projects.title).fullText,
         href: `#${projects.href}`,

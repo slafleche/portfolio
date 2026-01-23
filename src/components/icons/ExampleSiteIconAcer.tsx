@@ -1,6 +1,10 @@
 import { clsx } from 'clsx';
 import type { SVGProps } from 'react';
 
+import * as s from '@/styles/components/exampleSites.css';
+
+import { exampleSitesVars } from '../../tokens/exampleSites.tokens';
+
 export default function ExampleSiteIconAcer({
   className,
   ...props
@@ -8,10 +12,10 @@ export default function ExampleSiteIconAcer({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 4151.1 1000"
+      viewBox={`0 0 ${exampleSitesVars.acer.ratio.numerator()} ${exampleSitesVars.acer.ratio.denominator()}`}
       fill="#83b81a"
       stroke="none"
-      className={clsx(className)}
+      className={clsx(s.icon, s.acer, className)}
       aria-hidden
       {...props}
     >

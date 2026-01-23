@@ -1,6 +1,5 @@
 import { clsx } from 'clsx';
 import Link from 'next/link';
-import { href } from 'react-router-dom';
 
 import * as s from '@/styles/components/exampleSites.css';
 
@@ -12,6 +11,7 @@ type ExampleSite = {
   label: string;
   href: string;
   Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  linkClass: string;
 };
 
 type ExampleSitesProps = {
@@ -19,47 +19,45 @@ type ExampleSitesProps = {
   siteData?: ExampleSite[] | 'fr' | 'en';
 };
 
-// - [King Games](https://community.king.com/fr/)
-// - [Oracle (en anglais seulement)](https://community.oracle.com/hub/)
-// - [Acer](https://community.acer.com/fr)
-
-// - [King Games](https://community.king.com/en/)
-// - [Oracle](https://community.oracle.com/hub/)
-// - [Acer](https://community.acer.com)
-
 const sitesFr = [
-  {
-    label: 'King Games',
-    href: 'https://community.king.com/fr/',
-    Icon: ExampleSiteIconKing,
-  },
   {
     label: 'Oracle (en anglais seulement)',
     href: 'https://community.oracle.com/hub/',
     Icon: ExampleSiteIconOracle,
+    linkClass: s.oracleLink,
+  },
+  {
+    label: 'King Games',
+    href: 'https://community.king.com/fr/',
+    Icon: ExampleSiteIconKing,
+    linkClass: s.kgLink,
   },
   {
     label: 'Acer',
     href: 'https://community.acer.com/fr',
     Icon: ExampleSiteIconAcer,
+    linkClass: s.acerLink,
   },
 ] as ExampleSite[];
 
 const sitesEn = [
   {
-    label: 'King Games',
-    href: 'https://community.king.com/en/',
-    Icon: ExampleSiteIconKing,
-  },
-  {
     label: 'Oracle',
     href: 'https://community.oracle.com/hub/',
     Icon: ExampleSiteIconOracle,
+    linkClass: s.oracleLink,
+  },
+  {
+    label: 'King Games',
+    href: 'https://community.king.com/en/',
+    Icon: ExampleSiteIconKing,
+    linkClass: s.kgLink,
   },
   {
     label: 'Acer',
     href: 'https://community.acer.com',
     Icon: ExampleSiteIconAcer,
+    linkClass: s.acerLink,
   },
 ] as ExampleSite[];
 
@@ -84,10 +82,11 @@ export default function ExampleSites({
           <Link
             title={site.label}
             href={site.href}
-            className={s.link}
             data-ui="link"
             aria-hidden={true}
             key={site.label}
+            target={'_blank'}
+            className={clsx(s.link, site.linkClass)}
           >
             <site.Icon />
           </Link>

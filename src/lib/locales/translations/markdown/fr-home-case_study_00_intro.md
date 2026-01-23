@@ -10,6 +10,6 @@ façonné le modèle de thématisation partagé. La couche de tokens maintenait 
 compatibilité avec le **Forum** (_PHP_). Les clients pouvaient conserver une
 identité de marque unifiée sur les deux produits.
 
-### Exemples de ce système de thématisation en production
+### Quelques exemples en production :
 
 [ExampleSites|fr]
