@@ -63,6 +63,41 @@ const getSectionForKey = (key: string) => {
   return 'home';
 };
 
+const findEmDashIssue = (markdown: string) => {
+  const patterns: Array<{ needle: string; label: string }> = [
+    { needle: '—', label: '—' },
+    { needle: '&mdash;', label: '&mdash;' },
+    { needle: '&#8212;', label: '&#8212;' },
+    { needle: '&#x2014;', label: '&#x2014;' },
+    { needle: '&#X2014;', label: '&#X2014;' },
+  ];
+
+  let bestMatch: { index: number; label: string } | null = null;
+  for (const { needle, label } of patterns) {
+    const index = markdown.indexOf(needle);
+    if (index === -1) continue;
+    if (!bestMatch || index < bestMatch.index) {
+      bestMatch = { index, label };
+    }
+  }
+
+  if (!bestMatch) return null;
+
+  const before = markdown.slice(0, bestMatch.index);
+  const line = before.split('\n').length;
+  const lastNewlineIndex = before.lastIndexOf('\n');
+  const column =
+    lastNewlineIndex === -1
+      ? bestMatch.index + 1
+      : bestMatch.index - lastNewlineIndex;
+
+  return {
+    label: bestMatch.label,
+    line,
+    column,
+  };
+};
+
 const readMarkdownFor = async (
   key: MarkdownKey,
   locale: Locale,
@@ -72,6 +107,14 @@ const readMarkdownFor = async (
   const filePath = path.join(markdownDir, fileName);
   try {
     const content = await fs.readFile(filePath, 'utf8');
+    const emDashIssue = findEmDashIssue(content);
+    if (emDashIssue) {
+      recordIssue({
+        locale,
+        key,
+        reason: `contains em dash (${emDashIssue.label}) at line ${emDashIssue.line}, column ${emDashIssue.column}`,
+      });
+    }
     return content;
   } catch (error) {
     if (isErrno(error) && error.code === 'ENOENT') {

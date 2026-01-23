@@ -1,7 +1,7 @@
 Building scalable systems means aligning three targets: the design vision, 
 the end user, and the developers maintaining the code.
 
-The third is easy to overlook—but it determines whether the vision survives.
+The third is easy to overlook, but it determines whether the vision survives.
 
 When a codebase is frustrating to work in, quality erodes. Not because teams 
 don't care, but because the system makes care expensive. Developers take 
