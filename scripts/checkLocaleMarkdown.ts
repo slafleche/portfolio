@@ -2,6 +2,8 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import * as ts from 'typescript';
+
 import type { LocaleMessagesShape } from '../src/lib/locales/localeTypes';
 import type { Locale } from '../src/lib/locales/translations';
 import { resolveAbbrShortcodes } from '../src/lib/locales/translations/resolveAbbrShortcodes';
@@ -63,6 +65,18 @@ const getSectionForKey = (key: string) => {
   return 'home';
 };
 
+const FRENCH_BANNED_TERMS = [
+  'themable',
+  'theming',
+  'themer',
+  'theme',
+] as const;
+
+const FRENCH_BANNED_TERMS_REGEX = new RegExp(
+  `\\b(?:${FRENCH_BANNED_TERMS.join('|')})\\b`,
+  'i',
+);
+
 const findEmDashIssue = (markdown: string) => {
   const patterns: Array<{ needle: string; label: string }> = [
     { needle: '—', label: '—' },
@@ -98,15 +112,47 @@ const findEmDashIssue = (markdown: string) => {
   };
 };
 
+const findFrenchBannedTermIssue = (text: string) => {
+  const match = FRENCH_BANNED_TERMS_REGEX.exec(text);
+  if (!match || match.index === undefined) return null;
+
+  const before = text.slice(0, match.index);
+  const line = before.split('\n').length;
+  const lastNewlineIndex = before.lastIndexOf('\n');
+  const column =
+    lastNewlineIndex === -1
+      ? match.index + 1
+      : match.index - lastNewlineIndex;
+
+  return {
+    term: match[0],
+    line,
+    column,
+  };
+};
+
+const referencedFrenchMarkdownFiles = new Set<string>();
+
 const readMarkdownFor = async (
   key: MarkdownKey,
   locale: Locale,
 ): Promise<string | null> => {
   const section = getSectionForKey(key);
   const fileName = `${locale}-${section}-${key.replace(/-/g, '_')}.md`;
+  if (locale === 'fr') referencedFrenchMarkdownFiles.add(fileName);
   const filePath = path.join(markdownDir, fileName);
   try {
     const content = await fs.readFile(filePath, 'utf8');
+    if (locale === 'fr') {
+      const bannedIssue = findFrenchBannedTermIssue(content);
+      if (bannedIssue) {
+        recordIssue({
+          locale,
+          key,
+          reason: `contains banned english term (${bannedIssue.term}) at line ${bannedIssue.line}, column ${bannedIssue.column}`,
+        });
+      }
+    }
     const emDashIssue = findEmDashIssue(content);
     if (emDashIssue) {
       recordIssue({
@@ -127,6 +173,91 @@ const readMarkdownFor = async (
     }
     throw error;
   }
+};
+
+const scanAllFrenchMarkdownFiles = async () => {
+  const entries = await fs.readdir(markdownDir, {
+    withFileTypes: true,
+  });
+  const fileNames = entries
+    .filter(
+      (entry) =>
+        entry.isFile() &&
+        entry.name.startsWith('fr-') &&
+        entry.name.endsWith('.md'),
+    )
+    .map((entry) => entry.name);
+
+  for (const fileName of fileNames) {
+    if (referencedFrenchMarkdownFiles.has(fileName)) continue;
+    const filePath = path.join(markdownDir, fileName);
+    const content = await fs.readFile(filePath, 'utf8');
+
+    const bannedIssue = findFrenchBannedTermIssue(content);
+    if (bannedIssue) {
+      recordIssue({
+        locale: 'fr',
+        key: fileName,
+        reason: `contains banned english term (${bannedIssue.term}) at line ${bannedIssue.line}, column ${bannedIssue.column}`,
+      });
+    }
+
+    const emDashIssue = findEmDashIssue(content);
+    if (emDashIssue) {
+      recordIssue({
+        locale: 'fr',
+        key: fileName,
+        reason: `contains em dash (${emDashIssue.label}) at line ${emDashIssue.line}, column ${emDashIssue.column}`,
+      });
+    }
+  }
+};
+
+const scanFrenchDataFile = async () => {
+  const frDataPath = path.resolve(
+    __dirname,
+    '../src/lib/locales/translations/fr.data.ts',
+  );
+  const sourceText = await fs.readFile(frDataPath, 'utf8');
+  const sourceFile = ts.createSourceFile(
+    frDataPath,
+    sourceText,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS,
+  );
+
+  const recordBannedAtPos = (
+    term: string,
+    pos: number,
+  ) => {
+    const { line, character } =
+      sourceFile.getLineAndCharacterOfPosition(pos);
+    recordIssue({
+      locale: 'fr',
+      key: 'fr.data.ts',
+      reason: `contains banned english term (${term}) at line ${line + 1}, column ${character + 1}`,
+    });
+  };
+
+  const visit = (node: ts.Node) => {
+    if (
+      ts.isStringLiteral(node) ||
+      ts.isNoSubstitutionTemplateLiteral(node)
+    ) {
+      const raw = node.getText(sourceFile);
+      const rawInner = raw.length >= 2 ? raw.slice(1, -1) : '';
+      const match = FRENCH_BANNED_TERMS_REGEX.exec(rawInner);
+      if (match && match.index !== undefined) {
+        const absolute =
+          node.getStart(sourceFile) + 1 + match.index;
+        recordBannedAtPos(match[0], absolute);
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+
+  visit(sourceFile);
 };
 
 const ensureGeneratedContentIsCurrent = (
@@ -193,6 +324,7 @@ const regenerateMarkdownGenerated = async () => {
 const main = async () => {
   await applyLocaleEntitiesToDataFiles();
   await applyLocaleEntitiesToMarkdown();
+  await scanFrenchDataFile();
   await regenerateMarkdownGenerated();
 
   const { AVAILABLE_LOCALES, LOCALE_LOADERS } = await import(
@@ -288,6 +420,8 @@ const main = async () => {
       }
     }
   }
+
+  await scanAllFrenchMarkdownFiles();
 
   if (issuesByLocale.size === 0) {
     console.log('✅ lint:locale markdown checks passed');
