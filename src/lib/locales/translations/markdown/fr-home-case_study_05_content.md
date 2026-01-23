@@ -12,7 +12,7 @@ produit Forums (_PHP_) et le produit Knowledge Base (_React_). On peut le voir
 dans l’exemple suivant, où les deux produits cohabitent et partagent un thème
 unifié.
 
-### Deux produits, un seul thème
+### Deux produits, un seul thème :
 
-- [Acer Community (Forum)](https://community.acer.com/en/)
-- [Acer Answers (Knowledge Base)](https://community.acer.com/en/kb/)
+- [Communauté Acer (Forum)](https://community.acer.com/fr/)
+- [Réponses Acer (Knowledge Base)](https://community.acer.com/en/kb/)
