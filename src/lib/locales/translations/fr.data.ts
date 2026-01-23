@@ -53,7 +53,7 @@ const frBaseData = {
 
   'hero-title': 'Stéphane LaFlèche [split] développeur front-end',
   'hero-subtitle':
-    'Je construis des systèmes de design et des bibliothèques de composants qui passent à l’échelle. [split] Pour que les interfaces restent cohérentes, maintenables et alignées sur le design dans le temps.',
+    'Je construis des systèmes de design et de composants qui sont évolutifs. [split] Pour garder les interfaces cohérentes, maintenables et fidèles au design.',
 
   'console-curiosity-title': '🔎 Curieux ?',
   'console-curiosity-test': '[test] 👀 Observateur détecté.',

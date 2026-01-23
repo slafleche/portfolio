@@ -1,5 +1,13 @@
-Construire des systèmes à l’échelle exige d’aligner toutes les personnes qui les
-touchent. Le travail s’adressait à **trois publics** : l’équipe interne qui fait
-évoluer la plateforme, les développeurs produit qui s’y appuient et les clients
-qui définissent leurs thèmes. Maintenir la même intention pour ces trois
-audiences est devenu mon critère de réussite.
+Construire des systèmes évolutifs, c’est aligner trois cibles: la vision,
+l’utilisateur final, et l’équipe interne qui fait vivre le code.
+
+Cette troisième audience est souvent oubliée. Pourtant, c’est elle qui détermine
+si la vision tient dans la durée.
+
+Quand une base de code est pénible à faire évoluer, l’effort devient coûteux.
+Les développeurs prennent des raccourcis, repoussent les refactorings, négligent
+les finitions. Les incohérences s’accumulent.
+
+À l’inverse, quand le code est lisible, prévisible et facile à modifier,
+l’équipe investit. Elle refactorise, ajoute des tests, corrige les cas limites.
+Une bonne infrastructure rend la bonne approche plus simple que la mauvaise.

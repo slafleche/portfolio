@@ -19,7 +19,7 @@ rendent l’évolution du produit coûteuse ou rigide.
 Travail étroit avec les designers pour traduire le langage visuel, les
 interactions et les contraintes en primitives, composants, helpers et tokens
 réutilisables. L’objectif est de réduire les frictions entre design et
-développement et de garder une cohérence claire à l’échelle du produit.
+développement et de garder une cohérence claire dans l’ensemble du produit.
 
 ### Thématisation et systèmes partagés
 
