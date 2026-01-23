@@ -1,6 +1,6 @@
 Chez Vanilla Forums, j’étais **développeur front-end senior en [abbr:R&D]**.
 J’ai contribué à un système de thématisation basé sur des design tokens. Le
-système découplait le design de l’implémentation. Il permettait aux équipes de
+système en séparant le design de l’implémentation. Il permettait aux équipes de
 livrer des changements et de refactoriser sans casser les thèmes clients, sur
 environ **1 300+** déploiements actifs de Vanilla.
 
