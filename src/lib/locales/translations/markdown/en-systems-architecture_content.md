@@ -1,16 +1,16 @@
 [MockCode|ts] The system has clear boundaries: typed inputs at the start, plain
-CSS at the end, and flexible composition in between. This isn't about rigid
-structure. It's about preventing the two failure modes I see most often: string
-soup at authoring time, and abstraction layers that lag behind the platform.
-[/MockCode]
+[abbr:CSS] at the end, and flexible composition in between. This isn't about
+rigid structure. It's about preventing the two failure modes I see most often:
+string soup at authoring time, and abstraction layers that lag behind the
+platform. [/MockCode]
 
 ### Typed inputs at the boundary
 
 Styling values enter the system as typed primitives rather than raw strings.
-This prevents the concatenation hell described in the CSS Calipers section: no
-more `"12px" + "40vh"` producing `"12px40vh"`, no more losing type safety the
-moment a number becomes a string, no more runtime surprises from unit
-mismatches.
+This prevents the concatenation hell described in the
+[CSS Calipers](#css-calipers) section: no more `"12px" + "40vh"` producing
+`"12px40vh"`, no more losing type safety the moment a number becomes a string,
+no more runtime surprises from unit mismatches.
 
 The types enforce consistency at authoring time. You can't accidentally mix
 incompatible units or pass invalid values. Mistakes surface immediately, not
@@ -20,9 +20,9 @@ when a user reports broken spacing.
 
 Structure and constraints exist at authoring time. The final output is plain,
 spec-compliant CSS. This matters because I've worked on projects where the
-component model couldn't express the full range of HTML/CSS. We were always
-behind the actual spec, relying on hacks in JavaScript to modify post-render
-output just to use features browsers already supported.
+component model couldn't express the full range of HTML/CSS. We were behind the
+actual spec, relying on hacks in JavaScript to modify post-render output just to
+use features browsers already supported.
 
 CSS remains the source of truth, not an abstracted dialect. You can inspect what
 shipped, debug it with standard tools, and adopt new CSS features the moment
@@ -44,11 +44,12 @@ project needs shift, you can replace pieces incrementally. Nothing becomes a
 dead end.
 
 The portfolio site you're reading is open source on
-[element:GitHubWordmark|site-en], as is CSS Calipers on [element:NPMWordmark].
+[element:GitHubWordmark|site-en], as is CSS Calipers on
+[element:NPMWordmark|en].
 
 ### Flexible composition in the middle
 
-This is where the "framework" comparison matters. Most CSS "frameworks" are
+This is where the framework comparison matters. Most CSS "frameworks" are
 really libraries: collections of utilities or components. My Tetrachromatic
 approach is closer to a programming framework like PHP. You have expected inputs
 (typed values) and outputs (spec-compliant CSS), but the middle is yours to

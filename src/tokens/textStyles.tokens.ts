@@ -85,8 +85,9 @@ export const textStyleVars = {
         color: codeBackground,
       },
       paddings: {
-        top: anchorMenuVars.handle.sizeWithBorder.half(),
-        bottom: anchorMenuVars.handle.sizeWithBorder.half(),
+        vertical: anchorMenuVars.handle.sizeWithBorder
+          .multiply(0.75)
+          .round(),
         horizontal: anchorMenuVars.handle.sizeWithBorder,
       },
       borders: {

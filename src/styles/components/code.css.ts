@@ -22,7 +22,6 @@ export const code = style({});
 const bgColor = colors.white;
 export const mock = style({
   position: 'relative',
-
   ...borders({
     top: {
       ...textStyleVars.code.block.borders,
@@ -53,11 +52,6 @@ export const mock = style({
 });
 
 const codeBlock = textStyleVars.code.block;
-// globalStyle('pre, pre[data-ui="code-block"]', {
-//   overflowX: 'auto',
-//   whiteSpace: 'nowrap',
-// });
-
 // unset in decorative mock code blocks
 globalStyle('pre[data-ui="mock-code-block"] code', {
   background: 'none',
@@ -128,3 +122,22 @@ globalStyle(
     }),
   },
 );
+
+// typography for mock code
+globalStyle(`.${root} h3`, {
+  fontSize: mEm(1.2).css(),
+  ...margins({
+    top: mEm(0.5),
+  }),
+});
+
+globalStyle(`.${root} p:not([data-first="true"])`, {
+  ...margins({
+    top: mEm(0.5),
+  }),
+});
+
+globalStyle('.prism-code', {
+  ...borders(textStyleVars.code.block.borders),
+  overflowX: 'auto',
+});

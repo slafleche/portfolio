@@ -5,19 +5,22 @@ technical debt and increasingly ugly workarounds as the project matures.
 The Tetrachromatic Approach solves this by letting you discover your project's
 architecture progressively. Like
 <dfn title="People with four types of color receptors in their eyes, allowing them to perceive colours most humans cannot see">tetrachromats</dfn>
-the system reveals patterns and constraints
-that most systems obscure or push you in a direction that doesn't fit your
-project.
+the system reveals patterns and constraints that most systems obscure or push
+you in a direction that doesn't fit your project.
 
-Start with a good structure. Type your CSS variables, and have our output allow the full [abbr:CSS] spec (not a subset). With [CSS Calipers](#css-calipers), you can have all your [abbr:CSS] vars typed and checked in [abbr:TS] and even do your own custom validation in [abbr:JS].
+Start with a good structure. Type your CSS variables, and have our output allow
+the full [abbr:CSS] spec (not a subset). With [CSS Calipers](#css-calipers), you
+can have all your [abbr:CSS] vars typed and checked in [abbr:TS] and even do
+your own custom validation in [abbr:JS].
 
-Globals are good, but always use them as overridable defaults for components.
-As complexity emerges, you can have more complex tokens or pipelines for getting
+Globals are good, but always use them as overridable defaults for components. As
+complexity emerges, you can have more complex tokens or pipelines for getting
 your variables through to the style. Components own their concerns. Boundaries
 stay explicit. Dependencies remain traceable.
 
-Here's what this looks like in practice. Complex styles are output via helpers, but they are optional to use. Using `borders()`, `paddings()`, or `margins()` allows you to add
-complexity to your styles by only editing your tokens:
+Here's what this looks like in practice. Complex styles are output via helpers,
+but they are optional to use. Using `borders()`, `paddings()`, or `margins()`
+allows you to add complexity to your styles by only editing your tokens:
 
 ```ts
 // In a *.tokens.ts file
@@ -42,7 +45,8 @@ const complexConf = {
   },
 };
 
-// Vanilla-Extract is used here, but [abbr:CSS]-Calipers is agnostic of [abbr:CSS]-in-[abbr:JS] library)
+// Vanilla-Extract is used here, but CSS-Calipers
+// is agnostic of CSS-in-JS library
 
 // Example A: Use defaults directly
 export const useDefaults = style(borders()); // gets default width, style and color
@@ -64,8 +68,12 @@ export const fromVarsComplex = style({
   ...borders(complexConf.borders),
 });
 
-// ⚠️ Important note: there's no difference between C and D. You can just change your tokens and it works, no edits to CSS needed!
-// In CSS Calipers, the plural is used to differentiate the CSS value from our helper, so "borders" is the helper for border, "margins" for margin, etc.
+// ⚠️ Important note: there's no difference betwee the written
+// styles for C and D. You can just change your tokens and it
+// works, no edits to CSS needed! In CSS Calipers, the plural
+// is used to differentiate the CSS value from our helper, so
+// "borders" is the helper for border, "margins" for margin,
+// etc.
 ```
 
 The result: a system where changes have predictable, local impact. You can

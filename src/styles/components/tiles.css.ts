@@ -4,6 +4,7 @@ import { m, mEm } from 'css-calipers';
 import { typographyFontVariants } from '../../tokens/fontVariants/typography';
 import {
   borderVars,
+  colors,
   colorVars,
   themeColours,
 } from '../../tokens/global.tokens';
@@ -223,4 +224,10 @@ export const separator = style({
       },
     }),
   },
+});
+
+globalStyle(`.${root} .${userContent} a:not([data-ui="link"])`, {
+  color: colors.white.css(),
+  fontWeight: 'bold',
+  // textShadow: 'none',
 });

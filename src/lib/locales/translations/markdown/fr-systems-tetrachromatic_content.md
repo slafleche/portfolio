@@ -12,7 +12,7 @@ projet.
 
 Commencez par une bonne structure. Typez vos variables [abbr:CSS], et laisser la
 sortie finale des styles permettre toute la spécification [abbr:CSS] (pas un
-sous-ensemble). Avec [CSS Calipers](#css-calipers), vous pouvez typer et
+sous-ensemble). Avec [CSS Calipers](#css-calipers), vous pouvez typer et
 vérifier toutes vos variables [abbr:CSS], en [abbr:TS] ou même écrire votre
 propre validation sur mesure en [abbr:JS].
 
@@ -50,7 +50,8 @@ const complexConf = {
   },
 };
 
-// Vanilla-Extract est utilisé dans mon exemple, mais [abbr:CSS] Calipers est agnostique de toute plateforme [abbr:CSS]-in-[abbr:JS].
+// Vanilla-Extract est utilisé dans mon exemple, mais CSS Calipers
+// est agnostique de toute plateforme CSS-in-JS.
 
 
 // Exemple A : utiliser les valeurs par défaut directement
@@ -73,8 +74,13 @@ export const fromVarsComplex = style({
   ...borders(complexConf.borders),
 });
 
-// ⚠️ Note importante : il n’y a aucune différence entre C et D. Vous pouvez simplement changer vos tokens et tout fonctionne, sans modifier le CSS.
-// Dans CSS Calipers, le pluriel sert à distinguer la valeur CSS du helper : « borders » est le helper pour « border », « margins » pour « margin », etc.
+// ⚠️ Note importante : il n’y a aucune différence entre le style
+//  écrit pour C et D. Vous pouvez simplement changer vos tokens
+// et tout fonctionne, sans modifier le CSS. Dans CSS Calipers,
+// le pluriel sert à distinguer la valeur CSS du helper :
+// « borders » est le helper pour « border », « margins » pour
+// « margin », etc.
+
 ```
 
 Résultat : un système où les changements ont un impact local et prévisible. Vous

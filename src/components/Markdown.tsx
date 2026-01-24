@@ -132,6 +132,16 @@ const defaultAsUi: Required<AsUiConfig> = {
   codeBlocks: false,
 };
 
+const defaultMockCodeAsUi: Required<AsUiConfig> = {
+  headings: true,
+  paragraphs: true,
+  links: false,
+  listUnordered: true,
+  listOrdered: true,
+  blockquotes: true,
+  codeBlocks: true,
+};
+
 const defaultClassNameMap: Required<PerTagClassNames> = {
   headings: '',
   h1: '',
@@ -152,8 +162,7 @@ const elementShortcodeExtension = createElementShortcodeExtension();
 const brShortcodeExtension = createBrShortcodeExtension();
 const exampleSitesShortcodeExtension =
   createExampleSitesShortcodeExtension();
-const mockCodeShortcodeExtension =
-  createMockCodeShortcodeExtension();
+const mockCodeShortcodeExtension = createMockCodeShortcodeExtension();
 marked.use({
   extensions: [
     elementShortcodeExtension,
@@ -170,12 +179,19 @@ const elementLookup = {
 
 const getGitHubVariant = (variant?: string) => {
   const raw = (variant ?? '').trim().toLowerCase();
-  if (raw === '') return { target: 'site' as const, locale: 'en' as const };
+  if (raw === '')
+    return { target: 'site' as const, locale: 'en' as const };
 
-  const [targetRaw, localeRaw] = raw.split('-', 2);
+  const [
+    targetRaw,
+    localeRaw,
+  ] = raw.split('-', 2);
   const target =
-    targetRaw === 'csscalipers' ? ('csscalipers' as const) : ('site' as const);
-  const locale = localeRaw === 'fr' ? ('fr' as const) : ('en' as const);
+    targetRaw === 'csscalipers'
+      ? ('csscalipers' as const)
+      : ('site' as const);
+  const locale =
+    localeRaw === 'fr' ? ('fr' as const) : ('en' as const);
   return { target, locale };
 };
 
@@ -239,8 +255,9 @@ const parseDfnTitle = (raw: string): string | null => {
   if (raw.endsWith('/>')) return null;
 
   const attrsChunk = openTagMatch[1] ?? '';
-  const titleMatch =
-    /\btitle\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(attrsChunk);
+  const titleMatch = /\btitle\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(
+    attrsChunk,
+  );
   return titleMatch?.[1] ?? titleMatch?.[2] ?? null;
 };
 
@@ -279,7 +296,11 @@ const parseHeadingDataAttributesPrefix = (
 ): { dataAttrs: Record<string, string>; text: string } | null => {
   const match = text.match(/^\[([^\]]+)\]\s+(.*)$/);
   if (!match) return null;
-  const [, attrChunk, remainingText] = match;
+  const [
+    ,
+    attrChunk,
+    remainingText,
+  ] = match;
   const dataAttrs = parseDataAttributesChunk(attrChunk);
   if (Object.keys(dataAttrs).length === 0) return null;
   if (remainingText.trim() === '') return null;
@@ -716,15 +737,7 @@ const renderTokens = (
             : (marked.lexer(innerNormalized) as MarkedToken[]);
         const innerOptions: RenderOptions = {
           ...options,
-          asUi: {
-            headings: true,
-            paragraphs: true,
-            links: true,
-            listUnordered: true,
-            listOrdered: true,
-            blockquotes: true,
-            codeBlocks: true,
-          },
+          asUi: defaultMockCodeAsUi,
         };
 
         nodes.push(
@@ -745,9 +758,7 @@ const renderTokens = (
         const headingTag = `h${depth}` as keyof JSX.IntrinsicElements;
         const headingClassName = clsx(
           classNameMap.headings,
-          classNameMap[
-            headingTag as keyof PerTagClassNames
-          ],
+          classNameMap[headingTag as keyof PerTagClassNames],
         );
         const parsedPrefix = parseHeadingDataAttributesPrefix(
           (token as { text?: string }).text ?? '',

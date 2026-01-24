@@ -116,9 +116,7 @@ describe('Markdown component', () => {
   it('preserves data attributes on allowed inline HTML tags', () => {
     const { container } = render(
       <Markdown
-        source={
-          'Hello <span data-foo="bar" data-flag>world</span>!'
-        }
+        source={'Hello <span data-foo="bar" data-flag>world</span>!'}
       />,
     );
     const span = container.querySelector('span');
@@ -223,9 +221,7 @@ describe('Markdown component', () => {
       <Markdown source="[element:GitHubWordmark]" />,
     );
     const link = container.querySelector('a');
-    expect(link?.getAttribute('href')).toBe(
-      sharedStrings.githubUrl,
-    );
+    expect(link?.getAttribute('href')).toBe(sharedStrings.githubUrl);
     expect(link?.getAttribute('aria-label')).toBe(
       enData['links-github-label'],
     );
@@ -255,9 +251,7 @@ describe('Markdown component', () => {
       <Markdown source="[element:GitHubWordmark|site-fr]" />,
     );
     const link = container.querySelector('a');
-    expect(link?.getAttribute('href')).toBe(
-      sharedStrings.githubUrl,
-    );
+    expect(link?.getAttribute('href')).toBe(sharedStrings.githubUrl);
     expect(link?.getAttribute('aria-label')).toBe(
       frData['links-github-label'],
     );
@@ -338,7 +332,9 @@ describe('Markdown component', () => {
     ) as HTMLElement | null;
     expect(abbr?.textContent).toBe('CSS');
 
-    const nestedPre = container.querySelector('pre') as HTMLElement | null;
+    const nestedPre = container.querySelector(
+      'pre',
+    ) as HTMLElement | null;
     const code = nestedPre?.querySelector('code');
     expect(code?.textContent).toContain('const value = 1;');
   });
@@ -356,10 +352,14 @@ describe('Markdown component', () => {
       />,
     );
 
-    const paragraph = container.querySelector('p[data-ui="paragraph"]');
+    const paragraph = container.querySelector(
+      'p[data-ui="paragraph"]',
+    );
     expect(paragraph?.textContent).toBe('A paragraph.');
 
-    const list = container.querySelector('ul[data-ui="list-unordered"]');
+    const list = container.querySelector(
+      'ul[data-ui="list-unordered"]',
+    );
     expect(list).not.toBeNull();
   });
 
@@ -390,9 +390,7 @@ describe('Markdown component', () => {
   });
 
   it('renders [br|3] as three line breaks', () => {
-    const { container } = render(
-      <Markdown source={'A[br|3]B'} />,
-    );
+    const { container } = render(<Markdown source={'A[br|3]B'} />);
     expect(container.querySelectorAll('br')).toHaveLength(3);
   });
 
@@ -450,22 +448,12 @@ describe('Markdown component', () => {
     const { container } = render(
       <Markdown source={'First\n\nSecond'} />,
     );
-    const paragraphs = Array.from(
-      container.querySelectorAll('p'),
-    );
+    const paragraphs = Array.from(container.querySelectorAll('p'));
     expect(paragraphs).toHaveLength(2);
-    expect(paragraphs[0]?.getAttribute('data-first')).toBe(
-      'true',
-    );
-    expect(paragraphs[0]?.getAttribute('data-last')).toBe(
-      null,
-    );
-    expect(paragraphs[1]?.getAttribute('data-first')).toBe(
-      null,
-    );
-    expect(paragraphs[1]?.getAttribute('data-last')).toBe(
-      'true',
-    );
+    expect(paragraphs[0]?.getAttribute('data-first')).toBe('true');
+    expect(paragraphs[0]?.getAttribute('data-last')).toBe(null);
+    expect(paragraphs[1]?.getAttribute('data-first')).toBe(null);
+    expect(paragraphs[1]?.getAttribute('data-last')).toBe('true');
   });
 
   it('adds data-ui attributes for all AsUiConfig flags', () => {
@@ -528,7 +516,11 @@ describe('Markdown component', () => {
   it('applies classNameMap for headings (clsx(headings, h*))', () => {
     const { container } = render(
       <Markdown
-        source={['# Title', '', '## Subtitle'].join('\n')}
+        source={[
+          '# Title',
+          '',
+          '## Subtitle',
+        ].join('\n')}
         classNameMap={{
           headings: 'headingBase',
           h1: 'headingH1',

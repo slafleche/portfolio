@@ -1,36 +1,36 @@
-Partir d’une base solide, puis construire des systèmes qui s’adaptent au
-changement plutôt que d’y résister. Ajouter de la complexité seulement quand
-elle résout de vrais problèmes, et garder tout composable pour que les parties
-puissent évoluer indépendamment.
+[MockCode|ts] Les systèmes d’interface échouent quand ils optimisent la mauvaise
+chose. La plupart optimisent la vitesse de mise en place ou la réutilisabilité
+maximale. Moi, j’optimise la **prévisibilité du changement dans le temps**.
+[/MockCode]
 
 ### Concevoir pour le changement
 
-Le changement à long terme est prioritaire sur la commodité à court terme. Les
-systèmes sont conçus pour évoluer de manière incrémentale, afin que de nouvelles
-exigences n’imposent ni réécritures complètes ni couches de contournements.
+La valeur du système se cumule à mesure que le projet mûrit. La vélocité au
+démarrage compte, mais pas au prix de décisions qui vous enferment. De nouvelles
+exigences ne devraient pas déclencher des réécritures. Elles devraient
+ressembler à des extensions naturelles de ce qui existe déjà.
 
 ### Composition plutôt que rigidité
 
-Les systèmes sont construits par composition plutôt qu’à partir d’abstractions
-rigides. Les décisions sont encodées une seule fois au niveau du système et
-réutilisées de manière cohérente, ce qui réduit le retravail et les incohérences
-accidentelles au fur et à mesure que le système grandit.
+Encodez les décisions une fois, composez-les partout. Quand une valeur
+d’espacement doit changer, vous changez un token, pas cinquante composants. Et
+quand un pattern doit diverger, vous le branchez proprement, sans abandonner
+l’original.
 
 ### Respecter la plateforme
 
-Les spécifications de la plateforme restent visibles et autoritaires. Le rendu
-final reste inspectable et débogable, ce qui évite les couches opaques qui
-compliquent le diagnostic et le changement.
+La spécification [abbr:CSS] est le contrat. Les abstractions peuvent faciliter
+l’écriture, mais la sortie doit rester du [abbr:CSS] inspectable et débogable,
+pour que n’importe quel développeur peut lire et comprendre. Pas de runtime
+magique, pas de transformations opaques.
 
 ### Les personnes avant les abstractions
 
-La conception de systèmes tient compte des utilisateurs, de la vision produit et
-des développeurs qui les maintiendront. Les outils sont choisis de manière
-pragmatique en fonction des besoins du projet, et non par idéologie.
+Les systèmes servent les équipes, pas l’inverse. Une abstraction « maline » qui
+perd votre équipe est un boulet. Les outils sont choisis pour leur utilité au projet, pas pour une pureté architecturale. L’objectif, c’est la maintenabilité,
+pas l’outil du moment parce qu’il rend bien en démo. 
 
 ### Frontières et contraintes claires
 
-La séparation des responsabilités permet aux différentes parties du système
-d’évoluer de manière indépendante. Les contraintes sont appliquées de manière
-volontaire pour réduire la complexité accidentelle et garder le système
-compréhensible dans le temps.
+Des frontières explicites rendent le changement prévisible. Vous savez qui
+dépend de quoi. Vous savez ce qu’un refactor va affecter. L’ampleur de l’impact de chaque changement est claire et évidente. Les contraintes sont choisies pour le projet et pour ce qu’on veut construire,et non des limites arbitraires héritées d’un framework que quelqu’un a choisi avant de comprendre le problème.

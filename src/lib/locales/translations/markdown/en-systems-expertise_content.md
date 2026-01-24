@@ -44,4 +44,4 @@ frontend stacks. This often involves navigating imperfect codebases, identifying
 the underlying system within ad-hoc implementations, and reshaping them
 incrementally without requiring full rewrites.
 
-If this approach fits what you're building, I'd love to hear about your project.
+If this approach fits what you're building, I'd love to hear about your project, contact information below!
