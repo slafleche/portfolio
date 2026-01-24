@@ -6,7 +6,6 @@ import {
   type Token,
 } from 'prism-react-renderer';
 import type { ComponentPropsWithoutRef } from 'react';
-import { Fragment } from 'react';
 
 import * as s from '@/styles/components/code.css';
 
@@ -14,6 +13,24 @@ type CodeBlockProps = {
   code: string;
   language?: string | null;
 } & Omit<ComponentPropsWithoutRef<'pre'>, 'children'>;
+
+const normalizeCodeForPrism = (value: string): string => {
+  const normalized = value.replace(/\r\n/g, '\n');
+  const lines = normalized.split('\n');
+
+  let start = 0;
+  let end = lines.length;
+
+  while (start < end && (lines[start]?.trim() ?? '') === '') {
+    start += 1;
+  }
+
+  while (end > start && (lines[end - 1]?.trim() ?? '') === '') {
+    end -= 1;
+  }
+
+  return lines.slice(start, end).join('\n');
+};
 
 const toPrismLanguage = (
   raw: string | null | undefined,
@@ -45,10 +62,12 @@ export default function CodeBlock({
   className,
   ...preProps
 }: CodeBlockProps) {
+  const normalizedCode = normalizeCodeForPrism(code);
+
   return (
     <div className={clsx(s.root, s.code)}>
       <Highlight
-        code={code}
+        code={normalizedCode}
         language={toPrismLanguage(language)}
         theme={themes.nightOwl}
       >
@@ -58,7 +77,7 @@ export default function CodeBlock({
           getLineProps,
           getTokenProps,
         }) => {
-          const rawLines = code.replace(/\r\n/g, '\n').split('\n');
+          const rawLines = normalizedCode.split('\n');
           const lines = tokens.slice(0, rawLines.length);
 
           return (
@@ -66,37 +85,20 @@ export default function CodeBlock({
               {...preProps}
               data-code="block"
               data-ui="code-block"
-              data-language={language ?? ''}  
+              data-language={language ?? ''}
               className={clsx(className, prismClassName)}
             >
-              <code data-code="block" data-ui="code-block">
-                {rawLines.map((_, lineIndex: number) => {
+              <code data-code="block" data-ui="code-block">{rawLines.map(
+                (_, lineIndex: number) => {
                   const line: Token[] = lines[lineIndex] ?? [];
-                  const isLastLine =
-                    lineIndex === rawLines.length - 1;
-                  const lineContent = line
-                    .map((token) => token.content)
-                    .join('');
-                  const lineHasTrailingNewline =
-                    lineContent.endsWith('\n');
 
                   return (
-                    <Fragment key={lineIndex}>
-                      <div {...getLineProps({ line })}>
-                        {line.map((token, tokenIndex) => (
-                          <span
-                            key={tokenIndex}
-                            {...getTokenProps({ token })}
-                          />
-                        ))}
-                      </div>
-                      {!isLastLine && !lineHasTrailingNewline
-                        ? '\n'
-                        : null}
-                    </Fragment>
+                    <div key={lineIndex} {...getLineProps({ line })}>{line.map((token, tokenIndex) => (
+                        <span key={tokenIndex} {...getTokenProps({ token })} />
+                      ))}</div>
                   );
-                })}
-              </code>
+                },
+              )}</code>
             </pre>
           );
         }}

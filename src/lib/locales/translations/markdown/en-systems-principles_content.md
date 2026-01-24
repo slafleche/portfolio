@@ -1,33 +1,36 @@
-Start from a robust foundation, then build systems that adapt to change rather
-than resist it. Add complexity only when it solves real problems, and keep
-everything composable so parts can evolve independently.
+[MockCode|ts] UI systems fail when they optimize for the wrong thing. Most
+optimize for initial setup speed or maximum reusability. I optimize for
+**predictable change over time**. [/MockCode]
 
 ### Design for change
 
-Long-term change is prioritized over short-term convenience. Systems are
-designed to evolve incrementally, so new requirements don’t force rewrites or
-layers of workarounds.
+The system's value compounds as the project matures. Early velocity matters, but
+not at the cost of painted-into-corner decisions. New requirements shouldn't
+trigger rewrites. They should feel like natural extensions of what's already
+there.
 
 ### Composition over rigidity
 
-Systems are built up through composition rather than rigid abstractions.
-Decisions are encoded once at the system level and reused consistently, reducing
-rework and accidental inconsistency as the system grows.
+Encode decisions once, compose them everywhere. When a spacing value needs to
+change, you change one token, not fifty components. When a pattern needs to
+diverge, you branch it cleanly without orphaning the original.
 
 ### Respect the platform
 
-Platform specifications remain visible and authoritative. Output is kept
-inspectable and debuggable, avoiding opaque layers that make diagnosis and
-change harder.
+The [abbr:CSS] spec is the contract. Abstractions can make authoring easier, but the
+output must be inspectable, debuggable [abbr:CSS] that any developer can reason about.
+No magic runtimes, no opaque transformations.
 
 ### People over abstractions
 
-System design accounts for users, product vision, and the developers who will
-maintain it. Tools are chosen pragmatically based on project needs, not
-ideology.
+Systems serve teams, not the other way around. A "clever" abstraction that
+confuses your team is a liability. Tools are chosen for project fit, not
+architectural purity. The goal is maintainability, not elegance for its own
+sake.
 
 ### Clear boundaries and constraints
 
-Separation of concerns allows parts of the system to evolve independently.
-Constraints are applied deliberately to reduce accidental complexity and keep
-the system understandable over time.
+Explicit boundaries make change predictable. You know what depends on what. You
+know what a refactor will affect. You know when something is "system" vs
+"component-specific." Constraints aren't limitations, they're guardrails that
+keep complexity from spreading invisibly.

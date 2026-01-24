@@ -83,13 +83,16 @@ const enBaseData = {
   'projects-05-king-games-title': '[wordmark:King Games]',
   ...markdownRefs('projects-05-king-games-content'),
 
-  'systems-hero-title': 'Interfaces designed [split] for composition',
+  'systems-hero-title': 'The Tetrachromatic [split] Approach',
   'systems-hero-subtitle':
-    'Type-safe CSS primitives for building **your** design system',
+    'UI systems with **progressive formalization** and explicit boundaries. [split] Start simple. Formalize progressively. Own locally. Change predictably.',
+
+  'systems-tetrachromatic-title': 'The Tetrachromatic Approach',
+  ...markdownRefs('tetrachromatic-content'),
 
   'systems-title': 'Expertise',
-
   ...markdownRefs('expertise-content'),
+
   'systems-intro-href': 'systems-expertise',
   'systems-principles': 'Principles',
   'systems-principles-href': 'systems-principles',
@@ -122,6 +125,11 @@ const enBaseData = {
   ...markdownRefs('privacy-content'),
 
   css_calipers: 'CSS Calipers',
+
+  'links-github-label': 'My portfolio on GitHub',
+  'links-linkedin-label': 'My LinkedIn Page',
+  'links-github-css-calipers-label': 'CSS Calipers on GitHub',
+  'links-npm-css-calipers-label': 'CSS Calipers on NPM',
 } as const;
 
 export const enData = mergeLocaleSections(

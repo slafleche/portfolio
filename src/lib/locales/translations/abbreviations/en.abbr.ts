@@ -31,6 +31,10 @@ export const enAbbreviations = {
     label: 'JS',
     definition: 'JavaScript',
   },
+  'abbr-ts': {
+    label: 'TS',
+    definition: 'TypeScript',
+  },
   'abbr-ui': {
     label: 'UI',
     definition: 'User Interface',

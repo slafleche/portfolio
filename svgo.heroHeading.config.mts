@@ -175,7 +175,7 @@ const removeFullRectPathPlugin = {
     };
     const approxEqual = (a, b) => Math.abs(a - b) < 0.01;
     const fullRectPattern =
-      /^M0 0h([0-9.+-]+)v([0-9.+-]+)H0Z(?:m0 0)?$/i;
+      /^M([0-9.+-]+) ([0-9.+-]+)h([0-9.+-]+)v([0-9.+-]+)H([0-9.+-]+)Z(?:m0 0)?$/i;
 
     return {
       element: {
@@ -190,13 +190,20 @@ const removeFullRectPathPlugin = {
           if (!d || !viewBox) return;
           const match = d.replace(/\s+/g, ' ').match(fullRectPattern);
           if (!match) return;
-          const width = Number(match[1]);
-          const height = Number(match[2]);
+          const x = Number(match[1]);
+          const y = Number(match[2]);
+          const width = Number(match[3]);
+          const height = Number(match[4]);
+          const closeX = Number(match[5]);
+          const viewBoxMaxX = viewBox.x + viewBox.width;
+          const viewBoxMaxY = viewBox.y + viewBox.height;
           if (
-            approxEqual(viewBox.x, 0) &&
-            approxEqual(viewBox.y, 0) &&
-            approxEqual(viewBox.width, width) &&
-            approxEqual(viewBox.height, height)
+            approxEqual(x, viewBox.x) &&
+            approxEqual(closeX, viewBox.x) &&
+            approxEqual(width, viewBox.width) &&
+            (approxEqual(y, viewBox.y) ||
+              approxEqual(y + height, viewBoxMaxY)) &&
+            approxEqual(x + width, viewBoxMaxX)
           ) {
             const parentChildren = parentNode.children ?? [];
             const index = parentChildren.indexOf(node);

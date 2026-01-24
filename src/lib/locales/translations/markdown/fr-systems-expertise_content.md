@@ -1,5 +1,8 @@
-Primitives CSS typées pour des systèmes de design sur mesure. Transformer un travail UI fragmenté en base stable et composable. L’accent est mis sur des décisions d’architecture prises tôt pour rendre les changements sûrs et prévisibles. Les mises à jour se font avec confiance, car le changement reste prévisible, à mesure que le système grandit.
-
+Primitives CSS typées pour des systèmes de design sur mesure. Transformer un
+travail UI fragmenté en base stable et composable. L’accent est mis sur des
+décisions d’architecture prises tôt pour rendre les changements sûrs et
+prévisibles. Les mises à jour se font avec confiance, car le changement reste
+prévisible, à mesure que le système grandit.
 
 ### Design systems sur mesure
 
@@ -34,3 +37,5 @@ Travail dans des environnements variés (PHP, Java, Node, stacks front-end
 modernes). Une part importante du travail consiste à intervenir dans des
 codebases existantes, à identifier les structures sous-jacentes et à les faire
 évoluer progressivement sans réécriture complète.
+
+Découvrez le code source de mon portfolio : [element:GitHubWordmark|site-fr]!

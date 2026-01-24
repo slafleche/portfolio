@@ -1,34 +1,44 @@
-I wanted numeric CSS values to have the same guarantees as the rest of my code,
-so I built CSS-Calipers.
+[MockCode|ts]
 
-### The problem
+I got tired of **string soup** in CSS-in-JS: concatenating units, losing type
+safety the moment a number became `"12px"`, and debugging unit mismatches at
+runtime. So I built CSS-Calipers.
 
-CSS values are code, but we treat them like strings. You concatenate units,
-parse numbers out of strings, and discover unit mismatches when layouts break in
-production instead of at compile time.
+```ts
+// The friction:
+const spacingPx = 4;
+const gutter = `${spacingPx * 3}px`; // string immediately
+const heroHeight = `40vh`;
+const combo = gutter + heroHeight; // "12px40vh" (valid JS, broken CSS)
 
-### Measurements as structured data
+// With CSS-Calipers: typed values until the last moment
+import { m } from 'css-calipers';
 
-CSS-Calipers treats measurements as typed data with a clear shape: a number and
-a unit that stay together until you explicitly need a CSS string. You do math
-with helpers like `add()`, `multiply()`, `subtract()`, and `clamp()`. Catch
-incompatible operations at compile time, then call `.css()` at the edge. Ideally
-at build time for performance, but runtime supported. It is agnostic of your
-CSS-in-JS setup.
+const spacing = m(4); // defaults to px
+const gutter = spacing.multiply(3); // 12px, still typed
+const heroHeight = m(40, 'vh');
+// gutter.add(heroHeight);  ❌ Type error: can't mix px + vh
 
-### Typed [abbr:CSS]
+// Emit CSS only at the boundary
+const styles = { gap: gutter.css() }; // "12px"
+```
 
-You can keep more (or all) of your styling surface typed. Helpers that normally
-accept raw CSS strings can take TypeScript typed inputs from CSS‑Calipers, so
-“stringy” style values become real, validated inputs.
+## What stays strings
 
-### Clear scope and coexistence
+Keywords (`auto`, `inherit`), CSS variables `var(--spacing)`, and `calc(...)`
+expressions remain plain strings. This keeps your output inspectable and
+framework-agnostic: no magic runtime, no custom DSL.
 
-The library stays narrow and opinionated about what it handles. It focuses on
-numeric, unit-bearing values and leaves keywords, `calc()` expressions, and CSS
-variables to your styling layer. It doesn't try to be your entire CSS solution.
-It coexists with existing styling systems by handling one thing well: making
-measurement math predictable and type-safe.
+## Where it shines
 
-Check it out on [element:NPMWordmark] or
-<span data-white-space="no-wrap">[element:GitHubWordmark]!</span>
+**Design token validation.** Enforce that related tokens share units. Build
+media query helpers that catch `px`/`em` mismatches in breakpoint configs. Write
+tests that verify spacing scales stay within expected ranges; all with types
+doing the heavy lifting.
+
+**Bonus:** includes a typed breakpoint utility that turns a config object into
+normalized media query strings.
+
+Check it out on [element:NPMWordmark] or [element:GitHubWordmark|csscalipers-en]!
+
+[/MockCode]

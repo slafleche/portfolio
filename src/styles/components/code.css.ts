@@ -53,10 +53,10 @@ export const mock = style({
 });
 
 const codeBlock = textStyleVars.code.block;
-globalStyle('pre, pre[data-ui="code-block"]', {
-  overflowX: 'auto',
-  whiteSpace: 'nowrap',
-});
+// globalStyle('pre, pre[data-ui="code-block"]', {
+//   overflowX: 'auto',
+//   whiteSpace: 'nowrap',
+// });
 
 // unset in decorative mock code blocks
 globalStyle('pre[data-ui="mock-code-block"] code', {
@@ -89,7 +89,9 @@ globalStyle(`pre[data-code="block"] .${userContent} *`, {
 });
 
 export const contentAsMockCode = style({});
+
 export const contentAsMockCodeTitle = style({});
+
 export const contentAsMockCodeIntro = style({});
 
 globalStyle(

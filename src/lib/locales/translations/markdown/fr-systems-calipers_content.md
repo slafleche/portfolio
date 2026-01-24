@@ -34,4 +34,5 @@ n’essaie pas d’être votre solution CSS complète. Elle coexiste avec les sy
 de styling existants en gérant une chose bien : rendre les calculs de mesure
 prévisibles et type-safe.
 
-Découvrez-le sur [element:NPMWordmark] ou <span data-white-space="no-wrap">[element:GitHubWordmark] !</span>
+Découvrez-le sur [element:NPMWordmark|fr] ou
+<span data-white-space="no-wrap">[element:GitHubWordmark|csscalipers-fr] !</span>

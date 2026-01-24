@@ -64,17 +64,28 @@ export const homeSecondLine_en = style({
 export const systemsTitle = style({});
 
 // Systems FR
+export const systemsFr = style({
+  lineHeight: 1.1,
+});
+
 export const systemsFirstLine_fr = style({
-  fontSize: '1.1em',
+  fontSize: '1em',
 });
 export const systemsSecondLine_fr = style({
-  fontSize: '1em',
+  fontSize: '1.5em',
+  lineHeight: 1,
 });
 
 // Systems EN
+export const systemsEn = style({
+  lineHeight: 1.1,
+});
+
 export const systemsFirstLine_en = style({
-  fontSize: '1.1em',
+  fontSize: '1.5em',
+  lineHeight: 1,
 });
 export const systemsSecondLine_en = style({
-  fontSize: '1em',
+  fontSize: '1.2em',
+  lineHeight: 1.2,
 });

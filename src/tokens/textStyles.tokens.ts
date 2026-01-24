@@ -66,7 +66,7 @@ export const textStyleVars = {
       fontFamily: codeFontStack,
       fontSize: mEm(0.75),
       backgrounds: {
-        color: codeBackground,
+        color: codeBackground.alpha(0.2),
       },
       borders: {
         width: m(1),

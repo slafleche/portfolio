@@ -342,4 +342,6 @@ globalStyle('pre', {
   display: 'block',
   marginBlock: 0,
   marginInline: 0,
+  whiteSpace: 'pre',
+  lineHeight: 1.5,
 });

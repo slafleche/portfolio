@@ -31,6 +31,10 @@ export const frAbbreviations = {
     label: 'JS',
     definition: 'JavaScript',
   },
+  'abbr-ts': {
+    label: 'TS',
+    definition: 'TypeScript',
+  },
   'abbr-ui': {
     label: 'UI',
     definition: 'Interface utilisateur',
