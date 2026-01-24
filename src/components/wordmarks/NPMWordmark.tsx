@@ -2,22 +2,27 @@ import type { LinkProps } from 'next/link';
 import Link from 'next/link';
 import type { SVGProps } from 'react';
 
+import { sharedStrings } from '@/lib/sharedStrings';
+
 import {
   npmLinkInTitleIcon,
   npmLinkInTitleLink,
 } from '../../styles/typography.css';
 
 const LABEL = 'Node Package Manager (NPM)';
+const LINK_LABEL = 'NPM - CSS Calipers';
 
 type NPMWordmarkProps = {
   linkUrl?: LinkProps['href'];
   linkClassName?: string;
+  linkLabel?: string;
 } & SVGProps<SVGSVGElement>;
 
 export default function NPMWordmark({
   className = npmLinkInTitleIcon,
-  linkUrl = 'https://www.npmjs.com/package/css-calipers',
+  linkUrl = sharedStrings.npmUrl,
   linkClassName = npmLinkInTitleLink,
+  linkLabel = LINK_LABEL,
   ...props
 }: NPMWordmarkProps) {
   const svgElement = (
@@ -44,6 +49,8 @@ export default function NPMWordmark({
         href={linkUrl}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label={linkLabel}
+        title={linkLabel}
         data-ui="link"
         className={linkClassName}
       >

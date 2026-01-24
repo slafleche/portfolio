@@ -56,6 +56,7 @@ const SYSTEMS_MARKDOWN_KEYS = new Set([
   'calipers-content',
   'expertise-content',
   'principles-content',
+  'tetrachromatic-content',
 ]);
 
 const getSectionForKey = (key: string) => {

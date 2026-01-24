@@ -7,7 +7,6 @@ import {
   colorVars,
   themeColours,
 } from '../../tokens/global.tokens';
-import { layoutVars } from '../../tokens/layout.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { borders } from '../helpers/borders.helper';
 import {
@@ -20,18 +19,19 @@ import { fontStylesFromFontVariant } from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 import { userContent } from '../typography.css';
 
+const gridGap = m(24);
 export const grid = style({
   display: 'grid',
   gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-  gap: '24px',
+  gap: gridGap.css(),
   alignItems: 'stretch',
   selectors: {
     ...mediaQueryStyle({
       snug: {
         gridTemplateColumns: '1fr',
-        ...margins({
-          top: m(60),
-        }),
+        // ...margins({
+        //   top: m(60),
+        // }),
       },
       compact: {
         gap: '0px',
@@ -53,8 +53,17 @@ export const span2 = style({
 
 export const intro = style({
   ...margins({
-    bottom: layoutVars.content.gap,
+    bottom: gridGap,
   }),
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...margins({
+          bottom: m(0),
+        }),
+      },
+    }),
+  },
 });
 
 export const introWrapper = style({
@@ -62,7 +71,8 @@ export const introWrapper = style({
     ...mediaQueryStyle({
       compact: {
         ...paddings({
-          horizontal: anchorMenuVars.handle.sizeWithBorder,
+          horizontal: m(0),
+          // horizontal: anchorMenuVars.handle.sizeWithBorder,
         }),
       },
     }),

@@ -16,6 +16,7 @@ export interface IBackgrounds {
   position?: CSS_TYPES.Property.BackgroundPosition;
   repeat?: CSS_TYPES.Property.BackgroundRepeat;
   size?: CSS_TYPES.Property.BackgroundSize;
+  url?: string;
   image?: CSS_TYPES.Property.BackgroundImage;
   fallbackImage?: CSS_TYPES.Property.BackgroundImage;
   opacity?: CSS_TYPES.Property.Opacity;
@@ -161,21 +162,56 @@ export const getBackgroundImage = (
   image?: CSS_TYPES.Property.BackgroundImage,
 ) => {
   if (!image) return undefined;
-  if (image.startsWith('linear-gradient(')) return image;
-  return `url(${image})`;
+  const v = image.trim();
+  if (
+    v.startsWith('linear-gradient(') ||
+    v.startsWith('repeating-linear-gradient(') ||
+    v.startsWith('radial-gradient(') ||
+    v.startsWith('repeating-radial-gradient(') ||
+    v.startsWith('conic-gradient(') ||
+    v.startsWith('repeating-conic-gradient(') ||
+    v.startsWith('image-set(') ||
+    v.startsWith('url(')
+  )
+    return v;
+
+  const normalized = v.startsWith('data:')
+    ? v.replace(/ /g, '%20')
+    : v;
+
+  const needsQuotes =
+    normalized.startsWith('data:') ||
+    /[\s"'()]/.test(normalized);
+
+  return needsQuotes
+    ? `url("${normalized}")`
+    : `url(${normalized})`;
 };
 
 /* Typed helper you can safely spread into globalStyle(...) */
 export const backgrounds = (props: IBackgrounds): GlobalStyleRule => {
+  const primaryImage =
+    props.image ?? (props.url ? props.url : undefined);
+
   const styles: GlobalStyleRule = {
     backgroundPosition: props.position ?? '50% 50%',
     backgroundRepeat: props.repeat ?? 'no-repeat',
-    ...(props.image
+    ...(primaryImage
       ? {
-          backgroundImage: getBackgroundImage(props.image),
+          backgroundImage: getBackgroundImage(primaryImage),
         }
       : {}),
   };
+
+  if (props.fallbackImage && primaryImage) {
+    styles.backgroundImage = getBackgroundImage(props.fallbackImage);
+    styles['@supports'] = {
+      [`(background-image: ${getBackgroundImage(primaryImage)})`]: {
+        backgroundImage: getBackgroundImage(primaryImage),
+      },
+    };
+  }
+
   if (props.size) styles.backgroundSize = props.size;
   if (props.color !== undefined) {
     const c = props.color;

@@ -7,7 +7,10 @@ import type {
 } from 'react';
 
 import SoftTriangleIcon from '@/components/icons/SoftTriangleIcon';
-import { Markdown, renderInlineMarkdown } from '@/components/Markdown';
+import {
+  Markdown,
+  renderInlineMarkdown,
+} from '@/components/Markdown';
 import Tile from '@/components/Tile';
 import TileGrid from '@/components/TileGrid';
 import * as tileStyles from '@/styles/components/tiles.css';
@@ -28,6 +31,8 @@ type BaseProps<T extends ElementType> = {
   title?: ReactNode;
   headingDepth?: 2 | 3 | 4 | 5 | 6;
   className?: string;
+  titleClassName?: string;
+  introClassName?: string;
   randomizedBg?: RandomizeBg;
   bgOffset?: number;
   rotateOffset?: number;
@@ -105,6 +110,8 @@ export default function ContentAsTiles<
     rotateOffset,
     scaleOffset,
     translateOffset,
+    titleClassName,
+    introClassName,
     ...rest
   } = props;
   const { intro, tiles } = parseMarkdownIntoTiles(markdown);
@@ -200,17 +207,23 @@ export default function ContentAsTiles<
       ignoreDataUI={true}
       headingDepth={headingDepth}
       className={className}
+      titleClassName={titleClassName}
       queryDataAttributes={{
         compact: 'no-padding',
       }}
       {...rest}
     >
       {intro ? (
-        <div className={tileStyles.introWrapper}>
+        <div
+          className={clsx(tileStyles.introWrapper, introClassName)}
+        >
           <Markdown
             source={intro}
+            classNameMap={{
+              headings: titleClassName,
+            }}
             className={clsx(userContent, tileStyles.intro)}
-            />
+          />
         </div>
       ) : null}
       {tiles.length > 0 ? (

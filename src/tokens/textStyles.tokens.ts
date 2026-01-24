@@ -6,11 +6,12 @@ import { color } from '../styles/helpers/colorWrap.helper';
 import type { SpacingIntentInternal } from '../styles/helpers/spacing.helper';
 import { colors, colorVars, themeColours } from './global.tokens';
 import { layoutVars } from './layout.tokens';
+import { anchorMenuVars } from './menu.tokens';
 
 const blockSpacing = m(20);
 const listIndent = m(24);
-const codeBackground = colors.black.alpha(0.5);
-const codeBorder = colorVars.bodyFg.alpha(0.12);
+const codeBackground = colors.black.alpha(0.8);
+const codeBorder = colorVars.bodyFg.alpha(0.5);
 
 const codeFontStack =
   '"SFMono-Regular", "Roboto Mono", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace';
@@ -70,7 +71,6 @@ export const textStyleVars = {
       borders: {
         width: m(1),
         color: codeBorder,
-        radius: m(4),
       },
       paddings: {
         vertical: mEm(0.125),
@@ -85,17 +85,17 @@ export const textStyleVars = {
         color: codeBackground,
       },
       paddings: {
-        all: m(16),
+        top: anchorMenuVars.handle.sizeWithBorder.half(),
+        bottom: anchorMenuVars.handle.sizeWithBorder.half(),
+        horizontal: anchorMenuVars.handle.sizeWithBorder,
       },
       borders: {
-        bottom: {
-          width: m(1),
-          color: codeBorder,
-        },
-        radius: m(6),
+        width: m(1),
+        color: colors.white.mix(colors.black, 0.2),
+        radius: m(2),
       },
       margins: {
-        bottom: blockSpacing,
+        all: 0,
       },
     },
   },

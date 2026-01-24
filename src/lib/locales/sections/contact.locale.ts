@@ -10,6 +10,8 @@ export const CONTACT_KEYS = {
   labelHero: 'contact-label-hero',
   content: 'contact-content',
   emailLabel: 'contact-email-label',
+  linkedInLabel: 'links-linkedin-label',
+  githubLabel: 'links-github-label',
   href: 'contact-href',
   mockHtmlAlt: 'systems-mock-html-alt',
   bgDescription: 'contact-bg-description',
@@ -22,6 +24,8 @@ export type ContactCopy = {
   labelHero: string;
   content: string;
   emailLabel: string;
+  linkedInLabel: string;
+  githubLabel: string;
   href: string;
   mockHtmlAlt: string;
 };
@@ -32,6 +36,8 @@ export const buildContactCopy = (t: Translator): ContactCopy => ({
   labelHero: t(CONTACT_KEYS.labelHero),
   content: t(CONTACT_KEYS.content),
   emailLabel: t(CONTACT_KEYS.emailLabel),
+  linkedInLabel: t(CONTACT_KEYS.linkedInLabel),
+  githubLabel: t(CONTACT_KEYS.githubLabel),
   href: t(CONTACT_KEYS.href),
   mockHtmlAlt: t(CONTACT_KEYS.mockHtmlAlt),
 });

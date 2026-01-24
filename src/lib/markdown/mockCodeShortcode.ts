@@ -5,7 +5,7 @@ import type {
 } from 'marked';
 
 const SHORTCODE_PATTERN =
-  /^\[MockCode\|([^\]\r\n]+)\]\s*\n([\s\S]*?)\n?\[\/MockCode\](?:\s*\n|$)/i;
+  /^\[MockCode\|([^\]\r\n]+)\]([^\r\n]*)\r?\n([\s\S]*?)\r?\n?\[\/MockCode\](?:\s*\r?\n|$)/i;
 const TOKEN_TYPE = 'mock-code-shortcode';
 
 type MockCodeToken = Tokens.Generic & {
@@ -35,7 +35,10 @@ export const createMockCodeShortcodeExtension =
       if (!match) return undefined;
 
       const lang = sanitizeValue(match[1]).toLowerCase();
-      const text = match[2] ?? '';
+      const trailing = match[2] ?? '';
+      const body = match[3] ?? '';
+      const openingLine = trailing.replace(/^\s+/, '');
+      const text = openingLine ? `${openingLine}\n${body}` : body;
 
       return {
         type: TOKEN_TYPE,
@@ -48,4 +51,3 @@ export const createMockCodeShortcodeExtension =
       return '';
     },
   });
-

@@ -337,3 +337,9 @@ globalStyle('hr', {
   ...borders(textStyleVars.horizontalRule.borders),
   ...margins(textStyleVars.horizontalRule.margins),
 });
+
+globalStyle('pre', {
+  display: 'block',
+  marginBlock: 0,
+  marginInline: 0,
+});

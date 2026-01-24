@@ -29,6 +29,11 @@ import * as layoutStyles from '@/styles/layout.css';
 import ContentWithTitle from '../../../../src/components/responsive/ContentWithTitle';
 import SystemsBgOverlay from '../../../../src/components/SystemsBgOverlay';
 import SystemsGooey from '../../../../src/components/SystemsGooey';
+import {
+  contentAsMockCode,
+  contentAsMockCodeIntro,
+  contentAsMockCodeTitle,
+} from '../../../../src/styles/components/code.css';
 
 type SystemsPageParams = Promise<{ LOCALE: string }>;
 
@@ -48,7 +53,10 @@ export async function generateMetadata({
     AVAILABLE_LOCALES.map((code) => {
       const slug =
         canonicalToLocalizedSlugs[code]?.systems ?? 'systems';
-      return [code, `${origin}/${code}/${slug}`];
+      return [
+        code,
+        `${origin}/${code}/${slug}`,
+      ];
     }),
   );
   const defaultSlug =
@@ -57,14 +65,8 @@ export async function generateMetadata({
   const canonicalSlug =
     canonicalToLocalizedSlugs[locale]?.systems ?? 'systems';
   const canonicalUrl = `${origin}/${locale}/${canonicalSlug}`;
-  const openGraphImageUrl = getSocialImageByName(
-    locale,
-    '1200x630',
-  );
-  const twitterImageUrl = getSocialImageByName(
-    locale,
-    '1200x675',
-  );
+  const openGraphImageUrl = getSocialImageByName(locale, '1200x630');
+  const twitterImageUrl = getSocialImageByName(locale, '1200x675');
 
   return {
     title: systemsMeta.title,
@@ -98,7 +100,11 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: systemsMeta.title,
       description: systemsMeta.description,
-      images: twitterImageUrl ? [twitterImageUrl] : undefined,
+      images: twitterImageUrl
+        ? [
+            twitterImageUrl,
+          ]
+        : undefined,
     },
   };
 }
@@ -119,6 +125,9 @@ export default async function SystemsPage({
   const heroCopyBase = buildHeroCopy(translator);
   const contactCopy = buildContactCopy(translator);
   const systemsLink = buildSystemsLink(locale, translator);
+  const tetrachromaticTitle = translator('systems-tetrachromatic-title');
+  const tetrachromaticMarkdown = translator('tetrachromatic-content');
+  const tetrachromaticId = 'systems-tetrachromatic';
   const systemsTitle = translator('systems-title');
   const systemsIntroMarkdown = translator('expertise-content');
   const systemsIntroId = translator('systems-intro-href');
@@ -154,8 +163,8 @@ export default async function SystemsPage({
     anchorNavLabel: menuCopy.anchorLabel,
     anchorLinks: [
       {
-        title: parseWordmarkTemplate(systemsTitle).fullText,
-        href: `#${systemsIntroId}`,
+        title: parseWordmarkTemplate(tetrachromaticTitle).fullText,
+        href: `#${tetrachromaticId}`,
       },
       {
         title: parseWordmarkTemplate(systemsPrinciplesTitle).fullText,
@@ -168,6 +177,10 @@ export default async function SystemsPage({
       {
         title: 'CSS Calipers',
         href: '#css-calipers',
+      },
+      {
+        title: parseWordmarkTemplate(systemsTitle).fullText,
+        href: `#${systemsIntroId}`,
       },
       {
         title: contactCopy.title,
@@ -203,48 +216,66 @@ export default async function SystemsPage({
             TitleSvg={localeSvgs.systems.heroHeading}
             Bg={SystemsGooey}
           />
-          <DeferredIsland when="idle">
-            {/* Exptertise */}
-            <ContentAsTiles
-              id={systemsIntroId}
-              title={systemsTitle}
-              markdown={systemsIntroMarkdown}
-            />
 
-            {/* Principles */}
-            <ContentAsTiles
-              id={systemsPrinciplesId}
-              title={systemsPrinciplesTitle}
-              markdown={systemsPrinciplesMarkdown}
-              bgOffset={2}
-              rotateOffset={3}
-              scaleOffset={1}
-              translateOffset={4}
-            />
+          {/* Tetrachromatic */}
+          <ContentWithTitle
+            id={tetrachromaticId}
+            ignoreDataUI={true}
+            className={contentAsMockCode}
+            titleClassName={contentAsMockCodeTitle}
+            title={parseWordmarkTemplate(tetrachromaticTitle).fullText}
+          >
+            <Markdown source={tetrachromaticMarkdown} />
+          </ContentWithTitle>
 
-            {/* Architecture */}
-            <ContentAsTiles
-              id={systemsShapeId}
-              title={systemsShapeTitle}
-              markdown={systemsShapeMarkdown}
-              bgOffset={5}
-              rotateOffset={1}
-              scaleOffset={4}
-              translateOffset={3}
-            />
+          {/* Principles */}
+          <ContentAsTiles
+            id={systemsPrinciplesId}
+            title={systemsPrinciplesTitle}
+            titleClassName={contentAsMockCodeTitle}
+            introClassName={contentAsMockCodeIntro}
+            markdown={systemsPrinciplesMarkdown}
+            bgOffset={2}
+            rotateOffset={3}
+            scaleOffset={1}
+            translateOffset={4}
+            className={contentAsMockCode}
+          />
 
-            {/* CSS Calipers */}
-            <ContentWithTitle
-              id="css-calipers"
-              ignoreDataUI={true}
-              title={
-                parseWordmarkTemplate(translator('css_calipers'))
-                  .fullText
-              }
-            >
-              <Markdown source={systemsShapeCSSCalipersMarkdown} />
-            </ContentWithTitle>
-          </DeferredIsland>
+          {/* Architecture */}
+          <ContentAsTiles
+            id={systemsShapeId}
+            title={systemsShapeTitle}
+            markdown={systemsShapeMarkdown}
+            titleClassName={contentAsMockCodeTitle}
+            bgOffset={5}
+            rotateOffset={1}
+            scaleOffset={4}
+            translateOffset={3}
+            className={contentAsMockCode}
+          />
+
+          {/* CSS Calipers */}
+          <ContentWithTitle
+            id="css-calipers"
+            ignoreDataUI={true}
+            className={contentAsMockCode}
+            titleClassName={contentAsMockCodeTitle}
+            title={
+              parseWordmarkTemplate(translator('css_calipers')).fullText
+            }
+          >
+            <Markdown source={systemsShapeCSSCalipersMarkdown} />
+          </ContentWithTitle>
+
+          {/* Exptertise */}
+          <ContentAsTiles
+            id={systemsIntroId}
+            title={systemsTitle}
+            markdown={systemsIntroMarkdown}
+            titleClassName={contentAsMockCodeTitle}
+            className={contentAsMockCode}
+          />
         </main>
         <DeferredIsland when="idle">
           <Footer
@@ -253,7 +284,6 @@ export default async function SystemsPage({
             systemsLink={systemsLink}
             hideSystemsLink
             backHref={homeHref}
-            backLabel={translator('systems-back-home-label')}
           />
         </DeferredIsland>
       </div>
