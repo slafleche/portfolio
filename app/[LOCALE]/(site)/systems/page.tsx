@@ -125,7 +125,9 @@ export default async function SystemsPage({
   const heroCopyBase = buildHeroCopy(translator);
   const contactCopy = buildContactCopy(translator);
   const systemsLink = buildSystemsLink(locale, translator);
-  const tetrachromaticTitle = translator('systems-tetrachromatic-title');
+  const tetrachromaticTitle = translator(
+    'systems-tetrachromatic-title',
+  );
   const tetrachromaticMarkdown = translator('tetrachromatic-content');
   const tetrachromaticId = 'systems-tetrachromatic';
   const systemsTitle = translator('systems-title');
@@ -223,7 +225,13 @@ export default async function SystemsPage({
             ignoreDataUI={true}
             className={contentAsMockCode}
             titleClassName={contentAsMockCodeTitle}
-            title={parseWordmarkTemplate(tetrachromaticTitle).fullText}
+            title={
+              parseWordmarkTemplate(tetrachromaticTitle).fullText
+            }
+            data-first="true"
+            queryDataAttributes={{
+              compact: 'no-padding-no-margin',
+            }}
           >
             <Markdown source={tetrachromaticMarkdown} />
           </ContentWithTitle>
@@ -253,6 +261,8 @@ export default async function SystemsPage({
             scaleOffset={4}
             translateOffset={3}
             className={contentAsMockCode}
+            data-query-all="no-margin"
+            data-query-compact="no-padding-no-margin"
           />
 
           {/* CSS Calipers */}
@@ -262,8 +272,13 @@ export default async function SystemsPage({
             className={contentAsMockCode}
             titleClassName={contentAsMockCodeTitle}
             title={
-              parseWordmarkTemplate(translator('css_calipers')).fullText
+              parseWordmarkTemplate(translator('css_calipers'))
+                .fullText
             }
+            queryDataAttributes={{
+              all: 'no-margin',
+              compact: 'no-padding-no-margin',
+            }}
           >
             <Markdown source={systemsShapeCSSCalipersMarkdown} />
           </ContentWithTitle>
@@ -275,6 +290,8 @@ export default async function SystemsPage({
             markdown={systemsIntroMarkdown}
             titleClassName={contentAsMockCodeTitle}
             className={contentAsMockCode}
+            data-query-all="no-margin"
+            data-query-compact="no-padding-no-margin"
           />
         </main>
         <DeferredIsland when="idle">

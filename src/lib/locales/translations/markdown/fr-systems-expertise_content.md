@@ -1,8 +1,8 @@
 [MockCode|ts] L’accent est mis sur les décisions d’architecture prises tôt qui
 rendent le changement sûr et prévisible, pour que les mises à jour tardives ne
 semblent pas risquées à mesure que le système évolue. J’applique cette approche
-à chaque projet, mais je m’adapte à votre réalité. Si vous êtes sur Material UI,
-Chakra ou Bootstrap, je vous aide à le faire évoluer pour répondre à vos
+à chaque projet, mais je m’adapte à **votre réalité**. Si vous êtes sur Material
+UI, Chakra ou Bootstrap, je vous aide à le faire évoluer pour répondre à vos
 besoins. Si vous partez de zéro, je le conçois pour durer. Les principes restent
 les mêmes, mais l’implémentation s’adapte à votre contexte. [/MockCode]
 

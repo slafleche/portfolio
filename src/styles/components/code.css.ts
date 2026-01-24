@@ -9,6 +9,10 @@ import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
+import {
+  globalMediaQueryStyle,
+  mediaQueryStyle,
+} from '../responsive/mediaQueries';
 import { userContent } from '../typography.css';
 
 export const root = style({
@@ -48,6 +52,11 @@ export const mock = style({
       pointerEvents: 'none',
       opacity: 0.05,
     },
+    ...mediaQueryStyle({
+      compact: {
+        border: 'none',
+      },
+    }),
   },
 });
 
@@ -82,7 +91,15 @@ globalStyle(`pre[data-code="block"] .${userContent} *`, {
   lineHeight: 'inherit',
 });
 
-export const contentAsMockCode = style({});
+export const contentAsMockCode = style({
+  selectors: {
+    '&&[no-padding-no-margin]': {
+      ...margins({
+        top: m(0),
+      }),
+    },
+  },
+});
 
 export const contentAsMockCodeTitle = style({});
 
@@ -110,6 +127,56 @@ globalStyle(
     }),
     ...margins({ vertical: m(0) }),
     ...paddings({ vertical: mEm(0.5) }),
+    ...globalMediaQueryStyle({
+      compact: {
+        ...borders({
+          top: {
+            color: colors.white.mix(colors.black, 0.9),
+            width: textStyleVars.code.block.borders.width,
+          },
+          bottom: {
+            color: colors.white.mix(colors.black, 0.9),
+            width: textStyleVars.code.block.borders.width,
+          },
+          horizontal: {
+            width: m(0),
+          },
+          radius: {
+            north: m(0),
+            south: m(0),
+          },
+        }),
+      },
+    }),
+  },
+);
+
+globalStyle(
+  `.${ls.content}.${contentAsMockCode}[data-ui="content"][data-first="true"] .${contentAsMockCodeTitle}`,
+  {
+    ...margins({
+      top: m(50),
+    }),
+    ...globalMediaQueryStyle({
+      compact: {
+        ...margins({
+          top: m(0),
+        }),
+      },
+    }),
+  },
+);
+
+globalStyle(
+  `.${ls.content}.${contentAsMockCode}[data-ui="content"] > .${contentAsMockCodeTitle}`,
+  {
+    ...globalMediaQueryStyle({
+      compact: {
+        ...margins({
+          top: textStyleVars.code.block.borders.width.negation(),
+        }),
+      },
+    }),
   },
 );
 
@@ -140,4 +207,7 @@ globalStyle(`.${root} p:not([data-first="true"])`, {
 globalStyle('.prism-code', {
   ...borders(textStyleVars.code.block.borders),
   overflowX: 'auto',
+  ...margins({
+    top: codeBlock.paddings.vertical,
+  }),
 });

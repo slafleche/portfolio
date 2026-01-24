@@ -1,11 +1,11 @@
 [MockCode|ts] The focus is on early architectural decisions that keep change
 safe and predictable, so late-stage updates don't feel risky as the system
-scales. [/MockCode]
+scales.
 
-I bring this approach to every project, but I adapt to your reality. If you're
-on Material UI, Chakra, or Bootstrap, I help you evolve it to fit your needs. If
-you're building from scratch, I design it to last. The principles stay
-consistent, but the implementation meets you where you are.
+I bring this approach to every project, but I adapt to **your reality**. If
+you're on Material UI, Chakra, or Bootstrap, I help you evolve it to fit your
+needs. If you're building from scratch, I design it to last. The principles stay
+consistent, but the implementation meets you where you are. [/MockCode]
 
 ### Custom design systems
 
@@ -44,4 +44,5 @@ frontend stacks. This often involves navigating imperfect codebases, identifying
 the underlying system within ad-hoc implementations, and reshaping them
 incrementally without requiring full rewrites.
 
-If this approach fits what you're building, I'd love to hear about your project, contact information below!
+If this approach fits what you're building, I'd love to hear about your project,
+contact information below!

@@ -209,7 +209,7 @@ export default function ContentAsTiles<
       className={className}
       titleClassName={titleClassName}
       queryDataAttributes={{
-        compact: 'no-padding',
+        compact: 'no-padding-no-margin',
       }}
       {...rest}
     >
