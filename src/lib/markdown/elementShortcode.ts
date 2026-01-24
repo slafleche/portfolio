@@ -4,12 +4,14 @@ import type {
   Tokens,
 } from 'marked';
 
-const SHORTCODE_PATTERN = /^\[element:([^\]]+)\]/i;
+const SHORTCODE_PATTERN =
+  /^\[element:([^\]|]+)(?:\|([^\]]+))?\]/i;
 const TOKEN_TYPE = 'element-shortcode';
 
 type ElementToken = Tokens.Generic & {
   type: typeof TOKEN_TYPE;
   name: string;
+  variant?: string;
 };
 
 type ElementShortcodeExtension = TokenizerExtension &
@@ -34,11 +36,13 @@ export const createElementShortcodeExtension =
 
       const name = sanitizeValue(match[1]);
       if (!name) return undefined;
+      const variant = sanitizeValue(match[2]);
 
       return {
         type: TOKEN_TYPE,
         raw: match[0],
         name,
+        ...(variant ? { variant } : {}),
       } satisfies ElementToken;
     },
     renderer() {

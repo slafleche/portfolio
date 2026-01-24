@@ -46,21 +46,30 @@ export default function HeroTitleTemplate(props: TitleProps) {
       data-shadow={shadowPayload}
       className={clsx(s.heading, props.className)}
     >
-      <>
+      {titleCopy.secondLine ? (
+        <>
+          <span
+            className={clsx(s.line, props.firstLineClassName)}
+            data-position="first"
+          >
+            {titleCopy.lastLine}
+          </span>
+          <br />
+          <span
+            className={clsx(s.line, props.secondLineClassName)}
+            data-position="last"
+          >
+            {titleCopy.secondLine}
+          </span>
+        </>
+      ) : (
         <span
           className={clsx(s.line, props.firstLineClassName)}
           data-position="first"
         >
           {titleCopy.lastLine}
         </span>
-        <br />
-        <span
-          className={clsx(s.line, props.secondLineClassName)}
-          data-position="last"
-        >
-          {titleCopy.secondLine}
-        </span>
-      </>
+      )}
     </h1>
   );
 }

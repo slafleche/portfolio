@@ -1,3 +1,5 @@
+import { clsx } from 'clsx';
+
 import * as s from '@/styles/components/tempalates/heroHeadingToSvg.css';
 
 import HeroTitleTemplate from '../../../../src/assets/HeroTitleTemplate';
@@ -69,7 +71,7 @@ export default async function HeroHeadingSvgDebugPage() {
         data-locale="fr"
       >
         <HeroTitleTemplate
-          className={s.systemsTitle}
+          className={clsx(s.systemsTitle, s.systemsFr)}
           firstLineClassName={s.systemsFirstLine_fr}
           secondLineClassName={s.systemsSecondLine_fr}
           copy={systemsCopy.fr}
@@ -85,7 +87,7 @@ export default async function HeroHeadingSvgDebugPage() {
         data-locale="en"
       >
         <HeroTitleTemplate
-          className={s.systemsTitle}
+          className={clsx(s.systemsTitle, s.systemsEn)}
           firstLineClassName={s.systemsFirstLine_en}
           secondLineClassName={s.systemsSecondLine_en}
           copy={systemsCopy.en}

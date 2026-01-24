@@ -101,6 +101,55 @@ describe('background.helper', () => {
     );
   });
 
+  it('does not double-wrap background image strings that already use url(...)', () => {
+    const styles = backgrounds({
+      image: 'url("/images/bg.png")',
+    });
+    expect(styles.backgroundImage).toBe('url("/images/bg.png")');
+  });
+
+  it('accepts url as shorthand for background-image url(...)', () => {
+    const styles = backgrounds({
+      url: '/images/bg.png',
+    } as any);
+    expect(styles.backgroundImage).toBe('url(/images/bg.png)');
+  });
+
+  it('quotes data URLs when building url(...)', () => {
+    const styles = backgrounds({
+      url: 'data:image/svg+xml,%3Csvg%3E%3C/svg%3E',
+    } as any);
+    expect(styles.backgroundImage).toBe(
+      'url("data:image/svg+xml,%3Csvg%3E%3C/svg%3E")',
+    );
+  });
+
+  it('encodes spaces in data URLs (so url(...) remains parseable)', () => {
+    const styles = backgrounds({
+      url: "data:image/svg+xml,%3Csvg xmlns='http://example.com'%3E%3C/svg%3E",
+    } as any);
+    expect(styles.backgroundImage).toBe(
+      'url("data:image/svg+xml,%3Csvg%20xmlns=\'http://example.com\'%3E%3C/svg%3E")',
+    );
+  });
+
+  it('supports fallbackImage for image-set() via @supports override', () => {
+    const imageSet = 'image-set(url("/x.webp") type("image/webp"))';
+    const styles = backgrounds({
+      image: imageSet,
+      fallbackImage: '/images/fallback.png',
+    });
+
+    expect(styles.backgroundImage).toBe('url(/images/fallback.png)');
+
+    const supports = (styles as any)['@supports'] as
+      | Record<string, unknown>
+      | undefined;
+    const entries = Object.entries(supports ?? {});
+    expect(entries).toHaveLength(1);
+    expect(entries[0]?.[1]).toEqual({ backgroundImage: imageSet });
+  });
+
   it('returns empty object when no props provided', () => {
     expect(backgrounds({})).toEqual({
       backgroundPosition: '50% 50%',

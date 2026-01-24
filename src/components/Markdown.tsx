@@ -8,12 +8,18 @@ import type {
 } from 'react';
 import { createElement, memo } from 'react';
 
+import CodeBlock from '@/components/CodeBlock';
 import ExampleSites from '@/components/ExampleSites';
+import MockCodeBlock from '@/components/MockCodeBlock';
 import GitHubWordmark from '@/components/wordmarks/GitHubWordmark';
 import NPMWordmark from '@/components/wordmarks/NPMWordmark';
+import { enData } from '@/lib/locales/translations/en.data';
+import { frData } from '@/lib/locales/translations/fr.data';
 import { createBrShortcodeExtension } from '@/lib/markdown/brShortcode';
 import { createElementShortcodeExtension } from '@/lib/markdown/elementShortcode';
 import { createExampleSitesShortcodeExtension } from '@/lib/markdown/exampleSitesShortcode';
+import { createMockCodeShortcodeExtension } from '@/lib/markdown/mockCodeShortcode';
+import { sharedStrings } from '@/lib/sharedStrings';
 
 import { userContent } from '../styles/typography.css';
 
@@ -27,11 +33,28 @@ type AsUiConfig = {
   codeBlocks?: boolean;
 };
 
+type PerTagClassNames = {
+  headings?: string;
+  h1?: string;
+  h2?: string;
+  h3?: string;
+  h4?: string;
+  h5?: string;
+  h6?: string;
+  paragraphs?: string;
+  links?: string;
+  listUnordered?: string;
+  listOrdered?: string;
+  blockquotes?: string;
+  codeBlocks?: string;
+};
+
 type MarkdownProps = {
   tag?: keyof JSX.IntrinsicElements;
   source?: string | null;
   openLinksInNewTab?: boolean;
   asUi?: AsUiConfig;
+  classNameMap?: PerTagClassNames;
 } & Omit<ComponentPropsWithoutRef<'div'>, 'children'>;
 
 type MarkedToken = {
@@ -55,6 +78,7 @@ const markFirstLastTokens = (tokens: MarkedToken[]) => {
 type ElementShortcodeToken = {
   type: 'element-shortcode';
   name: string;
+  variant?: string;
 };
 
 type BrShortcodeToken = {
@@ -67,12 +91,19 @@ type ExampleSitesShortcodeToken = {
   locale: string;
 };
 
+type MockCodeShortcodeToken = {
+  type: 'mock-code-shortcode';
+  lang: string;
+  text: string;
+};
+
 const isElementShortcodeToken = (
   token:
     | MarkedToken
     | ElementShortcodeToken
     | BrShortcodeToken
-    | ExampleSitesShortcodeToken,
+    | ExampleSitesShortcodeToken
+    | MockCodeShortcodeToken,
 ): token is ElementShortcodeToken =>
   token.type === 'element-shortcode';
 
@@ -81,12 +112,14 @@ const isBrShortcodeToken = (
     | MarkedToken
     | ElementShortcodeToken
     | BrShortcodeToken
-    | ExampleSitesShortcodeToken,
+    | ExampleSitesShortcodeToken
+    | MockCodeShortcodeToken,
 ): token is BrShortcodeToken => token.type === 'br-shortcode';
 
 type RenderOptions = {
   openLinksInNewTab: boolean;
   asUi: AsUiConfig;
+  classNameMap?: PerTagClassNames;
 };
 
 const defaultAsUi: Required<AsUiConfig> = {
@@ -99,15 +132,43 @@ const defaultAsUi: Required<AsUiConfig> = {
   codeBlocks: false,
 };
 
+const defaultMockCodeAsUi: Required<AsUiConfig> = {
+  headings: true,
+  paragraphs: true,
+  links: false,
+  listUnordered: true,
+  listOrdered: true,
+  blockquotes: true,
+  codeBlocks: true,
+};
+
+const defaultClassNameMap: Required<PerTagClassNames> = {
+  headings: '',
+  h1: '',
+  h2: '',
+  h3: '',
+  h4: '',
+  h5: '',
+  h6: '',
+  paragraphs: '',
+  links: '',
+  listUnordered: '',
+  listOrdered: '',
+  blockquotes: '',
+  codeBlocks: '',
+};
+
 const elementShortcodeExtension = createElementShortcodeExtension();
 const brShortcodeExtension = createBrShortcodeExtension();
 const exampleSitesShortcodeExtension =
   createExampleSitesShortcodeExtension();
+const mockCodeShortcodeExtension = createMockCodeShortcodeExtension();
 marked.use({
   extensions: [
     elementShortcodeExtension,
     brShortcodeExtension,
     exampleSitesShortcodeExtension,
+    mockCodeShortcodeExtension,
   ],
 });
 
@@ -115,6 +176,32 @@ const elementLookup = {
   GitHubWordmark,
   NPMWordmark,
 } as const;
+
+const getGitHubVariant = (variant?: string) => {
+  const raw = (variant ?? '').trim().toLowerCase();
+  if (raw === '')
+    return { target: 'site' as const, locale: 'en' as const };
+
+  const [
+    targetRaw,
+    localeRaw,
+  ] = raw.split('-', 2);
+  const target =
+    targetRaw === 'csscalipers'
+      ? ('csscalipers' as const)
+      : ('site' as const);
+  const locale =
+    localeRaw === 'fr' ? ('fr' as const) : ('en' as const);
+  return { target, locale };
+};
+
+const getLocaleStrings = (locale: 'en' | 'fr') =>
+  locale === 'fr' ? frData : enData;
+
+const getNpmLocale = (variant?: string): 'en' | 'fr' => {
+  const raw = (variant ?? '').trim().toLowerCase();
+  return raw === 'fr' ? 'fr' : 'en';
+};
 
 const sanitizeHref = (href?: string) => {
   if (!href) return '';
@@ -162,6 +249,21 @@ const parseAbbrTitle = (raw: string): string | null => {
 const isAbbrClose = (raw: string) =>
   raw.trim().toLowerCase() === '</abbr>';
 
+const parseDfnTitle = (raw: string): string | null => {
+  const openTagMatch = raw.match(/^<dfn\b([^>]*)>$/i);
+  if (!openTagMatch) return null;
+  if (raw.endsWith('/>')) return null;
+
+  const attrsChunk = openTagMatch[1] ?? '';
+  const titleMatch = /\btitle\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(
+    attrsChunk,
+  );
+  return titleMatch?.[1] ?? titleMatch?.[2] ?? null;
+};
+
+const isDfnClose = (raw: string) =>
+  raw.trim().toLowerCase() === '</dfn>';
+
 const inlineHtmlTagAllowList = new Set([
   'span',
 ]);
@@ -194,7 +296,11 @@ const parseHeadingDataAttributesPrefix = (
 ): { dataAttrs: Record<string, string>; text: string } | null => {
   const match = text.match(/^\[([^\]]+)\]\s+(.*)$/);
   if (!match) return null;
-  const [, attrChunk, remainingText] = match;
+  const [
+    ,
+    attrChunk,
+    remainingText,
+  ] = match;
   const dataAttrs = parseDataAttributesChunk(attrChunk);
   if (Object.keys(dataAttrs).length === 0) return null;
   if (remainingText.trim() === '') return null;
@@ -242,17 +348,56 @@ const renderInlineTokens = (
 ): ReactNode[] => {
   const nodes: ReactNode[] = [];
   const asUi = { ...defaultAsUi, ...options.asUi };
+  const classNameMap = {
+    ...defaultClassNameMap,
+    ...options.classNameMap,
+  };
 
   for (let i = 0; i < tokens.length; i += 1) {
     const token = tokens[i];
 
     if (isElementShortcodeToken(token)) {
-      const Element =
-        elementLookup[token.name as keyof typeof elementLookup];
+      const name = token.name as keyof typeof elementLookup;
+      const Element = elementLookup[name];
       if (!Element) {
         nodes.push('');
         continue;
       }
+
+      if (name === 'GitHubWordmark') {
+        const { target, locale } = getGitHubVariant(token.variant);
+        const linkUrl =
+          target === 'csscalipers'
+            ? sharedStrings.githubCSSCalipersUrl
+            : sharedStrings.githubUrl;
+        const strings = getLocaleStrings(locale);
+        const linkLabel =
+          target === 'csscalipers'
+            ? strings['links-github-css-calipers-label']
+            : strings['links-github-label'];
+        nodes.push(
+          <GitHubWordmark
+            key={`${keyPrefix}-element-${i}`}
+            linkUrl={linkUrl}
+            linkLabel={linkLabel}
+          />,
+        );
+        continue;
+      }
+
+      if (name === 'NPMWordmark') {
+        const locale = getNpmLocale(token.variant);
+        const strings = getLocaleStrings(locale);
+        nodes.push(
+          <NPMWordmark
+            key={`${keyPrefix}-element-${i}`}
+            linkUrl={sharedStrings.npmUrl}
+            linkLabel={strings['links-npm-css-calipers-label']}
+          />,
+        );
+        continue;
+      }
+
       nodes.push(<Element key={`${keyPrefix}-element-${i}`} />);
       continue;
     }
@@ -297,6 +442,41 @@ const renderInlineTokens = (
                 true,
               )}
             </abbr>,
+          );
+          i = closedIndex;
+          continue;
+        }
+      }
+
+      const dfnTitle = parseDfnTitle(raw);
+      if (dfnTitle) {
+        const innerTokens: Array<
+          MarkedToken | ElementShortcodeToken | BrShortcodeToken
+        > = [];
+        let closedIndex = -1;
+
+        for (let j = i + 1; j < tokens.length; j += 1) {
+          const next = tokens[j];
+          if (next.type === 'html') {
+            const nextRaw = (next as { text?: string }).text ?? '';
+            if (isDfnClose(nextRaw)) {
+              closedIndex = j;
+              break;
+            }
+          }
+          innerTokens.push(next);
+        }
+
+        if (closedIndex !== -1) {
+          nodes.push(
+            <dfn key={`${keyPrefix}-dfn-${i}`} title={dfnTitle}>
+              {renderInlineTokens(
+                innerTokens,
+                options,
+                `${keyPrefix}-dfn-${i}`,
+                true,
+              )}
+            </dfn>,
           );
           i = closedIndex;
           continue;
@@ -429,7 +609,7 @@ const renderInlineTokens = (
       case 'codespan': {
         const codeToken = token as { text?: string };
         nodes.push(
-          <code key={`${keyPrefix}-code-${i}`}>
+          <code key={`${keyPrefix}-code-${i}`} data-code="inline">
             {codeToken.text ?? ''}
           </code>,
         );
@@ -458,12 +638,17 @@ const renderInlineTokens = (
           ...(linkToken.title ? { title: linkToken.title } : {}),
           ...(dataUi ? { 'data-ui': dataUi } : {}),
         };
-        if (options.openLinksInNewTab) {
+        const isHashLink = safeHref.startsWith('#');
+        if (options.openLinksInNewTab && !isHashLink) {
           linkProps.target = '_blank';
           linkProps.rel = 'noopener noreferrer';
         }
         nodes.push(
-          <a key={`${keyPrefix}-link-${i}`} {...linkProps}>
+          <a
+            key={`${keyPrefix}-link-${i}`}
+            className={classNameMap.links}
+            {...linkProps}
+          >
             {renderInlineTokens(
               linkToken.tokens ?? [],
               options,
@@ -524,6 +709,10 @@ const renderTokens = (
   markFirstLastTokens(tokens);
   const nodes: ReactNode[] = [];
   const asUi = { ...defaultAsUi, ...options.asUi };
+  const classNameMap = {
+    ...defaultClassNameMap,
+    ...options.classNameMap,
+  };
 
   tokens.forEach((token, index) => {
     const key = `${keyPrefix}-${index}`;
@@ -539,10 +728,38 @@ const renderTokens = (
         );
         break;
       }
+      case 'mock-code-shortcode': {
+        const t = token as MockCodeShortcodeToken;
+        const innerNormalized = normalizeSource(t.text);
+        const innerTokens =
+          innerNormalized === ''
+            ? []
+            : (marked.lexer(innerNormalized) as MarkedToken[]);
+        const innerOptions: RenderOptions = {
+          ...options,
+          asUi: defaultMockCodeAsUi,
+        };
+
+        nodes.push(
+          <MockCodeBlock
+            key={key}
+            language={t.lang}
+            {...getDataAttrs(token)}
+          >
+            {renderTokens(innerTokens, innerOptions, `${key}-mock`)}
+          </MockCodeBlock>,
+        );
+        break;
+      }
       case 'heading': {
         const depth = (token as { depth?: number }).depth ?? 1;
         const dataUi = asUi.headings ? 'heading' : undefined;
         const baseAttrs = getDataAttrs(token, dataUi);
+        const headingTag = `h${depth}` as keyof JSX.IntrinsicElements;
+        const headingClassName = clsx(
+          classNameMap.headings,
+          classNameMap[headingTag as keyof PerTagClassNames],
+        );
         const parsedPrefix = parseHeadingDataAttributesPrefix(
           (token as { text?: string }).text ?? '',
         );
@@ -562,8 +779,8 @@ const renderTokens = (
           : baseAttrs;
         nodes.push(
           createElement(
-            `h${depth}` as keyof JSX.IntrinsicElements,
-            { key, ...attrs },
+            headingTag,
+            { key, className: headingClassName, ...attrs },
             headingChildren,
           ),
         );
@@ -572,7 +789,11 @@ const renderTokens = (
       case 'paragraph': {
         const dataUi = asUi.paragraphs ? 'paragraph' : undefined;
         nodes.push(
-          <p key={key} {...getDataAttrs(token, dataUi)}>
+          <p
+            key={key}
+            className={classNameMap.paragraphs}
+            {...getDataAttrs(token, dataUi)}
+          >
             {renderInlineTokens(
               (token as { tokens?: MarkedToken[] }).tokens ?? [],
               options,
@@ -585,7 +806,11 @@ const renderTokens = (
       case 'text': {
         const dataUi = asUi.paragraphs ? 'paragraph' : undefined;
         nodes.push(
-          <p key={key} {...getDataAttrs(token, dataUi)}>
+          <p
+            key={key}
+            className={classNameMap.paragraphs}
+            {...getDataAttrs(token, dataUi)}
+          >
             {renderInlineTokens(
               (token as { tokens?: MarkedToken[] }).tokens ?? [],
               options,
@@ -610,8 +835,15 @@ const renderTokens = (
             ? 'list-unordered'
             : undefined;
         const Tag = listToken.ordered ? 'ol' : 'ul';
+        const listClassName = listToken.ordered
+          ? classNameMap.listOrdered
+          : classNameMap.listUnordered;
         nodes.push(
-          <Tag key={key} {...getDataAttrs(token, dataUi)}>
+          <Tag
+            key={key}
+            className={listClassName}
+            {...getDataAttrs(token, dataUi)}
+          >
             {(listToken.items ?? []).map((item, itemIndex) => (
               <li key={`${key}-item-${itemIndex}`}>
                 {renderInlineTokens(
@@ -628,7 +860,11 @@ const renderTokens = (
       case 'blockquote': {
         const dataUi = asUi.blockquotes ? 'blockquote' : undefined;
         nodes.push(
-          <blockquote key={key} {...getDataAttrs(token, dataUi)}>
+          <blockquote
+            key={key}
+            className={classNameMap.blockquotes}
+            {...getDataAttrs(token, dataUi)}
+          >
             {renderTokens(
               (token as { tokens?: MarkedToken[] }).tokens ?? [],
               options,
@@ -640,11 +876,19 @@ const renderTokens = (
       }
       case 'code': {
         const dataUi = asUi.codeBlocks ? 'code-block' : undefined;
-        const text = (token as { text?: string }).text ?? '';
+        const codeToken = token as {
+          text?: string;
+          lang?: string;
+        };
+        const text = codeToken.text ?? '';
         nodes.push(
-          <pre key={key} {...getDataAttrs(token, dataUi)}>
-            <code>{text}</code>
-          </pre>,
+          <CodeBlock
+            key={key}
+            code={text}
+            language={codeToken.lang}
+            className={classNameMap.codeBlocks}
+            {...getDataAttrs(token, dataUi)}
+          />,
         );
         break;
       }
@@ -769,6 +1013,7 @@ function MarkdownBase({
   id,
   className,
   asUi = {},
+  classNameMap = {},
   ...rest
 }: MarkdownProps): ReactElement | null {
   const normalized =
@@ -783,6 +1028,7 @@ function MarkdownBase({
     {
       openLinksInNewTab,
       asUi,
+      classNameMap: { ...defaultClassNameMap, ...classNameMap },
     },
     'md',
   );

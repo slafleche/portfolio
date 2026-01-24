@@ -56,6 +56,7 @@ const SYSTEMS_MARKDOWN_KEYS = new Set([
   'calipers-content',
   'expertise-content',
   'principles-content',
+  'tetrachromatic-content',
 ]);
 
 const getSectionForKey = (key: string) => {
@@ -112,6 +113,45 @@ const findEmDashIssue = (markdown: string) => {
   };
 };
 
+const INVISIBLE_BEFORE_FENCE = [
+  { char: '\u200B', label: 'U+200B (zero-width space)' },
+  { char: '\uFEFF', label: 'U+FEFF (byte order mark)' },
+  { char: '\u200E', label: 'U+200E (left-to-right mark)' },
+  { char: '\u200F', label: 'U+200F (right-to-left mark)' },
+] as const;
+
+const findInvisibleBeforeFenceIssue = (markdown: string) => {
+  const fencePattern = /(^|\n)([^\n]*?)(```|~~~)/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = fencePattern.exec(markdown)) !== null) {
+    const prefix = match[2] ?? '';
+    const prefixIndex = match.index + (match[1]?.length ?? 0);
+
+    for (const { char, label } of INVISIBLE_BEFORE_FENCE) {
+      const hit = prefix.indexOf(char);
+      if (hit === -1) continue;
+
+      const absoluteIndex = prefixIndex + hit;
+      const before = markdown.slice(0, absoluteIndex);
+      const line = before.split('\n').length;
+      const lastNewlineIndex = before.lastIndexOf('\n');
+      const column =
+        lastNewlineIndex === -1
+          ? absoluteIndex + 1
+          : absoluteIndex - lastNewlineIndex;
+
+      return {
+        label,
+        line,
+        column,
+      };
+    }
+  }
+
+  return null;
+};
+
 const findFrenchBannedTermIssue = (text: string) => {
   const match = FRENCH_BANNED_TERMS_REGEX.exec(text);
   if (!match || match.index === undefined) return null;
@@ -159,6 +199,14 @@ const readMarkdownFor = async (
         locale,
         key,
         reason: `contains em dash (${emDashIssue.label}) at line ${emDashIssue.line}, column ${emDashIssue.column}`,
+      });
+    }
+    const invisibleFenceIssue = findInvisibleBeforeFenceIssue(content);
+    if (invisibleFenceIssue) {
+      recordIssue({
+        locale,
+        key,
+        reason: `contains invisible character ${invisibleFenceIssue.label} before fenced code block at line ${invisibleFenceIssue.line}, column ${invisibleFenceIssue.column}`,
       });
     }
     return content;

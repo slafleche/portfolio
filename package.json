@@ -69,6 +69,8 @@
     "prettier-plugin-multiline-arrays": "^4.0.5",
     "prettier-plugin-xml": "^0.1.0",
     "pretty-bytes": "^7.1.0",
+    "prism-react-renderer": "^2.4.1",
+    "prismjs": "^1.30.0",
     "sharp": "^0.34.5",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",

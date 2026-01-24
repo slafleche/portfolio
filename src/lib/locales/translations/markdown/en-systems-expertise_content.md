@@ -1,18 +1,28 @@
-Type-safe CSS primitives for custom design systems. Turn fragmented UI work into a stable, composable foundation. The focus is on early architectural decisions that keep change safe and predictable, so late-stage updates don’t feel risky as the system scales.
+[MockCode|ts] The focus is on early architectural decisions that keep change
+safe and predictable, so late-stage updates don't feel risky as the system
+scales.
+
+I bring this approach to every project, but I adapt to **your reality**. If
+you're on Material UI, Chakra, or Bootstrap, I help you evolve it to fit your
+needs. If you're building from scratch, I design it to last. The principles stay
+consistent, but the implementation meets you where you are. [/MockCode]
 
 ### Custom design systems
 
 Design and implement custom UI and design systems that can evolve without
 constant rewrites. The focus is on turning design intent into coherent,
-composable systems rather than accumulating one-off solutions.
+composable systems rather than accumulating one-off solutions. Whether starting
+fresh or refining what exists, the goal is a foundation that grows with your
+product.
 
 ### Long-term evolution
 
 Optimize systems for long-term evolution. Emphasis is placed on replaceability,
 incremental change, and avoiding decisions that lock teams into structures that
-no longer fit the project.
+no longer fit the project. Systems should adapt as requirements change, not
+require rewrites.
 
-### Designer–engineer collaboration
+### Design ↔ engineering
 
 Work closely with designers to translate design language, interaction patterns,
 and constraints into primitives, components, helpers, and tokens that compose
@@ -33,3 +43,6 @@ Work across heterogeneous environments, including PHP, Java, Node, and modern
 frontend stacks. This often involves navigating imperfect codebases, identifying
 the underlying system within ad-hoc implementations, and reshaping them
 incrementally without requiring full rewrites.
+
+If this approach fits what you're building, I'd love to hear about your project,
+contact information below!

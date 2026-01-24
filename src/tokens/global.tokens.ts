@@ -49,46 +49,30 @@ const shapeGradientB = {
 };
 
 // System - Triangle A
-const triangleA_blend = 0.7;
-const triangleA_alpha = 0.4;
-
-const triangleA_color_a = color('hsl(270, 50%, 36%)')
-  .mix(reddish, triangleA_blend)
+const triangleA_alpha = 0.5;
+const triangleA_color_a = brandMix
+  .mix(brand, 1)
   .alpha(triangleA_alpha);
-const triangleA_color_b = color('hsl(280, 45%, 34%)')
-  .mix(reddish, triangleA_blend)
+const triangleA_color_b = brandMix
+  .mix(brand, 0.8)
   .alpha(triangleA_alpha);
-const triangleA_color_c = color('hsl(265, 48%, 38%)')
-  .mix(reddish, triangleA_blend)
+const triangleA_color_c = brandMix
+  .mix(brand, 0.4)
   .alpha(triangleA_alpha);
-const triangleA_color_d = color('hsl(275, 46%, 28%)').mix(
-  reddish,
-  triangleA_blend,
-);
+const triangleA_color_d = brandMix
+  .mix(brand, 0.8)
+  .alpha(triangleA_alpha);
 // System - Triangle B
-const triangleB_blend = 0.9;
-const triangleB_alpha = 0.4;
-const bMixer = color('#ff8000');
-const triangleB_color_a = color('hsl(255, 50%, 36%)')
-  .mix(bMixer, triangleB_blend)
-  .alpha(triangleB_alpha);
-const triangleB_color_b = color('hsl(265, 45%, 34%)')
-  .mix(bMixer, triangleB_blend)
-  .alpha(triangleB_alpha);
-const triangleB_color_c = color('hsl(250, 48%, 38%)')
-  .mix(bMixer, triangleB_blend)
-  .alpha(triangleB_alpha);
-const triangleB_color_d = color('hsl(260, 46%, 28%)')
-  .mix(bMixer, triangleB_blend)
-  .alpha(triangleB_alpha);
+const triangleB_color_a = reddish.mix(lightPurple, 0);
+const triangleB_color_b = reddish.mix(lightPurple, 0.2);
+const triangleB_color_c = reddish.mix(lightPurple, 0.6);
+const triangleB_color_d = reddish.mix(lightPurple, 1);
 
 // System - Triangle C
-const triangleC_alpha = 1;
-
-const triangleC_color_a = electricBlue.alpha(triangleC_alpha);
-const triangleC_color_b = electricBlue.alpha(triangleC_alpha);
-const triangleC_color_c = electricBlue.alpha(triangleC_alpha);
-const triangleC_color_d = electricBlue.alpha(triangleC_alpha);
+const triangleC_color_a = electricBlue.mix(secondary, 0.2);
+const triangleC_color_b = electricBlue.mix(secondary, 0.8);
+const triangleC_color_c = electricBlue.mix(secondary, 0.2);
+const triangleC_color_d = electricBlue.mix(secondary, 1);
 
 const cardGradientAlpha = 0.8;
 

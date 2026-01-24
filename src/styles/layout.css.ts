@@ -1,7 +1,9 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 
+import { colors } from '../tokens/global.tokens';
 import { layoutVars } from '../tokens/layout.tokens';
 import { anchorMenuVars } from '../tokens/menu.tokens';
+import { backgrounds } from './helpers/background.helper';
 import { margins, paddings } from './helpers/spacing.helper';
 import { mediaQueryStyle } from './responsive/mediaQueries';
 
@@ -56,9 +58,7 @@ export const content = style({
             }),
           },
           "&[data-query-compact='no-padding-no-margin']": {
-            ...paddings({
-              horizontal: 0,
-            }),
+            ...paddings(0),
             ...margins({
               bottom: 0,
             }),
@@ -96,13 +96,23 @@ export const page = style({
   display: 'flex',
   flexDirection: 'column',
   zIndex: 0,
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        ...backgrounds({
+          color: colors.bodyBg.darken(0.5).alpha(0.5),
+        }),
+      },
+    }),
+  },
 });
 
 export const main = style({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
-  gap: layoutVars.content.gap.css(),
+  justifyContent: 'space-between',
+  columnGap: layoutVars.content.gap.css(),
   ...paddings({
     bottom: layoutVars.content.padding.multiply(1.5),
   }),
@@ -115,7 +125,7 @@ export const main = style({
     ...mediaQueryStyle({
       compact: {
         ...paddings({
-          bottom: anchorMenuVars.handle.sizeWithBorder,
+          bottom: 0,
         }),
         selectors: {
           "&[data-query-compact='no-padding']": {
@@ -140,4 +150,11 @@ export const svgOverlay = style({
   ],
   pointerEvents: 'none',
   opacity: 0.02,
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        display: 'none',
+      },
+    }),
+  },
 });

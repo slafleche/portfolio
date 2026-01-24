@@ -2,6 +2,8 @@ import type { LinkProps } from 'next/link';
 import Link from 'next/link';
 import type { SVGProps } from 'react';
 
+import { sharedStrings } from '@/lib/sharedStrings';
+
 import {
   githubLinkInTitleIcon,
   githubLinkInTitleLink,
@@ -12,12 +14,14 @@ const LABEL = 'GitHub';
 type GitHubWordmarkProps = {
   linkUrl?: LinkProps['href'];
   linkClassName?: string;
+  linkLabel?: string;
 } & SVGProps<SVGSVGElement>;
 
 export default function GitHubWordmark({
   className = githubLinkInTitleIcon,
-  linkUrl = 'https://github.com/slafleche/css-calipers',
+  linkUrl = sharedStrings.githubCSSCalipersUrl,
   linkClassName = githubLinkInTitleLink,
+  linkLabel = LABEL,
   ...props
 }: GitHubWordmarkProps) {
   const svgElement = (
@@ -41,6 +45,8 @@ export default function GitHubWordmark({
         href={linkUrl}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label={linkLabel}
+        title={linkLabel}
         data-ui="link"
         className={linkClassName}
       >

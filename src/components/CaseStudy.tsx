@@ -41,7 +41,7 @@ export default function CaseStudy({
           textTemplate={title}
           textClassName={wordMarkClassName}
           depth={2}
-          data-padding="no-top"
+          // data-padding="no-top"
         />
         {hasIntro ? (
           <Markdown className={s.intro} source={intro} />

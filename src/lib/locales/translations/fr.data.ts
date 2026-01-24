@@ -83,19 +83,22 @@ const frBaseData = {
   'projects-05-king-games-title': '[wordmark:King Games]',
   ...markdownRefs('projects-05-king-games-content'),
 
-  'systems-hero-title':
-    'Interfaces conçues [split] pour la composition',
+  'systems-hero-title': 'L’approche [split] Tetrachromatic',
   'systems-hero-subtitle':
-    'Primitives CSS typées pour structurer **votre** système de design',
+    'Systèmes d’interface avec **formalisation progressive** et frontières explicites. Commencer simple. Formaliser progressivement. Périmètre local. Changer de manière prévisible.',
 
   'systems-title': 'Expertise',
   ...markdownRefs('expertise-content'),
   'systems-intro-href': 'systems-expertise',
+
+  'systems-tetrachromatic-title': "L’approche Tetrachromatic",
+  ...markdownRefs('tetrachromatic-content'),
+
   'systems-principles': 'Principes',
   'systems-principles-href': 'systems-principes',
   ...markdownRefs('principles-content'),
-  'systems-architecture': 'Forme du système',
-  'systems-architecture-href': 'systems-forme-du-systeme',
+  'systems-architecture': 'Architecture',
+  'systems-architecture-href': 'systems-architecture',
   ...markdownRefs('architecture-content'),
   ...markdownRefs('calipers-content'),
   'systems-back-home-label': 'Retour à la page d’accueil',
@@ -124,6 +127,11 @@ const frBaseData = {
   ...markdownRefs('privacy-content'),
 
   css_calipers: 'CSS Calipers',
+
+  'links-github-label': 'Mon Portfolio sur GitHub',
+  'links-linkedin-label': 'Ma page LinkedIn',
+  'links-github-css-calipers-label': 'CSS Calipers sur GitHub',
+  'links-npm-css-calipers-label': 'CSS Calipers sur NPM',
 } as const;
 
 export const frData = mergeLocaleSections(

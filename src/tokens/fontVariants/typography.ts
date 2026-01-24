@@ -86,7 +86,6 @@ export const typographyFontVariants = {
   }),
   h5: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h5',
-
     config: {
       styleOverrides: {
         size: m(16),
@@ -95,11 +94,14 @@ export const typographyFontVariants = {
   }),
   h6: defineFontVariant(fontFamilies.objectSans, {
     label: 'heading-h6',
-
     config: {
       styleOverrides: {
         size: m(16),
       },
     },
+  }),
+  code: defineFontVariant(fontFamilies.code, {
+    label: 'code',
+    config: {},
   }),
 } as const satisfies FontVariantMap;

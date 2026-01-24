@@ -16,6 +16,7 @@ export type ContentWithTitleBaseProps = Omit<
   showDecoration?: boolean;
   headingDepth?: 2 | 3 | 4 | 5 | 6;
   titleOutside?: boolean;
+  titleClassName?: string;
 };
 
 type ContentWithTitleProps<T extends ElementType = 'section'> = Omit<
@@ -39,6 +40,7 @@ export default function ContentWithTitle<
     queryDataAttributes,
     showDecoration,
     titleOutside = false,
+    titleClassName = false,
     id,
     ...rest
   } = props;
@@ -51,7 +53,9 @@ export default function ContentWithTitle<
           ignoreDataUI={ignoreDataUI}
           depth={headingDepth}
           data-margin="no-top"
-          className={clsx({ [headingDecoration]: showDecoration })}
+          className={clsx(titleClassName, {
+            [headingDecoration]: showDecoration,
+          })}
         >
           {title}
         </Heading>
@@ -71,7 +75,9 @@ export default function ContentWithTitle<
           <Heading
             ignoreDataUI={ignoreDataUI}
             depth={headingDepth}
-            className={clsx({ [headingDecoration]: showDecoration })}
+            className={clsx(titleClassName, {
+              [headingDecoration]: showDecoration,
+            })}
             data-margin="no-top"
           >
             {title}

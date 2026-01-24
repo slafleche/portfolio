@@ -1,37 +1,41 @@
-Je voulais que les valeurs CSS numériques aient les mêmes garanties que le reste
-de mon code, alors j’ai créé CSS-Calipers.
+[MockCode|ts]
 
-### Le problème
+J’en avais assez de gérer des valeurs CSS en chaînes. Concaténer des unités,
+perdre le typage dès qu’un nombre devient `"12px"`, et déboguer des erreurs
+d’unités à l’exécution.
 
-Les valeurs CSS sont du code, mais nous les traitons comme des chaînes de
-caractères. Vous concaténez des unités, extrayez des nombres de chaînes, et
-découvrez des incompatibilités d’unités quand les mises en page cassent en
-production au lieu de les détecter à la compilation.
+J’ai donc créé CSS-Calipers.
 
-### Les mesures comme données structurées
+```ts
+// La friction :
+const spacingPx = 4;
+const gutter = `${spacingPx * 3}px`; // string immédiatement
+const heroHeight = `40vh`;
+const combo = gutter + heroHeight; // "12px40vh" (JS valide, CSS cassé)
 
-CSS-Calipers traite les mesures comme des données typées avec une structure
-claire : un nombre et une unité qui restent ensemble jusqu’à ce que vous ayez
-explicitement besoin d’une chaîne CSS. Vous faites des calculs avec des helpers
-comme `add()`, `multiply()`, `subtract()`, et `clamp()`. Détectez les opérations
-incompatibles à la compilation, puis appelez `.css()` à la frontière. Idéalement
-au moment du build pour la meilleure performance, mais le runtime est supporté.
-C’est agnostique de votre configuration CSS-in-JS.
+// Avec CSS-Calipers : des valeurs typées jusqu’au dernier moment
+import { m } from ’css-calipers’;
 
-### [abbr:CSS] typé
+const spacing = m(4); // px par défaut
+const gutter = spacing.multiply(3); // 12px, toujours typé
+const heroHeight = m(40, ’vh’);
+// gutter.add(heroHeight);  ❌
+// Erreur de type : impossible de mélanger px et vh.
+// Tu trouves l’erreur pendant le développement,
+// pas comme une erreur de chaîne silencieuse.
 
-Vous pouvez garder davantage (ou la totalité) de votre surface de styling typée.
-Les helpers qui normalement acceptent des chaînes CSS brutes peuvent prendre des
-entrées TypeScript typées de CSS‑Calipers, donc les valeurs de style "chaînées"
-deviennent des entrées réelles et validées.
+// N’émettre du CSS qu’à la frontière
+const styles = { gap: gutter.css() }; // "12px"
+```
 
-### Périmètre clair et coexistence
+### Ce qui reste des chaînes
 
-La bibliothèque reste ciblée et prescriptive sur ce qu’elle gère. Elle se
-concentre sur les valeurs numériques avec unités et laisse les mots-clés, les
-expressions `calc()`, et les variables CSS à votre couche de styling. Elle
-n’essaie pas d’être votre solution CSS complète. Elle coexiste avec les systèmes
-de styling existants en gérant une chose bien : rendre les calculs de mesure
-prévisibles et type-safe.
+Les mots-clés (`auto`, `inherit`), les variables CSS `var(--spacing)`, et les
+expressions `calc(...)` restent de simples chaînes. Ça garde la sortie
+inspectable et agnostique du framework. Pas de runtime magique, pas de DSL
+opaque.
 
-Découvrez-le sur [element:NPMWordmark] ou <span data-white-space="no-wrap">[element:GitHubWordmark] !</span>
+### For more details
+
+Découvrez-le sur [element:NPMWordmark] ou
+[element:GitHubWordmark|csscalipers-en]! [/MockCode]

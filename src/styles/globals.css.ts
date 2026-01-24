@@ -21,6 +21,8 @@ import { outlines } from './helpers/outlines.helper';
 import { margins, paddings } from './helpers/spacing.helper';
 import { fontStylesFromFontVariant } from './helpers/typography.helper';
 
+
+
 const {
   palette: {
     body: { background: bodyBg, foreground: bodyFg },
@@ -253,16 +255,6 @@ globalStyle('[hidden]', {
   display: 'none',
 });
 
-globalStyle('pre', {
-  fontFamily: 'monospace, monospace',
-  fontSize: '1em',
-});
-
-globalStyle('code, kbd, samp', {
-  fontFamily: 'monospace, monospace',
-  fontSize: '1em',
-});
-
 globalStyle(
   'ul[data-ui="list-unordered"], ol[data-ui="list-ordered"]',
   {
@@ -346,4 +338,12 @@ globalStyle('hr', {
   height: 0,
   ...borders(textStyleVars.horizontalRule.borders),
   ...margins(textStyleVars.horizontalRule.margins),
+});
+
+globalStyle('pre', {
+  display: 'block',
+  marginBlock: 0,
+  marginInline: 0,
+  whiteSpace: 'pre',
+  lineHeight: 1.5,
 });

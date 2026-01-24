@@ -26,7 +26,6 @@ type FooterProps = {
   };
   hideSystemsLink?: boolean;
   backHref?: string;
-  backLabel?: string;
 };
 
 export default function Footer({
@@ -76,7 +75,7 @@ export default function Footer({
           </ContactDialogTrigger>
           <GlassyLink
             href={sharedStrings.linkedInUrl}
-            label="LinkedIn"
+            label={contact.linkedInLabel}
             className={clsx(glassLink, s.link)}
             target="_blank"
           >
@@ -87,7 +86,7 @@ export default function Footer({
           </GlassyLink>
           <GlassyLink
             href={sharedStrings.githubUrl}
-            label="GitHub"
+            label={contact.githubLabel}
             className={clsx(glassLink, s.link)}
             target="_blank"
           >

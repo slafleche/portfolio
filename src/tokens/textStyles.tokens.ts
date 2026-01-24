@@ -6,11 +6,12 @@ import { color } from '../styles/helpers/colorWrap.helper';
 import type { SpacingIntentInternal } from '../styles/helpers/spacing.helper';
 import { colors, colorVars, themeColours } from './global.tokens';
 import { layoutVars } from './layout.tokens';
+import { anchorMenuVars } from './menu.tokens';
 
 const blockSpacing = m(20);
 const listIndent = m(24);
-const codeBackground = colorVars.bodyFg.alpha(0.08);
-const codeBorder = colorVars.bodyFg.alpha(0.12);
+const codeBackground = colors.black.alpha(0.8);
+const codeBorder = colorVars.bodyFg.alpha(0.5);
 
 const codeFontStack =
   '"SFMono-Regular", "Roboto Mono", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace';
@@ -63,40 +64,39 @@ export const textStyleVars = {
   code: {
     inline: {
       fontFamily: codeFontStack,
+      fontSize: mEm(0.75),
       backgrounds: {
-        color: codeBackground,
+        color: codeBackground.alpha(0.1),
       },
       borders: {
-        all: {
-          width: m(1),
-          color: codeBorder,
-        },
-        radius: {
-          all: m(4),
-        },
+        width: m(1),
+        color: codeBorder,
       },
       paddings: {
-        vertical: m(2),
-        horizontal: m(4),
+        vertical: mEm(0.125),
+        horizontal: mEm(0.25),
       },
     },
     block: {
       fontFamily: codeFontStack,
+      fontSize: mEm(0.85),
+      lineHeight: mEm(1.5),
       backgrounds: {
         color: codeBackground,
       },
       paddings: {
-        all: m(16),
+        vertical: anchorMenuVars.handle.sizeWithBorder
+          .multiply(0.75)
+          .round(),
+        horizontal: anchorMenuVars.handle.sizeWithBorder,
       },
       borders: {
-        bottom: {
-          width: m(1),
-          color: codeBorder,
-          radius: m(6),
-        },
+        width: m(1),
+        color: colors.white.mix(colors.black, 0.2),
+        radius: m(2),
       },
       margins: {
-        bottom: blockSpacing,
+        all: 0,
       },
     },
   },
