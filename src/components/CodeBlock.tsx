@@ -74,7 +74,6 @@ export default function CodeBlock({
         {({
           className: prismClassName,
           tokens,
-          getLineProps,
           getTokenProps,
         }) => {
           const rawLines = normalizedCode.split('\n');
@@ -91,11 +90,26 @@ export default function CodeBlock({
               <code data-code="block" data-ui="code-block">{rawLines.map(
                 (_, lineIndex: number) => {
                   const line: Token[] = lines[lineIndex] ?? [];
+                  const isLastLine = lineIndex === rawLines.length - 1;
 
                   return (
-                    <div key={lineIndex} {...getLineProps({ line })}>{line.map((token, tokenIndex) => (
-                        <span key={tokenIndex} {...getTokenProps({ token })} />
-                      ))}</div>
+                    <span key={lineIndex}>
+                      {line.map((token, tokenIndex) => {
+                        const {
+                          children,
+                          ...props
+                        } = getTokenProps({ token });
+
+                        return (
+                          <span key={tokenIndex} {...props}>
+                            {typeof children === 'string'
+                              ? children.replaceAll('\n', '')
+                              : children}
+                          </span>
+                        );
+                      })}
+                      {!isLastLine ? '\n' : null}
+                    </span>
                   );
                 },
               )}</code>

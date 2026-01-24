@@ -16,16 +16,13 @@ describe('CodeBlock', () => {
 
     const { container } = render(<Markdown source={source} />);
 
-    const tokenLines = Array.from(
-      container.querySelectorAll(
-        'pre[data-ui="code-block"] div.token-line',
-      ),
+    const codeBlock = container.querySelector(
+      'pre[data-ui="code-block"] code',
     );
 
-    expect(tokenLines.length).toBeGreaterThan(0);
-    expect((tokenLines[0]?.textContent ?? '').trim()).not.toBe('');
-    expect(
-      (tokenLines.at(-1)?.textContent ?? '').trim(),
-    ).not.toBe('');
+    const lines = (codeBlock?.textContent ?? '').split('\n');
+    expect(lines.length).toBeGreaterThan(0);
+    expect((lines[0] ?? '').trim()).not.toBe('');
+    expect((lines.at(-1) ?? '').trim()).not.toBe('');
   });
 });

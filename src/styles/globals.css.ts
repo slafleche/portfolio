@@ -12,7 +12,6 @@ import {
   ReducedMotion,
   reducedMotion,
 } from './helpers/accessibility.helper';
-import { backgrounds } from './helpers/background.helper';
 import borders from './helpers/borders.helper';
 import {
   buildLinear,
@@ -21,10 +20,8 @@ import {
 import { outlines } from './helpers/outlines.helper';
 import { margins, paddings } from './helpers/spacing.helper';
 import { fontStylesFromFontVariant } from './helpers/typography.helper';
-import {
-  globalMediaQueryStyle,
-  mediaQueryStyle,
-} from './responsive/mediaQueries';
+
+
 
 const {
   palette: {

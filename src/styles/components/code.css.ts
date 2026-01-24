@@ -73,6 +73,7 @@ globalStyle(`code[data-code="inline"]`, {
   ...paddings(textStyleVars.code.inline.paddings),
   ...backgrounds(textStyleVars.code.inline.backgrounds),
   ...borders(textStyleVars.code.inline.borders),
+  
 });
 
 globalStyle('pre[data-ui="mock-code-block"]', {
@@ -126,25 +127,21 @@ globalStyle(
       },
     }),
     ...margins({ vertical: m(0) }),
-    ...paddings({ vertical: mEm(0.5) }),
+    ...paddings({
+      top: mEm(0.6),
+      bottom: mEm(0.5),
+    }),
     ...globalMediaQueryStyle({
       compact: {
         ...borders({
-          top: {
-            color: colors.white.mix(colors.black, 0.9),
-            width: textStyleVars.code.block.borders.width,
-          },
-          bottom: {
+          vertical: {
             color: colors.white.mix(colors.black, 0.9),
             width: textStyleVars.code.block.borders.width,
           },
           horizontal: {
             width: m(0),
           },
-          radius: {
-            north: m(0),
-            south: m(0),
-          },
+          radius: 0,
         }),
       },
     }),
@@ -192,7 +189,7 @@ globalStyle(
 
 // typography for mock code
 globalStyle(`.${root} h3`, {
-  fontSize: mEm(1.2).css(),
+  fontSize: '1.2em',
   ...margins({
     top: mEm(0.5),
   }),

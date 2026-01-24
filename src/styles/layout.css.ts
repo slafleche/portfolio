@@ -1,5 +1,4 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { makeMediaQueryStyle } from 'css-calipers/mediaQueries';
 
 import { colors } from '../tokens/global.tokens';
 import { layoutVars } from '../tokens/layout.tokens';
@@ -59,10 +58,7 @@ export const content = style({
             }),
           },
           "&[data-query-compact='no-padding-no-margin']": {
-            ...paddings({
-              horizontal: 0,
-              vertical: 0,
-            }),
+            ...paddings(0),
             ...margins({
               bottom: 0,
             }),
