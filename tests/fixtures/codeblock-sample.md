@@ -1,4 +1,5 @@
 before
+
 ```ts
 // In a *.tokens.ts file
 const simpleConf = {
@@ -46,6 +47,8 @@ export const fromVarsComplex = style({
 });
 
 // ⚠️ Important note: there's no difference between C and D. You can just change your tokens and it works, no edits to CSS needed!
+
 // In CSS Calipers, the plural is used to differentiate the CSS value from our helper, so "borders" is the helper for border, "margins" for margin, etc.
 ```
+
 after

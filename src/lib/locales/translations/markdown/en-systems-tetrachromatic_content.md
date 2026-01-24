@@ -70,10 +70,11 @@ export const fromVarsComplex = style({
 
 // ⚠️ Important note: there's no difference betwee the written
 // styles for C and D. You can just change your tokens and it
-// works, no edits to CSS needed! In CSS Calipers, the plural
-// is used to differentiate the CSS value from our helper, so
-// "borders" is the helper for border, "margins" for margin,
-// etc.
+// works, no edits to CSS needed!
+
+// In CSS Calipers, the plural is used to differentiate the CSS
+// value from our helper, so "borders" is the helper for border,
+// "margins" for margin, etc.
 ```
 
 The result: a system where changes have predictable, local impact. You can

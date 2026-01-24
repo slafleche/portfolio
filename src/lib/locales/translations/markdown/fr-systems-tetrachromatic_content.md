@@ -55,7 +55,8 @@ const complexConf = {
 
 
 // Exemple A : utiliser les valeurs par défaut directement
-export const useDefaults = style(borders()); // utilise la largeur, le style et la couleur par défaut
+export const useDefaults = style(borders()); // utilise la largeur,
+// le style et la couleur par défaut
 
 // Exemple B : définir une surcharge dans votre stylesheet
 export const hardCoded = style({
@@ -76,10 +77,11 @@ export const fromVarsComplex = style({
 
 // ⚠️ Note importante : il n’y a aucune différence entre le style
 //  écrit pour C et D. Vous pouvez simplement changer vos tokens
-// et tout fonctionne, sans modifier le CSS. Dans CSS Calipers,
-// le pluriel sert à distinguer la valeur CSS du helper :
-// « borders » est le helper pour « border », « margins » pour
-// « margin », etc.
+// et tout fonctionne, sans modifier le CSS.
+
+// Dans CSS Calipers, le pluriel sert à distinguer la valeur CSS
+// du helper : « borders » est le helper pour « border »,
+// «margins » pour « margin », etc.
 
 ```
 
