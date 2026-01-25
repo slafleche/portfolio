@@ -9,6 +9,8 @@ import type { ComponentPropsWithoutRef } from 'react';
 
 import * as s from '@/styles/components/code.css';
 
+import { textStyleVars } from '../tokens/textStyles.tokens';
+
 type CodeBlockProps = {
   code: string;
   language?: string | null;
@@ -64,18 +66,29 @@ export default function CodeBlock({
 }: CodeBlockProps) {
   const normalizedCode = normalizeCodeForPrism(code);
 
+  const theme = {
+    ...themes.nightOwl,
+    styles: themes.nightOwl.styles.map((rule) =>
+	      rule.types.includes('comment')
+	        ? {
+	            ...rule,
+	            style: {
+	              ...rule.style,
+	              color: textStyleVars.code.block.colors.comments.css(),
+	            },
+	          }
+	        : rule,
+	    ),
+	  } as typeof themes.nightOwl;
+
   return (
     <div className={clsx(s.root, s.code)}>
       <Highlight
         code={normalizedCode}
         language={toPrismLanguage(language)}
-        theme={themes.nightOwl}
+        theme={theme}
       >
-        {({
-          className: prismClassName,
-          tokens,
-          getTokenProps,
-        }) => {
+        {({ className: prismClassName, tokens, getTokenProps }) => {
           const rawLines = normalizedCode.split('\n');
           const lines = tokens.slice(0, rawLines.length);
 
@@ -87,18 +100,18 @@ export default function CodeBlock({
               data-language={language ?? ''}
               className={clsx(className, prismClassName)}
             >
-              <code data-code="block" data-ui="code-block">{rawLines.map(
-                (_, lineIndex: number) => {
+              <code data-code="block" data-ui="code-block">
+                {rawLines.map((_, lineIndex: number) => {
                   const line: Token[] = lines[lineIndex] ?? [];
-                  const isLastLine = lineIndex === rawLines.length - 1;
+                  const isLastLine =
+                    lineIndex === rawLines.length - 1;
 
                   return (
                     <span key={lineIndex}>
                       {line.map((token, tokenIndex) => {
-                        const {
-                          children,
-                          ...props
-                        } = getTokenProps({ token });
+                        const { children, ...props } = getTokenProps({
+                          token,
+                        });
 
                         return (
                           <span key={tokenIndex} {...props}>
@@ -111,8 +124,8 @@ export default function CodeBlock({
                       {!isLastLine ? '\n' : null}
                     </span>
                   );
-                },
-              )}</code>
+                })}
+              </code>
             </pre>
           );
         }}

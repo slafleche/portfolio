@@ -10,7 +10,7 @@ import { anchorMenuVars } from './menu.tokens';
 
 const blockSpacing = m(20);
 const listIndent = m(24);
-const codeBackground = colors.black.alpha(0.8);
+const codeBackground = colors.black.alpha(0.1);
 const codeBorder = colorVars.bodyFg.alpha(0.5);
 
 const codeFontStack =
@@ -66,7 +66,7 @@ export const textStyleVars = {
       fontFamily: codeFontStack,
       fontSize: mEm(0.75),
       backgrounds: {
-        color: codeBackground.alpha(0.1),
+        color: codeBackground.alpha(0.01),
       },
       borders: {
         width: m(1),
@@ -81,6 +81,9 @@ export const textStyleVars = {
       fontFamily: codeFontStack,
       fontSize: mEm(0.85),
       lineHeight: mEm(1.5),
+      colors: {
+        comments: color("rgb(184 212 255)")
+      },
       backgrounds: {
         color: codeBackground,
       },
