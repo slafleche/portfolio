@@ -7,7 +7,6 @@ import { chromium } from 'playwright';
 const SHARE_IMAGE_SIZES = [
   { width: 1200, height: 630 },
   { width: 1200, height: 675 },
-  { width: 1200, height: 1200 },
 ] as const;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -27,9 +26,7 @@ const TARGET_URL =
 const VIEWPORT_SELECTOR = '[data-target="share-image-viewport"]';
 
 const expectedSizes = new Set(
-  SHARE_IMAGE_SIZES.map(
-    (size) => `${size.width}x${size.height}`,
-  ),
+  SHARE_IMAGE_SIZES.map((size) => `${size.width}x${size.height}`),
 );
 
 const main = async () => {
@@ -68,6 +65,15 @@ const main = async () => {
       * {
         animation: none !important;
         transition: none !important;
+      }
+
+      /* Hide Next.js devtools/overlay UI (the "pill") when capturing screenshots. */
+      nextjs-portal,
+      #__next-devtools,
+      #__next-build-watcher,
+      [data-nextjs-devtools],
+      [data-nextjs-toast] {
+        display: none !important;
       }
     `,
   });

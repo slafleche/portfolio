@@ -45,24 +45,6 @@ const SHARE_IMAGE_SIZES = [
       },
     },
   },
-  {
-    width: 1200,
-    height: 1200,
-    bg: {
-      roundedTransform: {
-        translateXPercent: 12,
-        translateYPercent: 40,
-        rotationDeg: -5,
-        scale: 1,
-      },
-      nubbyTransform: {
-        translateXPercent: -10,
-        translateYPercent: -45,
-        rotationDeg: 10,
-        scale: 0.95,
-      },
-    },
-  },
 ] as const;
 
 export default async function ShareImageDebugPage() {
