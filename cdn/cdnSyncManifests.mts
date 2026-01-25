@@ -216,10 +216,17 @@ function buildPublicUrl(base: string, key: string): string {
   return `${normalizedBase}/${key}`;
 }
 
+const shouldIgnoreAssetEntry = (name: string): boolean => {
+  if (name === '.DS_Store') return true;
+  if (name.startsWith('._')) return true;
+  return false;
+};
+
 async function listFilesRecursive(root: string): Promise<string[]> {
   const entries = await fs.readdir(root, { withFileTypes: true });
   const files: string[] = [];
   for (const entry of entries) {
+    if (shouldIgnoreAssetEntry(entry.name)) continue;
     const full = path.join(root, entry.name);
     if (entry.isDirectory()) {
       const nested = await listFilesRecursive(full);

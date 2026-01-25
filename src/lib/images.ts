@@ -6,7 +6,7 @@ export type Variant = {
   w: number;
   url: string;
 };
-export type SocialImageSize = '1200x630' | '1200x675' | '1200x1200';
+export type SocialImageSize = '1200x630' | '1200x675';
 export type ImageEntry = {
   name: string;
   hash?: string;

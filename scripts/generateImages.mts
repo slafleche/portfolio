@@ -209,6 +209,29 @@ async function removeHashedImageDirs(
   );
 }
 
+async function removeShareImageDirs(outRoot: string): Promise<void> {
+  const prefix = `${IMAGE_CACHE_PREFIX}-share-images-`;
+  let entries: string[] = [];
+  try {
+    entries = await fs.readdir(outRoot);
+  } catch (error) {
+    if (isErrno(error) && error.code === 'ENOENT') return;
+    throw error;
+  }
+
+  const targets = entries.filter((entry) => entry.startsWith(prefix));
+  if (targets.length === 0) return;
+
+  await Promise.all(
+    targets.map((entry) =>
+      fs.rm(path.join(outRoot, entry), {
+        recursive: true,
+        force: true,
+      }),
+    ),
+  );
+}
+
 // --- Duplicate-name handling ---
 class DuplicateNameError extends Error {
   code: string;
@@ -624,6 +647,8 @@ async function processTargets(
       (await loadJson<HashesMap>(hashesPath)) ?? {};
 
     const manifest: ImageManifest = {};
+
+    await removeShareImageDirs(outRoot);
 
     console.log(`→ Walking source images in "${IMAGE_SOURCES_DIR}"`);
     let localCount = 0;
