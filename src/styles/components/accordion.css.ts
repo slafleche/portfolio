@@ -17,9 +17,7 @@ import {
 import { outlines } from '../helpers/outlines.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import { margins, paddings } from '../helpers/spacing.helper';
-import {
-  fontStylesFromFontVariant,
-} from '../helpers/typography.helper';
+import { fontStylesFromFontVariant } from '../helpers/typography.helper';
 import { mediaQueryStyle } from '../responsive/mediaQueries';
 
 const slideTokens = accordionItemTokens.animation.slide;
@@ -69,6 +67,9 @@ export const accordion = style({
   overflow: 'hidden',
   ...borders(accordionSurfaceTokens.borders),
   ...gradientAsBgImg(surfaceGradient),
+  ...margins({
+    bottom: m(48),
+  }),
 });
 
 export const item = style({

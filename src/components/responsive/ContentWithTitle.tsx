@@ -52,7 +52,6 @@ export default function ContentWithTitle<
           id={id}
           ignoreDataUI={ignoreDataUI}
           depth={headingDepth}
-          data-margin="no-top"
           className={clsx(titleClassName, {
             [headingDecoration]: showDecoration,
           })}
@@ -78,7 +77,6 @@ export default function ContentWithTitle<
             className={clsx(titleClassName, {
               [headingDecoration]: showDecoration,
             })}
-            data-margin="no-top"
           >
             {title}
           </Heading>

@@ -4,6 +4,7 @@ import { m, mEm } from 'css-calipers';
 import * as ls from '@/styles/layout.css';
 
 import { colors } from '../../tokens/global.tokens';
+import { layoutVars } from '../../tokens/layout.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { textStyleVars } from '../../tokens/textStyles.tokens';
 import { backgrounds } from '../helpers/background.helper';
@@ -93,13 +94,16 @@ globalStyle(`pre[data-code="block"] .${userContent} *`, {
 });
 
 export const contentAsMockCode = style({
-  selectors: {
-    '&&[no-padding-no-margin]': {
-      ...margins({
-        top: m(0),
-      }),
-    },
-  },
+  ...margins({
+    top: layoutVars.content.gap,
+  }),
+  // selectors: {
+  //   '&&[no-padding-no-margin]:not([data-first="true"])': {
+  //     ...margins({
+  //       top: m(0),
+  //     }),
+  //   },
+  // },
 });
 
 export const contentAsMockCodeTitle = style({
@@ -156,7 +160,7 @@ globalStyle(
   `.${ls.content}.${contentAsMockCode}[data-ui="content"][data-first="true"] .${contentAsMockCodeTitle}`,
   {
     ...margins({
-      top: m(50),
+      top: m(0),
     }),
     ...globalMediaQueryStyle({
       compact: {
@@ -212,3 +216,24 @@ globalStyle('.prism-code', {
     top: codeBlock.paddings.vertical,
   }),
 });
+
+//<section
+// data-ui="content"
+// class="layout_content__t3od040
+// code_contentAsMockCode__1au64dd3"
+// data-query-compact="no-padding-no-margin"
+// id="systems-tetrachromatic"
+// data-first="true">
+
+globalStyle(
+  `.${ls.content}.${contentAsMockCode}[data-query-compact='no-padding-no-margin'][data-first="true"]`,
+  {
+    ...globalMediaQueryStyle({
+      compact: {
+        ...margins({
+          top: m(0),
+        }),
+      },
+    }),
+  },
+);

@@ -70,11 +70,15 @@ export const content = style({
 });
 
 globalStyle(`.${content} + .${content}`, {
-  marginTop: layoutVars.content.gap.css(),
+  ...margins({
+    top: layoutVars.content.gap,
+  }),
 });
 
 export const sectionSpacing = style({
-  marginTop: layoutVars.content.gap.css(),
+  ...margins({
+    top: layoutVars.content.gap,
+  }),
 });
 
 export const title = style({

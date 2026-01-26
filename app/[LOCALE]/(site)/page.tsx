@@ -265,7 +265,6 @@ export default async function HomePage({
               <Content tag="div" ignoreBottomMargin={true}>
                 <Heading
                   id={projects.href}
-                  data-margin="no-top"
                   ignoreDataUI={true}
                 >
                   {projects.title}
