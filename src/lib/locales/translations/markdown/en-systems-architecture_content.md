@@ -44,8 +44,8 @@ project needs shift, you can replace pieces incrementally. Nothing becomes a
 dead end.
 
 The portfolio site you're reading is open source on
-[element:GitHubWordmark|site-en], as is CSS Calipers on
-[element:NPMWordmark|en].
+<span data-white-space="no-wrap">[element:GitHubWordmark|site-en],</span> as is CSS Calipers on
+<span data-white-space="no-wrap">[element:NPMWordmark|en].</span>
 
 ### Flexible composition in the middle
 

@@ -35,5 +35,5 @@ framework-agnostic: no magic runtime, no custom DSL.
 ### For more information
 
 Check it out on [element:NPMWordmark] or
-[element:GitHubWordmark|csscalipers-en]!
+<span data-white-space="no-wrap">[element:GitHubWordmark|csscalipers-en]!</span>
 [/MockCode]

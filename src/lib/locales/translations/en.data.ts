@@ -19,7 +19,7 @@ const enBaseData = {
   'systems-meta-title':
     'Design Systems & UI Architecture | Stéphane LaFlèche',
   'systems-meta-description':
-    "A guiding overview of Stéphane's design systems practice. Context first, details live in GitHub.",
+    'How I build UI systems that scale: composable tokens, typed styling inputs, and plain CSS output so changes stay predictable and scoped.',
   'systems-meta-keywords':
     'design systems, UI architecture, typed CSS, CSS primitives, scalable UI, accessibility, frontend engineering, portfolio',
   'not_found-title': '404 This page can not be found',

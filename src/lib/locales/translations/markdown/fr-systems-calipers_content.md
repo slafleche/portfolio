@@ -38,4 +38,5 @@ opaque.
 ### For more details
 
 Découvrez-le sur [element:NPMWordmark] ou
-[element:GitHubWordmark|csscalipers-en]! [/MockCode]
+<span data-white-space="no-wrap">[element:GitHubWordmark|csscalipers-en]!</span>
+[/MockCode]

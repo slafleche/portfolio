@@ -50,7 +50,7 @@ remplacer des pièces de manière incrémentale. Rien ne devient une impasse.
 
 Le site portfolio que vous lisez est open source sur
 [element:GitHubWordmark|site-fr], et CSS Calipers est sur
-[element:NPMWordmark|fr].
+<span data-white-space="no-wrap">[element:NPMWordmark|fr].</span>
 
 ### Composition flexible au milieu
 

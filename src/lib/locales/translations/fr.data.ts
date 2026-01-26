@@ -19,7 +19,7 @@ const frBaseData = {
   'systems-meta-title':
     'Systèmes de design & architecture UI | Stéphane LaFlèche',
   'systems-meta-description':
-    'Un survol de la pratique des systèmes de design de Stéphane : contexte d’abord, détails sur GitHub.',
+    'Une approche pour des systèmes UI qui évoluent : tokens composables, styles typés et CSS en sortie, pour que les changements restent prévisibles et bien cadrés.',
   'systems-meta-keywords':
     'systèmes de design, architecture UI, CSS typé, primitives CSS, interfaces évolutives, accessibilité, ingénierie front-end, portfolio',
   'not_found-title': '404 Page non trouvée',

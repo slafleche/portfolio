@@ -4,6 +4,7 @@ import { m, mEm } from 'css-calipers';
 import * as ls from '@/styles/layout.css';
 
 import { colors } from '../../tokens/global.tokens';
+import { anchorMenuVars } from '../../tokens/menu.tokens';
 import { textStyleVars } from '../../tokens/textStyles.tokens';
 import { backgrounds } from '../helpers/background.helper';
 import borders from '../helpers/borders.helper';
@@ -73,7 +74,6 @@ globalStyle(`code[data-code="inline"]`, {
   ...paddings(textStyleVars.code.inline.paddings),
   ...backgrounds(textStyleVars.code.inline.backgrounds),
   ...borders(textStyleVars.code.inline.borders),
-  
 });
 
 globalStyle('pre[data-ui="mock-code-block"]', {
@@ -102,7 +102,11 @@ export const contentAsMockCode = style({
   },
 });
 
-export const contentAsMockCodeTitle = style({});
+export const contentAsMockCodeTitle = style({
+  ...paddings({
+    horizontal: anchorMenuVars.handle.sizeWithBorder,
+  }),
+});
 
 export const contentAsMockCodeIntro = style({});
 
