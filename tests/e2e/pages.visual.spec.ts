@@ -65,6 +65,19 @@ const hideNextDevOverlays = async (page: Page) => {
   });
 };
 
+const disableScrollbarGutterForSnapshots = async (page: Page) => {
+  await page.addStyleTag({
+    content: [
+      // Prevent reserved scrollbar space from showing as a right-side "bar"
+      // in Linux/Chromium snapshot renders.
+      'html { scrollbar-gutter: auto !important; }',
+      // Hide scrollbars while preserving scroll behavior.
+      'html, body { -ms-overflow-style: none !important; scrollbar-width: none !important; }',
+      '::-webkit-scrollbar { width: 0 !important; height: 0 !important; }',
+    ].join('\n'),
+  });
+};
+
 const waitForMenuPositioning = async (page: Page) => {
   await page.waitForFunction(() => {
     const localeLink = document.querySelector('a[hreflang]');
@@ -100,6 +113,7 @@ for (const locale of LOCALES) {
         await page.goto(path, { waitUntil: 'domcontentloaded' });
         await waitForFonts(page);
         await hideNextDevOverlays(page);
+        await disableScrollbarGutterForSnapshots(page);
         await waitForMenuPositioning(page);
 
         await expect(
