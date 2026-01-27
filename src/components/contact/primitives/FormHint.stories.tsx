@@ -37,14 +37,13 @@ export const Default: Story = {
                 Helper
               </Heading>
               <FormHint tone="helper">
-                Helper hint with inline markdown: **bold**, _italic_, `code`,
-                and a [link](/).
+                Helper hint with inline markdown: **bold**, _italic_.
               </FormHint>
               <Heading depth={2} ignoreDataUI={true}>
                 Error
               </Heading>
               <FormHint tone="error">
-                Error hint with inline markdown: **bold**, _italic_, `code`.
+                Error hint with inline markdown: **bold**, _italic_.
               </FormHint>
               <Heading depth={2} ignoreDataUI={true}>
                 Empty
