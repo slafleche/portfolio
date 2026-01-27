@@ -99,10 +99,10 @@ const disableScrollbarGutterForSnapshots = async (page: Page) => {
     content: [
       // Prevent reserved scrollbar space from showing as a right-side "bar"
       // in Linux/Chromium snapshot renders.
-      'html { scrollbar-gutter: auto !important; }',
+      'html, body, * { scrollbar-gutter: auto !important; }',
       // Hide scrollbars while preserving scroll behavior.
-      'html, body { -ms-overflow-style: none !important; scrollbar-width: none !important; }',
-      '::-webkit-scrollbar { width: 0 !important; height: 0 !important; }',
+      '* { -ms-overflow-style: none !important; scrollbar-width: none !important; }',
+      '::-webkit-scrollbar, *::-webkit-scrollbar { width: 0 !important; height: 0 !important; }',
     ].join('\n'),
   });
 };

@@ -14,6 +14,7 @@ const renderPage = (width: number) => (
         display: 'block',
         width: `${width}px`,
         maxWidth: 'unset',
+        margin: 0,
       }}
     />
   </div>
