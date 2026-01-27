@@ -14,9 +14,9 @@ import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
 import en from '@/lib/locales/translations/en';
 import fr from '@/lib/locales/translations/fr';
 
-import Hero from './Hero';
-import HeroHomeBg from './HeroHomeBg';
-import SiteProviders from './site/SiteProviders.client';
+import Hero from '../Hero';
+import HeroHomeBg from '../HeroHomeBg';
+import SiteProviders from '../site/SiteProviders.client';
 
 const t = createSectionTranslator(en, en);
 const tFr = createSectionTranslator(fr, en);

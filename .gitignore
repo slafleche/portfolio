@@ -108,6 +108,7 @@ tmp/*
 /storybook-static/
 /.chromatic/
 build-storybook.log
+debug-storybook.log
 
 # -----------------------
 # Epics (local by default)

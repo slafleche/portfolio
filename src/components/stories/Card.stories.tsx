@@ -5,13 +5,7 @@ import { useEffect } from 'react';
 import Card from '@/components/Card';
 import { Column, Grid } from '@/components/Grid';
 import WordMarkInTitle from '@/components/WordmarkInTitle';
-import {
-  BQWordmark,
-  CCWordmark,
-  EAWordmark,
-  HSWordmark,
-  KGWordmark,
-} from '@/components/wordmarks/wordmarks';
+import { EAWordmark } from '@/components/wordmarks/wordmarks';
 import {
   __forceReducedMotion,
   __setStorybookPathname,
@@ -24,9 +18,9 @@ import fr from '@/lib/locales/translations/fr';
 import * as cg from '@/styles/components/card.css';
 import * as layoutStyles from '@/styles/layout.css';
 
-import Heading from './Heading';
-import { Markdown } from './Markdown';
-import Content from './responsive/Content';
+import Heading from '../Heading';
+import { Markdown } from '../Markdown';
+import Content from '../responsive/Content';
 
 const t = createSectionTranslator(en, en);
 const tFr = createSectionTranslator(fr, en);
@@ -75,7 +69,7 @@ type ProjectsSectionProps = {
 };
 
 function ProjectsSection({ copy }: ProjectsSectionProps) {
-  const { cocacola, ea, banq, hootsuite, kingGames } = copy.items;
+  const { ea } = copy.items;
 
   return (
     <section className={layoutStyles.sectionSpacing}>
@@ -86,26 +80,6 @@ function ProjectsSection({ copy }: ProjectsSectionProps) {
       </Content>
 
       <Grid>
-        <Column span={2}>
-          <Card
-            className={cg.cardCC}
-            gradientClassName={cg.gradientCC}
-            title={
-              <WordMarkInTitle
-                WordMark={CCWordmark}
-                textTemplate={cocacola.title}
-                textClassName={cg.wordmarkTextNoLogo}
-              />
-            }
-            logoAsBg={
-              <CCWordmark
-                className={clsx(cg.logoAsBgSVG, cg.logoAsBg_cc)}
-              />
-            }
-          >
-            <Markdown source={cocacola.content} />
-          </Card>
-        </Column>
         <Column span={2}>
           <Card
             className={cg.cardEa}
@@ -126,92 +100,20 @@ function ProjectsSection({ copy }: ProjectsSectionProps) {
             <Markdown source={ea.content} />
           </Card>
         </Column>
-        <Column
-          span={1}
-          mediaQuerySpan={{
-            underMinWidth: 2,
-          }}
-        >
-          <Card
-            className={cg.cardBanq}
-            gradientClassName={cg.gradientBanq}
-            title={
-              <WordMarkInTitle
-                WordMark={BQWordmark}
-                textTemplate={banq.title}
-                textClassName={cg.wordmarkTextNoLogo}
-              />
-            }
-            logoAsBg={
-              <BQWordmark
-                className={clsx(cg.logoAsBgSVG, cg.logoAsBg_banq)}
-              />
-            }
-          >
-            <Markdown source={banq.content} />
-          </Card>
-        </Column>
-        <Column
-          span={1}
-          mediaQuerySpan={{
-            underMinWidth: 2,
-          }}
-        >
-          <Card
-            className={cg.cardHs}
-            gradientClassName={cg.gradientHs}
-            title={
-              <WordMarkInTitle
-                WordMark={HSWordmark}
-                textTemplate={hootsuite.title}
-                textClassName={cg.wordmarkTextNoLogo}
-              />
-            }
-            logoAsBg={
-              <HSWordmark
-                className={clsx(cg.logoAsBgSVG, cg.logoAsBg_hs)}
-              />
-            }
-          >
-            <Markdown source={hootsuite.content} />
-          </Card>
-        </Column>
-        <Column
-          span={2}
-          mediaQuerySpan={{
-            compact: 1,
-          }}
-        >
-          <Card
-            className={cg.cardKg}
-            gradientClassName={cg.gradientKg}
-            title={
-              <WordMarkInTitle
-                WordMark={KGWordmark}
-                textTemplate={kingGames.title}
-                textClassName={cg.wordmarkTextNoLogo}
-              />
-            }
-            logoAsBg={
-              <KGWordmark
-                className={clsx(cg.logoAsBgSVG, cg.logoAsBg_kg)}
-              />
-            }
-          >
-            <Markdown source={kingGames.content} />
-          </Card>
-        </Column>
       </Grid>
     </section>
   );
 }
 
 const meta: Meta<typeof ProjectsSection> = {
-  title: 'Sections/Projects',
+  title: 'Components/Card',
   component: ProjectsSection,
   parameters: {
     layout: 'fullscreen',
-    chromatic: { viewports: defaultViewports, pauseAnimationAtEnd: true },
+    chromatic: {
+      viewports: defaultViewports,
+      pauseAnimationAtEnd: true,
+    },
   },
 };
 
@@ -220,13 +122,17 @@ export default meta;
 type Story = StoryObj<typeof ProjectsSection>;
 
 export const En: Story = {
-  name: 'Projects (EN)',
-  decorators: [withLocaleEnvironment('/en')],
+  name: 'Card (EN)',
+  decorators: [
+    withLocaleEnvironment('/en'),
+  ],
   render: () => <ProjectsSection copy={projectsEn} />,
 };
 
 export const Fr: Story = {
-  name: 'Projects (FR)',
-  decorators: [withLocaleEnvironment('/fr')],
+  name: 'Card (FR)',
+  decorators: [
+    withLocaleEnvironment('/fr'),
+  ],
   render: () => <ProjectsSection copy={projectsFr} />,
 };

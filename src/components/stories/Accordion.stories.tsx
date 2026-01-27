@@ -7,8 +7,8 @@ import en from '@/lib/locales/translations/en';
 import fr from '@/lib/locales/translations/fr';
 import * as layoutStyles from '@/styles/layout.css';
 
-import { Accordion } from './Accordion';
-import { Markdown } from './Markdown';
+import { Accordion } from '../Accordion';
+import { Markdown } from '../Markdown';
 
 const t = createSectionTranslator(en, en);
 const caseStudies = buildCaseStudiesCopy(t);

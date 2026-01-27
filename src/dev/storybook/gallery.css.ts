@@ -1,35 +1,52 @@
 import { globalStyle, style } from '@vanilla-extract/css';
+import { m } from 'css-calipers';
 
 import * as ws from '@/styles/components/card.css';
+import { backgrounds } from '@/styles/helpers/background.helper';
+import { borders } from '@/styles/helpers/borders.helper';
+import { margins } from '@/styles/helpers/spacing.helper';
+import { colorVars } from '@/tokens/global.tokens';
 
 export const root = style({
   minHeight: '100vh',
   padding: 24,
-  background: '#000',
+  ...backgrounds({ color: colorVars.black }),
   color: '#fff',
   fontFamily:
     'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji',
 });
 
 export const title = style({
-  margin: 0,
+  ...margins(0),
   fontSize: 18,
   fontWeight: 600,
 });
 
 export const subtitle = style({
-  margin: '8px 0 16px',
+  ...margins({
+    top: m(8),
+    bottom: m(16),
+    horizontal: 0,
+  }),
   opacity: 0.75,
 });
 
 export const sectionTitle = style({
-  margin: '22px 0 0',
+  ...margins({
+    top: m(22),
+    bottom: 0,
+    horizontal: 0,
+  }),
   fontSize: 16,
   fontWeight: 600,
 });
 
 export const sectionSubtitle = style({
-  margin: '6px 0 12px',
+  ...margins({
+    top: m(6),
+    bottom: m(12),
+    horizontal: 0,
+  }),
   opacity: 0.75,
 });
 
@@ -51,7 +68,9 @@ export const gridLogos = style({
   gap: 12,
   alignItems: 'stretch',
   gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-  marginBottom: '25px',
+  ...margins({
+    bottom: m(25),
+  }),
 });
 
 export const svgTile = style({
@@ -62,9 +81,14 @@ export const svgTile = style({
   minHeight: '100%',
   rowGap: 10,
   padding: 12,
-  borderRadius: 12,
-  background: 'rgba(255, 255, 255, 0.06)',
-  border: '1px solid rgba(255, 255, 255, 0.10)',
+  ...backgrounds({
+    color: colorVars.white.alpha(0.06),
+  }),
+  ...borders({
+    width: m(1),
+    color: colorVars.white.alpha(0.1),
+    radius: m(12),
+  }),
   textAlign: 'center',
 });
 
@@ -91,6 +115,13 @@ export const businessLogoContainer = style({
   position: 'relative',
   width: '100px',
   height: '100px',
+});
+
+export const siteLogoContainer = style({
+  width: '120px',
+  height: '100px',
+  display: 'grid',
+  placeItems: 'center',
 });
 
 globalStyle(`.${businessLogoContainer}[data-target="oracle"]`, {

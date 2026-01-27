@@ -7,7 +7,7 @@ import en from '@/lib/locales/translations/en';
 import fr from '@/lib/locales/translations/fr';
 import * as cg from '@/styles/components/card.css';
 
-import CaseStudy from './CaseStudy';
+import CaseStudy from '../CaseStudy';
 
 const t = createSectionTranslator(en, en);
 const caseStudies = buildCaseStudiesCopy(t);

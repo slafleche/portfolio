@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import type { LinkProps } from 'next/link';
 import type { ComponentType, JSX, SVGProps } from 'react';
 
+import Logo from '@/components/Logo';
 import GitHubWordmark from '@/components/wordmarks/GitHubWordmark';
 import NPMWordmark from '@/components/wordmarks/NPMWordmark';
 import {
@@ -13,6 +14,7 @@ import {
   VNWordmark,
 } from '@/components/wordmarks/wordmarks';
 import * as g from '@/dev/storybook/gallery.css';
+import { color } from '@/styles/helpers/colorWrap.helper';
 
 import ExampleSiteIconAcer from './ExampleSiteIconAcer';
 import ExampleSiteIconKing from './ExampleSiteIconKing';
@@ -84,6 +86,18 @@ function LogosGallery() {
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   const logoTiles: LogoTile[] = [
+    {
+      name: 'SiteLogo',
+      render: () => (
+        <div className={g.siteLogoContainer}>
+          <Logo
+            idBase="storybook-site-logo"
+            mode="mono"
+            bgColour={color('#000')}
+          />
+        </div>
+      ),
+    },
     ...businessLogos.map(({ name, Component }) => ({
       name,
       render: () => (

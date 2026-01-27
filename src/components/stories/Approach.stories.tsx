@@ -11,8 +11,8 @@ import { translateMarkdownSections } from '@/lib/locales/sections/markdownSectio
 import en from '@/lib/locales/translations/en';
 import fr from '@/lib/locales/translations/fr';
 
-import { Markdown } from './Markdown';
-import ContentWithTitle from './responsive/ContentWithTitle';
+import { Markdown } from '../Markdown';
+import ContentWithTitle from '../responsive/ContentWithTitle';
 
 const t = createSectionTranslator(en, en);
 const tFr = createSectionTranslator(fr, en);

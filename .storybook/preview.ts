@@ -90,37 +90,50 @@ const preview: Preview = {
   ],
   parameters: {
     layout: 'fullscreen',
-    options: {
-      storySort: {
-        order: [
-          'Sections',
-          [
-            'Menu',
-            'Hero',
-            'CaseStudy',
-            'Accordion',
-            'Approach',
-            'Projects',
-            'Footer',
-            [
-              'Contact',
-              [
-                'Contact Form (EN)',
-                'Privacy Policy (EN)',
-                'Contact Form (FR)',
-                'Privacy Policy (FR)',
-              ],
-            ],
-          ],
-          'SVGs',
-          [
-            'Icons',
-            'Logos',
-          ],
-        ],
-      },
-    },
-  },
-};
+	    options: {
+		      storySort: {
+		        order: [
+		          'Primitives',
+		          [
+		            'Heading',
+		            'Abbr',
+		          ],
+		          'Components',
+		          [
+		            'Card',
+		            'Project',
+		            'Tile',
+		            'PageCurl',
+		          ],
+		          'SVGs',
+		          [
+		            'Icons',
+		            'Logos',
+		          ],
+		          'Sections',
+		          [
+		            'Menu',
+		            'Hero',
+		            'CaseStudy',
+		            'Accordion',
+		            'ContentAsTiles',
+		            'Approach',
+		            'Projects',
+		            'Footer',
+		            [
+		              'Contact',
+		              [
+		                'Contact Form (EN)',
+		                'Privacy Policy (EN)',
+		                'Contact Form (FR)',
+		                'Privacy Policy (FR)',
+		              ],
+		            ],
+		          ],
+		        ],
+		      },
+		    },
+		  },
+		};
 
 export default preview;
