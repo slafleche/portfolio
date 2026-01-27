@@ -33,7 +33,6 @@ export default function PageRenderImage({
     overflow: 'hidden',
     margin: 0,
     padding: 0,
-    background: 'transparent',
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
@@ -45,7 +44,6 @@ export default function PageRenderImage({
     maxWidth: 'unset',
     height: 'auto',
     margin: 0,
-    background: 'transparent',
     borderRadius: 0,
     flex: '0 0 auto',
   };

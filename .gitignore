@@ -97,6 +97,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .pnpm-debug.log*
+verify.log
 
 # -----------------------
 # Local files

@@ -32,6 +32,11 @@ export const STYLE_LITERAL_RESETS = {
       /\bbackground\s*:\s*['"]none(?:\s*!important)?['"]/.test(
         line,
       ) && !/\bbackgroundColor\b/.test(line),
+    // Allow explicit transparent backgrounds as a reset value.
+    (line) =>
+      /\bbackground(?:Color)?\s*:\s*['"]transparent(?:\s*!important)?['"]/.test(
+        line,
+      ),
     // Allow currentColor as a deliberate transparent-ish background alias.
     (line) =>
       /\bbackgroundColor\s*:\s*['"]currentColor(?:\s*!important)?['"]/.test(
