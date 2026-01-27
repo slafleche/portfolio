@@ -4,7 +4,6 @@ export default function SocialGitHubIcon({
   className,
   ...props
 }: SVGProps<SVGSVGElement>) {
-  /* TODO: replace with `import Icon from '@/assets/SVG/github.svg'` once Turbopack reads our @svgr/webpack config */
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

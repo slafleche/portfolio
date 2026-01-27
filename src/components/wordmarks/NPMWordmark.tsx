@@ -16,6 +16,7 @@ type NPMWordmarkProps = {
   linkUrl?: LinkProps['href'];
   linkClassName?: string;
   linkLabel?: string;
+  disableLink?: boolean;
 } & SVGProps<SVGSVGElement>;
 
 export default function NPMWordmark({
@@ -23,6 +24,7 @@ export default function NPMWordmark({
   linkUrl = sharedStrings.npmUrl,
   linkClassName = npmLinkInTitleLink,
   linkLabel = LINK_LABEL,
+  disableLink = false,
   ...props
 }: NPMWordmarkProps) {
   const svgElement = (
@@ -43,7 +45,7 @@ export default function NPMWordmark({
     </svg>
   );
 
-  if (linkUrl) {
+  if (linkUrl && !disableLink) {
     return (
       <Link
         href={linkUrl}

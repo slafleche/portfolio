@@ -15,6 +15,7 @@ type GitHubWordmarkProps = {
   linkUrl?: LinkProps['href'];
   linkClassName?: string;
   linkLabel?: string;
+  disableLink?: boolean;
 } & SVGProps<SVGSVGElement>;
 
 export default function GitHubWordmark({
@@ -22,6 +23,7 @@ export default function GitHubWordmark({
   linkUrl = sharedStrings.githubCSSCalipersUrl,
   linkClassName = githubLinkInTitleLink,
   linkLabel = LABEL,
+  disableLink = false,
   ...props
 }: GitHubWordmarkProps) {
   const svgElement = (
@@ -39,7 +41,7 @@ export default function GitHubWordmark({
     </svg>
   );
 
-  if (linkUrl) {
+  if (linkUrl && !disableLink) {
     return (
       <Link
         href={linkUrl}

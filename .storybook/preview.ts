@@ -112,6 +112,11 @@ const preview: Preview = {
               ],
             ],
           ],
+          'SVGs',
+          [
+            'Icons',
+            'Logos',
+          ],
         ],
       },
     },
