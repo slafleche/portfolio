@@ -39,13 +39,19 @@ const ensureHeadLink = (props: Record<string, string>) => {
   if (typeof document === 'undefined') return;
 
   const selectorParts = Object.entries(props).map(
-    ([key, value]) => `[${key}="${CSS.escape(value)}"]`,
+    ([
+      key,
+      value,
+    ]) => `[${key}="${CSS.escape(value)}"]`,
   );
   const selector = `link${selectorParts.join('')}`;
   if (document.head.querySelector(selector)) return;
 
   const link = document.createElement('link');
-  for (const [key, value] of Object.entries(props)) {
+  for (const [
+    key,
+    value,
+  ] of Object.entries(props)) {
     link.setAttribute(key, value);
   }
   document.head.appendChild(link);
@@ -90,51 +96,71 @@ const preview: Preview = {
   ],
   parameters: {
     layout: 'fullscreen',
-	    options: {
-		      storySort: {
-		        order: [
-		          'Primitives',
+    options: {
+      storySort: {
+        order: [
+          'Primitives',
+          [
+            'Heading',
+            'Abbr',
+          ],
+          'Components',
+          [
+            'Markdown',
+            'Card',
+            'Project',
+            'Tile',
+            'PageCurl',
+          ],
+          'SVGs',
+          [
+            'Icons',
+            'Logos',
+          ],
+		          'Forms',
 		          [
-		            'Heading',
-		            'Abbr',
-		          ],
-		          'Components',
-		          [
-		            'Markdown',
-		            'Card',
-		            'Project',
-		            'Tile',
-		            'PageCurl',
-		          ],
-		          'SVGs',
-		          [
-		            'Icons',
-		            'Logos',
-		          ],
-		          'Sections',
-		          [
-		            'Menu',
-		            'Hero',
-		            'CaseStudy',
-		            'Accordion',
-		            'ContentAsTiles',
-		            'Approach',
-		            'Projects',
-		            'Footer',
+		            'Form primitives',
 		            [
-		              'Contact',
-		              [
-		                'Contact Form (EN)',
-		                'Privacy Policy (EN)',
-		                'Contact Form (FR)',
-		                'Privacy Policy (FR)',
-		              ],
-		            ],
-		          ],
-		        ],
-		      },
-		    },
-		  },
-		};
+		              'FormHint',
+		              'FormLabel',
+		              'TextareaInput',
+              'TextInput',
+            ],
+            'Components',
+            [
+              'TextInputBlock',
+              'EmailBlock',
+              'Honeypot Block',
+              'MessageBlock',
+              'NameBlock',
+              'TurnstileBlock',
+              'SubmitButton',
+            ],
+          ],
+          'Sections',
+          [
+            'Menu',
+            'Hero',
+            'CaseStudy',
+            'Accordion',
+            'ContentAsTiles',
+            'Approach',
+            'Projects',
+            'Footer',
+            [
+              'Contact',
+              [
+                'Contact Form (EN)',
+                'Privacy Policy (EN)',
+                'Contact Form (FR)',
+                'Privacy Policy (FR)',
+              ],
+            ],
+          ],
+        ],
+      },
+    },
+  },
+};
 
 export default preview;
