@@ -1,6 +1,8 @@
 export const defaultViewports = [
-  335,
+  320,
+  360,
   840,
+  1024,
   1400,
 ] as const;
 

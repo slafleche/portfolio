@@ -16,6 +16,7 @@ import {
   shuttleExitDurationMs,
 } from '@/styles/components/contactButton.vars';
 
+import { usePrefersReducedMotion } from '../lib/accessibility/usePrefersReducedMotion';
 import { scoopedGradient } from '../styles/components/ctaHero.css';
 import {
   glassLinkShine,
@@ -325,6 +326,9 @@ export default function ContactButton({
               data-phase={phase}
               aria-disabled={exiting ? 'true' : undefined}
               style={exiting ? { pointerEvents: 'none' } : undefined}
+              data-motion={
+                usePrefersReducedMotion() ? 'reduced' : 'normal'
+              }
               // extra guard for keyboard activation while exiting
               onKeyDown={(e) => {
                 if (exiting && (e.key === 'Enter' || e.key === ' ')) {

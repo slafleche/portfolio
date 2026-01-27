@@ -1,4 +1,4 @@
-import { keyframes, style } from '@vanilla-extract/css';
+import { globalStyle, keyframes, style } from '@vanilla-extract/css';
 import { m } from 'css-calipers';
 
 import {
@@ -207,8 +207,10 @@ export const button = style({
     radius: roundRadius,
   }),
   selectors: {
-    '&:hover, &:focus-visible': {
+    '&[data-motion="normal"]:hover, &[data-motion="normal"]:focus-visible': {
       transform: 'scale(1) translate(-5px, -5px)',
+    },
+    '&:hover, &:focus-visible': {
       color: colorVars.white.css(),
       ...boxShadow({ blur: hoverBlurPx }),
     },
@@ -228,6 +230,7 @@ export const button = style({
   '@media': {
     '(prefers-reduced-motion: reduce)': {
       transition: 'none',
+      willChange: 'auto',
       selectors: {
         '&[data-phase="entering"]': {
           animation: `${buttonScaleEnter} 0s ${SETTLE} 0s both`,
@@ -239,6 +242,8 @@ export const button = style({
     },
   },
 });
+
+
 
 export const scoopGradient = style({
   position: 'absolute',

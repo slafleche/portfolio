@@ -5,6 +5,7 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 
 const configDir = path.dirname(fileURLToPath(import.meta.url));
+const srcDir = path.resolve(configDir, '../src');
 
 const config: StorybookConfig = {
   stories: [
@@ -38,6 +39,20 @@ const config: StorybookConfig = {
         ...(viteConfig.resolve ?? {}),
         alias: [
           ...normalizedAlias,
+          {
+            find: 'next/link',
+            replacement: path.resolve(
+              srcDir,
+              'dev/storybook/nextLinkShim.tsx',
+            ),
+          },
+          {
+            find: 'next/navigation',
+            replacement: path.resolve(
+              srcDir,
+              'dev/storybook/nextNavigationShim.ts',
+            ),
+          },
           {
             find: '@',
             replacement: path.resolve(configDir, '../src'),
