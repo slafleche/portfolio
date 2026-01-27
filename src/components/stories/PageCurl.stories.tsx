@@ -1,7 +1,6 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import { useEffect } from 'react';
 
-import { backgrounds } from '@/styles/helpers/background.helper';
 import { colorVars } from '@/tokens/global.tokens';
 
 import PageCurl from '../PageCurl';
@@ -82,7 +81,7 @@ export const Default: Story = {
       style={{
         minHeight: '100vh',
         padding: 24,
-        ...backgrounds({ color: colorVars.black }),
+        backgroundColor: colorVars.black.css(),
         color: '#fff',
         display: 'grid',
         placeItems: 'center',

@@ -5,9 +5,9 @@ import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
 import en from '@/lib/locales/translations/en';
 import * as layoutStyles from '@/styles/layout.css';
 
+import { HoneypotBlock } from '../contact/blocks/HoneypotBlock';
 import Heading from '../Heading';
 import Content from '../responsive/Content';
-import { HoneypotBlock } from '../contact/blocks/HoneypotBlock';
 
 const t = createSectionTranslator(en, en);
 const copy = buildHoneypotBlockLocale(t);

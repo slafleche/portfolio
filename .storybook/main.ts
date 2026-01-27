@@ -8,6 +8,12 @@ const configDir = path.dirname(fileURLToPath(import.meta.url));
 const srcDir = path.resolve(configDir, '../src');
 
 const config: StorybookConfig = {
+  staticDirs: [
+    {
+      from: '../public/svgs',
+      to: '/svgs',
+    },
+  ],
   stories: [
     '../src/**/*.stories.@(ts|tsx|mdx)',
   ],

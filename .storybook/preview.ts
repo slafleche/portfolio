@@ -1,6 +1,5 @@
 import 'normalize.css';
 import '@/styles/globals.css';
-import '@/styles/fontFaces.css';
 import '@/styles/typography.css';
 
 import type { Preview } from '@storybook/react';
@@ -24,16 +23,27 @@ if (typeof globalThis.process === 'undefined') {
     'ENV',
   ].join('_');
 
+  const runtimeNodeEnv = getRuntimeNodeEnv();
+
   const env: Record<string, string> = {};
   Object.defineProperty(env, nodeEnvKey, {
-    value: getRuntimeNodeEnv(),
+    value: runtimeNodeEnv,
     enumerable: true,
   });
+
+  // Most of the site expects a `LOCAL_MANIFEST_TARGET` override when not running
+  // in hosted environments. In Storybook:
+  // - Development should use `_staging` assets.
+  // - Production builds (Chromatic) should use `release` assets.
+  env.LOCAL_MANIFEST_TARGET =
+    runtimeNodeEnv === 'production' ? 'release' : '_staging';
 
   (globalThis as any).process = {
     env,
   };
 }
+
+await import('@/styles/fontFaces.css');
 
 const ensureHeadLink = (props: Record<string, string>) => {
   if (typeof document === 'undefined') return;

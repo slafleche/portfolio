@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { backgrounds } from '@/styles/helpers/background.helper';
 import { colorVars } from '@/tokens/global.tokens';
 
 import { Abbr } from '../Abbr';
@@ -24,7 +23,7 @@ export const Default: Story = {
       style={{
         minHeight: '100vh',
         padding: 24,
-        ...backgrounds({ color: colorVars.black }),
+        backgroundColor: colorVars.black.css(),
         color: '#fff',
         fontSize: 18,
       }}
