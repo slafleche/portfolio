@@ -34,7 +34,7 @@ const formCopyFr = buildContactFormCopy(tFr);
 const privacyCopyFr = buildPrivacyCopy(tFr);
 const closeLabelFr = tFr('close-label');
 
-const GlobalStyleOverrides = () => {
+function GlobalStyleOverrides() {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = [
@@ -47,7 +47,7 @@ const GlobalStyleOverrides = () => {
     };
   }, []);
   return null;
-};
+}
 
 const dispatchHashChange = () => {
   try {
@@ -57,9 +57,8 @@ const dispatchHashChange = () => {
   }
 };
 
-const WithHash =
-  (hash: string): Decorator =>
-  (Story) => {
+function withHash(hash: string): Decorator {
+  return function WithHashDecorator(Story) {
     function HashDecorator() {
       useLayoutEffect(() => {
         const previousHash = window.location.hash;
@@ -88,9 +87,9 @@ const WithHash =
 
     return <HashDecorator />;
   };
+}
 
-const WithContactDialogProvider =
-  ({
+function withContactDialogProvider({
     pathname,
     nextFormCopy,
     nextPrivacyCopy,
@@ -100,8 +99,8 @@ const WithContactDialogProvider =
     nextFormCopy: typeof formCopy;
     nextPrivacyCopy: typeof privacyCopy;
     nextCloseLabel: string;
-  }): Decorator =>
-  (Story) => {
+  }): Decorator {
+  return function WithContactDialogProviderDecorator(Story) {
     function ContactDialogProviderDecorator() {
       useLayoutEffect(() => {
         __setStorybookPathname(pathname);
@@ -129,9 +128,10 @@ const WithContactDialogProvider =
 
     return <ContactDialogProviderDecorator />;
   };
+}
 
 const meta: Meta = {
-  title: 'Components/Contact Form',
+  title: 'Sections/Contact',
   parameters: {
     layout: 'fullscreen',
     chromatic: {
@@ -140,7 +140,7 @@ const meta: Meta = {
     },
   },
   decorators: [
-    WithContactDialogProvider({
+    withContactDialogProvider({
       pathname: '/en',
       nextFormCopy: formCopy,
       nextPrivacyCopy: privacyCopy,
@@ -156,7 +156,7 @@ type Story = StoryObj;
 export const OpenDialog: Story = {
   name: 'Contact Form (EN)',
   decorators: [
-    WithHash(sharedStrings.contactFormHash),
+    withHash(sharedStrings.contactFormHash),
   ],
   render: () => (
     <Menu
@@ -186,7 +186,7 @@ export const OpenDialog: Story = {
 export const OpenPrivacy: Story = {
   name: 'Privacy Policy (EN)',
   decorators: [
-    WithHash(sharedStrings.contactFormPolicyHash),
+    withHash(sharedStrings.contactFormPolicyHash),
   ],
   render: () => (
     <Menu
@@ -216,13 +216,13 @@ export const OpenPrivacy: Story = {
 export const OpenDialogFr: Story = {
   name: 'Contact Form (FR)',
   decorators: [
-    WithContactDialogProvider({
+    withContactDialogProvider({
       pathname: '/fr',
       nextFormCopy: formCopyFr,
       nextPrivacyCopy: privacyCopyFr,
       nextCloseLabel: closeLabelFr,
     }),
-    WithHash(sharedStrings.contactFormHash),
+    withHash(sharedStrings.contactFormHash),
   ],
   render: () => (
     <Menu
@@ -252,13 +252,13 @@ export const OpenDialogFr: Story = {
 export const OpenPrivacyFr: Story = {
   name: 'Privacy Policy (FR)',
   decorators: [
-    WithContactDialogProvider({
+    withContactDialogProvider({
       pathname: '/fr',
       nextFormCopy: formCopyFr,
       nextPrivacyCopy: privacyCopyFr,
       nextCloseLabel: closeLabelFr,
     }),
-    WithHash(sharedStrings.contactFormPolicyHash),
+    withHash(sharedStrings.contactFormPolicyHash),
   ],
   render: () => (
     <Menu

@@ -16,7 +16,7 @@ const tFr = createSectionTranslator(fr, en);
 const caseStudiesFr = buildCaseStudiesCopy(tFr);
 
 const meta: Meta<typeof CaseStudy> = {
-  title: 'Components/CaseStudy',
+  title: 'Sections/CaseStudy',
   component: CaseStudy,
   parameters: {
     layout: 'fullscreen',

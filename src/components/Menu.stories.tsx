@@ -69,7 +69,7 @@ const WithMenuSetup: Decorator = (Story) => {
 };
 
 const meta: Meta<typeof Menu> = {
-  title: 'Components/Menu',
+  title: 'Sections/Menu',
   component: Menu,
   parameters: {
     layout: 'fullscreen',

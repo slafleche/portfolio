@@ -17,7 +17,7 @@ const tFr = createSectionTranslator(fr, fr);
 const caseStudiesFr = buildCaseStudiesCopy(tFr);
 
 const meta: Meta<typeof Accordion> = {
-  title: 'Components/Accordion',
+  title: 'Sections/Accordion',
   component: Accordion,
   parameters: {
     layout: 'fullscreen',

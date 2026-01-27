@@ -67,6 +67,8 @@ export default [
       'next-env.d.ts',
       'dist/**',
       'build/**',
+      'storybook-static/**',
+      'test-results/**',
       'tmp/**',
       '.cloudflare/**',
       'public/**',
