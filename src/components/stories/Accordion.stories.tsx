@@ -5,7 +5,6 @@ import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale'
 import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
 import en from '@/lib/locales/translations/en';
 import fr from '@/lib/locales/translations/fr';
-import * as layoutStyles from '@/styles/layout.css';
 
 import { Accordion } from '../Accordion';
 import { Markdown } from '../Markdown';
