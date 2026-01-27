@@ -13,6 +13,10 @@ const config: StorybookConfig = {
       from: '../public/svgs',
       to: '/svgs',
     },
+    {
+      from: '../public/pages-renders',
+      to: '/pages',
+    },
   ],
   stories: [
     '../src/**/*.stories.@(ts|tsx|mdx)',

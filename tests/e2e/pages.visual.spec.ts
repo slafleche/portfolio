@@ -1,3 +1,6 @@
+import fs from 'node:fs/promises';
+import nodePath from 'node:path';
+
 import {
   expect,
   takeSnapshot,
@@ -116,20 +119,44 @@ const waitForMenuPositioning = async (page: Page) => {
   });
 };
 
+const waitForLazyImages = async (page: Page) => {
+  const timeoutMs = 15_000;
+
+  try {
+    await page.waitForFunction(() => {
+      const imgs = Array.from(document.images).filter((img) => {
+        const src = img.currentSrc || img.src || '';
+        return src.includes('mock-end-html');
+      });
+
+      // Some routes (e.g. systems) don't render the PageCurl at all.
+      if (imgs.length === 0) return true;
+
+      return imgs.every(
+        (img) => img.complete && img.naturalWidth > 0,
+      );
+    }, { timeout: timeoutMs });
+  } catch {
+    // Best-effort: missing assets shouldn't block the whole render suite,
+    // but we still try to wait when they exist to avoid blank lazy renders.
+  }
+};
+
 for (const locale of LOCALES) {
   for (const width of WIDTHS) {
     for (const variant of VARIANTS) {
       test(`${variant.name} (${locale}) @${width}px`, async ({
         page,
       }, testInfo) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
         await page.setViewportSize({
           width,
           height: VIEWPORT_HEIGHT,
         });
 
-        const path = variant.path(locale);
+        const routePath = variant.path(locale);
 
-        await page.goto(path, { waitUntil: 'domcontentloaded' });
+        await page.goto(routePath, { waitUntil: 'domcontentloaded' });
         await waitForFonts(page);
         await hideNextDevOverlays(page);
         await disableScrollbarGutterForSnapshots(page);
@@ -142,12 +169,23 @@ for (const locale of LOCALES) {
           timeout: 30_000,
         });
 
+        await page.locator('#contact').scrollIntoViewIfNeeded();
+        await waitForLazyImages(page);
+
+        const rendersDir = nodePath.join(
+          process.cwd(),
+          'public/pages-renders',
+        );
+        await fs.mkdir(rendersDir, { recursive: true });
+        const renderPath = nodePath.join(
+          rendersDir,
+          `${locale}-${variant.name}-${width}.png`,
+        );
+
         await page.screenshot({
           fullPage: true,
           animations: 'disabled',
-          path: testInfo.outputPath(
-            `${variant.name}-${locale}-${width}.png`,
-          ),
+          path: renderPath,
         });
 
         await takeSnapshot(

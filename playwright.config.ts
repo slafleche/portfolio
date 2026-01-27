@@ -32,7 +32,6 @@ export default defineConfig({
     trace: 'off',
     screenshot: 'off',
     video: 'off',
-    reducedMotion: 'reduce',
   },
   projects: [
     {
