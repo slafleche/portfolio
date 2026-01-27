@@ -1,5 +1,4 @@
 import 'normalize.css';
-
 import '@/styles/globals.css';
 import '@/styles/typography.css';
 

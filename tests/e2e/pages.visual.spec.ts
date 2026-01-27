@@ -1,4 +1,9 @@
-import { expect, type Page, test } from '@playwright/test';
+import {
+  expect,
+  takeSnapshot,
+  test,
+} from '@chromatic-com/playwright';
+import type { Page } from '@playwright/test';
 
 import {
   defaultViewports,
@@ -9,6 +14,11 @@ const VIEWPORT_HEIGHT = 900;
 const WIDTHS = defaultViewports;
 
 type Locale = (typeof LOCALES)[number];
+
+test.use({
+  disableAutoSnapshot: true,
+  cropToViewport: false,
+});
 
 type Variant = {
   name: 'home' | 'systems';
@@ -77,17 +87,18 @@ for (const locale of LOCALES) {
           timeout: 30_000,
         });
 
-        const screenshot = await page.screenshot({
+        await page.screenshot({
           fullPage: true,
           animations: 'disabled',
+          path: testInfo.outputPath(
+            `${variant.name}-${locale}-${width}.png`,
+          ),
         });
 
-        await testInfo.attach(
-          `${variant.name}-${locale}-${width}.png`,
-          {
-            body: screenshot,
-            contentType: 'image/png',
-          },
+        await takeSnapshot(
+          page,
+          `${variant.name}-${locale}-${width}`,
+          testInfo,
         );
       });
     }

@@ -54,6 +54,7 @@ const tsNoProjectFiles = [
   'next-env.d.ts',
   'cdn/**/*.{ts,tsx,mts}',
   'tests/**/*.{ts,tsx}',
+  '.storybook/**/*.{ts,tsx}',
 ];
 
 /** @type {import('eslint').FlatConfig.Config[]} */
