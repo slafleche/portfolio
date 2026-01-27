@@ -125,17 +125,20 @@ jobs:
       - name: Run Playwright page renders (en/fr @ 1400/840/335)
         run: yarn test:e2e pages.visual.spec.ts
 
+      - name: Build Storybook
+        run: yarn build-storybook
+
       - name: Set Chromatic archive location
         run: |
           echo "CHROMATIC_ARCHIVE_LOCATION=test-results/e2e" >> "$GITHUB_ENV"
 
-      - name: Publish Playwright renders to Chromatic (PR gate)
+      - name: Publish Storybook + Playwright renders to Chromatic (PR gate)
         uses: chromaui/action@latest
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          storybookBuildDir: storybook-static
           playwright: true
-          forceRebuild: true
           exitOnceUploaded: true
           exitZeroOnChanges: false
 
@@ -145,40 +148,3 @@ jobs:
         with:
           name: playwright-test-results
           path: test-results
-
-  chromatic:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.base_ref == 'main'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Use Node.js (from .nvmrc)
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install --immutable
-
-      - name: Generate locales
-        run: yarn locales
-
-      - name: Generate build inputs
-        run: yarn generate --skip-cdn
-
-      - name: Build Storybook
-        run: yarn build-storybook
-
-      - name: Publish to Chromatic (PR gate)
-        uses: chromaui/action@latest
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          storybookBuildDir: storybook-static
-          exitOnceUploaded: true
-          exitZeroOnChanges: false

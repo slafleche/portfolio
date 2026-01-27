@@ -42,6 +42,7 @@ export default function ContactButton({
   portalTarget,
   forceVisible = false,
 }: ContactButtonProps) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [
     mounted,
     setMounted,
@@ -276,21 +277,54 @@ export default function ContactButton({
     wantVisibleRef.current = visibleSignal;
 
     const currentPhase = phaseRef.current;
+    const shouldInstantTransition =
+      forceVisible || prefersReducedMotion;
     let enterTimeout: number | null = null;
     let exitTimeout: number | null = null;
 
+    if (shouldInstantTransition) {
+      if (currentPhase === 'entering') {
+        L('→ instant enter (motion/force)');
+        enterTimeout = window.setTimeout(() => {
+          setPhase('shown', 'instant enter');
+          if (!wantVisibleRef.current)
+            requestExitIfAllowed('post-enter check (instant)');
+        }, 0);
+      }
+      if (currentPhase === 'exiting') {
+        L('→ instant exit (motion/force)');
+        exitTimeout = window.setTimeout(() => {
+          setPhase('hidden', 'instant exit');
+        }, 0);
+      }
+    }
+
     if (currentPhase === 'hidden' && visibleSignal) {
       L('→ signal enter (offscreen hook)');
-      enterTimeout = window.setTimeout(() => {
-        setPhase('entering', 'signal->enter');
-      }, 0);
+      if (shouldInstantTransition) {
+        enterTimeout = window.setTimeout(() => {
+          setPhase('shown', 'signal->shown (instant)');
+          if (!wantVisibleRef.current)
+            requestExitIfAllowed('post-enter check (instant)');
+        }, 0);
+      } else {
+        enterTimeout = window.setTimeout(() => {
+          setPhase('entering', 'signal->enter');
+        }, 0);
+      }
     }
 
     if (currentPhase === 'shown' && !visibleSignal) {
       L('→ signal exit (offscreen hook)');
-      exitTimeout = window.setTimeout(() => {
-        requestExitIfAllowed('signal->exit');
-      }, 0);
+      if (shouldInstantTransition) {
+        exitTimeout = window.setTimeout(() => {
+          setPhase('hidden', 'signal->hidden (instant)');
+        }, 0);
+      } else {
+        exitTimeout = window.setTimeout(() => {
+          requestExitIfAllowed('signal->exit');
+        }, 0);
+      }
     }
 
     return () => {
@@ -303,6 +337,8 @@ export default function ContactButton({
     };
   }, [
     visibleSignal,
+    forceVisible,
+    prefersReducedMotion,
     L,
     setPhase,
     requestExitIfAllowed,
@@ -327,7 +363,7 @@ export default function ContactButton({
               aria-disabled={exiting ? 'true' : undefined}
               style={exiting ? { pointerEvents: 'none' } : undefined}
               data-motion={
-                usePrefersReducedMotion() ? 'reduced' : 'normal'
+                prefersReducedMotion ? 'reduced' : 'normal'
               }
               // extra guard for keyboard activation while exiting
               onKeyDown={(e) => {
