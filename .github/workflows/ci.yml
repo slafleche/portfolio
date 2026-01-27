@@ -127,8 +127,7 @@ jobs:
 
       - name: Set Chromatic archive location
         run: |
-          LATEST="$(ls -1dt test-results/*/ | head -n 1 | sed 's:/*$::')"
-          echo "CHROMATIC_ARCHIVE_LOCATION=$LATEST" >> "$GITHUB_ENV"
+          echo "CHROMATIC_ARCHIVE_LOCATION=test-results/e2e" >> "$GITHUB_ENV"
 
       - name: Publish Playwright renders to Chromatic (PR gate)
         uses: chromaui/action@latest

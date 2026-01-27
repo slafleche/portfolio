@@ -1,21 +1,5 @@
 import { defineConfig } from '@playwright/test';
 
-const pad = (value) => String(value).padStart(2, '0');
-const now = new Date();
-const timestamp = [
-  now.getFullYear(),
-  '-',
-  pad(now.getMonth() + 1),
-  '-',
-  pad(now.getDate()),
-  '_',
-  pad(now.getHours()),
-  '-',
-  pad(now.getMinutes()),
-  '-',
-  pad(now.getSeconds()),
-].join('');
-
 const inCI = Boolean(process.env.CI);
 const forceReuseExisting =
   process.env.PLAYWRIGHT_REUSE_EXISTING === '1';
@@ -36,7 +20,7 @@ const webServer = useExistingServer
 
 export default defineConfig({
   testDir: 'tests/e2e',
-  outputDir: `test-results/${timestamp}`,
+  outputDir: 'test-results/e2e',
   timeout: 30_000,
   expect: {
     timeout: 5_000,
