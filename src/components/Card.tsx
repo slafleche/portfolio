@@ -56,7 +56,7 @@ export default function Card({
               {logoAsBg}
             </div>
           )}
-          <div className={clsx(s.panel, s.glassSurface)}>
+          <div className={clsx(s.panel)}>
             <div className={s.spacer} />
             <div className={s.text}>{children}</div>
           </div>
