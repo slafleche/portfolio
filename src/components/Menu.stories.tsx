@@ -35,8 +35,9 @@ const GlobalStyleOverrides = () => {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = [
-      'html, body { background: #000 !important; }',
       '* { animation: none !important; transition: none !important; }',
+      'html { scrollbar-gutter: auto !important; }',
+      'html, body { overflow: hidden !important; }',
     ].join('\n');
     document.head.appendChild(style);
     return () => {
@@ -88,7 +89,7 @@ export default meta;
 type Story = StoryObj<typeof Menu>;
 
 export const Default: Story = {
-  name: 'Menu (reduced motion, black bg)',
+  name: 'Menu (reduced motion)',
   render: () => (
     <Menu
       root="/en"
@@ -104,9 +105,9 @@ export const Default: Story = {
         { title: 'Projects', href: '#projects' },
         { title: contact.title, href: '#contact' },
       ]}
-      localeLinks={AVAILABLE_LOCALES.filter((code) => code !== 'en').map(
-        (code) => ({ locale: code, label: LOCALE_LABELS[code] }),
-      )}
+      localeLinks={AVAILABLE_LOCALES.filter(
+        (code) => code !== 'en',
+      ).map((code) => ({ locale: code, label: LOCALE_LABELS[code] }))}
       ctaLabel={contact.labelFloating}
       ctaWatchId={sharedStrings.heroWaypointId}
       forceCtaVisible={true}

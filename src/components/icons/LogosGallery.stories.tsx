@@ -93,7 +93,7 @@ function LogosGallery() {
           <Logo
             idBase="storybook-site-logo"
             mode="mono"
-            bgColour={color('#000')}
+            bgColour={color('#505050')}
           />
         </div>
       ),

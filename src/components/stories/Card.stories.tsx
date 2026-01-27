@@ -32,7 +32,6 @@ function GlobalStyleOverrides() {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = [
-      'html, body { background: #000 !important; }',
       '* { animation: none !important; transition: none !important; }',
     ].join('\n');
     document.head.appendChild(style);

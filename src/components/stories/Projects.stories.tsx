@@ -38,7 +38,6 @@ function GlobalStyleOverrides() {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = [
-      'html, body { background: #000 !important; }',
       '* { animation: none !important; transition: none !important; }',
     ].join('\n');
     document.head.appendChild(style);
@@ -211,7 +210,10 @@ const meta: Meta<typeof ProjectsSection> = {
   component: ProjectsSection,
   parameters: {
     layout: 'fullscreen',
-    chromatic: { viewports: defaultViewports, pauseAnimationAtEnd: true },
+    chromatic: {
+      viewports: defaultViewports,
+      pauseAnimationAtEnd: true,
+    },
   },
 };
 
@@ -221,12 +223,16 @@ type Story = StoryObj<typeof ProjectsSection>;
 
 export const En: Story = {
   name: 'Projects (EN)',
-  decorators: [withLocaleEnvironment('/en')],
+  decorators: [
+    withLocaleEnvironment('/en'),
+  ],
   render: () => <ProjectsSection copy={projectsEn} />,
 };
 
 export const Fr: Story = {
   name: 'Projects (FR)',
-  decorators: [withLocaleEnvironment('/fr')],
+  decorators: [
+    withLocaleEnvironment('/fr'),
+  ],
   render: () => <ProjectsSection copy={projectsFr} />,
 };

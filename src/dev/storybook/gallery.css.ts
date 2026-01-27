@@ -10,8 +10,6 @@ import { colorVars } from '@/tokens/global.tokens';
 export const root = style({
   minHeight: '100vh',
   padding: 24,
-  ...backgrounds({ color: colorVars.black }),
-  color: '#fff',
   fontFamily:
     'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji',
 });

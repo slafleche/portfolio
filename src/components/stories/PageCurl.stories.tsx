@@ -12,7 +12,7 @@ const removeFrozenAnimationOverrides = () => {
   for (const style of styles) {
     const text = style.textContent ?? '';
     if (
-      text.includes('html, body { background: #000 !important; }') &&
+      text.includes('html, body { background: #505050 !important; }') &&
       text.includes('animation: none !important') &&
       text.includes('transition: none !important')
     ) {

@@ -42,11 +42,30 @@ const VARIANTS: Variant[] = [
 ];
 
 const waitForFonts = async (page: Page) => {
-  await page.waitForFunction(() => {
-    if (typeof document === 'undefined') return true;
+  const timeoutMs = 15_000;
+
+  try {
+    await page.waitForFunction(() => {
+      if (typeof document === 'undefined') return true;
+      const fonts = (document as any).fonts;
+      return typeof fonts === 'undefined' || fonts.status === 'loaded';
+    }, { timeout: timeoutMs });
+    return;
+  } catch {
+    // Some environments can keep `document.fonts.status` at "loading" forever
+    // even though the page has rendered and visual snapshots are stable.
+    // Prefer a bounded best-effort wait over failing the entire suite.
+  }
+
+  await page.evaluate(async (ms) => {
     const fonts = (document as any).fonts;
-    return typeof fonts === 'undefined' || fonts.status === 'loaded';
-  });
+    if (!fonts?.ready) return;
+
+    await Promise.race([
+      fonts.ready.catch(() => undefined),
+      new Promise<void>((resolve) => setTimeout(resolve, ms)),
+    ]);
+  }, timeoutMs);
 };
 
 const hideNextDevOverlays = async (page: Page) => {

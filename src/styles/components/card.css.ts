@@ -1,5 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css';
-import { m, mPercent } from 'css-calipers';
+import { m } from 'css-calipers';
 
 import { glassVars } from '../../tokens/glassy.tokens';
 import { colorVars } from '../../tokens/global.tokens';
@@ -8,7 +8,6 @@ import { wordMarkVars } from '../../tokens/wordmarks.tokens';
 import { cardLayout } from '../componentTokens/card.component.tokens';
 import borders from '../helpers/borders.helper';
 import { makeCardGradient } from '../helpers/cardGradient.helper';
-import { makeGlassSurface } from '../helpers/glassy.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import {
   globalDropShadowFilter,

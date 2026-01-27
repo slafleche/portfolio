@@ -1,9 +1,7 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import { useEffect } from 'react';
 
-import {
-  __setStorybookPathname,
-} from '@/dev/storybook/nextNavigationShim';
+import { __setStorybookPathname } from '@/dev/storybook/nextNavigationShim';
 import { defaultViewports } from '@/dev/storybookConfig';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
@@ -29,7 +27,6 @@ const removeFrozenAnimationOverrides = () => {
   for (const style of styles) {
     const text = style.textContent ?? '';
     if (
-      text.includes('html, body { background: #000 !important; }') &&
       text.includes('animation: none !important') &&
       text.includes('transition: none !important')
     ) {
@@ -67,9 +64,6 @@ const forceNoReducedMotionMatchMedia = () => {
 function GlobalStyleOverrides() {
   useEffect(() => {
     const style = document.createElement('style');
-    style.textContent = [
-      'html, body { background: #000 !important; }',
-    ].join('\n');
     document.head.appendChild(style);
     return () => {
       style.remove();
@@ -105,7 +99,10 @@ const meta: Meta<typeof Footer> = {
   component: Footer,
   parameters: {
     layout: 'fullscreen',
-    chromatic: { viewports: defaultViewports, pauseAnimationAtEnd: true },
+    chromatic: {
+      viewports: defaultViewports,
+      pauseAnimationAtEnd: true,
+    },
   },
 };
 
@@ -115,7 +112,9 @@ type Story = StoryObj<typeof Footer>;
 
 export const En: Story = {
   name: 'Footer (EN)',
-  decorators: [withLocaleEnvironment('/en')],
+  decorators: [
+    withLocaleEnvironment('/en'),
+  ],
   render: () => (
     <Footer contact={contactEn} systemsLink={systemsLinkEn} />
   ),
@@ -123,7 +122,9 @@ export const En: Story = {
 
 export const Fr: Story = {
   name: 'Footer (FR)',
-  decorators: [withLocaleEnvironment('/fr')],
+  decorators: [
+    withLocaleEnvironment('/fr'),
+  ],
   render: () => (
     <Footer contact={contactFr} systemsLink={systemsLinkFr} />
   ),

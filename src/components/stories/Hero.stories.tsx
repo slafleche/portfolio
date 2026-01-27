@@ -41,7 +41,6 @@ function GlobalStyleOverrides() {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = [
-      'html, body { background: #000 !important; }',
       '* { animation: none !important; transition: none !important; }',
     ].join('\n');
     document.head.appendChild(style);
@@ -53,16 +52,16 @@ function GlobalStyleOverrides() {
 }
 
 function withHeroEnvironment({
-    pathname,
-    formCopy,
-    privacyCopy,
-    closeLabel,
-  }: {
-    pathname: string;
-    formCopy: typeof enCopies.form;
-    privacyCopy: typeof enCopies.privacy;
-    closeLabel: string;
-  }): Decorator {
+  pathname,
+  formCopy,
+  privacyCopy,
+  closeLabel,
+}: {
+  pathname: string;
+  formCopy: typeof enCopies.form;
+  privacyCopy: typeof enCopies.privacy;
+  closeLabel: string;
+}): Decorator {
   return function WithHeroEnvironmentDecorator(Story) {
     const restoreReducedMotion = (() => {
       __setStorybookPathname(pathname);
@@ -93,7 +92,10 @@ const meta: Meta<typeof Hero> = {
   component: Hero,
   parameters: {
     layout: 'fullscreen',
-    chromatic: { viewports: defaultViewports, pauseAnimationAtEnd: true },
+    chromatic: {
+      viewports: defaultViewports,
+      pauseAnimationAtEnd: true,
+    },
   },
 };
 

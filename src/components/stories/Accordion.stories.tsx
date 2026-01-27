@@ -9,6 +9,7 @@ import * as layoutStyles from '@/styles/layout.css';
 
 import { Accordion } from '../Accordion';
 import { Markdown } from '../Markdown';
+import Content from '../responsive/Content';
 
 const t = createSectionTranslator(en, en);
 const caseStudies = buildCaseStudiesCopy(t);
@@ -32,19 +33,21 @@ type Story = StoryObj<typeof Accordion>;
 export const HomeCaseStudies: Story = {
   name: 'Home Case Studies (EN)',
   render: () => (
-    <section className={layoutStyles.sectionSpacing}>
-      <div className={layoutStyles.content}>
-        <Accordion
-          items={caseStudies.list.map((study, index) => ({
-            id: `case-study-${index}`,
-            heading: study.title,
-            subHeading: study.subTitle,
-            content: <Markdown source={study.content} />,
-            defaultOpen: index === 0,
-          }))}
-        />
-      </div>
-    </section>
+    <Content
+      queryDataAttributes={{
+        compact: 'no-padding-no-margin',
+      }}
+    >
+      <Accordion
+        items={caseStudies.list.map((study, index) => ({
+          id: `case-study-${index}`,
+          heading: study.title,
+          subHeading: study.subTitle,
+          content: <Markdown source={study.content} />,
+          defaultOpen: index === 0,
+        }))}
+      />
+    </Content>
   ),
 };
 

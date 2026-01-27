@@ -21,7 +21,6 @@ function GlobalStyleOverrides() {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = [
-      'html, body { background: #000 !important; }',
       '* { animation: none !important; transition: none !important; }',
     ].join('\n');
     document.head.appendChild(style);
@@ -53,7 +52,9 @@ function withLocaleEnvironment(pathname: string): Decorator {
   };
 }
 
-const [approachEn] = translateMarkdownSections(t, [
+const [
+  approachEn,
+] = translateMarkdownSections(t, [
   {
     titleKey: 'approach',
     markdownKey: 'approach-content',
@@ -61,7 +62,9 @@ const [approachEn] = translateMarkdownSections(t, [
   },
 ] as const);
 
-const [approachFr] = translateMarkdownSections(tFr, [
+const [
+  approachFr,
+] = translateMarkdownSections(tFr, [
   {
     titleKey: 'approach',
     markdownKey: 'approach-content',
@@ -74,7 +77,10 @@ const meta: Meta<typeof ContentWithTitle> = {
   component: ContentWithTitle,
   parameters: {
     layout: 'fullscreen',
-    chromatic: { viewports: defaultViewports, pauseAnimationAtEnd: true },
+    chromatic: {
+      viewports: defaultViewports,
+      pauseAnimationAtEnd: true,
+    },
   },
 };
 
@@ -84,7 +90,9 @@ type Story = StoryObj<typeof ContentWithTitle>;
 
 export const En: Story = {
   name: 'Approach (EN)',
-  decorators: [withLocaleEnvironment('/en')],
+  decorators: [
+    withLocaleEnvironment('/en'),
+  ],
   render: () => (
     <ContentWithTitle id={approachEn.href} title={approachEn.title}>
       <Markdown source={approachEn.content} />
@@ -94,7 +102,9 @@ export const En: Story = {
 
 export const Fr: Story = {
   name: 'Approach (FR)',
-  decorators: [withLocaleEnvironment('/fr')],
+  decorators: [
+    withLocaleEnvironment('/fr'),
+  ],
   render: () => (
     <ContentWithTitle id={approachFr.href} title={approachFr.title}>
       <Markdown source={approachFr.content} />

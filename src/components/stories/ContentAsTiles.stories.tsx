@@ -34,7 +34,6 @@ function GlobalStyleOverrides() {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = [
-      'html, body { background: #000 !important; }',
       '* { animation: none !important; transition: none !important; }',
     ].join('\n');
     document.head.appendChild(style);
@@ -109,13 +108,16 @@ type Story = StoryObj<typeof ContentAsTilesSection>;
 
 export const ArchitectureEn: Story = {
   name: 'Architecture Tiles (EN)',
-  decorators: [withLocaleEnvironment('/en/systems')],
+  decorators: [
+    withLocaleEnvironment('/en/systems'),
+  ],
   render: () => <ContentAsTilesSection {...architectureEn} />,
 };
 
 export const ArchitectureFr: Story = {
   name: 'Architecture Tiles (FR)',
-  decorators: [withLocaleEnvironment('/fr/systems')],
+  decorators: [
+    withLocaleEnvironment('/fr/systems'),
+  ],
   render: () => <ContentAsTilesSection {...architectureFr} />,
 };
-
