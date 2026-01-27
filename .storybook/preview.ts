@@ -4,6 +4,14 @@ import '@/styles/typography.css';
 
 import type { Preview } from '@storybook/react';
 
+if (typeof globalThis.process === 'undefined') {
+  (globalThis as any).process = {
+    env: {
+      NODE_ENV: 'development',
+    },
+  };
+}
+
 const preview: Preview = {
   parameters: {
     layout: 'fullscreen',
@@ -11,4 +19,3 @@ const preview: Preview = {
 };
 
 export default preview;
-

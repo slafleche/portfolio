@@ -125,8 +125,18 @@ jobs:
       - name: Run Playwright page renders (en/fr @ 1400/840/335)
         run: yarn test:e2e pages.visual.spec.ts
 
+      - name: Set Chromatic archive location
+        run: |
+          LATEST="$(ls -1dt test-results/*/ | head -n 1 | sed 's:/*$::')"
+          echo "CHROMATIC_ARCHIVE_LOCATION=$LATEST" >> "$GITHUB_ENV"
+
       - name: Publish Playwright renders to Chromatic (PR gate)
-        run: yarn chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --playwright
+        uses: chromaui/action@latest
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          playwright: true
+          exitZeroOnChanges: false
 
       - name: Upload Playwright results
         if: always()
@@ -164,4 +174,9 @@ jobs:
         run: yarn build-storybook
 
       - name: Publish to Chromatic (PR gate)
-        run: yarn chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --storybook-build-dir=storybook-static
+        uses: chromaui/action@latest
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          storybookBuildDir: storybook-static
+          exitZeroOnChanges: false
