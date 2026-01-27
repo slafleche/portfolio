@@ -51,6 +51,7 @@ type PerTagClassNames = {
 
 type MarkdownProps = {
   tag?: keyof JSX.IntrinsicElements;
+  children?: string | null;
   source?: string | null;
   openLinksInNewTab?: boolean;
   asUi?: AsUiConfig;
@@ -1007,6 +1008,7 @@ const normalizeSource = (source: string): string => {
 };
 
 function MarkdownBase({
+  children,
   source,
   openLinksInNewTab = true,
   tag,
@@ -1016,8 +1018,14 @@ function MarkdownBase({
   classNameMap = {},
   ...rest
 }: MarkdownProps): ReactElement | null {
+  const effectiveSource =
+    typeof children === 'string'
+      ? children
+      : typeof source === 'string'
+        ? source
+        : '';
   const normalized =
-    typeof source === 'string' ? normalizeSource(source) : '';
+    effectiveSource === '' ? '' : normalizeSource(effectiveSource);
   const tokens = normalized === '' ? [] : marked.lexer(normalized);
   if (tokens.length === 0) {
     return null;

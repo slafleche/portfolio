@@ -2,7 +2,6 @@ import type { Decorator, Meta, StoryObj } from '@storybook/react';
 import { useEffect } from 'react';
 
 import {
-  __forceReducedMotion,
   __setStorybookPathname,
 } from '@/dev/storybook/nextNavigationShim';
 import { defaultViewports } from '@/dev/storybookConfig';
@@ -23,12 +22,53 @@ const contactFr = buildContactCopy(tFr);
 const systemsLinkEn = buildSystemsLink('en', t);
 const systemsLinkFr = buildSystemsLink('fr', tFr);
 
+const removeFrozenAnimationOverrides = () => {
+  if (typeof document === 'undefined') return;
+
+  const styles = Array.from(document.querySelectorAll('style'));
+  for (const style of styles) {
+    const text = style.textContent ?? '';
+    if (
+      text.includes('html, body { background: #000 !important; }') &&
+      text.includes('animation: none !important') &&
+      text.includes('transition: none !important')
+    ) {
+      style.remove();
+    }
+  }
+};
+
+const forceNoReducedMotionMatchMedia = () => {
+  if (typeof window === 'undefined') return () => {};
+  const originalMatchMedia = window.matchMedia.bind(window);
+
+  window.matchMedia = ((query: string) => {
+    if (query.includes('prefers-reduced-motion')) {
+      const mql: MediaQueryList = {
+        media: query,
+        matches: false,
+        onchange: null,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        addListener: () => {},
+        removeListener: () => {},
+        dispatchEvent: () => false,
+      };
+      return mql;
+    }
+    return originalMatchMedia(query);
+  }) as typeof window.matchMedia;
+
+  return () => {
+    window.matchMedia = originalMatchMedia;
+  };
+};
+
 function GlobalStyleOverrides() {
   useEffect(() => {
     const style = document.createElement('style');
     style.textContent = [
       'html, body { background: #000 !important; }',
-      '* { animation: none !important; transition: none !important; }',
     ].join('\n');
     document.head.appendChild(style);
     return () => {
@@ -40,13 +80,14 @@ function GlobalStyleOverrides() {
 
 function withLocaleEnvironment(pathname: string): Decorator {
   return function WithLocaleEnvironmentDecorator(Story) {
-    const restoreReducedMotion = (() => {
+    const restoreMatchMedia = (() => {
       __setStorybookPathname(pathname);
-      return __forceReducedMotion();
+      removeFrozenAnimationOverrides();
+      return forceNoReducedMotionMatchMedia();
     })();
 
     function LocaleDecorator() {
-      useEffect(() => restoreReducedMotion, []);
+      useEffect(() => restoreMatchMedia, []);
       return (
         <>
           <GlobalStyleOverrides />

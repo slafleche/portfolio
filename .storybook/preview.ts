@@ -100,6 +100,7 @@ const preview: Preview = {
 		          ],
 		          'Components',
 		          [
+		            'Markdown',
 		            'Card',
 		            'Project',
 		            'Tile',
