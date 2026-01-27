@@ -104,6 +104,10 @@ pnpm-debug.log*
 tmp/*
 .local/*
 /test-results/**
+/playwright-report/
+/storybook-static/
+/.chromatic/
+build-storybook.log
 
 # -----------------------
 # Epics (local by default)

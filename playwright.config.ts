@@ -24,10 +24,11 @@ const defaultE2EPort = 3100;
 const e2ePort = Number(process.env.PLAYWRIGHT_PORT ?? defaultE2EPort);
 const e2eBaseURL =
   process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${e2ePort}`;
+const serverScript = inCI ? 'start:e2e' : 'dev:e2e';
 const webServer = useExistingServer
   ? undefined
   : {
-      command: `PORT=${e2ePort} yarn dev:e2e`,
+      command: `PORT=${e2ePort} yarn ${serverScript}`,
       url: e2eBaseURL,
       reuseExistingServer: false,
       timeout: 120_000,

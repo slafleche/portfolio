@@ -102,6 +102,11 @@ export function getTurnstileSiteKey(): string | null {
   return siteKey ?? null;
 }
 
+export function getChromaticProjectToken(): string | null {
+  const raw = process.env.CHROMATIC_PROJECT_TOKEN?.trim();
+  return raw ? raw : null;
+}
+
 export interface BrevoEnvConfig {
   apiKey: string | null;
   mailFrom: string | null;

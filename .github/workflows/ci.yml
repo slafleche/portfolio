@@ -74,3 +74,87 @@ jobs:
           (github.event_name == 'pull_request' &&
             (github.base_ref == 'staging' || github.base_ref == 'release'))
         run: yarn ci
+
+  e2e-pages:
+    runs-on: ubuntu-latest
+    if: >
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && github.base_ref == 'main')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js (from .nvmrc)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Cache Next.js build cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Generate locales
+        run: yarn locales
+
+      - name: Generate build inputs
+        run: yarn generate --skip-cdn
+
+      - name: Build Next.js
+        run: yarn build
+
+      - name: Install Playwright (Chromium only)
+        run: yarn playwright install --with-deps chromium
+
+      - name: Run Playwright page renders (en/fr @ 1400/840/335)
+        run: yarn test:e2e pages.visual.spec.ts
+
+      - name: Upload Playwright results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results
+
+  chromatic:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js (from .nvmrc)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Generate locales
+        run: yarn locales
+
+      - name: Generate build inputs
+        run: yarn generate --skip-cdn
+
+      - name: Build Storybook
+        run: yarn build-storybook
+
+      - name: Publish to Chromatic (PR gate)
+        run: yarn chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --storybook-build-dir=storybook-static
