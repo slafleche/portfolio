@@ -16,6 +16,16 @@ export {
   notStaging,
 };
 
+export type RuntimeNodeEnv = 'development' | 'production';
+
+export function getRuntimeNodeEnv(): RuntimeNodeEnv {
+  const configType = (globalThis as any).CONFIG_TYPE;
+  if (configType === 'PRODUCTION') return 'production';
+  if (configType === 'DEVELOPMENT') return 'development';
+
+  return isDev() ? 'development' : 'production';
+}
+
 export function getSiteOrigin(): string | null {
   const raw = process.env.SITE_URL?.trim();
   if (raw) {

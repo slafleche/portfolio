@@ -25,6 +25,11 @@ const config: StorybookConfig = {
 
     return {
       ...viteConfig,
+      // Storybook (Vite) copies Vite's `publicDir` into the build output.
+      // This repo has `public/index.html` + `public/main.js`, which would
+      // overwrite Storybook's own `index.html` and make Chromatic show the app
+      // ("Hello / Welcome to the site") instead of the Storybook manager.
+      publicDir: false,
       plugins: [
         ...(viteConfig.plugins ?? []),
         vanillaExtractPlugin(),

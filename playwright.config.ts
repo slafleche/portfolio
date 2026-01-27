@@ -44,9 +44,10 @@ export default defineConfig({
   webServer,
   use: {
     baseURL: e2eBaseURL,
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    // Chromatic page renders only need image outputs; avoid generating videos/traces.
+    trace: 'off',
+    screenshot: 'off',
+    video: 'off',
     reducedMotion: 'reduce',
   },
   projects: [
