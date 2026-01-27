@@ -19,6 +19,7 @@ test.use({
   disableAutoSnapshot: true,
   cropToViewport: false,
   assetDomains: ['cdn.lafleche.dev'],
+  deviceScaleFactor: 2,
 });
 
 type Variant = {

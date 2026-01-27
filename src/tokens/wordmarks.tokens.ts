@@ -92,11 +92,11 @@ const cardGradient_hs: CardGradientPack = {
 const cardGradient_kg: CardGradientPack = {
   linear: [
     {
-      color: color('#FFB800'),
+      color: color('#b16e08').darken(0.1),
       at: 0,
     },
     {
-      color: color('#b16e08'),
+      color: color('#b16e08').lighten(0.1),
       at: 100,
     },
   ],

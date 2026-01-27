@@ -52,7 +52,8 @@ export const root = style({
   ...gradientAsBgImg(buildLinear(themeColours.gradients.ctaConfig)),
   fontSize: '22px',
   lineHeight: 1,
-  ...relativeFontWeight(fontFamilies.objectSans, mPercent(0)),
+  letterSpacing: '0.02em',
+  ...relativeFontWeight(fontFamilies.objectSans, mPercent(50)),
   ...paddings(m(8)),
   ...borders.radii([
     m(40),

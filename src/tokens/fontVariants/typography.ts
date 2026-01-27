@@ -19,7 +19,7 @@ export const typographyFontVariants = {
       },
       options: {
         weightPercents: {
-          default: mPercent(30),
+          default: mPercent(45),
           strong: mPercent(100),
         },
       },
