@@ -18,8 +18,18 @@ export {
 
 export type RuntimeNodeEnv = 'development' | 'production';
 
+type StorybookConfigType = 'PRODUCTION' | 'DEVELOPMENT';
+
+const readStorybookConfigType = (): StorybookConfigType | null => {
+  const value = (globalThis as unknown as Record<string, unknown>)
+    .CONFIG_TYPE;
+  if (value === 'PRODUCTION') return 'PRODUCTION';
+  if (value === 'DEVELOPMENT') return 'DEVELOPMENT';
+  return null;
+};
+
 export function getRuntimeNodeEnv(): RuntimeNodeEnv {
-  const configType = (globalThis as any).CONFIG_TYPE;
+  const configType = readStorybookConfigType();
   if (configType === 'PRODUCTION') return 'production';
   if (configType === 'DEVELOPMENT') return 'development';
 
