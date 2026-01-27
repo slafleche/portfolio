@@ -1,23 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import PageRenderImage, {
+  pageRenderWrapperWidth,
+} from './PageRenderImage';
+
 const renderPage = (width: number) => (
-  <div
-    style={{
-      overflow: 'auto',
-      width: '100%',
-    }}
-  >
-    <img
-      alt={`Systems FR @${width}px`}
-      src={`/pages/fr-systems-${width}.png`}
-      style={{
-        display: 'block',
-        width: `${width}px`,
-        maxWidth: 'unset',
-        margin: 0,
-      }}
-    />
-  </div>
+  <PageRenderImage
+    alt={`Systems FR @${width}px`}
+    src={`/pages/fr-systems-${width}.png`}
+    width={width}
+  />
 );
 
 const meta: Meta = {
@@ -36,7 +28,7 @@ export const Size320: Story = {
   parameters: {
     chromatic: {
       viewports: [
-        320,
+        pageRenderWrapperWidth(320),
       ],
     },
   },
@@ -48,7 +40,7 @@ export const Size360: Story = {
   parameters: {
     chromatic: {
       viewports: [
-        360,
+        pageRenderWrapperWidth(360),
       ],
     },
   },
@@ -60,7 +52,7 @@ export const Size840: Story = {
   parameters: {
     chromatic: {
       viewports: [
-        840,
+        pageRenderWrapperWidth(840),
       ],
     },
   },
@@ -72,7 +64,7 @@ export const Size1024: Story = {
   parameters: {
     chromatic: {
       viewports: [
-        1024,
+        pageRenderWrapperWidth(1024),
       ],
     },
   },
@@ -84,7 +76,7 @@ export const Size1400: Story = {
   parameters: {
     chromatic: {
       viewports: [
-        1400,
+        pageRenderWrapperWidth(1400),
       ],
     },
   },
