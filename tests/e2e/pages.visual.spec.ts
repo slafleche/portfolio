@@ -18,11 +18,18 @@ const WIDTHS = defaultViewports;
 
 type Locale = (typeof LOCALES)[number];
 
+// These "full page render" tests can be slow in CI due to:
+// - remote font/image fetches
+// - fullPage screenshots on long pages
+test.describe.configure({ timeout: 120_000 });
+
 test.use({
   disableAutoSnapshot: true,
   cropToViewport: false,
   assetDomains: ['cdn.lafleche.dev'],
   deviceScaleFactor: 2,
+  navigationTimeout: 60_000,
+  actionTimeout: 60_000,
 });
 
 type Variant = {

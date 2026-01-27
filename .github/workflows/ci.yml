@@ -75,9 +75,11 @@ jobs:
             (github.base_ref == 'staging' || github.base_ref == 'release'))
         run: yarn ci
 
-  e2e-pages:
+  page-renders:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && github.base_ref == 'main')
 
     steps:
       - name: Checkout code
@@ -123,6 +125,13 @@ jobs:
       - name: Run Playwright page renders (en/fr @ 1400/840/335)
         run: yarn test:e2e pages.visual.spec.ts
 
+      - name: Upload page renders
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: page-renders
+          path: public/pages-renders
+
       - name: Upload Playwright results
         if: always()
         uses: actions/upload-artifact@v4
@@ -133,12 +142,19 @@ jobs:
   chromatic:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    needs: page-renders
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Download page renders
+        uses: actions/download-artifact@v4
+        with:
+          name: page-renders
+          path: .
 
       - name: Use Node.js (from .nvmrc)
         uses: actions/setup-node@v4
@@ -154,12 +170,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock') }}
-
       - name: Install dependencies
         run: yarn install --immutable
 
@@ -171,12 +181,6 @@ jobs:
 
       - name: Build Next.js
         run: yarn build
-
-      - name: Install Playwright (Chromium only)
-        run: yarn playwright install --with-deps chromium
-
-      - name: Build Playwright page renders (en/fr @ 1400/1024/840/360/320)
-        run: yarn test:e2e pages.visual.spec.ts
 
       - name: Build Storybook
         run: yarn build-storybook
