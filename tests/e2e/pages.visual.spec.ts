@@ -18,6 +18,7 @@ type Locale = (typeof LOCALES)[number];
 test.use({
   disableAutoSnapshot: true,
   cropToViewport: false,
+  assetDomains: ['cdn.lafleche.dev'],
 });
 
 type Variant = {
@@ -63,6 +64,25 @@ const hideNextDevOverlays = async (page: Page) => {
   });
 };
 
+const waitForMenuPositioning = async (page: Page) => {
+  await page.waitForFunction(() => {
+    const localeLink = document.querySelector('a[hreflang]');
+    if (!localeLink) return false;
+
+    const localeItem = localeLink.closest('li');
+    if (!localeItem) return false;
+
+    const itemStyle = window.getComputedStyle(localeItem);
+    if (itemStyle.position !== 'absolute') return false;
+
+    const linkStyle = window.getComputedStyle(localeLink);
+    if (linkStyle.borderTopLeftRadius === '0px') return false;
+
+    const rect = localeItem.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  });
+};
+
 for (const locale of LOCALES) {
   for (const width of WIDTHS) {
     for (const variant of VARIANTS) {
@@ -79,6 +99,7 @@ for (const locale of LOCALES) {
         await page.goto(path, { waitUntil: 'domcontentloaded' });
         await waitForFonts(page);
         await hideNextDevOverlays(page);
+        await waitForMenuPositioning(page);
 
         await expect(
           page.locator(variant.heroSelector),

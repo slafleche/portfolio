@@ -136,6 +136,7 @@ jobs:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           playwright: true
           forceRebuild: true
+          exitOnceUploaded: true
           exitZeroOnChanges: false
 
       - name: Upload Playwright results
@@ -179,4 +180,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           storybookBuildDir: storybook-static
+          exitOnceUploaded: true
           exitZeroOnChanges: false
