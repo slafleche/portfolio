@@ -5,10 +5,10 @@ import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
 import en from '@/lib/locales/translations/en';
 import * as layoutStyles from '@/styles/layout.css';
 
-import Heading from '../../Heading';
-import Content from '../../responsive/Content';
-import { FormBlocksProvider } from '../formBlocks.context';
-import { EmailBlock } from './EmailBlock';
+import Heading from '../Heading';
+import Content from '../responsive/Content';
+import { FormBlocksProvider } from '../contact/formBlocks.context';
+import { EmailBlock } from '../contact/blocks/EmailBlock';
 
 const t = createSectionTranslator(en, en);
 const copy = buildEmailBlockLocale(t);

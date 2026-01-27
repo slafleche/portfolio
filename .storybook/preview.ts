@@ -88,7 +88,9 @@ const preview: Preview = {
           formCopy: storyFormCopy,
           privacyCopy: storyPrivacyCopy,
           closeLabel: storyCloseLabel,
-          turnstileSiteKey: null,
+          // Cloudflare Turnstile test key (always passes).
+          // Loads the real Turnstile widget script in Storybook.
+          turnstileSiteKey: '1x00000000000000000000AA',
         },
         createElement(Story),
       );
@@ -117,13 +119,13 @@ const preview: Preview = {
             'Icons',
             'Logos',
           ],
-		          'Forms',
-		          [
-		            'Form primitives',
-		            [
-		              'FormHint',
-		              'FormLabel',
-		              'TextareaInput',
+          'Forms',
+          [
+            'Form primitives',
+            [
+              'FormHint',
+              'FormLabel',
+              'TextareaInput',
               'TextInput',
             ],
             'Components',

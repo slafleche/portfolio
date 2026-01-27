@@ -5,9 +5,9 @@ import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
 import en from '@/lib/locales/translations/en';
 import * as layoutStyles from '@/styles/layout.css';
 
-import Heading from '../../Heading';
-import Content from '../../responsive/Content';
-import { HoneypotBlock } from './HoneypotBlock';
+import Heading from '../Heading';
+import Content from '../responsive/Content';
+import { HoneypotBlock } from '../contact/blocks/HoneypotBlock';
 
 const t = createSectionTranslator(en, en);
 const copy = buildHoneypotBlockLocale(t);
@@ -41,11 +41,13 @@ export const Default: Story = {
             <div style={{ display: 'grid', gap: 12, maxWidth: 720 }}>
               <p>
                 This honeypot field is intentionally invisible and
-                <em> aria-hidden</em> to humans, but it’s present in the DOM to
-                catch simple spam bots that fill every input.
+                <em> aria-hidden</em> to humans, but it’s present in
+                the DOM to catch simple spam bots that fill every
+                input.
               </p>
               <p>
-                In this story, the block renders but stays hidden by design.
+                In this story, the block renders but stays hidden by
+                design.
               </p>
               <HoneypotBlock copy={copy} />
             </div>

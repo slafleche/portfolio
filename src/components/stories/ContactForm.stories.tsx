@@ -17,8 +17,8 @@ import fr from '@/lib/locales/translations/fr';
 import { WindowSizeProvider } from '@/lib/responsive/WindowSizeContext';
 import { sharedStrings } from '@/lib/sharedStrings';
 
+import { ContactDialogProvider } from '../contact/ContactDialogProvider';
 import Menu from '../Menu';
-import { ContactDialogProvider } from './ContactDialogProvider';
 
 const t = createSectionTranslator(en, en);
 const menuCopy = buildMenuCopy(t);
@@ -90,16 +90,16 @@ function withHash(hash: string): Decorator {
 }
 
 function withContactDialogProvider({
-    pathname,
-    nextFormCopy,
-    nextPrivacyCopy,
-    nextCloseLabel,
-  }: {
-    pathname: string;
-    nextFormCopy: typeof formCopy;
-    nextPrivacyCopy: typeof privacyCopy;
-    nextCloseLabel: string;
-  }): Decorator {
+  pathname,
+  nextFormCopy,
+  nextPrivacyCopy,
+  nextCloseLabel,
+}: {
+  pathname: string;
+  nextFormCopy: typeof formCopy;
+  nextPrivacyCopy: typeof privacyCopy;
+  nextCloseLabel: string;
+}): Decorator {
   return function WithContactDialogProviderDecorator(Story) {
     function ContactDialogProviderDecorator() {
       useLayoutEffect(() => {
@@ -117,7 +117,9 @@ function withContactDialogProvider({
             formCopy={nextFormCopy}
             privacyCopy={nextPrivacyCopy}
             closeLabel={nextCloseLabel}
-            turnstileSiteKey={null}
+            // Cloudflare Turnstile test key (always passes).
+            // Loads the real Turnstile widget script in Storybook.
+            turnstileSiteKey="1x00000000000000000000AA"
           >
             <GlobalStyleOverrides />
             <Story />

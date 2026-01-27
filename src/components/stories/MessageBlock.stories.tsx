@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { buildTurnstileBlockLocale } from '@/lib/locales/form/form.turnstile';
+import { buildMessageBlockLocale } from '@/lib/locales/form/form.message';
 import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
 import en from '@/lib/locales/translations/en';
 import * as layoutStyles from '@/styles/layout.css';
 
-import Heading from '../../Heading';
-import Content from '../../responsive/Content';
-import { FormBlocksProvider } from '../formBlocks.context';
-import { TurnstileBlock } from './TurnstileBlock';
+import Heading from '../Heading';
+import Content from '../responsive/Content';
+import { FormBlocksProvider } from '../contact/formBlocks.context';
+import { MessageBlock } from '../contact/blocks/MessageBlock';
 
 const t = createSectionTranslator(en, en);
-const copy = buildTurnstileBlockLocale(t);
+const copy = buildMessageBlockLocale(t);
 
-const meta: Meta<typeof TurnstileBlock> = {
-  title: 'Forms/Components/TurnstileBlock',
-  component: TurnstileBlock,
+const meta: Meta<typeof MessageBlock> = {
+  title: 'Forms/Components/MessageBlock',
+  component: MessageBlock,
   parameters: {
     layout: 'fullscreen',
   },
@@ -23,7 +23,7 @@ const meta: Meta<typeof TurnstileBlock> = {
 
 export default meta;
 
-type Story = StoryObj<typeof TurnstileBlock>;
+type Story = StoryObj<typeof MessageBlock>;
 
 export const Default: Story = {
   name: 'Default',
@@ -37,15 +37,10 @@ export const Default: Story = {
         <section className={layoutStyles.sectionSpacing}>
           <Content tag="div" ignoreBottomMargin={true}>
             <Heading depth={1} ignoreDataUI={true}>
-              TurnstileBlock
+              MessageBlock
             </Heading>
             <FormBlocksProvider>
-              <TurnstileBlock
-                id="turnstile"
-                order={3}
-                copy={copy}
-                turnstileSiteKey={null}
-              />
+              <MessageBlock id="message" order={2} copy={copy} />
             </FormBlocksProvider>
           </Content>
         </section>

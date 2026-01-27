@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { buildMessageBlockLocale } from '@/lib/locales/form/form.message';
+import { buildNameBlockLocale } from '@/lib/locales/form/form.name';
 import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
 import en from '@/lib/locales/translations/en';
 import * as layoutStyles from '@/styles/layout.css';
 
-import Heading from '../../Heading';
-import Content from '../../responsive/Content';
-import { FormBlocksProvider } from '../formBlocks.context';
-import { MessageBlock } from './MessageBlock';
+import { NameBlock } from '../contact/blocks/NameBlock';
+import { FormBlocksProvider } from '../contact/formBlocks.context';
+import Heading from '../Heading';
+import Content from '../responsive/Content';
 
 const t = createSectionTranslator(en, en);
-const copy = buildMessageBlockLocale(t);
+const copy = buildNameBlockLocale(t);
 
-const meta: Meta<typeof MessageBlock> = {
-  title: 'Forms/Components/MessageBlock',
-  component: MessageBlock,
+const meta: Meta<typeof NameBlock> = {
+  title: 'Forms/Components/NameBlock',
+  component: NameBlock,
   parameters: {
     layout: 'fullscreen',
   },
@@ -23,7 +23,7 @@ const meta: Meta<typeof MessageBlock> = {
 
 export default meta;
 
-type Story = StoryObj<typeof MessageBlock>;
+type Story = StoryObj<typeof NameBlock>;
 
 export const Default: Story = {
   name: 'Default',
@@ -37,10 +37,10 @@ export const Default: Story = {
         <section className={layoutStyles.sectionSpacing}>
           <Content tag="div" ignoreBottomMargin={true}>
             <Heading depth={1} ignoreDataUI={true}>
-              MessageBlock
+              NameBlock
             </Heading>
             <FormBlocksProvider>
-              <MessageBlock id="message" order={2} copy={copy} />
+              <NameBlock id="name" order={0} copy={copy} />
             </FormBlocksProvider>
           </Content>
         </section>

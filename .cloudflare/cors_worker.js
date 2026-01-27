@@ -1,18 +1,50 @@
 /* global Response */
 
-const ALLOW_ORIGINS = new Set([
+const ALLOW_ORIGINS_STAGING = new Set([
+  // Staging site
   "https://staging.lafleche.dev",
-  "https://lafleche.dev",
+
+  // Local dev (Storybook / Next dev)
+  "http://localhost:6006",
+  "http://127.0.0.1:6006",
   "http://localhost:3000",
+  "http://127.0.0.1:3000",
 ]);
+
+const ALLOW_ORIGINS_PROD = new Set([
+  // Production site(s)
+  "https://lafleche.dev",
+  "https://www.lafleche.dev",
+]);
+
+const ALLOW_ORIGIN_SUFFIXES_PROD = [
+  // Chromatic previews (e.g. https://<build>.chromatic.com)
+  ".chromatic.com",
+];
 
 // Keep this tight for an asset bucket:
 const ALLOW_METHODS = "GET, HEAD, OPTIONS";
 // If you truly need POST to this hostname, change to:
 // const ALLOW_METHODS = "GET, HEAD, OPTIONS, POST";
 
-function isAllowedOrigin(origin) {
-  return origin && ALLOW_ORIGINS.has(origin);
+function isAllowedOrigin(origin, isStagingAsset) {
+  if (!origin) return false;
+  const allowedExact = isStagingAsset
+    ? ALLOW_ORIGINS_STAGING.has(origin)
+    : ALLOW_ORIGINS_PROD.has(origin);
+  if (allowedExact) return true;
+
+  if (isStagingAsset) return false;
+
+  try {
+    const parsed = new URL(origin);
+    const hostname = parsed.hostname.toLowerCase();
+    return ALLOW_ORIGIN_SUFFIXES_PROD.some((suffix) =>
+      hostname.endsWith(suffix),
+    );
+  } catch {
+    return false;
+  }
 }
 
 function applyCors(headers, origin) {
@@ -32,7 +64,9 @@ export default {
     }
 
     const origin = request.headers.get("Origin");
-    const allowed = isAllowedOrigin(origin);
+    const key = url.pathname.replace(/^\/+/, "");
+    const isStagingAsset = key.startsWith("_staging/");
+    const allowed = isAllowedOrigin(origin, isStagingAsset);
 
     // Handle preflight
     if (request.method === "OPTIONS") {
@@ -61,7 +95,6 @@ export default {
       return new Response("Method Not Allowed", { status: 405 });
     }
 
-    const key = url.pathname.replace(/^\/+/, "");
     const object = await env.ASSETS.get(key);
 
     if (!object) {
