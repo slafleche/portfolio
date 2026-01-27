@@ -54,18 +54,20 @@ export const HomeCaseStudies: Story = {
 export const HomeCaseStudiesFr: Story = {
   name: 'Home Case Studies (FR)',
   render: () => (
-    <section className={layoutStyles.sectionSpacing}>
-      <div className={layoutStyles.content}>
-        <Accordion
-          items={caseStudiesFr.list.map((study, index) => ({
-            id: `case-study-fr-${index}`,
-            heading: study.title,
-            subHeading: study.subTitle,
-            content: <Markdown source={study.content} />,
-            defaultOpen: index === 0,
-          }))}
-        />
-      </div>
-    </section>
+    <Content
+      queryDataAttributes={{
+        compact: 'no-padding-no-margin',
+      }}
+    >
+      <Accordion
+        items={caseStudiesFr.list.map((study, index) => ({
+          id: `case-study-fr-${index}`,
+          heading: study.title,
+          subHeading: study.subTitle,
+          content: <Markdown source={study.content} />,
+          defaultOpen: index === 0,
+        }))}
+      />
+    </Content>
   ),
 };
