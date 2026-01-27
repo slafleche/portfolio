@@ -10,6 +10,7 @@
     "clsx": "^2.1.1",
     "css-calipers": "^0.12.0",
     "culori": "^4.0.2",
+    "hls.js": "^1.6.15",
     "marked": "^17.0.1",
     "next": "^16.0.7",
     "normalize.css": "^8.0.1",
