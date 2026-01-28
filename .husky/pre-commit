@@ -1,3 +1,43 @@
 #!/bin/sh
 
-yarn lint
+set -e
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+YARN_CJS="$REPO_ROOT/.yarn/releases/yarn-4.11.0.cjs"
+
+node_major() {
+  "$1" -p "process.versions.node.split('.')[0]" 2>/dev/null || echo ""
+}
+
+pick_node20() {
+  for candidate in \
+    "/opt/homebrew/opt/node@20/bin/node" \
+    "/usr/local/opt/node@20/bin/node"
+  do
+    if [ -x "$candidate" ]; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+
+  candidate="$(command -v node 2>/dev/null || true)"
+  if [ -n "$candidate" ] && [ "$(node_major "$candidate")" = "20" ]; then
+    echo "$candidate"
+    return 0
+  fi
+
+  return 1
+}
+
+NODE20="$(pick_node20)" || {
+  echo "pre-commit: Node 20 is required for this repo (.nvmrc/engines)."
+  echo "Install with: brew install node@20"
+  exit 1
+}
+
+if [ ! -f "$YARN_CJS" ]; then
+  echo "pre-commit: expected Yarn at $YARN_CJS"
+  exit 1
+fi
+
+"$NODE20" "$YARN_CJS" lint

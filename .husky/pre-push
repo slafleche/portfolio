@@ -1,5 +1,45 @@
 #!/bin/sh
 
+set -e
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+YARN_CJS="$REPO_ROOT/.yarn/releases/yarn-4.11.0.cjs"
+
+node_major() {
+  "$1" -p "process.versions.node.split('.')[0]" 2>/dev/null || echo ""
+}
+
+pick_node20() {
+  for candidate in \
+    "/opt/homebrew/opt/node@20/bin/node" \
+    "/usr/local/opt/node@20/bin/node"
+  do
+    if [ -x "$candidate" ]; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+
+  candidate="$(command -v node 2>/dev/null || true)"
+  if [ -n "$candidate" ] && [ "$(node_major "$candidate")" = "20" ]; then
+    echo "$candidate"
+    return 0
+  fi
+
+  return 1
+}
+
+NODE20="$(pick_node20)" || {
+  echo "pre-push: Node 20 is required for this repo (.nvmrc/engines)."
+  echo "Install with: brew install node@20"
+  exit 1
+}
+
+if [ ! -f "$YARN_CJS" ]; then
+  echo "pre-push: expected Yarn at $YARN_CJS"
+  exit 1
+fi
+
 has_main_push=0
 has_staging_push=0
 has_release_push=0
@@ -28,12 +68,7 @@ while read -r local_ref local_sha remote_ref remote_sha; do
   fi
 done
 
-if [ "$has_main_push" -eq 1 ]; then
-  echo "→ pre-push: running 'yarn ci' (push to main)"
-  yarn ci
-fi
-
-if [ "$has_staging_push" -eq 1 ] || [ "$has_release_push" -eq 1 ]; then
-  echo "→ pre-push: running 'yarn verify' (push to staging/release)"
-  yarn verify
+if [ "$has_main_push" -eq 1 ] || [ "$has_staging_push" -eq 1 ] || [ "$has_release_push" -eq 1 ]; then
+  echo "→ pre-push: running 'yarn ci' (push to protected branch)"
+  "$NODE20" "$YARN_CJS" ci
 fi
