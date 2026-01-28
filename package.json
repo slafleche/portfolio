@@ -87,7 +87,7 @@
   },
   "packageManager": "yarn@4.11.0",
   "engines": {
-    "node": "20.19.6"
+    "node": "20.x"
   },
   "scripts": {
     "ci": "node -e \"console.log('→ [ci 1/4] check:node')\" && yarn check:node && node -e \"console.log('→ [ci 2/4] generate (skip CDN)')\" && yarn generate --skip-cdn && node -e \"console.log('→ [ci 3/4] verify')\" && yarn verify && node -e \"console.log('→ [ci 4/4] build')\" && yarn build",
