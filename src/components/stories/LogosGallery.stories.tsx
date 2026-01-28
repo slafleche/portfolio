@@ -16,11 +16,11 @@ import {
 import * as g from '@/dev/storybook/gallery.css';
 import { color } from '@/styles/helpers/colorWrap.helper';
 
-import ExampleSiteIconAcer from './ExampleSiteIconAcer';
-import ExampleSiteIconKing from './ExampleSiteIconKing';
-import ExampleSiteIconOracle from './ExampleSiteIconOracle';
-import SocialGitHubIcon from './SocialGitHubIcon';
-import SocialLinkedInIcon from './SocialLinkedInIcon';
+import ExampleSiteIconAcer from '../icons/ExampleSiteIconAcer';
+import ExampleSiteIconKing from '../icons/ExampleSiteIconKing';
+import ExampleSiteIconOracle from '../icons/ExampleSiteIconOracle';
+import SocialGitHubIcon from '../icons/SocialGitHubIcon';
+import SocialLinkedInIcon from '../icons/SocialLinkedInIcon';
 
 type SvgComponent = ComponentType<SVGProps<SVGSVGElement>>;
 

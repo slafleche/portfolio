@@ -11,7 +11,6 @@ import { Column, Grid } from '@/components/Grid';
 import Hero from '@/components/Hero';
 import { Markdown } from '@/components/Markdown';
 import Menu from '@/components/Menu';
-import ContentWithTitle from '@/components/responsive/ContentWithTitle';
 import SiteProviders from '@/components/site/SiteProviders.client';
 import WordMarkInTitle from '@/components/WordmarkInTitle';
 import {
@@ -49,6 +48,7 @@ import { Accordion } from '../../../src/components/Accordion';
 import Heading from '../../../src/components/Heading';
 import HeroHomeBg from '../../../src/components/HeroHomeBg';
 import Content from '../../../src/components/responsive/Content';
+import ContentAsTiles from '../../../src/components/responsive/ContentAsTiles';
 
 interface PageParams {
   LOCALE: string;
@@ -244,29 +244,20 @@ export default async function HomePage({
             </CaseStudy>
 
             {/* Approach */}
-            <ContentWithTitle
-              id={approach.href}
+            <ContentAsTiles
+              id={approach.href?.split('#')[0]}
               title={approach.title}
-            >
-              <Markdown source={approach.content} />
-            </ContentWithTitle>
-
-            {/* About */}
-            {/* <ContentWithTitle
-              id={about.href}
-              title={about.title}
-              titleOutside={true}
-            >
-              <Markdown source={about.content} />
-            </ContentWithTitle> */}
+              markdown={approach.content}
+              bgOffset={2}
+              rotateOffset={3}
+              scaleOffset={1}
+              translateOffset={4}
+            />
 
             {/* Projects */}
             <section className={layoutStyles.sectionSpacing}>
               <Content tag="div" ignoreBottomMargin={true}>
-                <Heading
-                  id={projects.href}
-                  ignoreDataUI={true}
-                >
+                <Heading id={projects.href} ignoreDataUI={true}>
                   {projects.title}
                 </Heading>
               </Content>

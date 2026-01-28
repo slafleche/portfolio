@@ -10,6 +10,7 @@ export default function SendIcon({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
+      shapeRendering="geometricPrecision"
       strokeWidth={3}
       strokeLinecap="round"
       strokeLinejoin="round"

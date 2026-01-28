@@ -4,17 +4,21 @@ import type { ComponentType, JSX, SVGProps } from 'react';
 import * as g from '@/dev/storybook/gallery.css';
 
 import PulseLoader from '../contact/PulseLoader';
-import ChevronDown from './ChevronDown';
-import CircledCheckIcon from './CircledCheckIcon';
-import CircledErrorIcon from './CircledErrorIcon';
-import CloseIcon from './CloseIcon';
-import LeftArrow from './LeftArrow';
-import NubbyTriangle from './NubbyTriangle';
-import Plus from './Plus';
-import RightArrow from './RightArrow';
-import RoundedTriangle from './RoundedTriangle';
-import SendIcon from './SendIcon';
-import ToTopArrow from './ToTopArrow';
+import ChevronDown from '../icons/ChevronDown';
+import CircledCheckIcon from '../icons/CircledCheckIcon';
+import CircledErrorIcon from '../icons/CircledErrorIcon';
+import CloseIcon from '../icons/CloseIcon';
+import CrossroadsIcon from '../icons/CrossRoadsIcon';
+import CrossRoadsIcon from '../icons/CrossRoadsIcon';
+import LeftArrow from '../icons/LeftArrow';
+import NubbyTriangle from '../icons/NubbyTriangle';
+import Plus from '../icons/Plus';
+import RightArrow from '../icons/RightArrow';
+import RoundedTriangle from '../icons/RoundedTriangle';
+import SendIcon from '../icons/SendIcon';
+import ToTopArrow from '../icons/ToTopArrow';
+import VennSquaresIcon from '../icons/VennSquaresIcon';
+import BlocksIcon from '../icons/BlocksIcon';
 
 type SvgIconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -77,6 +81,18 @@ const icons: IconTile[] = [
   },
   { name: 'SendIcon', render: () => renderSquareIcon(SendIcon) },
   { name: 'ToTopArrow', render: () => renderSquareIcon(ToTopArrow) },
+  {
+    name: 'CrossRoadsIcon',
+    render: () => renderSquareIcon(CrossRoadsIcon),
+  },
+  {
+    name: 'VennSquaresIcon',
+    render: () => renderSquareIcon(VennSquaresIcon),
+  },
+  {
+    name: 'BlocksIcon',
+    render: () => renderSquareIcon(BlocksIcon),
+  },
 ].sort((a, b) => a.name.localeCompare(b.name));
 
 function IconGallery() {
@@ -89,10 +105,7 @@ function IconGallery() {
       </p>
 
       <div className={g.gridIcons}>
-        <div
-          key="PulseLoader"
-          className={g.svgTile}
-        >
+        <div key="PulseLoader" className={g.svgTile}>
           <div className={g.svgTileIcon}>
             <PulseLoader
               className={g.pulse}
@@ -104,10 +117,7 @@ function IconGallery() {
         </div>
 
         {icons.map(({ name, render }) => (
-          <div
-            key={name}
-            className={g.svgTile}
-          >
+          <div key={name} className={g.svgTile}>
             <div className={g.svgTileIcon}>{render()}</div>
             <div className={g.svgTitleLabel}>{name}</div>
           </div>

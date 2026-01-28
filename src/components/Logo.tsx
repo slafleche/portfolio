@@ -51,6 +51,7 @@ export default function Logo({
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
       xmlSpace="preserve"
+      shapeRendering="geometricPrecision"
       width="550"
       height="550"
       viewBox="-22.66156 -22.66156 200 200"

@@ -17,6 +17,7 @@ export default function RoundedTriangle({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 111.464 110.56"
       className={clsx(s.root, className)}
+      shapeRendering="geometricPrecision"
       aria-hidden
       {...props}
     >

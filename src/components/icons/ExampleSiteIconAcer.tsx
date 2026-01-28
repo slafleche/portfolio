@@ -15,6 +15,7 @@ export default function ExampleSiteIconAcer({
       viewBox={`0 0 ${exampleSitesVars.acer.ratio.numerator()} ${exampleSitesVars.acer.ratio.denominator()}`}
       fill="#83b81a"
       stroke="none"
+      shapeRendering="geometricPrecision"
       className={clsx(s.icon, s.acer, className)}
       aria-hidden
       {...props}

@@ -12,6 +12,7 @@ export default function PlusIcon({
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
+      shapeRendering="geometricPrecision"
       strokeLinejoin="round"
       className={className}
       {...props}
