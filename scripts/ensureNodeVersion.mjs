@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { isRelease, isStaging } from '../envPrimitives.mjs';
+
 const ROOT = process.cwd();
 const NVMRC = path.join(ROOT, '.nvmrc');
 
@@ -18,10 +20,10 @@ if (!expected) {
   process.exit(0);
 }
 
-if (process.env.VERCEL && major(actual) === major(expected)) {
+if ((isRelease() || isStaging()) && major(actual) === major(expected)) {
   if (actual !== expected) {
     console.warn(
-      `Vercel detected: expected Node ${expected}, running ${actual}. ` +
+      `Hosted env detected: expected Node ${expected}, running ${actual}. ` +
         `Proceeding because major versions match (${major(expected)}).`,
     );
   }

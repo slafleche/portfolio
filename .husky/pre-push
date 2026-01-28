@@ -1,12 +1,40 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+has_main_push=0
+has_staging_push=0
+has_release_push=0
 
-case "$BRANCH" in
-  main|staging|release)
-    yarn verify
-    ;;
-  *)
-    ;;
-esac
+# stdin lines: <local ref> <local sha> <remote ref> <remote sha>
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main) has_main_push=1 ;;
+    refs/heads/staging) has_staging_push=1 ;;
+    refs/heads/release) has_release_push=1 ;;
+    *) ;;
+  esac
+
+  if [ "$remote_ref" = "refs/heads/main" ]; then
+    # If the remote SHA isn't an ancestor of the local SHA, this is a non-fast-forward
+    # update (i.e. requires --force / --force-with-lease). Treat that as an explicit
+    # bypass request and skip the local CI check.
+    if [ "$remote_sha" != "0000000000000000000000000000000000000000" ]; then
+      if git cat-file -e "$remote_sha^{commit}" 2>/dev/null; then
+        if ! git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null; then
+          echo "↪︎ pre-push: non-fast-forward update to main detected; skipping 'yarn ci' (force push bypass)."
+          exit 0
+        fi
+      fi
+    fi
+  fi
+done
+
+if [ "$has_main_push" -eq 1 ]; then
+  echo "→ pre-push: running 'yarn ci' (push to main)"
+  yarn ci
+fi
+
+if [ "$has_staging_push" -eq 1 ] || [ "$has_release_push" -eq 1 ]; then
+  echo "→ pre-push: running 'yarn verify' (push to staging/release)"
+  yarn verify
+fi
