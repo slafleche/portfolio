@@ -4,11 +4,11 @@ import type { ComponentType, JSX, SVGProps } from 'react';
 import * as g from '@/dev/storybook/gallery.css';
 
 import PulseLoader from '../contact/PulseLoader';
+import BlocksIcon from '../icons/BlocksIcon';
 import ChevronDown from '../icons/ChevronDown';
 import CircledCheckIcon from '../icons/CircledCheckIcon';
 import CircledErrorIcon from '../icons/CircledErrorIcon';
 import CloseIcon from '../icons/CloseIcon';
-import CrossroadsIcon from '../icons/CrossRoadsIcon';
 import CrossRoadsIcon from '../icons/CrossRoadsIcon';
 import LeftArrow from '../icons/LeftArrow';
 import NubbyTriangle from '../icons/NubbyTriangle';
@@ -18,7 +18,6 @@ import RoundedTriangle from '../icons/RoundedTriangle';
 import SendIcon from '../icons/SendIcon';
 import ToTopArrow from '../icons/ToTopArrow';
 import VennSquaresIcon from '../icons/VennSquaresIcon';
-import BlocksIcon from '../icons/BlocksIcon';
 
 type SvgIconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
