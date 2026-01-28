@@ -97,6 +97,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .pnpm-debug.log*
+verify.log
 
 # -----------------------
 # Local files
@@ -104,6 +105,11 @@ pnpm-debug.log*
 tmp/*
 .local/*
 /test-results/**
+/playwright-report/
+/storybook-static/
+/.chromatic/
+build-storybook.log
+debug-storybook.log
 
 # -----------------------
 # Epics (local by default)

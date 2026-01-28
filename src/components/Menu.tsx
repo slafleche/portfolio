@@ -50,6 +50,7 @@ type MenuProps = {
   anchorNavLabel: string;
   ctaLabel: string;
   ctaWatchId?: string;
+  forceCtaVisible?: boolean;
 };
 
 export default function Menu({
@@ -64,6 +65,7 @@ export default function Menu({
   anchorNavLabel,
   ctaLabel,
   ctaWatchId,
+  forceCtaVisible: forceCtaVisibleProp = false,
 }: MenuProps) {
   const pathname = usePathname();
   const { layoutTick } = useWindowSize();
@@ -74,8 +76,8 @@ export default function Menu({
     setPortalTarget,
   ] = useState<HTMLElement | null>(null);
   const [
-    forceCtaVisible,
-    setForceCtaVisible,
+    ctaVisibleFromKeyboard,
+    setCtaVisibleFromKeyboard,
   ] = useState(false);
   const alternateLocale = localeLinks[0];
   const localeHref =
@@ -123,11 +125,11 @@ export default function Menu({
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Tab') return;
-      setForceCtaVisible(true);
+      setCtaVisibleFromKeyboard(true);
     };
 
     const handlePointer = () => {
-      setForceCtaVisible(false);
+      setCtaVisibleFromKeyboard(false);
     };
 
     window.addEventListener('keydown', handleKeyDown, {
@@ -222,7 +224,9 @@ export default function Menu({
             watchId={ctaWatchId}
             label={ctaLabel}
             portalTarget={portalTarget}
-            forceVisible={forceCtaVisible}
+            forceVisible={
+              forceCtaVisibleProp || ctaVisibleFromKeyboard
+            }
           />
         ) : null}
       </div>

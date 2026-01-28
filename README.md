@@ -96,6 +96,8 @@
 - Run `yarn generate` (or `yarn generate:staging`) to build fonts/images/videos
   and locale artifacts.
 - Start the dev server with `yarn dev`.
+- For visual regression (Storybook + Chromatic + Playwright page renders), see
+  `visual-regression.md` for the full pipeline and local/CI workflows.
 - When updating `fonts.config.json`, regenerate the Google Fonts URL bundle and
   optionally verify that each generated URL resolves:
   ```bash

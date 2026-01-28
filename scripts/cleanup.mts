@@ -21,9 +21,12 @@ const eslint = new ESLint({
     {
       ignores: [
         '**/.next/**',
+        '**/storybook-static/**',
         '**/tmp/**',
         '**/public/**/*.js',
       ],
+    },
+    {
       files: [
         '**/*.{js,jsx,ts,tsx,mjs,cjs}',
       ],
@@ -68,5 +71,8 @@ const hasErrors = results.some(
 );
 
 if (hasErrors) {
+  const formatter = await eslint.loadFormatter('stylish');
+  const output = await formatter.format(results);
+  if (output.trim()) console.error(output);
   process.exit(1);
 }

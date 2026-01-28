@@ -2,6 +2,10 @@ name = "cors-worker"
 main = "cors_worker.js"
 compatibility_date = "2026-01-16"
 
+routes = [
+  { pattern = "cdn.lafleche.dev/*", zone_name = "lafleche.dev" }
+]
+
 [[r2_buckets]]
 binding = "ASSETS"
 bucket_name = "portfolio-assets"

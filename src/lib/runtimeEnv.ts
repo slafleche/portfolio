@@ -16,6 +16,26 @@ export {
   notStaging,
 };
 
+export type RuntimeNodeEnv = 'development' | 'production';
+
+type StorybookConfigType = 'PRODUCTION' | 'DEVELOPMENT';
+
+const readStorybookConfigType = (): StorybookConfigType | null => {
+  const value = (globalThis as unknown as Record<string, unknown>)
+    .CONFIG_TYPE;
+  if (value === 'PRODUCTION') return 'PRODUCTION';
+  if (value === 'DEVELOPMENT') return 'DEVELOPMENT';
+  return null;
+};
+
+export function getRuntimeNodeEnv(): RuntimeNodeEnv {
+  const configType = readStorybookConfigType();
+  if (configType === 'PRODUCTION') return 'production';
+  if (configType === 'DEVELOPMENT') return 'development';
+
+  return isDev() ? 'development' : 'production';
+}
+
 export function getSiteOrigin(): string | null {
   const raw = process.env.SITE_URL?.trim();
   if (raw) {
@@ -100,6 +120,11 @@ export function getTurnstileEnvConfig(): TurnstileEnvConfig {
 export function getTurnstileSiteKey(): string | null {
   const { siteKey } = getTurnstileEnvConfig();
   return siteKey ?? null;
+}
+
+export function getChromaticProjectToken(): string | null {
+  const raw = process.env.CHROMATIC_PROJECT_TOKEN?.trim();
+  return raw ? raw : null;
 }
 
 export interface BrevoEnvConfig {

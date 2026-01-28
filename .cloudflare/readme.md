@@ -31,7 +31,8 @@ Edit cors_worker.js and update the allow list:
 
 - Add or remove origins in the Set
 - Origins must match exactly (scheme + hostname + port)
-- No wildcards are supported
+- For Chromatic previews, the worker also supports hostname suffix allow rules
+  (e.g. `.chromatic.com`) for production assets.
 
 ## Updating the Target Backend
 

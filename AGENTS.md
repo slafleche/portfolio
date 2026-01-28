@@ -110,6 +110,8 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
 - Should: Capture important decisions in `README.md` or `TODO.*.md` so future
   work has context, and surface unrelated lint/type errors without fixing them
   unless asked.
+- Must: When file paths are part of the decision (or next action), include the
+  full path in the visible text (don’t hide it behind a generic “link” label).
 - Must: Any statement of desired behavior ("should", "expected", "wrong")
   implies corrective intent. Output the fix (minimal diff or corrected draft).
   Never restate existing behavior unless explicitly asked for diagnostics.

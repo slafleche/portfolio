@@ -201,7 +201,17 @@ export default function PulseLoader(props: PulseLoaderProps) {
             />
           </circle>
         </>
-      ) : null}
+      ) : (
+        <circle
+          cx="12"
+          cy="12"
+          r="11"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          opacity="0.35"
+        />
+      )}
     </svg>
   );
 }

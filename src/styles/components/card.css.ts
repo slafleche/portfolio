@@ -8,7 +8,6 @@ import { wordMarkVars } from '../../tokens/wordmarks.tokens';
 import { cardLayout } from '../componentTokens/card.component.tokens';
 import borders from '../helpers/borders.helper';
 import { makeCardGradient } from '../helpers/cardGradient.helper';
-import { makeGlassSurface } from '../helpers/glassy.helper';
 import { absolutePosition } from '../helpers/positioning.helper';
 import {
   globalDropShadowFilter,
@@ -140,11 +139,14 @@ export const panel = style({
 //   height: '100%',
 // });
 
-export const glassSurface = style(
-  makeGlassSurface({
-    blur: m(3),
-  }),
-);
+// export const glassSurface = style(
+//   makeGlassSurface({
+//     blur: m(2),
+//     saturate: mPercent(100),
+//     contrast: mPercent(100),
+//     brightness: mPercent(100),
+//   }),
+// );
 
 export const title = style({});
 
@@ -409,7 +411,7 @@ export const logoAsBg_ea = style({
 export const logoAsBg_banq = style({
   width: '100%',
   transformOrigin: '50% 50%',
-  transform: 'translate(20%, -50%) rotate(4deg) scale(1.5)',
+  transform: 'translate(0%, -20%) rotate(4deg) scale(1.5)',
   color: wordMarkVars.banq.logoAsBg.css(),
 });
 

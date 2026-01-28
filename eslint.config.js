@@ -54,6 +54,7 @@ const tsNoProjectFiles = [
   'next-env.d.ts',
   'cdn/**/*.{ts,tsx,mts}',
   'tests/**/*.{ts,tsx}',
+  '.storybook/**/*.{ts,tsx}',
 ];
 
 /** @type {import('eslint').FlatConfig.Config[]} */
@@ -66,6 +67,8 @@ export default [
       'next-env.d.ts',
       'dist/**',
       'build/**',
+      'storybook-static/**',
+      'test-results/**',
       'tmp/**',
       '.cloudflare/**',
       'public/**',

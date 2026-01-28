@@ -229,5 +229,4 @@ export const separator = style({
 globalStyle(`.${root} .${userContent} a:not([data-ui="link"])`, {
   color: colors.white.css(),
   fontWeight: 'bold',
-  // textShadow: 'none',
 });
