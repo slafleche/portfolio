@@ -68,6 +68,7 @@ const frBaseData = {
   architecture: 'Architecture du site',
   'architecture-href': 'architecture',
   ...markdownRefs('home-architecture-content'),
+  ...markdownRefs('architecture-main-content'),
 
   about: 'À propos',
   'about-href': 'a-propos',

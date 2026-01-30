@@ -60,6 +60,7 @@ const SYSTEMS_MARKDOWN_KEYS = new Set([
 
 const getSectionForKey = (key: string) => {
   if (key.startsWith('systems-')) return 'systems';
+  if (key.startsWith('architecture-')) return 'architecture';
   if (SYSTEMS_MARKDOWN_KEYS.has(key)) return 'systems';
   if (key.startsWith('forms-')) return 'contact';
   return 'home';

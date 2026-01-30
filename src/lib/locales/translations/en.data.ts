@@ -68,6 +68,7 @@ const enBaseData = {
   architecture: 'Site Architecture',
   'architecture-href': 'architecture',
   ...markdownRefs('home-architecture-content'),
+  ...markdownRefs('architecture-main-content'),
 
   about: 'About Me',
   'about-href': 'about',
