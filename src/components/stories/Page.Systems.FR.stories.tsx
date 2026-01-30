@@ -6,14 +6,14 @@ import PageRenderImage, {
 
 const renderPage = (width: number) => (
   <PageRenderImage
-    alt={`Systems FR @${width}px`}
+    alt={`Systèmes FR @${width}px`}
     src={`/pages/fr-systems-${width}.png`}
     width={width}
   />
 );
 
 const meta: Meta = {
-  title: 'Pages/Systems/FR',
+  title: 'Pages/FR Systèmes',
   parameters: {
     layout: 'fullscreen',
   },

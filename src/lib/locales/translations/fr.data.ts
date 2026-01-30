@@ -65,6 +65,10 @@ const frBaseData = {
   'approach-href': 'philosophie',
   ...markdownRefs('approach-content'),
 
+  architecture: 'Architecture du site',
+  'architecture-href': 'architecture',
+  ...markdownRefs('home-architecture-content'),
+
   about: 'À propos',
   'about-href': 'a-propos',
   ...markdownRefs('about-content'),
@@ -91,7 +95,7 @@ const frBaseData = {
   ...markdownRefs('expertise-content'),
   'systems-intro-href': 'systems-expertise',
 
-  'systems-tetrachromatic-title': "L’approche Tetrachromatic",
+  'systems-tetrachromatic-title': 'L’approche Tetrachromatic',
   ...markdownRefs('tetrachromatic-content'),
 
   'systems-principles': 'Principes',
@@ -99,7 +103,7 @@ const frBaseData = {
   ...markdownRefs('principles-content'),
   'systems-architecture': 'Architecture',
   'systems-architecture-href': 'systems-architecture',
-  ...markdownRefs('architecture-content'),
+  ...markdownRefs('systems-architecture-content'),
   ...markdownRefs('calipers-content'),
   'systems-back-home-label': 'Retour à la page d’accueil',
   'systems-link-label': 'Naviguez vers la page Systèmes',

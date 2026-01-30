@@ -16,6 +16,9 @@ export const BASE_ANCHORS: readonly AnchorEntry[] = [
   },
   {
     hrefKey: 'projects',
+  },  
+  {
+    hrefKey: 'architecture',
   },
   {
     hrefKey: 'contact',

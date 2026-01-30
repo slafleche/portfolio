@@ -171,6 +171,7 @@ export const OpenDialog: Story = {
       anchorLinks={[
         { title: 'Case Studies', href: '#case-studies' },
         { title: 'Approach', href: '#approach' },
+        { title: 'Site Architecture', href: '#architecture' },
         { title: 'Projects', href: '#projects' },
         { title: contact.title, href: '#contact' },
       ]}
@@ -201,6 +202,7 @@ export const OpenPrivacy: Story = {
       anchorLinks={[
         { title: 'Case Studies', href: '#case-studies' },
         { title: 'Approach', href: '#approach' },
+        { title: 'Site Architecture', href: '#architecture' },
         { title: 'Projects', href: '#projects' },
         { title: contact.title, href: '#contact' },
       ]}
@@ -237,6 +239,7 @@ export const OpenDialogFr: Story = {
       anchorLinks={[
         { title: 'Case Studies', href: '#case-studies' },
         { title: 'Approach', href: '#approach' },
+        { title: 'Site Architecture', href: '#architecture' },
         { title: 'Projects', href: '#projects' },
         { title: contactFr.title, href: '#contact' },
       ]}
@@ -273,6 +276,7 @@ export const OpenPrivacyFr: Story = {
       anchorLinks={[
         { title: 'Case Studies', href: '#case-studies' },
         { title: 'Approach', href: '#approach' },
+        { title: 'Site Architecture', href: '#architecture' },
         { title: 'Projects', href: '#projects' },
         { title: contactFr.title, href: '#contact' },
       ]}

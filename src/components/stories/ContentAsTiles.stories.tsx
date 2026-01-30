@@ -21,13 +21,13 @@ const tFr = createSectionTranslator(fr, en);
 const architectureEn = {
   id: t('systems-architecture-href'),
   title: t('systems-architecture'),
-  markdown: t('architecture-content'),
+  markdown: t('systems-architecture-content'),
 };
 
 const architectureFr = {
   id: tFr('systems-architecture-href'),
   title: tFr('systems-architecture'),
-  markdown: tFr('architecture-content'),
+  markdown: tFr('systems-architecture-content'),
 };
 
 function GlobalStyleOverrides() {

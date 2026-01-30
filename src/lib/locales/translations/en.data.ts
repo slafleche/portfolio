@@ -65,6 +65,10 @@ const enBaseData = {
   'approach-href': 'approach',
   ...markdownRefs('approach-content'),
 
+  architecture: 'Site Architecture',
+  'architecture-href': 'architecture',
+  ...markdownRefs('home-architecture-content'),
+
   about: 'About Me',
   'about-href': 'about',
   ...markdownRefs('about-content'),
@@ -99,7 +103,7 @@ const enBaseData = {
   ...markdownRefs('principles-content'),
   'systems-architecture': 'Architecture',
   'systems-architecture-href': 'systems-architecture',
-  ...markdownRefs('architecture-content'),
+  ...markdownRefs('systems-architecture-content'),
   ...markdownRefs('calipers-content'),
   'systems-back-home-label': 'Back to home',
   'systems-link-label': 'Open systems page',

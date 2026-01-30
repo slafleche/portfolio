@@ -157,6 +157,7 @@ const preview: Preview = {
             'Accordion',
             'ContentAsTiles',
             'Approach',
+            'Site Architecture',
             'Projects',
             'Footer',
             [

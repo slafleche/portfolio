@@ -13,7 +13,7 @@ const renderPage = (width: number) => (
 );
 
 const meta: Meta = {
-  title: 'Pages/Home/EN',
+  title: 'Pages/EN Home',
   parameters: {
     layout: 'fullscreen',
   },

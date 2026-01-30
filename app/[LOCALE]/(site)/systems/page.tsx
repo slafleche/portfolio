@@ -138,7 +138,7 @@ export default async function SystemsPage({
   const systemsPrinciplesMarkdown = translator('principles-content');
   const systemsShapeId = translator('systems-architecture-href');
   const systemsShapeTitle = translator('systems-architecture');
-  const systemsShapeMarkdown = translator('architecture-content');
+  const systemsShapeMarkdown = translator('systems-architecture-content');
   const systemsShapeCSSCalipersMarkdown = translator(
     'calipers-content',
   );

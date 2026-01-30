@@ -44,16 +44,16 @@ project needs shift, you can replace pieces incrementally. Nothing becomes a
 dead end.
 
 The portfolio site you're reading is open source on
-<span data-white-space="no-wrap">[element:GitHubWordmark|site-en],</span> as is CSS Calipers on
+<span data-white-space="no-wrap">[element:GitHubWordmark|site-en],</span> as is
+CSS Calipers on
 <span data-white-space="no-wrap">[element:NPMWordmark|en].</span>
 
 ### Flexible composition in the middle
 
-This is where the framework comparison matters. Most CSS "frameworks" are
-really libraries: collections of utilities or components. My Tetrachromatic
-approach is closer to a programming framework like PHP. You have expected inputs
-(typed values) and outputs (spec-compliant CSS), but the middle is yours to
-structure.
+This is where the framework comparison matters. Most CSS "frameworks" are really
+libraries: collections of utilities or components. My Tetrachromatic approach is
+closer to a programming framework like PHP. You have expected inputs (typed
+values) and outputs (spec-compliant CSS), but the middle is yours to structure.
 
 I have helpers and opinions on how to get there, but you can do whatever you
 want. Don't like my `colorWrapper`? Write your own, just use the types. Don't

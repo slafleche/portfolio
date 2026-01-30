@@ -143,6 +143,15 @@ export default async function HomePage({
       hrefKey: 'approach-href',
     },
   ]);
+  const [
+    architecture,
+  ] = translateMarkdownSections(translator, [
+    {
+      titleKey: 'architecture',
+      markdownKey: 'home-architecture-content',
+      hrefKey: 'architecture-href',
+    },
+  ]);
   const caseStudies = buildCaseStudiesCopy(translator);
   const projects = buildProjectsCopy(translator);
   const { cocacola, ea, banq, hootsuite, kingGames } = projects.items;
@@ -177,6 +186,10 @@ export default async function HomePage({
       {
         title: parseWordmarkTemplate(approach.title).fullText,
         href: `#${approach.href}`,
+      },
+      {
+        title: parseWordmarkTemplate(architecture.title).fullText,
+        href: `#${architecture.href}`,
       },
       {
         title: parseWordmarkTemplate(projects.title).fullText,
@@ -252,6 +265,17 @@ export default async function HomePage({
               rotateOffset={3}
               scaleOffset={1}
               translateOffset={4}
+            />
+
+            {/* Architecture */}
+            <ContentAsTiles
+              id={architecture.href?.split('#')[0]}
+              title={architecture.title}
+              markdown={architecture.content}
+              bgOffset={3}
+              rotateOffset={1}
+              scaleOffset={4}
+              translateOffset={6}
             />
 
             {/* Projects */}

@@ -102,6 +102,7 @@ export const Default: Story = {
       anchorLinks={[
         { title: 'Case Studies', href: '#case-studies' },
         { title: 'Approach', href: '#approach' },
+        { title: 'Site Architecture', href: '#architecture' },
         { title: 'Projects', href: '#projects' },
         { title: contact.title, href: '#contact' },
       ]}

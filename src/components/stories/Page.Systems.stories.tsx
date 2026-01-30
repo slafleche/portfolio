@@ -13,7 +13,7 @@ const renderPage = (width: number) => (
 );
 
 const meta: Meta = {
-  title: 'Pages/Systems/EN',
+  title: 'Pages/EN Systems',
   parameters: {
     layout: 'fullscreen',
   },

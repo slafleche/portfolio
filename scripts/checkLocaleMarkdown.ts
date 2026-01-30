@@ -52,7 +52,6 @@ const recordIssue = (issue: Issue) => {
 };
 
 const SYSTEMS_MARKDOWN_KEYS = new Set([
-  'architecture-content',
   'calipers-content',
   'expertise-content',
   'principles-content',

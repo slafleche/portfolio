@@ -21,6 +21,10 @@ export const buildHomeMenuSections = (
     label: t('case_study'),
   },
   {
+    id: t('architecture-href'),
+    label: t('architecture'),
+  },
+  {
     id: t('projects-href'),
     label: t('projects'),
   },

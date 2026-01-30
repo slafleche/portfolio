@@ -68,7 +68,7 @@ function buildSingleTileMarkdown(markdown: string): string {
     .trim();
 }
 
-const architectureMarkdown = t('architecture-content');
+const architectureMarkdown = t('systems-architecture-content');
 const oneTileArchitectureMarkdown = buildSingleTileMarkdown(
   architectureMarkdown,
 );
@@ -105,4 +105,3 @@ export const Default: Story = {
     </div>
   ),
 };
-

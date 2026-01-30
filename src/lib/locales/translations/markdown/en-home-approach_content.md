@@ -20,3 +20,4 @@ My approach: cascade where it's expected, stay explicit otherwise, and allow
 overrides and inherit global defaults. Well-designed primitives compose
 naturally. Components can be bypassed or forked when you need to without
 worrying about unintended side-effects.
+
