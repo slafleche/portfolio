@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import Script from 'next/script';
 import type { ReactNode } from 'react';
 
+import { RenderModeProvider } from '@/components/renderMode/RenderModeContext';
 import SmoothScrollIdle from '@/components/SmoothScrollIdle';
 import debugRoutes from '@/data/debugRoutes.json';
 import {
@@ -16,6 +17,10 @@ import {
 import { GOOGLE_FONT_URLS } from '@/data/generated/fonts/googleFonts.gen';
 import { resolveLocale } from '@/lib/locales/locale';
 import { type Locale } from '@/lib/locales/translations';
+import {
+  RENDER_MODE_HEADER,
+  resolveRenderMode,
+} from '@/lib/renderMode';
 
 import {
   isIndexingAllowed,
@@ -29,7 +34,10 @@ const GA_STAGING_ID = 'G-JLTPT80N2J';
 
 if (notRelease()) {
   const envKey = '__DEBUG_ROUTES_LOGGED__';
-  const envTracker = process.env as Record<string, string | undefined>;
+  const envTracker = process.env as Record<
+    string,
+    string | undefined
+  >;
   if (envTracker[envKey] !== '1') {
     envTracker[envKey] = '1';
     const debugLocale = debugRoutes.baseLocale;
@@ -52,6 +60,9 @@ export default async function RootLayout({
 }: RootLayoutProps) {
   const headerList = await headers();
   const requestedLocale = headerList.get('x-locale') ?? undefined;
+  const renderMode = resolveRenderMode(
+    headerList.get(RENDER_MODE_HEADER),
+  );
   const locale = resolveLocale(requestedLocale);
   const fallbackLocale =
     FAVICON_DEFAULT_WEB_MANIFEST.locale as Locale;
@@ -141,7 +152,9 @@ export default async function RootLayout({
         ) : null}
       </head>
       <body>
-        {children}
+        <RenderModeProvider mode={renderMode}>
+          {children}
+        </RenderModeProvider>
         <SmoothScrollIdle />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}

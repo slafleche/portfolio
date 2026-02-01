@@ -58,6 +58,7 @@ try {
 const publicRoutes = [
   '',
   'systems',
+  'architecture',
 ] as const;
 
 const urls: string[] = [];

@@ -2,6 +2,10 @@ import clsx from 'clsx';
 
 import ContactDialogTrigger from '@/components/contact/ContactDialogTrigger';
 import type { ContactCopy } from '@/lib/locales/sections/contact.locale';
+import {
+  DEFAULT_RENDER_MODE,
+  type RenderMode,
+} from '@/lib/renderMode';
 import { sharedStrings } from '@/lib/sharedStrings';
 import * as s from '@/styles/components/footer.css';
 import {
@@ -26,6 +30,7 @@ type FooterProps = {
   };
   hideSystemsLink?: boolean;
   backHref?: string;
+  renderMode?: RenderMode;
 };
 
 export default function Footer({
@@ -33,10 +38,51 @@ export default function Footer({
   id,
   systemsLink,
   hideSystemsLink,
+  renderMode = DEFAULT_RENDER_MODE,
 }: FooterProps) {
   const footerId = id ?? contact.href;
   const sentinelId = `${footerId}-sentinel`;
   const headingId = `${footerId}-title`;
+
+  if (renderMode === 'simple') {
+    return (
+      <footer
+        id={footerId}
+        aria-labelledby={headingId}
+        data-simple-render="Footer.tsx"
+      >
+        <h2 id={headingId}>{contact.title}</h2>
+        {contact.content
+          .split('\n')
+          .map((value) => value.trim())
+          .filter(Boolean)
+          .map((value, index) => (
+            <p key={`${footerId}-p-${index}`}>{value}</p>
+          ))}
+        <div>
+          <a href={`#${footerId}`}>{contact.emailLabel}</a>
+          <a
+            href={sharedStrings.linkedInUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {contact.linkedInLabel}
+          </a>
+          <a
+            href={sharedStrings.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {contact.githubLabel}
+          </a>
+          {systemsLink && !hideSystemsLink ? (
+            <a href={systemsLink.href}>{systemsLink.label}</a>
+          ) : null}
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer
       className={s.root}

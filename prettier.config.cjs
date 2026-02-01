@@ -26,6 +26,16 @@ module.exports = {
     },
     {
       files: [
+        'simpleHtml/**/*.html',
+      ],
+      options: {
+        // Keep snapshot HTML "classic": avoid wrapping inside tags.
+        printWidth: 999,
+        htmlWhitespaceSensitivity: 'css',
+      },
+    },
+    {
+      files: [
         '*.md',
         '*.mdx',
       ],

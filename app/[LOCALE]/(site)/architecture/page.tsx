@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 
 import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
@@ -15,6 +16,10 @@ import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
+import {
+  RENDER_MODE_HEADER,
+  resolveRenderMode,
+} from '@/lib/renderMode';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
 import { getSiteOrigin } from '@/lib/runtimeEnv';
@@ -106,10 +111,17 @@ export default async function ArchitecturePage({
 }) {
   const { LOCALE } = await params;
   const locale = resolveLocale(LOCALE);
-  const simpleHtml = await readSimpleHtml({
-    locale,
-    route: 'architecture',
-  });
+  const headerList = await headers();
+  const renderMode = resolveRenderMode(
+    headerList.get(RENDER_MODE_HEADER),
+  );
+  const simpleHtml =
+    renderMode === 'simple'
+      ? ''
+      : await readSimpleHtml({
+          locale,
+          route: 'architecture',
+        });
   const translator = await loadTranslator(locale);
   const contactFormCopy = buildContactFormCopy(translator);
   const privacyCopy = buildPrivacyCopy(translator);
@@ -148,6 +160,9 @@ export default async function ArchitecturePage({
 
   return (
     <>
+      <noscript
+        dangerouslySetInnerHTML={{ __html: simpleHtml }}
+      />
       <SiteProviders
         formCopy={contactFormCopy}
         privacyCopy={privacyCopy}
@@ -166,13 +181,23 @@ export default async function ArchitecturePage({
               </Content>
             </section>
           </main>
-          <DeferredIsland when="idle">
+          {renderMode === 'simple' ? (
             <Footer
               contact={contactCopy}
               id="contact"
               systemsLink={systemsLink}
+              renderMode={renderMode}
             />
-          </DeferredIsland>
+          ) : (
+            <DeferredIsland when="idle">
+              <Footer
+                contact={contactCopy}
+                id="contact"
+                systemsLink={systemsLink}
+                renderMode={renderMode}
+              />
+            </DeferredIsland>
+          )}
         </div>
       </SiteProviders>
     </>

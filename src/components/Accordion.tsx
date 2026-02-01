@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import { useMemo } from 'react';
 
+import { useRenderMode } from '@/components/renderMode/useRenderMode.client';
 import { usePrefersReducedMotion } from '@/lib/accessibility/usePrefersReducedMotion';
 import { createDomId } from '@/lib/dom';
 import { isLocaleRichText } from '@/lib/stringUtils';
@@ -35,6 +36,7 @@ export function Accordion({
 }: AccordionProps) {
   const baseId = useMemo(() => createDomId('accordion'), []);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const renderMode = useRenderMode();
 
   const resolvedItems = useMemo(
     () =>
@@ -68,6 +70,49 @@ export function Accordion({
         defaultValue: defaultOpenValues[0],
         collapsible: true as const,
       };
+
+  if (renderMode === 'simple') {
+    return (
+      <section data-simple-render="Accordion.tsx">
+        {resolvedItems.map((item) => (
+          <div key={item.value} id={item.id}>
+            <h3>
+              {typeof item.heading === 'string' &&
+              isLocaleRichText(item.heading)
+                ? renderInlineMarkdown(item.heading, {
+                    openLinksInNewTab: true,
+                    asUi: { links: true },
+                  })
+                : item.heading}
+            </h3>
+            {item.subHeading ? (
+              <p>
+                {typeof item.subHeading === 'string' &&
+                isLocaleRichText(item.subHeading)
+                  ? renderInlineMarkdown(item.subHeading, {
+                      openLinksInNewTab: true,
+                      asUi: { links: true },
+                    })
+                  : item.subHeading}
+              </p>
+            ) : null}
+            {typeof item.content === 'string' ? (
+              <p>
+                {isLocaleRichText(item.content)
+                  ? renderInlineMarkdown(item.content, {
+                      openLinksInNewTab: true,
+                      asUi: { links: true },
+                    })
+                  : item.content}
+              </p>
+            ) : (
+              <div>{item.content}</div>
+            )}
+          </div>
+        ))}
+      </section>
+    );
+  }
 
   return (
     <AccordionPrimitive.Root

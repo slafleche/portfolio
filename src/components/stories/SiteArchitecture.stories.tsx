@@ -11,7 +11,6 @@ import { translateMarkdownSections } from '@/lib/locales/sections/markdownSectio
 import en from '@/lib/locales/translations/en';
 import fr from '@/lib/locales/translations/fr';
 
-import { Markdown } from '../Markdown';
 import ContentAsTiles from '../responsive/ContentAsTiles';
 import ContentWithTitle from '../responsive/ContentWithTitle';
 

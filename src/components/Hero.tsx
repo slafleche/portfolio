@@ -1,6 +1,11 @@
 import clsx from 'clsx';
 import type { ComponentType, SVGProps } from 'react';
 
+import { parseSplit } from '@/lib/locales/translations/splitShortcodes';
+import {
+  DEFAULT_RENDER_MODE,
+  type RenderMode,
+} from '@/lib/renderMode';
 import * as s from '@/styles/components/hero.css';
 import * as layoutStyles from '@/styles/layout.css';
 
@@ -21,6 +26,8 @@ type Props = {
   id?: string;
   className?: string;
   copy: HeroCopy;
+  renderMode?: RenderMode;
+  simpleCtaAs?: 'link' | 'button';
   overlayClassName?: string;
   headingAnimated?: boolean;
   TitleSvg?: ComponentType<SVGProps<SVGSVGElement>>;
@@ -34,6 +41,8 @@ export default function Hero({
   id,
   className,
   copy,
+  renderMode = DEFAULT_RENDER_MODE,
+  simpleCtaAs = 'link',
   overlayClassName,
   TitleSvg,
   Bg,
@@ -41,6 +50,49 @@ export default function Hero({
   hideWaypoint = false,
   hideSubtitle = false,
 }: Props) {
+  if (renderMode === 'simple') {
+    const titleParts = parseSplit(copy.title);
+    const subtitleParts = copy.subtitle
+      ? parseSplit(copy.subtitle)
+      : null;
+
+    return (
+      <section id={id} data-simple-render="Hero.tsx">
+        <h1>
+          {titleParts.first}
+          {titleParts.hasSplit ? (
+            <>
+              <br />
+              {titleParts.second}
+            </>
+          ) : null}
+        </h1>
+        {!hideSubtitle && subtitleParts ? (
+          <p>
+            {subtitleParts.first}
+            {subtitleParts.hasSplit ? (
+              <>
+                <br />
+                {subtitleParts.second}
+              </>
+            ) : null}
+          </p>
+        ) : null}
+        {hideCta ? null : (
+          simpleCtaAs === 'button' ? (
+            <button type="button" aria-label={copy.ctaLabel}>
+              {copy.ctaText}
+            </button>
+          ) : (
+            <a href="#contact" aria-label={copy.ctaLabel}>
+              {copy.ctaText}
+            </a>
+          )
+        )}
+      </section>
+    );
+  }
+
   const titleCopy = splitText(copy.title);
   const subtitleCopy = copy.subtitle
     ? splitText(copy.subtitle)

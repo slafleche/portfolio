@@ -112,6 +112,10 @@ This file is **only for automated agents** (Codex CLI / GPT, etc.). It does
   unless asked.
 - Must: When file paths are part of the decision (or next action), include the
   full path in the visible text (don’t hide it behind a generic “link” label).
+- Must: When suggesting terminal commands, avoid glob/wildcard patterns (for
+  example, `"*.html"`). Prefer directory targets or explicit file paths, and
+  include enough context to understand where the command is run and what it
+  affects.
 - Must: Any statement of desired behavior ("should", "expected", "wrong")
   implies corrective intent. Output the fix (minimal diff or corrected draft).
   Never restate existing behavior unless explicitly asked for diagnostics.

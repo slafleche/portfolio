@@ -116,6 +116,8 @@
     "locales:lint": "tsx scripts/checkLocaleMarkdown.ts",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",
     "locales:publish": "tsx scripts/generateCopyHtml.ts",
+    "locales:simpleHtml": "tsx scripts/runLocalesAndSimpleHtml.mts",
+    "simpleHtml": "tsx scripts/generateSimpleHtml.mts",
     "verify": "node -e \"console.log('→ [verify 1/6] check:node')\" && yarn check:node && node -e \"console.log('→ [verify 2/6] lint:cleanup')\" && yarn lint:cleanup && node -e \"console.log('→ [verify 3/6] typecheck')\" && yarn typecheck && node -e \"console.log('→ [verify 4/6] lint')\" && yarn lint && node -e \"console.log('→ [verify 5/6] test')\" && yarn test && node -e \"console.log('→ [verify 6/6] done')\"",
     "preverify": "yarn check:node",
     "typecheck": "yarn tsc --noEmit",

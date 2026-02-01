@@ -1,0 +1,262 @@
+<!-- Simple Render for Hero.tsx --><!-- Section #systems-hero -->
+<section id="systems-hero">
+  <h1>The Tetrachromatic<br />Approach</h1>
+  <p>UI systems with **progressive formalization** and explicit boundaries.<br />Start simple. Formalize progressively. Own locally. Change predictably.</p>
+  <button aria-label="Open Contact Form">Let's connect!</button>
+</section>
+<!-- Section #systems-tetrachromatic -->
+<section id="systems-tetrachromatic">
+  <h2>The Tetrachromatic Approach</h2>
+  <div>
+    <div>
+      <pre><code><p>Most teams choose frameworks for early velocity. When those
+frameworks don't fit the project's actual needs, you end up with mounting
+technical debt and increasingly ugly workarounds as the project matures.</p><p>The Tetrachromatic Approach solves this by letting you discover your project's
+architecture progressively. Like
+<dfn title="People with four types of color receptors in their eyes, allowing them to perceive colours most humans cannot see">tetrachromats</dfn>
+the system reveals patterns and constraints that most systems obscure or push
+you in a direction that doesn't fit your project.</p><p>Start with a good structure. Type your CSS variables, and have our output allow
+the full <abbr title="Cascading Style Sheets">CSS</abbr> spec (not a subset). With <a href="#css-calipers">CSS&nbsp;Calipers</a>, you
+can have all your <abbr title="Cascading Style Sheets">CSS</abbr> vars typed and checked in <abbr title="TypeScript">TS</abbr> and even do
+your own custom validation in <abbr title="JavaScript">JS</abbr>.</p><p>Globals are good, but always use them as overridable defaults for components. As
+complexity emerges, you can have more complex tokens or pipelines for getting
+your variables through to the style. Components own their concerns. Boundaries
+stay explicit. Dependencies remain traceable.</p><p>Here's what this looks like in practice. Complex styles are output via helpers,
+but they are optional to use. Using <code>borders()</code>, <code>paddings()</code>, or <code>margins()</code>
+allows you to add complexity to your styles by only editing your tokens:</p><div><pre><code><span><span>// In a *.tokens.ts file</span>
+</span><span><span>const</span><span> simpleConf </span><span>=</span><span>{</span>
+</span><span><span>  borders</span><span>:</span><span>{</span>
+</span><span><span>    color</span><span>:</span><span>color</span><span>(</span><span>'#fff'</span><span>)</span><span>,</span>
+</span><span><span>}</span><span>,</span>
+</span><span><span>}</span><span>;</span>
+</span><span><span>const</span><span> complexConf </span><span>=</span><span>{</span>
+</span><span><span>  borders</span><span>:</span><span>{</span>
+</span><span><span>    top</span><span>:</span><span>{</span>
+</span><span><span>...</span><span>externalDesignTokens</span><span>.</span><span>borders</span><span>,</span>
+</span><span><span>      color</span><span>:</span><span> externalDesignTokens</span><span>.</span><span>borders</span><span>.</span><span>color</span><span>.</span><span>alpha</span><span>(</span><span>0.3</span><span>)</span><span>,</span>
+</span><span><span>}</span><span>,</span>
+</span><span><span>    horitonzal</span><span>:</span><span> externalDesignTokens</span><span>.</span><span>borders</span><span>,</span>
+</span><span><span>    bottom</span><span>:</span><span> externalDesignTokens</span><span>.</span><span>borders</span><span>,</span>
+</span><span><span>    radius</span><span>:</span><span>{</span>
+</span><span><span>      north</span><span>:</span><span>m</span><span>(</span><span>0</span><span>)</span><span>,</span>
+</span><span><span>      south</span><span>:</span><span> externalDesignTokens</span><span>.</span><span>borders</span><span>.</span><span>radius</span><span>,</span>
+</span><span><span>}</span><span>,</span>
+</span><span><span>}</span><span>,</span>
+</span><span><span>}</span><span>;</span>
+</span><span><span>// Vanilla-Extract is used here, but CSS-Calipers</span>
+</span><span><span>// is agnostic of CSS-in-JS library</span>
+</span><span><span>// Example A: Use defaults directly</span>
+</span><span><span>export</span><span>const</span><span> useDefaults </span><span>=</span><span>style</span><span>(</span><span>borders</span><span>(</span><span>)</span><span>)</span><span>;</span><span>// gets default width, style and color</span>
+</span><span><span>// Example B: Set your overwrite in your stylesheet</span>
+</span><span><span>export</span><span>const</span><span> hardCoded </span><span>=</span><span>style</span><span>(</span><span>{</span>
+</span><span><span>...</span><span>borders</span><span>(</span><span>{</span>
+</span><span><span>    width</span><span>:</span><span>m</span><span>(</span><span>20</span><span>)</span><span>,</span>
+</span><span><span>}</span><span>)</span><span>,</span><span>// will use default color and style</span>
+</span><span><span>}</span><span>)</span><span>;</span>
+</span><span><span>// Example C: Get all tokens from external object</span>
+</span><span><span>export</span><span>const</span><span> fromVarsSimple </span><span>=</span><span>style</span><span>(</span><span>{</span>
+</span><span><span>...</span><span>borders</span><span>(</span><span>simpleConf</span><span>.</span><span>borders</span><span>)</span><span>,</span>
+</span><span><span>}</span><span>)</span><span>;</span><span>// will use default width and style from global config</span>
+</span><span><span>// Example D: Get complex tokens from external object</span>
+</span><span><span>export</span><span>const</span><span> fromVarsComplex </span><span>=</span><span>style</span><span>(</span><span>{</span>
+</span><span><span>...</span><span>borders</span><span>(</span><span>complexConf</span><span>.</span><span>borders</span><span>)</span><span>,</span>
+</span><span><span>}</span><span>)</span><span>;</span>
+</span><span><span>// ⚠️ Important note: there's no difference betwee the written</span>
+</span><span><span>// styles for C and D. You can just change your tokens and it</span>
+</span><span><span>// works, no edits to CSS needed!</span>
+</span><span><span>// In CSS Calipers, the plural is used to differentiate the CSS</span>
+</span><span><span>// value from our helper, so "borders" is the helper for border,</span>
+</span><span><span>// "margins" for margin, etc.</span></span></code></pre></div><p>The result: a system where changes have predictable, local impact. You can
+diverge safely and refactor with confidence. Changes are clearly scoped, and you
+always know what depends on what.</p><p>Below, I'll break down the tools and patterns that make this possible.</p></code></pre>
+    </div>
+  </div>
+</section>
+<!-- Section #systems-principles -->
+<section id="systems-principles">
+  <h2>Principles</h2>
+  <div>
+    <div>
+      <div>
+        <pre><code><p>User Interface systems fail when they optimize for the wrong thing. Most
+optimize for initial setup speed or maximum reusability. I optimize for
+<strong>predictable change over time</strong>.</p></code></pre>
+      </div>
+    </div>
+  </div>
+  <div>
+    <article>
+      <div>
+        <h3>Design for change</h3>
+        <div><p>The system's value compounds as the project matures. Early velocity matters, but not at the cost of painted-into-corner decisions. New requirements shouldn't trigger rewrites. They should feel like natural extensions of what's already there.</p></div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Composition over rigidity</h3>
+        <div><p>Encode decisions once, compose them everywhere. When a spacing value needs to change, you change one token, not fifty components. When a pattern needs to diverge, you branch it cleanly without orphaning the original.</p></div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Respect the platform</h3>
+        <div>
+          <p>The <abbr title="Cascading Style Sheets">CSS</abbr> spec is the contract. Abstractions can make authoring easier, but the output must be inspectable, debuggable that any developer can reason about. No magic runtimes, no opaque transformations.</p>
+        </div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>People over abstractions</h3>
+        <div><p>Systems serve teams, not the other way around. A "clever" abstraction that confuses your team is a liability. Tools are chosen for project fit, not architectural purity. The goal is maintainability, not picking the trendy library because it demos well.</p></div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Clear boundaries and constraints</h3>
+        <div><p>Explicit boundaries make change predictable. You know what depends on what. You know what a refactor will affect. The blast radius of each change is clear and obvious. Constraints are deliberate. They’re chosen for the project and what we want to build, not arbitrary limits inherited from a framework someone picked before they understood the problem.</p></div>
+      </div>
+    </article>
+  </div>
+</section>
+<!-- Section #systems-architecture -->
+<section id="systems-architecture">
+  <h2>Architecture</h2>
+  <div>
+    <div>
+      <div>
+        <pre><code><p>The system has clear boundaries: typed inputs at the start, plain
+<abbr title="Cascading Style Sheets">CSS</abbr> at the end, and flexible composition in between. This isn't about
+rigid structure. It's about preventing the two failure modes I see most often:
+string soup at authoring time, and abstraction layers that lag behind the
+platform.</p></code></pre>
+      </div>
+    </div>
+  </div>
+  <div>
+    <article>
+      <div>
+        <h3>Typed inputs at the boundary</h3>
+        <div>
+          <p>Styling values enter the system as typed primitives rather than raw strings. This prevents the concatenation hell described in the <a href="#css-calipers">CSS&nbsp;Calipers</a> section: no more <code>"12px" + "40vh"</code> producing <code>"12px40vh"</code>, no more losing type safety the moment a number becomes a string, no more runtime surprises from unit mismatches.</p>
+          <p>The types enforce consistency at authoring time. You can't accidentally mix incompatible units or pass invalid values. Mistakes surface immediately, not when a user reports broken spacing.</p>
+        </div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Clear start and clear end</h3>
+        <div>
+          <p>Structure and constraints exist at authoring time. The final output is plain, spec-compliant CSS. This matters because I've worked on projects where the component model couldn't express the full range of HTML/CSS. We were behind the actual spec, relying on hacks in JavaScript to modify post-render output just to use features browsers already supported.</p>
+          <p>CSS remains the source of truth, not an abstracted dialect. You can inspect what shipped, debug it with standard tools, and adopt new CSS features the moment browsers support them. No waiting for your framework to catch up.</p>
+        </div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Semantic intent, real CSS</h3>
+        <div>
+          <p>Domain abstractions like <code>borders()</code> or <code>spacing()</code> attach meaning to values without changing the platform. They make intent explicit and reduce repetition, but the output is still recognizable CSS properties. The abstraction layer adds clarity, not mystery. If you inspect the result, you see <code>border: 1px solid #fff</code>, not some intermediate representation.</p>
+        </div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Designed to be inspected and replaced</h3>
+        <div>
+          <p>Parts can be swapped or retired over time without destabilizing the whole. No single framework or authoring pattern is required. If a better tool emerges, or project needs shift, you can replace pieces incrementally. Nothing becomes a dead end.</p>
+          <p>
+            The portfolio site you're reading is open source on <span><a target="_blank" rel="noopener noreferrer" aria-label="My portfolio on GitHub" title="My portfolio on GitHub" href="https://github.com/slafleche/portfolio">My portfolio on GitHub</a>,</span> as is CSS Calipers on <span><a target="_blank" rel="noopener noreferrer" aria-label="CSS Calipers on NPM" title="CSS Calipers on NPM" href="https://www.npmjs.com/package/css-calipers">CSS Calipers on NPM</a>.</span>
+          </p>
+        </div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Flexible composition in the middle</h3>
+        <div>
+          <p>This is where the framework comparison matters. Most CSS "frameworks" are really libraries: collections of utilities or components. My Tetrachromatic approach is closer to a programming framework like PHP. You have expected inputs (typed values) and outputs (spec-compliant CSS), but the middle is yours to structure.</p>
+          <p>I have helpers and opinions on how to get there, but you can do whatever you want. Don't like my <code>colorWrapper</code>? Write your own, just use the types. Don't like the <code>borders()</code> helper? Hand-write border styles. The system cares about the <strong>bookends</strong> (typed inputs and real CSS output), not how you organize the middle.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+<!-- Section #css-calipers -->
+<section id="css-calipers">
+  <h2>CSS Calipers</h2>
+  <div>
+    <div>
+      <pre><code><p>I got tired of managing stringy vars in CSS. Concatenating units, losing type
+safety the moment a number became <code>"12px"</code>, and debugging unit mismatches at
+runtime.</p><p>So I built CSS-Calipers.</p><div><pre><code><span><span>// The friction:</span>
+</span><span><span>const</span><span> spacingPx </span><span>=</span><span>4</span><span>;</span>
+</span><span><span>const</span><span> gutter </span><span>=</span><span>`</span><span>${</span><span>spacingPx </span><span>*</span><span>3</span><span>}</span><span>px</span><span>`</span><span>;</span><span>// string immediately</span>
+</span><span><span>const</span><span> heroHeight </span><span>=</span><span>`</span><span>40vh</span><span>`</span><span>;</span>
+</span><span><span>const</span><span> combo </span><span>=</span><span> gutter </span><span>+</span><span> heroHeight</span><span>;</span><span>// "12px40vh" (valid JS, broken CSS)</span>
+</span><span><span>// With CSS-Calipers: typed values until the last moment</span>
+</span><span><span>import</span><span>{</span><span> m </span><span>}</span><span>from</span><span>'css-calipers'</span><span>;</span>
+</span><span><span>const</span><span> spacing </span><span>=</span><span>m</span><span>(</span><span>4</span><span>)</span><span>;</span><span>// defaults to px</span>
+</span><span><span>const</span><span> gutter </span><span>=</span><span> spacing</span><span>.</span><span>multiply</span><span>(</span><span>3</span><span>)</span><span>;</span><span>// 12px, still typed</span>
+</span><span><span>const</span><span> heroHeight </span><span>=</span><span>m</span><span>(</span><span>40</span><span>,</span><span>'vh'</span><span>)</span><span>;</span>
+</span><span><span>// gutter.add(heroHeight);  ❌</span>
+</span><span><span>// Type error: can't mix px + vh, find errors while developing, not quiet string mistakes</span>
+</span><span><span>// Emit CSS only at the boundary</span>
+</span><span><span>const</span><span> styles </span><span>=</span><span>{</span><span> gap</span><span>:</span><span> gutter</span><span>.</span><span>css</span><span>(</span><span>)</span><span>}</span><span>;</span><span>// "12px"</span></span></code></pre></div><h3>What stays strings</h3><p>Keywords (<code>auto</code>, <code>inherit</code>), CSS variables <code>var(--spacing)</code>, and <code>calc(...)</code>
+expressions remain plain strings. This keeps your output inspectable and
+framework-agnostic: no magic runtime, no custom DSL.</p><h3>For more information</h3><p>Check it out on <a target="_blank" rel="noopener noreferrer" aria-label="CSS Calipers on NPM" title="CSS Calipers on NPM" href="https://www.npmjs.com/package/css-calipers">CSS Calipers on NPM</a> or
+<span><a target="_blank" rel="noopener noreferrer" aria-label="CSS Calipers on GitHub" title="CSS Calipers on GitHub" href="https://github.com/slafleche/css-calipers">CSS Calipers on GitHub</a>!</span></p></code></pre>
+    </div>
+  </div>
+</section>
+<!-- Section #systems-expertise -->
+<section id="systems-expertise">
+  <h2>Expertise</h2>
+  <div>
+    <div>
+      <div>
+        <pre><code><p>The focus is on early architectural decisions that keep change
+safe and predictable, so late-stage updates don't feel risky as the system
+scales.</p><p>I bring this approach to every project, but I adapt to <strong>your reality</strong>. If
+you're on Material UI, Chakra, or Bootstrap, I help you evolve it to fit your
+needs. If you're building from scratch, I design it to last. The principles stay
+consistent, but the implementation meets you where you are.</p></code></pre>
+      </div>
+    </div>
+  </div>
+  <div>
+    <article>
+      <div>
+        <h3>Custom design systems</h3>
+        <div><p>Design and implement custom UI and design systems that can evolve without constant rewrites. The focus is on turning design intent into coherent, composable systems rather than accumulating one-off solutions. Whether starting fresh or refining what exists, the goal is a foundation that grows with your product.</p></div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Long-term evolution</h3>
+        <div><p>Optimize systems for long-term evolution. Emphasis is placed on replaceability, incremental change, and avoiding decisions that lock teams into structures that no longer fit the project. Systems should adapt as requirements change, not require rewrites.</p></div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Design ↔ engineering</h3>
+        <div><p>Work closely with designers to translate design language, interaction patterns, and constraints into primitives, components, helpers, and tokens that compose consistently across a product. This reduces friction between design and engineering and keeps systems aligned with product intent.</p></div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Theming &amp; shared systems</h3>
+        <div><p>Design and implement theming systems, including shared theming across multiple applications and stacks. This includes environments where legacy systems and modern applications must coexist, such as supporting a shared theming model across an older PHP codebase and a newer React application backed by the same configuration.</p></div>
+      </div>
+    </article>
+    <article>
+      <div>
+        <h3>Legacy and heterogeneous environments</h3>
+        <div>
+          <p>Work across heterogeneous environments, including PHP, Java, Node, and modern frontend stacks. This often involves navigating imperfect codebases, identifying the underlying system within ad-hoc implementations, and reshaping them incrementally without requiring full rewrites.</p>
+          <p>If this approach fits what you're building, I'd love to hear about your project, contact information below!</p>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

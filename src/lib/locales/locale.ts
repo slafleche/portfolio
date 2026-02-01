@@ -13,14 +13,18 @@ import {
 
 export const DEFAULT_LOCALE: Locale = 'en';
 
+export function isLocale(value: string): value is Locale {
+  return (AVAILABLE_LOCALES as readonly string[]).includes(value);
+}
+
 /**
  * Only validate an explicit candidate (e.g. from the URL). NOTE: No
  * browser checks here — explicit URL always wins.
  */
 export function resolveLocale(candidate?: string): Locale {
   return candidate &&
-    (AVAILABLE_LOCALES as readonly string[]).includes(candidate)
-    ? (candidate as Locale)
+    isLocale(candidate)
+    ? (candidate)
     : DEFAULT_LOCALE;
 }
 
@@ -34,8 +38,8 @@ export function getBrowserLocale(): Locale | null {
   ).filter(Boolean);
   for (const tag of langs) {
     const base = tag.slice(0, 2);
-    if ((AVAILABLE_LOCALES as readonly string[]).includes(base)) {
-      return base as Locale;
+    if (isLocale(base)) {
+      return base;
     }
   }
   return null;
@@ -48,8 +52,8 @@ export function pickLocaleFromAcceptLanguage(
   if (!accept) return null;
   for (const part of accept.split(',')) {
     const base = part.split(';')[0].trim().slice(0, 2);
-    if ((AVAILABLE_LOCALES as readonly string[]).includes(base)) {
-      return base as Locale;
+    if (isLocale(base)) {
+      return base;
     }
   }
   return null;

@@ -8,30 +8,23 @@ import {
   FAVICON_ICO,
   FAVICON_PNG_VARIANTS,
 } from '@/data/generated/favicons/manifest.favicons.gen';
-import { AVAILABLE_LOCALES, type Locale } from '@/data/locales';
+import { type Locale } from '@/data/locales';
 import {
   DEFAULT_LOCALE,
+  isLocale,
   pickLocaleFromAcceptLanguage,
 } from '@/lib/locales/locale';
 import { localizedToCanonicalSlugs } from '@/lib/routes/localeSlugs';
 import * as runtimeEnv from '@/lib/runtimeEnv';
 
-const LOCALES = new Set<Locale>(
-  AVAILABLE_LOCALES as readonly Locale[],
-);
-
 function pickPreferredLocale(request: NextRequest): string {
   const headerLocale = pickLocaleFromAcceptLanguage(
     request.headers.get('accept-language'),
   );
-  if (headerLocale && LOCALES.has(headerLocale)) {
+  if (headerLocale) {
     return headerLocale;
   }
   return DEFAULT_LOCALE;
-}
-
-function isLocale(segment: string): segment is Locale {
-  return LOCALES.has(segment as Locale);
 }
 
 function isGateEnabled(): boolean {

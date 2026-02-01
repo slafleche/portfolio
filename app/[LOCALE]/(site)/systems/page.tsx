@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 
 import { getLocaleSvgs } from '@/assets/SVG/generated/headingsAsSvgs';
 import DeferredIsland from '@/components/DeferredIsland';
@@ -18,11 +19,16 @@ import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import { buildMenuCopy } from '@/lib/locales/sections/menu.locale';
 import { buildSystemsMetaTagBundle } from '@/lib/locales/sections/meta.locale';
 import { buildPrivacyCopy } from '@/lib/locales/sections/privacy.locale';
+import {
+  RENDER_MODE_HEADER,
+  resolveRenderMode,
+} from '@/lib/renderMode';
 import { canonicalToLocalizedSlugs } from '@/lib/routes/localeSlugs';
 import { buildSystemsLink } from '@/lib/routes/systemsLink';
 import { getSiteOrigin } from '@/lib/runtimeEnv';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
+import { readSimpleHtml } from '@/server/simpleHtml/readSimpleHtml';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
 import * as layoutStyles from '@/styles/layout.css';
 
@@ -116,6 +122,17 @@ export default async function SystemsPage({
 }) {
   const { LOCALE } = await params;
   const locale = resolveLocale(LOCALE);
+  const headerList = await headers();
+  const renderMode = resolveRenderMode(
+    headerList.get(RENDER_MODE_HEADER),
+  );
+  const simpleHtml =
+    renderMode === 'simple'
+      ? ''
+      : await readSimpleHtml({
+          locale,
+          route: 'systems',
+        });
   const translator = await loadTranslator(locale);
   const contactFormCopy = buildContactFormCopy(translator);
   const privacyCopy = buildPrivacyCopy(translator);
@@ -138,7 +155,9 @@ export default async function SystemsPage({
   const systemsPrinciplesMarkdown = translator('principles-content');
   const systemsShapeId = translator('systems-architecture-href');
   const systemsShapeTitle = translator('systems-architecture');
-  const systemsShapeMarkdown = translator('systems-architecture-content');
+  const systemsShapeMarkdown = translator(
+    'systems-architecture-content',
+  );
   const systemsShapeCSSCalipersMarkdown = translator(
     'calipers-content',
   );
@@ -200,110 +219,129 @@ export default async function SystemsPage({
   };
 
   return (
-    <SiteProviders
-      formCopy={contactFormCopy}
-      privacyCopy={privacyCopy}
-      closeLabel={closeLabel}
-      turnstileSiteKey={turnstileSiteKey}
-    >
-      <Menu {...menuProps} />
+    <>
+      <noscript
+        dangerouslySetInnerHTML={{ __html: simpleHtml }}
+      />
+      <SiteProviders
+        formCopy={contactFormCopy}
+        privacyCopy={privacyCopy}
+        closeLabel={closeLabel}
+        turnstileSiteKey={turnstileSiteKey}
+      >
+        <Menu {...menuProps} />
 
-      <div className={layoutStyles.page}>
-        <SystemsBgOverlay className={layoutStyles.svgOverlay} />
-        <main id="main" className={layoutStyles.main} tabIndex={-1}>
-          <Hero
-            id="systems-hero"
-            copy={heroCopy}
-            headingAnimated={false}
-            TitleSvg={localeSvgs.systems.heroHeading}
-            Bg={SystemsGooey}
-          />
+        <div className={layoutStyles.page}>
+          <SystemsBgOverlay className={layoutStyles.svgOverlay} />
+          <main id="main" className={layoutStyles.main} tabIndex={-1}>
+            <Hero
+              id="systems-hero"
+              copy={heroCopy}
+              renderMode={renderMode}
+              simpleCtaAs="button"
+              headingAnimated={false}
+              TitleSvg={localeSvgs.systems.heroHeading}
+              Bg={SystemsGooey}
+            />
 
-          {/* Tetrachromatic */}
-          <ContentWithTitle
-            id={tetrachromaticId}
-            ignoreDataUI={true}
-            className={contentAsMockCode}
-            titleClassName={contentAsMockCodeTitle}
-            title={
-              parseWordmarkTemplate(tetrachromaticTitle).fullText
-            }
-            data-first="true"
-            queryDataAttributes={{
-              compact: 'no-padding-no-margin',
-            }}
-          >
-            <Markdown source={tetrachromaticMarkdown} />
-          </ContentWithTitle>
+            {/* Tetrachromatic */}
+            <ContentWithTitle
+              id={tetrachromaticId}
+              ignoreDataUI={true}
+              className={contentAsMockCode}
+              titleClassName={contentAsMockCodeTitle}
+              title={
+                parseWordmarkTemplate(tetrachromaticTitle).fullText
+              }
+              data-first="true"
+              queryDataAttributes={{
+                compact: 'no-padding-no-margin',
+              }}
+            >
+              <Markdown source={tetrachromaticMarkdown} />
+            </ContentWithTitle>
 
-          {/* Principles */}
-          <ContentAsTiles
-            id={systemsPrinciplesId}
-            title={systemsPrinciplesTitle}
-            titleClassName={contentAsMockCodeTitle}
-            introClassName={contentAsMockCodeIntro}
-            markdown={systemsPrinciplesMarkdown}
-            bgOffset={2}
-            rotateOffset={3}
-            scaleOffset={1}
-            translateOffset={4}
-            className={contentAsMockCode}
-          />
+            {/* Principles */}
+            <ContentAsTiles
+              id={systemsPrinciplesId}
+              title={systemsPrinciplesTitle}
+              titleClassName={contentAsMockCodeTitle}
+              introClassName={contentAsMockCodeIntro}
+              markdown={systemsPrinciplesMarkdown}
+              bgOffset={2}
+              rotateOffset={3}
+              scaleOffset={1}
+              translateOffset={4}
+              className={contentAsMockCode}
+            />
 
-          {/* Architecture */}
-          <ContentAsTiles
-            id={systemsShapeId}
-            title={systemsShapeTitle}
-            markdown={systemsShapeMarkdown}
-            titleClassName={contentAsMockCodeTitle}
-            bgOffset={5}
-            rotateOffset={1}
-            scaleOffset={4}
-            translateOffset={3}
-            className={contentAsMockCode}
-            data-query-all="no-margin"
-            data-query-compact="no-padding-no-margin"
-          />
+            {/* Architecture */}
+            <ContentAsTiles
+              id={systemsShapeId}
+              title={systemsShapeTitle}
+              markdown={systemsShapeMarkdown}
+              titleClassName={contentAsMockCodeTitle}
+              bgOffset={5}
+              rotateOffset={1}
+              scaleOffset={4}
+              translateOffset={3}
+              className={contentAsMockCode}
+              data-query-all="no-margin"
+              data-query-compact="no-padding-no-margin"
+            />
 
-          {/* CSS Calipers */}
-          <ContentWithTitle
-            id="css-calipers"
-            ignoreDataUI={true}
-            className={contentAsMockCode}
-            titleClassName={contentAsMockCodeTitle}
-            title={
-              parseWordmarkTemplate(translator('css_calipers'))
-                .fullText
-            }
-            queryDataAttributes={{
-              all: 'no-margin',
-              compact: 'no-padding-no-margin',
-            }}
-          >
-            <Markdown source={systemsShapeCSSCalipersMarkdown} />
-          </ContentWithTitle>
+            {/* CSS Calipers */}
+            <ContentWithTitle
+              id="css-calipers"
+              ignoreDataUI={true}
+              className={contentAsMockCode}
+              titleClassName={contentAsMockCodeTitle}
+              title={
+                parseWordmarkTemplate(translator('css_calipers'))
+                  .fullText
+              }
+              queryDataAttributes={{
+                all: 'no-margin',
+                compact: 'no-padding-no-margin',
+              }}
+            >
+              <Markdown source={systemsShapeCSSCalipersMarkdown} />
+            </ContentWithTitle>
 
-          {/* Exptertise */}
-          <ContentAsTiles
-            id={systemsIntroId}
-            title={systemsTitle}
-            markdown={systemsIntroMarkdown}
-            titleClassName={contentAsMockCodeTitle}
-            className={contentAsMockCode}
-            data-query-all="no-margin"
-            data-query-compact="no-padding-no-margin"
-          />
-        </main>
-        <DeferredIsland when="idle">
-          <Footer
-            contact={contactCopy}
-            id="contact"
-            systemsLink={systemsLink}
-            hideSystemsLink
-            backHref={homeHref}
-          />
-        </DeferredIsland>
-      </div>
-    </SiteProviders>
+            {/* Exptertise */}
+            <ContentAsTiles
+              id={systemsIntroId}
+              title={systemsTitle}
+              markdown={systemsIntroMarkdown}
+              titleClassName={contentAsMockCodeTitle}
+              className={contentAsMockCode}
+              data-query-all="no-margin"
+              data-query-compact="no-padding-no-margin"
+            />
+          </main>
+          {renderMode === 'simple' ? (
+            <Footer
+              contact={contactCopy}
+              id="contact"
+              systemsLink={systemsLink}
+              hideSystemsLink
+              backHref={homeHref}
+              renderMode={renderMode}
+            />
+          ) : (
+            <DeferredIsland when="idle">
+              <Footer
+                contact={contactCopy}
+                id="contact"
+                systemsLink={systemsLink}
+                hideSystemsLink
+                backHref={homeHref}
+                renderMode={renderMode}
+              />
+            </DeferredIsland>
+          )}
+        </div>
+      </SiteProviders>
+    </>
   );
 }

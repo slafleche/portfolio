@@ -1,3 +1,43 @@
 #!/bin/sh
 
-exit 0
+set -e
+
+if [ "${SKIP_SIMPLE_HTML:-}" = "1" ]; then
+  echo "pre-commit: SKIP_SIMPLE_HTML=1; skipping simpleHtml snapshot check."
+  exit 0
+fi
+
+if [ "${CI:-}" = "true" ] || [ "${GITHUB_ACTIONS:-}" = "true" ] || [ "${VERCEL:-}" = "1" ] || [ -n "${VERCEL_ENV:-}" ]; then
+  echo "pre-commit: CI/Vercel environment detected; skipping simpleHtml snapshot check."
+  exit 0
+fi
+
+if command -v curl >/dev/null 2>&1; then
+  if ! curl -fsS --max-time 1 "http://localhost:3000" >/dev/null 2>&1; then
+    echo "pre-commit: expected a local dev server at http://localhost:3000"
+    echo "Start it with: yarn dev"
+    echo "Or bypass with: SKIP_SIMPLE_HTML=1 git commit ..."
+    exit 1
+  fi
+fi
+
+corepack yarn locales:simpleHtml
+
+# Fail only when snapshots are not staged (unstaged edits or untracked files).
+# Staged snapshot changes are allowed (that's how you commit updated snapshots).
+unstaged_diff="$(git diff --name-only -- simpleHtml)"
+untracked_files="$(git ls-files --others --exclude-standard -- simpleHtml)"
+
+if [ -n "${unstaged_diff}" ] || [ -n "${untracked_files}" ]; then
+  echo ""
+  echo "pre-commit: simpleHtml snapshots are out of date (not staged)."
+  echo "Run: yarn locales:simpleHtml (with your dev server running), then stage the changes and commit."
+  echo ""
+  if [ -n "${unstaged_diff}" ]; then
+    echo "${unstaged_diff}"
+  fi
+  if [ -n "${untracked_files}" ]; then
+    echo "${untracked_files}"
+  fi
+  exit 1
+fi

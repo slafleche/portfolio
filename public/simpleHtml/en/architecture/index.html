@@ -1,0 +1,310 @@
+<!-- Section This Websites's Architecture -->
+<section>
+  <div>
+    <h3>This Websites's Architecture</h3>
+    <p>A high-level look at the system: patterns, tooling, and delivery workflow.</p>
+    <div>
+      <p>A practical overview of the tools I use to design, build, and ship UI, optimized for maintainability, predictable change, and reviewable output (not "latest for the sake of it").</p>
+      <p>
+        Repo is open source: <span><a target="_blank" rel="noopener noreferrer" aria-label="Mon Portfolio sur GitHub" title="Mon Portfolio sur GitHub" href="https://github.com/slafleche/portfolio">Mon Portfolio sur GitHub</a>.</span>
+      </p>
+      <h2>Application</h2>
+      <p>Built with Next.js (App Router) on top of React + TypeScript. It's a solid baseline for routing, rendering, and performance, while keeping the codebase strongly typed and easy to refactor.</p>
+      <p>
+        If you want to verify:
+        <a href="https://github.com/slafleche/portfolio/blob/main/next.config.js" target="_blank" rel="noopener noreferrer"><code>next.config.js</code></a>
+        shows the build wiring (including custom webpack rules and the style pipeline).
+      </p>
+      <h2>UI system</h2>
+      <p>The design system is token-driven and implemented with vanilla-extract (sprinkles/recipes), with Radix UI primitives where it makes sense. The goal is to keep building blocks composable and predictable: consistent spacing, typography, and color decisions, plus clear escape hatches when a page needs to diverge.</p>
+      <p>
+        If you want to verify: see <a href="https://github.com/slafleche/portfolio/tree/main/src/styles" target="_blank" rel="noopener noreferrer"><code>src/styles/</code></a> and the Storybook stories under <a href="https://github.com/slafleche/portfolio/tree/main/src/components/stories" target="_blank" rel="noopener noreferrer"><code>src/components/stories/</code></a
+        >.
+      </p>
+      <h2>Content &amp; media</h2>
+      <p>Content is authored in Markdown and rendered via Marked (with custom shortcodes), with Prism-based syntax highlighting. Video playback uses HLS.js when needed.</p>
+      <p>If you want to verify:</p>
+      <ul>
+        <li>
+          Markdown rendering: <a href="https://github.com/slafleche/portfolio/blob/main/src/components/Markdown.tsx" target="_blank" rel="noopener noreferrer"><code>src/components/Markdown.tsx</code></a>
+        </li>
+        <li>
+          Code highlighting: <a href="https://github.com/slafleche/portfolio/blob/main/src/components/CodeBlock.tsx" target="_blank" rel="noopener noreferrer"><code>src/components/CodeBlock.tsx</code></a>
+        </li>
+        <li>
+          HLS video: <a href="https://github.com/slafleche/portfolio/blob/main/src/components/VideoByName.client.tsx" target="_blank" rel="noopener noreferrer"><code>src/components/VideoByName.client.tsx</code></a>
+        </li>
+      </ul>
+      <h2>Storybook + visual review</h2>
+      <p>Storybook (Vite) is used as a UI workshop, and Chromatic provides visual diffs so changes can be reviewed safely.</p>
+      <p>
+        If you want to verify:
+        <a href="https://github.com/slafleche/portfolio/blob/main/.storybook/main.ts" target="_blank" rel="noopener noreferrer"><code>.storybook/main.ts</code></a>
+        and the stories under
+        <a href="https://github.com/slafleche/portfolio/tree/main/src/components/stories" target="_blank" rel="noopener noreferrer"><code>src/components/stories/</code></a
+        >.
+      </p>
+      <h2>Infra</h2>
+      <p>Deployed on Vercel, with a Cloudflare Worker used as a CORS proxy in front of an R2-backed asset bucket for CDN delivery.</p>
+      <p>
+        If you want to verify: <a href="https://github.com/slafleche/portfolio/blob/main/.cloudflare/cors_worker.js" target="_blank" rel="noopener noreferrer"><code>.cloudflare/cors_worker.js</code></a
+        >, <a href="https://github.com/slafleche/portfolio/blob/main/.cloudflare/wrangler.toml" target="_blank" rel="noopener noreferrer"><code>.cloudflare/wrangler.toml</code></a
+        >, and <a href="https://github.com/slafleche/portfolio/blob/main/.cloudflare/readme.md" target="_blank" rel="noopener noreferrer"><code>.cloudflare/readme.md</code></a
+        >.
+      </p>
+      <h2>Code quality guardrails</h2>
+      <p>Beyond ESLint + Prettier, this repo includes a set of custom linting rules that codify architecture and "design system" constraints: style-layer guardrails, dependency boundary checks, locale markdown validation, and secret scanning. This keeps changes reviewable and prevents slow, accidental drift over time.</p>
+      <p>If you want to verify:</p>
+      <ul>
+        <li>
+          Lint entry points: <a href="https://github.com/slafleche/portfolio/blob/main/package.json" target="_blank" rel="noopener noreferrer"><code>package.json</code></a> (<code>lint:*</code>, <code>typecheck</code>, <code>verify</code>)
+        </li>
+        <li>
+          Style + architecture rules: <a href="https://github.com/slafleche/portfolio/blob/main/scripts/checkLintRules.mjs" target="_blank" rel="noopener noreferrer"><code>scripts/checkLintRules.mjs</code></a>
+        </li>
+        <li>
+          Secret scanning + runtime config checks (Turnstile/Brevo, etc): <a href="https://github.com/slafleche/portfolio/blob/main/scripts/checkSecretLookout.mjs" target="_blank" rel="noopener noreferrer"><code>scripts/checkSecretLookout.mjs</code></a
+          >, <a href="https://github.com/slafleche/portfolio/blob/main/scripts/checkRuntimeConfig.mjs" target="_blank" rel="noopener noreferrer"><code>scripts/checkRuntimeConfig.mjs</code></a>
+        </li>
+        <li>
+          Locale markdown validation: <a href="https://github.com/slafleche/portfolio/blob/main/scripts/checkLocaleMarkdown.ts" target="_blank" rel="noopener noreferrer"><code>scripts/checkLocaleMarkdown.ts</code></a>
+        </li>
+        <li>
+          Base ESLint config: <a href="https://github.com/slafleche/portfolio/blob/main/eslint.config.js" target="_blank" rel="noopener noreferrer"><code>eslint.config.js</code></a>
+        </li>
+      </ul>
+      <h2>Validation and testing</h2>
+      <p>I use Vitest + Testing Library for unit/integration tests (core logic, component behavior, and edge cases), and Playwright for end-to-end coverage of real flows.</p>
+      <p>Concrete examples you can check:</p>
+      <ul>
+        <li>
+          Contact form behavior and failure modes:
+          <a href="https://github.com/slafleche/portfolio/tree/main/tests/contact" target="_blank" rel="noopener noreferrer"><code>tests/contact/</code></a>
+          (for example
+          <a href="https://github.com/slafleche/portfolio/blob/main/tests/contact/ContactFormFlow.test.tsx" target="_blank" rel="noopener noreferrer"><code>tests/contact/ContactFormFlow.test.tsx</code></a
+          >)
+        </li>
+        <li>
+          Responsive behavior utilities: <a href="https://github.com/slafleche/portfolio/tree/main/tests/responsive" target="_blank" rel="noopener noreferrer"><code>tests/responsive/</code></a>
+        </li>
+        <li>
+          Server-side verification: <a href="https://github.com/slafleche/portfolio/tree/main/tests/server" target="_blank" rel="noopener noreferrer"><code>tests/server/</code></a>
+        </li>
+      </ul>
+      <h3>Full-page visual regression in Chromatic (custom pipeline)</h3>
+      <p>In addition to component stories, I built a small pipeline that renders full Next.js pages with Playwright, writes PNGs into <code>public/pages-renders/</code>, and then surfaces those images inside Storybook as "Pages/<!-- -->" stories, so Chromatic can review full-page renders alongside the UI library.</p>
+      <p>If you want to verify:</p>
+      <ul>
+        <li>
+          Overview doc: <a href="https://github.com/slafleche/portfolio/blob/main/visual-regression.md" target="_blank" rel="noopener noreferrer"><code>visual-regression.md</code></a>
+        </li>
+        <li>
+          Playwright generator: <a href="https://github.com/slafleche/portfolio/blob/main/tests/e2e/pages.visual.spec.ts" target="_blank" rel="noopener noreferrer"><code>tests/e2e/pages.visual.spec.ts</code></a>
+        </li>
+        <li>
+          Storybook static mapping (<code>public/pages-renders/</code> → <code>/pages</code>):
+          <a href="https://github.com/slafleche/portfolio/tree/main/public/pages-renders" target="_blank" rel="noopener noreferrer"><code>public/pages-renders/</code></a>
+          →
+          <a href="https://github.com/slafleche/portfolio/blob/main/.storybook/main.ts" target="_blank" rel="noopener noreferrer"><code>.storybook/main.ts</code></a>
+        </li>
+        <li>
+          Page image stories: <a href="https://github.com/slafleche/portfolio/blob/main/src/components/stories/Page.Home.stories.tsx" target="_blank" rel="noopener noreferrer"><code>src/components/stories/Page.Home.stories.tsx</code></a
+          >, <a href="https://github.com/slafleche/portfolio/blob/main/src/components/stories/Page.Systems.stories.tsx" target="_blank" rel="noopener noreferrer"><code>src/components/stories/Page.Systems.stories.tsx</code></a>
+        </li>
+      </ul>
+      <h2>AI-assisted coding</h2>
+      <p>I use AI assistants as a pair-programming tool to accelerate routine work while keeping technical decisions and quality standards human-owned. AI helps me move faster on exploration, drafting, and consistency checks, but I treat all outputs as drafts requiring verification.</p>
+      <h3>What I use it for</h3>
+      <p>Technical writing (documentation, PR descriptions), design exploration (evaluating trade-offs, edge cases, API shapes), scaffolding generation (tests, utilities, refactor steps), and consistency checks (naming, patterns, missing cases).</p>
+      <h3>How I keep it reliable</h3>
+      <p>All changes are validated against types, lint rules, tests, and runtime behavior. When AI output fails, I treat it like a failing unit test; I add more constraints through agent instructions, linting rules, or stricter specifications until it produces reliable results.</p>
+      <p>I keep changes reviewable: small diffs, repeatable scripts over manual edits. I don't share secrets or proprietary details in prompts.</p>
+      <h3>Why it matters</h3>
+      <p>Faster iteration on maintenance-heavy work without compromising quality. Better documentation and explicit decisions that reduce team overhead. AI works best when paired with solid architecture, linting, and tests - the kind of environment I build and work within.</p>
+      <h2>Pipelines</h2>
+      <p>This repo includes purpose-built pipelines to generate assets, keep localization in sync, and make "hard to review" UI states easy to validate.</p>
+      <h3>Localization + rich Markdown pipeline</h3>
+      <p>Locale content is authored in Markdown and compiled into generated TypeScript maps, with validation to catch missing content and formatting issues. It also supports rich "shortcodes" (for example abbreviations and custom blocks) so the same content works in the app and in Storybook.</p>
+      <p>If you want to verify:</p>
+      <ul>
+        <li>
+          Markdown compilation: <a href="https://github.com/slafleche/portfolio/blob/main/scripts/generateLocaleMarkdown.ts" target="_blank" rel="noopener noreferrer"><code>scripts/generateLocaleMarkdown.ts</code></a>
+        </li>
+        <li>
+          Locale markdown validation (missing files, formatting rules): <a href="https://github.com/slafleche/portfolio/blob/main/scripts/checkLocaleMarkdown.ts" target="_blank" rel="noopener noreferrer"><code>scripts/checkLocaleMarkdown.ts</code></a>
+        </li>
+        <li>
+          Copy HTML generation + missing/extra locale key checks: <a href="https://github.com/slafleche/portfolio/blob/main/scripts/generateCopyHtml.ts" target="_blank" rel="noopener noreferrer"><code>scripts/generateCopyHtml.ts</code></a>
+        </li>
+        <li>
+          Shortcodes/extensions: <a href="https://github.com/slafleche/portfolio/tree/main/src/lib/markdown" target="_blank" rel="noopener noreferrer"><code>src/lib/markdown/</code></a>
+        </li>
+        <li>
+          Generated outputs: <a href="https://github.com/slafleche/portfolio/blob/main/src/lib/locales/generated/markdown.gen.ts" target="_blank" rel="noopener noreferrer"><code>src/lib/locales/generated/markdown.gen.ts</code></a
+          >, <a href="https://github.com/slafleche/portfolio/blob/main/src/lib/locales/generated/html.gen.ts" target="_blank" rel="noopener noreferrer"><code>src/lib/locales/generated/html.gen.ts</code></a>
+        </li>
+      </ul>
+      <h3>Build orchestration</h3>
+      <p>For release flows, a single "generate" entrypoint runs the pipeline in a repeatable order (locales → favicons → sitemap → CDN assets), so the repo stays consistent without manual steps.</p>
+      <p>
+        If you want to verify:
+        <a href="https://github.com/slafleche/portfolio/blob/main/scripts/runGenerateAllPipeline.mts" target="_blank" rel="noopener noreferrer"><code>scripts/runGenerateAllPipeline.mts</code></a>
+        (<a href="https://github.com/slafleche/portfolio/blob/main/package.json" target="_blank" rel="noopener noreferrer"><code>package.json</code></a> <code>generate</code>).
+      </p>
+      <h3>Favicons pipeline</h3>
+      <p>Favicons are generated from a token-driven plan, written to <code>public/favicons/</code>, and surfaced via a generated manifest consumed by the app and debug tooling.</p>
+      <p>If you want to verify:</p>
+      <ul>
+        <li>
+          Generator: <a href="https://github.com/slafleche/portfolio/blob/main/scripts/generateFavicons.ts" target="_blank" rel="noopener noreferrer"><code>scripts/generateFavicons.ts</code></a>
+        </li>
+        <li>
+          Tokens/plan: <a href="https://github.com/slafleche/portfolio/blob/main/src/tokens/favicon.tokens" target="_blank" rel="noopener noreferrer"><code>src/tokens/favicon.tokens</code></a>
+        </li>
+        <li>
+          Generated manifest: <a href="https://github.com/slafleche/portfolio/blob/main/src/data/generated/favicons/manifest.favicons.gen.ts" target="_blank" rel="noopener noreferrer"><code>src/data/generated/favicons/manifest.favicons.gen.ts</code></a>
+        </li>
+        <li>
+          Preview/debug page: <a href="https://github.com/slafleche/portfolio/blob/main/app/%5BLOCALE%5D/debug/favicons/page.tsx" target="_blank" rel="noopener noreferrer"><code>app/[LOCALE]/debug/favicons/page.tsx</code></a>
+        </li>
+      </ul>
+      <h3>Sitemap pipeline</h3>
+      <p>The sitemap is generated as a real build artifact (not hand-edited), based on routes and locales.</p>
+      <p>
+        If you want to verify:
+        <a href="https://github.com/slafleche/portfolio/blob/main/scripts/generateSitemap.mts" target="_blank" rel="noopener noreferrer"><code>scripts/generateSitemap.mts</code></a>
+        (writes
+        <a href="https://github.com/slafleche/portfolio/blob/main/public/sitemap.xml" target="_blank" rel="noopener noreferrer"><code>public/sitemap.xml</code></a
+        >),
+        <a href="https://github.com/slafleche/portfolio/blob/main/package.json" target="_blank" rel="noopener noreferrer"><code>package.json</code></a>
+        (<code>generate:sitemap</code>).
+      </p>
+      <h3>Custom hero SVG generation</h3>
+      <p>The hero heading artwork is generated and wired into the app as code, so the rendered output is predictable and can be versioned like any other UI change.</p>
+      <p>
+        If you want to verify:
+        <a href="https://github.com/slafleche/portfolio/blob/main/scripts/buildHeroHeadingSvg.mts" target="_blank" rel="noopener noreferrer"><code>scripts/buildHeroHeadingSvg.mts</code></a>
+        (script),
+        <a href="https://github.com/slafleche/portfolio/blob/main/package.json" target="_blank" rel="noopener noreferrer"><code>package.json</code></a>
+        (<code>build:hero-svg</code>), and the debug "workbench" page
+        <a href="https://github.com/slafleche/portfolio/blob/main/app/%5BLOCALE%5D/debug/heroHeadingSvg/page.tsx" target="_blank" rel="noopener noreferrer"><code>app/[LOCALE]/debug/heroHeadingSvg/page.tsx</code></a
+        >.
+      </p>
+      <h3>Share images generation (custom page → PNGs)</h3>
+      <p>Share images are generated by rendering a dedicated debug page and screenshotting the exact viewport(s) needed. This keeps output consistent across locales/sizes and makes it easy to update assets without hand-editing images.</p>
+      <p>If you want to verify:</p>
+      <ul>
+        <li>
+          Generator: <a href="https://github.com/slafleche/portfolio/blob/main/scripts/buildShareImages.mts" target="_blank" rel="noopener noreferrer"><code>scripts/buildShareImages.mts</code></a>
+        </li>
+        <li>
+          Source page: <a href="https://github.com/slafleche/portfolio/blob/main/app/%5BLOCALE%5D/debug/shareImage/page.tsx" target="_blank" rel="noopener noreferrer"><code>app/[LOCALE]/debug/shareImage/page.tsx</code></a>
+        </li>
+        <li>
+          Output folder: <a href="https://github.com/slafleche/portfolio/tree/main/cdn/media/images/localImageSrc/share-images" target="_blank" rel="noopener noreferrer"><code>cdn/media/images/localImageSrc/share-images/</code></a>
+        </li>
+        <li>
+          Images pipeline entrypoint: <a href="https://github.com/slafleche/portfolio/blob/main/scripts/runGenerateImagesPipeline.mjs" target="_blank" rel="noopener noreferrer"><code>scripts/runGenerateImagesPipeline.mjs</code></a>
+        </li>
+      </ul>
+      <h3>Render component markup → reusable assets</h3>
+      <p>For cases where the most reliable artifact is "what the browser renders", there is a script that renders a React component to static HTML, compiles its vanilla-extract CSS, and then uses Playwright to generate a PNG asset.</p>
+      <p>
+        If you want to verify:
+        <a href="https://github.com/slafleche/portfolio/blob/main/scripts/mockMarkupToImg.mts" target="_blank" rel="noopener noreferrer"><code>scripts/mockMarkupToImg.mts</code></a>
+        (script),
+        <a href="https://github.com/slafleche/portfolio/blob/main/src/components/MockEndHTML.tsx" target="_blank" rel="noopener noreferrer"><code>src/components/MockEndHTML.tsx</code></a>
+        (component),
+        <a href="https://github.com/slafleche/portfolio/blob/main/src/styles/components/mockEndHTML.css.ts" target="_blank" rel="noopener noreferrer"><code>src/styles/components/mockEndHTML.css.ts</code></a>
+        (styles),
+        <a href="https://github.com/slafleche/portfolio/blob/main/package.json" target="_blank" rel="noopener noreferrer"><code>package.json</code></a>
+        (<code>mock:markup-img</code>).
+      </p>
+      <h3>SVG formatting and optimization</h3>
+      <p>SVGs are formatted consistently and can be optimized via an SVGO-based pipeline to keep diffs small and assets efficient.</p>
+      <p>
+        If you want to verify:
+        <a href="https://github.com/slafleche/portfolio/blob/main/scripts/optimizeSvgs.mjs" target="_blank" rel="noopener noreferrer"><code>scripts/optimizeSvgs.mjs</code></a>
+        (optimizer),
+        <a href="https://github.com/slafleche/portfolio/blob/main/package.json" target="_blank" rel="noopener noreferrer"><code>package.json</code></a>
+        (<code>format:svg</code>, <code>optimize:svg</code>).
+      </p>
+      <h3>CDN assets (fonts / images / videos)</h3>
+      <p>Large static assets are generated locally, separated by environment and version (<code>_staging</code> vs <code>release</code>, <code>v1</code>/<code>v2</code>/…), then synced to Cloudflare R2. Manifests are rewritten to stable CDN URLs, and a hashes file is produced to make updates fast and cache-friendly.</p>
+      <p>This includes custom pipelines for fonts, images, and videos (including video posters and HLS ladders), plus tooling to sync, delete, and purge CDN caches.</p>
+      <p>If you want to verify:</p>
+      <ul>
+        <li>
+          Overview: <a href="https://github.com/slafleche/portfolio/blob/main/cdn/README.md" target="_blank" rel="noopener noreferrer"><code>cdn/README.md</code></a>
+        </li>
+        <li>
+          Versions by env/kind: <a href="https://github.com/slafleche/portfolio/blob/main/cdn/assetGroupVersions.json" target="_blank" rel="noopener noreferrer"><code>cdn/assetGroupVersions.json</code></a>
+        </li>
+        <li>
+          CDN sync + manifest rewriting + hashing: <a href="https://github.com/slafleche/portfolio/blob/main/cdn/cdnSyncManifests.mts" target="_blank" rel="noopener noreferrer"><code>cdn/cdnSyncManifests.mts</code></a>
+        </li>
+        <li>
+          Cache purge tooling: <a href="https://github.com/slafleche/portfolio/blob/main/cdn/cdnPurgeCache.mts" target="_blank" rel="noopener noreferrer"><code>cdn/cdnPurgeCache.mts</code></a>
+        </li>
+        <li>
+          CDN client ops (list/delete): <a href="https://github.com/slafleche/portfolio/blob/main/cdn/cdnClient.mts" target="_blank" rel="noopener noreferrer"><code>cdn/cdnClient.mts</code></a>
+        </li>
+        <li>
+          CDN scripts: <a href="https://github.com/slafleche/portfolio/blob/main/cdn/package.json" target="_blank" rel="noopener noreferrer"><code>cdn/package.json</code></a>
+        </li>
+        <li>
+          Orchestrator: <a href="https://github.com/slafleche/portfolio/blob/main/scripts/runGenerateAllPipeline.mts" target="_blank" rel="noopener noreferrer"><code>scripts/runGenerateAllPipeline.mts</code></a>
+        </li>
+        <li>
+          Font smoke tests:
+          <a href="https://github.com/slafleche/portfolio/blob/main/scripts/testFonts.mts" target="_blank" rel="noopener noreferrer"><code>scripts/testFonts.mts</code></a>
+          (<a href="https://github.com/slafleche/portfolio/blob/main/package.json" target="_blank" rel="noopener noreferrer"><code>package.json</code></a> <code>test:fonts</code>)
+        </li>
+      </ul>
+      <h3>Cloudflare CORS proxy (Wrangler)</h3>
+      <p>There is a small Cloudflare Worker that acts as a CORS shim/proxy in front of a target origin, with an explicit allow-list of origins. It's deployed with Wrangler and versioned as infrastructure code.</p>
+      <p>
+        If you want to verify: <a href="https://github.com/slafleche/portfolio/blob/main/.cloudflare/cors_worker.js" target="_blank" rel="noopener noreferrer"><code>.cloudflare/cors_worker.js</code></a
+        >, <a href="https://github.com/slafleche/portfolio/blob/main/.cloudflare/wrangler.toml" target="_blank" rel="noopener noreferrer"><code>.cloudflare/wrangler.toml</code></a
+        >, and <a href="https://github.com/slafleche/portfolio/blob/main/.cloudflare/readme.md" target="_blank" rel="noopener noreferrer"><code>.cloudflare/readme.md</code></a
+        >.
+      </p>
+      <h3>"Scenarios" for hard-to-style UI states</h3>
+      <p>Some UI states are hard to catch by hand (for example, the contact form loading state that only appears briefly). This repo includes a "scenario" system that forces specific form states for development and review.</p>
+      <p>If you want to verify:</p>
+      <ul>
+        <li>
+          Scenario definitions: <a href="https://github.com/slafleche/portfolio/blob/main/src/dev/scenarios/contactForm.scenarios.ts" target="_blank" rel="noopener noreferrer"><code>src/dev/scenarios/contactForm.scenarios.ts</code></a>
+        </li>
+        <li>
+          Scenario runner:
+          <a href="https://github.com/slafleche/portfolio/blob/main/scripts/devScenarios.ts" target="_blank" rel="noopener noreferrer"><code>scripts/devScenarios.ts</code></a>
+          (see
+          <a href="https://github.com/slafleche/portfolio/blob/main/package.json" target="_blank" rel="noopener noreferrer"><code>package.json</code></a>
+          <code>scenarios:*</code>)
+        </li>
+        <li>
+          Scenario wiring in the form: <a href="https://github.com/slafleche/portfolio/blob/main/src/components/contact/ContactForm.tsx" target="_blank" rel="noopener noreferrer"><code>src/components/contact/ContactForm.tsx</code></a>
+        </li>
+        <li>
+          Scenario tests: <a href="https://github.com/slafleche/portfolio/blob/main/tests/contact/ContactForm.scenarios.test.tsx" target="_blank" rel="noopener noreferrer"><code>tests/contact/ContactForm.scenarios.test.tsx</code></a>
+        </li>
+      </ul>
+      <h3>Brevo + contact form test harness</h3>
+      <p>Contact form delivery is tested against a mocked Brevo client, with a small test harness to control runtime env/config consistently across unit tests.</p>
+      <p>If you want to verify:</p>
+      <ul>
+        <li>
+          Brevo delivery tests: <a href="https://github.com/slafleche/portfolio/blob/main/tests/server/deliverContactMessage.test.ts" target="_blank" rel="noopener noreferrer"><code>tests/server/deliverContactMessage.test.ts</code></a>
+        </li>
+        <li>
+          Test command: <a href="https://github.com/slafleche/portfolio/blob/main/package.json" target="_blank" rel="noopener noreferrer"><code>package.json</code></a> (<code>test:brevo</code>)
+        </li>
+        <li>
+          Env harness helpers: <a href="https://github.com/slafleche/portfolio/blob/main/tests/helpers/runtimeEnvHarness.ts" target="_blank" rel="noopener noreferrer"><code>tests/helpers/runtimeEnvHarness.ts</code></a
+          >, <a href="https://github.com/slafleche/portfolio/blob/main/tests/helpers/testEnvVars.ts" target="_blank" rel="noopener noreferrer"><code>tests/helpers/testEnvVars.ts</code></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
