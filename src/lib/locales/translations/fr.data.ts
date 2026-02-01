@@ -16,12 +16,21 @@ const frBaseData = {
   'meta-keywords':
     'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
   'meta-author': 'Stéphane LaFlèche',
+
   'systems-meta-title':
     'Systèmes de design & architecture UI | Stéphane LaFlèche',
   'systems-meta-description':
     'Une approche pour des systèmes UI qui évoluent : tokens composables, styles typés et CSS en sortie, pour que les changements restent prévisibles et bien cadrés.',
   'systems-meta-keywords':
     'systèmes de design, architecture UI, CSS typé, primitives CSS, interfaces évolutives, accessibilité, ingénierie front-end, portfolio',
+
+  'architecture-meta-title':
+    'Architecture de ce site web | Stéphane LaFlèche',
+  'architecture-meta-description':
+    'Comment ce portfolio est construit : un système UI basé sur des tokens, une pipeline de localisation, des vérifications automatisées et des tests pour livrer en confiance.',
+  'architecture-meta-keywords':
+    'architecture de site, architecture front-end, design system, localisation, tests automatisés, tests visuels, TypeScript, Next.js, ingénierie UI',
+
   'not_found-title': '404 Page non trouvée',
   'not_found-back': 'Retour à la page d’accueil',
 

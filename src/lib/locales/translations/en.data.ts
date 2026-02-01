@@ -22,6 +22,14 @@ const enBaseData = {
     'How I build UI systems that scale: composable tokens, typed styling inputs, and plain CSS output so changes stay predictable and scoped.',
   'systems-meta-keywords':
     'design systems, UI architecture, typed CSS, CSS primitives, scalable UI, accessibility, frontend engineering, portfolio',
+  
+  'architecture-meta-title':
+    "This Website's Architecture | Stéphane LaFlèche",
+  'architecture-meta-description':
+    'How this portfolio is built: a token-driven UI system, localization pipeline, automated checks, and testing that keep changes safe and reviewable.',
+  'architecture-meta-keywords':
+    'site architecture, frontend architecture, design system, localization, automated testing, visual regression, TypeScript, Next.js, UI engineering',
+  
   'not_found-title': '404 This page can not be found',
   'not_found-back': 'Back to home',
 
