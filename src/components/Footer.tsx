@@ -61,6 +61,7 @@ export default function Footer({
           ))}
         <div>
           <a href={`#${footerId}`}>{contact.emailLabel}</a>
+          <br/>
           <a
             href={sharedStrings.linkedInUrl}
             target="_blank"
@@ -68,6 +69,7 @@ export default function Footer({
           >
             {contact.linkedInLabel}
           </a>
+          <br/>
           <a
             href={sharedStrings.githubUrl}
             target="_blank"
@@ -75,6 +77,7 @@ export default function Footer({
           >
             {contact.githubLabel}
           </a>
+          <br/>
           {systemsLink && !hideSystemsLink ? (
             <a href={systemsLink.href}>{systemsLink.label}</a>
           ) : null}

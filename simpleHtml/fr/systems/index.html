@@ -1,7 +1,10 @@
 <!-- Simple Render for Hero.tsx --><!-- Section #systems-hero -->
 <section id="systems-hero">
   <h1>L’approche<br />Tetrachromatic</h1>
-  <p>Systèmes d’interface avec **formalisation progressive** et frontières explicites. Commencer simple. Formaliser progressivement. Périmètre local. Changer de manière prévisible.</p>
+  <p>
+    Systèmes d’interface avec **formalisation progressive** et frontières explicites. Commencer simple. Formaliser
+    progressivement. Périmètre local. Changer de manière prévisible.
+  </p>
   <button aria-label="Ouvrir le formulaire de contact">Prenons contact !</button>
 </section>
 <!-- Section #systems-tetrachromatic -->
@@ -94,33 +97,63 @@ maximale. Moi, j’optimise la <strong>prévisibilité du changement dans le tem
     <article>
       <div>
         <h3>Concevoir pour le changement</h3>
-        <div><p>La valeur du système se cumule à mesure que le projet mûrit. La vélocité au démarrage compte, mais pas au prix de décisions qui vous enferment. De nouvelles exigences ne devraient pas déclencher des réécritures. Elles devraient ressembler à des extensions naturelles de ce qui existe déjà.</p></div>
+        <div>
+          <p>
+            La valeur du système se cumule à mesure que le projet mûrit. La vélocité au démarrage compte, mais pas au
+            prix de décisions qui vous enferment. De nouvelles exigences ne devraient pas déclencher des réécritures.
+            Elles devraient ressembler à des extensions naturelles de ce qui existe déjà.
+          </p>
+        </div>
       </div>
     </article>
     <article>
       <div>
         <h3>Composition plutôt que rigidité</h3>
-        <div><p>Encodez les décisions une fois, composez-les partout. Quand une valeur d’espacement doit changer, vous changez un token, pas cinquante composants. Et quand un pattern doit diverger, vous le branchez proprement, sans abandonner l’original.</p></div>
+        <div>
+          <p>
+            Encodez les décisions une fois, composez-les partout. Quand une valeur d’espacement doit changer, vous
+            changez un token, pas cinquante composants. Et quand un pattern doit diverger, vous le branchez proprement,
+            sans abandonner l’original.
+          </p>
+        </div>
       </div>
     </article>
     <article>
       <div>
         <h3>Respecter la plateforme</h3>
         <div>
-          <p>La spécification <abbr title="Feuilles de style en cascade">CSS</abbr> est le contrat. Les abstractions peuvent faciliter l’écriture, mais la sortie doit rester du <abbr title="Feuilles de style en cascade">CSS</abbr> inspectable et débogable, pour que n’importe quel développeur peut lire et comprendre. Pas de runtime magique, pas de transformations opaques.</p>
+          <p>
+            La spécification <abbr title="Feuilles de style en cascade">CSS</abbr> est le contrat. Les abstractions
+            peuvent faciliter l’écriture, mais la sortie doit rester du
+            <abbr title="Feuilles de style en cascade">CSS</abbr> inspectable et débogable, pour que n’importe quel
+            développeur peut lire et comprendre. Pas de runtime magique, pas de transformations opaques.
+          </p>
         </div>
       </div>
     </article>
     <article>
       <div>
         <h3>Les personnes avant les abstractions</h3>
-        <div><p>Les systèmes servent les équipes, pas l’inverse. Une abstraction « maline » qui perd votre équipe est un boulet. Les outils sont choisis pour leur utilité au projet, pas pour une pureté architecturale. L’objectif, c’est la maintenabilité, pas l’outil du moment parce qu’il rend bien en démo.</p></div>
+        <div>
+          <p>
+            Les systèmes servent les équipes, pas l’inverse. Une abstraction « maline » qui perd votre équipe est un
+            boulet. Les outils sont choisis pour leur utilité au projet, pas pour une pureté architecturale. L’objectif,
+            c’est la maintenabilité, pas l’outil du moment parce qu’il rend bien en démo.
+          </p>
+        </div>
       </div>
     </article>
     <article>
       <div>
         <h3>Frontières et contraintes claires</h3>
-        <div><p>Des frontières explicites rendent le changement prévisible. Vous savez qui dépend de quoi. Vous savez ce qu’un refactor va affecter. L’ampleur de l’impact de chaque changement est claire et évidente. Les contraintes sont choisies pour le projet et pour ce qu’on veut construire,et non des limites arbitraires héritées d’un framework que quelqu’un a choisi avant de comprendre le problème.</p></div>
+        <div>
+          <p>
+            Des frontières explicites rendent le changement prévisible. Vous savez qui dépend de quoi. Vous savez ce
+            qu’un refactor va affecter. L’ampleur de l’impact de chaque changement est claire et évidente. Les
+            contraintes sont choisies pour le projet et pour ce qu’on veut construire,et non des limites arbitraires
+            héritées d’un framework que quelqu’un a choisi avant de comprendre le problème.
+          </p>
+        </div>
       </div>
     </article>
   </div>
@@ -144,8 +177,18 @@ d’abstraction qui prennent du retard sur la plateforme.</p></code></pre>
       <div>
         <h3>Entrées typées à la frontière</h3>
         <div>
-          <p>Les valeurs de style entrent dans le système sous forme de primitives typées, pas comme des chaînes brutes. Ça évite l’enfer de concaténation décrit dans la section <a href="#css-calipers">CSS&nbsp;Calipers</a>. C’est fini les erreur de style <code>"12px" + "40vh"</code> qui devient <code>"12px40vh"</code>, fini la perte de typage dès qu’un nombre devient une chaîne, fini les surprises à l’exécution causées par des unités incompatibles.</p>
-          <p>Les types imposent la cohérence au moment d’écrire. Vous ne pouvez pas mélanger des unités incompatibles par accident, ni passer des valeurs invalides. Les erreurs apparaissent tout de suite, pas quand un utilisateur signale un espacement brisé.</p>
+          <p>
+            Les valeurs de style entrent dans le système sous forme de primitives typées, pas comme des chaînes brutes.
+            Ça évite l’enfer de concaténation décrit dans la section <a href="#css-calipers">CSS&nbsp;Calipers</a>.
+            C’est fini les erreur de style <code>"12px" + "40vh"</code> qui devient <code>"12px40vh"</code>, fini la
+            perte de typage dès qu’un nombre devient une chaîne, fini les surprises à l’exécution causées par des unités
+            incompatibles.
+          </p>
+          <p>
+            Les types imposent la cohérence au moment d’écrire. Vous ne pouvez pas mélanger des unités incompatibles par
+            accident, ni passer des valeurs invalides. Les erreurs apparaissent tout de suite, pas quand un utilisateur
+            signale un espacement brisé.
+          </p>
         </div>
       </div>
     </article>
@@ -153,8 +196,18 @@ d’abstraction qui prennent du retard sur la plateforme.</p></code></pre>
       <div>
         <h3>Début clair et fin claire</h3>
         <div>
-          <p>La structure et les contraintes existent à l’écriture. La sortie finale est du CSS conforme à la spécification. C’est important, parce que j’ai déjà travaillé sur des projets où le modèle de composants ne pouvait pas exprimer toute l’étendue du HTML/CSS. On était en retard sur la spécification, à dépendre de hacks en JavaScript pour modifier le rendu après coup, juste pour utiliser des fonctionnalités que les navigateurs supportaient déjà.</p>
-          <p>Le CSS reste la source de vérité, pas un dialecte abstrait. Vous pouvez inspecter ce qui est livré, le déboguer avec les outils standards, et adopter de nouvelles fonctionnalités CSS dès que les navigateurs les supportent. Pas besoin d’attendre que votre framework rattrape la plateforme.</p>
+          <p>
+            La structure et les contraintes existent à l’écriture. La sortie finale est du CSS conforme à la
+            spécification. C’est important, parce que j’ai déjà travaillé sur des projets où le modèle de composants ne
+            pouvait pas exprimer toute l’étendue du HTML/CSS. On était en retard sur la spécification, à dépendre de
+            hacks en JavaScript pour modifier le rendu après coup, juste pour utiliser des fonctionnalités que les
+            navigateurs supportaient déjà.
+          </p>
+          <p>
+            Le CSS reste la source de vérité, pas un dialecte abstrait. Vous pouvez inspecter ce qui est livré, le
+            déboguer avec les outils standards, et adopter de nouvelles fonctionnalités CSS dès que les navigateurs les
+            supportent. Pas besoin d’attendre que votre framework rattrape la plateforme.
+          </p>
         </div>
       </div>
     </article>
@@ -162,7 +215,13 @@ d’abstraction qui prennent du retard sur la plateforme.</p></code></pre>
       <div>
         <h3>Intention sémantique, CSS réel</h3>
         <div>
-          <p>Des abstractions de domaine comme <code>borders()</code> ou <code>spacing()</code> donnent du sens aux valeurs sans changer la plateforme. Elles rendent l’intention explicite et réduisent la répétition, mais la sortie reste des propriétés CSS reconnaissables. La couche d’abstraction ajoute de la clarté, pas du mystère. Si vous inspectez le résultat, vous voyez <code>border: 1px solid #fff</code>, pas une représentation intermédiaire.</p>
+          <p>
+            Des abstractions de domaine comme <code>borders()</code> ou <code>spacing()</code> donnent du sens aux
+            valeurs sans changer la plateforme. Elles rendent l’intention explicite et réduisent la répétition, mais la
+            sortie reste des propriétés CSS reconnaissables. La couche d’abstraction ajoute de la clarté, pas du
+            mystère. Si vous inspectez le résultat, vous voyez <code>border: 1px solid #fff</code>, pas une
+            représentation intermédiaire.
+          </p>
         </div>
       </div>
     </article>
@@ -170,9 +229,31 @@ d’abstraction qui prennent du retard sur la plateforme.</p></code></pre>
       <div>
         <h3>Conçu pour être inspecté et remplacé</h3>
         <div>
-          <p>Des morceaux peuvent être remplacés ou retirés au fil du temps sans déstabiliser l’ensemble. Aucun outil unique ni un seul style d’écriture n’est requis. Si un meilleur outil apparaît, ou si les besoins du projet changent, vous pouvez remplacer des pièces de manière incrémentale. Rien ne devient une impasse.</p>
           <p>
-            Le site portfolio que vous lisez est open source sur <a target="_blank" rel="noopener noreferrer" aria-label="Mon Portfolio sur GitHub" title="Mon Portfolio sur GitHub" href="https://github.com/slafleche/portfolio">Mon Portfolio sur GitHub</a>, et CSS Calipers est sur <span><a target="_blank" rel="noopener noreferrer" aria-label="CSS Calipers sur NPM" title="CSS Calipers sur NPM" href="https://www.npmjs.com/package/css-calipers">CSS Calipers sur NPM</a>.</span>
+            Des morceaux peuvent être remplacés ou retirés au fil du temps sans déstabiliser l’ensemble. Aucun outil
+            unique ni un seul style d’écriture n’est requis. Si un meilleur outil apparaît, ou si les besoins du projet
+            changent, vous pouvez remplacer des pièces de manière incrémentale. Rien ne devient une impasse.
+          </p>
+          <p>
+            Le site portfolio que vous lisez est open source sur
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Mon Portfolio sur GitHub"
+              title="Mon Portfolio sur GitHub"
+              href="https://github.com/slafleche/portfolio"
+              >Mon Portfolio sur GitHub</a
+            >, et CSS Calipers est sur
+            <span
+              ><a
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="CSS Calipers sur NPM"
+                title="CSS Calipers sur NPM"
+                href="https://www.npmjs.com/package/css-calipers"
+                >CSS Calipers sur NPM</a
+              >.</span
+            >
           </p>
         </div>
       </div>
@@ -181,8 +262,19 @@ d’abstraction qui prennent du retard sur la plateforme.</p></code></pre>
       <div>
         <h3>Composition flexible au milieu</h3>
         <div>
-          <p>C’est ici que la comparaison avec un framework compte. La plupart des « frameworks » CSS sont en réalité des bibliothèques : des collections d’utilitaires ou de composants. Mon approche tétrachromatique ressemble davantage à un framework de programmation comme PHP. Vous avez des entrées attendues (valeurs typées) et des sorties (CSS conforme à la spécification), mais le milieu vous appartient.</p>
-          <p>J’ai des helpers et des opinions pour vous y amener, mais vous pouvez structurer comme vous voulez. Vous n’aimez pas mon <code>colorWrapper</code> ? Écrivez le vôtre, en gardant les types. Vous n’aimez pas le helper <code>borders()</code> ? Écrivez vos bordures à la main. Le système se soucie des <strong>bornes</strong> (entrées typées et sortie CSS réelle), pas de la façon dont vous organisez le milieu.</p>
+          <p>
+            C’est ici que la comparaison avec un framework compte. La plupart des « frameworks » CSS sont en réalité des
+            bibliothèques : des collections d’utilitaires ou de composants. Mon approche tétrachromatique ressemble
+            davantage à un framework de programmation comme PHP. Vous avez des entrées attendues (valeurs typées) et des
+            sorties (CSS conforme à la spécification), mais le milieu vous appartient.
+          </p>
+          <p>
+            J’ai des helpers et des opinions pour vous y amener, mais vous pouvez structurer comme vous voulez. Vous
+            n’aimez pas mon <code>colorWrapper</code> ? Écrivez le vôtre, en gardant les types. Vous n’aimez pas le
+            helper <code>borders()</code> ? Écrivez vos bordures à la main. Le système se soucie des
+            <strong>bornes</strong> (entrées typées et sortie CSS réelle), pas de la façon dont vous organisez le
+            milieu.
+          </p>
         </div>
       </div>
     </article>
@@ -238,41 +330,90 @@ les mêmes, mais l’implémentation s’adapte à votre contexte.</p></code></p
     <article>
       <div>
         <h3>Systèmes de design sur mesure</h3>
-        <div><p>Concevoir et implémenter des systèmes UI et des design systems sur mesure qui peuvent évoluer sans réécritures constantes. L’objectif est de transformer l’intention de design en systèmes cohérents et composables, plutôt que d’accumuler des solutions ponctuelles. Que ce soit en partant de zéro ou en améliorant l’existant, le but est de bâtir une fondation qui grandit avec votre produit.</p></div>
+        <div>
+          <p>
+            Concevoir et implémenter des systèmes UI et des design systems sur mesure qui peuvent évoluer sans
+            réécritures constantes. L’objectif est de transformer l’intention de design en systèmes cohérents et
+            composables, plutôt que d’accumuler des solutions ponctuelles. Que ce soit en partant de zéro ou en
+            améliorant l’existant, le but est de bâtir une fondation qui grandit avec votre produit.
+          </p>
+        </div>
       </div>
     </article>
     <article>
       <div>
         <h3>Évolution à long terme</h3>
-        <div><p>Optimiser les systèmes pour l’évolution à long terme. Mettre l’accent sur la remplaçabilité, le changement incrémental, et éviter les décisions qui enferment les équipes dans des structures qui ne correspondent plus au projet. Les systèmes devraient s’adapter quand les exigences changent, pas exiger des réécritures.</p></div>
+        <div>
+          <p>
+            Optimiser les systèmes pour l’évolution à long terme. Mettre l’accent sur la remplaçabilité, le changement
+            incrémental, et éviter les décisions qui enferment les équipes dans des structures qui ne correspondent plus
+            au projet. Les systèmes devraient s’adapter quand les exigences changent, pas exiger des réécritures.
+          </p>
+        </div>
       </div>
     </article>
     <article>
       <div>
         <h3>Design ↔ ingénierie</h3>
-        <div><p>Collaborer étroitement avec les designers pour traduire le langage de design, les patterns d’interaction et les contraintes en primitives, composants, helpers et tokens qui se composent de manière cohérente dans tout le produit. Ça réduit les frictions entre design et ingénierie, et garde le système aligné avec l’intention produit.</p></div>
+        <div>
+          <p>
+            Collaborer étroitement avec les designers pour traduire le langage de design, les patterns d’interaction et
+            les contraintes en primitives, composants, helpers et tokens qui se composent de manière cohérente dans tout
+            le produit. Ça réduit les frictions entre design et ingénierie, et garde le système aligné avec l’intention
+            produit.
+          </p>
+        </div>
       </div>
     </article>
     <article>
       <div>
         <h3>Thèmes et systèmes partagés</h3>
-        <div><p>Concevoir et implémenter des systèmes de gestion des thèmes, y compris une gestion des thèmes partagée entre plusieurs applications et stacks. Ça inclut des environnements où des systèmes legacy et des applications modernes doivent coexister, par exemple un modèle de gestion des thèmes partagé entre une base de code PHP plus ancienne et une application React plus récente, soutenues par la même configuration.</p></div>
+        <div>
+          <p>
+            Concevoir et implémenter des systèmes de gestion des thèmes, y compris une gestion des thèmes partagée entre
+            plusieurs applications et stacks. Ça inclut des environnements où des systèmes legacy et des applications
+            modernes doivent coexister, par exemple un modèle de gestion des thèmes partagé entre une base de code PHP
+            plus ancienne et une application React plus récente, soutenues par la même configuration.
+          </p>
+        </div>
       </div>
     </article>
     <article>
       <div>
         <h3>Legacy et environnements hétérogènes</h3>
         <div>
-          <p>Travailler dans des environnements hétérogènes, notamment PHP, Java, Node et des stacks frontend modernes. Ça implique souvent de naviguer des bases de code imparfaites, d’identifier le système sous-jacent dans des implémentations ad-hoc, et de les remodeler progressivement sans exiger une réécriture complète.</p>
-          <p>Si cette approche correspond à ce que vous construisez, j’aimerais beaucoup entendre parler de votre projet, mes coordonnées ci-dessous !</p>
+          <p>
+            Travailler dans des environnements hétérogènes, notamment PHP, Java, Node et des stacks frontend modernes.
+            Ça implique souvent de naviguer des bases de code imparfaites, d’identifier le système sous-jacent dans des
+            implémentations ad-hoc, et de les remodeler progressivement sans exiger une réécriture complète.
+          </p>
+          <p>
+            Si cette approche correspond à ce que vous construisez, j’aimerais beaucoup entendre parler de votre projet,
+            mes coordonnées ci-dessous !
+          </p>
         </div>
       </div>
     </article>
   </div>
 </section>
 <!-- Simple Render for Footer.tsx -->
-<footer id="contact" aria-labelledby="contact-title">
+<footer
+  id="contact"
+  aria-labelledby="contact-title"
+>
   <h2 id="contact-title">Contact</h2>
   <p>Envie de collaborer ?</p>
-  <div><a href="#contact">Envoyez-moi un courriel !</a><a href="https://www.linkedin.com/in/slafleche/" target="_blank" rel="noopener noreferrer">Ma page LinkedIn</a><a href="https://github.com/slafleche/portfolio" target="_blank" rel="noopener noreferrer">Mon Portfolio sur GitHub</a></div>
+  <div>
+    <a href="#contact">Envoyez-moi un courriel !</a><br /><a
+      href="https://www.linkedin.com/in/slafleche/"
+      target="_blank"
+      rel="noopener noreferrer"
+      >Ma page LinkedIn</a
+    ><br /><a
+      href="https://github.com/slafleche/portfolio"
+      target="_blank"
+      rel="noopener noreferrer"
+      >Mon Portfolio sur GitHub</a
+    ><br />
+  </div>
 </footer>

@@ -5,12 +5,32 @@
     <p>Une vue d’ensemble du système : patterns, outillage, et flux de livraison.</p>
     <div>
       <h2>Itération rapide, risque réduit</h2>
-      <p>Le site est construit avec des outils modernes qui me permettent de livrer vite, tout en détectant les problèmes avant qu’ils n’atteignent les utilisateurs. Les tests visuels automatisés aident à valider les mises à jour UI avec confiance, sans dépendre de longues cycles de QA manuelle.</p>
       <p>
-        Je garde aussi les styles "typés" (au lieu d’un CSS basé sur des chaînes), grâce à CSS Calipers publié sur <span><a target="_blank" rel="noopener noreferrer" aria-label="CSS Calipers sur NPM" title="CSS Calipers sur NPM" href="https://www.npmjs.com/package/css-calipers">CSS Calipers sur NPM</a>.</span> Ça permet d’attraper des valeurs invalides et des erreurs d’unités tôt, tout en produisant du CSS standard et facile à déboguer.
+        Le site est construit avec des outils modernes qui me permettent de livrer vite, tout en détectant les problèmes
+        avant qu’ils n’atteignent les utilisateurs. Les tests visuels automatisés aident à valider les mises à jour UI
+        avec confiance, sans dépendre de longues cycles de QA manuelle.
+      </p>
+      <p>
+        Je garde aussi les styles "typés" (au lieu d’un CSS basé sur des chaînes), grâce à CSS Calipers publié sur
+        <span
+          ><a
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="CSS Calipers sur NPM"
+            title="CSS Calipers sur NPM"
+            href="https://www.npmjs.com/package/css-calipers"
+            >CSS Calipers sur NPM</a
+          >.</span
+        >
+        Ça permet d’attraper des valeurs invalides et des erreurs d’unités tôt, tout en produisant du CSS standard et
+        facile à déboguer.
       </p>
       <h2>Maintenable par design</h2>
-      <p>La base de code suit des patterns cohérents, renforcés par des vérifications automatiques, pour que les changements restent prévisibles et faciles à reviewer. Les nouvelles fonctionnalités n’abîment pas l’existant, et la dette technique est détectée tôt plutôt que de s’accumuler.</p>
+      <p>
+        La base de code suit des patterns cohérents, renforcés par des vérifications automatiques, pour que les
+        changements restent prévisibles et faciles à reviewer. Les nouvelles fonctionnalités n’abîment pas l’existant,
+        et la dette technique est détectée tôt plutôt que de s’accumuler.
+      </p>
       <p>Exemples de garde-fous intégrés au repo :</p>
       <ul>
         <li>règles de dépendances (frontières claires, changements bien cadrés)</li>
@@ -18,17 +38,43 @@
         <li>validation du contenu i18n (clés manquantes, règles de format)</li>
         <li>détection de secrets et vérification de config runtime</li>
       </ul>
-      <p>Des tests unitaires et d’intégration (Vitest + Testing Library) couvrent la logique et les comportements UI importants, pour livrer des refactors en confiance.</p>
+      <p>
+        Des tests unitaires et d’intégration (Vitest + Testing Library) couvrent la logique et les comportements UI
+        importants, pour livrer des refactors en confiance.
+      </p>
       <h2>Livraison fiable</h2>
-      <p>Les assets, le contenu, et la localisation sont générés via des scripts reproductibles. Moins d’étapes manuelles veut dire moins d’erreurs et des livraisons plus rapides. Les favicons et les mises à jour de contenu CDN se mettent à jour automatiquement, avec une traçabilité claire.</p>
+      <p>
+        Les assets, le contenu, et la localisation sont générés via des scripts reproductibles. Moins d’étapes manuelles
+        veut dire moins d’erreurs et des livraisons plus rapides. Les favicons et les mises à jour de contenu CDN se
+        mettent à jour automatiquement, avec une traçabilité claire.
+      </p>
       <h2>IA pour gagner du levier</h2>
-      <p>J’utilise l’IA pour accélérer le travail répétitif (documentation, scaffolding de tests, vérifications de cohérence) tout en gardant les standards de qualité humains. Les résultats sont validés comme du code écrit à la main : types, tests, et revues automatisées.</p>
+      <p>
+        J’utilise l’IA pour accélérer le travail répétitif (documentation, scaffolding de tests, vérifications de
+        cohérence) tout en gardant les standards de qualité humains. Les résultats sont validés comme du code écrit à la
+        main : types, tests, et revues automatisées.
+      </p>
     </div>
   </div>
 </section>
 <!-- Simple Render for Footer.tsx -->
-<footer id="contact" aria-labelledby="contact-title">
+<footer
+  id="contact"
+  aria-labelledby="contact-title"
+>
   <h2 id="contact-title">Contact</h2>
   <p>Envie de collaborer ?</p>
-  <div><a href="#contact">Envoyez-moi un courriel !</a><a href="https://www.linkedin.com/in/slafleche/" target="_blank" rel="noopener noreferrer">Ma page LinkedIn</a><a href="https://github.com/slafleche/portfolio" target="_blank" rel="noopener noreferrer">Mon Portfolio sur GitHub</a><a href="/fr/systemes">Naviguez vers la page Systèmes</a></div>
+  <div>
+    <a href="#contact">Envoyez-moi un courriel !</a><br /><a
+      href="https://www.linkedin.com/in/slafleche/"
+      target="_blank"
+      rel="noopener noreferrer"
+      >Ma page LinkedIn</a
+    ><br /><a
+      href="https://github.com/slafleche/portfolio"
+      target="_blank"
+      rel="noopener noreferrer"
+      >Mon Portfolio sur GitHub</a
+    ><br /><a href="/fr/systemes">Naviguez vers la page Systèmes</a>
+  </div>
 </footer>

@@ -29,9 +29,11 @@ module.exports = {
         'simpleHtml/**/*.html',
       ],
       options: {
-        // Keep snapshot HTML "classic": avoid wrapping inside tags.
-        printWidth: 999,
+        // Snapshot HTML: readable, but never "broken tags".
+        // Prefer breaking attributes onto new lines over splitting tag boundaries.
+        printWidth: 120,
         htmlWhitespaceSensitivity: 'css',
+        singleAttributePerLine: true,
       },
     },
     {
