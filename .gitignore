@@ -120,6 +120,17 @@ ai/textDirectives.md
 !ai/epics/AGENTS.md
 !ai/epics/blockedUpgrades/
 !ai/epics/blockedUpgrades/**
+
+# -----------------------
+# Home copy snapshots (local scratch for copy rework)
+# -----------------------
+ai/home.en.md
+ai/home.en.map.md
+
+# -----------------------
+# Local logs
+# -----------------------
+.logs/
 .vercel
 .env*
 
