@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(yarn npm *)",
+      "Bash(grep -A20 \"^├─ postcss$\")",
+      "Bash(yarn typecheck *)",
+      "Bash(yarn locales *)",
+      "Bash(yarn test *)",
+      "Bash(yarn build *)",
+      "Bash(yarn build:hero-svg)",
+      "Bash(node scripts/optimizeSvgs.mjs '/tmp/heroTextSvg/**/svgs/*.svg' --write --shorten-ids --config=svgo.heroHeading.config.mts)",
+      "Bash(node --import tsx -e \"import\\('./svgo.heroHeading.config.mts'\\).then\\(m => console.log\\('OK keys:', Object.keys\\(m\\)\\)\\)\")",
+      "Bash(node --import tsx scripts/optimizeSvgs.mjs '/tmp/heroTextSvg/**/svgs/*.svg' --write --shorten-ids --config=svgo.heroHeading.config.mts)",
+      "Bash(pkill -f \"next-server\\\\|next dev\\\\|node scripts/devWithDebug\")",
+      "Bash(kill 28553)"
+    ]
+  }
+}

@@ -79,7 +79,7 @@ export default function CodeBlock({
 	          }
 	        : rule,
 	    ),
-	  } as typeof themes.nightOwl;
+	  };
 
   return (
     <div className={clsx(s.root, s.code)}>

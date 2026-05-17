@@ -54,7 +54,7 @@ const forceNoReducedMotionMatchMedia = () => {
       return mql;
     }
     return originalMatchMedia(query);
-  }) as typeof window.matchMedia;
+  });
 
   return () => {
     window.matchMedia = originalMatchMedia;

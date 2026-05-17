@@ -135,8 +135,14 @@ export default async function HomePage({
     subtitle: translator('hero-subtitle'),
   };
   const [
+    summary,
     approach,
   ] = translateMarkdownSections(translator, [
+    {
+      titleKey: 'summary',
+      markdownKey: 'summary-content',
+      hrefKey: 'summary-href',
+    },
     {
       titleKey: 'approach',
       markdownKey: 'approach-content',
@@ -170,6 +176,10 @@ export default async function HomePage({
     localeChangeLabel: menuCopy.languageLabel,
     anchorNavLabel: menuCopy.anchorLabel,
     anchorLinks: [
+      {
+        title: parseWordmarkTemplate(summary.title).fullText,
+        href: `#${summary.href}`,
+      },
       {
         title: parseWordmarkTemplate(caseStudies.title).fullText,
         href: `#${caseStudies.href}`,
@@ -223,6 +233,14 @@ export default async function HomePage({
             Bg={HeroHomeBg}
           />
           <DeferredIsland when="idle">
+            {/* Summary */}
+            <ContentWithTitle
+              id={summary.href}
+              title={summary.title}
+            >
+              <Markdown source={summary.content} />
+            </ContentWithTitle>
+
             {/* Case Study */}
             <CaseStudy
               id={caseStudies.href}

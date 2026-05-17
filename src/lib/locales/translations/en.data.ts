@@ -8,13 +8,14 @@ const enBaseData = {
   label: 'English',
   'abbreviated-label': 'EN',
   redirecting: 'Redirecting...',
-  title: "Front-End Developer | Stéphane's Developer Portfolio",
+  title:
+    'Full-stack developer · End-to-end design systems for AI-era teams | Stéphane LaFlèche',
   description:
-    'Front‑end developer Stéphane builds UI systems, reusable components, and accessible interfaces that keep design and engineering aligned over time',
+    "Getting a team aligned with a design system was hard enough before. Now that everyone has an AI assistant in their workflow, it's harder.",
   'meta-description':
-    'Front‑end developer Stéphane builds UI systems, reusable components, and accessible interfaces that keep design and engineering aligned over time.',
+    "Getting a team aligned with a design system was hard enough before. Now that everyone has an AI assistant in their workflow, it's harder.",
   'meta-keywords':
-    'portfolio, web developer, frontend developer, frontend engineer, design systems, TypeScript, CSS architecture, type-safe CSS, CSS-in-JS, UI engineering, UI architecture, UI components, component systems, accessibility, performance, responsive design, UX',
+    'portfolio, full-stack developer, web developer, frontend developer, frontend engineer, design systems, AI-era teams, AI-assisted development, lint rules, pre-commit hooks, agent skills, Payload CMS, Next.js, TypeScript, CSS architecture, type-safe CSS, UI engineering, UI architecture, UI components, accessibility, performance, responsive design, UX',
   'meta-author': 'Stéphane LaFlèche',
   'systems-meta-title':
     'Design Systems & UI Architecture | Stéphane LaFlèche',
@@ -51,15 +52,20 @@ const enBaseData = {
     'portfolio, web developer, frontend developer, frontend engineer, design systems, TypeScript, CSS architecture, type-safe CSS, CSS-in-JS, UI engineering, UI architecture, UI components, component systems, accessibility, performance, responsive design, UX',
   'favicon-meta-author': 'Stéphane LaFlèche',
 
-  'hero-title': 'Stéphane LaFlèche [split] Front-end Developer',
+  'hero-title':
+    'Full-stack developer [split] End-to-end design systems for AI-era teams',
   'hero-subtitle':
-    'I build design systems and component libraries that scale. [split] Keeping UIs consistent, maintainable, and aligned with design over time.',
+    "Aligning a team on a design system was hard before AI assistants. [split] Now it's harder.",
 
   'console-curiosity-title': '🔎 Curious?',
   'console-curiosity-test': '[test] 👀 Observer detected.',
   'console-curiosity-result': '[result] Access granted.',
   'console-curiosity-hint':
     '[hint] The code shows what I built; curiosity() shows how I think.',
+
+  summary: 'Summary',
+  'summary-href': 'summary',
+  ...markdownRefs('summary-content'),
 
   approach: 'Approach',
   'approach-href': 'approach',

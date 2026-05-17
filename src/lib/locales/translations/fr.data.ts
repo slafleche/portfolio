@@ -61,6 +61,10 @@ const frBaseData = {
   'console-curiosity-hint':
     '[indice] Le code montre ce que j’ai construit; curiosity() montre comment je pense.',
 
+  summary: 'Résumé',
+  'summary-href': 'resume',
+  ...markdownRefs('summary-content'),
+
   approach: 'Approche',
   'approach-href': 'philosophie',
   ...markdownRefs('approach-content'),

@@ -78,11 +78,11 @@ export const createGlassBackground = (
 
   const backgroundColorValue = (
     overwrites?.backgroundColor ?? glassVars.backgrounds.color
-  ).css() as CSS_TYPES.Property.BackgroundColor;
+  ).css();
   const backgroundImageValue = [
     overlayGradient,
     glowGradient,
-  ].join(', ') as CSS_TYPES.Property.BackgroundImage;
+  ].join(', ');
 
   return {
     backgroundLayers: {

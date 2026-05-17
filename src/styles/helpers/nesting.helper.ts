@@ -79,7 +79,7 @@ export function nest(
   ): v is NestedSelectors | NestedSelectors[] => {
     if (Array.isArray(v)) return true;
     if (v && typeof v === 'object') {
-      const keys = Object.keys(v as Record<string, unknown>);
+      const keys = Object.keys(v);
       // Heuristic: treat as nested map if any key looks like a selector (starts with '&' or ':')
       return keys.some(
         (k) => k.trim().startsWith('&') || k.trim().startsWith(':'),

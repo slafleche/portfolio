@@ -11,8 +11,8 @@ import * as s from '@/styles/components/imageByName.css';
 const target = getManifestTarget();
 const bakedImagesManifest: Record<string, ImageEntry> =
   target === 'release'
-    ? (releaseManifest as Record<string, ImageEntry>)
-    : (stagingManifest as Record<string, ImageEntry>);
+    ? (releaseManifest)
+    : (stagingManifest);
 
 const useImagesManifest = () => bakedImagesManifest;
 

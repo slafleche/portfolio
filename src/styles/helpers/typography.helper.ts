@@ -269,7 +269,7 @@ const resolveVariantWeights = (
         console.warn(message);
         const clamped = clamp(baseNumber);
         if (clamped !== baseNumber) {
-          adjustedBase = clamped as CSS_TYPES.Property.FontWeight;
+          adjustedBase = clamped;
         }
       }
     }
@@ -286,7 +286,7 @@ const resolveVariantWeights = (
         console.warn(message);
         const clamped = clamp(strongNumber);
         if (clamped !== strongNumber) {
-          adjustedStrong = clamped as CSS_TYPES.Property.FontWeight;
+          adjustedStrong = clamped;
         }
       }
     }
@@ -315,18 +315,18 @@ const resolveVariantWeights = (
         Math.max(resolvedBase + 1, family.weights.strong),
       );
       return {
-        default: resolvedBase as CSS_TYPES.Property.FontWeight,
-        strong: fallbackStrong as CSS_TYPES.Property.FontWeight,
+        default: resolvedBase,
+        strong: fallbackStrong,
       };
     }
 
     return {
       default: (typeof resolvedBase === 'number'
         ? resolvedBase
-        : base) as CSS_TYPES.Property.FontWeight,
+        : base),
       strong: (typeof resolvedStrong === 'number'
         ? resolvedStrong
-        : strong) as CSS_TYPES.Property.FontWeight,
+        : strong),
     };
   };
 
@@ -569,7 +569,7 @@ export function computeFontWeight(
   const value = low + (high - low) * normalized;
   const rounded = Math.round(value / 100) * 100;
   const clamped = Math.min(rounded, high);
-  return clamped as CSS_TYPES.Property.FontWeight;
+  return clamped;
 }
 
 export function fontWeightStyle(

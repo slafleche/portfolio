@@ -84,7 +84,7 @@ export const backdropFilterValue = (
 ): CSS_TYPES.Property.BackdropFilter | undefined => {
   const parts = buildBackdropFilterParts(intents);
   if (!parts.length) return undefined;
-  return parts.join(' ') as CSS_TYPES.Property.BackdropFilter;
+  return parts.join(' ');
 };
 
 export const backdropFilterStyle = (

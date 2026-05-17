@@ -250,6 +250,8 @@ const main = async () => {
   await execa(
     'node',
     [
+      '--import',
+      'tsx',
       'scripts/optimizeSvgs.mjs',
       svgGlob,
       '--write',

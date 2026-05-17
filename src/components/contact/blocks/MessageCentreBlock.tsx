@@ -1,4 +1,3 @@
-import type { Ref } from 'react';
 import { forwardRef, useMemo } from 'react';
 
 import * as s from '@/styles/components/messageCentre.css';
@@ -107,7 +106,7 @@ export const MessageCentreBlock = forwardRef<
               </ul>
             ) : inlineMessages.length === 1 ? (
               <div
-                ref={ref as Ref<HTMLDivElement>}
+                ref={ref}
                 className={s.status}
                 data-mc="errors"
               >

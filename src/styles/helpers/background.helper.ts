@@ -219,7 +219,7 @@ export const backgrounds = (props: IBackgrounds): GlobalStyleRule => {
       styles.backgroundColor = c;
     } else if (hasCssMethod(c)) {
       styles.backgroundColor =
-        c.css() as CSS_TYPES.Property.BackgroundColor;
+        c.css();
     }
   }
   if (props.attachment)

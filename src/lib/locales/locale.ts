@@ -61,7 +61,7 @@ const loadDefaultMessages =
   async (): Promise<LocaleMessagesShape> => {
     if (!defaultMessagesCache) {
       const mod = await LOCALE_LOADERS[DEFAULT_LOCALE]();
-      defaultMessagesCache = mod.default as LocaleMessagesShape;
+      defaultMessagesCache = mod.default;
     }
     return defaultMessagesCache;
   };
@@ -70,7 +70,7 @@ export async function loadMessages(
   locale: Locale,
 ): Promise<Messages> {
   const mod = await LOCALE_LOADERS[locale]();
-  const resolved = mod.default as Messages;
+  const resolved = mod.default;
   const typed = resolved as LocaleMessagesShape;
 
   if (notRelease() && locale !== DEFAULT_LOCALE) {

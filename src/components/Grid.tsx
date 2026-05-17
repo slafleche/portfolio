@@ -5,7 +5,6 @@ import {
   Children,
   cloneElement,
   createContext,
-  type CSSProperties,
   Fragment,
   isValidElement,
   type ReactNode,
@@ -97,7 +96,7 @@ export function Column({
       style={
         {
           gridColumn: `span ${clampedSpan}`,
-        } as CSSProperties
+        }
       }
     >
       {processedChildren}

@@ -25,6 +25,6 @@ export const localizedToCanonicalSlugs: SlugMap =
           canonical,
         ],
       ),
-    ) as Record<string, string>;
+    );
     return acc;
   }, {} as SlugMap);

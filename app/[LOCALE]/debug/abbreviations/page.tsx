@@ -23,12 +23,12 @@ const COLUMN_META: ReadonlyArray<ColumnDescriptor> = [
   {
     locale: 'fr',
     label: 'Français',
-    entries: frAbbreviations as Record<string, AbbrLocaleEntry>,
+    entries: frAbbreviations,
   },
   {
     locale: 'en',
     label: 'English',
-    entries: enAbbreviations as Record<string, AbbrLocaleEntry>,
+    entries: enAbbreviations,
   },
 ];
 

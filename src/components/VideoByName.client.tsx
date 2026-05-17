@@ -60,9 +60,10 @@ export default function VideoByNameClient({
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const { layoutTick } = useWindowSize();
   const [
-    shouldLoadVideo,
-    setShouldLoadVideo,
-  ] = React.useState<boolean>(() => priority ?? false);
+    hasIntersected,
+    setHasIntersected,
+  ] = React.useState(false);
+  const shouldLoadVideo = priority || hasIntersected;
   const [
     isVideoReady,
     setVideoReady,
@@ -72,28 +73,26 @@ export default function VideoByNameClient({
     setPosterLoaded,
   ] = React.useState(false);
 
-  React.useEffect(() => {
+  const [
+    prevVideoName,
+    setPrevVideoName,
+  ] = React.useState(videoName);
+  if (prevVideoName !== videoName) {
+    setPrevVideoName(videoName);
     setVideoReady(false);
     setPosterLoaded(false);
-  }, [
-    videoName,
-  ]);
+  }
 
-  React.useEffect(() => {
-    if (priority) {
-      setShouldLoadVideo(true);
-    }
-  }, [
-    priority,
-  ]);
-
-  React.useEffect(() => {
+  const [
+    prevShouldLoadVideo,
+    setPrevShouldLoadVideo,
+  ] = React.useState(shouldLoadVideo);
+  if (prevShouldLoadVideo !== shouldLoadVideo) {
+    setPrevShouldLoadVideo(shouldLoadVideo);
     if (!shouldLoadVideo) {
       setVideoReady(false);
     }
-  }, [
-    shouldLoadVideo,
-  ]);
+  }
 
   React.useEffect(() => {
     if (priority) return;
@@ -108,7 +107,7 @@ export default function VideoByNameClient({
         if (cancelled) return;
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setShouldLoadVideo(true);
+            setHasIntersected(true);
             observer.disconnect();
             return;
           }

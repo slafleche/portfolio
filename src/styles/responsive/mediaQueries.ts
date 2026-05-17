@@ -2,7 +2,6 @@ import type { StyleRule } from '@vanilla-extract/css';
 import {
   defineMediaQueryModules,
   type IMediaQueries,
-  type IMediaQueryProps,
   mediaQueryFactory,
   outputVanillaExtract,
   preprocessorVanillaExtract,
@@ -23,42 +22,42 @@ const fullSizeMinWidth = layoutVars.content.width.add(
 export const mediaQueryStyleConfig: IMediaQueries = {
   fullSize: {
     minWidth: fullSizeMinWidth,
-  } as IMediaQueryProps,
+  },
 
   noEdge: {
     maxWidth: fullSizeMinWidth.subtract(1),
-  } as IMediaQueryProps,
+  },
 
   noEdgeOnly: {
     minWidth: layoutVars.compact.maxWidth.subtract(1),
     maxWidth: fullSizeMinWidth.subtract(1),
-  } as IMediaQueryProps,
+  },
 
   snug: {
     maxWidth: layoutVars.snug.maxWidth,
-  } as IMediaQueryProps,
+  },
 
   snugOnly: {
     minWidth: layoutVars.compact.maxWidth.subtract(1),
     maxWidth: layoutVars.snug.maxWidth,
-  } as IMediaQueryProps,
+  },
 
   compact: {
     maxWidth: layoutVars.compact.maxWidth,
-  } as IMediaQueryProps,
+  },
 
   compactOnly: {
     minWidth: layoutVars.compressed.maxWidth.add(1),
     maxWidth: layoutVars.snug.maxWidth,
-  } as IMediaQueryProps,
+  },
 
   notCompact: {
     minWidth: layoutVars.compact.maxWidth.add(1),
-  } as IMediaQueryProps,
+  },
 
   compressed: {
     maxWidth: layoutVars.compressed.maxWidth,
-  } as IMediaQueryProps,
+  },
 };
 
 const baseMediaQueryStyle = mediaQueryFactory({

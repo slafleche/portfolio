@@ -96,7 +96,7 @@ const fallbackWidth = (): string => toCssLen(borderVars.width) ?? '0';
 const fallbackRadius = (): string =>
   toCssLen(borderVars.radius) ?? '0';
 const fallbackStyle = (): CSS_TYPES.Property.BorderStyle =>
-  (borderVars.style as CSS_TYPES.Property.BorderStyle) ?? 'solid';
+  (borderVars.style) ?? 'solid';
 const fallbackColor = (): string =>
   colorVars.border.css() ?? 'transparent';
 
@@ -521,7 +521,7 @@ const normalizeIntent = (
     } else if (isRadiusCompass(radius)) {
       intent.radius = radius;
     } else {
-      intent.radius = radius as BorderIntent['radius'];
+      intent.radius = radius;
     }
   }
 
@@ -558,25 +558,25 @@ const resolve = (
   ] = widths;
   const widthsDefined = widths.every((w) => w !== undefined);
   if (widthsDefined) {
-    css.borderTopWidth = tw as CSS_TYPES.Property.BorderTopWidth;
-    css.borderRightWidth = rw as CSS_TYPES.Property.BorderRightWidth;
+    css.borderTopWidth = tw;
+    css.borderRightWidth = rw;
     css.borderBottomWidth =
-      bw as CSS_TYPES.Property.BorderBottomWidth;
-    css.borderLeftWidth = lw as CSS_TYPES.Property.BorderLeftWidth;
+      bw;
+    css.borderLeftWidth = lw;
   } else {
     if (tw !== undefined) {
-      css.borderTopWidth = tw as CSS_TYPES.Property.BorderTopWidth;
+      css.borderTopWidth = tw;
     }
     if (rw !== undefined) {
       css.borderRightWidth =
-        rw as CSS_TYPES.Property.BorderRightWidth;
+        rw;
     }
     if (bw !== undefined) {
       css.borderBottomWidth =
-        bw as CSS_TYPES.Property.BorderBottomWidth;
+        bw;
     }
     if (lw !== undefined) {
-      css.borderLeftWidth = lw as CSS_TYPES.Property.BorderLeftWidth;
+      css.borderLeftWidth = lw;
     }
   }
 

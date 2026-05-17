@@ -280,7 +280,7 @@ const create: ColorCreators = {
       alpha: normalizeAlpha(alpha) ?? 1,
     };
     return culoriOklchToWrapper(normalized);
-  }) as OklchCreator,
+  }),
 };
 
 const toRgbChannel = (channel: number) =>

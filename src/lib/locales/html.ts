@@ -5,7 +5,7 @@ import { escapeHtml } from '@/lib/stringUtils';
 import { DEFAULT_LOCALE } from './locale';
 
 const TYPED_HTML_MESSAGES: Record<Locale, Record<string, string>> =
-  HTML_MESSAGES as Record<Locale, Record<string, string>>;
+  HTML_MESSAGES;
 
 export function getHtmlMessage(
   locale: Locale,

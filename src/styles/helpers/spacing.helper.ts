@@ -89,13 +89,13 @@ const normalize = (
   if (input === 0) {
     return {
       all: m(0),
-    } as SpacingIntentInternal;
+    };
   }
 
   if (isMeasurement(input) || isSpacingKeyword(input)) {
     return {
       all: input,
-    } as SpacingIntentInternal;
+    };
   }
 
   if (
@@ -103,7 +103,7 @@ const normalize = (
     input !== null &&
     !Array.isArray(input)
   ) {
-    return input as SpacingIntentInternal;
+    return input;
   }
 
   throw new Error(

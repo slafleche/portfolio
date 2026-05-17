@@ -68,7 +68,7 @@ export function noiseBg(props?: {
       (noiseStyle(
         noiseId,
         noiseOptions,
-      ) as CSS_TYPES.Property.BackgroundImage);
+      ));
   }
   return style;
 }

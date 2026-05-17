@@ -387,7 +387,7 @@ const main = async () => {
   ): Promise<LocaleMessagesShape | null> => {
     try {
       const mod = await LOCALE_LOADERS[locale]();
-      return mod.default as LocaleMessagesShape;
+      return mod.default;
     } catch (error) {
       recordIssue({
         locale,
@@ -437,7 +437,7 @@ const main = async () => {
         if (expected == null) continue;
 
         ensureGeneratedContentIsCurrent(
-          MARKDOWN_MESSAGES as Record<Locale, Record<string, string>>,
+          MARKDOWN_MESSAGES,
           key,
           locale,
           expected,

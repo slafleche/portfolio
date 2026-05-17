@@ -8,20 +8,20 @@ import { margins, paddings } from './helpers/spacing.helper';
 
 globalStyle('*[data-visible="hidden"]', {
   visibility: 'hidden !important' as CSS_TYPES.Property.Visibility,
-  height: '0 !important' as CSS_TYPES.Property.Height,
-  overflow: 'hidden !important' as CSS_TYPES.Property.Overflow,
+  height: '0 !important',
+  overflow: 'hidden !important',
 });
 
 globalStyle('*[data-visible="sc-only"]', {
   position: 'absolute !important' as CSS_TYPES.Property.Position,
-  width: '1px !important' as CSS_TYPES.Property.Width,
-  height: '1px !important' as CSS_TYPES.Property.Height,
+  width: '1px !important',
+  height: '1px !important',
   ...important(paddings(m(0))),
   ...important(margins(m(-1))),
-  overflow: 'hidden !important' as CSS_TYPES.Property.Overflow,
-  clip: 'rect(0,0,0,0) !important' as CSS_TYPES.Property.Clip,
-  border: 'none !important' as CSS_TYPES.Property.Border,
-  whiteSpace: 'nowrap !important' as CSS_TYPES.Property.WhiteSpace,
+  overflow: 'hidden !important',
+  clip: 'rect(0,0,0,0) !important',
+  border: 'none !important',
+  whiteSpace: 'nowrap !important',
 });
 
 globalStyle('*[data-interaction="none"]', {
@@ -31,5 +31,5 @@ globalStyle('*[data-interaction="none"]', {
 });
 
 globalStyle('*[data-white-space="no-wrap"]', {
-  whiteSpace: 'nowrap !important' as CSS_TYPES.Property.WhiteSpace,
+  whiteSpace: 'nowrap !important',
 });

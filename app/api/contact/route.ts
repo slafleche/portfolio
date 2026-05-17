@@ -32,7 +32,7 @@ const MAX_BODY_BYTES = 8 * 1024;
 const statusFromCode = (
   code: FormServerResponseCode,
 ): FormStatusKey =>
-  (code === 'generic_error' ? 'generic' : code) as FormStatusKey;
+  (code === 'generic_error' ? 'generic' : code);
 
 const coerceLocale = (request: NextRequest) =>
   request.nextUrl.searchParams.get('locale') ??
@@ -60,7 +60,7 @@ const parseJsonBody = async (
 ): Promise<{ rawText: string; body: RawContactFormInput | null }> => {
   const rawText = await request.text();
   if (!rawText) {
-    return { rawText: '', body: {} as RawContactFormInput };
+    return { rawText: '', body: {} };
   }
   try {
     return {

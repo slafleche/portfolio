@@ -32,8 +32,8 @@ export type ImageEntry = {
 const manifestTarget = getManifestTarget();
 const imagesManifest: Record<string, ImageEntry> =
   manifestTarget === 'release'
-    ? (releaseManifest as Record<string, ImageEntry>)
-    : (stagingManifest as Record<string, ImageEntry>);
+    ? (releaseManifest)
+    : (stagingManifest);
 
 export function getSocialImageByName(
   locale: string,

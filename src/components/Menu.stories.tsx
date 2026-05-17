@@ -47,26 +47,40 @@ const GlobalStyleOverrides = () => {
   return null;
 };
 
+type MenuSetupInnerProps = {
+  restoreReducedMotion: () => void;
+  Story: Parameters<Decorator>[0];
+};
+
+function MenuSetupInner({
+  restoreReducedMotion,
+  Story,
+}: MenuSetupInnerProps) {
+  useEffect(() => restoreReducedMotion, [
+    restoreReducedMotion,
+  ]);
+  return (
+    <WindowSizeProvider>
+      <ContactDialogProvider
+        formCopy={contactFormCopy}
+        privacyCopy={privacyCopy}
+        closeLabel={closeLabel}
+      >
+        <GlobalStyleOverrides />
+        <Story />
+      </ContactDialogProvider>
+    </WindowSizeProvider>
+  );
+}
+
 const WithMenuSetup: Decorator = (Story) => {
   const restoreReducedMotion = applyMenuStoryEnvironment();
-
-  function MenuSetupDecorator() {
-    useEffect(() => restoreReducedMotion, []);
-    return (
-      <WindowSizeProvider>
-        <ContactDialogProvider
-          formCopy={contactFormCopy}
-          privacyCopy={privacyCopy}
-          closeLabel={closeLabel}
-        >
-          <GlobalStyleOverrides />
-          <Story />
-        </ContactDialogProvider>
-      </WindowSizeProvider>
-    );
-  }
-
-  return <MenuSetupDecorator />;
+  return (
+    <MenuSetupInner
+      restoreReducedMotion={restoreReducedMotion}
+      Story={Story}
+    />
+  );
 };
 
 const meta: Meta<typeof Menu> = {

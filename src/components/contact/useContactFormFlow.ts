@@ -1,7 +1,7 @@
 'use client';
 
 import type { FormEvent } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   buildInvalidFieldSummary,
@@ -59,10 +59,18 @@ export function useContactFormFlow(
     submitStatus,
     setSubmitStatus,
   ] = useState<ContactFormSubmitStatus>('idle');
-  const [
-    latestValidationResults,
-    setLatestValidationResults,
-  ] = useState<ContactFormBlockValidationResult[]>([]);
+  const latestValidationResults = useMemo(
+    () => {
+      // validationResultsVersion is the cache-bust signal; the snapshot
+      // getter is stable across renders.
+      void validationResultsVersion;
+      return getValidationResultsSnapshot();
+    },
+    [
+      getValidationResultsSnapshot,
+      validationResultsVersion,
+    ],
+  );
   const [
     latestPayload,
     setLatestPayload,
@@ -118,7 +126,6 @@ export function useContactFormFlow(
 
   useEffect(() => {
     const snapshot = getValidationResultsSnapshot();
-    setLatestValidationResults(snapshot);
 
     if (snapshot.some((result) => !result.valid)) {
       hadInvalidSnapshotRef.current = true;
@@ -172,7 +179,6 @@ export function useContactFormFlow(
 
       try {
         const validationResults = validateAll();
-        setLatestValidationResults(validationResults);
 
         if (validationResults.length === 0) {
           setInvalid(false);

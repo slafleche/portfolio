@@ -40,25 +40,39 @@ const forceNoReducedMotionMatchMedia = () => {
       return mql;
     }
     return originalMatchMedia(query);
-  }) as typeof window.matchMedia;
+  });
 
   return () => {
     window.matchMedia = originalMatchMedia;
   };
 };
 
+type FullMotionInnerProps = {
+  restoreMatchMedia: () => void;
+  Story: Parameters<Decorator>[0];
+};
+
+function FullMotionInner({
+  restoreMatchMedia,
+  Story,
+}: FullMotionInnerProps) {
+  useEffect(() => {
+    removeFrozenAnimationOverrides();
+    return restoreMatchMedia;
+  }, [
+    restoreMatchMedia,
+  ]);
+  return <Story />;
+}
+
 const WithFullMotion: Decorator = (Story) => {
   const restoreMatchMedia = forceNoReducedMotionMatchMedia();
-
-  function FullMotionDecorator() {
-    useEffect(() => {
-      removeFrozenAnimationOverrides();
-      return restoreMatchMedia;
-    }, []);
-    return <Story />;
-  }
-
-  return <FullMotionDecorator />;
+  return (
+    <FullMotionInner
+      restoreMatchMedia={restoreMatchMedia}
+      Story={Story}
+    />
+  );
 };
 
 const meta: Meta<typeof PageCurl> = {

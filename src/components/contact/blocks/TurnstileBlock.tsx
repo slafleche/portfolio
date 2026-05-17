@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import {
-  type MouseEventHandler,
   useCallback,
   useEffect,
   useMemo,
@@ -368,7 +367,7 @@ export function TurnstileBlock({
             event.preventDefault();
             event.stopPropagation();
           }
-        }) as MouseEventHandler<HTMLDivElement>
+        })
       }
     >
       <div

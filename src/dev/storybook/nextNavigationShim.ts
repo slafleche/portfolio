@@ -37,7 +37,7 @@ export const __forceReducedMotion = () => {
       return mql;
     }
     return originalMatchMedia(query);
-  }) as MatchMediaFn;
+  });
 
   return () => {
     window.matchMedia = originalMatchMedia;

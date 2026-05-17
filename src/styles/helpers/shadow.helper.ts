@@ -44,9 +44,9 @@ const boxShadowValue = (
   if (isBoxShadowList(input)) {
     return input
       .map((entry) => formatBoxShadow(entry))
-      .join(', ') as CSS_TYPES.Property.BoxShadow;
+      .join(', ');
   }
-  return formatBoxShadow(input) as CSS_TYPES.Property.BoxShadow;
+  return formatBoxShadow(input);
 };
 
 type BoxShadowComposer = {
