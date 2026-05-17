@@ -131,6 +131,12 @@ ai/home.en.map.md
 # Local logs
 # -----------------------
 .logs/
+
+# -----------------------
+# Private skill symlinks
+# -----------------------
+.claude/skills/marketing-angle
+.claude/skills/audience-tone
 .vercel
 .env*
 

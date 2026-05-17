@@ -11,9 +11,9 @@ const enBaseData = {
   title:
     'Full-stack developer · End-to-end design systems for AI-era teams | Stéphane LaFlèche',
   description:
-    "Getting a team aligned with a design system was hard enough before. Now that everyone has an AI assistant in their workflow, it's harder.",
+    "I'm a front end developer based in Montreal specializing in building scalable, end-to-end design systems for AI-era teams.",
   'meta-description':
-    "Getting a team aligned with a design system was hard enough before. Now that everyone has an AI assistant in their workflow, it's harder.",
+    "I'm a front end developer based in Montreal specializing in building scalable, end-to-end design systems for AI-era teams.",
   'meta-keywords':
     'portfolio, full-stack developer, web developer, frontend developer, frontend engineer, design systems, AI-era teams, AI-assisted development, lint rules, pre-commit hooks, agent skills, Payload CMS, Next.js, TypeScript, CSS architecture, type-safe CSS, UI engineering, UI architecture, UI components, accessibility, performance, responsive design, UX',
   'meta-author': 'Stéphane LaFlèche',
@@ -55,7 +55,7 @@ const enBaseData = {
   'hero-title':
     'Full-stack developer [split] End-to-end design systems for AI-era teams',
   'hero-subtitle':
-    "Aligning a team on a design system was hard before AI assistants. [split] Now it's harder.",
+    "I'm a full-stack developer based in Montreal specializing in building scalable, end-to-end design systems for AI-era teams.",
 
   'console-curiosity-title': '🔎 Curious?',
   'console-curiosity-test': '[test] 👀 Observer detected.',
@@ -63,7 +63,7 @@ const enBaseData = {
   'console-curiosity-hint':
     '[hint] The code shows what I built; curiosity() shows how I think.',
 
-  summary: 'Summary',
+  summary: 'A little about me',
   'summary-href': 'summary',
   ...markdownRefs('summary-content'),
 
