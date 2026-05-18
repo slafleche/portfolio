@@ -21,7 +21,8 @@ export const enCaseStudies = {
   'case-study-05-subtitle': 'Connecting Forums to modern theming',
   ...markdownRefs('case-study-05-content'),
   'case-study-06-title': 'Lessons learned',
-  'case-study-06-subtitle':
-    'systems that serve designers, developers, and users',
+  'case-study-06-subtitle': 'Why the third audience matters',
   ...markdownRefs('case-study-06-content'),
+  case_studies_outro: 'The case for craft',
+  ...markdownRefs('case-studies-outro-content'),
 } as const;

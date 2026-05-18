@@ -1,4 +1,4 @@
-Moved from theming into the [abbr:R&D] team as an **Application Web
+I moved from theming into the [abbr:R&D] team as an **Application Web
 Integrator**. I contributed to **core product** functionality and started
 thinking more about the developers who would work with my code. That shift
 refocused my work on clarity, maintainability, and developer experience,

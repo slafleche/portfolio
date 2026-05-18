@@ -241,6 +241,14 @@ export default async function HomePage({
               <Markdown source={summary.content} />
             </ContentWithTitle>
 
+            {/* Approach */}
+            <ContentWithTitle
+              id={approach.href}
+              title={approach.title}
+            >
+              <Markdown source={approach.content} />
+            </ContentWithTitle>
+
             {/* Case Study */}
             <CaseStudy
               id={caseStudies.href}
@@ -260,14 +268,6 @@ export default async function HomePage({
                 )}
               />
             </CaseStudy>
-
-            {/* Approach */}
-            <ContentWithTitle
-              id={approach.href}
-              title={approach.title}
-            >
-              <Markdown source={approach.content} />
-            </ContentWithTitle>
 
             {/* About */}
             {/* <ContentWithTitle

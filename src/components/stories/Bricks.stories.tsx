@@ -9,9 +9,9 @@ import {
 } from '@/dev/storybook/nextNavigationShim';
 import { defaultViewports } from '@/dev/storybookConfig';
 import {
-  type BricksCopy,
-  buildBricksCopy,
-} from '@/lib/locales/sections/bricks.locale';
+  type GuardrailsCopy,
+  buildGuardrailsCopy,
+} from '@/lib/locales/sections/guardrails.locale';
 import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
 import en from '@/lib/locales/translations/en';
 import fr from '@/lib/locales/translations/fr';
@@ -22,8 +22,8 @@ import Content from '../responsive/Content';
 const t = createSectionTranslator(en, en);
 const tFr = createSectionTranslator(fr, en);
 
-const bricksEn = buildBricksCopy(t);
-const bricksFr = buildBricksCopy(tFr);
+const bricksEn = buildGuardrailsCopy(t);
+const bricksFr = buildGuardrailsCopy(tFr);
 
 function GlobalStyleOverrides() {
   useEffect(() => {
@@ -69,7 +69,7 @@ const toBrickData = (item: {
 });
 
 type BricksSectionProps = {
-  copy: BricksCopy;
+  copy: GuardrailsCopy;
 };
 
 function BricksSection({ copy }: BricksSectionProps) {
