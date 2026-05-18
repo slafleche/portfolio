@@ -182,3 +182,8 @@ ai/home.en.map.md
 # Cors worker
 # -----------------------
 .cloudflare/.wrangler/*
+
+# -----------------------
+# Claude local settings
+# -----------------------
+.claude/settings.local.json
