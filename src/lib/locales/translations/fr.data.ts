@@ -87,6 +87,17 @@ const frBaseData = {
   'projects-05-king-games-title': '[wordmark:King Games]',
   ...markdownRefs('projects-05-king-games-content'),
 
+  'bricks-hero-title': '[TODO] Titre brique hero',
+  ...markdownRefs('bricks-hero-content'),
+  'bricks-01-title': '[TODO] Titre brique 01',
+  ...markdownRefs('bricks-01-content'),
+  'bricks-02-title': '[TODO] Titre brique 02',
+  ...markdownRefs('bricks-02-content'),
+  'bricks-03-title': '[TODO] Titre brique 03',
+  ...markdownRefs('bricks-03-content'),
+  'bricks-04-title': '[TODO] Titre brique 04',
+  ...markdownRefs('bricks-04-content'),
+
   'systems-hero-title': 'L’approche [split] Tetrachromatic',
   'systems-hero-subtitle':
     'Systèmes d’interface avec **formalisation progressive** et frontières explicites. Commencer simple. Formaliser progressivement. Périmètre local. Changer de manière prévisible.',

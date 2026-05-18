@@ -11,9 +11,9 @@ const enBaseData = {
   title:
     'Full-stack developer · End-to-end design systems for AI-era teams | Stéphane LaFlèche',
   description:
-    "I'm a front end developer based in Montreal specializing in building scalable, end-to-end design systems for AI-era teams.",
+    "I'm a full-stack developer based in Montreal specializing in building scalable, end-to-end design systems for AI-era teams.",
   'meta-description':
-    "I'm a front end developer based in Montreal specializing in building scalable, end-to-end design systems for AI-era teams.",
+    "I'm a full-stack developer based in Montreal specializing in building scalable, end-to-end design systems for AI-era teams.",
   'meta-keywords':
     'portfolio, full-stack developer, web developer, frontend developer, frontend engineer, design systems, AI-era teams, AI-assisted development, lint rules, pre-commit hooks, agent skills, Payload CMS, Next.js, TypeScript, CSS architecture, type-safe CSS, UI engineering, UI architecture, UI components, accessibility, performance, responsive design, UX',
   'meta-author': 'Stéphane LaFlèche',
@@ -88,6 +88,17 @@ const enBaseData = {
   ...markdownRefs('projects-04-hootsuite-content'),
   'projects-05-king-games-title': '[wordmark:King Games]',
   ...markdownRefs('projects-05-king-games-content'),
+
+  'bricks-hero-title': '[TODO] Hero brick title',
+  ...markdownRefs('bricks-hero-content'),
+  'bricks-01-title': '[TODO] Brick 01 title',
+  ...markdownRefs('bricks-01-content'),
+  'bricks-02-title': '[TODO] Brick 02 title',
+  ...markdownRefs('bricks-02-content'),
+  'bricks-03-title': '[TODO] Brick 03 title',
+  ...markdownRefs('bricks-03-content'),
+  'bricks-04-title': '[TODO] Brick 04 title',
+  ...markdownRefs('bricks-04-content'),
 
   'systems-hero-title': 'The Tetrachromatic [split] Approach',
   'systems-hero-subtitle':
