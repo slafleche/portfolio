@@ -8,11 +8,12 @@ const frBaseData = {
   label: 'Français',
   'abbreviated-label': 'FR',
   redirecting: 'Redirection...',
-  title: 'Développeur Front-End | Portfolio par Stéphane',
+  title:
+    'Développeur full-stack · Systèmes de design intégrés de A à Z pour les équipes à l’ère de l’IA | Stéphane LaFlèche',
   description:
-    'Développeur front-end, Stéphane conçoit des systèmes UI, des composants réutilisables et des interfaces accessibles qui alignent design et engineering dans la durée.',
+    'Je suis développeur full-stack basé à Montréal, spécialisé dans la création de systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
   'meta-description':
-    'Développeur front-end, Stéphane conçoit des systèmes UI, des composants réutilisables et des interfaces accessibles qui alignent design et engineering dans la durée.',
+    'Je suis développeur full-stack basé à Montréal, spécialisé dans la création de systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
   'meta-keywords':
     'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
   'meta-author': 'Stéphane LaFlèche',
@@ -51,9 +52,10 @@ const frBaseData = {
     'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
   'favicon-meta-author': 'Stéphane LaFlèche',
 
-  'hero-title': 'Stéphane LaFlèche [split] développeur front-end',
+  'hero-title':
+    'Développeur full-stack [split] Systèmes de design pour les équipes à l’ère de l’IA',
   'hero-subtitle':
-    'Je construis des systèmes de design et de composants qui sont évolutifs. [split] Pour garder les interfaces cohérentes, maintenables et fidèles au design.',
+    'Je suis développeur full-stack basé à Montréal. [split] Je crée des systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
 
   'console-curiosity-title': '🔎 Curieux ?',
   'console-curiosity-test': '[test] 👀 Observateur détecté.',
@@ -61,7 +63,7 @@ const frBaseData = {
   'console-curiosity-hint':
     '[indice] Le code montre ce que j’ai construit; curiosity() montre comment je pense.',
 
-  summary: 'À propos',
+  summary: 'Quelques mots sur moi',
   'summary-href': 'resume',
   ...markdownRefs('summary-content'),
 

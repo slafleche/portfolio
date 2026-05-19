@@ -28,29 +28,28 @@ export const enCaseStudies = {
   ...markdownRefs('tnb-case-study-00-intro'),
   'tnb-case-study-01-title': 'Consolidating design tokens',
   'tnb-case-study-01-subtitle':
-    'Multiple sources of truth refactored into tokens.json, fanning out to Tailwind, CSS variables, and responsive helpers',
+    'Refactoring multiple sources of truth into one',
   ...markdownRefs('tnb-case-study-01-content'),
-  'tnb-case-study-02-title':
-    'Tailoring AI standards to the agency’s stack',
+  'tnb-case-study-02-title': 'Tailoring AI standards',
   'tnb-case-study-02-subtitle':
-    'Custom skills, agent rules, and pre-commit hooks for a Next.js + Payload + Tailwind shop',
+    'Skills, agent rules, and pre-commit hooks for the agency’s stack',
   ...markdownRefs('tnb-case-study-02-content'),
-  'tnb-case-study-03-title': 'Extending the agency’s CLI workflow',
+  'tnb-case-study-03-title': 'Extending the CLI workflow',
   'tnb-case-study-03-subtitle':
-    'Database, credentials, and Vercel diagnostics, wired into the daily dev loop',
+    'Database, credentials, and deploy diagnostics in the daily loop',
   ...markdownRefs('tnb-case-study-03-content'),
   'tnb-case-study-04-title': 'Building inside Payload',
   'tnb-case-study-04-subtitle':
-    'Admin utilities for editor and content data-quality work',
+    'Admin utilities for editor workflows',
   ...markdownRefs('tnb-case-study-04-content'),
-  'tnb-case-study-05-title': 'Owning the agency’s live fleet',
+  'tnb-case-study-05-title': 'Owning the live fleet',
   'tnb-case-study-05-subtitle':
-    'Security rollouts and ongoing client support across multiple sites',
+    'Security rollouts and client support across sites',
   ...markdownRefs('tnb-case-study-05-content'),
-  'tnb-case-study-06-title': 'Bridging sister-product knowledge to AI',
+  'tnb-case-study-06-title': 'Bridging product knowledge to AI',
   'tnb-case-study-06-subtitle':
     'Making the assistant fluent in Whereabouts widgets',
   ...markdownRefs('tnb-case-study-06-content'),
-  case_studies_outro: 'The case for craft',
+  case_studies_outro: 'The Case for Craft',
   ...markdownRefs('case-studies-outro-content'),
 } as const;

@@ -2,6 +2,8 @@ import clsx from 'clsx';
 import { r } from 'css-calipers';
 import type { SVGProps } from 'react';
 
+import { wordMark_tnb } from '../../styles/components/card.css';
+
 const LABEL = 'The New Business';
 export const ratioTNB = r(590.68, 113.14);
 
@@ -14,7 +16,7 @@ export default function TNBWordmark({
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`0 0 ${ratioTNB.numerator()} ${ratioTNB.denominator()}`}
       fill="currentColor"
-      className={clsx(className)}
+      className={clsx(className, wordMark_tnb)}
       shapeRendering="geometricPrecision"
       role="img"
       aria-label={LABEL}

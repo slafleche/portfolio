@@ -296,10 +296,8 @@ export default async function HomePage({
                     items={guardrailsItems}
                   />
                 </Content>
-                <Content tag="div" ignoreBottomMargin={true}>
+                <Content tag="div">
                   <Markdown source={guardrails.outro} />
-                </Content>
-                <Content tag="div" ignoreBottomMargin={true}>
                   <Heading depth={3} ignoreDataUI={true}>
                     {caseStudies.outroTitle}
                   </Heading>
