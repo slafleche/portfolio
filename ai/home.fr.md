@@ -88,15 +88,86 @@ que le projet évolue.
 
 ### guardrails-01-title: Façonner l’IA (carte hero 2x2)
 
-Les assistants IA, par défaut, démarrent chaque session sans aucune mémoire
-de vous ni de votre projet. Je leur donne les deux. Les règles portent les
-conventions ; les skills portent les workflows sur mesure ; certains skills
-sont même liés à des fonctions CLI pour que l’assistant puisse exécuter ses
-propres diagnostics quand quelque chose tourne mal. Certaines parties vivent
-au niveau système et m’accompagnent dans n’importe quel projet ; d’autres
-vivent dans le dépôt et accompagnent quiconque rejoint le projet.
+Tout le monde utilise l’IA. Peu l’utilisent bien. Encore moins savent aligner
+toute une équipe sur son usage. Je construis cet alignement.
 
-> Cartes 02–05 et `guardrails-outro` à traduire à la suite.
+Chez The New Business, ça voulait dire huit sites clients en production :
+trois nouveaux livrés en trois mois, cinq hérités maintenus stables grâce aux
+mêmes garde-fous. J’ai aussi entamé un système de thématisation unifié et un
+nouveau gabarit de projet, tous deux visant à raccourcir les futurs cycles de
+développement. La vision du design a tenu parce que l’alignement a tenu.
+
+Je commence léger et je converge. Chaque projet pioche ce dont il a besoin
+dans une petite boîte à outils : des règles pour les conventions (où les
+choses vivent, les conventions de nommage, Tailwind ou CSS Modules), des
+skills pour les workflows, des liaisons CLI quand l’assistant doit se vérifier
+(quelle base de données est connectée, quel fichier env est actif). Certains
+projets ont besoin de tous. La plupart n’ont besoin que d’une partie.
+
+Quand un seul prompt ne suffit pas, je construis des pipelines sur mesure
+autour de l’assistant : génération en plusieurs étapes, contrôles de
+validation, sorties structurées. Même discipline, appliquée au niveau du
+pipeline.
+
+Certaines pièces m’accompagnent d’un projet à l’autre. D’autres vivent dans
+le dépôt et restent avec l’équipe. Dans les deux cas, quiconque rejoint le
+projet, humain ou IA, adopte les mêmes conventions dès le premier jour. La
+vision du design ne dépend pas de qui se présente ; elle dépend de ce qui est
+dans le dépôt.
+
+### guardrails-02-title: Détecter la dérive tôt
+
+Le lint attrape les dérives subtiles qui échappent à l’IA. Chaque projet a
+son propre ensemble de règles : où vit chaque style, comment les classes et
+variables sont nommées, quand utiliser une bibliothèque comme Tailwind et
+quand construire sur mesure. Je conçois cet ensemble de règles pour que les
+équipes avancent vite sans que les standards dérivent avec elles.
+
+### guardrails-03-title: Contrôler chaque commit
+
+Les hooks pre-commit Husky empêchent l’IA d’envoyer du code sans supervision.
+Chaque commit déclenche le lint, les vérifications de locales et un scan des
+artefacts de débogage. Même quand une journée pressée ou une IA confiante à
+tort essaie d’envoyer quelque chose de bâclé, le hook dit non et le mauvais
+changement ne quitte jamais ma machine.
+
+### guardrails-04-title: Tester le comportement
+
+Les tests décrivent ce que le code est censé faire. Quand l’IA réécrit une
+fonction ou refactorise un composant, les tests me disent si le comportement
+tient toujours. Vitest couvre la couche unitaire, Storybook couvre les états
+de composants à travers les thèmes, et Playwright couvre les flux de bout en
+bout qui comptent. Ensemble, ils forment le contrat que l’IA doit honorer.
+
+### guardrails-05-title: Vérifier dans la CI
+
+GitHub Actions est le dernier garde-fou avant que le code atteigne main.
+Chaque pull request exécute le même pipeline dans le même ordre : lint et
+vérifications de cycles d’abord, puis build et rendus, puis Chromatic pour la
+régression visuelle. Même si un garde-fou était contourné localement, la CI
+le rattrape avant le merge. Chromatic attrape ce qui échappe à l’œil.
+
+### guardrails-outro
+
+Construire des systèmes évolutifs, c’est aligner trois cibles : la vision du
+design, l’utilisateur final, et les développeurs qui maintiennent le code.
+
+La troisième est facile à oublier, mais c’est elle qui détermine si la vision
+survit.
+
+Quand une base de code est pénible à faire évoluer, la qualité s’érode. Pas
+parce que les équipes ne s’en soucient pas, mais parce que le système rend
+l’attention coûteuse. Les développeurs prennent des raccourcis, repoussent
+les refactorings, négligent les finitions. Les petites incohérences
+s’accumulent.
+
+Quand le code est lisible, prévisible et facile à changer, les équipes
+investissent. Elles refactorisent, ajoutent des tests, et corrigent les cas
+limites. Une bonne infrastructure rend la bonne approche plus facile que la
+mauvaise.
+
+Les bons garde-fous fonctionnent peu importe qui écrit le code, humain ou
+IA. L’IA a juste rendu le problème universel.
 
 ---
 
@@ -200,27 +271,22 @@ thème unifié.
 
 ### case-study-06-title: Leçons retenues
 
-### case-study-06-subtitle: Des systèmes au service des designers, développeurs et usagers
+### case-study-06-subtitle: Pourquoi la troisième audience compte
 
-Construire des systèmes évolutifs, c’est aligner trois cibles: la vision,
-l’utilisateur final, et l’équipe interne qui fait vivre le code.
+La leçon de Vanilla : un système de design n’est pas juste pour les designers
+ou les usagers, il est aussi pour les développeurs qui le maintiennent. Quand
+le système est pénible à faire évoluer, la qualité s’érode ; quand il est
+facile, les équipes investissent. L’architecture par tokens a bien réussi sur
+ce point, et c’est le même test que j’applique à tout système que j’aide à
+construire.
 
-Cette troisième audience est souvent oubliée. Pourtant, c’est elle qui
-détermine si la vision tient dans la durée.
+## case_studies_outro (title): Plaidoyer pour le métier
 
-Quand une base de code est pénible à faire évoluer, l’effort devient coûteux.
-Les développeurs prennent des raccourcis, repoussent les refactorings,
-négligent les finitions. Les incohérences s’accumulent.
-
-À l’inverse, quand le code est lisible, prévisible et facile à modifier,
-l’équipe investit. Elle refactorise, ajoute des tests, corrige les cas
-limites. Une bonne infrastructure rend la bonne approche plus simple que la
-mauvaise.
-
-## case_studies_outro (title): The case for craft
-
-> **[needs translation]** — This section exists in `home.en.md`. No FR
-> translation yet. Do not invent; translate during a dedicated pass.
+Beaucoup d’équipes ont oublié ce que fait un bon développeur front-end.
+Elles confient tout à l’IA et aux frameworks prêts à l’emploi, et c’est le
+projet qui en paie le prix plus tard. Je construis des systèmes UI robustes
+qui survivent aux équipes, à l’IA et au changement. Le travail au-dessus en
+est la preuve.
 
 ## projects (title): Projets
 

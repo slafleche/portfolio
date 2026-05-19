@@ -1,7 +1,10 @@
 import { clsx } from 'clsx';
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 
 import { getLocaleSvgs } from '@/assets/SVG/generated/headingsAsSvgs';
+import type { BrickData } from '@/components/Brick';
+import Bricks from '@/components/Bricks';
 import Card from '@/components/Card';
 import CaseStudy from '@/components/CaseStudy';
 import ConsoleCuriosity from '@/components/ConsoleCuriosity';
@@ -9,6 +12,11 @@ import DeferredIsland from '@/components/DeferredIsland';
 import Footer from '@/components/Footer';
 import { Column, Grid } from '@/components/Grid';
 import Hero from '@/components/Hero';
+import BookCheckIcon from '@/components/icons/bricks/BookCheckIcon';
+import BugOffIcon from '@/components/icons/bricks/BugOffIcon';
+import ConstructionIcon from '@/components/icons/bricks/ConstructionIcon';
+import HeadCircuitIcon from '@/components/icons/bricks/HeadCircuitIcon';
+import TrafficLightsIcon from '@/components/icons/bricks/TrafficLightsIcon';
 import { Markdown } from '@/components/Markdown';
 import Menu from '@/components/Menu';
 import ContentWithTitle from '@/components/responsive/ContentWithTitle';
@@ -29,6 +37,7 @@ import type { CaseStudyListItem } from '@/lib/locales/sections/caseStudies.local
 import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
+import { buildGuardrailsCopy } from '@/lib/locales/sections/guardrails.locale';
 import { loadTranslator } from '@/lib/locales/sections/helpers.locale';
 import { buildHeroCopy } from '@/lib/locales/sections/hero.locale';
 import { translateMarkdownSections } from '@/lib/locales/sections/markdownSections.helpers';
@@ -42,7 +51,9 @@ import { getSiteOrigin } from '@/lib/runtimeEnv';
 import { sharedStrings } from '@/lib/sharedStrings';
 import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
+import * as bs from '@/styles/components/brick.css';
 import * as cg from '@/styles/components/card.css';
+import * as homeBlocks from '@/styles/components/homeBlocks.css';
 import * as layoutStyles from '@/styles/layout.css';
 
 import { Accordion } from '../../../src/components/Accordion';
@@ -150,6 +161,26 @@ export default async function HomePage({
     },
   ]);
   const caseStudies = buildCaseStudiesCopy(translator);
+  const guardrails = buildGuardrailsCopy(translator);
+  const guardrailIcons: Record<string, ReactNode> = {
+    hero: <HeadCircuitIcon className={bs.iconAsBg_headCircuit} />,
+    item2: <TrafficLightsIcon className={bs.iconAsBg_trafficLights} />,
+    item3: <ConstructionIcon className={bs.iconAsBg_construction} />,
+    item4: <BugOffIcon className={bs.iconAsBg_bugOff} />,
+    item5: <BookCheckIcon className={bs.iconAsBg_bookCheck} />,
+  };
+  const guardrailsHero: BrickData = {
+    title: guardrails.hero.title,
+    body: guardrails.hero.content,
+    iconAsBg: guardrailIcons.hero,
+  };
+  const guardrailsItems: BrickData[] = Object.values(
+    guardrails.items,
+  ).map((item) => ({
+    title: item.title,
+    body: item.content,
+    iconAsBg: guardrailIcons[item.id],
+  }));
   const projects = buildProjectsCopy(translator);
   const { cocacola, ea, banq, hootsuite, kingGames } = projects.items;
   const contact = buildContactCopy(translator);
@@ -181,12 +212,16 @@ export default async function HomePage({
         href: `#${summary.href}`,
       },
       {
-        title: parseWordmarkTemplate(caseStudies.title).fullText,
-        href: `#${caseStudies.href}`,
-      },
-      {
         title: parseWordmarkTemplate(approach.title).fullText,
         href: `#${approach.href}`,
+      },
+      {
+        title: parseWordmarkTemplate(guardrails.title).fullText,
+        href: `#${guardrails.href}`,
+      },
+      {
+        title: parseWordmarkTemplate(caseStudies.title).fullText,
+        href: `#${caseStudies.href}`,
       },
       {
         title: parseWordmarkTemplate(projects.title).fullText,
@@ -233,41 +268,76 @@ export default async function HomePage({
             Bg={HeroHomeBg}
           />
           <DeferredIsland when="idle">
-            {/* Summary */}
-            <ContentWithTitle
-              id={summary.href}
-              title={summary.title}
-            >
-              <Markdown source={summary.content} />
-            </ContentWithTitle>
+            <div className={homeBlocks.aboutMe}>
+              {/* Summary */}
+              <ContentWithTitle
+                id={summary.href}
+                title={summary.title}
+              >
+                <Markdown source={summary.content} />
+              </ContentWithTitle>
+            </div>
 
-            {/* Approach */}
-            <ContentWithTitle
-              id={approach.href}
-              title={approach.title}
-            >
-              <Markdown source={approach.content} />
-            </ContentWithTitle>
+            <div className={homeBlocks.approach}>
+              {/* Approach */}
+              <ContentWithTitle
+                id={approach.href}
+                title={approach.title}
+              >
+                <Markdown source={approach.content} />
+              </ContentWithTitle>
+            </div>
 
-            {/* Case Study */}
-            <CaseStudy
-              id={caseStudies.href}
-              intro={caseStudies.intro}
-              title={caseStudies.title}
-              wordMarkClassName={cg.wordmarkTextNoLogo}
-            >
-              <Accordion
-                items={caseStudies.list.map(
-                  (study: CaseStudyListItem, index: number) => ({
-                    heading: study.title,
-                    subHeading: study.subTitle,
-                    content: <Markdown source={study.content} />,
-                    id: `${baseId}-${index}`,
-                    defaultOpen: index === 0,
-                  }),
-                )}
-              />
-            </CaseStudy>
+            <div className={homeBlocks.craft}>
+              {/* Code Quality Guardrails */}
+              <section className={layoutStyles.sectionSpacing}>
+                <Content tag="div" ignoreBottomMargin={true}>
+                  <Heading id={guardrails.href} ignoreDataUI={true}>
+                    {guardrails.title}
+                  </Heading>
+                  <Markdown source={guardrails.intro} />
+                </Content>
+                <Content tag="div" ignoreBottomMargin={true}>
+                  <Bricks
+                    hero={guardrailsHero}
+                    items={guardrailsItems}
+                  />
+                </Content>
+                <Content tag="div" ignoreBottomMargin={true}>
+                  <Markdown source={guardrails.outro} />
+                </Content>
+              </section>
+
+              {/* Case Study */}
+              <CaseStudy
+                id={caseStudies.href}
+                intro={caseStudies.intro}
+                title={caseStudies.title}
+                wordMarkClassName={cg.wordmarkTextNoLogo}
+              >
+                <Accordion
+                  items={caseStudies.list.map(
+                    (study: CaseStudyListItem, index: number) => ({
+                      heading: study.title,
+                      subHeading: study.subTitle,
+                      content: <Markdown source={study.content} />,
+                      id: `${baseId}-${index}`,
+                      defaultOpen: index === 0,
+                    }),
+                  )}
+                />
+              </CaseStudy>
+
+              {/* Case Studies Outro */}
+              <section className={layoutStyles.sectionSpacing}>
+                <Content tag="div" ignoreBottomMargin={true}>
+                  <Heading ignoreDataUI={true}>
+                    {caseStudies.outroTitle}
+                  </Heading>
+                  <Markdown source={caseStudies.outroContent} />
+                </Content>
+              </section>
+            </div>
 
             {/* About */}
             {/* <ContentWithTitle
@@ -278,150 +348,149 @@ export default async function HomePage({
               <Markdown source={about.content} />
             </ContentWithTitle> */}
 
-            {/* Projects */}
-            <section className={layoutStyles.sectionSpacing}>
-              <Content tag="div" ignoreBottomMargin={true}>
-                <Heading
-                  id={projects.href}
-                  ignoreDataUI={true}
-                >
-                  {projects.title}
-                </Heading>
-              </Content>
+            <div className={homeBlocks.projects}>
+              {/* Projects */}
+              <section className={layoutStyles.sectionSpacing}>
+                <Content tag="div" ignoreBottomMargin={true}>
+                  <Heading id={projects.href} ignoreDataUI={true}>
+                    {projects.title}
+                  </Heading>
+                </Content>
 
-              <Grid>
-                <Column span={2}>
-                  <Card
-                    className={cg.cardCC}
-                    gradientClassName={cg.gradientCC}
-                    title={
-                      <WordMarkInTitle
-                        WordMark={CCWordmark}
-                        textTemplate={cocacola.title}
-                        textClassName={cg.wordmarkTextNoLogo}
-                      />
-                    }
-                    logoAsBg={
-                      <CCWordmark
-                        className={clsx(
-                          cg.logoAsBgSVG,
-                          cg.logoAsBg_cc,
-                        )}
-                      />
-                    }
+                <Grid>
+                  <Column span={2}>
+                    <Card
+                      className={cg.cardCC}
+                      gradientClassName={cg.gradientCC}
+                      title={
+                        <WordMarkInTitle
+                          WordMark={CCWordmark}
+                          textTemplate={cocacola.title}
+                          textClassName={cg.wordmarkTextNoLogo}
+                        />
+                      }
+                      logoAsBg={
+                        <CCWordmark
+                          className={clsx(
+                            cg.logoAsBgSVG,
+                            cg.logoAsBg_cc,
+                          )}
+                        />
+                      }
+                    >
+                      <Markdown source={cocacola.content} />
+                    </Card>
+                  </Column>
+                  <Column span={2}>
+                    <Card
+                      className={cg.cardEa}
+                      gradientClassName={cg.gradientEa}
+                      title={
+                        <WordMarkInTitle
+                          WordMark={EAWordmark}
+                          textTemplate={ea.title}
+                          textClassName={cg.wordmarkTextNoLogo}
+                        />
+                      }
+                      logoAsBg={
+                        <EAWordmark
+                          className={clsx(
+                            cg.logoAsBgSVG,
+                            cg.logoAsBg_ea,
+                          )}
+                        />
+                      }
+                    >
+                      <Markdown source={ea.content} />
+                    </Card>
+                  </Column>
+                  <Column
+                    span={1}
+                    mediaQuerySpan={{
+                      underMinWidth: 2,
+                    }}
                   >
-                    <Markdown source={cocacola.content} />
-                  </Card>
-                </Column>
-                <Column span={2}>
-                  <Card
-                    className={cg.cardEa}
-                    gradientClassName={cg.gradientEa}
-                    title={
-                      <WordMarkInTitle
-                        WordMark={EAWordmark}
-                        textTemplate={ea.title}
-                        textClassName={cg.wordmarkTextNoLogo}
-                      />
-                    }
-                    logoAsBg={
-                      <EAWordmark
-                        className={clsx(
-                          cg.logoAsBgSVG,
-                          cg.logoAsBg_ea,
-                        )}
-                      />
-                    }
+                    <Card
+                      className={cg.cardBanq}
+                      gradientClassName={cg.gradientBanq}
+                      title={
+                        <WordMarkInTitle
+                          WordMark={BQWordmark}
+                          textTemplate={banq.title}
+                          textClassName={cg.wordmarkTextNoLogo}
+                        />
+                      }
+                      logoAsBg={
+                        <BQWordmark
+                          className={clsx(
+                            cg.logoAsBgSVG,
+                            cg.logoAsBg_banq,
+                          )}
+                        />
+                      }
+                    >
+                      <Markdown source={banq.content} />
+                    </Card>
+                  </Column>
+                  <Column
+                    span={1}
+                    mediaQuerySpan={{
+                      underMinWidth: 2,
+                    }}
                   >
-                    <Markdown source={ea.content} />
-                  </Card>
-                </Column>
-                <Column
-                  span={1}
-                  mediaQuerySpan={{
-                    underMinWidth: 2,
-                  }}
-                >
-                  <Card
-                    className={cg.cardBanq}
-                    gradientClassName={cg.gradientBanq}
-                    title={
-                      <WordMarkInTitle
-                        WordMark={BQWordmark}
-                        textTemplate={banq.title}
-                        textClassName={cg.wordmarkTextNoLogo}
-                      />
-                    }
-                    logoAsBg={
-                      <BQWordmark
-                        className={clsx(
-                          cg.logoAsBgSVG,
-                          cg.logoAsBg_banq,
-                        )}
-                      />
-                    }
+                    <Card
+                      className={cg.cardHs}
+                      gradientClassName={cg.gradientHs}
+                      title={
+                        <WordMarkInTitle
+                          WordMark={HSWordmark}
+                          textTemplate={hootsuite.title}
+                          textClassName={cg.wordmarkTextNoLogo}
+                        />
+                      }
+                      logoAsBg={
+                        <HSWordmark
+                          className={clsx(
+                            cg.logoAsBgSVG,
+                            cg.logoAsBg_hs,
+                          )}
+                        />
+                      }
+                    >
+                      <Markdown source={hootsuite.content} />
+                    </Card>
+                  </Column>
+                  <Column
+                    span={2}
+                    mediaQuerySpan={{
+                      compact: 1,
+                    }}
                   >
-                    <Markdown source={banq.content} />
-                  </Card>
-                </Column>
-                <Column
-                  span={1}
-                  mediaQuerySpan={{
-                    underMinWidth: 2,
-                  }}
-                >
-                  <Card
-                    className={cg.cardHs}
-                    gradientClassName={cg.gradientHs}
-                    title={
-                      <WordMarkInTitle
-                        WordMark={HSWordmark}
-                        textTemplate={hootsuite.title}
-                        textClassName={cg.wordmarkTextNoLogo}
-                      />
-                    }
-                    logoAsBg={
-                      <HSWordmark
-                        className={clsx(
-                          cg.logoAsBgSVG,
-                          cg.logoAsBg_hs,
-                        )}
-                      />
-                    }
-                  >
-                    <Markdown source={hootsuite.content} />
-                  </Card>
-                </Column>
-                <Column
-                  span={2}
-                  mediaQuerySpan={{
-                    compact: 1,
-                  }}
-                >
-                  <Card
-                    className={cg.cardKg}
-                    gradientClassName={cg.gradientKg}
-                    title={
-                      <WordMarkInTitle
-                        WordMark={KGWordmark}
-                        textTemplate={kingGames.title}
-                        textClassName={cg.wordmarkTextNoLogo}
-                      />
-                    }
-                    logoAsBg={
-                      <KGWordmark
-                        className={clsx(
-                          cg.logoAsBgSVG,
-                          cg.logoAsBg_kg,
-                        )}
-                      />
-                    }
-                  >
-                    <Markdown source={kingGames.content} />
-                  </Card>
-                </Column>
-              </Grid>
-            </section>
+                    <Card
+                      className={cg.cardKg}
+                      gradientClassName={cg.gradientKg}
+                      title={
+                        <WordMarkInTitle
+                          WordMark={KGWordmark}
+                          textTemplate={kingGames.title}
+                          textClassName={cg.wordmarkTextNoLogo}
+                        />
+                      }
+                      logoAsBg={
+                        <KGWordmark
+                          className={clsx(
+                            cg.logoAsBgSVG,
+                            cg.logoAsBg_kg,
+                          )}
+                        />
+                      }
+                    >
+                      <Markdown source={kingGames.content} />
+                    </Card>
+                  </Column>
+                </Grid>
+              </section>
+            </div>
           </DeferredIsland>
         </main>
         <DeferredIsland when="idle">

@@ -4,9 +4,13 @@ import { translateMarkdownSections } from './markdownSections.helpers';
 export const CASE_STUDY_KEYS = {
   title: 'case_study',
   href: 'case_study-href',
+  outroTitle: 'case_studies_outro',
+  outroContent: 'case-studies-outro-content',
 } as const satisfies {
   title: MessageKey;
   href: MessageKey;
+  outroTitle: MessageKey;
+  outroContent: MessageKey;
 };
 
 const CASE_STUDY_DEFINITIONS = [
@@ -53,6 +57,8 @@ export type CaseStudiesCopy = {
   href: string;
   intro?: string;
   list: CaseStudyListItem[];
+  outroTitle: string;
+  outroContent: string;
 };
 
 export const buildCaseStudiesCopy = (
@@ -69,5 +75,7 @@ export const buildCaseStudiesCopy = (
         subTitle,
       }),
     ),
+    outroTitle: t(CASE_STUDY_KEYS.outroTitle),
+    outroContent: t(CASE_STUDY_KEYS.outroContent),
   };
 };

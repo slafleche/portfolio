@@ -9,8 +9,8 @@ import {
 } from '@/dev/storybook/nextNavigationShim';
 import { defaultViewports } from '@/dev/storybookConfig';
 import {
-  type GuardrailsCopy,
   buildGuardrailsCopy,
+  type GuardrailsCopy,
 } from '@/lib/locales/sections/guardrails.locale';
 import { createSectionTranslator } from '@/lib/locales/sections/helpers.locale';
 import en from '@/lib/locales/translations/en';

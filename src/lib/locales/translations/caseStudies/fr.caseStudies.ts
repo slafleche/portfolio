@@ -23,7 +23,8 @@ export const frCaseStudies = {
     'Connecter les forums à la thématisation moderne',
   ...markdownRefs('case-study-05-content'),
   'case-study-06-title': 'Leçons retenues',
-  'case-study-06-subtitle':
-    'Des systèmes au service des designers, développeurs et usagers',
+  'case-study-06-subtitle': 'Pourquoi la troisième audience compte',
   ...markdownRefs('case-study-06-content'),
+  case_studies_outro: 'L’importance du métier',
+  ...markdownRefs('case-studies-outro-content'),
 } as const;

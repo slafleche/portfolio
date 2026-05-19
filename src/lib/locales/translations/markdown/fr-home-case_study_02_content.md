@@ -1,8 +1,7 @@
-J’ai créé des utilitaires et des snippets réutilisables pour réduire les
-duplications de style et améliorer la cohérence. Cela a rendu le travail de
-thématisation plus rapide et plus propre au quotidien, avec une boîte à outils de
-styles fiable et réutilisable d’un client à l’autre. J’ai aussi contribué à
-faire évoluer nos thèmes vers une approche plus pilotée par la configuration.
-Plus d’options exposées via des pages de dashboard, et moins de styles
-codés en dur. La personnalisation client est ainsi devenue plus simple à
+J’ai créé des utilitaires et des snippets réutilisables pour réduire la
+duplication de styles et améliorer la cohérence. La thématisation au quotidien
+est devenue plus rapide, plus propre et plus prévisible. J’ai aussi contribué à
+faire évoluer les thèmes vers une approche pilotée par la configuration, en
+exposant les options via des pages de tableau de bord et en limitant le
+stylage codé en dur. La personnalisation client est devenue plus simple à
 maintenir et à faire évoluer.

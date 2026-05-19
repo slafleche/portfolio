@@ -61,7 +61,7 @@ const frBaseData = {
   'console-curiosity-hint':
     '[indice] Le code montre ce que j’ai construit; curiosity() montre comment je pense.',
 
-  summary: 'Résumé',
+  summary: 'À propos',
   'summary-href': 'resume',
   ...markdownRefs('summary-content'),
 
@@ -69,18 +69,18 @@ const frBaseData = {
   'approach-href': 'philosophie',
   ...markdownRefs('approach-content'),
 
-  guardrails: '[TODO] Code Quality Guardrails',
-  'guardrails-href': 'guardrails',
+  guardrails: 'Garde-fous de qualité du code',
+  'guardrails-href': 'garde-fous',
   ...markdownRefs('guardrails-intro'),
-  'guardrails-01-title': '[TODO] Titre guardrails 01',
+  'guardrails-01-title': 'Façonner l’IA',
   ...markdownRefs('guardrails-01-content'),
-  'guardrails-02-title': '[TODO] Titre guardrails 02',
+  'guardrails-02-title': 'Détecter la dérive tôt',
   ...markdownRefs('guardrails-02-content'),
-  'guardrails-03-title': '[TODO] Titre guardrails 03',
+  'guardrails-03-title': 'Filtrer chaque commit',
   ...markdownRefs('guardrails-03-content'),
-  'guardrails-04-title': '[TODO] Titre guardrails 04',
+  'guardrails-04-title': 'Tester le comportement',
   ...markdownRefs('guardrails-04-content'),
-  'guardrails-05-title': '[TODO] Titre guardrails 05',
+  'guardrails-05-title': 'Vérifier sur la CI',
   ...markdownRefs('guardrails-05-content'),
   ...markdownRefs('guardrails-outro'),
 

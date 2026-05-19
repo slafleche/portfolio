@@ -4,13 +4,13 @@ export const bricksLayout = {
   grid: {
     gap: m(24),
     desktop: {
-      columns: 4,
+      columns: '40fr 30fr 30fr',
       rows: 2,
     },
-    mobile: {
-      columns: 2,
-      rows: 4,
-    },
+  },
+  breakpoints: {
+    twoColumn: m(1200),
+    oneColumn: m(740),
   },
 };
 

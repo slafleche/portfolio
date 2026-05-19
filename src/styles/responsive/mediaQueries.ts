@@ -11,6 +11,7 @@ import {
   formLayoutVars,
   layoutVars,
 } from '../../tokens/layout.tokens';
+import { bricksLayout } from '../componentTokens/brick.component.tokens';
 import { cardLayout } from '../componentTokens/card.component.tokens';
 import { footerVars } from '../componentTokens/footer.component.tokens';
 import { curlVars } from '../componentTokens/pageCurl.component.tokens';
@@ -105,6 +106,12 @@ const componentSpecificQueriesConfig: IMediaQueries = {
   },
   contact_compact: {
     maxWidth: formLayoutVars.compact.maxWidth,
+  },
+  bricks_twoColumn: {
+    maxWidth: bricksLayout.breakpoints.twoColumn,
+  },
+  bricks_oneColumn: {
+    maxWidth: bricksLayout.breakpoints.oneColumn,
   },
 };
 

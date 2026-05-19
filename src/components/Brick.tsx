@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import type {
   ComponentPropsWithoutRef,
-  CSSProperties,
   ReactNode,
 } from 'react';
 
@@ -17,34 +16,19 @@ export type BrickData = {
 };
 
 type Props = Omit<ComponentPropsWithoutRef<'article'>, 'title'> &
-  BrickData & {
-    columns?: number;
-    rows?: number;
-  };
+  BrickData;
 
 export default function Brick({
   title,
   body,
   iconAsBg,
-  columns = 1,
-  rows = 1,
   className,
-  style,
   ...rest
 }: Props) {
   const isStringTitle = typeof title === 'string';
-  const gridStyle: CSSProperties = {
-    gridColumn: `span ${columns}`,
-    gridRow: `span ${rows}`,
-    ...style,
-  };
 
   return (
-    <article
-      className={clsx(s.root, className)}
-      style={gridStyle}
-      {...rest}
-    >
+    <article className={clsx(s.root, className)} {...rest}>
       {iconAsBg && (
         <div className={s.iconAsBg} aria-hidden="true">
           {iconAsBg}
@@ -58,6 +42,7 @@ export default function Brick({
         ) : (
           title
         )}
+        <div aria-hidden={true} className={s.separator} />
         <Markdown className={s.body} source={body} />
       </div>
     </article>

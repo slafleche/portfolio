@@ -63,7 +63,7 @@ const enBaseData = {
   'console-curiosity-hint':
     '[hint] The code shows what I built; curiosity() shows how I think.',
 
-  summary: 'A little about me',
+  summary: 'About me',
   'summary-href': 'summary',
   ...markdownRefs('summary-content'),
 

@@ -1,24 +1,20 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
-  width="28.818626mm"
-  height="28.175972mm"
-  viewBox="0 0 28.818627 28.175972"
-  version="1.1"
-  id="svg1"
-  xml:space="preserve"
   xmlns="http://www.w3.org/2000/svg"
-  xmlns:svg="http://www.w3.org/2000/svg"
+  xml:space="preserve"
+  id="svg1"
+  width="108.921"
+  height="106.492"
+  version="1.1"
+  viewBox="0 0 28.819 28.176"
 >
   <g class="tquc7i7 tquc7ic">
     <path
-      class="tquc7i8"
-      d="M 200.00 70.00 C 267.55 70.00, 247.53 103.45, 277.45 155.28 C 307.38 207.11, 346.36 206.50, 312.58 265.00 C 278.81 323.50, 259.85 289.43, 200.00 289.43 C 140.15 289.43, 121.19 323.50, 87.42 265.00 C 53.64 206.50, 92.62 207.11, 122.55 155.28 C 152.47 103.45, 132.45 70.00, 200.00 70.00 Z"
+      fill="none"
       stroke="url(#_r_f_-hero-gooey-gradient-b)"
       stroke-width="55"
-      fill="none"
-      transform="translate(45 33.4) scale(0.13)"
-    ></path>
+      d="M200 70C267.55 70 247.53 103.45 277.45 155.28 307.38 207.11 346.36 206.5 312.58 265 278.81 323.5 259.85 289.43 200 289.43S121.19 323.5 87.42 265C53.64 206.5 92.62 207.11 122.55 155.28 152.47 103.45 132.45 70 200 70Z"
+      class="tquc7i8"
+      transform="matrix(.13 0 0 .13 45 33.4)"
+    />
   </g>
 </svg>
