@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import type { ComponentType, SVGProps } from 'react';
 
 import { Markdown } from '@/components/Markdown';
 import { createDomId } from '@/lib/dom';
@@ -13,6 +14,7 @@ type CaseStudyProps = {
   id?: string;
   intro?: string;
   title: string;
+  WordMark?: ComponentType<SVGProps<SVGSVGElement>>;
   wordMarkClassName?: string;
   className?: string;
   children: React.ReactNode;
@@ -22,6 +24,7 @@ export default function CaseStudy({
   id,
   intro,
   title,
+  WordMark = VNWordmark,
   wordMarkClassName,
   className,
   children,
@@ -36,7 +39,7 @@ export default function CaseStudy({
       <Content tag={'div'}>
         <WordMarkInTitle
           className={layoutStyles.title}
-          WordMark={VNWordmark}
+          WordMark={WordMark}
           ignoreDataUI={true}
           textTemplate={title}
           textClassName={wordMarkClassName}

@@ -28,13 +28,17 @@ import {
   EAWordmark,
   HSWordmark,
   KGWordmark,
+  TNBWordmark,
 } from '@/components/wordmarks/wordmarks.tsx';
 import { AVAILABLE_LOCALES, LOCALE_LABELS } from '@/data/locales';
 import { createDomId } from '@/lib/dom';
 import { getSocialImageByName } from '@/lib/images';
 import { resolveLocale } from '@/lib/locales/locale';
 import type { CaseStudyListItem } from '@/lib/locales/sections/caseStudies.locale';
-import { buildCaseStudiesCopy } from '@/lib/locales/sections/caseStudies.locale';
+import {
+  buildCaseStudiesCopy,
+  buildTnbCaseStudyCopy,
+} from '@/lib/locales/sections/caseStudies.locale';
 import { buildContactCopy } from '@/lib/locales/sections/contact.locale';
 import { buildContactFormCopy } from '@/lib/locales/sections/form.locale';
 import { buildGuardrailsCopy } from '@/lib/locales/sections/guardrails.locale';
@@ -161,6 +165,7 @@ export default async function HomePage({
     },
   ]);
   const caseStudies = buildCaseStudiesCopy(translator);
+  const tnbCaseStudy = buildTnbCaseStudyCopy(translator);
   const guardrails = buildGuardrailsCopy(translator);
   const guardrailIcons: Record<string, ReactNode> = {
     hero: <HeadCircuitIcon className={bs.iconAsBg_headCircuit} />,
@@ -208,6 +213,10 @@ export default async function HomePage({
     anchorNavLabel: menuCopy.anchorLabel,
     anchorLinks: [
       {
+        title: parseWordmarkTemplate(guardrails.title).fullText,
+        href: `#${guardrails.href}`,
+      },
+      {
         title: parseWordmarkTemplate(summary.title).fullText,
         href: `#${summary.href}`,
       },
@@ -216,8 +225,8 @@ export default async function HomePage({
         href: `#${approach.href}`,
       },
       {
-        title: parseWordmarkTemplate(guardrails.title).fullText,
-        href: `#${guardrails.href}`,
+        title: parseWordmarkTemplate(tnbCaseStudy.title).fullText,
+        href: `#${tnbCaseStudy.href}`,
       },
       {
         title: parseWordmarkTemplate(caseStudies.title).fullText,
@@ -268,28 +277,8 @@ export default async function HomePage({
             Bg={HeroHomeBg}
           />
           <DeferredIsland when="idle">
-            <div className={homeBlocks.aboutMe}>
-              {/* Summary */}
-              <ContentWithTitle
-                id={summary.href}
-                title={summary.title}
-              >
-                <Markdown source={summary.content} />
-              </ContentWithTitle>
-            </div>
-
-            <div className={homeBlocks.approach}>
-              {/* Approach */}
-              <ContentWithTitle
-                id={approach.href}
-                title={approach.title}
-              >
-                <Markdown source={approach.content} />
-              </ContentWithTitle>
-            </div>
-
             <div className={homeBlocks.craft}>
-              {/* Code Quality Guardrails */}
+              {/* Code Quality Guardrails (with "The case for craft" closing block) */}
               <section className={layoutStyles.sectionSpacing}>
                 <Content tag="div" ignoreBottomMargin={true}>
                   <Heading
@@ -310,9 +299,58 @@ export default async function HomePage({
                 <Content tag="div" ignoreBottomMargin={true}>
                   <Markdown source={guardrails.outro} />
                 </Content>
+                <Content tag="div" ignoreBottomMargin={true}>
+                  <Heading depth={3} ignoreDataUI={true}>
+                    {caseStudies.outroTitle}
+                  </Heading>
+                  <Markdown source={caseStudies.outroContent} />
+                </Content>
               </section>
+            </div>
 
-              {/* Case Study */}
+            <div className={homeBlocks.aboutMe}>
+              {/* Summary (About me) */}
+              <ContentWithTitle
+                id={summary.href}
+                title={summary.title}
+              >
+                <Markdown source={summary.content} />
+              </ContentWithTitle>
+            </div>
+
+            <div className={homeBlocks.approach}>
+              {/* Approach */}
+              <ContentWithTitle
+                id={approach.href}
+                title={approach.title}
+              >
+                <Markdown source={approach.content} />
+              </ContentWithTitle>
+            </div>
+
+            <div className={homeBlocks.craft}>
+              {/* TNB Case Study (recent work, presented first) */}
+              <CaseStudy
+                id={tnbCaseStudy.href}
+                intro={tnbCaseStudy.intro}
+                title={tnbCaseStudy.title}
+                WordMark={TNBWordmark}
+                wordMarkClassName={cg.wordmarkTextNoLogo}
+              >
+                <Accordion
+                  items={tnbCaseStudy.list.map(
+                    (study: CaseStudyListItem, index: number) => ({
+                      heading: study.title,
+                      subHeading: study.subTitle,
+                      content: <Markdown source={study.content} />,
+                      id: `${baseId}-tnb-${index}`,
+                      defaultOpen: index === 0,
+                    }),
+                  )}
+                />
+              </CaseStudy>
+
+              {/* Vanilla Case Study (deeper / older arc) */}
               <CaseStudy
                 id={caseStudies.href}
                 intro={caseStudies.intro}
@@ -331,16 +369,6 @@ export default async function HomePage({
                   )}
                 />
               </CaseStudy>
-
-              {/* Case Studies Outro */}
-              <section className={layoutStyles.sectionSpacing}>
-                <Content tag="div" ignoreBottomMargin={true}>
-                  <Heading depth={2} ignoreDataUI={true}>
-                    {caseStudies.outroTitle}
-                  </Heading>
-                  <Markdown source={caseStudies.outroContent} />
-                </Content>
-              </section>
             </div>
 
             {/* About */}
