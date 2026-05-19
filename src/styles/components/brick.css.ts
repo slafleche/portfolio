@@ -86,7 +86,7 @@ export const iconAsBg = style({
   pointerEvents: 'none',
   opacity: 0.1,
   zIndex: 0,
-  color: colorVars.black,
+  color: colorVars.black.css(),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
