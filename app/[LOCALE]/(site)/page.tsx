@@ -292,7 +292,11 @@ export default async function HomePage({
               {/* Code Quality Guardrails */}
               <section className={layoutStyles.sectionSpacing}>
                 <Content tag="div" ignoreBottomMargin={true}>
-                  <Heading id={guardrails.href} ignoreDataUI={true}>
+                  <Heading
+                    depth={2}
+                    id={guardrails.href}
+                    ignoreDataUI={true}
+                  >
                     {guardrails.title}
                   </Heading>
                   <Markdown source={guardrails.intro} />
@@ -331,7 +335,7 @@ export default async function HomePage({
               {/* Case Studies Outro */}
               <section className={layoutStyles.sectionSpacing}>
                 <Content tag="div" ignoreBottomMargin={true}>
-                  <Heading ignoreDataUI={true}>
+                  <Heading depth={2} ignoreDataUI={true}>
                     {caseStudies.outroTitle}
                   </Heading>
                   <Markdown source={caseStudies.outroContent} />
@@ -352,7 +356,11 @@ export default async function HomePage({
               {/* Projects */}
               <section className={layoutStyles.sectionSpacing}>
                 <Content tag="div" ignoreBottomMargin={true}>
-                  <Heading id={projects.href} ignoreDataUI={true}>
+                  <Heading
+                    depth={2}
+                    id={projects.href}
+                    ignoreDataUI={true}
+                  >
                     {projects.title}
                   </Heading>
                 </Content>

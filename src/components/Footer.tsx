@@ -51,6 +51,7 @@ export default function Footer({
 
       <Content ignoreBottomMargin={true}>
         <Heading
+          depth={2}
           data-visible="sc-only"
           id={headingId}
           className={s.heading}
