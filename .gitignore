@@ -137,6 +137,8 @@ ai/home.en.map.md
 # -----------------------
 .claude/skills/marketing-angle
 .claude/skills/audience-tone
+.claude/skills/sync-copy
+.claude/skills/toc
 .vercel
 .env*
 
