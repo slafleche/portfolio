@@ -15,7 +15,6 @@ import Hero from '@/components/Hero';
 import BookCheckIcon from '@/components/icons/bricks/BookCheckIcon';
 import BugOffIcon from '@/components/icons/bricks/BugOffIcon';
 import ConstructionIcon from '@/components/icons/bricks/ConstructionIcon';
-import HeadCircuitIcon from '@/components/icons/bricks/HeadCircuitIcon';
 import TrafficLightsIcon from '@/components/icons/bricks/TrafficLightsIcon';
 import { Markdown } from '@/components/Markdown';
 import Menu from '@/components/Menu';
@@ -150,9 +149,15 @@ export default async function HomePage({
     subtitle: translator('hero-subtitle'),
   };
   const [
+    designSystems,
     summary,
     approach,
   ] = translateMarkdownSections(translator, [
+    {
+      titleKey: 'design_systems',
+      markdownKey: 'design-systems-content',
+      hrefKey: 'design_systems-href',
+    },
     {
       titleKey: 'summary',
       markdownKey: 'summary-content',
@@ -168,16 +173,10 @@ export default async function HomePage({
   const tnbCaseStudy = buildTnbCaseStudyCopy(translator);
   const guardrails = buildGuardrailsCopy(translator);
   const guardrailIcons: Record<string, ReactNode> = {
-    hero: <HeadCircuitIcon className={bs.iconAsBg_headCircuit} />,
     item2: <TrafficLightsIcon className={bs.iconAsBg_trafficLights} />,
     item3: <ConstructionIcon className={bs.iconAsBg_construction} />,
     item4: <BugOffIcon className={bs.iconAsBg_bugOff} />,
     item5: <BookCheckIcon className={bs.iconAsBg_bookCheck} />,
-  };
-  const guardrailsHero: BrickData = {
-    title: guardrails.hero.title,
-    body: guardrails.hero.content,
-    iconAsBg: guardrailIcons.hero,
   };
   const guardrailsItems: BrickData[] = Object.values(
     guardrails.items,
@@ -212,6 +211,10 @@ export default async function HomePage({
     localeChangeLabel: menuCopy.languageLabel,
     anchorNavLabel: menuCopy.anchorLabel,
     anchorLinks: [
+      {
+        title: parseWordmarkTemplate(designSystems.title).fullText,
+        href: `#${designSystems.href}`,
+      },
       {
         title: parseWordmarkTemplate(guardrails.title).fullText,
         href: `#${guardrails.href}`,
@@ -277,6 +280,16 @@ export default async function HomePage({
             Bg={HeroHomeBg}
           />
           <DeferredIsland when="idle">
+            <div className={homeBlocks.designSystems}>
+              {/* End-to-end design systems (bridge from hero into the page) */}
+              <ContentWithTitle
+                id={designSystems.href}
+                title={designSystems.title}
+              >
+                <Markdown source={designSystems.content} />
+              </ContentWithTitle>
+            </div>
+
             <div className={homeBlocks.craft}>
               {/* Code Quality Guardrails (with "The case for craft" closing block) */}
               <section className={layoutStyles.sectionSpacing}>
@@ -291,17 +304,10 @@ export default async function HomePage({
                   <Markdown source={guardrails.intro} />
                 </Content>
                 <Content tag="div" ignoreBottomMargin={true}>
-                  <Bricks
-                    hero={guardrailsHero}
-                    items={guardrailsItems}
-                  />
+                  <Bricks items={guardrailsItems} />
                 </Content>
                 <Content tag="div">
                   <Markdown source={guardrails.outro} />
-                  <Heading depth={3} ignoreDataUI={true}>
-                    {caseStudies.outroTitle}
-                  </Heading>
-                  <Markdown source={caseStudies.outroContent} />
                 </Content>
               </section>
             </div>

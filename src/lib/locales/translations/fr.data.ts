@@ -63,6 +63,10 @@ const frBaseData = {
   'console-curiosity-hint':
     '[indice] Le code montre ce que j’ai construit; curiosity() montre comment je pense.',
 
+  design_systems: 'Systèmes de design intégrés de A à Z',
+  'design_systems-href': 'systemes-de-design',
+  ...markdownRefs('design-systems-content'),
+
   summary: 'Quelques mots sur moi',
   'summary-href': 'resume',
   ...markdownRefs('summary-content'),
@@ -74,11 +78,9 @@ const frBaseData = {
   guardrails: 'Garde-fous de qualité du code',
   'guardrails-href': 'garde-fous',
   ...markdownRefs('guardrails-intro'),
-  'guardrails-01-title': 'Façonner l’IA',
-  ...markdownRefs('guardrails-01-content'),
   'guardrails-02-title': 'Détecter la dérive tôt',
   ...markdownRefs('guardrails-02-content'),
-  'guardrails-03-title': 'Filtrer chaque commit',
+  'guardrails-03-title': 'Contrôler chaque commit',
   ...markdownRefs('guardrails-03-content'),
   'guardrails-04-title': 'Tester le comportement',
   ...markdownRefs('guardrails-04-content'),

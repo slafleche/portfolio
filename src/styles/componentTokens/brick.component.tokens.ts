@@ -4,7 +4,7 @@ export const bricksLayout = {
   grid: {
     gap: m(24),
     desktop: {
-      columns: '40fr 30fr 30fr',
+      columns: 'repeat(2, minmax(0, 1fr))',
       rows: 2,
     },
   },

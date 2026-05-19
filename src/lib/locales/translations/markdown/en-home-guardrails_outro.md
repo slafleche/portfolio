@@ -13,3 +13,7 @@ doing the right thing easier than doing the wrong thing.
 
 Good guardrails work whoever's writing the code, human or AI. AI just made the
 problem universal.
+
+A lot of teams now lean entirely on AI and prebuilt frameworks, and the
+project pays for that later. I build robust UI systems that survive teams,
+AI, and change. The work below is the proof.

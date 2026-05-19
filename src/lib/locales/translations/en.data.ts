@@ -63,6 +63,10 @@ const enBaseData = {
   'console-curiosity-hint':
     '[hint] The code shows what I built; curiosity() shows how I think.',
 
+  design_systems: 'End-to-end design systems',
+  'design_systems-href': 'design-systems',
+  ...markdownRefs('design-systems-content'),
+
   summary: 'About me',
   'summary-href': 'summary',
   ...markdownRefs('summary-content'),
@@ -74,8 +78,6 @@ const enBaseData = {
   guardrails: 'Code Quality Guardrails',
   'guardrails-href': 'guardrails',
   ...markdownRefs('guardrails-intro'),
-  'guardrails-01-title': 'Shape the AI',
-  ...markdownRefs('guardrails-01-content'),
   'guardrails-02-title': 'Catch Drift Early',
   ...markdownRefs('guardrails-02-content'),
   'guardrails-03-title': 'Gate Every Commit',

@@ -53,6 +53,4 @@ export const frCaseStudies = {
   'tnb-case-study-06-subtitle':
     'Rendre l’assistant fluide avec les widgets Whereabouts',
   ...markdownRefs('tnb-case-study-06-content'),
-  case_studies_outro: 'Plaidoyer pour le métier',
-  ...markdownRefs('case-studies-outro-content'),
 } as const;

@@ -73,13 +73,12 @@ type BricksSectionProps = {
 };
 
 function BricksSection({ copy }: BricksSectionProps) {
-  const hero = toBrickData(copy.hero);
   const items = Object.values(copy.items).map(toBrickData);
 
   return (
     <section className={layoutStyles.sectionSpacing}>
       <Content tag="div" ignoreBottomMargin={true}>
-        <Bricks hero={hero} items={items} />
+        <Bricks items={items} />
       </Content>
     </section>
   );

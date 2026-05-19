@@ -50,6 +50,4 @@ export const enCaseStudies = {
   'tnb-case-study-06-subtitle':
     'Making the assistant fluent in Whereabouts widgets',
   ...markdownRefs('tnb-case-study-06-content'),
-  case_studies_outro: 'The Case for Craft',
-  ...markdownRefs('case-studies-outro-content'),
 } as const;

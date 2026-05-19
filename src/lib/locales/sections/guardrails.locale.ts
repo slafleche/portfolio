@@ -17,11 +17,6 @@ type GuardrailDefinition = {
   markdownKey: MessageKey;
 };
 
-const HERO_DEFINITION: GuardrailDefinition = {
-  titleKey: 'guardrails-01-title',
-  markdownKey: 'guardrails-01-content',
-};
-
 const ITEM_DEFINITIONS = {
   item2: {
     titleKey: 'guardrails-02-title',
@@ -44,7 +39,7 @@ const ITEM_DEFINITIONS = {
 export type GuardrailItemId = keyof typeof ITEM_DEFINITIONS;
 
 export type GuardrailListItem = {
-  id: GuardrailItemId | 'hero';
+  id: GuardrailItemId;
   title: string;
   content: string;
 };
@@ -58,7 +53,6 @@ export type GuardrailsCopy = {
   href: string;
   intro: string;
   outro: string;
-  hero: GuardrailListItem;
   items: GuardrailsItems;
 };
 
@@ -86,11 +80,6 @@ export const buildGuardrailsCopy = (
     href: t(GUARDRAILS_KEYS.href),
     intro: t(GUARDRAILS_KEYS.intro),
     outro: t(GUARDRAILS_KEYS.outro),
-    hero: {
-      id: 'hero',
-      title: t(HERO_DEFINITION.titleKey),
-      content: t(HERO_DEFINITION.markdownKey),
-    },
     items: buildGuardrailItems(t),
   };
 };

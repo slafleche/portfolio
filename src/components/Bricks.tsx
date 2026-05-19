@@ -7,7 +7,7 @@ import Brick, { type BrickData } from './Brick';
 import HeroBrick from './HeroBrick';
 
 type Props = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
-  hero: BrickData;
+  hero?: BrickData;
   items: BrickData[];
 };
 
@@ -19,7 +19,7 @@ export default function Bricks({
 }: Props) {
   return (
     <div className={clsx(s.root, className)} {...rest}>
-      <HeroBrick {...hero} />
+      {hero ? <HeroBrick {...hero} /> : null}
       {items.map((item, index) => (
         <Brick key={index} {...item} />
       ))}
