@@ -1,7 +1,12 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 
-import sectionPatternUrl from '@/assets/SVG/sectionPattern.svg?url';
 import * as layoutStyles from '@/styles/layout.css';
+
+// Served from public/sectionPattern.svg. Kept out of the webpack asset
+// pipeline because referencing a `?url` import from a vanilla-extract
+// `.css.ts` file produces stale RealContentHashPlugin references across
+// compilation passes.
+const sectionPatternUrl = '/sectionPattern.svg';
 
 import { layoutVars } from '../../tokens/layout.tokens';
 import { backgrounds } from '../helpers/background.helper';
