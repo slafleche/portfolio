@@ -111,7 +111,7 @@
     "generate:release:skipConfirmation": "tsx scripts/runGenerateAllPipeline.mts --target=release --yes",
     "generate:favicons": "tsx scripts/generateFavicons.ts",
     "generate:sitemap": "tsx scripts/generateSitemap.mts",
-    "locales": "node -e \"console.log('→ [locales 1/4] lint')\" && yarn lint:locales && node -e \"console.log('→ [locales 2/4] markdown')\" && yarn locales:markdown && node -e \"console.log('→ [locales 3/4] publish')\" && yarn locales:publish && node -e \"console.log('→ [locales 4/4] audit:snapshot')\" && yarn audit:snapshot",
+    "locales": "node -e \"console.log('→ [locales 1/3] lint')\" && yarn lint:locales && node -e \"console.log('→ [locales 2/3] markdown')\" && yarn locales:markdown && node -e \"console.log('→ [locales 3/3] publish')\" && yarn locales:publish",
     "locales:lint": "tsx scripts/checkLocaleMarkdown.ts",
     "locales:markdown": "tsx scripts/generateLocaleMarkdown.ts",
     "locales:publish": "tsx scripts/generateCopyHtml.ts",
