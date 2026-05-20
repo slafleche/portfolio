@@ -38,6 +38,10 @@ export const buildSystemsMenuSections = (
     label: t('systems-title'),
   },
   {
+    id: t('systems-intro-title'),
+    label: t('systems-intro-title'),
+  },
+  {
     id: t('systems-principles-href'),
     label: t('systems-principles'),
   },

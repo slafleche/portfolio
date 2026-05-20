@@ -118,6 +118,7 @@ const enBaseData = {
 
   'systems-intro-href': 'systems-expertise',
   'systems-principles': 'Principles',
+  'systems-intro-title': 'The Approach',
   'systems-principles-href': 'systems-principles',
   ...markdownRefs('principles-content'),
   'systems-architecture': 'Architecture',

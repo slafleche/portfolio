@@ -17,7 +17,11 @@ export const LINT_FILE_IGNORE_SUBSTRINGS = [
 export const STYLE_RULE_SKIP_PATHS = [
   'src/tokens/',
   'public/main.js',
-  'src/components/debug/ProjectorPathDebug.tsx',
+  // Debug sandboxes are disposable and self-contained per CLAUDE.md;
+  // they use inline React style props, not the vanilla-extract style
+  // layer, so the helper-only rules don't apply.
+  'src/components/debug/',
+  'app/[LOCALE]/debug/',
 ];
 
 // Literal reset values that are allowed for specific inline style rules.

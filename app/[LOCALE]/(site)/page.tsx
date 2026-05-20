@@ -285,6 +285,7 @@ export default async function HomePage({
             <div
               className={clsx(
                 sectionWrap.section,
+                sectionWrap.bg,
                 sectionWrap.endToEnd,
               )}
             >
@@ -328,6 +329,7 @@ export default async function HomePage({
 
             <div
               className={clsx(
+                sectionWrap.bg,
                 sectionWrap.section,
                 sectionWrap.aboutMe,
               )}
@@ -358,6 +360,7 @@ export default async function HomePage({
 
             <div
               className={clsx(
+                sectionWrap.bg,
                 sectionWrap.section,
                 sectionWrap.caseStudies,
               )}
@@ -404,15 +407,6 @@ export default async function HomePage({
               </CaseStudy>
             </div>
 
-            {/* About */}
-            {/* <ContentWithTitle
-              id={about.href}
-              title={about.title}
-              titleOutside={true}
-            >
-              <Markdown source={about.content} />
-            </ContentWithTitle> */}
-
             <div
               className={clsx(
                 sectionWrap.section,
@@ -421,7 +415,7 @@ export default async function HomePage({
             >
               {/* Projects */}
               <section className={layoutStyles.sectionSpacing}>
-                <Content tag="div" ignoreBottomMargin={true}>
+                <Content tag="div" ignoreBottomMargin={true} >
                   <Heading
                     depth={2}
                     id={projects.href}

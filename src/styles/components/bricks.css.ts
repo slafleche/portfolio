@@ -1,6 +1,10 @@
 import { style } from '@vanilla-extract/css';
 
-import { bricksLayout } from '../componentTokens/brick.component.tokens';
+import {
+  brickLayout,
+  bricksLayout,
+} from '../componentTokens/brick.component.tokens';
+import { margins } from '../helpers/spacing.helper';
 import { componentMediaQueries } from '../responsive/mediaQueries';
 
 const { desktop, gap } = bricksLayout.grid;
@@ -12,6 +16,9 @@ export const root = style({
   gap: gap.css(),
   alignItems: 'stretch',
   width: '100%',
+  ...margins({
+    vertical: brickLayout.margins,
+  }),
   selectors: {
     ...componentMediaQueries({
       bricks_twoColumn: {

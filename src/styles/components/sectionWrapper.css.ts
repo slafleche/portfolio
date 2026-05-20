@@ -1,30 +1,33 @@
 import { globalStyle, style } from '@vanilla-extract/css';
 
+import sectionPatternUrl from '@/assets/SVG/sectionPattern.svg?url';
 import * as layoutStyles from '@/styles/layout.css';
 
-import { colors } from '../../tokens/global.tokens';
 import { layoutVars } from '../../tokens/layout.tokens';
+import { backgrounds } from '../helpers/background.helper';
 import { margins } from '../helpers/spacing.helper';
 
 export const section = style({
   display: 'flow-root',
 });
 
-export const endToEnd = style({
-  backgroundColor: colors.white.alpha(0.02).css(),
+export const bg = style({
+  ...backgrounds({
+    url: sectionPatternUrl,
+    size: '83px 87px',
+    repeat: 'repeat',
+  }),
 });
+
+export const endToEnd = style({});
 
 export const designSystems = style({});
 
-export const aboutMe = style({
-  backgroundColor: colors.white.alpha(0.02).css(),
-});
+export const aboutMe = style({});
 
 export const approach = style({});
 
-export const caseStudies = style({
-  // backgroundColor: colors.white.alpha(0.02).css(),
-});
+export const caseStudies = style({});
 
 export const projects = style({});
 

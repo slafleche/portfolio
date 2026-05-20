@@ -119,6 +119,7 @@ const frBaseData = {
 
   'systems-principles': 'Principes',
   'systems-principles-href': 'systems-principes',
+  'systems-intro-title': 'L’Approache',
   ...markdownRefs('principles-content'),
   'systems-architecture': 'Architecture',
   'systems-architecture-href': 'systems-architecture',

@@ -16,4 +16,5 @@ export const bricksLayout = {
 
 export const brickLayout = {
   paddings: m(36),
+  margins: m(36),
 };

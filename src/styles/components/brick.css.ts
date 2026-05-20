@@ -48,16 +48,6 @@ export const root = style({
   ...boxShadow(),
   ...paddings(brickLayout.paddings),
   ...makeGlassSurface(),
-  selectors: {
-    // ...componentMediaQueries({
-    //   bricks_twoColumn: {
-    //     // backgroundColor: colorVars.white.alpha(0.18).css(),
-    //   },
-    //   bricks_oneColumn: {
-    //     // backgroundColor: colorVars.white.alpha(0.18).css(),
-    //   },
-    // }),
-  },
 });
 
 export const heroPlacement = style({

@@ -8,6 +8,7 @@ import { margins, paddings } from './helpers/spacing.helper';
 import { mediaQueryStyle } from './responsive/mediaQueries';
 
 export const content = style({
+  display: 'flow-root',
   position: 'relative',
   maxWidth: layoutVars.content.width
     .add(layoutVars.content.padding.double())
@@ -29,6 +30,9 @@ export const content = style({
     },
     "&[data-spacing='no-bottom']": {
       ...margins({
+        bottom: 0,
+      }),
+      ...paddings({
         bottom: 0,
       }),
     },
