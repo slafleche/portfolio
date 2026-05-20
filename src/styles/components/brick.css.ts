@@ -49,14 +49,14 @@ export const root = style({
   ...paddings(brickLayout.paddings),
   ...makeGlassSurface(),
   selectors: {
-    ...componentMediaQueries({
-      bricks_twoColumn: {
-        backgroundColor: colorVars.white.alpha(0.18).css(),
-      },
-      bricks_oneColumn: {
-        backgroundColor: colorVars.white.alpha(0.18).css(),
-      },
-    }),
+    // ...componentMediaQueries({
+    //   bricks_twoColumn: {
+    //     // backgroundColor: colorVars.white.alpha(0.18).css(),
+    //   },
+    //   bricks_oneColumn: {
+    //     // backgroundColor: colorVars.white.alpha(0.18).css(),
+    //   },
+    // }),
   },
 });
 
@@ -84,9 +84,9 @@ export const iconAsBg = style({
   width: '100%',
   height: '100%',
   pointerEvents: 'none',
-  opacity: 0.1,
+  opacity: 0.01,
   zIndex: 0,
-  color: colorVars.black.css(),
+  color: colorVars.white.css(),
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -95,11 +95,18 @@ export const iconAsBg = style({
 
 // Per-icon hooks — empty by default so you can hand-tune each icon's
 // size/position/transform/opacity in isolation later.
-export const iconAsBg_headCircuit = style({});
-export const iconAsBg_trafficLights = style({});
-export const iconAsBg_construction = style({});
-export const iconAsBg_bugOff = style({});
-export const iconAsBg_bookCheck = style({});
+export const iconAsBg_trafficLights = style({
+  width: '55%',
+});
+export const iconAsBg_construction = style({
+  width: '50%',
+});
+export const iconAsBg_bugOff = style({
+  width: '45%',
+});
+export const iconAsBg_bookCheck = style({
+  width: '45%',
+});
 
 export const content = style({
   position: 'relative',

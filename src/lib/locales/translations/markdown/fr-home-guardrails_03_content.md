@@ -1,5 +1,5 @@
-Les hooks pre-commit Husky empêchent l’IA d’expédier du code sans
-supervision. Chaque commit exécute le lint, les vérifications de locales et un
-scan d’artéfacts de débogage. Même quand une journée pressée ou une IA
-confiante-mais-fausse tente d’expédier quelque chose à moitié cuit, le hook
-dit non et le mauvais changement ne quitte jamais ma machine.
+L’IA n’expédie rien sans supervision. Chaque commit est filtré
+automatiquement : lint, vérifications de locales et un scan des artéfacts de
+débogage s’exécutent avant que le code puisse quitter ma machine. Une IA
+confiante mais à tort, ou un développeur pressé, se fait arrêter au
+contrôle.

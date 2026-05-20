@@ -29,16 +29,15 @@ export const frCaseStudies = {
   'tnb-case-study-href': 'tnb-etude-de-cas',
   ...markdownRefs('tnb-case-study-00-intro'),
   'tnb-case-study-01-title': 'Consolider les design tokens',
-  'tnb-case-study-01-subtitle':
-    'Refactoriser plusieurs sources de vérité en une seule',
+  'tnb-case-study-01-subtitle': 'De plusieurs sources à une seule',
   ...markdownRefs('tnb-case-study-01-content'),
   'tnb-case-study-02-title': 'Adapter les standards IA',
   'tnb-case-study-02-subtitle':
-    'Skills, règles d’agent et hooks pre-commit pour la stack de l’agence',
+    'Encoder les standards dans l’outillage',
   ...markdownRefs('tnb-case-study-02-content'),
   'tnb-case-study-03-title': 'Étendre le workflow CLI',
   'tnb-case-study-03-subtitle':
-    'Base de données, identifiants et diagnostics de déploiement au quotidien',
+    'BD, secrets et déploiements en ligne de commande',
   ...markdownRefs('tnb-case-study-03-content'),
   'tnb-case-study-04-title': 'Construire à l’intérieur de Payload',
   'tnb-case-study-04-subtitle':
@@ -46,11 +45,11 @@ export const frCaseStudies = {
   ...markdownRefs('tnb-case-study-04-content'),
   'tnb-case-study-05-title': 'Gérer la flotte en production',
   'tnb-case-study-05-subtitle':
-    'Déploiements de sécurité et support client sur plusieurs sites',
+    'Correctifs et soutien pour la flotte',
   ...markdownRefs('tnb-case-study-05-content'),
   'tnb-case-study-06-title':
     'Connecter la connaissance produit à l’IA',
   'tnb-case-study-06-subtitle':
-    'Rendre l’assistant fluide avec les widgets Whereabouts',
+    'Initier l’IA au produit affilié',
   ...markdownRefs('tnb-case-study-06-content'),
 } as const;

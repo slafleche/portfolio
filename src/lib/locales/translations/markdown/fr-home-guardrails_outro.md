@@ -1,3 +1,6 @@
+**Stack :** ESLint, Husky, Vitest, Storybook, Playwright, Chromatic, GitHub
+Actions.
+
 Construire des systèmes évolutifs, c’est aligner trois cibles : la vision du
 design, l’utilisateur final, et les développeurs qui maintiennent le code.
 

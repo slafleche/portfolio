@@ -9,7 +9,7 @@ tenu.
 Mon approche est un système : conventions, workflows, règles de lint sur
 mesure, vérifications au commit, tests, CI. Tout est versionné, chargé au
 début de chaque session, identique pour moi et pour quiconque rejoint le
-projet. Certaines pièces m’accompagnent d’un projet à l’autre ; d’autres
+projet. Certaines pièces m’accompagnent d’un projet à l’autre. D’autres
 vivent dans le dépôt et restent avec l’équipe. Dans les deux cas, quiconque
 rejoint le projet, humain ou IA, adopte les mêmes conventions dès le
 premier jour.

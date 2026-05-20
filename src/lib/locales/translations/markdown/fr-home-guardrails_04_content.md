@@ -1,6 +1,5 @@
-Les tests décrivent ce que le code est censé faire. Alors quand l’IA réécrit
-une fonction ou refactorise un composant, les tests me disent si le
-comportement tient toujours. Vitest couvre la couche unitaire, Storybook
-couvre les états des composants à travers les thèmes, et Playwright couvre
-les flux de bout en bout qui comptent. Ensemble, ils forment le contrat que
-l’IA doit honorer.
+Quand l’IA réécrit une fonction ou refactorise un composant, le comportement
+tient parce que les tests décrivent ce que le code est censé faire. Trois
+couches couvrent le contrat : tests unitaires, couverture des états de
+composants à travers les thèmes, et flux de bout en bout pour les parcours
+qui comptent.

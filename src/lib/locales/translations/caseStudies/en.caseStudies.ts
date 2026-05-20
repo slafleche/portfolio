@@ -27,16 +27,15 @@ export const enCaseStudies = {
   'tnb-case-study-href': 'tnb-case-study',
   ...markdownRefs('tnb-case-study-00-intro'),
   'tnb-case-study-01-title': 'Consolidating design tokens',
-  'tnb-case-study-01-subtitle':
-    'Refactoring multiple sources of truth into one',
+  'tnb-case-study-01-subtitle': 'From many sources to one',
   ...markdownRefs('tnb-case-study-01-content'),
   'tnb-case-study-02-title': 'Tailoring AI standards',
   'tnb-case-study-02-subtitle':
-    'Skills, agent rules, and pre-commit hooks for the agency’s stack',
+    'Encoding standards into the toolchain',
   ...markdownRefs('tnb-case-study-02-content'),
   'tnb-case-study-03-title': 'Extending the CLI workflow',
   'tnb-case-study-03-subtitle':
-    'Database, credentials, and deploy diagnostics in the daily loop',
+    'Db, secrets, and deploys at the prompt',
   ...markdownRefs('tnb-case-study-03-content'),
   'tnb-case-study-04-title': 'Building inside Payload',
   'tnb-case-study-04-subtitle':
@@ -44,10 +43,10 @@ export const enCaseStudies = {
   ...markdownRefs('tnb-case-study-04-content'),
   'tnb-case-study-05-title': 'Owning the live fleet',
   'tnb-case-study-05-subtitle':
-    'Security rollouts and client support across sites',
+    'Patching and supporting the live fleet',
   ...markdownRefs('tnb-case-study-05-content'),
   'tnb-case-study-06-title': 'Bridging product knowledge to AI',
   'tnb-case-study-06-subtitle':
-    'Making the assistant fluent in Whereabouts widgets',
+    'Teaching the AI the sister product',
   ...markdownRefs('tnb-case-study-06-content'),
 } as const;

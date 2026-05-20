@@ -1,3 +1,6 @@
+**Stack:** ESLint, Husky, Vitest, Storybook, Playwright, Chromatic, GitHub
+Actions.
+
 Building scalable systems means aligning three targets: the design vision, the
 end user, and the developers maintaining the code.
 

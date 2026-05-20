@@ -14,4 +14,7 @@ engineering, explaining trade-offs in plain language and making accessibility a
 default rather than an add-on. I look beyond the immediate feature to the
 business goal it serves and to the internal processes around it, refining how we
 ship as much as what we ship. Done well, the system honours the design intent
-without slowing the team down.
+without slowing the team down. At The New Business, this approach shipped
+three Next.js + Payload sites from Figma to production in three months. At
+Vanilla, the token-based theming I helped design is still in production years
+after I left.

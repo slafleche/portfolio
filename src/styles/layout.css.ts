@@ -19,6 +19,7 @@ export const content = style({
   }),
   ...paddings({
     horizontal: layoutVars.content.padding,
+    bottom: layoutVars.content.gap,
   }),
   selectors: {
     "&[data-query-all='no-margin']": {

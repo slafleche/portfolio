@@ -1,5 +1,4 @@
-Tests describe what the code is supposed to do. So when the AI rewrites a
-function or refactors a component, the tests tell me whether the behavior still
-holds. Vitest covers the unit layer, Storybook covers component states across
-themes, and Playwright covers the end-to-end flows that matter. Together they
-form the contract the AI has to honor.
+When AI rewrites a function or refactors a component, behaviour stays intact
+because the tests describe what the code is supposed to do. Three layers
+cover the contract: unit tests, component-state coverage across themes, and
+end-to-end flows for the paths that matter.

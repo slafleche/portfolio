@@ -78,6 +78,18 @@ export const content = style({
   }),
 });
 
+export const fit = style({
+  position: 'relative',
+  zIndex: 1,
+  textAlign: 'center',
+  maxWidth: '52ch',
+  margin: 'auto',
+  opacity: 0.75,
+  ...paddings({
+    bottom: m(1, 'em'),
+  }),
+});
+
 export const links = style({
   position: 'relative',
   display: 'flex',

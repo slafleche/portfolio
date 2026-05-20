@@ -58,6 +58,7 @@ export default function Footer({
         >
           {contact.title}
         </Heading>
+        <p className={s.fit}>{contact.fit}</p>
         <p className={s.content}>{contact.content}</p>
 
         {/* Just a simple wrapper for links, since we have multiple elements to position */}

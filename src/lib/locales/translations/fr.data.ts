@@ -11,9 +11,9 @@ const frBaseData = {
   title:
     'Développeur full-stack · Systèmes de design intégrés de A à Z pour les équipes à l’ère de l’IA | Stéphane LaFlèche',
   description:
-    'Je suis développeur full-stack basé à Montréal, spécialisé dans la création de systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
+    'Développeur full-stack basé à Montréal depuis 2012, spécialisé dans la création de systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
   'meta-description':
-    'Je suis développeur full-stack basé à Montréal, spécialisé dans la création de systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
+    'Développeur full-stack basé à Montréal depuis 2012, spécialisé dans la création de systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
   'meta-keywords':
     'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
   'meta-author': 'Stéphane LaFlèche',
@@ -55,7 +55,7 @@ const frBaseData = {
   'hero-title':
     'Développeur full-stack [split] Systèmes de design pour les équipes à l’ère de l’IA',
   'hero-subtitle':
-    'Je suis développeur full-stack basé à Montréal. [split] Je crée des systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
+    'Je suis développeur full-stack basé à Montréal depuis 2012. [split] Je crée des systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
 
   'console-curiosity-title': '🔎 Curieux ?',
   'console-curiosity-test': '[test] 👀 Observateur détecté.',
@@ -84,7 +84,7 @@ const frBaseData = {
   ...markdownRefs('guardrails-03-content'),
   'guardrails-04-title': 'Tester le comportement',
   ...markdownRefs('guardrails-04-content'),
-  'guardrails-05-title': 'Vérifier sur la CI',
+  'guardrails-05-title': 'Tester avec le CI',
   ...markdownRefs('guardrails-05-content'),
   ...markdownRefs('guardrails-outro'),
 
@@ -133,6 +133,8 @@ const frBaseData = {
   'contact-href': 'contact',
 
   'contact-content': 'Envie de collaborer ?',
+  'contact-fit':
+    'Disponible pour des postes senior front-end ou full-stack dans des équipes qui prennent les systèmes de design et le métier au sérieux. Montréal hybride ou à distance.',
   'contact-email-label': 'Envoyez-moi un courriel !',
   'contact-label-floating':
     'Ouvrir le formulaire de contact (flottant)',

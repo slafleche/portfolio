@@ -9,6 +9,7 @@ export const CONTACT_KEYS = {
   labelFloating: 'contact-label-floating',
   labelHero: 'contact-label-hero',
   content: 'contact-content',
+  fit: 'contact-fit',
   emailLabel: 'contact-email-label',
   linkedInLabel: 'links-linkedin-label',
   githubLabel: 'links-github-label',
@@ -23,6 +24,7 @@ export type ContactCopy = {
   labelFloating: string;
   labelHero: string;
   content: string;
+  fit: string;
   emailLabel: string;
   linkedInLabel: string;
   githubLabel: string;
@@ -35,6 +37,7 @@ export const buildContactCopy = (t: Translator): ContactCopy => ({
   labelFloating: t(CONTACT_KEYS.labelFloating),
   labelHero: t(CONTACT_KEYS.labelHero),
   content: t(CONTACT_KEYS.content),
+  fit: t(CONTACT_KEYS.fit),
   emailLabel: t(CONTACT_KEYS.emailLabel),
   linkedInLabel: t(CONTACT_KEYS.linkedInLabel),
   githubLabel: t(CONTACT_KEYS.githubLabel),

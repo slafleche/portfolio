@@ -1,5 +1,5 @@
-Le lint attrape les petites dérives que l’IA ne sait pas être des dérives.
-Chaque projet a son propre ensemble de règles : où vit chaque style, comment
-classes et variables sont nommées, quand utiliser une librairie comme Tailwind
-et quand construire sur mesure. J’architecture cet ensemble de règles pour que
-les équipes avancent rapidement sans que les standards ne dérivent avec elles.
+Les équipes avancent vite sans que les standards dérivent avec elles. Chaque
+projet a son propre ensemble de règles (des règles de lint sur mesure
+couvrant où vivent les styles, comment les classes et variables sont
+nommées, quand utiliser une bibliothèque plutôt que construire sur mesure).
+La dérive que l’IA ne remarque pas, ces règles l’attrapent.

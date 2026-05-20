@@ -56,7 +56,7 @@ import { parseWordmarkTemplate } from '@/lib/wordmarks/wordmarkText';
 import { getTurnstileSiteKey } from '@/server/turnstile/getTurnstileSiteKey';
 import * as bs from '@/styles/components/brick.css';
 import * as cg from '@/styles/components/card.css';
-import * as homeBlocks from '@/styles/components/homeBlocks.css';
+import * as sectionWrap from '@/styles/components/sectionWrapper.css';
 import * as layoutStyles from '@/styles/layout.css';
 
 import { Accordion } from '../../../src/components/Accordion';
@@ -173,7 +173,9 @@ export default async function HomePage({
   const tnbCaseStudy = buildTnbCaseStudyCopy(translator);
   const guardrails = buildGuardrailsCopy(translator);
   const guardrailIcons: Record<string, ReactNode> = {
-    item2: <TrafficLightsIcon className={bs.iconAsBg_trafficLights} />,
+    item2: (
+      <TrafficLightsIcon className={bs.iconAsBg_trafficLights} />
+    ),
     item3: <ConstructionIcon className={bs.iconAsBg_construction} />,
     item4: <BugOffIcon className={bs.iconAsBg_bugOff} />,
     item5: <BookCheckIcon className={bs.iconAsBg_bookCheck} />,
@@ -280,17 +282,29 @@ export default async function HomePage({
             Bg={HeroHomeBg}
           />
           <DeferredIsland when="idle">
-            <div className={homeBlocks.designSystems}>
-              {/* End-to-end design systems (bridge from hero into the page) */}
-              <ContentWithTitle
-                id={designSystems.href}
-                title={designSystems.title}
-              >
-                <Markdown source={designSystems.content} />
-              </ContentWithTitle>
+            <div
+              className={clsx(
+                sectionWrap.section,
+                sectionWrap.endToEnd,
+              )}
+            >
+              <section className={layoutStyles.sectionSpacing}>
+                {/* End-to-end design systems (bridge from hero into the page) */}
+                <ContentWithTitle
+                  id={designSystems.href}
+                  title={designSystems.title}
+                >
+                  <Markdown source={designSystems.content} />
+                </ContentWithTitle>
+              </section>
             </div>
 
-            <div className={homeBlocks.craft}>
+            <div
+              className={clsx(
+                sectionWrap.section,
+                sectionWrap.designSystems,
+              )}
+            >
               {/* Code Quality Guardrails (with "The case for craft" closing block) */}
               <section className={layoutStyles.sectionSpacing}>
                 <Content tag="div" ignoreBottomMargin={true}>
@@ -312,7 +326,12 @@ export default async function HomePage({
               </section>
             </div>
 
-            <div className={homeBlocks.aboutMe}>
+            <div
+              className={clsx(
+                sectionWrap.section,
+                sectionWrap.aboutMe,
+              )}
+            >
               {/* Summary (About me) */}
               <ContentWithTitle
                 id={summary.href}
@@ -322,7 +341,12 @@ export default async function HomePage({
               </ContentWithTitle>
             </div>
 
-            <div className={homeBlocks.approach}>
+            <div
+              className={clsx(
+                sectionWrap.section,
+                sectionWrap.approach,
+              )}
+            >
               {/* Approach */}
               <ContentWithTitle
                 id={approach.href}
@@ -332,7 +356,12 @@ export default async function HomePage({
               </ContentWithTitle>
             </div>
 
-            <div className={homeBlocks.craft}>
+            <div
+              className={clsx(
+                sectionWrap.section,
+                sectionWrap.caseStudies,
+              )}
+            >
               {/* TNB Case Study (recent work, presented first) */}
               <CaseStudy
                 id={tnbCaseStudy.href}
@@ -384,7 +413,12 @@ export default async function HomePage({
               <Markdown source={about.content} />
             </ContentWithTitle> */}
 
-            <div className={homeBlocks.projects}>
+            <div
+              className={clsx(
+                sectionWrap.section,
+                sectionWrap.projects,
+              )}
+            >
               {/* Projects */}
               <section className={layoutStyles.sectionSpacing}>
                 <Content tag="div" ignoreBottomMargin={true}>
