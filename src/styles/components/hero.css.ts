@@ -152,6 +152,7 @@ export const subtitle = style({
   textAlign: 'center',
   fontSize: '22px',
   lineHeight: 1.3,
+  maxWidth: '1000px',
   ...textShadow({
     x: m(1),
     y: m(1),

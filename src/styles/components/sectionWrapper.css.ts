@@ -1,6 +1,10 @@
-import { style } from '@vanilla-extract/css';
+import { globalStyle, style } from '@vanilla-extract/css';
+
+import * as layoutStyles from '@/styles/layout.css';
 
 import { colors } from '../../tokens/global.tokens';
+import { layoutVars } from '../../tokens/layout.tokens';
+import { margins } from '../helpers/spacing.helper';
 
 export const section = style({
   display: 'flow-root',
@@ -23,3 +27,9 @@ export const caseStudies = style({
 });
 
 export const projects = style({});
+
+globalStyle(`.${section} > .${layoutStyles.content}`, {
+  ...margins({
+    top: layoutVars.content.gap,
+  }),
+});

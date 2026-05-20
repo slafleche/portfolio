@@ -1,4 +1,4 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { colors } from '../tokens/global.tokens';
 import { layoutVars } from '../tokens/layout.tokens';
@@ -68,12 +68,6 @@ export const content = style({
       },
     }),
   },
-});
-
-globalStyle(`.${content} + .${content}`, {
-  ...margins({
-    top: layoutVars.content.gap,
-  }),
 });
 
 export const sectionSpacing = style({

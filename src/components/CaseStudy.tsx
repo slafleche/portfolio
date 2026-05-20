@@ -32,11 +32,8 @@ export default function CaseStudy({
   const baseId = id ?? createDomId('case-study');
   const hasIntro = typeof intro === 'string' && intro.trim() !== '';
   return (
-    <section
-      id={baseId}
-      className={clsx(s.root, layoutStyles.sectionSpacing, className)}
-    >
-      <Content tag={'div'}>
+    <section id={baseId} className={clsx(s.root, className)}>
+      <Content tag={'div'} ignoreBottomMargin={true}>
         <WordMarkInTitle
           className={layoutStyles.title}
           WordMark={WordMark}

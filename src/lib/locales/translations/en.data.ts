@@ -55,7 +55,7 @@ const enBaseData = {
   'hero-title':
     'Full-stack developer [split] End-to-end design systems for AI-era teams',
   'hero-subtitle':
-    "I've been a full-stack developer based in Montreal since 2012, specializing in scalable, [split] end-to-end design systems for AI-era teams.",
+    "I've been a full-stack developer based in Montreal since 2012, specializing in scalable, end-to-end design systems for AI-era teams.",
 
   'console-curiosity-title': '🔎 Curious?',
   'console-curiosity-test': '[test] 👀 Observer detected.',
@@ -137,7 +137,7 @@ const enBaseData = {
 
   'contact-content': "Think we'd work well together?",
   'contact-fit':
-    'Open to senior front-end / full-stack roles at teams that take design systems and craft seriously. Montréal hybrid or fully remote.',
+    'Open to senior front-end / full-stack roles on teams that take design systems and craft seriously. Montréal in office, hybrid or fully remote.',
   'contact-email-label': 'Shoot me an email!',
   'contact-bg-title': 'Starry night sky with tree line silhouette',
   'contact-bg-description':

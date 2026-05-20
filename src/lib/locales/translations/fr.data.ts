@@ -55,7 +55,7 @@ const frBaseData = {
   'hero-title':
     'Développeur full-stack [split] Systèmes de design pour les équipes à l’ère de l’IA',
   'hero-subtitle':
-    'Je suis développeur full-stack basé à Montréal depuis 2012. [split] Je crée des systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
+    'Je suis développeur full-stack basé à Montréal depuis 2012. Je crée des systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
 
   'console-curiosity-title': '🔎 Curieux ?',
   'console-curiosity-test': '[test] 👀 Observateur détecté.',
@@ -114,7 +114,7 @@ const frBaseData = {
   ...markdownRefs('expertise-content'),
   'systems-intro-href': 'systems-expertise',
 
-  'systems-tetrachromatic-title': "L’approche Tetrachromatic",
+  'systems-tetrachromatic-title': 'L’approche Tetrachromatic',
   ...markdownRefs('tetrachromatic-content'),
 
   'systems-principles': 'Principes',
