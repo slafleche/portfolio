@@ -35,15 +35,13 @@ export const root = style({
   overflow: 'visible',
   minHeight: curlVars.height.css(),
   ...paddings({
-    top: layoutVars.content.gap.multiply(3).round(),
-    bottom: layoutVars.content.gap.multiply(3).round(),
+    vertical: layoutVars.content.gap.multiply(3).round(),
   }),
   selectors: {
     ...mediaQueryStyle({
       compact: {
         ...paddings({
-          top: anchorMenuVars.handle.sizeWithBorder.multiply(2),
-          bottom: anchorMenuVars.handle.sizeWithBorder.multiply(2),
+          vertical: anchorMenuVars.handle.sizeWithBorder.multiply(2),
         }),
       },
     }),

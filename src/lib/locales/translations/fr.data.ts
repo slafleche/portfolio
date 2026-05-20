@@ -134,7 +134,7 @@ const frBaseData = {
 
   'contact-content': 'Envie de collaborer ?',
   'contact-fit':
-    'Disponible pour des postes senior front-end ou full-stack dans des équipes qui prennent les systèmes de design et le métier au sérieux. Montréal hybride ou à distance.',
+    'Disponible pour des postes senior front-end ou full-stack dans des équipes qui prennent les systèmes de design et le métier au sérieux. Montréal sur place, hybride ou à distance.',
   'contact-email-label': 'Envoyez-moi un courriel !',
   'contact-label-floating':
     'Ouvrir le formulaire de contact (flottant)',
