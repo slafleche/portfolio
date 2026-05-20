@@ -51,13 +51,17 @@ export default function Footer({
 
       <Content ignoreBottomMargin={true}>
         <Heading
+          depth={2}
           data-visible="sc-only"
           id={headingId}
           className={s.heading}
         >
           {contact.title}
         </Heading>
-        <p className={s.content}>{contact.content}</p>
+        {contact.content && (
+          <p className={s.content}>{contact.content}</p>
+        )}
+        <p className={s.fit}>{contact.fit}</p>
 
         {/* Just a simple wrapper for links, since we have multiple elements to position */}
         <div className={s.links}>

@@ -113,11 +113,6 @@ export const labelWrapper = style({
   height: '100%',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
-  // width: '0%',
-  // flexGrow: 0,
-  // flexShrink: 0,
-  // flexBasis: '0%',
-  // minWidth: 0,
 });
 
 export const label = style({
@@ -126,7 +121,7 @@ export const label = style({
   minWidth: 0,
   overflow: 'hidden',
   whiteSpace: 'nowrap',
-  lineHeight: 1,
+  lineHeight: 1.5,
   transformOrigin: '0 50%',
   ...relativeFontWeight(fontFamilies.ibm, mPercent(50)),
   ...textShadow(anchorMenuVars.text.textShadow),

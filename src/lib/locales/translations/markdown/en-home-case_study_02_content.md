@@ -1,1 +1,5 @@
-Built reusable helpers and snippets to reduce duplicated styles and improve consistency. This made day-to-day theming faster and cleaner, with a predictable set of styling tools to apply across clients. I also helped move our themes toward a more config-driven approach. Surfacing more options through dashboard pages and relied less on hard-coded styling. Client customization was easier to maintain and iterate on.
+I built reusable helpers and snippets to reduce duplicated styles and improve
+consistency. Day-to-day theming became faster, cleaner, and more predictable. I
+also helped move themes toward a config-driven approach, surfacing options
+through dashboard pages and relying less on hard-coded styling. Client
+customization became easier to maintain and iterate on.

@@ -11,9 +11,9 @@ const enBaseData = {
   title:
     'Full-stack developer · End-to-end design systems for AI-era teams | Stéphane LaFlèche',
   description:
-    "Getting a team aligned with a design system was hard enough before. Now that everyone has an AI assistant in their workflow, it's harder.",
+    "I've been a full-stack developer based in Montreal since 2012, specializing in scalable, end-to-end design systems for AI-era teams.",
   'meta-description':
-    "Getting a team aligned with a design system was hard enough before. Now that everyone has an AI assistant in their workflow, it's harder.",
+    "I've been a full-stack developer based in Montreal since 2012, specializing in scalable, end-to-end design systems for AI-era teams.",
   'meta-keywords':
     'portfolio, full-stack developer, web developer, frontend developer, frontend engineer, design systems, AI-era teams, AI-assisted development, lint rules, pre-commit hooks, agent skills, Payload CMS, Next.js, TypeScript, CSS architecture, type-safe CSS, UI engineering, UI architecture, UI components, accessibility, performance, responsive design, UX',
   'meta-author': 'Stéphane LaFlèche',
@@ -55,7 +55,7 @@ const enBaseData = {
   'hero-title':
     'Full-stack developer [split] End-to-end design systems for AI-era teams',
   'hero-subtitle':
-    "Aligning a team on a design system was hard before AI assistants. [split] Now it's harder.",
+    "I've been a full-stack developer based in Montreal since 2012, specializing in scalable, end-to-end design systems for AI-era teams.",
 
   'console-curiosity-title': '🔎 Curious?',
   'console-curiosity-test': '[test] 👀 Observer detected.',
@@ -63,13 +63,30 @@ const enBaseData = {
   'console-curiosity-hint':
     '[hint] The code shows what I built; curiosity() shows how I think.',
 
-  summary: 'Summary',
+  design_systems: 'End-to-end design systems',
+  'design_systems-href': 'design-systems',
+  ...markdownRefs('design-systems-content'),
+
+  summary: 'About me',
   'summary-href': 'summary',
   ...markdownRefs('summary-content'),
 
   approach: 'Approach',
   'approach-href': 'approach',
   ...markdownRefs('approach-content'),
+
+  guardrails: 'Code Quality Guardrails',
+  'guardrails-href': 'guardrails',
+  ...markdownRefs('guardrails-intro'),
+  'guardrails-02-title': 'Catch Drift Early',
+  ...markdownRefs('guardrails-02-content'),
+  'guardrails-03-title': 'Gate Every Commit',
+  ...markdownRefs('guardrails-03-content'),
+  'guardrails-04-title': 'Test the Behavior',
+  ...markdownRefs('guardrails-04-content'),
+  'guardrails-05-title': 'Verify on CI',
+  ...markdownRefs('guardrails-05-content'),
+  ...markdownRefs('guardrails-outro'),
 
   about: 'About Me',
   'about-href': 'about',
@@ -101,6 +118,7 @@ const enBaseData = {
 
   'systems-intro-href': 'systems-expertise',
   'systems-principles': 'Principles',
+  'systems-intro-title': 'The Approach',
   'systems-principles-href': 'systems-principles',
   ...markdownRefs('principles-content'),
   'systems-architecture': 'Architecture',
@@ -119,6 +137,8 @@ const enBaseData = {
   'contact-cta': "Let's connect!",
 
   'contact-content': "Think we'd work well together?",
+  'contact-fit':
+    'Open to senior front-end / full-stack roles on teams that take design systems and craft seriously. Montréal in office, hybrid or fully remote.',
   'contact-email-label': 'Shoot me an email!',
   'contact-bg-title': 'Starry night sky with tree line silhouette',
   'contact-bg-description':

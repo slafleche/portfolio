@@ -19,7 +19,6 @@ export interface IBackgrounds {
   url?: string;
   image?: CSS_TYPES.Property.BackgroundImage;
   fallbackImage?: CSS_TYPES.Property.BackgroundImage;
-  opacity?: CSS_TYPES.Property.Opacity;
 }
 
 type Variant = {
@@ -224,7 +223,6 @@ export const backgrounds = (props: IBackgrounds): GlobalStyleRule => {
   }
   if (props.attachment)
     styles.backgroundAttachment = props.attachment;
-  if (props.opacity !== undefined) styles.opacity = props.opacity;
   return styles;
 };
 

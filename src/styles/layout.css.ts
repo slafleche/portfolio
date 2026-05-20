@@ -1,4 +1,4 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { colors } from '../tokens/global.tokens';
 import { layoutVars } from '../tokens/layout.tokens';
@@ -8,6 +8,7 @@ import { margins, paddings } from './helpers/spacing.helper';
 import { mediaQueryStyle } from './responsive/mediaQueries';
 
 export const content = style({
+  display: 'flow-root',
   position: 'relative',
   maxWidth: layoutVars.content.width
     .add(layoutVars.content.padding.double())
@@ -19,6 +20,7 @@ export const content = style({
   }),
   ...paddings({
     horizontal: layoutVars.content.padding,
+    bottom: layoutVars.content.gap,
   }),
   selectors: {
     "&[data-query-all='no-margin']": {
@@ -28,6 +30,9 @@ export const content = style({
     },
     "&[data-spacing='no-bottom']": {
       ...margins({
+        bottom: 0,
+      }),
+      ...paddings({
         bottom: 0,
       }),
     },
@@ -67,12 +72,6 @@ export const content = style({
       },
     }),
   },
-});
-
-globalStyle(`.${content} + .${content}`, {
-  ...margins({
-    top: layoutVars.content.gap,
-  }),
 });
 
 export const sectionSpacing = style({

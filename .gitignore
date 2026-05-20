@@ -126,11 +126,20 @@ ai/textDirectives.md
 # -----------------------
 ai/home.en.md
 ai/home.en.map.md
+ai/home.fr.md
 
 # -----------------------
 # Local logs
 # -----------------------
 .logs/
+
+# -----------------------
+# Private skill symlinks
+# -----------------------
+.claude/skills/marketing-angle
+.claude/skills/audience-tone
+.claude/skills/sync-copy
+.claude/skills/toc
 .vercel
 .env*
 
@@ -176,3 +185,8 @@ ai/home.en.map.md
 # Cors worker
 # -----------------------
 .cloudflare/.wrangler/*
+
+# -----------------------
+# Claude local settings
+# -----------------------
+.claude/settings.local.json

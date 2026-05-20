@@ -8,11 +8,12 @@ const frBaseData = {
   label: 'Français',
   'abbreviated-label': 'FR',
   redirecting: 'Redirection...',
-  title: 'Développeur Front-End | Portfolio par Stéphane',
+  title:
+    'Développeur full-stack · Systèmes de design intégrés de A à Z pour les équipes à l’ère de l’IA | Stéphane LaFlèche',
   description:
-    'Développeur front-end, Stéphane conçoit des systèmes UI, des composants réutilisables et des interfaces accessibles qui alignent design et engineering dans la durée.',
+    'Développeur full-stack basé à Montréal depuis 2012, spécialisé dans la création de systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
   'meta-description':
-    'Développeur front-end, Stéphane conçoit des systèmes UI, des composants réutilisables et des interfaces accessibles qui alignent design et engineering dans la durée.',
+    'Développeur full-stack basé à Montréal depuis 2012, spécialisé dans la création de systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
   'meta-keywords':
     'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
   'meta-author': 'Stéphane LaFlèche',
@@ -51,9 +52,10 @@ const frBaseData = {
     'portfolio, développeur web, développeur frontend, ingénieur frontend, design systems, TypeScript, architecture CSS, CSS typé, CSS-in-JS, UI, architecture UI, composants, accessibilité, performance, design responsive, UX',
   'favicon-meta-author': 'Stéphane LaFlèche',
 
-  'hero-title': 'Stéphane LaFlèche [split] développeur front-end',
+  'hero-title':
+    'Développeur full-stack [split] Systèmes de design pour les équipes à l’ère de l’IA',
   'hero-subtitle':
-    'Je construis des systèmes de design et de composants qui sont évolutifs. [split] Pour garder les interfaces cohérentes, maintenables et fidèles au design.',
+    'Je suis développeur full-stack basé à Montréal depuis 2012. Je crée des systèmes de design évolutifs et intégrés de A à Z pour les équipes à l’ère de l’IA.',
 
   'console-curiosity-title': '🔎 Curieux ?',
   'console-curiosity-test': '[test] 👀 Observateur détecté.',
@@ -61,13 +63,30 @@ const frBaseData = {
   'console-curiosity-hint':
     '[indice] Le code montre ce que j’ai construit; curiosity() montre comment je pense.',
 
-  summary: 'Résumé',
+  design_systems: 'Systèmes de design intégrés de A à Z',
+  'design_systems-href': 'systemes-de-design',
+  ...markdownRefs('design-systems-content'),
+
+  summary: 'Quelques mots sur moi',
   'summary-href': 'resume',
   ...markdownRefs('summary-content'),
 
   approach: 'Approche',
   'approach-href': 'philosophie',
   ...markdownRefs('approach-content'),
+
+  guardrails: 'Garde-fous de qualité du code',
+  'guardrails-href': 'garde-fous',
+  ...markdownRefs('guardrails-intro'),
+  'guardrails-02-title': 'Détecter la dérive tôt',
+  ...markdownRefs('guardrails-02-content'),
+  'guardrails-03-title': 'Contrôler chaque commit',
+  ...markdownRefs('guardrails-03-content'),
+  'guardrails-04-title': 'Tester le comportement',
+  ...markdownRefs('guardrails-04-content'),
+  'guardrails-05-title': 'Tester avec le CI',
+  ...markdownRefs('guardrails-05-content'),
+  ...markdownRefs('guardrails-outro'),
 
   about: 'À propos',
   'about-href': 'a-propos',
@@ -95,11 +114,12 @@ const frBaseData = {
   ...markdownRefs('expertise-content'),
   'systems-intro-href': 'systems-expertise',
 
-  'systems-tetrachromatic-title': "L’approche Tetrachromatic",
+  'systems-tetrachromatic-title': 'L’approche Tetrachromatic',
   ...markdownRefs('tetrachromatic-content'),
 
   'systems-principles': 'Principes',
   'systems-principles-href': 'systems-principes',
+  'systems-intro-title': 'L’Approache',
   ...markdownRefs('principles-content'),
   'systems-architecture': 'Architecture',
   'systems-architecture-href': 'systems-architecture',
@@ -114,6 +134,8 @@ const frBaseData = {
   'contact-href': 'contact',
 
   'contact-content': 'Envie de collaborer ?',
+  'contact-fit':
+    'Disponible pour des postes senior front-end ou full-stack dans des équipes qui prennent les systèmes de design et le métier au sérieux. Montréal sur place, hybride ou à distance.',
   'contact-email-label': 'Envoyez-moi un courriel !',
   'contact-label-floating':
     'Ouvrir le formulaire de contact (flottant)',

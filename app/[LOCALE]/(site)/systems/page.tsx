@@ -133,6 +133,7 @@ export default async function SystemsPage({
   const systemsTitle = translator('systems-title');
   const systemsIntroMarkdown = translator('expertise-content');
   const systemsIntroId = translator('systems-intro-href');
+  const systemsIntroTitle = translator('systems-intro-title');
   const systemsPrinciplesId = translator('systems-principles-href');
   const systemsPrinciplesTitle = translator('systems-principles');
   const systemsPrinciplesMarkdown = translator('principles-content');
@@ -226,7 +227,7 @@ export default async function SystemsPage({
             className={contentAsMockCode}
             titleClassName={contentAsMockCodeTitle}
             title={
-              parseWordmarkTemplate(tetrachromaticTitle).fullText
+              systemsIntroTitle
             }
             data-first="true"
             queryDataAttributes={{

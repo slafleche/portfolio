@@ -291,6 +291,15 @@ export const wordMark_vanilla = style({
   verticalAlign: 'baseline',
 });
 
+const tnbCaseStudyLogoWidth = m(250);
+
+export const wordMark_tnb = style({
+  display: 'inline-block',
+  width: tnbCaseStudyLogoWidth.css(),
+  height: 'auto',
+  verticalAlign: 'middle',
+});
+
 export const wordMark_cc = style({
   width: wordMarkVars.cc.size.css(),
   height: wordMarkVars.cc.size.css(),

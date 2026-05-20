@@ -58,6 +58,12 @@ globalStyle('body', {
   margin: 0,
   padding: 0,
   backgroundColor: bodyBg.css(),
+  backgroundSize: [
+    '100vw 100vh',
+    '100vw 100dvh',
+  ],
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'top left',
   ...gradientAsBgImg(bgGradient),
 });
 

@@ -1,6 +1,6 @@
 import type { ComplexStyleRule } from '@vanilla-extract/css';
 import { globalStyle, style } from '@vanilla-extract/css';
-import { m } from 'css-calipers';
+import { m, mEm } from 'css-calipers';
 
 import { layoutVars } from '../../tokens/layout.tokens';
 import { anchorMenuVars } from '../../tokens/menu.tokens';
@@ -35,14 +35,13 @@ export const root = style({
   overflow: 'visible',
   minHeight: curlVars.height.css(),
   ...paddings({
-    vertical: layoutVars.content.gap.multiply(1.5).round(),
+    vertical: layoutVars.content.gap.multiply(3).round(),
   }),
   selectors: {
     ...mediaQueryStyle({
       compact: {
         ...paddings({
-          top: anchorMenuVars.handle.sizeWithBorder.multiply(2),
-          bottom: anchorMenuVars.handle.sizeWithBorder.multiply(1.5),
+          vertical: anchorMenuVars.handle.sizeWithBorder.multiply(2),
         }),
       },
     }),
@@ -74,7 +73,7 @@ export const content = style({
   margin: 'auto',
   opacity: 0.9,
   ...paddings({
-    bottom: m(0.5, 'em'),
+    bottom: mEm(0.5),
   }),
 });
 
@@ -122,4 +121,17 @@ export const icon = style({
 
 globalStyle(`.${glassLink}:hover .${icon}`, {
   transform: `scale(1.2)`,
+});
+
+export const fit = style({
+  position: 'relative',
+  zIndex: 1,
+  textAlign: 'center',
+  maxWidth: '80ch',
+  margin: 'auto',
+  opacity: 0.75,
+  lineHeight: 1.5,
+  ...margins({
+    bottom: mEm(1.5),
+  }),
 });

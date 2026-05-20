@@ -1,0 +1,50 @@
+import { readFile, writeFile } from 'node:fs/promises';
+
+import { NextResponse } from 'next/server';
+
+import { isDev } from '@/lib/runtimeEnv';
+
+const DEFAULTS_PATH = '/tmp/sectionBg.json';
+
+const FALLBACK = {
+  spacing: 24,
+  flipOddRows: false,
+  offsetOddRows: false,
+  baseGap: 24,
+  tipGap: 24,
+  triangleSize: 80,
+  strokeWidth: 2,
+  strokeColor: '#ffffff',
+  strokeOpacity: 0.05,
+  demoBg: 'transparent',
+};
+
+const forbiddenResponse = () =>
+  NextResponse.json({ error: 'Debug only.' }, { status: 403 });
+
+export async function GET() {
+  if (!isDev()) return forbiddenResponse();
+  try {
+    const raw = await readFile(DEFAULTS_PATH, 'utf8');
+    return new NextResponse(raw, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch {
+    return NextResponse.json(FALLBACK);
+  }
+}
+
+export async function POST(request: Request) {
+  if (!isDev()) return forbiddenResponse();
+  try {
+    const payload: unknown = await request.json();
+    const serialized = JSON.stringify(payload, null, 2);
+    await writeFile(DEFAULTS_PATH, serialized, 'utf8');
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: 'Failed to write defaults.' },
+      { status: 500 },
+    );
+  }
+}

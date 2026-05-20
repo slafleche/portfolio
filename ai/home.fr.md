@@ -1,0 +1,1 @@
+../../cv_stuff/portfolio_claude/ai/home.fr.md
