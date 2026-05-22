@@ -23,4 +23,6 @@ trois sites Next.js + Payload de Figma à la production en trois mois. Chez
 Vanilla, le système de thématisation par tokens que j’ai aidé à concevoir
 est encore en production des années après mon départ.
 
+Une partie de ce travail est en open source, comme [css-calipers](https://www.npmjs.com/package/css-calipers).
+
 

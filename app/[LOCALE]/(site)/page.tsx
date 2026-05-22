@@ -365,46 +365,48 @@ export default async function HomePage({
                 sectionWrap.caseStudies,
               )}
             >
-              {/* TNB Case Study (recent work, presented first) */}
-              <CaseStudy
-                id={tnbCaseStudy.href}
-                intro={tnbCaseStudy.intro}
-                title={tnbCaseStudy.title}
-                WordMark={TNBWordmark}
-                wordMarkClassName={cg.wordmarkTextNoLogo}
-              >
-                <Accordion
-                  items={tnbCaseStudy.list.map(
-                    (study: CaseStudyListItem, index: number) => ({
-                      heading: study.title,
-                      subHeading: study.subTitle,
-                      content: <Markdown source={study.content} />,
-                      id: `${baseId}-tnb-${index}`,
-                      defaultOpen: index === 0,
-                    }),
-                  )}
-                />
-              </CaseStudy>
+              <section className={layoutStyles.sectionSpacing}>
+                {/* TNB Case Study (recent work, presented first) */}
+                <CaseStudy
+                  id={tnbCaseStudy.href}
+                  intro={tnbCaseStudy.intro}
+                  title={tnbCaseStudy.title}
+                  WordMark={TNBWordmark}
+                  wordMarkClassName={cg.wordmarkTextNoLogo}
+                >
+                  <Accordion
+                    items={tnbCaseStudy.list.map(
+                      (study: CaseStudyListItem, index: number) => ({
+                        heading: study.title,
+                        subHeading: study.subTitle,
+                        content: <Markdown source={study.content} />,
+                        id: `${baseId}-tnb-${index}`,
+                        defaultOpen: index === 0,
+                      }),
+                    )}
+                  />
+                </CaseStudy>
 
-              {/* Vanilla Case Study (deeper / older arc) */}
-              <CaseStudy
-                id={caseStudies.href}
-                intro={caseStudies.intro}
-                title={caseStudies.title}
-                wordMarkClassName={cg.wordmarkTextNoLogo}
-              >
-                <Accordion
-                  items={caseStudies.list.map(
-                    (study: CaseStudyListItem, index: number) => ({
-                      heading: study.title,
-                      subHeading: study.subTitle,
-                      content: <Markdown source={study.content} />,
-                      id: `${baseId}-${index}`,
-                      defaultOpen: index === 0,
-                    }),
-                  )}
-                />
-              </CaseStudy>
+                {/* Vanilla Case Study (deeper / older arc) */}
+                <CaseStudy
+                  id={caseStudies.href}
+                  intro={caseStudies.intro}
+                  title={caseStudies.title}
+                  wordMarkClassName={cg.wordmarkTextNoLogo}
+                >
+                  <Accordion
+                    items={caseStudies.list.map(
+                      (study: CaseStudyListItem, index: number) => ({
+                        heading: study.title,
+                        subHeading: study.subTitle,
+                        content: <Markdown source={study.content} />,
+                        id: `${baseId}-${index}`,
+                        defaultOpen: index === 0,
+                      }),
+                    )}
+                  />
+                </CaseStudy>
+              </section>
             </div>
 
             <div

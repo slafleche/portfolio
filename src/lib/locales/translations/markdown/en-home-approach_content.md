@@ -18,3 +18,5 @@ without slowing the team down. At The New Business, this approach shipped
 three Next.js + Payload sites from Figma to production in three months. At
 Vanilla, the token-based theming I helped design is still in production years
 after I left.
+
+Some of this work is open source, like [css-calipers](https://www.npmjs.com/package/css-calipers).

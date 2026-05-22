@@ -54,7 +54,11 @@ const slideUp = keyframes({
   },
 });
 export const root = style({});
-export const intro = style({});
+export const intro = style({
+  ...margins({
+    bottom: m(24),
+  }),
+});
 
 globalStyle(`.${intro} p`, {
   marginTop: 0,

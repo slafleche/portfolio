@@ -9,6 +9,10 @@
 // Files to skip entirely (matched by substring in the relative path).
 export const LINT_FILE_IGNORE_SUBSTRINGS = [
   '.bak.',
+  // Standalone snippet used by scripts/cssCalipersSnippetToImg.mts to
+  // render an image for a separate project; not portfolio surface area.
+  'mockCssCalipersSnippet',
+  'MockCssCalipersSnippet',
 ];
 
 // Paths where raw CSS property checks (background/border/padding/margin/
