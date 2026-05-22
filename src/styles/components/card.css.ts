@@ -281,6 +281,29 @@ export const wordmarkTextNoLogo = style({
   },
 });
 
+// Pair with wordmarkTextNoLogo on titles where the wordmark SVG is wide
+// enough to wrap on narrow viewports. On compact, stacks the trailing text
+// on its own line and prevents it from breaking mid-string.
+export const wordmarkTextStacked = style({
+  selectors: {
+    ...mediaQueryStyle({
+      compact: {
+        display: 'block',
+        whiteSpace: 'nowrap',
+      },
+    }),
+    '&[data-position="before"]': {
+      ...mediaQueryStyle({
+        compact: {
+          ...margins({
+            left: 0,
+          }),
+        },
+      }),
+    },
+  },
+});
+
 const caseStudyLogoHeight = m(1.4, 'em');
 
 export const wordMark_vanilla = style({

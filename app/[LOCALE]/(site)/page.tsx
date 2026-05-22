@@ -372,7 +372,10 @@ export default async function HomePage({
                   intro={tnbCaseStudy.intro}
                   title={tnbCaseStudy.title}
                   WordMark={TNBWordmark}
-                  wordMarkClassName={cg.wordmarkTextNoLogo}
+                  wordMarkClassName={clsx(
+                    cg.wordmarkTextNoLogo,
+                    cg.wordmarkTextStacked,
+                  )}
                 >
                   <Accordion
                     items={tnbCaseStudy.list.map(

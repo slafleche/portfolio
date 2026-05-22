@@ -71,9 +71,6 @@ export const accordion = style({
   overflow: 'hidden',
   ...borders(accordionSurfaceTokens.borders),
   ...gradientAsBgImg(surfaceGradient),
-  ...margins({
-    bottom: m(48),
-  }),
 });
 
 export const item = style({
