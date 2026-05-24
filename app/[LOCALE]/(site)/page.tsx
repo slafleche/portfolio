@@ -285,7 +285,6 @@ export default async function HomePage({
             <div
               className={clsx(
                 sectionWrap.section,
-                sectionWrap.bg,
                 sectionWrap.endToEnd,
               )}
             >
@@ -302,6 +301,7 @@ export default async function HomePage({
 
             <div
               className={clsx(
+                sectionWrap.bg,
                 sectionWrap.section,
                 sectionWrap.designSystems,
               )}
@@ -329,7 +329,6 @@ export default async function HomePage({
 
             <div
               className={clsx(
-                sectionWrap.bg,
                 sectionWrap.section,
                 sectionWrap.aboutMe,
               )}
@@ -345,6 +344,7 @@ export default async function HomePage({
 
             <div
               className={clsx(
+                sectionWrap.bg,
                 sectionWrap.section,
                 sectionWrap.approach,
               )}
@@ -360,7 +360,6 @@ export default async function HomePage({
 
             <div
               className={clsx(
-                sectionWrap.bg,
                 sectionWrap.section,
                 sectionWrap.caseStudies,
               )}
@@ -414,6 +413,7 @@ export default async function HomePage({
 
             <div
               className={clsx(
+                sectionWrap.bg,
                 sectionWrap.section,
                 sectionWrap.projects,
               )}
