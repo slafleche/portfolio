@@ -1,4 +1,196 @@
 {
+  "blog-images-no-css-frameworks-1000x420.gen": {
+    "name": "blog-images-no-css-frameworks-1000x420.gen",
+    "hash": "accc8b14",
+    "basePath": "img-blog-images-no-css-frameworks-1000x420.gen-accc8b14",
+    "dirName": "img-blog-images-no-css-frameworks-1000x420.gen-accc8b14",
+    "width": 1000,
+    "height": 421,
+    "aspect": 2.375296912114014,
+    "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAKABgDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAMCBAb/xAAfEAABBAEFAQAAAAAAAAAAAAAAAQIDEQQSFCExMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAADAQL/xAAYEQEBAAMAAAAAAAAAAAAAAAABABESMf/aAAwDAQACEQMRAD8AzuPHE719H7PH1LUhRaq0CdjiSgYnzxxtWmcgQQCvbWt//9k=",
+    "shareImage": false,
+    "variants": {
+      "avif": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/320.avif"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/480.avif"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/640.avif"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/750.avif"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/828.avif"
+        }
+      ],
+      "webp": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/320.webp"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/480.webp"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/640.webp"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/750.webp"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/828.webp"
+        }
+      ],
+      "jpg": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/320.jpg"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/480.jpg"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/640.jpg"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/750.jpg"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/828.jpg"
+        }
+      ]
+    },
+    "original": {
+      "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1000x420.gen-accc8b14/orig.png",
+      "width": 1000,
+      "height": 421
+    }
+  },
+  "blog-images-no-css-frameworks-1200x630.gen": {
+    "name": "blog-images-no-css-frameworks-1200x630.gen",
+    "hash": "c8e15bc6",
+    "basePath": "img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6",
+    "dirName": "img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6",
+    "width": 1200,
+    "height": 631,
+    "aspect": 1.901743264659271,
+    "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAANABgDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAIDBAb/xAAfEAACAgEEAwAAAAAAAAAAAAABAgADEQUSIUEygZH/xAAWAQEBAQAAAAAAAAAAAAAAAAADAQL/xAAYEQADAQEAAAAAAAAAAAAAAAAAARESQf/aAAwDAQACEQMRAD8AzdNAfsSU6eQ3DL9lVWIHBjLa4PkT7jKCRQaygIcZBhDdu6hK5w1k/9k=",
+    "shareImage": false,
+    "variants": {
+      "avif": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/320.avif"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/480.avif"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/640.avif"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/750.avif"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/828.avif"
+        },
+        {
+          "w": 1080,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/1080.avif"
+        },
+        {
+          "w": 1200,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/1200.avif"
+        }
+      ],
+      "webp": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/320.webp"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/480.webp"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/640.webp"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/750.webp"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/828.webp"
+        },
+        {
+          "w": 1080,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/1080.webp"
+        },
+        {
+          "w": 1200,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/1200.webp"
+        }
+      ],
+      "jpg": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/320.jpg"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/480.jpg"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/640.jpg"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/750.jpg"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/828.jpg"
+        },
+        {
+          "w": 1080,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/1080.jpg"
+        },
+        {
+          "w": 1200,
+          "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/1200.jpg"
+        }
+      ]
+    },
+    "original": {
+      "url": "https://cdn.lafleche.dev/_staging/images/v1/img-blog-images-no-css-frameworks-1200x630.gen-c8e15bc6/orig.png",
+      "width": 1200,
+      "height": 631
+    }
+  },
   "css-calipers-snippet@2x": {
     "name": "css-calipers-snippet@2x",
     "hash": "683cb142",
