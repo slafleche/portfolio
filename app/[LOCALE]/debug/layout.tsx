@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import type { CSSProperties, ReactNode } from 'react';
 
 import { notDev } from '@/lib/runtimeEnv';
+import '@/styles/components/debugScope.css';
 import { backgrounds } from '@/styles/helpers/background.helper';
 
 export default function DebugLayout({
@@ -15,6 +16,7 @@ export default function DebugLayout({
 
   return (
     <div
+      data-debug-scope="true"
       style={{
         minHeight: '100vh',
         ...(backgrounds({ color: '#0a0616' }) as CSSProperties),

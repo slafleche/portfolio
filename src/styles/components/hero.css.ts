@@ -147,6 +147,11 @@ export const main = style({
   },
 });
 
+// Opt-in extension class for the blog-image debug preview. Applied
+// alongside `main` via the Hero's `mainClassName` prop, never on the
+// production hero.
+export const blogMain = style({});
+
 export const subtitle = style({
   opacity: 0,
   textAlign: 'center',

@@ -22,6 +22,7 @@ type Props = {
   className?: string;
   copy: HeroCopy;
   overlayClassName?: string;
+  mainClassName?: string;
   headingAnimated?: boolean;
   TitleSvg?: ComponentType<SVGProps<SVGSVGElement>>;
   Bg?: ComponentType<{ className?: string }> | null;
@@ -35,6 +36,7 @@ export default function Hero({
   className,
   copy,
   overlayClassName,
+  mainClassName,
   TitleSvg,
   Bg,
   hideCta = false,
@@ -66,7 +68,11 @@ export default function Hero({
             <div className={s.glassWrap}>
               <GlassPanel
                 className={s.glassPanel}
-                contentClassName={clsx(s.main, layoutStyles.content)}
+                contentClassName={clsx(
+                  s.main,
+                  layoutStyles.content,
+                  mainClassName,
+                )}
                 surfaceClassNameOverride={s.glassySurfaceOverwrite}
               >
                 <div
