@@ -5,8 +5,10 @@ import ShareImageHeroBg from '@/components/ShareImageHeroBg';
 import * as s from '@/styles/components/blogImages.css';
 import * as heroStyles from '@/styles/components/hero.css';
 
-const BLOG_IMAGE_WIDTH = 1000;
-const BLOG_IMAGE_HEIGHT = 420;
+const BLOG_IMAGE_SIZES = [
+  { width: 1200, height: 630, label: 'LinkedIn' },
+  { width: 1000, height: 420, label: 'dev.to' },
+] as const;
 
 const BLOG_IMAGES = [
   {
@@ -33,18 +35,21 @@ const BG_TRANSFORMS = {
   },
 } as const;
 
-function makeTitleSvg(lines: ReadonlyArray<string>) {
+function makeTitleSvg(
+  lines: ReadonlyArray<string>,
+  imageWidth: number,
+) {
   const lineHeight = 80;
   const fontSize = 60;
-  const width = 900;
+  const svgWidth = Math.round(imageWidth * 0.9);
   const height = lines.length * lineHeight;
-  const centerX = width / 2;
+  const centerX = svgWidth / 2;
 
   function BlogImageTitleSvg(props: SVGProps<SVGSVGElement>) {
     return (
       <svg
         {...props}
-        viewBox={`0 0 ${width} ${height}`}
+        viewBox={`0 0 ${svgWidth} ${height}`}
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -74,53 +79,55 @@ function makeTitleSvg(lines: ReadonlyArray<string>) {
 }
 
 export default function BlogImagesDebugPage() {
-  const sizeLabel = `${BLOG_IMAGE_WIDTH}x${BLOG_IMAGE_HEIGHT}`;
-  const viewportStyle = {
-    width: `${BLOG_IMAGE_WIDTH}px`,
-    height: `${BLOG_IMAGE_HEIGHT}px`,
-  } as CSSProperties;
-
   return (
     <div className={s.debugRoot}>
       {BLOG_IMAGES.map((image) => {
         const titleText = image.titleLines.join(' ');
-        const TitleSvg = makeTitleSvg(image.titleLines);
 
-        return (
-          <div key={image.id}>
-            <p className={s.debugLabel}>
-              {image.id} - {sizeLabel}
-            </p>
-            <div
-              className={s.viewport}
-              data-target="blog-image-viewport"
-              data-id={image.id}
-              data-size={sizeLabel}
-              style={viewportStyle}
-            >
-              <Hero
-                className={s.heroOverride}
-                mainClassName={heroStyles.blogMain}
-                copy={{
-                  title: titleText,
-                  ctaLabel: '',
-                  ctaText: '',
-                }}
-                TitleSvg={TitleSvg}
-                Bg={(props) => (
-                  <ShareImageHeroBg
-                    {...props}
-                    roundedTransform={BG_TRANSFORMS.roundedTransform}
-                    nubbyTransform={BG_TRANSFORMS.nubbyTransform}
-                  />
-                )}
-                hideCta={true}
-                hideSubtitle={true}
-                hideWaypoint={true}
-              />
+        return BLOG_IMAGE_SIZES.map((size) => {
+          const sizeLabel = `${size.width}x${size.height}`;
+          const TitleSvg = makeTitleSvg(image.titleLines, size.width);
+          const viewportStyle = {
+            width: `${size.width}px`,
+            height: `${size.height}px`,
+          } as CSSProperties;
+
+          return (
+            <div key={`${image.id}-${sizeLabel}`}>
+              <p className={s.debugLabel}>
+                {image.id} - {sizeLabel} ({size.label})
+              </p>
+              <div
+                className={s.viewport}
+                data-target="blog-image-viewport"
+                data-id={image.id}
+                data-size={sizeLabel}
+                style={viewportStyle}
+              >
+                <Hero
+                  className={s.heroOverride}
+                  mainClassName={heroStyles.blogMain}
+                  copy={{
+                    title: titleText,
+                    ctaLabel: '',
+                    ctaText: '',
+                  }}
+                  TitleSvg={TitleSvg}
+                  Bg={(props) => (
+                    <ShareImageHeroBg
+                      {...props}
+                      roundedTransform={BG_TRANSFORMS.roundedTransform}
+                      nubbyTransform={BG_TRANSFORMS.nubbyTransform}
+                    />
+                  )}
+                  hideCta={true}
+                  hideSubtitle={true}
+                  hideWaypoint={true}
+                />
+              </div>
             </div>
-          </div>
-        );
+          );
+        });
       })}
     </div>
   );

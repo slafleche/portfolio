@@ -1,8 +1,9 @@
+import '@/styles/components/debugScope.css';
+
 import { notFound } from 'next/navigation';
 import type { CSSProperties, ReactNode } from 'react';
 
 import { notDev } from '@/lib/runtimeEnv';
-import '@/styles/components/debugScope.css';
 import { backgrounds } from '@/styles/helpers/background.helper';
 
 export default function DebugLayout({

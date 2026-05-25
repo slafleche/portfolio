@@ -6,6 +6,8 @@ import { backgrounds } from '../helpers/background.helper';
 import { important } from '../helpers/important.helper';
 import { paddings } from '../helpers/spacing.helper';
 import { blogMain } from './hero.css';
+import { wrapper as nubbyWrapper } from './nubbyTriangle.css';
+import { wrapper as roundedWrapper } from './roundedTriangle.css';
 
 export const heroOverride = style({
   ...important({
@@ -16,6 +18,14 @@ export const heroOverride = style({
 
 globalStyle(`[data-id="no-css-frameworks"] .${blogMain}`, {
   ...paddings({ vertical: m(48) }),
+});
+
+globalStyle(`[data-id="no-css-frameworks"] .${roundedWrapper}`, {
+  width: '35%',
+});
+
+globalStyle(`[data-id="no-css-frameworks"] .${nubbyWrapper}`, {
+  width: '35%',
 });
 
 export const debugRoot = style({
