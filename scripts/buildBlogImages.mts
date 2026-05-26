@@ -7,14 +7,7 @@ import { chromium } from 'playwright';
 const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(__filename), '..');
 
-const OUTPUT_DIR = path.join(
-  REPO_ROOT,
-  'cdn',
-  'media',
-  'images',
-  'localImageSrc',
-  'blog-images',
-);
+const OUTPUT_DIR = path.join(REPO_ROOT, 'tmp', 'blog-images');
 const TARGET_URL =
   process.env.BLOG_IMAGE_URL ??
   'http://localhost:3000/en/debug/blogImages';

@@ -1,18 +1,18 @@
 ---
 name: generate-images
 description: >-
-  Use when the user says "generate images", "generate blog images", or
-  "generate social images" (also "share images", "OG images"). Also use
-  when hero heading text changes (hero-title in locale data) since the
-  heading is a generated SVG that must be rebuilt before screenshots.
-  Covers the full pipeline: SVG rebuild, Playwright screenshots, CDN
-  upload with --force, and manifest generation. Requires `yarn dev` on
-  port 3000.
+  Use when the user says "generate images" or "generate share images"
+  (also "OG images"). Also use when hero heading text changes
+  (hero-title in locale data) since the heading is a generated SVG that
+  must be rebuilt before screenshots. Covers the full pipeline: SVG
+  rebuild, Playwright screenshots, CDN upload, and manifest generation.
+  Requires `yarn dev` on port 3000. For blog/social media images, use
+  the `social-images` skill instead.
 ---
 
 # generate-images
 
-Screenshot debug preview pages into CDN-ready PNGs using Playwright.
+Screenshot share/OG image debug pages into CDN-ready PNGs using Playwright.
 
 ## Prerequisites
 
@@ -62,45 +62,32 @@ Requires `yarn dev` running on port 3000 (the script captures text from
   renders the Hero component with `hideSubtitle={true}`, so only the
   SVG title is visible in generated share images.
 
-## Screenshot commands
+## Screenshot command
 
-| What | yarn script (run from repo root) | Debug page |
-|---|---|---|
-| Social / OG images | `yarn --cwd cdn generate:img:share-images` | `/en/debug/shareImage` |
-| Blog images | `yarn --cwd cdn generate:img:blog-images` | `/en/debug/blogImages` |
+```bash
+yarn --cwd cdn generate:img:share-images
+```
 
-## Trigger phrases and what to run
+Debug page: `/en/debug/shareImage`
 
-- **"generate blog images"** -- run the blog images command only.
-- **"generate social images"**, **"generate share images"**,
-  **"generate OG images"** -- run the share images command only.
-- **"generate images"** (no qualifier) -- run both, share images first,
-  then blog images.
+## Trigger phrases
+
+- **"generate images"**, **"generate share images"**,
+  **"generate OG images"** -- run the share images command.
+- For blog/social media images, use the `social-images` skill instead.
 
 ## What happens
-
-Each script:
 
 1. Launches headless Chromium via Playwright.
 2. Navigates to the debug page on localhost:3000.
 3. Waits for fonts and network idle.
-4. Finds all elements with the viewport data attribute
-   (`data-target="share-image-viewport"` or
-   `data-target="blog-image-viewport"`).
+4. Finds all elements with `data-target="share-image-viewport"`.
 5. Screenshots each viewport element to a `.gen.png` file.
 
-### Output directories
+### Output directory
 
-- Share images: `cdn/media/images/localImageSrc/share-images/`
-  - Files: `{locale}-share-image-{width}x{height}.gen.png`
-- Blog images: `cdn/media/images/localImageSrc/blog-images/`
-  - Files: `{id}-{width}x{height}.gen.png`
-
-## Adding a new blog image
-
-Add an entry to the `BLOG_IMAGES` array in
-`app/[LOCALE]/debug/blogImages/page.tsx` with an `id` and `titleLines`,
-then re-run the blog images command.
+- `cdn/media/images/localImageSrc/share-images/`
+- Files: `{locale}-share-image-{width}x{height}.gen.png`
 
 ## CDN upload and manifest pipeline
 
