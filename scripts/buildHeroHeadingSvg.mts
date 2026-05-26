@@ -81,11 +81,43 @@ const applyShadowToSvg = async (svgPath: string) => {
     '',
   );
 
+  svg = svg.replace(
+    /<g[^>]*clip-path="[^"]*"[^>]*>[\s\S]*?<\/g>\s*/gi,
+    '',
+  );
+
+  const viewBoxMatch = svg.match(/viewBox="([^"]*)"/i);
+  const isFullRect = (d: string) => {
+    if (!viewBoxMatch) return false;
+    const vbParts = viewBoxMatch[1].trim().split(/[\s,]+/).map(Number);
+    if (vbParts.length !== 4 || vbParts.some((n) => !Number.isFinite(n)))
+      return false;
+    const [vbX, vbY, vbW, vbH] = vbParts;
+    const approx = (a: number, b: number) => Math.abs(a - b) < 0.5;
+    const norm = d.replace(/\s+/g, ' ').trim();
+    const m = norm.match(
+      /^M([0-9.+-]+) ([0-9.+-]+)h([0-9.+-]+)v([0-9.+-]+)H([0-9.+-]+)Z(?:m0 0)?$/i,
+    );
+    if (!m) return false;
+    return (
+      approx(Number(m[1]), vbX) &&
+      approx(Number(m[2]), vbY) &&
+      approx(Number(m[3]), vbW) &&
+      approx(Number(m[4]), vbH) &&
+      approx(Number(m[5]), vbX)
+    );
+  };
+
   const pathMatches = [
     ...svg.matchAll(/<path\b[^>]*\/>/gi),
     ...svg.matchAll(/<path\b[^>]*>[\s\S]*?<\/path>/gi),
   ];
-  const pathElements = pathMatches.map((match) => match[0]);
+  const pathElements = pathMatches
+    .map((match) => match[0])
+    .filter((el) => {
+      const dMatch = el.match(/\bd="([^"]*)"/);
+      return !dMatch || !isFullRect(dMatch[1]);
+    });
   if (pathElements.length === 0) return;
 
   const shadowPaths = pathElements
@@ -311,11 +343,16 @@ const main = async () => {
         );
       }
       const attributes = svgMatch[1].trim();
-      const inner = svgMatch[2].trim();
+      let inner = svgMatch[2].trim();
+      inner = inner.replace(
+        /<g[^>]*clip-path="[^"]*"[^>]*>[\s\S]*?<\/g>\s*/gi,
+        '',
+      );
       const toJsxAttrs = (value: string) =>
         value
           .replace(/\bfill-opacity=/gi, 'fillOpacity=')
-          .replace(/\bstroke-opacity=/gi, 'strokeOpacity=');
+          .replace(/\bstroke-opacity=/gi, 'strokeOpacity=')
+          .replace(/\bclip-path=/gi, 'clipPath=');
       const jsxAttributes = toJsxAttrs(attributes);
       const jsxInner = inner.replace(
         /<!--([\s\S]*?)-->/g,

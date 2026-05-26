@@ -39,7 +39,7 @@ const enBaseData = {
   'manifest-name': "Stéphane LaFlèche's Portfolio",
   'manifest-short-name': 'Stéphane',
   'manifest-description':
-    'Front-end developer building design systems and accessible interfaces with TypeScript.',
+    'Full-stack developer building design systems and accessible interfaces with TypeScript.',
   'manifest-categories': [
     'portfolio',
     'developer',
@@ -53,7 +53,7 @@ const enBaseData = {
   'favicon-meta-author': 'Stéphane LaFlèche',
 
   'hero-title':
-    'Full-stack developer [split] End-to-end design systems for AI-era teams',
+    'Stéphane LaFlèche [split] Full Stack Developer',
   'hero-subtitle':
     "I've been a full-stack developer based in Montreal since 2012, specializing in scalable, end-to-end design systems for AI-era teams.",
 

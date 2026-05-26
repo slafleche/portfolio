@@ -7,8 +7,8 @@ import SystemsEnHeroHeadingSvg from './systems-en-heroHeading.gen.tsx';
 import SystemsFrHeroHeadingSvg from './systems-fr-heroHeading.gen.tsx';
 
 export const generatedSvgs = {
-  en: { systems: { heroHeading: SystemsEnHeroHeadingSvg }, home: { heroHeading: HomeEnHeroHeadingSvg } },
-  fr: { systems: { heroHeading: SystemsFrHeroHeadingSvg }, home: { heroHeading: HomeFrHeroHeadingSvg } }
+  en: { home: { heroHeading: HomeEnHeroHeadingSvg }, systems: { heroHeading: SystemsEnHeroHeadingSvg } },
+  fr: { home: { heroHeading: HomeFrHeroHeadingSvg }, systems: { heroHeading: SystemsFrHeroHeadingSvg } }
 } as const;
 
 export const getLocaleSvgs = (locale: Locale) => generatedSvgs[locale];

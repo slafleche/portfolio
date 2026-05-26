@@ -159,5 +159,5 @@ split a single string into two parts (for example, multi-line hero titles).
 Example:
 
 ```txt
-Stéphane LaFlèche [split] Front-end Developer
+Stéphane LaFlèche [split] Full-stack Developer
 ```
