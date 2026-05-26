@@ -18,6 +18,13 @@ const BLOG_IMAGES = [
       'CSS frameworks',
     ],
   },
+  {
+    id: 'compiled-typed-css',
+    titleLines: [
+      'The case for compiled,',
+      'typed CSS (blame AI)',
+    ],
+  },
 ] as const;
 
 const BG_TRANSFORMS = {

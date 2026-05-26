@@ -1,4 +1,196 @@
 {
+  "blog-images-compiled-typed-css-1000x420.gen": {
+    "name": "blog-images-compiled-typed-css-1000x420.gen",
+    "hash": "4f245a23",
+    "basePath": "img-blog-images-compiled-typed-css-1000x420.gen-4f245a23",
+    "dirName": "img-blog-images-compiled-typed-css-1000x420.gen-4f245a23",
+    "width": 1000,
+    "height": 421,
+    "aspect": 2.375296912114014,
+    "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAKABgDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAAMEAQb/xAAeEAACAgICAwAAAAAAAAAAAAAAAQIDBBEhIjEyQf/EABYBAQEBAAAAAAAAAAAAAAAAAAEDBP/EABkRAAMBAQEAAAAAAAAAAAAAAAABEQISIf/aAAwDAQACEQMRAD8A57Fqrsn3ekVTxaW01YuCGHoza/LNOZIWylIMyoQU+j2Av6Aafo8n/9k=",
+    "shareImage": false,
+    "variants": {
+      "avif": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/320.avif"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/480.avif"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/640.avif"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/750.avif"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/828.avif"
+        }
+      ],
+      "webp": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/320.webp"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/480.webp"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/640.webp"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/750.webp"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/828.webp"
+        }
+      ],
+      "jpg": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/320.jpg"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/480.jpg"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/640.jpg"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/750.jpg"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/828.jpg"
+        }
+      ]
+    },
+    "original": {
+      "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1000x420.gen-4f245a23/orig.png",
+      "width": 1000,
+      "height": 421
+    }
+  },
+  "blog-images-compiled-typed-css-1200x630.gen": {
+    "name": "blog-images-compiled-typed-css-1200x630.gen",
+    "hash": "187f83ba",
+    "basePath": "img-blog-images-compiled-typed-css-1200x630.gen-187f83ba",
+    "dirName": "img-blog-images-compiled-typed-css-1200x630.gen-187f83ba",
+    "width": 1200,
+    "height": 631,
+    "aspect": 1.901743264659271,
+    "blurDataURL": "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAANABgDASIAAhEBAxEB/8QAGAAAAgMAAAAAAAAAAAAAAAAAAAQBAgb/xAAeEAACAgICAwAAAAAAAAAAAAAAAQIDESEEEjFhgf/EABcBAAMBAAAAAAAAAAAAAAAAAAABAwT/xAAYEQADAQEAAAAAAAAAAAAAAAAAARECEv/aAAwDAQACEQMRAD8AzdNCmxh8Bpdk479itc3FF3fPxl4NGXkqkoRfSoSxr4AZ7PYA5R80/9k=",
+    "shareImage": false,
+    "variants": {
+      "avif": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/320.avif"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/480.avif"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/640.avif"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/750.avif"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/828.avif"
+        },
+        {
+          "w": 1080,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/1080.avif"
+        },
+        {
+          "w": 1200,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/1200.avif"
+        }
+      ],
+      "webp": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/320.webp"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/480.webp"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/640.webp"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/750.webp"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/828.webp"
+        },
+        {
+          "w": 1080,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/1080.webp"
+        },
+        {
+          "w": 1200,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/1200.webp"
+        }
+      ],
+      "jpg": [
+        {
+          "w": 320,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/320.jpg"
+        },
+        {
+          "w": 480,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/480.jpg"
+        },
+        {
+          "w": 640,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/640.jpg"
+        },
+        {
+          "w": 750,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/750.jpg"
+        },
+        {
+          "w": 828,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/828.jpg"
+        },
+        {
+          "w": 1080,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/1080.jpg"
+        },
+        {
+          "w": 1200,
+          "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/1200.jpg"
+        }
+      ]
+    },
+    "original": {
+      "url": "https://cdn.lafleche.dev/release/images/v1/img-blog-images-compiled-typed-css-1200x630.gen-187f83ba/orig.png",
+      "width": 1200,
+      "height": 631
+    }
+  },
   "blog-images-no-css-frameworks-1000x420.gen": {
     "name": "blog-images-no-css-frameworks-1000x420.gen",
     "hash": "accc8b14",
