@@ -25,6 +25,23 @@ const BLOG_IMAGES = [
       'typed CSS (blame AI)',
     ],
   },
+  {
+    id: 'save-handedness',
+    titleLines: [
+      'Most of the web is touch.',
+      '[br]',
+      "We still don't save handedness.",
+    ],
+  },
+  {
+    id: 'save-handedness-linkedin',
+    titleLines: [
+      "The web's most ignored preference:",
+      '[br]',
+      'your hand.',
+    ],
+    sizes: ['1200x630'],
+  },
 ] as const;
 
 const BG_TRANSFORMS = {
@@ -42,15 +59,31 @@ const BG_TRANSFORMS = {
   },
 } as const;
 
+// Use '[br]' as a titleLines entry to insert a paragraph gap between lines
+// instead of a full blank text line.
+const TITLE_BREAK_MARKER = '[br]';
+
 function makeTitleSvg(
   lines: ReadonlyArray<string>,
   imageWidth: number,
 ) {
   const lineHeight = 80;
+  const breakGap = 36;
   const fontSize = 60;
   const svgWidth = Math.round(imageWidth * 0.9);
-  const height = lines.length * lineHeight;
   const centerX = svgWidth / 2;
+
+  let cursor = 0;
+  const positionedLines: Array<{ text: string; y: number }> = [];
+  for (const line of lines) {
+    if (line === TITLE_BREAK_MARKER) {
+      cursor += breakGap;
+      continue;
+    }
+    positionedLines.push({ text: line, y: cursor + lineHeight / 2 });
+    cursor += lineHeight;
+  }
+  const height = cursor;
 
   function BlogImageTitleSvg(props: SVGProps<SVGSVGElement>) {
     return (
@@ -68,13 +101,13 @@ function makeTitleSvg(
           fontFamily="system-ui, -apple-system, 'Segoe UI', sans-serif"
           fill="#ffffff"
         >
-          {lines.map((line, index) => (
+          {positionedLines.map((line, index) => (
             <tspan
               key={index}
               x={centerX}
-              y={(index + 0.5) * lineHeight}
+              y={line.y}
             >
-              {line}
+              {line.text}
             </tspan>
           ))}
         </text>
@@ -89,9 +122,17 @@ export default function BlogImagesDebugPage() {
   return (
     <div className={s.debugRoot}>
       {BLOG_IMAGES.map((image) => {
-        const titleText = image.titleLines.join(' ');
+        const titleText = image.titleLines
+          .filter((line) => line !== TITLE_BREAK_MARKER)
+          .join(' ');
 
-        return BLOG_IMAGE_SIZES.map((size) => {
+        const allowedSizes = 'sizes' in image ? image.sizes : null;
+
+        return BLOG_IMAGE_SIZES.filter(
+          (size) =>
+            !allowedSizes ||
+            allowedSizes.includes(`${size.width}x${size.height}`),
+        ).map((size) => {
           const sizeLabel = `${size.width}x${size.height}`;
           const TitleSvg = makeTitleSvg(image.titleLines, size.width);
           const viewportStyle = {
