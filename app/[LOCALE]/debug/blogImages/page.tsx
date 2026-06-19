@@ -126,7 +126,8 @@ export default function BlogImagesDebugPage() {
           .filter((line) => line !== TITLE_BREAK_MARKER)
           .join(' ');
 
-        const allowedSizes = 'sizes' in image ? image.sizes : null;
+        const allowedSizes: readonly string[] | null =
+          'sizes' in image ? image.sizes : null;
 
         return BLOG_IMAGE_SIZES.filter(
           (size) =>
