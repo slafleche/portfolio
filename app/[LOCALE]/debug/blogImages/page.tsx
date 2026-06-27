@@ -42,6 +42,37 @@ const BLOG_IMAGES = [
     ],
     sizes: ['1200x630'],
   },
+  {
+    id: 'css-frameworks-fashion',
+    titleLines: [
+      'CSS frameworks are all fashion,',
+      'no foundation',
+    ],
+  },
+  {
+    id: 'dreamweaver-mistake',
+    titleLines: [
+      "We're making the Dreamweaver mistake again,",
+      'on purpose this time',
+    ],
+    fontSize: 40,
+  },
+  {
+    id: 'figma-design-tokens',
+    titleLines: [
+      "Even Figma isn't sure about",
+      'its own design tokens',
+    ],
+  },
+  {
+    id: 'missing-middle',
+    titleLines: [
+      'The messy missing middle:',
+      'charting a better path from',
+      'design to AI-generated code',
+    ],
+    fontSize: 54,
+  },
 ] as const;
 
 const BG_TRANSFORMS = {
@@ -63,13 +94,20 @@ const BG_TRANSFORMS = {
 // instead of a full blank text line.
 const TITLE_BREAK_MARKER = '[br]';
 
+const DEFAULT_TITLE_FONT_SIZE = 60;
+
+// A per-image `fontSize` override is interpreted at this reference width
+// (the LinkedIn size) and scaled proportionally for narrower sizes.
+const TITLE_REFERENCE_WIDTH = 1200;
+
 function makeTitleSvg(
   lines: ReadonlyArray<string>,
   imageWidth: number,
+  fontSize: number = DEFAULT_TITLE_FONT_SIZE,
 ) {
-  const lineHeight = 80;
-  const breakGap = 36;
-  const fontSize = 60;
+  const scale = fontSize / DEFAULT_TITLE_FONT_SIZE;
+  const lineHeight = 80 * scale;
+  const breakGap = 36 * scale;
   const svgWidth = Math.round(imageWidth * 0.9);
   const centerX = svgWidth / 2;
 
@@ -135,7 +173,18 @@ export default function BlogImagesDebugPage() {
             allowedSizes.includes(`${size.width}x${size.height}`),
         ).map((size) => {
           const sizeLabel = `${size.width}x${size.height}`;
-          const TitleSvg = makeTitleSvg(image.titleLines, size.width);
+          // A per-image `fontSize` is specified at the reference width and
+          // scaled by this size's width, so every size fills the same
+          // fraction of the frame (consistent side padding across sizes).
+          const fontSize =
+            'fontSize' in image
+              ? image.fontSize * (size.width / TITLE_REFERENCE_WIDTH)
+              : undefined;
+          const TitleSvg = makeTitleSvg(
+            image.titleLines,
+            size.width,
+            fontSize,
+          );
           const viewportStyle = {
             width: `${size.width}px`,
             height: `${size.height}px`,
