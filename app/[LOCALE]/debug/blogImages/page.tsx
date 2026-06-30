@@ -73,6 +73,15 @@ const BLOG_IMAGES = [
     ],
     fontSize: 54,
   },
+  {
+    id: 'illusion-of-stability',
+    titleLines: [
+      '_The illusion of stability:_',
+      'Figma-to-code pipelines are repeating',
+      'the same mistakes we made with *Flash*',
+    ],
+    fontSize: 42,
+  },
 ] as const;
 
 const BG_TRANSFORMS = {
@@ -99,6 +108,44 @@ const DEFAULT_TITLE_FONT_SIZE = 60;
 // A per-image `fontSize` override is interpreted at this reference width
 // (the LinkedIn size) and scaled proportionally for narrower sizes.
 const TITLE_REFERENCE_WIDTH = 1200;
+
+// How much larger a *bold* emphasis word renders than the base size. The
+// headless render's system font may not distinguish 700 from 900, so size is
+// what actually makes the word read as emphasized.
+const BOLD_EMPHASIS_SCALE = 1.22;
+
+// Inline markup inside a title line:
+//   *word*  -> bold emphasis (bigger + weight 900, against the 700 default)
+//   _text_  -> italic
+type TitleSegment = { text: string; bold?: boolean; italic?: boolean };
+
+const TITLE_MARKUP_REGEX = /(\*[^*]+\*|_[^_]+_)/g;
+
+function parseTitleLine(line: string): TitleSegment[] {
+  const segments: TitleSegment[] = [];
+  let lastIndex = 0;
+  for (const match of line.matchAll(TITLE_MARKUP_REGEX)) {
+    const index = match.index ?? 0;
+    if (index > lastIndex) {
+      segments.push({ text: line.slice(lastIndex, index) });
+    }
+    const token = match[0];
+    if (token.startsWith('*')) {
+      segments.push({ text: token.slice(1, -1), bold: true });
+    } else {
+      segments.push({ text: token.slice(1, -1), italic: true });
+    }
+    lastIndex = index + token.length;
+  }
+  if (lastIndex < line.length) {
+    segments.push({ text: line.slice(lastIndex) });
+  }
+  return segments.length > 0 ? segments : [{ text: line }];
+}
+
+function stripTitleMarkup(line: string): string {
+  return line.replace(/[*_]/g, '');
+}
 
 function makeTitleSvg(
   lines: ReadonlyArray<string>,
@@ -145,7 +192,16 @@ function makeTitleSvg(
               x={centerX}
               y={line.y}
             >
-              {line.text}
+              {parseTitleLine(line.text).map((seg, segIndex) => (
+                <tspan
+                  key={segIndex}
+                  fontSize={seg.bold ? fontSize * BOLD_EMPHASIS_SCALE : undefined}
+                  fontWeight={seg.bold ? 900 : undefined}
+                  fontStyle={seg.italic ? 'italic' : undefined}
+                >
+                  {seg.text}
+                </tspan>
+              ))}
             </tspan>
           ))}
         </text>
@@ -162,6 +218,7 @@ export default function BlogImagesDebugPage() {
       {BLOG_IMAGES.map((image) => {
         const titleText = image.titleLines
           .filter((line) => line !== TITLE_BREAK_MARKER)
+          .map(stripTitleMarkup)
           .join(' ');
 
         const allowedSizes: readonly string[] | null =
