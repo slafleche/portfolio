@@ -82,6 +82,30 @@ const BLOG_IMAGES = [
     ],
     fontSize: 42,
   },
+  {
+    id: 'shaky-foundation',
+    titleLines: [
+      'Figma-to-code: even the best ones',
+      'hit a wall on a shaky foundation',
+    ],
+    fontSize: 48,
+  },
+  {
+    id: 'real-shift',
+    titleLines: [
+      'Figma-to-code:',
+      '[br]',
+      'the real _shift_ happening',
+    ],
+    fontSize: 56,
+  },
+  {
+    id: 'hits-a-wall',
+    titleLines: [
+      'Where design-to-code hits a wall',
+    ],
+    fontSize: 48,
+  },
 ] as const;
 
 const BG_TRANSFORMS = {
