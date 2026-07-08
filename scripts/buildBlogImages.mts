@@ -13,8 +13,16 @@ const TARGET_URL =
   'http://localhost:3000/en/debug/blogImages';
 const VIEWPORT_SELECTOR = '[data-target="blog-image-viewport"]';
 
+// Optional id filter(s) passed as CLI args, e.g.
+//   yarn build:blog-images lafleche-dev-design-walkthrough
+// When provided, only matching images are (re)rendered and the output
+// directory is NOT wiped, so other images stay untouched.
+const ID_FILTER = new Set(process.argv.slice(2).filter(Boolean));
+
 const main = async () => {
-  await fs.rm(OUTPUT_DIR, { recursive: true, force: true });
+  if (ID_FILTER.size === 0) {
+    await fs.rm(OUTPUT_DIR, { recursive: true, force: true });
+  }
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
 
   const browser = await chromium.launch();
@@ -76,6 +84,7 @@ const main = async () => {
     );
   }
 
+  let wrote = 0;
   for (let index = 0; index < count; index += 1) {
     const viewport = viewports.nth(index);
     const id = await viewport.getAttribute('data-id');
@@ -95,15 +104,26 @@ const main = async () => {
       );
     }
 
+    if (ID_FILTER.size > 0 && !ID_FILTER.has(id)) {
+      continue;
+    }
+
     const outputName = `${id}-${size}.gen.png`;
     const outputPath = path.join(OUTPUT_DIR, outputName);
 
     await viewport.scrollIntoViewIfNeeded();
     await viewport.screenshot({ path: outputPath });
     console.log(`Wrote ${outputPath}`);
+    wrote += 1;
   }
 
   await browser.close();
+
+  if (ID_FILTER.size > 0 && wrote === 0) {
+    throw new Error(
+      `No viewports matched id filter: ${[...ID_FILTER].join(', ')}.`,
+    );
+  }
 };
 
 main().catch((error) => {

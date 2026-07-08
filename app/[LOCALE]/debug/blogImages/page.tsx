@@ -8,6 +8,7 @@ import * as heroStyles from '@/styles/components/hero.css';
 const BLOG_IMAGE_SIZES = [
   { width: 1200, height: 630, label: 'LinkedIn' },
   { width: 1000, height: 420, label: 'dev.to' },
+  { width: 1280, height: 720, label: 'YouTube' },
 ] as const;
 
 const BLOG_IMAGES = [
@@ -105,6 +106,15 @@ const BLOG_IMAGES = [
       'Where design-to-code hits a wall',
     ],
     fontSize: 48,
+  },
+  {
+    id: 'lafleche-dev-design-walkthrough',
+    titleLines: [
+      'lafleche.dev',
+      'design walkthrough',
+    ],
+    sizes: ['1280x720'],
+    fontSize: 84,
   },
 ] as const;
 
